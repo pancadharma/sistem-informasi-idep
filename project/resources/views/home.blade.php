@@ -1,19 +1,28 @@
-@extends('adminlte::page')
-
-@section('title', 'AdminLTE')
-
-@section('content_header')
-    <h1 class="m-0 text-dark">Dashboard</h1>
-@stop
-
+@extends('layouts.admin')
 @section('content')
+<div class="content">
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-12">
             <div class="card">
+                <div class="card-header">
+                    Dashboard
+                </div>
+
                 <div class="card-body">
-                    <p class="mb-0">You are logged in!</p>
+                    @if(session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    You are logged in!
                 </div>
             </div>
         </div>
     </div>
-@stop
+</div>
+@endsection
+@section('scripts')
+@parent
+
+@endsection
