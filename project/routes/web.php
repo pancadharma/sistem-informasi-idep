@@ -18,6 +18,10 @@ Route::get('/profile', function(){
     return view('layouts.app');
 });
 
+Route::get('/home', function(){
+    return view('home');
+});
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,9 +30,10 @@ Route::get('/', function () {
 // Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/home', function() {
-    return view('home');
-})->name('home')->middleware('auth');
+
+// Route::get('/home', function() {
+//     return view('home');
+// })->name('home')->middleware('auth');
 
 
 
