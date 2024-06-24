@@ -24,7 +24,8 @@ Route::get('/home', function(){
 
 
 Route::get('/', function () {
-    return view('welcome');
+    $title = "LOGIN IDEP SERVER";
+    return view('welcome',['title'=> $title]);
 });
 
 // Auth::routes();

@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\View\Factory;
 use JeroenNoten\LaravelAdminLte\Http\ViewComposers\AdminLteComposer;
+// use JeroenNoten\LaravelAdminLte\Http\ViewComposers\AdminLteServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Factory $view): void
     {
         $this->registerViewComposers($view);
+        // $this->loadTranslations();
     }
     
     public function lte(Factory $view): void{
@@ -39,4 +43,16 @@ class AppServiceProvider extends ServiceProvider
         // $view->composer('adminlte::page', AdminLteComposer::class);
         $view->composer('layouts.page', AdminLteComposer::class);
     }
+
+ 
+//     protected $pkgPrefix = 'idep';
+//     private function loadTranslations():void
+//     {
+//         $translationsPath = $this->packagePaths('resources/lang');
+//         $this->loadTranslationsFrom($translationsPath,$this->pkgPrefix);
+//     }
+
+//     public function packagePaths($path){
+//         $path = __DIR__."../../$path";
+//    }
 }
