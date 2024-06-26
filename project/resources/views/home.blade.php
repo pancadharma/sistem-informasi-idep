@@ -2,9 +2,9 @@
 
 {{-- Customize layout sections --}}
 
-@section('subtitle', 'Dashboard')
-@section('content_header_title', 'Dashboard')
-@section('content_header_subtitle', '')
+@section('subtitle', 'Dashboard') {{-- Ganti Site Title Pada Tab Browser --}}
+@section('content_header_title', 'Dashboard') {{-- Ditampilkan pada halaman sesuai Menu yang dipilih --}}
+@section('content_header_subtitle', 'Welcome ') {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 {{-- Content body: main page content --}}
 

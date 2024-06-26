@@ -19,7 +19,8 @@ Route::get('/profile', function(){
 });
 
 Route::get('/home', function(){
-    return view('home');
+    $name = "I Gede Adi Surya Eka Pramana Putra";
+    return view('home',[$name]);
 });
 
 

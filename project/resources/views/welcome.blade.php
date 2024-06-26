@@ -9,7 +9,7 @@
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
     {{-- Title --}}
-    <title> {{ __('adminlte::auth.title') }} </title>
+    <title> @lang('auth.title') </title>
     {{-- Base Stylesheets --}}
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
