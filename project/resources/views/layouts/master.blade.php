@@ -25,7 +25,7 @@
     @endif
 
     {{-- Extra Configured Plugins Stylesheets --}}
-    @include('adminlte::plugins', ['type' => 'css'])
+    @include('layouts.plugins', ['type' => 'css'])
 
     {{-- Livewire Styles --}}
     @if(config('adminlte.livewire'))
@@ -65,35 +65,32 @@
 </head>
 
 <body class="@yield('classes_body')" @yield('body_data')>
+{{-- Body Content --}}
+@yield('body')
+{{-- Base Scripts --}}
+@if(!config('adminlte.enabled_laravel_mix'))
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+@else
+    <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
+@endif
 
-    {{-- Body Content --}}
-    @yield('body')
+{{-- Extra Configured Plugins Scripts --}}
+@include('layouts.plugins', ['type' => 'js'])
 
-    {{-- Base Scripts --}}
-    @if(!config('adminlte.enabled_laravel_mix'))
-        <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-        <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
-        <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+{{-- Livewire Script --}}
+@if(config('adminlte.livewire'))
+    @if(intval(app()->version()) >= 7)
+        @livewireScripts
     @else
-        <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
+        <livewire:scripts />
     @endif
+@endif
 
-    {{-- Extra Configured Plugins Scripts --}}
-    @include('layouts.plugins', ['type' => 'js'])
-
-    {{-- Livewire Script --}}
-    @if(config('adminlte.livewire'))
-        @if(intval(app()->version()) >= 7)
-            @livewireScripts
-        @else
-            <livewire:scripts />
-        @endif
-    @endif
-
-    {{-- Custom Scripts --}}
-    @yield('adminlte_js')
+{{-- Custom Scripts --}}
+@yield('adminlte_js')
 
 </body>
-
 </html>

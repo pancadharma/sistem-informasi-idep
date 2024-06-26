@@ -41,7 +41,7 @@
                 @endif
 
                 {{-- Logo Label --}}
-                {!! config('adminlte.logo', '<b>IDEP</b>SERVER') !!}
+                {!! config('adminlte.logo', '<b>IDEP </b>Foundation') !!}
 
             </a>
         </div>

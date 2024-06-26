@@ -37,6 +37,6 @@
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
 </head>
-@extends('adminlte::auth.login')
+@extends('auth.login')
 
 </html>

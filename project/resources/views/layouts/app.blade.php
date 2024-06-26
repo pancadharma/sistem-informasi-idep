@@ -16,6 +16,15 @@
         </h1>
     @endif
 @stop
+{{-- Add Right Breadcumb Max 2 Item With Static Home Breadchumb --}}
+@section('breadcumb')
+    @hasSection ('sub_breadcumb')
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active">@yield('sub_breadcumb')</li>
+    </ol>
+    @endif
+@stop
 
 {{-- Rename section content to content_body --}}
 
@@ -30,11 +39,11 @@
         Version: {{ config('app.version', '1.0.0') }}
     </div>
 
-    <strong>
+    <strong>Copyright &copy; 2014 - {{ date('Y') }}
         <a href="{{ config('app.company_url', '/') }}">
-            {{ config('app.company_name', 'IDEP SERVER') }}
+            {{ config('app.company_name', 'IDEP Foundation') }}
         </a>
-    </strong>
+    </strong>. All rights reserved.
 @stop
 
 {{-- Add common Javascript/Jquery code --}}

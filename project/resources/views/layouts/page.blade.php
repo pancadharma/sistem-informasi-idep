@@ -14,7 +14,6 @@
 
 @section('body')
     <div class="wrapper">
-
         {{-- Preloader Animation (fullscreen mode) --}}
         @if($preloaderHelper->isPreloaderEnabled())
             @include('layouts.partials.common.preloader')
@@ -48,7 +47,6 @@
         @if(config('adminlte.right_sidebar'))
             @include('layouts.partials.sidebar.right-sidebar')
         @endif
-
     </div>
 @stop
 

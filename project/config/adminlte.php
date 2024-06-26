@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'IDEP SERVER',
+    'title' => 'IDEP Foundation',
     'title_prefix' => '',
     'title_postfix' => '',
 
