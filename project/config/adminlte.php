@@ -295,10 +295,23 @@ return [
 
     'menu' => [
         // Navbar items:
+        // [
+        //     'text' => 'Dashboard',
+        //     'type' => 'user-panel',
+        //     'url' => 'home',
+        //     'class' => 'img-circle elevation-2',
+        //     // 'active' => ['home', 'content', 'content*', 'regex:@^content/[0-9]+$@']
+        // ],
+        [
+            'text' => 'User Profile',
+            'url' => 'user/profile',
+            'icon' => 'fas fa-fw fa-user',
+            'icon_color' => 'primary',
+        ],
         [
             'type' => 'navbar-search',
             'text' => 'search',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
         [
             'type' => 'fullscreen-widget',
@@ -311,21 +324,33 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Dashboard',
+            'url' => 'home',
+            'icon' => 'fas fa-tachometer-alt',
+            'active' => ['home', 'content', 'content*', 'regex:@^content/[0-9]+$@']
         ],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
+            'header' => 'Master Data',
+            // 'classes' => 'text-yellow text-bold text-center',
+        ],
+        // [
+        //     'text' => 'blog',
+        //     'url' => 'admin/blog',
+        //     // 'can' => 'manage-blog',
+        // ],
+        [
+            'text' => 'Setup',
+            'url' => '#',
+            'icon' => 'fas fa-cog',
+            // 'label' => 4,
             'label_color' => 'success',
         ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
             'url' => 'admin/settings',
+            // 'route' => 'home',
+            // 'route' => ['admin.profile', ['userID' => '673']],
             'icon' => 'fas fa-fw fa-user',
         ],
         [

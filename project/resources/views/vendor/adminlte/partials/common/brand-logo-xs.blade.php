@@ -23,7 +23,7 @@
 
     {{-- Brand text --}}
     <span class="brand-text font-weight-light {{ config('adminlte.classes_brand_text') }}">
-        {!! config('adminlte.logo', '<b>IDEP</b>SERVER') !!}
+        {!! config('adminlte.logo', '<b>IDEP</b> SERVER') !!}
     </span>
 
 </a>
