@@ -17,13 +17,13 @@
 
     {{-- Small brand logo --}}
     <img src="{{ asset(config('adminlte.logo_img', 'vendor/adminlte/dist/img/idep.png')) }}"
-         alt="{{ config('adminlte.logo_img_alt', 'AdminLTE') }}"
+         alt="{{ config('adminlte.logo_img_alt', 'IDEP SERVER') }}"
          class="{{ config('adminlte.logo_img_class', 'brand-image img-circle elevation-3') }}"
          style="opacity:.8">
 
     {{-- Brand text --}}
     <span class="brand-text font-weight-light {{ config('adminlte.classes_brand_text') }}">
-        {!! config('adminlte.logo', '<b>Admin</b>LTE') !!}
+        {!! config('adminlte.logo', '<b>IDEP</b>SERVER') !!}
     </span>
 
 </a>

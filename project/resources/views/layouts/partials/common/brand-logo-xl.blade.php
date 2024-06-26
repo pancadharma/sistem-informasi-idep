@@ -14,15 +14,12 @@
     @else
         class="brand-link logo-switch {{ config('adminlte.classes_brand') }}"
     @endif>
-
     {{-- Small brand logo --}}
     <img src="{{ asset(config('adminlte.logo_img', 'vendor/adminlte/dist/img/idep.png')) }}"
          alt="{{ config('adminlte.logo_img_alt', 'IDEP SERVER') }}"
          class="{{ config('adminlte.logo_img_class', 'brand-image-xl') }} logo-xs">
-
     {{-- Large brand logo --}}
     <img src="{{ asset(config('adminlte.logo_img_xl')) }}"
          alt="{{ config('adminlte.logo_img_alt', 'IDEP SERVER') }}"
          class="{{ config('adminlte.logo_img_xl_class', 'brand-image-xs') }} logo-xl">
-
 </a>

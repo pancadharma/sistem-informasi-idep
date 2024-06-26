@@ -1,28 +1,26 @@
-@extends('layouts.admin')
-@section('content')
-<div class="content">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    Dashboard
-                </div>
+@extends('layouts.app')
 
-                <div class="card-body">
-                    @if(session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+{{-- Customize layout sections --}}
 
-                    You are logged in!
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-@section('scripts')
-@parent
+@section('subtitle', 'Dashboard')
+@section('content_header_title', 'Dashboard')
+@section('content_header_subtitle', '')
 
-@endsection
+{{-- Content body: main page content --}}
+
+@section('content_body')
+    <p>Welcome to this beautiful admin panel.</p>
+@stop
+
+{{-- Push extra CSS --}}
+
+@push('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@endpush
+
+{{-- Push extra scripts --}}
+
+@push('js')
+    {{-- <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script> --}}
+@endpush
