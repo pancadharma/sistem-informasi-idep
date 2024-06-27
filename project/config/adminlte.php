@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>IDEP</b>SERVER',
+    'logo' => '<b>IDEP </b>Foundation',
     'logo_img' => 'vendor/adminlte/dist/img/idep.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
