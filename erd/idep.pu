@@ -1,0 +1,416 @@
+@startuml erd
+
+hide circle
+skinparam linetype ortho
+
+entity "mdusun" as mdusun {
+    *id : int <<auto>>
+    --
+    kode : varchar(15)
+    nama : varchar(200)
+    aktif : bit
+    id_desa : int <<fk>>
+}
+entity "mdesa" as mdesa {
+    *id : int <<auto>>
+    --
+    kode : varchar(15)
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mkecamatan" as mkecamatan {
+    *id : int <<auto>>
+    --
+    kode : varchar(15)
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mkabupaten" as mkabupaten {
+    *id : int <<auto>>
+    --
+    kode : varchar(15)
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mprovinsi" as mprovinsi {
+    *id : int <<auto>>
+    --
+    kode : varchar(15)
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mjabatan" as mjabatan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mjenisbantuan" as mjenisbantuan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mkaitanidep" as mkaitanidep {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mkaitansdg" as mkaitansdg {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mkelompokrentan" as mkelompokrentan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mrentan" as mrentan{
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mpartner" as mpartner {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    keterangan : varchar(200)
+    aktif : bit
+}
+
+entity "msatuan" as msatuan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "mpendonor" as mpendonor{
+    *id : int <<auto>>
+    --
+    id_pendonorkategori : int <<FK>>
+    nama : varchar(200)
+    email : varchar(200) <null>
+    phone : varchar(20) <null>
+    aktif : bit
+}
+
+entity "mpendonorkategori" as mpendonorkategori{
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
+entity "muser" as muser {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    email : varchar(200)
+    username : varchar(100)
+    password : varchar(100)
+    email_verified_at : datetime
+    remember_token : varchar(200)
+    created_at : datetime
+    update_at : datetime
+    aktif : bit
+}
+
+entity "mrole" as mrole {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    created_at : datetime
+    update_at : datetime
+    aktif : bit
+}
+
+entity "muserrole" as muserrole {
+    *id : int <<auto>>
+    --
+    id_user : int <<fk>>
+    id_role : int <<fk>>
+    created_at : datetime
+    update_at : datetime
+}
+
+entity "trprogram" as trprogram {
+    *id : int <<auto>>
+    --
+    nama : varchar (200)
+    kode : varchar (50)
+    tanggalmulai : datetime
+    tanggalselesai : datetime
+    totalnilai : decimal
+    ekspektasipenerimamanfaat : int
+    ekspektasipenerimamanfaatwoman : int
+    ekspektasipenerimamanfaatman : int
+    ekspektasipenerimamanfaatgirl : int
+    ekspektasipenerimamanfaatboy : int
+    ekspektasipenerimamanfaattidaklangsung : varchar (100)
+    deskripsiprojek : varchar (500)
+    analisamasalah : varchar (500)
+    id_user : int <<fk>>
+    submit: bit
+    created_at : datetime
+    update_at : datetime
+}
+
+entity "trprogramkaitanidep" as trprogramkaitanidep {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_kaitanidep: int <<fk>>
+}
+
+entity "trprogramkaitansdg" as trprogramkaitansdg {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_kaitansdg: int <<fk>>
+}
+
+entity "trprogramkelompokrentan" as trprogramkelompokrentan {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_kelompokrentan: int <<fk>>
+}
+
+entity "trprogrampendonor" as trprogrampendonor {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_pendonor : int <<fk>>
+}
+
+entity "trprogrampartner" as trprogrampartner {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_partner : int <<fk>>
+}
+
+entity "trprogramuser" as trprogramuser {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_user : int <<fk>>
+    id_jabatan : int <<fk>>
+}
+
+entity "trprogramgoal" as trprogramgoal {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    deskrispsi : varchar(500)
+    indikator : varchar(500)
+    target : varchar(500)
+}
+
+entity "trprogramobjektif" as trprogramobjektif {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    deskrispsi : varchar(500)
+    indikator : varchar(500)
+    target : varchar(500)
+}
+
+entity "trprogramoutcome" as trprogramoutcome {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    deskrispsi : varchar(500)
+    indikator : varchar(500)
+    target : varchar(500)
+}
+
+entity "trprogramlokasi" as trprogramlokasi {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    id_provinsi : int <<fk>>
+}
+
+entity "trprogramreportschedule" as trprogramreportschedule {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    tanggal : datetime
+    keterangan : varchar (500)
+}
+
+entity "trprogramdokumen" as trprogramdokumen {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    filepath : varchar (200)
+    nama : varchar (200)
+    keterangan : varchar (200)
+}
+
+entity "trkegiatan" as trkegiatan {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    kode: varchar (50)
+    nama : varchar (500)
+    tanggalmulai : datetime
+    tanggalselesai : datetime
+    id_dusun : int <<fk>>
+    long : decimal (9,6)
+    lat : decimal (9,6)
+    tempat : varchar (200)
+    deskripsi : varchar (500) null
+    tujuan : varchar (500) null
+    yangterlibat : varchar (500) null
+    pelatih: varchar (500) null
+    informasilain : varchar (500) null
+    luaslahan : varchar (50) null
+    id_jenisbantuan : int <<fk>> null
+    id_satuan : int <<fk>> null
+    hasil : varchar (500) null
+    tindaklanjut : varchar (500) null
+    tantangan : varchar (500) null
+    id_user : int <<fk>>
+    submit : bit
+    created_at : datetime
+    update_at : datetime
+}
+
+entity "trkegiatanpeserta" as trkegiatanpeserta {
+    *id : int <<auto>>
+    --
+    id_kegiatan: int <<fk>>
+    noidentitas: varchar (50)
+    nama: varchar (300)
+    jeniskelamin: varchar (50)
+    tanggalahir: datetime
+    disabilitas: bit
+    hamil: bit
+    statuskawin: varchar (50)
+    nokartukeluarga: varchar (50)
+    jenispeserta: varchar (50) 
+}
+
+entity "trkegiatandokumen" as trkegiatandokumen {
+    *id : int <<auto>>
+    --
+    id_kegiatan : int <<fk>>
+    filepath : varchar (200)
+    nama : varchar (200)
+    keterangan : varchar (200)
+}
+
+entity "trevaluasi" as trevaluasi {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    nama : varchar (500)
+    tanggalmulai : datetime
+    tanggalselesai : datetime
+    id_dusun : int <<fk>>
+    tempat : varchar (200)
+    long : decimal (9,6)
+    lat : decimal (9,6)
+    id_partner : int <<fk>>
+    masyarakatterlibataktif : varchar (50)
+    managementprogramlancar : varchar (50)
+    managementprogramlancar_ket : varchar (500)
+    kapasitasstaffmumpuni : varchar (50)
+    kapasitasstaffmumpuni_ket : varchar (500)
+    sumberdayamemadai : varchar (50)
+    sumberdayamemadai_ket : varchar (500)
+    selarasdenganpemerintah : varchar (50)
+    pelibatankelompokkomunitas : varchar (50)
+    peningkatankapasitasdandampak_masyarakat : varchar (500)
+    peningkatankapasitasdandampak_staff : varchar (500)
+    memenuhikebutuhanpenyandangcacat : varchar (50)
+    memenuhikebutuhanpenyandangcacat_ket : varchar (500)
+    tujuanprogramtercapai : varchar (50)
+    tujuanprogramtercapai_ket : varchar (500)
+    targetpenerimamanfaattercapai : varchar (50)
+    sesuaidenganrencanakerja : varchar (50)
+    adminterlibat : varchar (50)
+    dukunganmanagement_positif : varchar (500)
+    dukunganmanagement_negatif : varchar (500)
+    keuangan_positif : varchar (500)
+    keuangan_negatif : varchar (500)
+    waktu_positif : varchar (500)
+    waktu_negatif : varchar (500)
+    sdm_positif : varchar (500)
+    sdm_negatif : varchar (500)
+    mediapendukung_positif : varchar (500)
+    mediapendukung_negatif : varchar (500)
+    memilikirencanatindaklanjut : varchar (50)
+    dukunganpihaklain : varchar (50)
+    dukunganpihaklain_ket : varchar (500)
+    id_user : int <<fk>>
+    submit : bit
+    created_at : datetime
+    update_at : datetime
+}
+
+entity "trevaluasidokumen" as trevaluasidokumen {
+    *id : int <<auto>>
+    --
+    id_evaluasi : int <<fk>>
+    filepath : varchar (200)
+    nama : varchar (200)
+    keterangan : varchar (200)
+}
+
+mdusun }o--|| mdesa
+muserrole }o--|| muser
+muserrole }o--|| mrole
+mpendonor }o--|| mpendonorkategori
+trprogram }o--|| mkelompokrentan
+trprogram }o--|| mkaitanidep
+trprogram }o--|| mkaitansdg
+trprogram }o--|| muser
+trprogrampendonor }o--|| trprogram
+trprogrampendonor }o--|| mpendonor
+trprogrampartner }o--|| trprogram
+trprogrampartner }o--|| mpartner
+trprogramuser }o--|| trprogram
+trprogramuser }o--|| muser
+trprogramuser }o--|| mjabatan
+trprogramgoal }o--|| trprogram
+trprogramobjektif }o--|| trprogram
+trprogramoutcome }o--|| trprogram
+trprogramlokasi }o--|| trprogram
+trprogramlokasi }o--|| mprovinsi
+trprogramreportschedule }o--|| trprogram
+trprogramdokumen }o--|| trprogram
+trkegiatan }o--|| trprogram
+trkegiatanpeserta }o--|| trkegiatan
+trkegiatandokumen }o--|| trkegiatan
+trkegiatan }o--|| mdusun
+trevaluasi }o--|| mdusun
+trevaluasi }o--|| mparter
+trevaluasi }o--|| trprogram
+trevaluasi }o--|| muser
+trevaluasidokumen }o--|| trevaluasi
+trprogramkaitanidep }o--|| trprogram
+trprogramkaitanidep }o--|| mkaitanidep
+trprogramkaitansdg }o--|| trprogram
+trprogramkaitansdg }o--|| mkaitansdg
+trprogramkelompokrentan }o--|| trprogram
+trprogramkelompokrentan }o--|| mkelompokrentan
+@enduml
