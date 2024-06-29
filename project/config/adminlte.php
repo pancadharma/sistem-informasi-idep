@@ -267,64 +267,95 @@ return [
             ],
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'level_four',
-            'icon' => 'fas fa-fw fa-share',
+            'text' => 'setup',
+            'icon' => 'far fa-image',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
+                    'text' => 'kelompok_rentan',
                     'url' => '#',
                     'icon' => '',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
+                    'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'level_one',
+                    'text' => 'pendonor',
                     'url' => '#',
+                    'icon' => '',
+                    'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'partner',
+                    'url' => '#',
+                    'icon' => '',
+                    'active' => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'jenis_bantuan',
+                    'url' => '#',
+                    'icon' => '',
+                    'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'satuan',
+                    'url' => '#',
+                    'icon' => '',
+                    'active' => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'sdg',
+                    'url' => '#',
+                    'icon' => '',
+                    'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'idep',
+                    'url' => '#',
+                    'icon' => '',
+                    'active' => ['idep', 'idep*', 'regex:@^idep/[0-9]+$@'],
                 ],
             ],
         ],
-        ['header' => 'labels'],
         [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
+            'text' => 'transaksi',
+            'icon' => 'fas fa-file-invoice',
+            'submenu' => [
+                [
+                    
+                ],
+            ],
         ],
         [
-            'text' => 'warning',
+            'text' => 'evaluasi',
+            'icon' => 'fas fa-tachometer-alt',
+            // 'url' => '#',
+            'active' => ['evaluasi', 'evaluasi*', 'regex:@^evaluasi/[0-9]+$@'],
+            'submenu' => [
+                [
+                    'url' => '#',
+                    'text' => 'Hehe',
+                ],
+                [
+                    'url' => '#',
+                    'text' => 'Hehe',
+                ],
+            ],
+        ],
+        [
+            'text' => 'log',
+            'url' => '#',
+            'icon' => 'fas fa-file-contract',
             'icon_color' => 'yellow',
-            'url' => '#',
+            'active' => ['log', 'log*', 'log:@^evaluasi/[0-9]+$@'],
         ],
         [
-            'text' => 'information',
-            'icon_color' => 'cyan',
+            'header' => 'laporan',
+            'classes' => 'text-bold text-uppercase',
+        ],
+        [
+            'text' => 'laporan',
             'url' => '#',
+            'icon' => 'fas fa-file',
+            'icon_color' => 'cyan',
+            'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
         ],
     ],
 

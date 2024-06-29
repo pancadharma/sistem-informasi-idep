@@ -42,4 +42,5 @@ return [
     'log' => 'Log',
     'laporan' => 'Laporan',
     'cari' => 'Pencarian',
+    'satuan' => 'Satuan',
 ];
