@@ -23,9 +23,9 @@
     @yield('styles')
 </head>
 
-<body class="sidebar-mini layout-fixed" style="height: auto;">
+<body class="sidebar-mini layout-fixed layout-footer-fixed" style="height: auto;">
     <div class="wrapper">
-        <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+        <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom ">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">

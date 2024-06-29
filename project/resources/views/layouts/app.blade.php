@@ -10,9 +10,11 @@
     @hasSection('content_header_title')
         <h1 class="text-muted">
             @yield('content_header_title')
-            @hasSection('content_header_subtitle')
+            {{-- 
+                @hasSection('content_header_subtitle')
                 <small class="text-dark"><i class="fas fa-xs fa-angle-right text-muted"></i>@yield('content_header_subtitle')</small>
-            @endif
+            @endif 
+            --}}
         </h1>
     @endif
 @stop

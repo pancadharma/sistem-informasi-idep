@@ -1,10 +1,6 @@
-<nav class="main-header navbar
-    {{ config('adminlte.classes_topnav_nav', 'navbar-expand-md') }}
-    {{ config('adminlte.classes_topnav', 'navbar-white navbar-light') }}">
-
+<nav class="main-header navbar {{ config('adminlte.classes_topnav_nav', 'navbar-expand-md') }} {{ config('adminlte.classes_topnav', 'navbar-white navbar-light') }}">
     <div class="{{ config('adminlte.classes_topnav_container', 'container') }}">
-
-        {{-- Navbar brand logo --}}
+    {{-- Navbar brand logo --}}
         @if(config('adminlte.logo_img_xl'))
             @include('layouts.partials.common.brand-logo-xl')
         @else
@@ -12,8 +8,8 @@
         @endif
 
         {{-- Navbar toggler button --}}
-        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" 
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 

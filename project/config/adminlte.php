@@ -1,5 +1,6 @@
 <?php
 
+
 return [
 
     /*
@@ -15,8 +16,8 @@ return [
     */
 
     'title' => 'IDEP Foundation',
-    'title_prefix' => '',
-    'title_postfix' => '',
+    'title_prefix' => '- ',
+    'title_postfix' => ' -',
 
     /*
     |--------------------------------------------------------------------------
@@ -32,57 +33,15 @@ return [
 
     'use_ico_only' => false,
     'use_full_favicon' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Google Fonts
-    |--------------------------------------------------------------------------
-    |
-    | Here you can allow or not the use of external google fonts. Disabling the
-    | google fonts may be useful if your admin panel internet access is
-    | restricted somehow.
-    |
-    | For detailed instructions you can look the google fonts section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'google_fonts' => [
-        'allowed' => true,
+        'allowed' => false,
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin Panel Logo
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the logo of your admin panel.
-    |
-    | For detailed instructions you can look the logo section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'logo' => '<b>IDEP </b>Foundation',
     'logo_img' => 'vendor/adminlte/dist/img/idep.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'Admin Logo',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Logo
-    |--------------------------------------------------------------------------
-    |
-    | Here you can setup an alternative logo to use on your login and register
-    | screens. When disabled, the admin panel logo will be used instead.
-    |
-    | For detailed instructions you can look the auth logo section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'auth_logo' => [
         'enabled' => true,
         'img' => [
@@ -93,127 +52,46 @@ return [
             'height' => 50,
         ],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Preloader Animation
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the preloader animation configuration. Currently, two
-    | modes are supported: 'fullscreen' for a fullscreen preloader animation
-    | and 'cwrapper' to attach the preloader animation into the content-wrapper
-    | element and avoid overlapping it with the sidebars and the top navbar.
-    |
-    | For detailed instructions you can look the preloader section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'preloader' => [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/idep.png',
-            'alt' => 'AdminLTE Preloader Image',
+            'alt' => 'IDEP Foundation Preloader Image',
             'effect' => 'animation__shake',
             'width' => 120,
             'height' => 120,
         ],
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | User Menu
-    |--------------------------------------------------------------------------
-    |
-    | Here you can activate and change the user menu.
-    |
-    | For detailed instructions you can look the user menu section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'usermenu_enabled' => true,
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => true,
     'usermenu_desc' => true,
     'usermenu_profile_url' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Layout
-    |--------------------------------------------------------------------------
-    |
-    | Here we change the layout of your admin panel.
-    |
-    | For detailed instructions you can look the layout section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
     'layout_topnav' => null,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Views Classes
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the look and behavior of the authentication views.
-    |
-    | For detailed instructions you can look the auth classes section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
     'classes_auth_card' => 'card-outline card-primary',
     'classes_auth_header' => '',
     'classes_auth_body' => '',
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
     'classes_auth_btn' => 'btn-flat btn-primary',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin Panel Classes
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the look and behavior of the admin panel.
-    |
-    | For detailed instructions you can look the admin panel classes here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
-    'classes_body' => '',
+    'classes_body' => 'layout-footer-fixed',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
+    'classes_sidebar_nav' => 'nav-child-indent nav-collapse-hide-child',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Sidebar
-    |--------------------------------------------------------------------------
-    |
-    | Here we can modify the sidebar of the admin panel.
-    |
-    | For detailed instructions you can look the sidebar section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
     'sidebar_mini' => 'lg',
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
@@ -223,19 +101,6 @@ return [
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
     'sidebar_nav_animation_speed' => 300,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Control Sidebar (Right Sidebar)
-    |--------------------------------------------------------------------------
-    |
-    | Here we can modify the right sidebar aka control sidebar of the admin panel.
-    |
-    | For detailed instructions you can look the right sidebar section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
-    |
-    */
-
     'right_sidebar' => true,
     'right_sidebar_icon' => 'fas fa-cogs',
     'right_sidebar_theme' => 'dark',
@@ -243,19 +108,11 @@ return [
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
     'right_sidebar_scrollbar_auto_hide' => 'l',
-
     /*
     |--------------------------------------------------------------------------
     | URLs
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the url settings of the admin panel.
-    |
-    | For detailed instructions you can look the urls section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
     */
-
     'use_route_url' => false,
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
@@ -265,18 +122,6 @@ return [
     'password_email_url' => 'password/email',
     'profile_url' => true,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Laravel Mix
-    |--------------------------------------------------------------------------
-    |
-    | Here we can enable the Laravel Mix option for the admin panel.
-    |
-    | For detailed instructions you can look the laravel mix section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Other-Configuration
-    |
-    */
-
     'enabled_laravel_mix' => false,
     'laravel_mix_css_path' => 'css/app.css',
     'laravel_mix_js_path' => 'js/app.js',
@@ -285,10 +130,6 @@ return [
     |--------------------------------------------------------------------------
     | Menu Items
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the sidebar/top navigation of the admin panel.
-    |
-    | For detailed instructions you can look here:
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Menu-Configuration
     |
     */
@@ -327,28 +168,75 @@ return [
             'text' => 'Dashboard',
             'url' => 'home',
             'icon' => 'fas fa-tachometer-alt',
-            'active' => ['home', 'content', 'content*', 'regex:@^content/[0-9]+$@']
+            'active' => ['home', 'dashboard', 'home*', 'regex:@^home/[0-9]+$@']
         ],
         [
             'header' => 'Master Data',
-            // 'classes' => 'text-yellow text-bold text-center',
+            'classes' => 'text-bold text-uppercase',
         ],
         // [
         //     'text' => 'blog',
-        //     'url' => 'admin/blog',
-        //     // 'can' => 'manage-blog',
+        //     'url' => 'blog',
+        //     'can' => 'manage-blog',
         // ],
         [
-            'text' => 'Setup',
-            'url' => '#',
-            'icon' => 'fas fa-cog',
-            // 'label' => 4,
+            'text'        => 'Setup',
+            'url'         => '#',
+            'icon'        => 'fas fa-cog',
             'label_color' => 'success',
+            'classes'     => 'text-bold text-uppercase',
+            // 'label' => 4,
         ],
-        ['header' => 'account_settings'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
+            'text' => 'Regional',
+            'icon' => 'fas fa-copy',
+            'submenu'   =>  [
+                [
+                    'text' => 'provinsi',
+                    'active' => ['provinsi', 'regex:@^provinsi/[0-9]+$@'],
+                    'url'  => '#',
+                    // 'classes' => 'text-danger text-uppercase',
+                    // 'route' => '',
+                ],
+                [
+                    'text' => 'kabupaten',
+                    'active' => ['kabupaten', 'regex:@^kabupaten/[0-9]+$@'],
+                    'url'  => '#',
+                    'icon'  => 'fas fa-table',
+                    // 'classes' => 'text-danger text-uppercase',
+                    // 'route' => '',
+                ],
+                [
+                    'text' => 'kecamatan',
+                    'active' => ['kecamatan', 'regex:@^kecamatan/[0-9]+$@'],
+                    'url'  => '#',
+                    // 'classes' => 'text-danger text-uppercase',
+                    // 'route' => '',
+                ],
+                [
+                    'text' => 'kelurahan',
+                    'active' => ['kelurahan', 'regex:@^kelurahan/[0-9]+$@'],
+                    'url'  => '#',
+                    // 'classes' => 'text-danger text-uppercase',
+                    // 'route' => '',
+                ],
+                [
+                    'text' => 'dusun',
+                    'active' => ['dusun', 'regex:@^dusun/[0-9]+$@'],
+                    'url'  => '#',
+                    // 'classes' => 'text-danger text-uppercase',
+                    // 'route' => '',
+                ],
+            ],
+        ],
+        [
+            'header'    => 'user_management',
+            'classes'   => 'text-bold text-uppercase',
+            'icon'   => 'far fa-image',
+        ],
+        [
+            'text'  => 'role',
+            'url'   => 'role',
             // 'route' => 'home',
             // 'route' => ['admin.profile', ['userID' => '673']],
             'icon' => 'fas fa-fw fa-user',
@@ -359,7 +247,7 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
-            'text' => 'multilevel',
+            'text' => 'level_four',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
                 [
