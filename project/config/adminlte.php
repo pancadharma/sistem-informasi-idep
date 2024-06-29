@@ -41,7 +41,7 @@ return [
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'IDEP Foundation Admin Logo',
     'auth_logo' => [
         'enabled' => true,
         'img' => [
@@ -88,7 +88,7 @@ return [
     'classes_content_header' => '',
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => 'nav-child-indent nav-collapse-hide-child',
+    'classes_sidebar_nav' => 'nav-child-indent',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
@@ -99,7 +99,7 @@ return [
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => true,
+    'sidebar_nav_accordion' => false,
     'sidebar_nav_animation_speed' => 300,
     'right_sidebar' => true,
     'right_sidebar_icon' => 'fas fa-cogs',
@@ -190,11 +190,14 @@ return [
         [
             'text' => 'Regional',
             'icon' => 'fas fa-copy',
+            'classes'   => 'text-bold',
             'submenu'   =>  [
                 [
                     'text' => 'provinsi',
                     'active' => ['provinsi', 'regex:@^provinsi/[0-9]+$@'],
                     'url'  => '#',
+                    'icon'  => 'fas fa-paste',
+
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
@@ -210,6 +213,7 @@ return [
                     'text' => 'kecamatan',
                     'active' => ['kecamatan', 'regex:@^kecamatan/[0-9]+$@'],
                     'url'  => '#',
+                    'icon'  => 'far fa-plus-square',
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
@@ -217,6 +221,7 @@ return [
                     'text' => 'kelurahan',
                     'active' => ['kelurahan', 'regex:@^kelurahan/[0-9]+$@'],
                     'url'  => '#',
+                    'icon'  => 'fas fa-map',
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
@@ -224,22 +229,42 @@ return [
                     'text' => 'dusun',
                     'active' => ['dusun', 'regex:@^dusun/[0-9]+$@'],
                     'url'  => '#',
+                    'icon'  => 'fas fa-tag',
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
             ],
         ],
         [
-            'header'    => 'user_management',
-            'classes'   => 'text-bold text-uppercase',
+            'text'    => 'user_management',
+            'classes'   => 'text-bold',
             'icon'   => 'far fa-image',
-        ],
-        [
-            'text'  => 'role',
-            'url'   => 'role',
-            // 'route' => 'home',
-            // 'route' => ['admin.profile', ['userID' => '673']],
-            'icon' => 'fas fa-fw fa-user',
+            'submenu' => [
+                [
+                    'text'  => 'role',
+                    'url'   => 'role',
+                    // 'route' => 'home',
+                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'icon' => 'far fa-check-circle',
+                    'active' => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
+                ],
+                [
+                    'text'  => 'roles',
+                    'url'   => 'jabatan',
+                    // 'can' => 'view_jabatan',
+                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'icon' => 'fas fa-user-tie',
+                    'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
+                ],
+                [
+                    'text'  => 'user',
+                    'url'   => 'users',
+                    // 'can' => 'view_jabatan',
+                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'icon' => 'fas fa-users',
+                    'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
+                ],
+            ],
         ],
         [
             'text' => 'change_password',
@@ -257,6 +282,7 @@ return [
                 [
                     'text' => 'level_one',
                     'url' => '#',
+                    'icon' => '',
                     'submenu' => [
                         [
                             'text' => 'level_two',
@@ -343,17 +369,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'location' => '/vendor/datatables/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'location' => '/vendor/datatables/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'location' => '/vendor/datatables/css/dataTables.bootstrap4.min.css',
                 ],
             ],
         ],
@@ -363,12 +389,13 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+                    'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    // 'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    'location' => '/vendor/select2/css/select2.css',
                 ],
             ],
         ],
@@ -378,7 +405,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js',
+                    'location' => '/vendor/chart.js/Chart.bundle.min.js',
                 ],
             ],
         ],
@@ -386,9 +413,16 @@ return [
             'active' => true,
             'files' => [
                 [
+                    'type' => 'css',
+                    'asset' => true,
+                    // 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.min.css',
+                    'location' => '/vendor/sweetalert2/sweetalert2.min.css',
+                ],
+                [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    // 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js',
+                    'location' => '/vendor/sweetalert2/sweetalert2.all.min.js',
                 ],
             ],
         ],

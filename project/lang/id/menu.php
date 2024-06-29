@@ -25,7 +25,7 @@ return [
     'kecamatan' => 'Kecamatan',
     'kelurahan' => 'Kelurahan',
     'dusun' => 'Dusun',
-    'user_management' => 'Manajemen Pengguna',
+    'user_management' => 'Manajemen User',
     'role' => 'Role',
     'roles' => 'Jabatan',
     'user' => 'Pengguna',
