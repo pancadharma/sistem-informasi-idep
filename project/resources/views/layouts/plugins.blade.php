@@ -15,7 +15,9 @@
         @endphp
         {{-- Check the requested file type --}}
         @if($file['type'] == $type && $type == 'css')<link rel="stylesheet" href="{{ $file['location'] }}">
-            @elseif($file['type'] == $type && $type == 'js')<script src="{{ $file['location'] }}" @if(! empty($file['defer'])) defer @endif></script>
+        @elseif($file['type'] == $type && $type == 'js')<script src="{{ $file['location'] }}" 
+        @if(! empty($file['defer'])) defer @endif>
+            </script>
             @endif
         @endforeach
     @endif

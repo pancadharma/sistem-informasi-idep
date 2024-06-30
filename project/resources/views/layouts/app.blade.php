@@ -37,14 +37,9 @@
 {{-- Create a common footer --}}
 
 @section('footer')
-    <div class="float-right">
-        Version: {{ config('app.version', '1.0.0') }}
-    </div>
-
+    <div class="float-right">Version: {{ config('app.version', '1.0.0') }}</div>
     <strong>Copyright &copy; 2014 - {{ date('Y') }}
-        <a href="{{ config('app.company_url', '/') }}">
-            {{ config('app.company_name', 'IDEP Foundation') }}
-        </a>
+        <a href="{{ config('app.company_url', '/') }}">{{ config('app.company_name', 'IDEP Foundation') }}</a>
     </strong>. All rights reserved.
 @stop
 
@@ -52,11 +47,9 @@
 
 @push('js')
 <script>
-
     $(document).ready(function() {
         // Add your common script logic here...
     });
-
 </script>
 @endpush
 
@@ -64,16 +57,6 @@
 
 @push('css')
 <style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-    /*
-    .card-header {
-        border-bottom: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-    */
-
+        
 </style>
 @endpush

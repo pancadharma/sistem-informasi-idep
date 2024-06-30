@@ -22,5 +22,8 @@
 {{-- Push extra scripts --}}
 
 @push('js')
-    {{-- <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script> --}}
+    {{-- call custom plugins js so not all pages load the JS --}}
+    @section('plugins.Datatables', true) 
+    @section('plugins.Select2', true)
+    @section('plugins.DateRangePicker', true)
 @endpush

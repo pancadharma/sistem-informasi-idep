@@ -22,8 +22,6 @@ Route::get('/', function () {
 
 
 Route::get('/login', function () {
-    // This is a placeholder function. You can replace it with your actual login logic.
-    // For example, you might return a view for the login form.
     return view('auth.login');
 })->name('login');
 

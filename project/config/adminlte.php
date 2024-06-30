@@ -46,7 +46,7 @@ return [
         'enabled' => true,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/idep.png',
-            'alt' => 'Auth Logo',
+            'alt' => 'IDEP Foundation Logo',
             'class' => '',
             'width' => 50,
             'height' => 50,
@@ -155,6 +155,15 @@ return [
             'topnav_right' => false,
         ],
         [
+            'type' => 'darkmode-widget',
+            'icon' => 'fas fa-moon',
+            'icon_enabled' => 'fas fa-moon',
+            'icon_disabled' => 'far fa-moon',
+            'color_enabled' => 'primary',
+            'color_disabled' => 'info',
+            'topnav_right' => true,
+        ],
+        [
             'type' => 'fullscreen-widget',
             'topnav_right' => false,
         ],
@@ -172,7 +181,7 @@ return [
         ],
         [
             'header' => 'Master Data',
-            'classes' => 'text-bold text-uppercase',
+            'classes' => 'text-bold text-uppercase nav-header-pad-as-first',
         ],
         // [
         //     'text' => 'blog',
@@ -184,7 +193,7 @@ return [
             'url'         => '#',
             'icon'        => 'fas fa-cog',
             'label_color' => 'success',
-            'classes'     => 'text-bold text-uppercase',
+            'classes'     => 'text-bold text-uppercase nav-header-pad-as-first',
             // 'label' => 4,
         ],
         [
@@ -319,7 +328,19 @@ return [
             'icon' => 'fas fa-file-invoice',
             'submenu' => [
                 [
+                    'text' => 'program',
+                    'icon' => 'nav-icon fas fa-project-diagram',
+                    // 'route' => 'program',
+                    'url' => 'program',
                     
+                    'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'kegiatan',
+                    'icon' => 'nav-icon fa fa-user-graduate',                
+                    // 'route' => 'kegiatan',
+                    'url' => 'kegiatan',
+                    'active' => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
                 ],
             ],
         ],
@@ -395,7 +416,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -415,7 +436,7 @@ return [
             ],
         ],
         'Select2' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -431,7 +452,7 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',
@@ -441,7 +462,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'css',
@@ -469,6 +490,26 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'DateRangePicker' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/daterangepicker/daterangepicker.css',
                 ],
             ],
         ],

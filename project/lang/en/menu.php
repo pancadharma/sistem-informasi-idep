@@ -39,6 +39,7 @@ return [
     'idep' => 'IDEP Link',
     'transaksi' => 'Transaction',
     'program' => 'Program',
+    'kegiatan' => 'Activity',
     'evaluasi' => 'Evaluation',
     'log' => 'Log',
     'laporan' => 'Report',

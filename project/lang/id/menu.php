@@ -38,6 +38,7 @@ return [
     'idep' => 'Kaitan IDEP',
     'transaksi' => 'Transaksi',
     'program' => 'Program',
+    'kegiatan' => 'Kegiatan',
     'evaluasi' => 'Evaluasi',
     'log' => 'Log',
     'laporan' => 'Laporan',

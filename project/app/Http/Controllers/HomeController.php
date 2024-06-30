@@ -24,7 +24,7 @@ class HomeController extends Controller
     {
         $data = [];
         $title = 'Home Dashboard';
-        $name = 'I Gede Ado Surya Eka Pramana Putra';
+        $name = 'I Gede Adi Surya Eka Pramana Putra';
         return view('home', compact('title', 'name'));
     }
 
