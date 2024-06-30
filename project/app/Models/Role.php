@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, Auditable, HasFactory;
     public $table = 'roles';
 
     protected $dates = [
@@ -19,7 +20,8 @@ class Role extends Model
     ];
 
     protected $fillable = [
-        'title',
+        'nama',
+        'aktif',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,16 +26,30 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-// Route::get('/home', function(){
-//     $name = "I Gede Adi Surya Eka Pramana Putra";
-//     return view('home', ['name' => $name]);
-// });
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/profile', function(){
-    return view('layouts.app');
+// Route::redirect('/', '/login');
+Route::get('/home', function () {
+    if (session('status')) {
+        return redirect()->route('home')->with('status', session('status'));
+    }
+
+    return redirect()->route('home');
 });
+
+
+Auth::routes(['register' => false]);
+
+Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
+    
+    Route::get('/', 'HomeController@index')->name('home');
+    // Permissions
+    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
+    Route::resource('permissions', 'PermissionsController');
+
+    // Roles
+    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
+    Route::resource('roles', 'RolesController');
 
 
    // Users
@@ -43,8 +58,8 @@ Route::get('/profile', function(){
    Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
    Route::resource('users', 'UsersController');
 
-Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
-
+   Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
+});
 
 
 

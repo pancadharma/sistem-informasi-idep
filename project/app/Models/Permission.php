@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
-
 use App\Traits\Auditable;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,6 +22,7 @@ class Permission extends Model
 
     protected $fillable = [
         'nama',
+        'aktif',
         'created_at',
         'updated_at',
         'deleted_at',
