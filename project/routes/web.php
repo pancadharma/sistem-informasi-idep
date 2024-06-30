@@ -37,6 +37,18 @@ Route::get('/profile', function(){
 });
 
 
+   // Users
+   Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
+   Route::post('users/media', 'UsersController@storeMedia')->name('users.storeMedia');
+   Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
+   Route::resource('users', 'UsersController');
+
+Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
+
+
+
+
+
 // Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
