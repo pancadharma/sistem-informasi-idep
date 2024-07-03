@@ -12,7 +12,7 @@ class CreatePermissionRolePivotTable extends Migration
      */
     public function up(): void
     {
-        Schema::update('permission', function (Blueprint $table) {
+        Schema::create('permission', function (Blueprint $table) {
             $table->unsignedBigInteger('id_role');
             $table->foreign('id_role', 'id_role_fk_9913741')->references('id')->on('roles')->onDelete('cascade');
             $table->unsignedBigInteger('id_permission');

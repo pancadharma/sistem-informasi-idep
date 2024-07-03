@@ -38,7 +38,7 @@ Route::get('/home', function () {
 });
 
 
-Auth::routes(['register' => false]);
+// Auth::routes(['register' => false]);
 
 Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
     
@@ -62,6 +62,9 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
 });
 
 
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 // Auth::routes();

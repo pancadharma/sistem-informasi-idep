@@ -38,5 +38,4 @@
     @endif
 </head>
 @extends('auth.login')
-
 </html>

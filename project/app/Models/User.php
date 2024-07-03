@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
 use App\Traits\Auditable;
 use Carbon\Carbon;
 use DateTimeInterface;
@@ -23,7 +22,8 @@ class User extends Authenticatable
     
     use HasApiTokens, SoftDeletes, Notifiable, InteractsWithMedia, Auditable, HasFactory;
     // public $table = 'users';
-    public $table = 'muser';
+
+    // public $table = 'muser';
 
     protected $appends = [
         'image',

@@ -4,7 +4,7 @@
 
 @section('subtitle', 'Dashboard') {{-- Ganti Site Title Pada Tab Browser --}}
 @section('content_header_title', 'Dashboard') {{-- Ditampilkan pada halaman sesuai Menu yang dipilih --}}
-@section('sub_breadcumb',$name) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
+@section('sub_breadcumb','') {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 {{-- Content body: main page content --}}
 
