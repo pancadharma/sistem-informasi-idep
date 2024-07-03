@@ -26,23 +26,17 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-// Route::redirect('/', '/login');
 Route::get('/home', function () {
     if (session('status')) {
         return redirect()->route('home')->with('status', session('status'));
     }
-
     return redirect()->route('home');
 });
-
-
 // Auth::routes(['register' => false]);
-
 Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
-    
-    Route::get('/', 'HomeController@index')->name('home');
+
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', 'PermissionsController');
@@ -64,7 +58,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 // Auth::routes();
