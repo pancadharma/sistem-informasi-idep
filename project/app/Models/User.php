@@ -14,13 +14,13 @@ use Hash;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+// use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-
 class User extends Authenticatable
 {
     
-    use HasApiTokens, SoftDeletes, Notifiable, InteractsWithMedia, Auditable, HasFactory;
+    use HasApiTokens, SoftDeletes, Notifiable, Auditable, HasFactory;
     // public $table = 'users';
 
     // public $table = 'muser';
