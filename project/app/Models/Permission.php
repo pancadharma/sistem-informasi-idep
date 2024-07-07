@@ -32,4 +32,9 @@ class Permission extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }

@@ -252,6 +252,7 @@ return [
                 [
                     'text'  => 'role',
                     'url'   => 'role',
+                    'can'   => ['role_create',],
                     // 'route' => 'home',
                     // 'route' => ['admin.profile', ['userID' => '673']],
                     'icon' => 'far fa-check-circle',
