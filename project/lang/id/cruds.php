@@ -26,7 +26,13 @@ return [
     'country' => [
         'list' => 'Daftar Negara',
         'countries' => 'Negara-Negara',
+        'title_singular' => 'Negara',
         'country' => 'Negara',
+        'kode'=>'Kode',
+        'nama'=>'Nama',
+        'iso1'=>'ISO-1',
+        'iso2'=>'ISO-2',
+        'flag'=>'Bendera',
     ],
     'role' => [
         'title'          => 'Peranan',

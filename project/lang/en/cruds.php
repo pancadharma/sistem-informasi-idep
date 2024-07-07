@@ -26,7 +26,13 @@ return [
     'country' => [
         'list' => 'List Countries',
         'countries' => 'Countries',
+        'title_singular' => 'Country',
         'country' => 'Country',
+        'kode'=>'Kode',
+        'nama'=>'Name',
+        'iso1'=>'ISO-1',
+        'iso2'=>'ISO-2',
+        'flag'=>'Flag',
     ],
     'role' => [
         'title'          => 'Roles',

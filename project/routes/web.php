@@ -2,6 +2,11 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\RolesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +26,6 @@ Route::get('/', function () {
     return view('auth.login', ['title'=> $title]);
 });
 
-
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
@@ -32,27 +36,31 @@ Route::get('/home', function () {
     }
     return redirect()->route('home');
 });
-// Auth::routes(['register' => false]);
-Route::group(['namespace' => 'Admin', 'middleware' => ['auth']], function () {
+Auth::routes(['register' => false]);
 
+Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
     // Permissions
-    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-    Route::resource('permissions', 'PermissionsController');
+    // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
+    // Route::resource('permissions', 'PermissionsController');
 
     // Roles
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
+    Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
+    Route::resource('roles', RolesController::class);
+    Route::resource('permissions', PermissionsController::class);
+    // Users
+    Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
+    Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
+    Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    Route::resource('users', UsersController::class);
 
+    Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
-   // Users
-   Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-   Route::post('users/media', 'UsersController@storeMedia')->name('users.storeMedia');
-   Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
-   Route::resource('users', 'UsersController');
-
-   Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
+    // Countyr
+    Route::delete('country/destroy', [CountryCountroller::class, 'massDestroy'])->name('provinsis.massDestroy');
+    Route::post('country/media', [CountryCountroller::class, 'storeMedia'])->name('provinsis.storeMedia');
+    Route::post('country/ckmedia', [CountryCountroller::class, 'storeCKEditorImages'])->name('provinsis.storeCKEditorImages');
+    Route::resource('country', CountryCountroller::class);
 });
 
 
