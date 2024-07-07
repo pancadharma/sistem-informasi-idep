@@ -24,7 +24,7 @@ class CountryCountroller extends Controller
         abort_if(Gate::denies('country_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $countries = Country::get();
-
+        return $countries;
         return view('master.country', compact('countries'));
     }
 
