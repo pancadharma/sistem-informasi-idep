@@ -23,6 +23,11 @@ return [
             'description_helper' => ' ',
         ],
     ],
+    'country' => [
+        'list' => 'List Countries',
+        'countries' => 'Countries',
+        'country' => 'Country',
+    ],
     'role' => [
         'title'          => 'Roles',
         'title_singular' => 'Role',

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('country', function (Blueprint $table) {
             $table->id();
+            $table->string('nama', 255);
+            $table->string('iso1', 10);
+            $table->string('iso2', 10);
+            $table->string('flag', 20);
+            $table->boolean('aktif')->default(1)->nullable();
             $table->timestamps();
         });
     }

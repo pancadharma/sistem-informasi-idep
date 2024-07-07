@@ -23,6 +23,11 @@ return [
             'description_helper' => ' ',
         ],
     ],
+    'country' => [
+        'list' => 'Daftar Negara',
+        'countries' => 'Negara-Negara',
+        'country' => 'Negara',
+    ],
     'role' => [
         'title'          => 'Peranan',
         'title_singular' => 'Peranan',
