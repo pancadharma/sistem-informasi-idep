@@ -62,6 +62,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('country/ckmedia', [CountryCountroller::class, 'storeCKEditorImages'])->name('country.storeCKEditorImages');
     Route::resource('country', CountryCountroller::class);
     Route::get('listcountry', [CountryCountroller::class, 'countrylist'])->name('country.data');
+
+
+    Route::resource('provinsi', ProvinsiCountroller::class);
+    Route::get('listprovinsi', [ProvinsiCountroller::class, 'provinsi_data'])->name('provinsi.data');
 });
 
 

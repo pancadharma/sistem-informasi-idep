@@ -14,6 +14,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "bootstrap-fileinput": "^5.5.4"
+        "bootstrap-fileinput": "^5.5.4",
+        "tabulator-tables": "^6.2.1"
     }
 }
