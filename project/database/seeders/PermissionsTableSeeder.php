@@ -96,7 +96,15 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 21,
-                'nama' => 'country_create',
+                'nama' => 'country_edit',
+            ],
+            [
+                'id'    => 22,
+                'nama' => 'country_show',
+            ],
+            [
+                'id'    => 23,
+                'nama' => 'country_delet',
             ],
         ];
 
