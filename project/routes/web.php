@@ -57,10 +57,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
     // Countyr
-    Route::delete('country/destroy', [CountryCountroller::class, 'massDestroy'])->name('provinsis.massDestroy');
-    Route::post('country/media', [CountryCountroller::class, 'storeMedia'])->name('provinsis.storeMedia');
-    Route::post('country/ckmedia', [CountryCountroller::class, 'storeCKEditorImages'])->name('provinsis.storeCKEditorImages');
+    Route::delete('country/destroy', [CountryCountroller::class, 'massDestroy'])->name('country.massDestroy');
+    Route::post('country/media', [CountryCountroller::class, 'storeMedia'])->name('country.storeMedia');
+    Route::post('country/ckmedia', [CountryCountroller::class, 'storeCKEditorImages'])->name('country.storeCKEditorImages');
     Route::resource('country', CountryCountroller::class);
+    Route::get('listcountry', [CountryCountroller::class, 'countrylist'])->name('country.data');
 });
 
 
