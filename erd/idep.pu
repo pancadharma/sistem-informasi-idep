@@ -300,13 +300,14 @@ entity "trkegiatanpeserta" as trkegiatanpeserta {
     id_kegiatan: int <<fk>>
     noidentitas: varchar (50)
     nama: varchar (300)
-    jeniskelamin: varchar (50)
+    jeniskelamin: varchar (50) null
     tanggalahir: datetime
     disabilitas: bit
     hamil: bit
-    statuskawin: varchar (50)
-    nokartukeluarga: varchar (50)
+    statuskawin: varchar (50) null
+    nokartukeluarga: varchar (50) null
     jenispeserta: varchar (50) 
+    namakepalakeluarga : varchar (50)
 }
 
 entity "trkegiatandokumen" as trkegiatandokumen {
