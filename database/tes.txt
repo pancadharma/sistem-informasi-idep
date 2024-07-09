@@ -1,1 +1,8 @@
-hallo
+https://sipedas.pertanian.go.id/api/wilayah/index
+
+
+Kecamatan Level
+https://sipedas.pertanian.go.id/api/wilayah/list_wilayah?thn=2024&lvl=11&pro=51&lv2=13
+
+Desa Level
+https://sipedas.pertanian.go.id/api/wilayah/list_wilayah?thn=2024&lvl=11&pro=51&lv2=14
