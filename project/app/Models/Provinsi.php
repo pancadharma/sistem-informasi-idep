@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Provinsi extends Model
 {
-    use SoftDeletes, Auditable, HasFactory;
+    use Auditable, HasFactory;
     protected $table = 'provinsi';
 
 
@@ -20,17 +20,25 @@ class Provinsi extends Model
         'id_provinsi',
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
 
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id');
+    }
+
+    public function provinsi_city(){
+        $province = Provinsi::first();   
+        return $province;     
+    }
+
+    public function kabupatens()
+    {
+        return $this->hasMany(Kabupaten::class);
     }
 }

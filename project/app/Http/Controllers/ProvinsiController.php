@@ -12,7 +12,8 @@ class ProvinsiController extends Controller
      */
     public function index()
     {
-        //
+        $province = Provinsi::where('aktif', 1)->get();
+        return $province;
     }
 
     /**
