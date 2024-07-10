@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::resource('provinsi', ProvinsiController::class);
-    Route::get('listprovinsi', [ProvinsiController::class, 'provinsi_data'])->name('provinsi.data');
+    Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
 });
 
 

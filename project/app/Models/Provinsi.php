@@ -7,6 +7,8 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
 class Provinsi extends Model
 {
@@ -40,5 +42,15 @@ class Provinsi extends Model
     public function kabupatens()
     {
         return $this->hasMany(Kabupaten::class);
+    }
+
+    public function dataAktif()
+    {
+        $province = Provinsi::where('aktif', 1)->get();
+    }
+    
+    public function scopeWithActive(Builder $query)
+    {
+        return $query->where('aktif', 1);
     }
 }

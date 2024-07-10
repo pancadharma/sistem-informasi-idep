@@ -24,7 +24,7 @@
             <h2 class="card-title">{{ trans('cruds.country.list') }}</h2>
         </div>
         <div class="card-body">
-            <table id="example" class="table table-bordered table-striped table-hover ajaxTable datatable datatable-Country">
+            <table id="example" class="table table-bordered table-striped table-hover ajaxTable datatable datatable-Country" style="width:100%">
                 <thead>
                     <tr>
                         <th width="10"></th>
@@ -72,11 +72,11 @@ icon="fas fa-bell" v-centered static-backdrop scrollable>
         $(document).ready(function() {
             $('#example').DataTable({
                 responsive: true,
-                "ajax": {
+                ajax: {
                     "url": "{{ route('country.data') }}",
                     "dataSrc": ""
                 },
-                "columns": [
+                columns: [
                     {
                         "data": null,
                         "render": function (data, type, row, meta) {

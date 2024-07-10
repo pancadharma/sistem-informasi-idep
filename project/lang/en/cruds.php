@@ -5,6 +5,12 @@ return [
         'title'          => 'User management',
         'title_singular' => 'User management',
     ],
+    'status' =>
+    [
+        'title' => 'Status',
+        'aktif' => 'Active',
+        'tidak_aktif'=> 'Non Active',
+    ],
     'permission' => [
         'title'          => 'Permissions',
         'title_singular' => 'Permission',
@@ -28,6 +34,17 @@ return [
         'countries' => 'Countries',
         'title_singular' => 'Country',
         'title' => 'Country',
+        'kode'=>'Kode',
+        'nama'=>'Name',
+        'iso1'=>'ISO-1',
+        'iso2'=>'ISO-2',
+        'flag'=>'Flag',
+    ],
+    'provinsi' => [
+        'list' => 'List Provincies',
+        'provincies' => 'Provincies',
+        'title_singular' => 'Province',
+        'title' => 'Province',
         'kode'=>'Kode',
         'nama'=>'Name',
         'iso1'=>'ISO-1',

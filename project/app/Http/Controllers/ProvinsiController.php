@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Provinsi;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class ProvinsiController extends Controller
 {
@@ -12,8 +13,19 @@ class ProvinsiController extends Controller
      */
     public function index()
     {
+        // abort_if(Gate::denies('provinsi_access'), Response::HTTP_FORBIDDEN, '403 Forbidden'); //Uncomment to apply permission provinsi_access index
         $province = Provinsi::where('aktif', 1)->get();
-        return $province;
+        // return $province;
+        return view('master.provinsi.index', compact('province'));
+    }
+
+    public function dataprovinsi(){
+        $activeProvinsi = Provinsi::withActive()->get();
+        
+        $data = DataTables::of($activeProvinsi)
+        ->make(true);
+        
+        return $data;
     }
 
     /**
