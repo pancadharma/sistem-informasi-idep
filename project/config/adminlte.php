@@ -520,7 +520,7 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js',
-                    'location' => '/vendor/sweetalert2/sweetalert2.all.min.js',
+                    'location' => '/vendor/sweetalert2/latest.js',
                 ],
             ],
         ],

@@ -41,9 +41,9 @@
 
 @push('js')
     {{-- @section('plugins.Tabulator', false)  --}}
-    @section('plugins.DatatablesNew', true) 
     {{-- @section('plugins.DatatablesPlugins', true)  --}}
     @section('plugins.Sweetalert2', true) 
+    @section('plugins.DatatablesNew', true) 
     
     <script>
         $(document).ready(function() {
