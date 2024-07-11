@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Provinsi;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Requests\StoreProvinsiRequest;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class ProvinsiController extends Controller
 {
@@ -35,7 +38,6 @@ class ProvinsiController extends Controller
 
         return $data;
 
-
         // $activeProvinsi = Provinsi::withActive()->get();
         // $data = DataTables::of($activeProvinsi)
         // ->make(true);
@@ -50,49 +52,46 @@ class ProvinsiController extends Controller
         // return response()->json($activeProvinsi);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreProvinsiRequest $request)
     {
-        //
+        $provinsi = Provinsi::create($request->all());
+        
+        $status = 'success';
+        $message = 'Data '. $request->nama.' submitted successfully!';
+
+        if (!$status) {
+            $message = 'There was an error processing your data.';
+        }
+
+        return response()->json(['status' => $status, 'message' => $message], ($status === 'success') ? 200 : 400); // Adjust codes as needed
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Province created successfully!',
+        //     'data' => $provinsi, // 
+        // ], 201);
+
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Provinsi $provinsi)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Provinsi $provinsi)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Provinsi $provinsi)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Provinsi $provinsi)
     {
         //

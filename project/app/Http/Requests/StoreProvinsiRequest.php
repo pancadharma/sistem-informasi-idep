@@ -11,7 +11,7 @@ class StoreProvinsiRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class StoreProvinsiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kode'=> ['required','integer','max:10'],
+            'kode'=> ['required','integer'],
             'nama' => ['required','string','max:200'],
             'aktif' => ['integer'],
         ];

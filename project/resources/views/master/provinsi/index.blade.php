@@ -59,8 +59,8 @@
                     { "data": "aktif", width:"10%", className: "text-center", orderable: false,
                         "render": function(data, type, row){
                             if (data === 1){
-                                // return '<input class="form-check-input" type="checkbox" disabled checked>';
-                                return '☑️';
+                                return '<input class="icheck-primary" type="checkbox" disabled checked>';
+                                // return '☑️';
                             }else{
                                 return '<input type="checkbox" disabled>';
                             }
@@ -74,54 +74,117 @@
                 order: [[2, 'asc']],
                 pageLength: 5,
                 lengthMenu: [ 5, 10, 50, 100, 500],
-                // dom: 'Bfrtip',
-                // buttons: ["copy", "csv", "excel", "pdf", "print", "colvis",
-                //     {   text: 'Reload',
-                //         action: function ( e, dt, node, config ) {
-                //         dt.ajax.reload()}
-                //     },
-                // ],
-                // scrollCollapse: true,
-                // scrollY: '70vh'
             });
         });
 
         //submit new provinsi
-        $('#provinsiForm').submit(function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var formData = form.serialize();
+        // $('#provinsiForm').submit(function(e) {
+        //     e.preventDefault();
+        //     var form = $(this);
+        //     var formData = form.serialize();
 
-            // console.log('data submit');
-            // console.log(formData);
+        //     // console.log('data submit');
+        //     // console.log(formData);
 
-            $.ajax({
-            // url: form.attr('action'),
-            type: 'POST',
-            data: formData,
+        //     $.ajax({
+        //     // url: form.attr('action'),
+        //     type: 'POST',
+        //     data: formData,
 
-            success: function(response) {
-                if (response.success) {
-                    // Refresh Datatables after successful submission
-                    $('#provinsi').DataTable().ajax.reload();
-                    // Show success message (using a library like Toastr)
-                    // toastr.success('{{ trans('global.success') }}');
-                    console.log(response)
-                    // Close the modal
-                    $('#addProvinsi').modal('hide');
-                } else {
-                    console.log(data);
-                    alert('{{ trans('global.error') }}');
-                }
-            },
-            error: function(error) {
-                console.error(error);
-                alert('{{ trans('global.error') }}');
-            }
-        });
+        //     success: function(response) {
+        //         if (response.success) {
+        //             // Refresh Datatables after successful submission
+        //             $('#provinsi').DataTable().ajax.reload();
+        //             // Show success message (using a library like Toastr)
+        //             // toastr.success('{{ trans('global.success') }}');
+        //             console.log(response)
+        //             // Close the modal
+        //             $('#addProvinsi').modal('hide');
+        //         } else {
+        //             console.log(data);
+        //             alert('{{ trans('global.error') }}');
+        //         }
+        //     },
+        //     error: function(error) {
+        //         console.error(error);
+        //         alert('{{ trans('global.error') }}');
+        //     }
+        //     });
 
 
-        });
-
+        // });
     </script>
+    <script>
+        $(document).ready(function () {
+            $("#provinsiForm").submit(function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                var provinsi_form = $('#addProvinsi');
+                $.ajax({
+                    method: "POST",
+                    url: '{{ route('provinsi.store')}}', // Get form action URL
+                    data: formData,
+                    dataType: 'json',            
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                    title: "Success",
+                                    text: response.message,
+                                    icon: "success"
+                            });
+                            // $('#addProvinsi').modal('hide');
+                            
+                            $('#provinsi').DataTable().ajax.reload(function() {
+                                provinsi_form.modal('fade');
+                                $('#provinsiForm').find('form').trigger('reset');
+                            });
+
+
+                        } else if (response.status === 400) {
+                            try {
+                                const errorData = JSON.parse(response.responseText);
+                                const errors = errorData.errors; // Access the error object
+                                let errorMessage = "";
+                                    for (const field in errors) {
+                                        errors[field].forEach(error => {
+                                        errorMessage += `* ${error}\n`; // Build a formatted error message string
+                                        });
+                                    }
+
+                                    Swal.fire({
+                                        title: "Error!",
+                                        text: errorMessage,
+                                        icon: "error"
+                                    });
+                                } catch (error) {
+                                console.error("Error parsing error response:", error);
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "An unexpected error occurred. Please try again later.",
+                                    icon: "error"
+                                });
+                                }
+                            } else {
+                                // Handle other errors
+                                console.error("Unexpected response:", response);
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: response.message,
+                                    icon: "error"
+                                });
+                                $('#addProvinsi').modal('hide');
+                              }
+                        },
+                        error: function(error) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred during submission.',
+                                icon: 'error'
+                            });
+                        }
+                });
+            });
+        });
+    </script>
+
 @endpush
