@@ -20,12 +20,34 @@ class ProvinsiController extends Controller
     }
 
     public function dataprovinsi(){
+
         $activeProvinsi = Provinsi::withActive()->get();
-        
+
+        // Prepare data for DataTables (without modifying original collection)
         $data = DataTables::of($activeProvinsi)
-        ->make(true);
-        
+            ->addColumn('action', function ($provinsi) {
+                $editUrl = route('provinsi.edit', $provinsi->id);
+                $viewUrl = route('provinsi.show', $provinsi->id);
+
+                return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
+            })
+            ->make(true);
+
         return $data;
+
+
+        // $activeProvinsi = Provinsi::withActive()->get();
+        // $data = DataTables::of($activeProvinsi)
+        // ->make(true);
+
+        // foreach($activeProvinsi as $item){
+        //     $item['action'] = '<a href="'.route('provinsi.edit', $item['id']).'" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Edit</a>
+        //                        <a href="'.route('provinsi.show', $item['id']).'" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i> View</a>';
+        // }
+
+        // return $data;
+
+        // return response()->json($activeProvinsi);
     }
 
     /**

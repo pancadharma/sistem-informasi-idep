@@ -17,9 +17,10 @@ class Provinsi extends Model
 
 
     protected $fillable = [
-        'nama',
         'kode',
-        'id_provinsi',
+        'nama',
+        'aktif',
+        'id_negara',
         'created_at',
         'updated_at',
     ];
@@ -34,14 +35,9 @@ class Provinsi extends Model
         return $this->belongsTo(Country::class, 'country_id');
     }
 
-    public function provinsi_city(){
-        $province = Provinsi::first();   
-        return $province;     
-    }
-
     public function kabupatens()
     {
-        return $this->hasMany(Kabupaten::class);
+        // return $this->hasMany(Kabupaten::class);
     }
 
     public function dataAktif()

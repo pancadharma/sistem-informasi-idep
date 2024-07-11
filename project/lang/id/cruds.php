@@ -10,6 +10,7 @@ return [
         'title' => 'Status',
         'aktif' => 'Aktif',
         'tidak_aktif'=> 'Tidak Aktif',
+        'action'=> 'Aksi',
     ],
     'permission' => [
         'title'          => 'Izin',
@@ -141,5 +142,11 @@ return [
             'updated_at_helper'   => ' ',
         ],
     ],
+    'form'=> [
+        'kode'=> 'Kode',
+        'nama'=> 'Nama',
+        'submit'=> 'Submit',
+        'cancel'=> 'Cancel',
+    ]
 
 ];

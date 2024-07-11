@@ -81,7 +81,7 @@ return [
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
     'classes_auth_btn' => 'btn-flat btn-primary',
-    'classes_body' => 'layout-footer-fixed',
+    'classes_body' => '',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -433,6 +433,31 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => '/vendor/datatables/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'DatatablesNew' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/pdfmake.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.css',
                 ],
             ],
         ],
