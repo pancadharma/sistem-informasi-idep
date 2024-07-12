@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
+
 class Provinsi extends Model
 {
     use Auditable, HasFactory;
@@ -44,9 +45,13 @@ class Provinsi extends Model
     {
         $province = Provinsi::where('aktif', 1)->get();
     }
-    
+
     public function scopeWithActive(Builder $query)
     {
         return $query->where('aktif', 1);
+    }
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

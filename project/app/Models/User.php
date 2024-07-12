@@ -19,7 +19,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class User extends Authenticatable
 {
-    
+
     use HasApiTokens, SoftDeletes, Notifiable, Auditable, HasFactory;
     // public $table = 'users';
 
@@ -121,7 +121,7 @@ class User extends Authenticatable
 
     public function adminlte_desc()
     {
-        return 'I\'m a nice guy';
+        return 'Default Description of User Need to Replace';
     }
 
     public function adminlte_profile_url()

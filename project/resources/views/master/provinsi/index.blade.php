@@ -34,17 +34,49 @@
         </div>
     </div>
     @include('master.provinsi.create')
+    @include('master.provinsi.edit')
+    @include('master.provinsi.show')
 @stop
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @endpush
 
 @push('js')
     {{-- @section('plugins.Tabulator', false)  --}}
     {{-- @section('plugins.DatatablesPlugins', true)  --}}
-    @section('plugins.Sweetalert2', true) 
-    @section('plugins.DatatablesNew', true) 
-    
+    @section('plugins.Sweetalert2', true)
+    @section('plugins.DatatablesNew', true)
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#editProvinceForm").validate({
+                rules: {
+                    kode: {
+                        required: true,
+                        pattern: "[0-9]+",
+                        maxlength: 10
+                    },
+                    nama: {
+                        required: true,
+                        maxlength: 200
+                    }
+                },
+                messages: {
+                    kode: {
+                        required: "Kode is required.",
+                        pattern: "Please enter only numbers.",
+                        maxlength: "Kode cannot exceed 10 characters."
+                    },
+                    nama: {
+                        required: "Nama is required.",
+                    }
+                }
+            });
+        });
+    </script>
+
+
     <script>
         $(document).ready(function() {
             $('#provinsi').DataTable({
@@ -59,12 +91,12 @@
                     { "data": "aktif", width:"10%", className: "text-center", orderable: false,
                         "render": function(data, type, row){
                             if (data === 1){
-                                return '<input class="icheck-primary" type="checkbox" disabled checked>';
+                                return '<div class="icheck-primary d-inline"><input data-aktif-id="'+data+'" class="icheck-primary" type="checkbox" disabled checked><label for="aktif'+data+'"></label></div>';
                                 // return '☑️';
                             }else{
                                 return '<input type="checkbox" disabled>';
                             }
-                        }                                
+                        }
                     },
                     { "data": "action", width: "8%", className: "text-center", orderable: false}
                 ],
@@ -76,43 +108,6 @@
                 lengthMenu: [ 5, 10, 50, 100, 500],
             });
         });
-
-        //submit new provinsi
-        // $('#provinsiForm').submit(function(e) {
-        //     e.preventDefault();
-        //     var form = $(this);
-        //     var formData = form.serialize();
-
-        //     // console.log('data submit');
-        //     // console.log(formData);
-
-        //     $.ajax({
-        //     // url: form.attr('action'),
-        //     type: 'POST',
-        //     data: formData,
-
-        //     success: function(response) {
-        //         if (response.success) {
-        //             // Refresh Datatables after successful submission
-        //             $('#provinsi').DataTable().ajax.reload();
-        //             // Show success message (using a library like Toastr)
-        //             // toastr.success('{{ trans('global.success') }}');
-        //             console.log(response)
-        //             // Close the modal
-        //             $('#addProvinsi').modal('hide');
-        //         } else {
-        //             console.log(data);
-        //             alert('{{ trans('global.error') }}');
-        //         }
-        //     },
-        //     error: function(error) {
-        //         console.error(error);
-        //         alert('{{ trans('global.error') }}');
-        //     }
-        //     });
-
-
-        // });
     </script>
     <script>
         $(document).ready(function () {
@@ -124,7 +119,7 @@
                     method: "POST",
                     url: '{{ route('provinsi.store')}}', // Get form action URL
                     data: formData,
-                    dataType: 'json',            
+                    dataType: 'json',
                     success: function (response) {
                         if (response.status === 'success') {
                             Swal.fire({
@@ -133,7 +128,7 @@
                                     icon: "success"
                             });
                             // $('#addProvinsi').modal('hide');
-                            
+
                             $('#provinsi').DataTable().ajax.reload(function() {
                                 provinsi_form.modal('fade');
                                 $('#provinsiForm').find('form').trigger('reset');
@@ -186,5 +181,43 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('.edit-province-btn').click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                //data-province-id
+                let provinceId = $(this).data('province-id');
+                console.log(provinceId);
+
+
+                // Make Ajax request to fetch province data for editing
+                $.ajax({
+                    url: '{{ route('provinsi.edit', ':id') }}'.replace(':id', provinceId), // Route with ID placeholder
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response);
+                        $('#editkode').val(response.kode);  // Set form field value
+                        $('#editnama').val(response.nama);
+                        $('#editaktif').val(response.aktif);
+
+                        $('#editProvinceForm').valid()
+                        $('#editProvinceModal').modal('show'); // Show the modal
+                    },
+                    error: function(error) {
+                        console.error("Error fetching Provinsi data:", error);
+                        // Handle errors appropriately (e.g., display error message)
+                        swal.fire({
+                            text: "Error",
+                            message: "Failed to fetch data",
+                            icon: "error"
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
 
 @endpush

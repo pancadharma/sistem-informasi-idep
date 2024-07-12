@@ -46,7 +46,7 @@ return [
         'provincies' => 'Provincies',
         'title_singular' => 'Province',
         'title' => 'Province',
-        'kode'=>'Kode',
+        'kode'=>'Code',
         'nama'=>'Name',
         'iso1'=>'ISO-1',
         'iso2'=>'ISO-2',
