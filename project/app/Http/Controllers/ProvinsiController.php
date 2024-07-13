@@ -29,11 +29,11 @@ class ProvinsiController extends Controller
                 $editUrl = route('provinsi.edit', $provinsi->id);
                 $viewUrl = route('provinsi.show', $provinsi->id);
 
-//                return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
+                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
                 //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
 
                 return '<button type="button" class="btn btn-sm btn-info edit-province-btn" data-action="edit" data-province-id="'. $provinsi->id .'" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-province-btn" data-action="view" data-province-id="'. $provinsi->id .'" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                <button type="button" class="btn btn-sm btn-primary view-province-btn" data-action="view" data-province-id="'. $provinsi->id .'" value="'. $provinsi->id .'" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i> View</button>';
 
             })
             ->make(true);
@@ -59,10 +59,10 @@ class ProvinsiController extends Controller
 
     public function show(Provinsi $provinsi)
     {
-//        $provinsi = Provinsi::find($provinsi);
-//        return response()->json($provinsi);
+        //        $provinsi = Provinsi::find($provinsi);
+        //        return response()->json($provinsi);
         return response()->json($provinsi); // Return province data as JSON
-//        return(view('master.provinsi.show', compact('provinsi')));
+        //        return(view('master.provinsi.show', compact('provinsi')));
     }
 
     public function edit(Provinsi $provinsi)

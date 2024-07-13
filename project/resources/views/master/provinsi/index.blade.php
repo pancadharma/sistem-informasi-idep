@@ -75,8 +75,6 @@
             });
         });
     </script>
-
-
     <script>
         $(document).ready(function() {
             $('#provinsi').DataTable({
@@ -88,10 +86,11 @@
                 "columns": [
                     { "data": "kode", width:"10%", className: "text-center" },
                     { "data": "nama", width:"40%" },
-                    { "data": "aktif", width:"10%", className: "text-center", orderable: false,
+                    { "data": "aktif", width:"10%", className: "text-center", orderable: false, searchable : false,
                         "render": function(data, type, row){
+                            
                             if (data === 1){
-                                return '<div class="icheck-primary d-inline"><input data-aktif-id="'+data+'" class="icheck-primary" type="checkbox" disabled checked><label for="aktif'+data+'"></label></div>';
+                                return '<div class="icheck-primary d-inline"><input id="aktif_'+row.id+'" data-aktif-id="aktif_'+row.id+'" class="icheck-primary" type="checkbox" disabled checked><label for="aktif_'+row.id+'"></label></div>';
                                 // return '☑️';
                             }else{
                                 return '<input type="checkbox" disabled>';
@@ -218,6 +217,39 @@
         });
 
     </script>
+    <script>
+    $(document).ready(function() {
+        $('#provinsi tbody').on('click', '.view-province-btn', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            let provinceId = $(this).data('province-id');
+            let action = $(this).data('action')
+
+            // console.log(provinceId);
+            $.ajax({
+                url: '{{ route('provinsi.show', ':id') }}'.replace(':id', provinceId), // Route with ID placeholder
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+
+                    let data = response || [];
+
+                    if (action === 'view') {
+                        $("#show-kode").text(data.kode);
+                        $("#show-nama").text(data.nama);
+                        $("#show-aktif").prop("checked", data.aktif === 1);
+                        $('#showProvinceModal').modal('show');
+                    } else {
+                        swal.fire({
+                            text: "Error",
+                            message: "Failed to fetch data",
+                            icon: "error"
+                        });
+                    }
+                }
+            })
+        });
+    });
+</script>
 
 
 @endpush
