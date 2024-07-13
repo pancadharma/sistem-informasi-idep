@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'details'                        => 'Detail',
     'actions'                        => 'Aksi',
     'add'                            => 'Tambah',
     'allRightsReserved'              => 'All rights reserved.',

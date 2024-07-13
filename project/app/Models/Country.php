@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
+
 
 class Country extends Model
 {
-    use HasFactory;
+    use Auditable, HasFactory;
 
     protected $table = 'country';
-    
+
     protected $fillable = [
         'nama',
         'aktif',
@@ -18,4 +21,8 @@ class Country extends Model
         'updated_at',
         'deleted_at',
     ];
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

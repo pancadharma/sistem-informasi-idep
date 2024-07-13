@@ -22,7 +22,7 @@
 @section('breadcumb')
     @hasSection ('sub_breadcumb')
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">{{ trans('global.home') }}</a></li>
         <li class="breadcrumb-item active">@yield('sub_breadcumb')</li>
     </ol>
     @endif
@@ -46,17 +46,17 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-<script>
+{{-- <script>
     $(document).ready(function() {
         // Add your common script logic here...
     });
-</script>
+</script> --}}
 @endpush
 
 {{-- Add common CSS customizations --}}
 
 @push('css')
-<style type="text/css">
+{{-- <style type="text/css">
         
-</style>
+</style> --}}
 @endpush

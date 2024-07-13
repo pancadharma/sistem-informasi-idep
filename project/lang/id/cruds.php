@@ -5,6 +5,13 @@ return [
         'title'          => 'Manajemen User',
         'title_singular' => 'Manajemen User',
     ],
+    'status' =>
+    [
+        'title' => 'Status',
+        'aktif' => 'Aktif',
+        'tidak_aktif'=> 'Tidak Aktif',
+        'action'=> 'Aksi',
+    ],
     'permission' => [
         'title'          => 'Izin',
         'title_singular' => 'Izin',
@@ -33,6 +40,17 @@ return [
         'iso1'=>'ISO-1',
         'iso2'=>'ISO-2',
         'flag'=>'Bendera',
+    ],
+    'provinsi' => [
+        'list' => 'Daftar Provinsi',
+        'provincies' => 'Provinsi',
+        'title_singular' => 'Provinsi',
+        'title' => 'Provinsi',
+        'kode'=>'Kode',
+        'nama'=>'Name',
+        'iso1'=>'ISO-1',
+        'iso2'=>'ISO-2',
+        'flag'=>'Flag',
     ],
     'negara' => [
         'title'          => 'Negara',
@@ -124,5 +142,11 @@ return [
             'updated_at_helper'   => ' ',
         ],
     ],
+    'form'=> [
+        'kode'=> 'Kode',
+        'nama'=> 'Nama',
+        'submit'=> 'Submit',
+        'cancel'=> 'Cancel',
+    ]
 
 ];

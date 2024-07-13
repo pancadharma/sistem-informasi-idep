@@ -71,8 +71,8 @@ return [
     'usermenu_profile_url' => true,
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_sidebar' => true,
+    'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
     'classes_auth_card' => 'card-outline card-primary',
@@ -81,7 +81,7 @@ return [
     'classes_auth_footer' => '',
     'classes_auth_icon' => '',
     'classes_auth_btn' => 'btn-flat btn-primary',
-    'classes_body' => 'layout-footer-fixed',
+    'classes_body' => '',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -101,7 +101,7 @@ return [
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => false,
     'sidebar_nav_animation_speed' => 300,
-    'right_sidebar' => true,
+    'right_sidebar' => false,
     'right_sidebar_icon' => 'fas fa-cogs',
     'right_sidebar_theme' => 'dark',
     'right_sidebar_slide' => true,
@@ -203,8 +203,8 @@ return [
             'submenu'   =>  [
                 [
                     'text' => 'provinsi',
-                    'active' => ['provinsi', 'regex:@^provinsi/[0-9]+$@'],
-                    'url'  => '#',
+                    'active' => ['provinsi', 'regex:@^provinsi/[0-9]+$@', 'country', 'provinsi*','country*'],
+                    'route'  => 'provinsi.index',
                     'icon'  => 'fas fa-paste',
 
                     // 'classes' => 'text-danger text-uppercase',
@@ -436,6 +436,61 @@ return [
                 ],
             ],
         ],
+        'DatatablesNew' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/pdfmake.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.css',
+                ],
+            ],
+        ],
+        'SelectDatatables' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-plugins/select/js/dataTables.select.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-plugins/select/js/select.dataTables.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-plugins/select/css/select.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'Validation' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/jquery-validation/jquery.validate.min.js',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => false,
             'files' => [
@@ -475,7 +530,7 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js',
-                    'location' => '/vendor/sweetalert2/sweetalert2.all.min.js',
+                    'location' => '/vendor/sweetalert2/latest.js',
                 ],
             ],
         ],
@@ -571,6 +626,21 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/summernote/summernote-bs4.min.css',
+                ],
+            ],
+        ],
+        'Tabulator' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/tabulator-tables/dist/js/tabulator.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/tabulator-tables/dist/css/tabulator_semanticui.min.css',
                 ],
             ],
         ],

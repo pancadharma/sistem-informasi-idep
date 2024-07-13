@@ -1,12 +1,11 @@
 <li>
-
     <form class="form-inline my-2" action="{{ $item['href'] }}" method="{{ $item['method'] }}">
         {{ csrf_field() }}
 
         <div class="input-group">
 
             {{-- Search input --}}
-            <input class="form-control form-control-sidebar" type="search"
+            <input class="form-control form-control-sidebar" id="search" type="search"
                 @isset($item['id']) id="{{ $item['id'] }}" @endisset
                 name="{{ $item['input_name'] }}"
                 placeholder="{{ $item['text'] }}"

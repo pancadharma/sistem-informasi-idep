@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\CountryCountroller;
-use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\RolesController;
+use App\Models\Provinsi;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProvinsiController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\PermissionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,8 +66,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('listcountry', [CountryCountroller::class, 'countrylist'])->name('country.data');
 
 
-    Route::resource('provinsi', ProvinsiCountroller::class);
-    Route::get('listprovinsi', [ProvinsiCountroller::class, 'provinsi_data'])->name('provinsi.data');
+    Route::resource('provinsi', ProvinsiController::class);
+    Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
+    Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
 });
 
 
