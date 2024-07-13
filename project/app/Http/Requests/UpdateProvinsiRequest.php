@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Provinsi;
+use Gate;
 use Illuminate\Foundation\Http\FormRequest;
-
-class StoreProvinsiRequest extends FormRequest
+use Illuminate\Http\Response;
+class UpdateProvinsiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +24,9 @@ class StoreProvinsiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kode' => ['string','max:15','required','unique:provinsi',],
+            'kode' => ['string','max:15','required','unique:provinsi,kode,' . request()->route('provinsi')->id,],
             'nama' => ['string','max:200','required',],
+            'aktif' => ['integer'],
         ];
     }
 }

@@ -481,6 +481,16 @@ return [
                 ],
             ],
         ],
+        'Validation' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/jquery-validation/jquery.validate.min.js',
+                ],
+            ],
+        ],
         'Select2' => [
             'active' => false,
             'files' => [

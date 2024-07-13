@@ -47,7 +47,7 @@ return [
         'title_singular' => 'Provinsi',
         'title' => 'Provinsi',
         'kode'=>'Kode',
-        'nama'=>'Nama',
+        'nama'=>'Name',
         'iso1'=>'ISO-1',
         'iso2'=>'ISO-2',
         'flag'=>'Flag',

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('provinsi', function (Blueprint $table) {
             $table->id();
-            $table->integer('kode')->unsigned();
+            $table->string('kode', 15);
             $table->string('nama', 200);
-            $table->boolean('aktif')->default(1)->nullable();
+            $table->boolean('aktif')->default(0)->nullable();
             $table->timestamps();
         });
     }

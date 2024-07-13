@@ -1,4 +1,4 @@
-<x-adminlte-modal id="showProvinceModal" title="{{ trans('global.show') }} {{ trans('cruds.provinsi.title_singular') }}" size="lg" theme="success" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
+<x-adminlte-modal id="showProvinceModal" title="{{ trans('global.details') }} {{ trans('cruds.provinsi.title_singular') }}" size="lg" theme="info" icon="fas fa-folder-open" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="modal-body">
             <table class="table table-bordered table-striped">
@@ -13,7 +13,12 @@
                 </tr>
                 <tr>
                     <th>{{ __('cruds.status.title') }}</th>
-                    <td><div class="icheck-primary d-inline"><input type="checkbox" id="show-status"><label for="show-status"></label></div></td>
+                    <td>
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="show-aktif">
+                            <label for="show-aktif"></label>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>

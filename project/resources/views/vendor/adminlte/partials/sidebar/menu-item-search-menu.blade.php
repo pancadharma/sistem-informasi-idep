@@ -4,7 +4,7 @@
         <div class="input-group" data-widget="sidebar-search" data-arrow-sign="&raquo;">
 
             {{-- Search input --}}
-            <input class="form-control form-control-sidebar" type="search"
+            <input class="form-control form-control-sidebar" id="search" type="search"
                 @isset($item['id']) id="{{ $item['id'] }}" @endisset
                 placeholder="{{ $item['text'] }}"
                 aria-label="{{ $item['text'] }}">

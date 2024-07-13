@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Models\Provinsi;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProvinsiController;
@@ -67,6 +68,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('provinsi', ProvinsiController::class);
     Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
+    Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
 });
 
 

@@ -10,15 +10,7 @@
             <x-adminlte-button label="{{ trans('global.add') }} {{ trans('cruds.provinsi.title_singular') }}" data-toggle="modal" data-target="#addProvinsi" class="bg-success"/>
         </div>
     </div>
-
-    {{-- <div class="card-body card-outline card-primary">
-        <div id="example-table"></div>
-    </div> --}}
-
     <div class="card card-outline card-primary">
-        {{-- <div class="card-header">
-            <h2 class="card-title">{{ trans('cruds.provinsi.list') }}</h2>
-        </div> --}}
         <div class="card-body">
             <table id="provinsi" class="table table-bordered cell-border ajaxTable datatable-provinsi" style="width:100%">
                 <thead>
@@ -43,38 +35,11 @@
 @endpush
 
 @push('js')
-    {{-- @section('plugins.Tabulator', false)  --}}
-    {{-- @section('plugins.DatatablesPlugins', true)  --}}
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#editProvinceForm").validate({
-                rules: {
-                    kode: {
-                        required: true,
-                        pattern: "[0-9]+",
-                        maxlength: 10
-                    },
-                    nama: {
-                        required: true,
-                        maxlength: 200
-                    }
-                },
-                messages: {
-                    kode: {
-                        required: "Kode is required.",
-                        pattern: "Please enter only numbers.",
-                        maxlength: "Kode cannot exceed 10 characters."
-                    },
-                    nama: {
-                        required: "Nama is required.",
-                    }
-                }
-            });
-        });
-    </script>
+    @section('plugins.Validation', true)
+    
+    {{-- Ajax Request data using server side data table to reduce large data load --}}    
     <script>
         $(document).ready(function() {
             $('#provinsi').DataTable({
@@ -83,133 +48,142 @@
                 processing: true,
                 serverSide: true,
                 stateSave: true,
-                "columns": [
-                    { "data": "kode", width:"10%", className: "text-center" },
-                    { "data": "nama", width:"40%" },
-                    { "data": "aktif", width:"10%", className: "text-center", orderable: false, searchable : false,
-                        "render": function(data, type, row){
-                            
-                            if (data === 1){
-                                return '<div class="icheck-primary d-inline"><input id="aktif_'+row.id+'" data-aktif-id="aktif_'+row.id+'" class="icheck-primary" type="checkbox" disabled checked><label for="aktif_'+row.id+'"></label></div>';
-                                // return '☑️';
-                            }else{
-                                return '<input type="checkbox" disabled>';
+                "columns": [{
+                        "data": "kode",
+                        width: "10%",
+                        className: "text-center"
+                    },
+                    {
+                        "data": "nama",
+                        width: "40%"
+                    },
+                    {
+                        "data": "aktif",
+                        width: "10%",
+                        className: "text-center",
+                        orderable: false,
+                        searchable: false,
+                        "render": function(data, type, row) {
+
+                            if (data === 1) {
+                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" type="checkbox" disabled checked><label for="aktif_' + row.id + '"></label></div>';// return '☑️';
+                            } else {
+                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" type="checkbox" disabled><label for="aktif_' + row.id + '"></label></div>';
                             }
                         }
                     },
-                    { "data": "action", width: "8%", className: "text-center", orderable: false}
+                    {
+                        "data": "action",
+                        width: "8%",
+                        className: "text-center",
+                        orderable: false
+                    }
                 ],
                 layout: {
-                    bottomStart: {buttons: ['csv', 'excel', 'pdf', 'copy', 'print', 'colvis']}
+                    bottomStart: {
+                        buttons: ['csv', 'excel', 'pdf', 'copy', 'print', 'colvis']
+                    }
                 },
-                order: [[2, 'asc']],
+                order: [
+                    [2, 'asc']
+                ],
                 pageLength: 5,
-                lengthMenu: [ 5, 10, 50, 100, 500],
+                lengthMenu: [5, 10, 50, 100, 500],
             });
         });
     </script>
+
+    {{-- AJAX CALL CREATE FORM --}}
+    @include('master.provinsi.js')
+
+    {{-- AJAX CALL EDIT FORM--}}
     <script>
-        $(document).ready(function () {
-            $("#provinsiForm").submit(function (event) {
-                event.preventDefault();
-                var formData = $(this).serialize();
-                var provinsi_form = $('#addProvinsi');
+        $(document).ready(function() {
+            $('#editaktif').change(function() {
+                $('#edit-aktif').val(this.checked ? 1 : 0);
+            });
+       
+            $('#editProvinceForm').submit(function(e){
+                e.preventDefault();
+
+                let id_prov = $('#id').val();
+                let formData = $(this).serialize();
                 $.ajax({
-                    method: "POST",
-                    url: '{{ route('provinsi.store')}}', // Get form action URL
+                    url: '{{ route('provinsi.update', ':id_p') }}'.replace(':id_p', id_prov),
+                    method: 'PUT',
+                    dataType: 'JSON',
                     data: formData,
-                    dataType: 'json',
-                    success: function (response) {
+                    success:function(response){
                         if (response.status === 'success') {
                             Swal.fire({
-                                    title: "Success",
-                                    text: response.message,
-                                    icon: "success"
-                            });
-                            // $('#addProvinsi').modal('hide');
-
-                            $('#provinsi').DataTable().ajax.reload(function() {
-                                provinsi_form.modal('fade');
-                                $('#provinsiForm').find('form').trigger('reset');
+                                title: "Success",
+                                html: response.message,
+                                icon: "success"
                             });
 
-
-                        } else if (response.status === 400) {
-                            try {
-                                const errorData = JSON.parse(response.responseText);
-                                const errors = errorData.errors; // Access the error object
-                                let errorMessage = "";
-                                    for (const field in errors) {
-                                        errors[field].forEach(error => {
-                                        errorMessage += `* ${error}\n`; // Build a formatted error message string
-                                        });
-                                    }
-
-                                    Swal.fire({
-                                        title: "Error!",
-                                        text: errorMessage,
-                                        icon: "error"
-                                    });
-                                } catch (error) {
-                                console.error("Error parsing error response:", error);
-                                Swal.fire({
-                                    title: "Error!",
-                                    text: "An unexpected error occurred. Please try again later.",
-                                    icon: "error"
-                                });
-                                }
-                            } else {
-                                // Handle other errors
-                                console.error("Unexpected response:", response);
-                                Swal.fire({
-                                    title: "Error!",
-                                    text: response.message,
-                                    icon: "error"
-                                });
-                                $('#addProvinsi').modal('hide');
-                              }
-                        },
-                        error: function(error) {
+                            $('#editProvinceModal').modal('hide');
+                            $('#editProvinceForm').trigger('reset');
+                            $('#provinsi').DataTable().ajax.reload();
+                        }else{
+                            console.log(response.status);
                             Swal.fire({
-                                title: 'Error!',
-                                text: 'An error occurred during submission.',
+                                title: 'Unable to Update Data !',
+                                html: response.message,
                                 icon: 'error'
                             });
                         }
+                    },
+                    error: function(jqXHR) {
+                        const errors = JSON.parse(jqXHR.responseText).errors;
+                        const errorMessage = Object.values(errors).flat().map(error => `<p>* ${error}</p>`).join('');
+                        Swal.fire({
+                            title: jqXHR.statusText,
+                            html: errorMessage,
+                            icon: 'error'
+                        });
+                    }
                 });
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('.edit-province-btn').click(function(e) {
-                e.preventDefault(); // Prevent default form submission
-                //data-province-id
-                let provinceId = $(this).data('province-id');
-                console.log(provinceId);
 
-
+            $('#provinsi tbody').on('click', '.edit-province-btn', function(e) {
+                let id_provinsi = $(this).data('provinsi-id');
+                let action = $(this).data('action');
                 // Make Ajax request to fetch province data for editing
                 $.ajax({
-                    url: '{{ route('provinsi.edit', ':id') }}'.replace(':id', provinceId), // Route with ID placeholder
+                    url: '{{ route('provinsi.getedit', ':id') }}'.replace(':id', id_provinsi), // Route with ID placeholder
+                    
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        console.log(response);
-                        $('#editkode').val(response.kode);  // Set form field value
+                        let newActionUrl = '{{ route('provinsi.update', ':id') }}'.replace(':id', response.id);
+                        $("#editProvinceForm").trigger('reset');
+                        $("#editProvinceForm").attr("action", newActionUrl);
+                        $('#id').val(response.id);
+                        $('#editkode').val(response.kode);
                         $('#editnama').val(response.nama);
-                        $('#editaktif').val(response.aktif);
-
-                        $('#editProvinceForm').valid()
+                        
+                        if (response.aktif === 1) {
+                            $('#edit-aktif').val(response.aktif);
+                            $("#editaktif").prop("checked", true); // Set checked to true if value is 1
+                            } else {
+                            $('#edit-aktif').val(0);
+                            $("#editaktif").prop("checked", false); // Set checked to false if value is not 1
+                        }
                         $('#editProvinceModal').modal('show'); // Show the modal
                     },
-                    error: function(error) {
-                        console.error("Error fetching Provinsi data:", error);
-                        // Handle errors appropriately (e.g., display error message)
-                        swal.fire({
-                            text: "Error",
-                            message: "Failed to fetch data",
-                            icon: "error"
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        const errorData = JSON.parse(jqXHR.responseText);
+                        const errors = errorData.errors; // Access the error object
+                        let errorMessage = "";
+                        for (const field in errors) {
+                            errors[field].forEach(error => {
+                                errorMessage += `* ${error}\n`; // Build a formatted error message string
+                            });
+                        }
+                        Swal.fire({
+                            title: jqXHR.statusText,
+                            text: errorMessage,
+                            icon: 'error'
                         });
                     }
                 });
@@ -217,39 +191,51 @@
         });
 
     </script>
+    {{-- AJAX CALL DETAILS --}}
     <script>
-    $(document).ready(function() {
-        $('#provinsi tbody').on('click', '.view-province-btn', function(e) {
-            e.preventDefault(); // Prevent default form submission
-            let provinceId = $(this).data('province-id');
-            let action = $(this).data('action')
+       $(document).ready(function() {
+           $('#provinsi tbody').on('click', '.view-province-btn', function(e) {
+               e.preventDefault();
+               let provinceId = $(this).data('province-id');
+               let action = $(this).data('action')
+               $.ajax({
+                   url: '{{ route('provinsi.show', ':id') }}'.replace(':id', provinceId), // Route with ID placeholder
+                   method: 'GET',
+                   dataType: 'json',
+                   success: function(response) {
+                       let data = response || [];
+                       if (action === 'view') {
+                           $("#show-kode").text(data.kode);
+                           $("#show-nama").text(data.nama);
+                        //    $("#show-aktif").prop("checked", data.aktif === 1 );
+                           if (data.aktif === 1) {
+                                $('#show-aktif').val(data.aktif);
+                                $("#show-aktif").prop("checked", true); // Set checked to true if value is 1
+                            } else {
+                                $('#show-aktif').val(0);
+                                $("#show-aktif").prop("checked", false); // Set checked to false if value is not 1
+                            }
 
-            // console.log(provinceId);
-            $.ajax({
-                url: '{{ route('provinsi.show', ':id') }}'.replace(':id', provinceId), // Route with ID placeholder
-                method: 'GET',
-                dataType: 'json',
-                success: function(response) {
-
-                    let data = response || [];
-
-                    if (action === 'view') {
-                        $("#show-kode").text(data.kode);
-                        $("#show-nama").text(data.nama);
-                        $("#show-aktif").prop("checked", data.aktif === 1);
-                        $('#showProvinceModal').modal('show');
-                    } else {
-                        swal.fire({
-                            text: "Error",
-                            message: "Failed to fetch data",
-                            icon: "error"
-                        });
-                    }
-                }
-            })
-        });
-    });
-</script>
-
-
+                           $('#showProvinceModal').modal('show');
+                       }
+                       else{
+                           Swal.fire({
+                               text: "Error",
+                               message: "Failed to fetch data",
+                               icon: "error"
+                           });
+                       }
+                   },
+                   error: function(jqXHR, textStatus, errorThrown) {
+                       console.error("AJAX Error:", textStatus, errorThrown);
+                       Swal.fire({
+                           title: 'Error!',
+                           text: 'An error occurred during data fetch',
+                           icon: 'error'
+                       });
+                   }
+               });
+           });
+       });
+   </script>
 @endpush
