@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kabupaten', function (Blueprint $table) {
             $table->id();
             $table->string('kode',15);
+            $table->string('type',15)->default('Kabupaten');
             $table->string('nama', 200);
             // Foreign key constraint with cascade delete
             $table->foreignId('provinsi_id')->constrained('provinsi')->onDelete('cascade');
