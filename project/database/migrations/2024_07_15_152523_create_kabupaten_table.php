@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('kabupaten', function (Blueprint $table) {
             $table->id();
-            $table->string('kode', 15)->unique();
+            $table->string('kode',15);
             $table->string('nama', 200);
-            $table->unsignedBigInteger('provinsi_id');
+            // Foreign key constraint with cascade delete
+            $table->foreignId('provinsi_id')->constrained('provinsi')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('provinsi_id')->references('id')->on('provinsi')->onDelete('cascade');
         });
     }
 
