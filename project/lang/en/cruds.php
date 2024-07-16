@@ -52,6 +52,16 @@ return [
         'iso2'=>'ISO-2',
         'flag'=>'Flag',
     ],
+    'kabupaten' => [
+        'list' => 'List Regencies',
+        'kabupatens' => 'Regencies',
+        'title_singular' => 'Regency',
+        'kabupaten' => 'Regency',
+        'kode'=>'Code',
+        'nama'=>'Name',
+        'aktif'=>'Active',
+        'provinsi'=>'Province',
+    ],
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',

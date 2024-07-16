@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             RoleUserTableSeeder::class,
             CountryTableSeeder::class,
             ProvinsiSeeder::class,
+            KabupatenSeeder::class,
         ]);
     }
 }

@@ -6,12 +6,18 @@ use App\Models\Kabupaten;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Provinsi;
+use Gate;
 
 class KabupatenController extends Controller
 {
     public function index()
     {
-        //
+        // abort_if(Gate::denies('kabupaten_acceess'), Response::HTTP_FORBIDDEN, '403 Forbidden'); //Uncomment to apply permission provinsi_access index
+        // return view("master.kabupaten.index");.
+        $kab = new Kabupaten();
+        $data = $kab->dataKabupaten();
+        return $data;
+        
     }
 
     
@@ -20,7 +26,10 @@ class KabupatenController extends Controller
         //
     }
 
-    
+    public function datakabupaten(){
+        $data = Kabupaten::dataKabupaten();
+        return $data;
+    }
     public function store(Request $request)
     {
         //

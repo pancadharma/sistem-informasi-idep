@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('kode',15);
             $table->string('type',15)->default('Kabupaten');
             $table->string('nama', 200);
-            // Foreign key constraint with cascade delete
+            $table->boolean('aktif')->default(0)->nullable();
             $table->foreignId('provinsi_id')->constrained('provinsi')->onDelete('cascade');
             $table->timestamps();
         });
