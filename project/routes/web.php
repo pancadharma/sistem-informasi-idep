@@ -70,6 +70,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('provinsi', ProvinsiController::class);
     Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
     Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
+
+    Route::resource('kabupaten', KabupatenController::class);
 });
 
 
