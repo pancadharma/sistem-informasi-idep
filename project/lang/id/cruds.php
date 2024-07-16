@@ -53,7 +53,7 @@ return [
         'list' => 'Daftar Kabupaten',
         'kabupatens' => 'Kabupaten',
         'title_singular' => 'Kabupaten',
-        'kabupaten' => 'Kabupaten',
+        'title' => 'Kabupaten',
         'kode'=>'Kode',
         'nama'=>'Nama',
         'aktif'=>'Aktif',

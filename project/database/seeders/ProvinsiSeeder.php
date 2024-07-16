@@ -206,6 +206,11 @@ class ProvinsiSeeder extends Seeder
                 "nama"=> "PAPUA PEGUNUNGAN"
             ]
         ];
+        $provinsi = array_map(function($item) {
+            $item['aktif'] = 1;
+            return $item;
+        }, $provinsi);
+
         Provinsi::insert($provinsi);
     }
 }

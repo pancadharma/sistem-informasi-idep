@@ -4,13 +4,14 @@ namespace App\Models;
 
 use DateTimeZone;
 use DateTimeInterface;
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kabupaten extends Model
 {
-    use HasFactory;
+    use Auditable, HasFactory;
 
     public $table = 'kabupaten';
     protected $fillable = ['kode', 'nama', 'type', 'aktif', 'created_at', 'updated_at'];
@@ -35,11 +36,11 @@ class Kabupaten extends Model
     }
 
     public function dataKabupaten(){
-        $kabupaten = Kabupaten::get();
+        $kabupaten = Kabupaten::with('provinsi')->get();
         // Prepare data for DataTables (without modifying original collection)
         $data = DataTables::of($kabupaten)
             ->addColumn('action', function ($kabupaten) {
-                return '<button type="button" class="btn btn-sm btn-info edit-kabupaten-btn" data-action="edit" data-kabupaten-id="'. $kabupaten->id .'" title="'.__('global.edit') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
+                return '<button type="button" class="btn btn-sm btn-info edit-kab-btn" data-action="edit" data-kabupaten-id="'. $kabupaten->id .'" title="'.__('global.edit') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
 
                 <button type="button" class="btn btn-sm btn-primary view-kabupaten-btn" data-action="view" data-kabupaten-id="'. $kabupaten->id .'" value="'. $kabupaten->id .'" title="'.__('global.view') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-folder-open"></i> View</button>';
             })
@@ -47,5 +48,4 @@ class Kabupaten extends Model
         return $data;
     }
     
-
 }

@@ -56,6 +56,7 @@ return [
         'list' => 'List Regencies',
         'kabupatens' => 'Regencies',
         'title_singular' => 'Regency',
+        'title' => 'Regency',
         'kabupaten' => 'Regency',
         'kode'=>'Code',
         'nama'=>'Name',
