@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Provinsi;
 use Exception;
@@ -12,7 +12,7 @@ use App\Http\Requests\StoreProvinsiRequest;
 use App\Http\Requests\UpdateProvinsiRequest;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-
+use App\Http\Controllers\Controller;
 
 
 
@@ -58,7 +58,7 @@ class ProvinsiController extends Controller
 
             return response()->json(['status' => $status, 'message' => $message], 201); // Use 201 Created for successful creation
 
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             $status = 'error';
 
             // Handle specific MySQL error for numeric value out of range
