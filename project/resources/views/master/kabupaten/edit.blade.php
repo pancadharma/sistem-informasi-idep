@@ -6,17 +6,15 @@
                 <input type="hidden" name="id" id="id">
                 <div class="form-group">
                     <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
-                    <input type="text" id="editkode" name="kode" class="form-control" v-model="form.kode" required pattern="\d{2}\.\d{2}" maxlength="15">
+                    <input type="text" id="editkode" name="kode" class="form-control" v-model="form.kode" required maxlength="5">
                 </div>
                 <div class="form-group">
                     <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                     <input type="text" id="editnama" name="nama" class="form-control" v-model="form.nama" required maxlength="200">
                 </div>
-                <label for="provinsi">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
+                <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
                 <div class="form-group">
-                    <select id="provinsi_id_edit" name="provinsi_id_edit" class="form-control select2 provinsi-data" style="width: 100%" >
-                        {{-- <option id="provinsi_id_edit"><span id="provinsi_nama_edit"></span></option> --}}
-                    </select>
+                    <select id="provinsi_id_edit" name="provinsi_id_edit" class="form-control select2 provinsi-data" style="width: 100%"></select>
                 </div>
                 <div class="form-group">
                     <strong>{{ trans('cruds.status.title') }}</strong>

@@ -198,14 +198,26 @@
                     $('#editnama').val(response[0].nama);
                     
                     // set select 2 data
+                    let id_prov = response[0].provinsi.id;
+                    let nama_prov = response[0].provinsi.nama;
+                    
+                    console.log(id_prov);
+
+                    $('#provinsi_id_edit').val(id_prov).trigger('change');
+                    $('#provinsi_id_edit').prop("selected", true);
+
                     let data = response.results.map(function(item) {
                             return {
-                            id: item.id,
-                            text: item.nama
+                                id: item.id,
+                                text: item.nama
                             };
                         });
                     $('#provinsi_id_edit').select2({
-                        data: data
+                        data: data,
+                        placeholder: "Pilih",
+                        // minimumInputLength: 2,
+                        dropdownParent: $('#editKabupatenModal')
+
                     });
 
                     if (response[0].aktif === 1) {
