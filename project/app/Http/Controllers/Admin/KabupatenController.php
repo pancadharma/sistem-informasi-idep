@@ -43,8 +43,15 @@ class KabupatenController extends Controller
     
     public function edit(Kabupaten $kabupaten)
     {
+        
+        // $negaras = Negara::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+        // $kabupaten->load('provinsi');
+        // $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+        // $provinsi =
+        $provinsi = Provinsi::withActive()->get(['id', 'nama']);
         $kabupaten->load('provinsi');
-        return response()->json($kabupaten); // Return province data as JSON
+        
+        return [$kabupaten, "results" => $provinsi];
     }
 
     

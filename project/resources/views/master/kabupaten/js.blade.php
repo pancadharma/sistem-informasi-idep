@@ -7,7 +7,8 @@
             processing: true,
             serverSide: true,
             stateSave: true,
-            "columns": [{
+            "columns": [
+                {
                     data: "kode",
                     width: "5%",
                     className: "text-center"
@@ -173,11 +174,14 @@
         });
     });
 
+    function selectProvinsi(){
+
+    }
 
     $(document).ready(function() {
         $('#kabupaten tbody').on('click', '.edit-kab-btn', function(e) {
             e.preventDefault();
-            console.log("wee");
+            // console.log("wee");
 
             let kabupatenId = $(this).data('kabupaten-id');
             let newActionUrl = '{{ route('kabupaten.update', ':id') }}'.replace(':id', kabupatenId);
@@ -187,22 +191,31 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response.provinsi.nama);
-                    
                     $("#editKabupatenForm").trigger('reset');
                     $("#editKabupatenForm").attr("action", newActionUrl);
-                    $('#id').val(response.id);
-                    $('#editkode').val(response.kode);
-                    $('#editnama').val(response.nama);
-                    $('#provinsi_nama').val(response.provinsi.nama);
+                    $('#id').val(response[0].id);
+                    $('#editkode').val(response[0].kode);
+                    $('#editnama').val(response[0].nama);
                     
-                    if (response.aktif === 1) {
-                        $('#edit-aktif').val(response.aktif);
+                    // set select 2 data
+                    let data = response.results.map(function(item) {
+                            return {
+                            id: item.id,
+                            text: item.nama
+                            };
+                        });
+                    $('#provinsi_id_edit').select2({
+                        data: data
+                    });
+
+                    if (response[0].aktif === 1) {
+                        $('#edit-aktif').val(response[0].aktif);
                         $("#editaktif").prop("checked",true); // Set checked to true if value is 1
                     } else {
                         $('#edit-aktif').val(0);
                         $("#editaktif").prop("checked",false); // Set checked to false if value is not 1
                     }
+
                     $('#editKabupatenModal').modal('show'); // Show the modal
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
