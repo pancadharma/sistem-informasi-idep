@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UpdateKabupatenRequest;
 use App\Models\Kabupaten;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -43,21 +44,16 @@ class KabupatenController extends Controller
     
     public function edit(Kabupaten $kabupaten)
     {
-        
-        // $negaras = Negara::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
-        // $kabupaten->load('provinsi');
-        // $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
-        // $provinsi =
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
-        $kabupaten->load('provinsi');
-        
+        $kabupaten->load('provinsi');   
         return [$kabupaten, "results" => $provinsi];
     }
 
     
-    public function update(Request $request, Kabupaten $kabupaten)
+    public function update(UpdateKabupatenRequest $request, Kabupaten $kabupaten)
     {
-        //
+        return response()->json($request->all());
+
     }
 
     public function destroy(Kabupaten $kabupaten)

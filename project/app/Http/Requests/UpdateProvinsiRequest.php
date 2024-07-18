@@ -14,6 +14,9 @@ class UpdateProvinsiRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+        //check permission if users allowed to update
+        // return Gate::allows('provinsi_edit');
+
     }
 
     /**

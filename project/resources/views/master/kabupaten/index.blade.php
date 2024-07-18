@@ -16,7 +16,7 @@
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
-                        <th>{{ trans('cruds.kabupaten.title') }}</th>
+                        <th>{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</th>
                         <th>{{ trans('cruds.provinsi.title') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>
                         <th>{{ trans('cruds.status.action') }}</th>

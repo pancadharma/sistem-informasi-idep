@@ -7,7 +7,8 @@
             @method('POST')
             <div class="form-group">
               <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
-              <input type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required pattern="\d{2}\.\d{2}" maxlength="4">
+              <input type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required pattern="\d{2}\.\d{2}" maxlength="5">
+              <small>format is xx.xx</small>
             </div>
             <div class="form-group">
               <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>

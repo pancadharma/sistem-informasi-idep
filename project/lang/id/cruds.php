@@ -58,6 +58,7 @@ return [
         'nama'=>'Nama',
         'aktif'=>'Aktif',
         'provinsi'=>'Provinsi',
+        'kota'=>'Kota',
     ],
     'negara' => [
         'title'          => 'Negara',
