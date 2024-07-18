@@ -18,8 +18,8 @@
             <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.kabupaten.title') }}</strong>
 				<div class="icheck-primary">
 					<input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-					<label for="aktif"></label>
-              </div>
+					<label for="aktif">{{ trans('cruds.status.aktif') }}</label>
+            	</div>
             </div>
             <button type="submit" class="btn btn-success float-right" @disabled($errors->isNotEmpty())><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
         </form>

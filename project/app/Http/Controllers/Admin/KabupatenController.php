@@ -32,7 +32,11 @@ class KabupatenController extends Controller
     }
     public function store(Request $request)
     {
-        //
+        return response()->json([
+            "status" =>"success",
+            "message"=> trans(""),
+            "data" => $request->all(),
+        ]);
     }
 
     
@@ -55,12 +59,14 @@ class KabupatenController extends Controller
     {
         $data = $request->all();
         try {
-            $kabupaten->update($request->validated());
+            $data = $request->validated();
+            // dd($data);
+            $kabupaten->update($data);
             
             return response()->json([
                 'status'    => 'success',
                 'message'   => "Data ". $request->nama ." Updated Successfully",
-                'data'      => $data,
+                'data'      => $kabupaten,
             ],201);
 
         } catch (Exception $e) {
@@ -68,7 +74,8 @@ class KabupatenController extends Controller
             $message = $e->getMessage();
             return response()->json([
                 'status'    => $status,
-                'message'=> $message,
+                'message'   => $message,
+                'data'      => $data,
             ], 400);
         }
     }

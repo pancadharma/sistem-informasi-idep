@@ -71,6 +71,8 @@
 
             let idKabupaten = $('#id').val();
             let formData = $(this).serialize();
+
+            console.log(formData);
             $.ajax({
                 url: '{{ route('kabupaten.update', ':id_p') }}'.replace(':id_p', idKabupaten),
                 method: 'PUT',
@@ -85,8 +87,9 @@
                         });
                         $('#editKabupatenModal').modal('hide');
                         $('#editKabupatenForm').trigger('reset');
+                        $('#provinsi_id').val(null).trigger('change');
                         $('#kabupaten').DataTable().ajax.reload();
-                    } else {
+                    } else if(response.status === "error" || response.status === "warning"){
                         console.log(response.status);
                         Swal.fire({
                             title: 'Unable to Update Data !',
