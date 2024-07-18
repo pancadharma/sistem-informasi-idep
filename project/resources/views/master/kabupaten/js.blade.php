@@ -30,14 +30,12 @@
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' +
-                                row.id + '" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" type="checkbox" disabled checked><label for="aktif_' +
+                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" type="checkbox" checked><label for="aktif_' +
                                 row.id + '"></label></div>'; // return '☑️';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' +
-                                row.id + '" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" type="checkbox" disabled><label for="aktif_' +
+                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" type="checkbox" ><label for="aktif_' +
                                 row.id + '"></label></div>';
                         }
                     }
@@ -169,23 +167,17 @@
 
     //prevent checkbox clicked in show modal 
     $(document).ready(function() {
-        $('#show-aktif').click(function(event) {
+        $('#show-aktif, #aktif_').click(function(event) {
             event.preventDefault();
         });
     });
-
-    function selectProvinsi(){
-
-    }
-
+    //call modal edit and populate data into modal form
     $(document).ready(function() {
         $('#kabupaten tbody').on('click', '.edit-kab-btn', function(e) {
             e.preventDefault();
-            // console.log("wee");
 
             let kabupatenId = $(this).data('kabupaten-id');
             let newActionUrl = '{{ route('kabupaten.update', ':id') }}'.replace(':id', kabupatenId);
-
             $.ajax({
                 url: '{{ route('kabupaten.edit', ':id') }}'.replace(':id', kabupatenId),
                 method: 'GET',
@@ -195,31 +187,7 @@
                     $("#editKabupatenForm").attr("action", newActionUrl);
                     $('#id').val(response[0].id);
                     $('#editkode').val(response[0].kode);
-                    $('#editnama').val(response[0].nama);
-                    
-                    // set select 2 data
-                    let id_prov = response[0].provinsi.id;
-                    let nama_prov = response[0].provinsi.nama;
-                    
-                    console.log(id_prov);
-
-                    $('#provinsi_id_edit').val(id_prov).trigger('change');
-                    $('#provinsi_id_edit').prop("selected", true);
-
-                    let data = response.results.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama
-                            };
-                        });
-                    $('#provinsi_id_edit').select2({
-                        data: data,
-                        placeholder: "Pilih",
-                        // minimumInputLength: 2,
-                        dropdownParent: $('#editKabupatenModal')
-
-                    });
-
+                    $('#editnama').val(response[0].nama);                  
                     if (response[0].aktif === 1) {
                         $('#edit-aktif').val(response[0].aktif);
                         $("#editaktif").prop("checked",true); // Set checked to true if value is 1
@@ -227,8 +195,26 @@
                         $('#edit-aktif').val(0);
                         $("#editaktif").prop("checked",false); // Set checked to false if value is not 1
                     }
-
                     $('#editKabupatenModal').modal('show'); // Show the modal
+                    
+                    // set select 2 data
+                    let id_prov = response[0].provinsi.id;
+                    let nama_prov = response[0].provinsi.nama;
+                    
+                    let data = response.results.map(function(item) {
+                        return {
+                            id: item.id,
+                            text: item.nama,
+                        };
+                    });
+                    $('#provinsi_id').select2({
+                        dropdownParent: $('#editKabupatenModal'),
+                        data : data
+                    });
+                    let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
+                    $('#provinsi_id').append(selected_data).trigger('change');
+                    $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
@@ -249,8 +235,6 @@
             });
         });
     });
-
-
     $(document).ready(function() {
         $('#kode, #editkode').on('input', function() {
             // Remove any non-numeric characters
@@ -266,8 +250,6 @@
                 parts[0] = parts[0].slice(0, 2); // Ensure first part is maximum two digits
                 value = parts[0];
             }
-            
-            // Update the input value with formatted result
             $(this).val(value);
         });
     });
