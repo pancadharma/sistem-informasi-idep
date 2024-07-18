@@ -27,7 +27,7 @@ class UpdateKabupatenRequest extends FormRequest
             'kode'          => ['string','max:15','required','unique:provinsi,kode,' . request()->route('kabupaten')->id,],
             'nama'          => ['required','string', 'max:255',],
             'provinsi_id'   => ['required','integer',],
-            'aktif'         => ['required','boolean',],
+            'aktif'         => ['integer',],
         ];
     }
 
