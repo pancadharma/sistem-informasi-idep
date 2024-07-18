@@ -13,7 +13,6 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
         "laraveldaily/laravel-charts": "^0.2.3",
-        "php-flasher/flasher-toastr-laravel": "^1.15",
         "spatie/laravel-ignition": "^2.8",
         "spatie/laravel-medialibrary": "^11.7",
         "yajra/laravel-datatables-oracle": "^10.3"

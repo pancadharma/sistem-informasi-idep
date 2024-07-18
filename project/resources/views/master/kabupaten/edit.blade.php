@@ -6,7 +6,7 @@
             <input type="hidden" name="id" id="id">
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
-                <input type="text" id="editkode" name="kode" class="form-control" v-model="form.kode" required maxlength="5">
+                <input type="text" id="editkode" name="kode" class="form-control" v-model="form.kode" pattern="\d{2}\.\d{2}" required maxlength="5">
             </div>
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\UpdateKabupatenRequest;
+use Gate;
+use Exception;
+use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use Illuminate\Http\Request;
+use Flasher\Prime\FlasherInterface;
 use App\Http\Controllers\Controller;
-use App\Models\Provinsi;
-use Gate;
-use Psy\Command\WhereamiCommand;
+use App\Http\Requests\UpdateKabupatenRequest;
 
 class KabupatenController extends Controller
 {
@@ -52,8 +53,24 @@ class KabupatenController extends Controller
     
     public function update(UpdateKabupatenRequest $request, Kabupaten $kabupaten)
     {
-        return response()->json($request->all());
+        $data = $request->all();
+        try {
+            $kabupaten->update($request->validated());
+            
+            return response()->json([
+                'status'    => 'success',
+                'message'   => "Data ". $request->nama ." Updated Successfully",
+                'data'      => $data,
+            ],201);
 
+        } catch (Exception $e) {
+            $status = 'error';
+            $message = $e->getMessage();
+            return response()->json([
+                'status'    => $status,
+                'message'=> $message,
+            ], 400);
+        }
     }
 
     public function destroy(Kabupaten $kabupaten)

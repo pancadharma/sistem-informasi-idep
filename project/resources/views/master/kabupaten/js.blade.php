@@ -1,5 +1,5 @@
-{{-- Ajax Request data using server side data table to reduce large data load --}}
 <script>
+    //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
         $('#kabupaten').DataTable({
             responsive: true,
@@ -59,11 +59,9 @@
             lengthMenu: [5, 10, 50, 100, 500],
         });
     });
-</script>
-{{-- AJAX CALL EDIT FORM --}}
-<script>
-    $(document).ready(function() {
 
+    // SUBMIT UPDATE FORM - EDIT
+    $(document).ready(function() {
         $('#editaktif').change(function() {
             $('#edit-aktif').val(this.checked ? 1 : 0);
         });
@@ -85,7 +83,6 @@
                             html: response.message,
                             icon: "success"
                         });
-
                         $('#editKabupatenModal').modal('hide');
                         $('#editKabupatenForm').trigger('reset');
                         $('#kabupaten').DataTable().ajax.reload();
@@ -111,10 +108,8 @@
             });
         });
     });
-</script>
 
-{{-- AJAX CALL DETAILS & EDIT --}}
-<script>
+    // AJAX CALL DETAILS & EDIT
     $(document).ready(function() {
         $('#kabupaten tbody').on('click', '.view-kabupaten-btn', function(e) {
             e.preventDefault();
