@@ -153,8 +153,14 @@ return [
     'form'=> [
         'kode'=> 'Kode',
         'nama'=> 'Nama',
-        'submit'=> 'Submit',
-        'cancel'=> 'Cancel',
+        'submit'=> 'Kirim',
+        'cancel'=> 'Batalkan',
+    ],
+    'data' => [
+        'data'      => 'Data',
+        'added'     => 'Berhasil ditambahkan',
+        'updated'   => 'Berhasil ditambahkan',
+        'deleted'   => 'Berhasil dihapus' 
     ]
 
 ];

@@ -233,40 +233,154 @@
             });
         });
     });
+
+    //call add kabupaten modal form
     $(document).ready(function() {
-        $('#kode, #editkode').on('input', function() {
-            // Remove any non-numeric characters
-            let value = $(this).val().replace(/[^\d.]/g, '');
+        $('.add-kabupaten').on('click', function(e){
+            e.preventDefault();
+            $.ajax({
+                url:  '{{ route('kabupaten.create') }}',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response){
+                    let data = response.map(function(item) {
+                        return {
+                            id: item.id,
+                            text: item.nama,
+                        };
+                    });
+                    $('#provinsi_add').select2({
+                        dropdownParent: $('#addKabupaten'),
+                        data : data,
+                        placeholder: 'Select Data'
+                    });
+                },error: function(jqXHR, textStatus, errorThrown) {
+                    const errorData = JSON.parse(jqXHR.responseText);
+                    const errors = errorData.errors; // Access the error object
+                    let errorMessage = "";
+                    for (const field in errors) {
+                        errors[field].forEach(error => {
+                            errorMessage +=
+                            `* ${error}\n`; // Build a formatted error message string
+                        });
+                    }
+                    Swal.fire({
+                        title: jqXHR.statusText,
+                        text: errorMessage,
+                        icon: 'error'
+                    });
+                }
+            });
+
+
+
+
+
+
+        });
+
+    // submit form 
+        $('.btn-add-kabupaten').on('click', function(e, form) {
+            e.preventDefault();
+            var formDataKab = $('#kabupatenForm').serialize();
+            // console.log(formDataKab);
+            // alert(formDataKab);
+            // consle.log(formDataKab);
+            $.ajax({
+                method: "POST",
+                url: '{{ route('kabupaten.store') }}', // Get form action URL
+                data: formDataKab,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success === true) {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success"
+                        });
+                        $('#addKabupaten').modal('hide');
+                        $('#kabupatenForm').trigger('reset');
+                        $('#kabupaten').DataTable().ajax.reload();
+                    } else {
+                        var errorMessage = response.message;
+                        if (response.status === 400) {
+                            try {
+                                const errors = JSON.parse(response.responseText).errors;
+                                errorMessage = Object.values(errors).flat().map(error => `<p>* ${error}</p>`).join('');
+                            } catch (error) {
+                                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+                            }
+                        }
+                        Swal.fire({
+                            title: "Error!",
+                            html: errorMessage,
+                            icon: "error"
+                        });
+                        $('#addKabupaten').modal('hide');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                        errorMessage = response.message;
+                        }
+
+                        if (response.errors) {
+                        const errors = response.errors;
+                        errorMessage += '<br><br><ul>';
+                        for (const field in errors) {
+                            if (errors.hasOwnProperty(field)) {
+                            errors[field].forEach(err => {
+                                errorMessage += `<li>${field}: ${err}</li>`;
+                            });
+                            }
+                        }
+                        errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage, // Use 'html' instead of 'text'
+                    });
+                    // var errorData = xhr.responseJSON;
+                    // var errorMessage = `<b>Error: ${xhr.status} - ${xhr.statusText}</b><br>`;
+                    // if (errorData && errorData.errors) {
+                    //     errorMessage += "<ul>";
+                    //         for (var field in errorData.errors) {
+                    //             errorMessage += `<li><b>${field}:</b>`;
+                    //                 for (var i = 0; i < errorData.errors[field].length; i++) {
+                    //                     errorMessage += `<br>- ${errorData.errors[field][i]}`;
+                    //                 }
+                    //                 errorMessage += "</li>";
+                    //             }
+                    //             errorMessage += "</ul>";
+                    //         } else {
+                    //             errorMessage += "<br><i>No specific error details available.</i>";
+                    //         }
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Error!',
+                    //     html: errorMessage
+                    // });
+
+                    // Swal.fire({
+                    //     icon: 'error',
+                    //     title: 'Error!',
+                    //     text: `Error: ${xhr.status} - ${xhr.statusText}`,
+                    // });
+                    // $('#kabupatenForm').trigger('reset');
+                }
+            });
             
-            // Split by dot (.) and ensure only two parts
-            let parts = value.split('.');
-            if (parts.length > 1) {
-                parts[0] = parts[0].slice(0, 2); // Ensure first part is maximum two digits
-                parts[1] = parts[1].slice(0, 2); // Ensure second part is maximum two digits
-                value = parts.join('.');
-            } else {
-                parts[0] = parts[0].slice(0, 2); // Ensure first part is maximum two digits
-                value = parts[0];
-            }
-            $(this).val(value);
         });
     });
 
-    // $(document).ready(function() {
-    //     $('#kabupaten tbody').on('click', '.edit-kab-btn', function(e) {
-    //         e.preventDefault();
-    //         console.log('clicked');
-    //         alert('hellow');
-
-
-    //     });
-    // });
-
-    // $(document).ready(function() {
-    //     $('#kabupaten tbody').on('click', '.view-kabupaten-btn', function(e) {
-    //     e.preventDefault();
-    //         console.log('hell hell helll');
-    //         alert('wkwkwkwwkwkw wwkwkwkwk');
-    //     });
-    // });
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
 </script>

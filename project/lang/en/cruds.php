@@ -159,6 +159,12 @@ return [
         'nama'=> 'Nama',
         'submit'=> 'Kirim',
         'cancel'=> 'Batalkan',
+    ],
+    'data' => [
+        'data'      => 'Data',
+        'added'     => 'Added Successfully',
+        'updated'   => 'Updated Successfully',
+        'deleted'   => 'Has Been Deleted' 
     ]
 
 ];

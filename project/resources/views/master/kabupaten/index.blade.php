@@ -7,7 +7,7 @@
 @section('content_body')
     <div class="row mb-2">
         <div class="col-lg-6">
-            <x-adminlte-button label="{{ trans('global.add') }} {{ trans('cruds.kabupaten.title_singular') }}" data-toggle="modal" data-target="#addKabupaten" class="bg-success"/>
+            <x-adminlte-button label="{{ trans('global.add') }} {{ trans('cruds.kabupaten.title_singular') }}" data-toggle="modal" data-target="#addKabupaten" class="bg-success add-kabupaten"/>
         </div>
     </div>
     <div class="card card-outline card-primary">
@@ -37,8 +37,9 @@
 @push('js')
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
-    @section('plugins.Validation', true)
     @section('plugins.Select2', true)
+    @section('plugins.Toastr', true)
+    @section('plugins.Validation', true)
     
     @include('master.kabupaten.js')
 @endpush
