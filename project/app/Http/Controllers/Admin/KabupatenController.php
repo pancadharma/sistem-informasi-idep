@@ -37,55 +37,54 @@ class KabupatenController extends Controller
     }
     public function store(StoreKabupatenRequest $request)
     {
-        $data = $request->validated();
-        return response()->json([
-            'success'   => true,
-            'message'   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.added'),
-            'data'      => $data,
-        ], 201);
+        // $data = $request->validated();
+        // return response()->json([
+        //     'success'   => true,
+        //     'message'   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.added'),
+        //     'data'      => $data,
+        // ], 201);
 
-        // try {
+        try {
+            $data = $request->validated();
+            Kabupaten::create($data);
+            
+            return response()->json([
+                "success"    => true,
+                "message"   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.added'),
+                "status"    => 201,
+                "data"      => $data,
+            ]);
 
-        //     $data = $request->validated();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status"    => 400,
+                "success"   => false,
+                "message"   => $th,
+                "data"      => $request->all(),
+            ]);
+        }catch (ValidationException $e) {
+            $status = 'error';
+            $message = 'Validation failed: ' . implode(', ', $e->errors());
+            return response()->json(['status' => $status, 'message' => $message], 422); // Use 422 Unprocessable Entity for validation errors
 
-        //     return response()->json([
-        //         "status"    => 201,
-        //         "success"    => true,
-        //         "message"   => "Data Saved",
-        //         "data"      => $request->all(),
-        //     ]);
-        // } catch (\Throwable $th) {
-        //     return response()->json([
-        //         "status"    => 201,
-        //         "success"   => false,
-        //         "message"   => $th,
-        //         "data"      => $request->all(),
-        //     ]);
-        // }catch (ValidationException $e) {
-        //     $status = 'error';
-        //     $message = 'Validation failed: ' . implode(', ', $e->errors());
-        //     return response()->json(['status' => $status, 'message' => $message], 422); // Use 422 Unprocessable Entity for validation errors
+        } catch (QueryException $e) {
+            $status = 'error';
+            if ($e->getCode() === '22003') {
+                $message = 'The provided code is too large for the database. Please enter a valid code within the allowed range.';
+            } else {
+                $message = 'Database error: ' . $e->getMessage();
+            }
+            return response()->json(['status' => $status, 'message' => $message], 400); // Use 400 Bad Request for database errors
 
-        // } catch (QueryException $e) {
-        //     $status = 'error';
-        //     if ($e->getCode() === '22003') {
-        //         $message = 'The provided code is too large for the database. Please enter a valid code within the allowed range.';
-        //     } else {
-        //         // Other database errors
-        //         $message = 'Database error: ' . $e->getMessage();
-        //     }
-        //     return response()->json(['status' => $status, 'message' => $message], 400); // Use 400 Bad Request for database errors
-
-        // } catch (Exception $e) {
-        //     $status = 'error';
-        //     $message = 'An unexpected error occurred: ' . $e->getMessage();
-        //     return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
-        // } catch (Exception $e) {
-        //     $status = 'error';
-        //     $message = 'An unexpected error occurred: ' . $e->getMessage(); 
-        //     return response()->json(['status' => $status, 'message' => $message], 419); // Use 500 Internal Server Error for general errors
-        // }
-
+        } catch (Exception $e) {
+            $status = 'error';
+            $message = 'An unexpected error occurred: ' . $e->getMessage();
+            return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
+        } catch (Exception $e) {
+            $status = 'error';
+            $message = 'An unexpected error occurred: ' . $e->getMessage(); 
+            return response()->json(['status' => $status, 'message' => $message], 419); // Use 500 Internal Server Error for general errors
+        }
     }
 
     

@@ -202,7 +202,7 @@
                     let data = response.results.map(function(item) {
                         return {
                             id: item.id,
-                            text: item.nama,
+                            text: item.id+' - '+ item.nama,
                         };
                     });
                     $('#provinsi_id').select2({
@@ -246,7 +246,7 @@
                     let data = response.map(function(item) {
                         return {
                             id: item.id,
-                            text: item.nama,
+                            text: item.id+' - '+ item.nama,
                         };
                     });
                     $('#provinsi_add').select2({
@@ -271,13 +271,25 @@
                     });
                 }
             });
-
-
-
-
-
-
         });
+
+        $('#provinsi_add').on('change', function() {
+            let val_prov_id = $('#provinsi_add').val();
+            $('#kode').val(val_prov_id+'.');
+        });
+        // $('#provinsi_id').on('change', function() {
+        //     let val_prov_id = $('#provinsi_id').val();
+        //     let edit_kode = $('#editkode').val();
+        //     // console.log(edit_kode);
+        //     if(edit_kode === 0 ){
+        //         // $('#editkode').val(edit_kode);
+        //         $('#editkode').val(val_prov_id+'.');
+        //     }else{
+
+        //     }
+        // });
+
+        
 
     // submit form 
         $('.btn-add-kabupaten').on('click', function(e, form) {
