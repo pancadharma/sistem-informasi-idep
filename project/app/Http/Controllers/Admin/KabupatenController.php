@@ -23,6 +23,12 @@ class KabupatenController extends Controller
         return view("master.kabupaten.index");
     }
 
+    public function figma()
+    {
+        // abort_if(Gate::denies('kabupaten_acceess'), Response::HTTP_FORBIDDEN, '403 Forbidden'); //Uncomment to apply permission provinsi_access index
+        $provinsi = Provinsi::withActive()->get(['id', 'nama']);
+        return view("master.kabupaten.figma");
+    }
     
     public function create()
     {

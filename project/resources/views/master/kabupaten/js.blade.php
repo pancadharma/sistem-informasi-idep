@@ -207,7 +207,8 @@
                     });
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
-                        data : data
+                        data : data,
+                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
                     let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
                     $('#provinsi_id').append(selected_data).trigger('change');
@@ -252,7 +253,7 @@
                     $('#provinsi_add').select2({
                         dropdownParent: $('#addKabupaten'),
                         data : data,
-                        placeholder: 'Select Data'
+                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
                 },error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
@@ -276,28 +277,12 @@
         $('#provinsi_add').on('change', function() {
             let val_prov_id = $('#provinsi_add').val();
             $('#kode').val(val_prov_id+'.');
-        });
-        // $('#provinsi_id').on('change', function() {
-        //     let val_prov_id = $('#provinsi_id').val();
-        //     let edit_kode = $('#editkode').val();
-        //     // console.log(edit_kode);
-        //     if(edit_kode === 0 ){
-        //         // $('#editkode').val(edit_kode);
-        //         $('#editkode').val(val_prov_id+'.');
-        //     }else{
-
-        //     }
-        // });
-
-        
+        });        
 
     // submit form 
         $('.btn-add-kabupaten').on('click', function(e, form) {
             e.preventDefault();
             var formDataKab = $('#kabupatenForm').serialize();
-            // console.log(formDataKab);
-            // alert(formDataKab);
-            // consle.log(formDataKab);
             $.ajax({
                 method: "POST",
                 url: '{{ route('kabupaten.store') }}', // Get form action URL
@@ -359,33 +344,6 @@
                         title: 'Error!',
                         html: errorMessage, // Use 'html' instead of 'text'
                     });
-                    // var errorData = xhr.responseJSON;
-                    // var errorMessage = `<b>Error: ${xhr.status} - ${xhr.statusText}</b><br>`;
-                    // if (errorData && errorData.errors) {
-                    //     errorMessage += "<ul>";
-                    //         for (var field in errorData.errors) {
-                    //             errorMessage += `<li><b>${field}:</b>`;
-                    //                 for (var i = 0; i < errorData.errors[field].length; i++) {
-                    //                     errorMessage += `<br>- ${errorData.errors[field][i]}`;
-                    //                 }
-                    //                 errorMessage += "</li>";
-                    //             }
-                    //             errorMessage += "</ul>";
-                    //         } else {
-                    //             errorMessage += "<br><i>No specific error details available.</i>";
-                    //         }
-                    // Swal.fire({
-                    //     icon: 'error',
-                    //     title: 'Error!',
-                    //     html: errorMessage
-                    // });
-
-                    // Swal.fire({
-                    //     icon: 'error',
-                    //     title: 'Error!',
-                    //     text: `Error: ${xhr.status} - ${xhr.statusText}`,
-                    // });
-                    // $('#kabupatenForm').trigger('reset');
                 }
             });
             

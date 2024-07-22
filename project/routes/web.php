@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
 
     Route::get('datakabupaten', [KabupatenController::class, 'datakabupaten'])->name('data.kabupaten');
+    Route::get('figma.kabupaten', [KabupatenController::class, 'figma'])->name('figma.kabupaten');
     Route::resource('kabupaten', KabupatenController::class);
 });
 
