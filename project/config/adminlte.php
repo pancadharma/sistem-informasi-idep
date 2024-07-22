@@ -212,8 +212,8 @@ return [
                 ],
                 [
                     'text' => 'kabupaten',
-                    'active' => ['kabupaten', 'regex:@^kabupaten/[0-9]+$@'],
-                    'url'  => '#',
+                    'active' => ['kabupaten', 'kabupaten*', 'regex:@^kabupaten/[0-9]+$@'],
+                    'route'  => 'kabupaten.index',
                     'icon'  => 'fas fa-table',
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
@@ -497,12 +497,13 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
+                    // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
                     'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    // 'location' => '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css',
+                    // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.css',
                     'location' => '/vendor/select2/css/select2.css',
                 ],
             ],
@@ -656,6 +657,21 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/bootstrap-select/dist/css/bootstrap-select.min.css',
+                ],
+            ],
+        ],
+        'Toastr' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/toastr/toastr.css',
                 ],
             ],
         ],

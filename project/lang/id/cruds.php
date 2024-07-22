@@ -48,9 +48,17 @@ return [
         'title' => 'Provinsi',
         'kode'=>'Kode',
         'nama'=>'Name',
-        'iso1'=>'ISO-1',
-        'iso2'=>'ISO-2',
-        'flag'=>'Flag',
+    ],
+    'kabupaten' => [
+        'list' => 'Daftar Kabupaten',
+        'kabupatens' => 'Kabupaten',
+        'title_singular' => 'Kabupaten',
+        'title' => 'Kabupaten',
+        'kode'=>'Kode',
+        'nama'=>'Nama',
+        'aktif'=>'Aktif',
+        'provinsi'=>'Provinsi',
+        'kota'=>'Kota',
     ],
     'negara' => [
         'title'          => 'Negara',
@@ -145,8 +153,14 @@ return [
     'form'=> [
         'kode'=> 'Kode',
         'nama'=> 'Nama',
-        'submit'=> 'Submit',
-        'cancel'=> 'Cancel',
+        'submit'=> 'Kirim',
+        'cancel'=> 'Batalkan',
+    ],
+    'data' => [
+        'data'      => 'Data',
+        'added'     => 'Berhasil ditambahkan',
+        'updated'   => 'Berhasil ditambahkan',
+        'deleted'   => 'Berhasil dihapus' 
     ]
 
 ];

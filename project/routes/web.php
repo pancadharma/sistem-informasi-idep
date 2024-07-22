@@ -4,7 +4,8 @@ use App\Http\Controllers\Admin;
 use App\Models\Provinsi;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProvinsiController;
+use App\Http\Controllers\Admin\ProvinsiController;
+use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
@@ -69,6 +70,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('provinsi', ProvinsiController::class);
     Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
     Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
+
+    Route::get('datakabupaten', [KabupatenController::class, 'datakabupaten'])->name('data.kabupaten');
+    Route::get('kabupaten.figma', [KabupatenController::class, 'figma'])->name('kabupaten.figma');
+    Route::resource('kabupaten', KabupatenController::class);
 });
 
 

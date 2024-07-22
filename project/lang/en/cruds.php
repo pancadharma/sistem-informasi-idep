@@ -52,6 +52,18 @@ return [
         'iso2'=>'ISO-2',
         'flag'=>'Flag',
     ],
+    'kabupaten' => [
+        'list' => 'List Regencies',
+        'kabupatens' => 'Regencies',
+        'title_singular' => 'Regency',
+        'title' => 'Regency',
+        'kabupaten' => 'Regency',
+        'kode'=>'Code',
+        'nama'=>'Name',
+        'aktif'=>'Active',
+        'provinsi'=>'Province',
+        'kota'=>'City',
+    ],
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',
@@ -147,6 +159,12 @@ return [
         'nama'=> 'Nama',
         'submit'=> 'Kirim',
         'cancel'=> 'Batalkan',
+    ],
+    'data' => [
+        'data'      => 'Data',
+        'added'     => 'Added Successfully',
+        'updated'   => 'Updated Successfully',
+        'deleted'   => 'Has Been Deleted' 
     ]
 
 ];
