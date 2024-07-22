@@ -255,6 +255,12 @@
                         data : data,
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
+
+                    $(document).on('select2:open', function() {
+                        setTimeout(function() {
+                            document.querySelector('.select2-search__field').focus();
+                        }, 100);
+                    });
                 },error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
                     const errors = errorData.errors; // Access the error object
