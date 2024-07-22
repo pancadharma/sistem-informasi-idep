@@ -10,7 +10,7 @@
                 {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
             </div>
                 <div class="card-body">
-                <form action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form" id="kabupatenForm">
+                <form action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form" id="kabupatenForm" autocomplete="off">
                     @csrf
                     @method('POST')
                     <div class="form-group">

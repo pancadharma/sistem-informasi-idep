@@ -2,7 +2,7 @@
     size="lg" theme="success" icon="fa fa-plus" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="modal-body">
-        <form @submit.prevent="handleSubmit" id="kabupatenForm" action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form">
+        <form @submit.prevent="handleSubmit" id="kabupatenForm" action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form" autocomplete="off">
             @csrf
             @method('POST')
             <div class="form-group">

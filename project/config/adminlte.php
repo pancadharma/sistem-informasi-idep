@@ -212,7 +212,7 @@ return [
                 ],
                 [
                     'text' => 'kabupaten',
-                    'active' => ['kabupaten', 'regex:@^kabupaten/[0-9]+$@'],
+                    'active' => ['kabupaten', 'kabupaten*', 'regex:@^kabupaten/[0-9]+$@'],
                     'route'  => 'kabupaten.index',
                     'icon'  => 'fas fa-table',
                     // 'classes' => 'text-danger text-uppercase',
