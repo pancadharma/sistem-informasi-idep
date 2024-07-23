@@ -22,11 +22,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="kode">{{ trans('cruds.kabupaten.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
                         <input placeholder="" type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required data-toggle="tooltip" data-placement="top" maxlength="5">
                     </div>
                     <div class="form-group">
-                        <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
