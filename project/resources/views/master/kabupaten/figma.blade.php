@@ -30,6 +30,14 @@
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
+                        <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
+                        <select id="type" name="type" class="form-control select2 type" style="width: 100%">
+                            <option></option>
+                            <option value="Kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
+                            <option value="Kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                     <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.kabupaten.title') }}</strong>
                         <div class="icheck-primary">
                             <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">

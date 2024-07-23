@@ -5,7 +5,7 @@ import os
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Define input and output file paths
-input_file_path = os.path.join(script_dir, 'data-kabupaten.json')
+input_file_path = os.path.join(script_dir, 'transformed_kabupaten.json')
 output_file_path = os.path.join(script_dir, 'kab.php')
 
 # Read the data from the input file

@@ -13,3091 +13,4121 @@ class KabupatenSeeder extends Seeder
      */
     public function run(): void
     {
-        $kabupaten = [
-            [
-                "kode"=> "11.1",
-                "nama"=> "KAB. SIMEULUE",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.2",
-                "nama"=> "KAB. ACEH SINGKIL",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.3",
-                "nama"=> "KAB. ACEH SELATAN",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.4",
-                "nama"=> "KAB. ACEH TENGGARA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.5",
-                "nama"=> "KAB. ACEH TIMUR",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.6",
-                "nama"=> "KAB. ACEH TENGAH",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.7",
-                "nama"=> "KAB. ACEH BARAT",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.8",
-                "nama"=> "KAB. ACEH BESAR",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.9",
-                "nama"=> "KAB. PIDIE",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.10",
-                "nama"=> "KAB. BIREUEN",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.11",
-                "nama"=> "KAB. ACEH UTARA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.12",
-                "nama"=> "KAB. ACEH BARAT DAYA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.13",
-                "nama"=> "KAB. GAYO LUES",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.14",
-                "nama"=> "KAB. ACEH TAMIANG",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.15",
-                "nama"=> "KAB. NAGAN RAYA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.16",
-                "nama"=> "KAB. ACEH JAYA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.17",
-                "nama"=> "KAB. BENER MERIAH",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.18",
-                "nama"=> "KAB. PIDIE JAYA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.71",
-                "nama"=> "KOTA BANDA ACEH",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.72",
-                "nama"=> "KOTA SABANG",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.73",
-                "nama"=> "KOTA LANGSA",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.74",
-                "nama"=> "KOTA LHOKSEUMAWE",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "11.75",
-                "nama"=> "KOTA SUBULUSSALAM",
-                "provinsi_id"=> 11,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.1",
-                "nama"=> "KAB. NIAS",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.2",
-                "nama"=> "KAB. MANDAILING NATAL",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.3",
-                "nama"=> "KAB. TAPANULI SELATAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.4",
-                "nama"=> "KAB. TAPANULI TENGAH",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.5",
-                "nama"=> "KAB. TAPANULI UTARA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.6",
-                "nama"=> "KAB. TOBA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.7",
-                "nama"=> "KAB. LABUHANBATU",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.8",
-                "nama"=> "KAB. ASAHAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.9",
-                "nama"=> "KAB. SIMALUNGUN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.10",
-                "nama"=> "KAB. DAIRI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.11",
-                "nama"=> "KAB. KARO",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.12",
-                "nama"=> "KAB. DELI SERDANG",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.13",
-                "nama"=> "KAB. LANGKAT",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.14",
-                "nama"=> "KAB. NIAS SELATAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.15",
-                "nama"=> "KAB. HUMBANG HASUNDUTAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.16",
-                "nama"=> "KAB. PAKPAK BHARAT",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.17",
-                "nama"=> "KAB. SAMOSIR",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.18",
-                "nama"=> "KAB. SERDANG BEDAGAI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.19",
-                "nama"=> "KAB. BATU BARA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.20",
-                "nama"=> "KAB. PADANG LAWAS UTARA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.21",
-                "nama"=> "KAB. PADANG LAWAS",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.22",
-                "nama"=> "KAB. LABUHANBATU SELATAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.23",
-                "nama"=> "KAB. LABUHANBATU UTARA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.24",
-                "nama"=> "KAB. NIAS UTARA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.25",
-                "nama"=> "KAB. NIAS BARAT",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.71",
-                "nama"=> "KOTA SIBOLGA",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.72",
-                "nama"=> "KOTA TANJUNG BALAI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.73",
-                "nama"=> "KOTA PEMATANGSIANTAR",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.74",
-                "nama"=> "KOTA TEBING TINGGI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.75",
-                "nama"=> "KOTA MEDAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.76",
-                "nama"=> "KOTA BINJAI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.77",
-                "nama"=> "KOTA PADANG SIDEMPUAN",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "12.78",
-                "nama"=> "KOTA GUNUNGSITOLI",
-                "provinsi_id"=> 12,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.1",
-                "nama"=> "KAB. KEPULAUAN MENTAWAI",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.2",
-                "nama"=> "KAB. PESISIR SELATAN",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.3",
-                "nama"=> "KAB. SOLOK",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.4",
-                "nama"=> "KAB. SIJUNJUNG",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.5",
-                "nama"=> "KAB. TANAH DATAR",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.6",
-                "nama"=> "KAB. PADANG PARIAMAN",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.7",
-                "nama"=> "KAB. AGAM",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.8",
-                "nama"=> "KAB. LIMA PULUH KOTA",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.9",
-                "nama"=> "KAB. PASAMAN",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.10",
-                "nama"=> "KAB. SOLOK SELATAN",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.11",
-                "nama"=> "KAB. DHARMASRAYA",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.12",
-                "nama"=> "KAB. PASAMAN BARAT",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.71",
-                "nama"=> "KOTA PADANG",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.72",
-                "nama"=> "KOTA SOLOK",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.73",
-                "nama"=> "KOTA SAWAHLUNTO",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.74",
-                "nama"=> "KOTA PADANG PANJANG",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.75",
-                "nama"=> "KOTA BUKITTINGGI",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.76",
-                "nama"=> "KOTA PAYAKUMBUH",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "13.77",
-                "nama"=> "KOTA PARIAMAN",
-                "provinsi_id"=> 13,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.1",
-                "nama"=> "KAB. KUANTAN SINGINGI",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.2",
-                "nama"=> "KAB. INDRAGIRI HULU",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.3",
-                "nama"=> "KAB. INDRAGIRI HILIR",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.4",
-                "nama"=> "KAB. PELALAWAN",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.5",
-                "nama"=> "KAB. SIAK",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.6",
-                "nama"=> "KAB. KAMPAR",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.7",
-                "nama"=> "KAB. ROKAN HULU",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.8",
-                "nama"=> "KAB. BENGKALIS",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.9",
-                "nama"=> "KAB. ROKAN HILIR",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.10",
-                "nama"=> "KAB. KEPULAUAN MERANTI",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.71",
-                "nama"=> "KOTA PEKANBARU",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "14.73",
-                "nama"=> "KOTA DUMAI",
-                "provinsi_id"=> 14,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.1",
-                "nama"=> "KAB. KERINCI",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.2",
-                "nama"=> "KAB. MERANGIN",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.3",
-                "nama"=> "KAB. SAROLANGUN",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.4",
-                "nama"=> "KAB. BATANGHARI",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.5",
-                "nama"=> "KAB. MUARO JAMBI",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.6",
-                "nama"=> "KAB. TANJUNG JABUNG TIMUR",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.7",
-                "nama"=> "KAB. TANJUNG JABUNG BARAT",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.8",
-                "nama"=> "KAB. TEBO",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.9",
-                "nama"=> "KAB. BUNGO",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.71",
-                "nama"=> "KOTA JAMBI",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "15.72",
-                "nama"=> "KOTA SUNGAI PENUH",
-                "provinsi_id"=> 15,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.1",
-                "nama"=> "KAB. OGAN KOMERING ULU",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.2",
-                "nama"=> "KAB. OGAN KOMERING ILIR",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.3",
-                "nama"=> "KAB. MUARA ENIM",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.4",
-                "nama"=> "KAB. LAHAT",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.5",
-                "nama"=> "KAB. MUSI RAWAS",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.6",
-                "nama"=> "KAB. MUSI BANYUASIN",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.7",
-                "nama"=> "KAB. BANYUASIN",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.8",
-                "nama"=> "KAB. OGAN KOMERING ULU\nSELATAN",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.9",
-                "nama"=> "KAB. OGAN KOMERING ULU TIMUR",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.10",
-                "nama"=> "KAB. OGAN ILIR",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.11",
-                "nama"=> "KAB. EMPAT LAWANG",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.12",
-                "nama"=> "KAB. PENUKAL ABAB LEMATANG\nILIR",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.13",
-                "nama"=> "KAB. MUSI RAWAS UTARA",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.71",
-                "nama"=> "KOTA PALEMBANG",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.72",
-                "nama"=> "KOTA PRABUMULIH",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.73",
-                "nama"=> "KOTA PAGAR ALAM",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "16.74",
-                "nama"=> "KOTA LUBUK LINGGAU",
-                "provinsi_id"=> 16,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.1",
-                "nama"=> "KAB. BENGKULU SELATAN",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.2",
-                "nama"=> "KAB. REJANG LEBONG",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.3",
-                "nama"=> "KAB. BENGKULU UTARA",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.4",
-                "nama"=> "KAB. KAUR",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.5",
-                "nama"=> "KAB. SELUMA",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.6",
-                "nama"=> "KAB. MUKO MUKO",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.7",
-                "nama"=> "KAB. LEBONG",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.8",
-                "nama"=> "KAB. KEPAHIANG",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.9",
-                "nama"=> "KAB. BENGKULU TENGAH",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "17.71",
-                "nama"=> "KOTA BENGKULU",
-                "provinsi_id"=> 17,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.1",
-                "nama"=> "KAB. LAMPUNG BARAT",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.2",
-                "nama"=> "KAB. TANGGAMUS",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.3",
-                "nama"=> "KAB. LAMPUNG SELATAN",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.4",
-                "nama"=> "KAB. LAMPUNG TIMUR",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.5",
-                "nama"=> "KAB. LAMPUNG TENGAH",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.6",
-                "nama"=> "KAB. LAMPUNG UTARA",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.7",
-                "nama"=> "KAB. WAY KANAN",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.8",
-                "nama"=> "KAB. TULANG BAWANG",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.9",
-                "nama"=> "KAB. PESAWARAN",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.10",
-                "nama"=> "KAB. PRINGSEWU",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.11",
-                "nama"=> "KAB. MESUJI",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.12",
-                "nama"=> "KAB. TULANG BAWANG BARAT",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.13",
-                "nama"=> "KAB. PESISIR BARAT",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.71",
-                "nama"=> "KOTA BANDAR LAMPUNG",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "18.72",
-                "nama"=> "KOTA METRO",
-                "provinsi_id"=> 18,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.1",
-                "nama"=> "KAB. BANGKA",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.2",
-                "nama"=> "KAB. BELITUNG",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.3",
-                "nama"=> "KAB. BANGKA BARAT",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.4",
-                "nama"=> "KAB. BANGKA TENGAH",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.5",
-                "nama"=> "KAB. BANGKA SELATAN",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.6",
-                "nama"=> "KAB. BELITUNG TIMUR",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "19.71",
-                "nama"=> "KOTA PANGKAL PINANG",
-                "provinsi_id"=> 19,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.1",
-                "nama"=> "KAB. KARIMUN",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.2",
-                "nama"=> "KAB. BINTAN",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.3",
-                "nama"=> "KAB. NATUNA",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.4",
-                "nama"=> "KAB. LINGGA",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.5",
-                "nama"=> "KAB. KEPULAUAN ANAMBAS",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.71",
-                "nama"=> "KOTA BATAM",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "21.72",
-                "nama"=> "KOTA TANJUNG PINANG",
-                "provinsi_id"=> 21,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.1",
-                "nama"=> "KAB. ADM. KEP. SERIBU",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.71",
-                "nama"=> "KOTA ADM. JAKARTA SELATAN",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.72",
-                "nama"=> "KOTA ADM. JAKARTA TIMUR",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.73",
-                "nama"=> "KOTA ADM. JAKARTA PUSAT",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.74",
-                "nama"=> "KOTA ADM. JAKARTA BARAT",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "31.75",
-                "nama"=> "KOTA ADM. JAKARTA UTARA",
-                "provinsi_id"=> 31,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.1",
-                "nama"=> "KAB. BOGOR",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.2",
-                "nama"=> "KAB. SUKABUMI",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.3",
-                "nama"=> "KAB. CIANJUR",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.4",
-                "nama"=> "KAB. BANDUNG",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.5",
-                "nama"=> "KAB. GARUT",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.6",
-                "nama"=> "KAB. TASIKMALAYA",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.7",
-                "nama"=> "KAB. CIAMIS",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.8",
-                "nama"=> "KAB. KUNINGAN",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.9",
-                "nama"=> "KAB. CIREBON",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.10",
-                "nama"=> "KAB. MAJALENGKA",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.11",
-                "nama"=> "KAB. SUMEDANG",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.12",
-                "nama"=> "KAB. INDRAMAYU",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.13",
-                "nama"=> "KAB. SUBANG",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.14",
-                "nama"=> "KAB. PURWAKARTA",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.15",
-                "nama"=> "KAB. KARAWANG",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.16",
-                "nama"=> "KAB. BEKASI",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.17",
-                "nama"=> "KAB. BANDUNG BARAT",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.18",
-                "nama"=> "KAB. PANGANDARAN",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.71",
-                "nama"=> "KOTA BOGOR",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.72",
-                "nama"=> "KOTA SUKABUMI",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.73",
-                "nama"=> "KOTA BANDUNG",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.74",
-                "nama"=> "KOTA CIREBON",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.75",
-                "nama"=> "KOTA BEKASI",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.76",
-                "nama"=> "KOTA DEPOK",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.77",
-                "nama"=> "KOTA CIMAHI",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.78",
-                "nama"=> "KOTA TASIKMALAYA",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "32.79",
-                "nama"=> "KOTA BANJAR",
-                "provinsi_id"=> 32,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.1",
-                "nama"=> "KAB. CILACAP",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.2",
-                "nama"=> "KAB. BANYUMAS",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.3",
-                "nama"=> "KAB. PURBALINGGA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.4",
-                "nama"=> "KAB. BANJARNEGARA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.5",
-                "nama"=> "KAB. KEBUMEN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.6",
-                "nama"=> "KAB. PURWOREJO",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.7",
-                "nama"=> "KAB. WONOSOBO",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.8",
-                "nama"=> "KAB. MAGELANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.9",
-                "nama"=> "KAB. BOYOLALI",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.10",
-                "nama"=> "KAB. KLATEN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.11",
-                "nama"=> "KAB. SUKOHARJO",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.12",
-                "nama"=> "KAB. WONOGIRI",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.13",
-                "nama"=> "KAB. KARANGANYAR",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.14",
-                "nama"=> "KAB. SRAGEN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.15",
-                "nama"=> "KAB. GROBOGAN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.16",
-                "nama"=> "KAB. BLORA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.17",
-                "nama"=> "KAB. REMBANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.18",
-                "nama"=> "KAB. PATI",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.19",
-                "nama"=> "KAB. KUDUS",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.20",
-                "nama"=> "KAB. JEPARA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.21",
-                "nama"=> "KAB. DEMAK",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.22",
-                "nama"=> "KAB. SEMARANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.23",
-                "nama"=> "KAB. TEMANGGUNG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.24",
-                "nama"=> "KAB. KENDAL",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.25",
-                "nama"=> "KAB. BATANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.26",
-                "nama"=> "KAB. PEKALONGAN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.27",
-                "nama"=> "KAB. PEMALANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.28",
-                "nama"=> "KAB. TEGAL",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.29",
-                "nama"=> "KAB. BREBES",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.71",
-                "nama"=> "KOTA MAGELANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.72",
-                "nama"=> "KOTA SURAKARTA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.73",
-                "nama"=> "KOTA SALATIGA",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.74",
-                "nama"=> "KOTA SEMARANG",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.75",
-                "nama"=> "KOTA PEKALONGAN",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "33.76",
-                "nama"=> "KOTA TEGAL",
-                "provinsi_id"=> 33,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "34.1",
-                "nama"=> "KAB. KULON PROGO",
-                "provinsi_id"=> 34,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "34.2",
-                "nama"=> "KAB. BANTUL",
-                "provinsi_id"=> 34,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "34.3",
-                "nama"=> "KAB. GUNUNGKIDUL",
-                "provinsi_id"=> 34,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "34.4",
-                "nama"=> "KAB. SLEMAN",
-                "provinsi_id"=> 34,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "34.71",
-                "nama"=> "KOTA YOGYAKARTA",
-                "provinsi_id"=> 34,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.1",
-                "nama"=> "KAB. PACITAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.2",
-                "nama"=> "KAB. PONOROGO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.3",
-                "nama"=> "KAB. TRENGGALEK",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.4",
-                "nama"=> "KAB. TULUNGAGUNG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.5",
-                "nama"=> "KAB. BLITAR",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.6",
-                "nama"=> "KAB. KEDIRI",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.7",
-                "nama"=> "KAB. MALANG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.8",
-                "nama"=> "KAB. LUMAJANG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.9",
-                "nama"=> "KAB. JEMBER",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.10",
-                "nama"=> "KAB. BANYUWANGI",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.11",
-                "nama"=> "KAB. BONDOWOSO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.12",
-                "nama"=> "KAB. SITUBONDO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.13",
-                "nama"=> "KAB. PROBOLINGGO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.14",
-                "nama"=> "KAB. PASURUAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.15",
-                "nama"=> "KAB. SIDOARJO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.16",
-                "nama"=> "KAB. MOJOKERTO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.17",
-                "nama"=> "KAB. JOMBANG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.18",
-                "nama"=> "KAB. NGANJUK",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.19",
-                "nama"=> "KAB. MADIUN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.20",
-                "nama"=> "KAB. MAGETAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.21",
-                "nama"=> "KAB. NGAWI",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.22",
-                "nama"=> "KAB. BOJONEGORO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.23",
-                "nama"=> "KAB. TUBAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.24",
-                "nama"=> "KAB. LAMONGAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.25",
-                "nama"=> "KAB. GRESIK",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.26",
-                "nama"=> "KAB. BANGKALAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.27",
-                "nama"=> "KAB. SAMPANG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.28",
-                "nama"=> "KAB. PAMEKASAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.29",
-                "nama"=> "KAB. SUMENEP",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.71",
-                "nama"=> "KOTA KEDIRI",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.72",
-                "nama"=> "KOTA BLITAR",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.73",
-                "nama"=> "KOTA MALANG",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.74",
-                "nama"=> "KOTA PROBOLINGGO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.75",
-                "nama"=> "KOTA PASURUAN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.76",
-                "nama"=> "KOTA MOJOKERTO",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.77",
-                "nama"=> "KOTA MADIUN",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.78",
-                "nama"=> "KOTA SURABAYA",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "35.79",
-                "nama"=> "KOTA BATU",
-                "provinsi_id"=> 35,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.1",
-                "nama"=> "KAB. PANDEGLANG",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.2",
-                "nama"=> "KAB. LEBAK",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.3",
-                "nama"=> "KAB. TANGERANG",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.4",
-                "nama"=> "KAB. SERANG",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.71",
-                "nama"=> "KOTA TANGERANG",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.72",
-                "nama"=> "KOTA CILEGON",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.73",
-                "nama"=> "KOTA SERANG",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "36.74",
-                "nama"=> "KOTA TANGERANG SELATAN",
-                "provinsi_id"=> 36,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.1",
-                "nama"=> "KAB. JEMBRANA",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.2",
-                "nama"=> "KAB. TABANAN",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.3",
-                "nama"=> "KAB. BADUNG",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.4",
-                "nama"=> "KAB. GIANYAR",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.5",
-                "nama"=> "KAB. KLUNGKUNG",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.6",
-                "nama"=> "KAB. BANGLI",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.7",
-                "nama"=> "KAB. KARANGASEM",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.8",
-                "nama"=> "KAB. BULELENG",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "51.71",
-                "nama"=> "KOTA DENPASAR",
-                "provinsi_id"=> 51,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.1",
-                "nama"=> "KAB. LOMBOK BARAT",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.2",
-                "nama"=> "KAB. LOMBOK TENGAH",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.3",
-                "nama"=> "KAB. LOMBOK TIMUR",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.4",
-                "nama"=> "KAB. SUMBAWA",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.5",
-                "nama"=> "KAB. DOMPU",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.6",
-                "nama"=> "KAB. BIMA",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.7",
-                "nama"=> "KAB. SUMBAWA BARAT",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.8",
-                "nama"=> "KAB. LOMBOK UTARA",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.71",
-                "nama"=> "KOTA MATARAM",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "52.72",
-                "nama"=> "KOTA BIMA",
-                "provinsi_id"=> 52,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.1",
-                "nama"=> "KAB. SUMBA BARAT",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.2",
-                "nama"=> "KAB. SUMBA TIMUR",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.3",
-                "nama"=> "KAB. KUPANG",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.4",
-                "nama"=> "KAB TIMOR TENGAH SELATAN",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.5",
-                "nama"=> "KAB. TIMOR TENGAH UTARA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.6",
-                "nama"=> "KAB. BELU",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.7",
-                "nama"=> "KAB. ALOR",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.8",
-                "nama"=> "KAB. LEMBATA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.9",
-                "nama"=> "KAB. FLORES TIMUR",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.10",
-                "nama"=> "KAB. SIKKA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.11",
-                "nama"=> "KAB. ENDE",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.12",
-                "nama"=> "KAB. NGADA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.13",
-                "nama"=> "KAB. MANGGARAI",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.14",
-                "nama"=> "KAB. ROTE NDAO",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.15",
-                "nama"=> "KAB. MANGGARAI BARAT",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.16",
-                "nama"=> "KAB. SUMBA TENGAH",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.17",
-                "nama"=> "KAB. SUMBA BARAT DAYA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.18",
-                "nama"=> "KAB. NAGEKEO",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.19",
-                "nama"=> "KAB. MANGGARAI TIMUR",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.20",
-                "nama"=> "KAB. SABU RAIJUA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.21",
-                "nama"=> "KAB. MALAKA",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "53.71",
-                "nama"=> "KOTA KUPANG",
-                "provinsi_id"=> 53,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.1",
-                "nama"=> "KAB. SAMBAS",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.2",
-                "nama"=> "KAB. BENGKAYANG",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.3",
-                "nama"=> "KAB. LANDAK",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.4",
-                "nama"=> "KAB. MEMPAWAH",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.5",
-                "nama"=> "KAB. SANGGAU",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.6",
-                "nama"=> "KAB. KETAPANG",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.7",
-                "nama"=> "KAB. SINTANG",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.8",
-                "nama"=> "KAB. KAPUAS HULU",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.9",
-                "nama"=> "KAB. SEKADAU",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.10",
-                "nama"=> "KAB. MELAWI",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.11",
-                "nama"=> "KAB. KAYONG UTARA",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.12",
-                "nama"=> "KAB. KUBU RAYA",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.71",
-                "nama"=> "KOTA PONTIANAK",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "61.72",
-                "nama"=> "KOTA SINGKAWANG",
-                "provinsi_id"=> 61,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.1",
-                "nama"=> "KAB. KOTAWARINGIN BARAT",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.2",
-                "nama"=> "KAB. KOTAWARINGIN TIMUR",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.3",
-                "nama"=> "KAB. KAPUAS",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.4",
-                "nama"=> "KAB. BARITO SELATAN",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.5",
-                "nama"=> "KAB. BARITO UTARA",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.6",
-                "nama"=> "KAB. SUKAMARA",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.7",
-                "nama"=> "KAB. LAMANDAU",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.8",
-                "nama"=> "KAB. SERUYAN",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.9",
-                "nama"=> "KAB. KATINGAN",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.10",
-                "nama"=> "KAB. PULANG PISAU",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.11",
-                "nama"=> "KAB. GUNUNG MAS",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.12",
-                "nama"=> "KAB. BARITO TIMUR",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.13",
-                "nama"=> "KAB. MURUNG RAYA",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "62.71",
-                "nama"=> "KOTA PALANGKARAYA",
-                "provinsi_id"=> 62,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.1",
-                "nama"=> "KAB. TANAH LAUT",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.2",
-                "nama"=> "KAB. KOTABARU",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.3",
-                "nama"=> "KAB. BANJAR",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.4",
-                "nama"=> "KAB. BARITO KUALA",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.5",
-                "nama"=> "KAB. TAPIN",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.6",
-                "nama"=> "KAB. HULU SUNGAI SELATAN",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.7",
-                "nama"=> "KAB. HULU SUNGAI TENGAH",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.8",
-                "nama"=> "KAB. HULU SUNGAI UTARA",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.9",
-                "nama"=> "KAB. TABALONG",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.10",
-                "nama"=> "KAB. TANAH BUMBU",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.11",
-                "nama"=> "KAB. BALANGAN",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.71",
-                "nama"=> "KOTA BANJARMASIN",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "63.72",
-                "nama"=> "KOTA BANJARBARU",
-                "provinsi_id"=> 63,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.1",
-                "nama"=> "KAB. PASER",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.2",
-                "nama"=> "KAB. KUTAI BARAT",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.3",
-                "nama"=> "KAB. KUTAI KARTANEGARA",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.4",
-                "nama"=> "KAB. KUTAI TIMUR",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.5",
-                "nama"=> "KAB. BERAU",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.9",
-                "nama"=> "KAB. PENAJAM PASER UTARA",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.11",
-                "nama"=> "KAB. MAHAKAM ULU",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.71",
-                "nama"=> "KOTA BALIKPAPAN",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.72",
-                "nama"=> "KOTA SAMARINDA",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "64.74",
-                "nama"=> "KOTA BONTANG",
-                "provinsi_id"=> 64,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "65.1",
-                "nama"=> "KAB. MALINAU",
-                "provinsi_id"=> 65,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "65.2",
-                "nama"=> "KAB. BULUNGAN",
-                "provinsi_id"=> 65,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "65.3",
-                "nama"=> "KAB. TANA TIDUNG",
-                "provinsi_id"=> 65,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "65.4",
-                "nama"=> "KAB. NUNUKAN",
-                "provinsi_id"=> 65,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "65.71",
-                "nama"=> "KOTA TARAKAN",
-                "provinsi_id"=> 65,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.1",
-                "nama"=> "KAB. BOLAANG MONGONDOW",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.2",
-                "nama"=> "KAB. MINAHASA",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.3",
-                "nama"=> "KAB. KEPULAUAN SANGIHE",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.4",
-                "nama"=> "KAB. KEPULAUAN TALAUD",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.5",
-                "nama"=> "KAB. MINAHASA SELATAN",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.6",
-                "nama"=> "KAB. MINAHASA UTARA",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.7",
-                "nama"=> "KAB. BOLAANG MONGONDOW UTARA",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.8",
-                "nama"=> "KAB. KEP. SIAU TAGULANDANG BIARO",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.9",
-                "nama"=> "KAB. MINAHASA TENGGARA",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.10",
-                "nama"=> "KAB. BOLAANG MONGONDOW SELATAN",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.11",
-                "nama"=> "KAB. BOLAANG MONGONDOW TIMUR",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.71",
-                "nama"=> "KOTA MANADO",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.72",
-                "nama"=> "KOTA BITUNG",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.73",
-                "nama"=> "KOTA TOMOHON",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "71.74",
-                "nama"=> "KOTA KOTAMOBAGU",
-                "provinsi_id"=> 71,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.1",
-                "nama"=> "KAB. BANGGAI KEPULAUAN",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.2",
-                "nama"=> "KAB. BANGGAI",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.3",
-                "nama"=> "KAB. MOROWALI",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.4",
-                "nama"=> "KAB. POSO",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.5",
-                "nama"=> "KAB. DONGGALA",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.6",
-                "nama"=> "KAB. TOLI TOLI",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.7",
-                "nama"=> "KAB. BUOL",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.8",
-                "nama"=> "KAB. PARIGI MOUTONG",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.9",
-                "nama"=> "KAB. TOJO UNA UNA",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.10",
-                "nama"=> "KAB. SIGI",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.11",
-                "nama"=> "KAB. BANGGAI LAUT",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.12",
-                "nama"=> "KAB. MOROWALI UTARA",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "72.71",
-                "nama"=> "KOTA PALU",
-                "provinsi_id"=> 72,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.1",
-                "nama"=> "KAB. KEPULAUAN SELAYAR",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.2",
-                "nama"=> "KAB. BULUKUMBA",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.3",
-                "nama"=> "KAB. BANTAENG",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.4",
-                "nama"=> "KAB. JENEPONTO",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.5",
-                "nama"=> "KAB. TAKALAR",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.6",
-                "nama"=> "KAB. GOWA",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.7",
-                "nama"=> "KAB. SINJAI",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.8",
-                "nama"=> "KAB. MAROS",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.9",
-                "nama"=> "KAB. PANGKAJENE DAN KEPULAUAN",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
-            ],
-            [
-                "kode"=> "73.10",
-                "nama"=> "KAB. BARRU",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+        $kabupaten =[
+            [
+                "id" => 1101,
+                "kode" => "11.01",
+                "nama" => "Kab. Simeulue",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.11",
-                "nama"=> "KAB. BONE",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1102,
+                "kode" => "11.02",
+                "nama" => "Kab. Aceh Singkil",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.12",
-                "nama"=> "KAB. SOPPENG",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1103,
+                "kode" => "11.03",
+                "nama" => "Kab. Aceh Selatan",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.13",
-                "nama"=> "KAB. WAJO",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1104,
+                "kode" => "11.04",
+                "nama" => "Kab. Aceh Tenggara",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.14",
-                "nama"=> "KAB. SIDENRENG RAPPANG",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1105,
+                "kode" => "11.05",
+                "nama" => "Kab. Aceh Timur",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.15",
-                "nama"=> "KAB. PINRANG",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1106,
+                "kode" => "11.06",
+                "nama" => "Kab. Aceh Tengah",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.16",
-                "nama"=> "KAB. ENREKANG",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1107,
+                "kode" => "11.07",
+                "nama" => "Kab. Aceh Barat",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.17",
-                "nama"=> "KAB. LUWU",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1108,
+                "kode" => "11.08",
+                "nama" => "Kab. Aceh Besar",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.18",
-                "nama"=> "KAB. TANA TORAJA",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1109,
+                "kode" => "11.09",
+                "nama" => "Kab. Pidie",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.22",
-                "nama"=> "KAB. LUWU UTARA",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1110,
+                "kode" => "11.10",
+                "nama" => "Kab. Bireuen",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.25",
-                "nama"=> "KAB. LUWU TIMUR",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1111,
+                "kode" => "11.11",
+                "nama" => "Kab. Aceh Utara",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.26",
-                "nama"=> "KAB. TORAJA UTARA",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1112,
+                "kode" => "11.12",
+                "nama" => "Kab. Aceh Barat Daya",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.71",
-                "nama"=> "KOTA MAKASSAR",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1113,
+                "kode" => "11.13",
+                "nama" => "Kab. Gayo Lues",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.72",
-                "nama"=> "KOTA PAREPARE",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1114,
+                "kode" => "11.14",
+                "nama" => "Kab. Aceh Tamiang",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "73.73",
-                "nama"=> "KOTA PALOPO",
-                "provinsi_id"=> 73,
-                "aktif"=> 1
+            [
+                "id" => 1115,
+                "kode" => "11.15",
+                "nama" => "Kab. Nagan Raya",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.1",
-                "nama"=> "KAB. BUTON",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1116,
+                "kode" => "11.16",
+                "nama" => "Kab. Aceh Jaya",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.2",
-                "nama"=> "KAB. MUNA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1117,
+                "kode" => "11.17",
+                "nama" => "Kab. Bener Meriah",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.3",
-                "nama"=> "KAB. KONAWE",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1118,
+                "kode" => "11.18",
+                "nama" => "Kab. Pidie Jaya",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.4",
-                "nama"=> "KAB. KOLAKA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1171,
+                "kode" => "11.71",
+                "nama" => "Kota Banda Aceh",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "74.5",
-                "nama"=> "KAB. KONAWE SELATAN",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1172,
+                "kode" => "11.72",
+                "nama" => "Kota Sabang",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "74.6",
-                "nama"=> "KAB. BOMBANA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1173,
+                "kode" => "11.73",
+                "nama" => "Kota Langsa",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "74.7",
-                "nama"=> "KAB. WAKATOBI",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1174,
+                "kode" => "11.74",
+                "nama" => "Kota Lhokseumawe",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "74.8",
-                "nama"=> "KAB. KOLAKA UTARA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1175,
+                "kode" => "11.75",
+                "nama" => "Kota Subulussalam",
+                "provinsi_id" => 11,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "74.9",
-                "nama"=> "KAB. BUTON UTARA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1201,
+                "kode" => "12.01",
+                "nama" => "Kab. Nias",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.10",
-                "nama"=> "KAB. KONAWE UTARA",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1202,
+                "kode" => "12.02",
+                "nama" => "Kab. Mandailing Natal",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.11",
-                "nama"=> "KAB. KOLAKA TIMUR",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1203,
+                "kode" => "12.03",
+                "nama" => "Kab. Tapanuli Selatan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.12",
-                "nama"=> "KAB. KONAWE KEPULAUAN",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1204,
+                "kode" => "12.04",
+                "nama" => "Kab. Tapanuli Tengah",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.13",
-                "nama"=> "KAB. MUNA BARAT",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1205,
+                "kode" => "12.05",
+                "nama" => "Kab. Tapanuli Utara",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.14",
-                "nama"=> "KAB. BUTON TENGAH",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1206,
+                "kode" => "12.06",
+                "nama" => "Kab. Toba",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.15",
-                "nama"=> "KAB. BUTON SELATAN",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1207,
+                "kode" => "12.07",
+                "nama" => "Kab. Labuhanbatu",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.71",
-                "nama"=> "KOTA KENDARI",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1208,
+                "kode" => "12.08",
+                "nama" => "Kab. Asahan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "74.72",
-                "nama"=> "KOTA BAU BAU",
-                "provinsi_id"=> 74,
-                "aktif"=> 1
+            [
+                "id" => 1209,
+                "kode" => "12.09",
+                "nama" => "Kab. Simalungun",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.1",
-                "nama"=> "KAB. BOALEMO",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1210,
+                "kode" => "12.10",
+                "nama" => "Kab. Dairi",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.2",
-                "nama"=> "KAB. GORONTALO",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1211,
+                "kode" => "12.11",
+                "nama" => "Kab. Karo",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.3",
-                "nama"=> "KAB. POHUWATO",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1212,
+                "kode" => "12.12",
+                "nama" => "Kab. Deli Serdang",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.4",
-                "nama"=> "KAB. BONE BOLANGO",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1213,
+                "kode" => "12.13",
+                "nama" => "Kab. Langkat",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.5",
-                "nama"=> "KAB. GORONTALO UTARA",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1214,
+                "kode" => "12.14",
+                "nama" => "Kab. Nias Selatan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "75.71",
-                "nama"=> "KOTA GORONTALO",
-                "provinsi_id"=> 75,
-                "aktif"=> 1
+            [
+                "id" => 1215,
+                "kode" => "12.15",
+                "nama" => "Kab. Humbang Hasundutan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.1",
-                "nama"=> "KAB. MAJENE",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1216,
+                "kode" => "12.16",
+                "nama" => "Kab. Pakpak Bharat",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.2",
-                "nama"=> "KAB. POLEWALI MANDAR",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1217,
+                "kode" => "12.17",
+                "nama" => "Kab. Samosir",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.3",
-                "nama"=> "KAB. MAMASA",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1218,
+                "kode" => "12.18",
+                "nama" => "Kab. Serdang Bedagai",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.4",
-                "nama"=> "KAB. MAMUJU",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1219,
+                "kode" => "12.19",
+                "nama" => "Kab. Batu Bara",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.5",
-                "nama"=> "KAB. PASANGKAYU",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1220,
+                "kode" => "12.20",
+                "nama" => "Kab. Padang Lawas Utara",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "76.6",
-                "nama"=> "KAB. MAMUJU TENGAH",
-                "provinsi_id"=> 76,
-                "aktif"=> 1
+            [
+                "id" => 1221,
+                "kode" => "12.21",
+                "nama" => "Kab. Padang Lawas",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "81.1",
-                "nama"=> "KAB. KEPULAUAN TANIMBAR",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1222,
+                "kode" => "12.22",
+                "nama" => "Kab. Labuhanbatu Selatan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "81.2",
-                "nama"=> "KAB. MALUKU TENGGARA",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1223,
+                "kode" => "12.23",
+                "nama" => "Kab. Labuhanbatu Utara",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "81.3",
-                "nama"=> "KAB. MALUKU TENGAH",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1224,
+                "kode" => "12.24",
+                "nama" => "Kab. Nias Utara",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "81.4",
-                "nama"=> "KAB. BURU",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1225,
+                "kode" => "12.25",
+                "nama" => "Kab. Nias Barat",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "81.5",
-                "nama"=> "KAB. KEPULAUAN ARU",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1271,
+                "kode" => "12.71",
+                "nama" => "Kota Sibolga",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.6",
-                "nama"=> "KAB. SERAM BAGIAN BARAT",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1272,
+                "kode" => "12.72",
+                "nama" => "Kota Tanjung Balai",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.7",
-                "nama"=> "KAB. SERAM BAGIAN TIMUR",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1273,
+                "kode" => "12.73",
+                "nama" => "Kota Pematangsiantar",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.8",
-                "nama"=> "KAB. MALUKU BARAT DAYA",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1274,
+                "kode" => "12.74",
+                "nama" => "Kota Tebing Tinggi",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.9",
-                "nama"=> "KAB. BURU SELATAN",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1275,
+                "kode" => "12.75",
+                "nama" => "Kota Medan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.71",
-                "nama"=> "KOTA AMBON",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1276,
+                "kode" => "12.76",
+                "nama" => "Kota Binjai",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "81.72",
-                "nama"=> "KOTA TUAL",
-                "provinsi_id"=> 81,
-                "aktif"=> 1
+            [
+                "id" => 1277,
+                "kode" => "12.77",
+                "nama" => "Kota Padang Sidempuan",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "82.1",
-                "nama"=> "KAB. HALMAHERA BARAT",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1278,
+                "kode" => "12.78",
+                "nama" => "Kota Gunungsitoli",
+                "provinsi_id" => 12,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "82.2",
-                "nama"=> "KAB. HALMAHERA TENGAH",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1301,
+                "kode" => "13.01",
+                "nama" => "Kab. Kepulauan Mentawai",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.3",
-                "nama"=> "KAB. KEPULAUAN SULA",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1302,
+                "kode" => "13.02",
+                "nama" => "Kab. Pesisir Selatan",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.4",
-                "nama"=> "KAB. HALMAHERA SELATAN",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1303,
+                "kode" => "13.03",
+                "nama" => "Kab. Solok",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.5",
-                "nama"=> "KAB. HALMAHERA UTARA",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1304,
+                "kode" => "13.04",
+                "nama" => "Kab. Sijunjung",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.6",
-                "nama"=> "KAB. HALMAHERA TIMUR",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1305,
+                "kode" => "13.05",
+                "nama" => "Kab. Tanah Datar",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.7",
-                "nama"=> "KAB. PULAU MOROTAI",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1306,
+                "kode" => "13.06",
+                "nama" => "Kab. Padang Pariaman",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.8",
-                "nama"=> "KAB. PULAU TALIABU",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1307,
+                "kode" => "13.07",
+                "nama" => "Kab. Agam",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.71",
-                "nama"=> "KOTA TERNATE",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1308,
+                "kode" => "13.08",
+                "nama" => "Kab. Lima Puluh Kota",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "82.72",
-                "nama"=> "KOTA TIDORE KEPULAUAN",
-                "provinsi_id"=> 82,
-                "aktif"=> 1
+            [
+                "id" => 1309,
+                "kode" => "13.09",
+                "nama" => "Kab. Pasaman",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "91.1",
-                "nama"=> "KAB. FAK FAK",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1310,
+                "kode" => "13.10",
+                "nama" => "Kab. Solok Selatan",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "91.2",
-                "nama"=> "KAB. KAIMANA",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1311,
+                "kode" => "13.11",
+                "nama" => "Kab. Dharmasraya",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "91.3",
-                "nama"=> "KAB. TELUK WONDAMA",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1312,
+                "kode" => "13.12",
+                "nama" => "Kab. Pasaman Barat",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "91.4",
-                "nama"=> "KAB. TELUK BINTUNI",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1371,
+                "kode" => "13.71",
+                "nama" => "Kota Padang",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "91.5",
-                "nama"=> "KAB. MANOKWARI",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1372,
+                "kode" => "13.72",
+                "nama" => "Kota Solok",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "91.11",
-                "nama"=> "KAB. MANOKWARI SELATAN",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1373,
+                "kode" => "13.73",
+                "nama" => "Kota Sawahlunto",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "91.12",
-                "nama"=> "KAB. PEGUNUNGAN ARFAK",
-                "provinsi_id"=> 91,
-                "aktif"=> 1
+            [
+                "id" => 1374,
+                "kode" => "13.74",
+                "nama" => "Kota Padang Panjang",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "92.1",
-                "nama"=> "KAB. RAJA AMPAT",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1375,
+                "kode" => "13.75",
+                "nama" => "Kota Bukittinggi",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "92.2",
-                "nama"=> "KAB. SORONG",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1376,
+                "kode" => "13.76",
+                "nama" => "Kota Payakumbuh",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "92.3",
-                "nama"=> "KAB. SORONG SELATAN",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1377,
+                "kode" => "13.77",
+                "nama" => "Kota Pariaman",
+                "provinsi_id" => 13,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "92.4",
-                "nama"=> "KAB. MAYBRAT",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1401,
+                "kode" => "14.01",
+                "nama" => "Kab. Kuantan Singingi",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "92.5",
-                "nama"=> "KAB. TAMBRAUW",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1402,
+                "kode" => "14.02",
+                "nama" => "Kab. Indragiri Hulu",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "92.71",
-                "nama"=> "KOTA SORONG",
-                "provinsi_id"=> 92,
-                "aktif"=> 1
+            [
+                "id" => 1403,
+                "kode" => "14.03",
+                "nama" => "Kab. Indragiri Hilir",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.3",
-                "nama"=> "KAB. JAYAPURA",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1404,
+                "kode" => "14.04",
+                "nama" => "Kab. Pelalawan",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.8",
-                "nama"=> "KAB. KEPULAUAN YAPEN",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1405,
+                "kode" => "14.05",
+                "nama" => "Kab. Siak",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.9",
-                "nama"=> "KAB. BIAK NUMFOR",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1406,
+                "kode" => "14.06",
+                "nama" => "Kab. Kampar",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.19",
-                "nama"=> "KAB. SARMI",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1407,
+                "kode" => "14.07",
+                "nama" => "Kab. Rokan Hulu",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.20",
-                "nama"=> "KAB. KEEROM",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1408,
+                "kode" => "14.08",
+                "nama" => "Kab. Bengkalis",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.26",
-                "nama"=> "KAB. WAROPEN",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1409,
+                "kode" => "14.09",
+                "nama" => "Kab. Rokan Hilir",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.27",
-                "nama"=> "KAB. SUPIORI",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1410,
+                "kode" => "14.10",
+                "nama" => "Kab. Kepulauan Meranti",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "94.28",
-                "nama"=> "KAB. MAMBERAMO RAYA",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1471,
+                "kode" => "14.71",
+                "nama" => "Kota Pekanbaru",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "94.71",
-                "nama"=> "KOTA JAYAPURA",
-                "provinsi_id"=> 94,
-                "aktif"=> 1
+            [
+                "id" => 1473,
+                "kode" => "14.73",
+                "nama" => "Kota Dumai",
+                "provinsi_id" => 14,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "95.1",
-                "nama"=> "KAB. MERAUKE",
-                "provinsi_id"=> 95,
-                "aktif"=> 1
+            [
+                "id" => 1501,
+                "kode" => "15.01",
+                "nama" => "Kab. Kerinci",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "95.2",
-                "nama"=> "KAB. BOVEN DIGOEL",
-                "provinsi_id"=> 95,
-                "aktif"=> 1
+            [
+                "id" => 1502,
+                "kode" => "15.02",
+                "nama" => "Kab. Merangin",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "95.3",
-                "nama"=> "KAB. MAPPI",
-                "provinsi_id"=> 95,
-                "aktif"=> 1
+            [
+                "id" => 1503,
+                "kode" => "15.03",
+                "nama" => "Kab. Sarolangun",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "95.4",
-                "nama"=> "KAB. ASMAT",
-                "provinsi_id"=> 95,
-                "aktif"=> 1
+            [
+                "id" => 1504,
+                "kode" => "15.04",
+                "nama" => "Kab. Batanghari",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.1",
-                "nama"=> "KAB. MIMIKA",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1505,
+                "kode" => "15.05",
+                "nama" => "Kab. Muaro Jambi",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.2",
-                "nama"=> "KAB. DOGIYAI",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1506,
+                "kode" => "15.06",
+                "nama" => "Kab. Tanjung Jabung Timur",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.3",
-                "nama"=> "KAB. DEIYAI",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1507,
+                "kode" => "15.07",
+                "nama" => "Kab. Tanjung Jabung Barat",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.4",
-                "nama"=> "KAB. NABIRE",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1508,
+                "kode" => "15.08",
+                "nama" => "Kab. Tebo",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.5",
-                "nama"=> "KAB. PANIAI",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1509,
+                "kode" => "15.09",
+                "nama" => "Kab. Bungo",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "96.6",
-                "nama"=> "KAB. INTAN JAYA",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1571,
+                "kode" => "15.71",
+                "nama" => "Kota Jambi",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "96.7",
-                "nama"=> "KAB. PUNCAK",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1572,
+                "kode" => "15.72",
+                "nama" => "Kota Sungai Penuh",
+                "provinsi_id" => 15,
+                "aktif" => 1,
+                "type" => "Kota",
             ],
-            [
-                "kode"=> "96.8",
-                "nama"=> "KAB. PUNCAK JAYA",
-                "provinsi_id"=> 96,
-                "aktif"=> 1
+            [
+                "id" => 1601,
+                "kode" => "16.01",
+                "nama" => "Kab. Ogan Komering Ulu",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.1",
-                "nama"=> "KAB. NDUGA",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1602,
+                "kode" => "16.02",
+                "nama" => "Kab. Ogan Komering Ilir",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.2",
-                "nama"=> "KAB. JAYAWIJAYA",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1603,
+                "kode" => "16.03",
+                "nama" => "Kab. Muara Enim",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.3",
-                "nama"=> "KAB. LANNY JAYA",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1604,
+                "kode" => "16.04",
+                "nama" => "Kab. Lahat",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.4",
-                "nama"=> "KAB. TOLIKARA",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1605,
+                "kode" => "16.05",
+                "nama" => "Kab. Musi Rawas",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.5",
-                "nama"=> "KAB. MAMBERAMO TENGAH",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1606,
+                "kode" => "16.06",
+                "nama" => "Kab. Musi Banyuasin",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.6",
-                "nama"=> "KAB. YALIMO",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1607,
+                "kode" => "16.07",
+                "nama" => "Kab. Banyuasin",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.7",
-                "nama"=> "KAB. YAHUKIMO",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
+            [
+                "id" => 1608,
+                "kode" => "16.08",
+                "nama" => "Kab. Ogan Komering Ulu
+        Selatan",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1609,
+                "kode" => "16.09",
+                "nama" => "Kab. Ogan Komering Ulu Timur",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1610,
+                "kode" => "16.10",
+                "nama" => "Kab. Ogan Ilir",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1611,
+                "kode" => "16.11",
+                "nama" => "Kab. Empat Lawang",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1612,
+                "kode" => "16.12",
+                "nama" => "Kab. Penukal Abab Lematang
+        Ilir",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1613,
+                "kode" => "16.13",
+                "nama" => "Kab. Musi Rawas Utara",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1671,
+                "kode" => "16.71",
+                "nama" => "Kota Palembang",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1672,
+                "kode" => "16.72",
+                "nama" => "Kota Prabumulih",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1673,
+                "kode" => "16.73",
+                "nama" => "Kota Pagar Alam",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1674,
+                "kode" => "16.74",
+                "nama" => "Kota Lubuk Linggau",
+                "provinsi_id" => 16,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1701,
+                "kode" => "17.01",
+                "nama" => "Kab. Bengkulu Selatan",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1702,
+                "kode" => "17.02",
+                "nama" => "Kab. Rejang Lebong",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1703,
+                "kode" => "17.03",
+                "nama" => "Kab. Bengkulu Utara",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1704,
+                "kode" => "17.04",
+                "nama" => "Kab. Kaur",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1705,
+                "kode" => "17.05",
+                "nama" => "Kab. Seluma",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1706,
+                "kode" => "17.06",
+                "nama" => "Kab. Muko Muko",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1707,
+                "kode" => "17.07",
+                "nama" => "Kab. Lebong",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1708,
+                "kode" => "17.08",
+                "nama" => "Kab. Kepahiang",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1709,
+                "kode" => "17.09",
+                "nama" => "Kab. Bengkulu Tengah",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1771,
+                "kode" => "17.71",
+                "nama" => "Kota Bengkulu",
+                "provinsi_id" => 17,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1801,
+                "kode" => "18.01",
+                "nama" => "Kab. Lampung Barat",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1802,
+                "kode" => "18.02",
+                "nama" => "Kab. Tanggamus",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1803,
+                "kode" => "18.03",
+                "nama" => "Kab. Lampung Selatan",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1804,
+                "kode" => "18.04",
+                "nama" => "Kab. Lampung Timur",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1805,
+                "kode" => "18.05",
+                "nama" => "Kab. Lampung Tengah",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1806,
+                "kode" => "18.06",
+                "nama" => "Kab. Lampung Utara",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1807,
+                "kode" => "18.07",
+                "nama" => "Kab. Way Kanan",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1808,
+                "kode" => "18.08",
+                "nama" => "Kab. Tulang Bawang",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1809,
+                "kode" => "18.09",
+                "nama" => "Kab. Pesawaran",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1810,
+                "kode" => "18.10",
+                "nama" => "Kab. Pringsewu",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1811,
+                "kode" => "18.11",
+                "nama" => "Kab. Mesuji",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1812,
+                "kode" => "18.12",
+                "nama" => "Kab. Tulang Bawang Barat",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1813,
+                "kode" => "18.13",
+                "nama" => "Kab. Pesisir Barat",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1871,
+                "kode" => "18.71",
+                "nama" => "Kota Bandar Lampung",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1872,
+                "kode" => "18.72",
+                "nama" => "Kota Metro",
+                "provinsi_id" => 18,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 1901,
+                "kode" => "19.01",
+                "nama" => "Kab. Bangka",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1902,
+                "kode" => "19.02",
+                "nama" => "Kab. Belitung",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1903,
+                "kode" => "19.03",
+                "nama" => "Kab. Bangka Barat",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1904,
+                "kode" => "19.04",
+                "nama" => "Kab. Bangka Tengah",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1905,
+                "kode" => "19.05",
+                "nama" => "Kab. Bangka Selatan",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1906,
+                "kode" => "19.06",
+                "nama" => "Kab. Belitung Timur",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 1971,
+                "kode" => "19.71",
+                "nama" => "Kota Pangkal Pinang",
+                "provinsi_id" => 19,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 2101,
+                "kode" => "21.01",
+                "nama" => "Kab. Karimun",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 2102,
+                "kode" => "21.02",
+                "nama" => "Kab. Bintan",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 2103,
+                "kode" => "21.03",
+                "nama" => "Kab. Natuna",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 2104,
+                "kode" => "21.04",
+                "nama" => "Kab. Lingga",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 2105,
+                "kode" => "21.05",
+                "nama" => "Kab. Kepulauan Anambas",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 2171,
+                "kode" => "21.71",
+                "nama" => "Kota Batam",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 2172,
+                "kode" => "21.72",
+                "nama" => "Kota Tanjung Pinang",
+                "provinsi_id" => 21,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3101,
+                "kode" => "31.01",
+                "nama" => "Kab. Adm. Kep. Seribu",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3171,
+                "kode" => "31.71",
+                "nama" => "Kota Adm. Jakarta Selatan",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3172,
+                "kode" => "31.72",
+                "nama" => "Kota Adm. Jakarta Timur",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3173,
+                "kode" => "31.73",
+                "nama" => "Kota Adm. Jakarta Pusat",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3174,
+                "kode" => "31.74",
+                "nama" => "Kota Adm. Jakarta Barat",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3175,
+                "kode" => "31.75",
+                "nama" => "Kota Adm. Jakarta Utara",
+                "provinsi_id" => 31,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3201,
+                "kode" => "32.01",
+                "nama" => "Kab. Bogor",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3202,
+                "kode" => "32.02",
+                "nama" => "Kab. Sukabumi",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3203,
+                "kode" => "32.03",
+                "nama" => "Kab. Cianjur",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3204,
+                "kode" => "32.04",
+                "nama" => "Kab. Bandung",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3205,
+                "kode" => "32.05",
+                "nama" => "Kab. Garut",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3206,
+                "kode" => "32.06",
+                "nama" => "Kab. Tasikmalaya",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3207,
+                "kode" => "32.07",
+                "nama" => "Kab. Ciamis",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3208,
+                "kode" => "32.08",
+                "nama" => "Kab. Kuningan",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3209,
+                "kode" => "32.09",
+                "nama" => "Kab. Cirebon",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3210,
+                "kode" => "32.10",
+                "nama" => "Kab. Majalengka",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3211,
+                "kode" => "32.11",
+                "nama" => "Kab. Sumedang",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3212,
+                "kode" => "32.12",
+                "nama" => "Kab. Indramayu",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3213,
+                "kode" => "32.13",
+                "nama" => "Kab. Subang",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3214,
+                "kode" => "32.14",
+                "nama" => "Kab. Purwakarta",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3215,
+                "kode" => "32.15",
+                "nama" => "Kab. Karawang",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3216,
+                "kode" => "32.16",
+                "nama" => "Kab. Bekasi",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3217,
+                "kode" => "32.17",
+                "nama" => "Kab. Bandung Barat",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3218,
+                "kode" => "32.18",
+                "nama" => "Kab. Pangandaran",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3271,
+                "kode" => "32.71",
+                "nama" => "Kota Bogor",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3272,
+                "kode" => "32.72",
+                "nama" => "Kota Sukabumi",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3273,
+                "kode" => "32.73",
+                "nama" => "Kota Bandung",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3274,
+                "kode" => "32.74",
+                "nama" => "Kota Cirebon",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3275,
+                "kode" => "32.75",
+                "nama" => "Kota Bekasi",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3276,
+                "kode" => "32.76",
+                "nama" => "Kota Depok",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3277,
+                "kode" => "32.77",
+                "nama" => "Kota Cimahi",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3278,
+                "kode" => "32.78",
+                "nama" => "Kota Tasikmalaya",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3279,
+                "kode" => "32.79",
+                "nama" => "Kota Banjar",
+                "provinsi_id" => 32,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3301,
+                "kode" => "33.01",
+                "nama" => "Kab. Cilacap",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3302,
+                "kode" => "33.02",
+                "nama" => "Kab. Banyumas",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3303,
+                "kode" => "33.03",
+                "nama" => "Kab. Purbalingga",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3304,
+                "kode" => "33.04",
+                "nama" => "Kab. Banjarnegara",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3305,
+                "kode" => "33.05",
+                "nama" => "Kab. Kebumen",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3306,
+                "kode" => "33.06",
+                "nama" => "Kab. Purworejo",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3307,
+                "kode" => "33.07",
+                "nama" => "Kab. Wonosobo",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3308,
+                "kode" => "33.08",
+                "nama" => "Kab. Magelang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3309,
+                "kode" => "33.09",
+                "nama" => "Kab. Boyolali",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3310,
+                "kode" => "33.10",
+                "nama" => "Kab. Klaten",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3311,
+                "kode" => "33.11",
+                "nama" => "Kab. Sukoharjo",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3312,
+                "kode" => "33.12",
+                "nama" => "Kab. Wonogiri",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3313,
+                "kode" => "33.13",
+                "nama" => "Kab. Karanganyar",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3314,
+                "kode" => "33.14",
+                "nama" => "Kab. Sragen",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3315,
+                "kode" => "33.15",
+                "nama" => "Kab. Grobogan",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3316,
+                "kode" => "33.16",
+                "nama" => "Kab. Blora",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3317,
+                "kode" => "33.17",
+                "nama" => "Kab. Rembang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3318,
+                "kode" => "33.18",
+                "nama" => "Kab. Pati",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3319,
+                "kode" => "33.19",
+                "nama" => "Kab. Kudus",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3320,
+                "kode" => "33.20",
+                "nama" => "Kab. Jepara",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3321,
+                "kode" => "33.21",
+                "nama" => "Kab. Demak",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3322,
+                "kode" => "33.22",
+                "nama" => "Kab. Semarang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3323,
+                "kode" => "33.23",
+                "nama" => "Kab. Temanggung",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3324,
+                "kode" => "33.24",
+                "nama" => "Kab. Kendal",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3325,
+                "kode" => "33.25",
+                "nama" => "Kab. Batang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3326,
+                "kode" => "33.26",
+                "nama" => "Kab. Pekalongan",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3327,
+                "kode" => "33.27",
+                "nama" => "Kab. Pemalang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3328,
+                "kode" => "33.28",
+                "nama" => "Kab. Tegal",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3329,
+                "kode" => "33.29",
+                "nama" => "Kab. Brebes",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3371,
+                "kode" => "33.71",
+                "nama" => "Kota Magelang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3372,
+                "kode" => "33.72",
+                "nama" => "Kota Surakarta",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3373,
+                "kode" => "33.73",
+                "nama" => "Kota Salatiga",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3374,
+                "kode" => "33.74",
+                "nama" => "Kota Semarang",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3375,
+                "kode" => "33.75",
+                "nama" => "Kota Pekalongan",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3376,
+                "kode" => "33.76",
+                "nama" => "Kota Tegal",
+                "provinsi_id" => 33,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3401,
+                "kode" => "34.01",
+                "nama" => "Kab. Kulon Progo",
+                "provinsi_id" => 34,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3402,
+                "kode" => "34.02",
+                "nama" => "Kab. Bantul",
+                "provinsi_id" => 34,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3403,
+                "kode" => "34.03",
+                "nama" => "Kab. Gunungkidul",
+                "provinsi_id" => 34,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3404,
+                "kode" => "34.04",
+                "nama" => "Kab. Sleman",
+                "provinsi_id" => 34,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3471,
+                "kode" => "34.71",
+                "nama" => "Kota Yogyakarta",
+                "provinsi_id" => 34,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3501,
+                "kode" => "35.01",
+                "nama" => "Kab. Pacitan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3502,
+                "kode" => "35.02",
+                "nama" => "Kab. Ponorogo",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3503,
+                "kode" => "35.03",
+                "nama" => "Kab. Trenggalek",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3504,
+                "kode" => "35.04",
+                "nama" => "Kab. Tulungagung",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3505,
+                "kode" => "35.05",
+                "nama" => "Kab. Blitar",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3506,
+                "kode" => "35.06",
+                "nama" => "Kab. Kediri",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3507,
+                "kode" => "35.07",
+                "nama" => "Kab. Malang",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3508,
+                "kode" => "35.08",
+                "nama" => "Kab. Lumajang",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3509,
+                "kode" => "35.09",
+                "nama" => "Kab. Jember",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3510,
+                "kode" => "35.10",
+                "nama" => "Kab. Banyuwangi",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3511,
+                "kode" => "35.11",
+                "nama" => "Kab. Bondowoso",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3512,
+                "kode" => "35.12",
+                "nama" => "Kab. Situbondo",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3513,
+                "kode" => "35.13",
+                "nama" => "Kab. Probolinggo",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3514,
+                "kode" => "35.14",
+                "nama" => "Kab. Pasuruan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3515,
+                "kode" => "35.15",
+                "nama" => "Kab. Sidoarjo",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3516,
+                "kode" => "35.16",
+                "nama" => "Kab. Mojokerto",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3517,
+                "kode" => "35.17",
+                "nama" => "Kab. Jombang",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3518,
+                "kode" => "35.18",
+                "nama" => "Kab. Nganjuk",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3519,
+                "kode" => "35.19",
+                "nama" => "Kab. Madiun",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3520,
+                "kode" => "35.20",
+                "nama" => "Kab. Magetan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3521,
+                "kode" => "35.21",
+                "nama" => "Kab. Ngawi",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3522,
+                "kode" => "35.22",
+                "nama" => "Kab. Bojonegoro",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3523,
+                "kode" => "35.23",
+                "nama" => "Kab. Tuban",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3524,
+                "kode" => "35.24",
+                "nama" => "Kab. Lamongan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3525,
+                "kode" => "35.25",
+                "nama" => "Kab. Gresik",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3526,
+                "kode" => "35.26",
+                "nama" => "Kab. Bangkalan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3527,
+                "kode" => "35.27",
+                "nama" => "Kab. Sampang",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3528,
+                "kode" => "35.28",
+                "nama" => "Kab. Pamekasan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3529,
+                "kode" => "35.29",
+                "nama" => "Kab. Sumenep",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3571,
+                "kode" => "35.71",
+                "nama" => "Kota Kediri",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3572,
+                "kode" => "35.72",
+                "nama" => "Kota Blitar",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3573,
+                "kode" => "35.73",
+                "nama" => "Kota Malang",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3574,
+                "kode" => "35.74",
+                "nama" => "Kota Probolinggo",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3575,
+                "kode" => "35.75",
+                "nama" => "Kota Pasuruan",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3576,
+                "kode" => "35.76",
+                "nama" => "Kota Mojokerto",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3577,
+                "kode" => "35.77",
+                "nama" => "Kota Madiun",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3578,
+                "kode" => "35.78",
+                "nama" => "Kota Surabaya",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3579,
+                "kode" => "35.79",
+                "nama" => "Kota Batu",
+                "provinsi_id" => 35,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3601,
+                "kode" => "36.01",
+                "nama" => "Kab. Pandeglang",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3602,
+                "kode" => "36.02",
+                "nama" => "Kab. Lebak",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3603,
+                "kode" => "36.03",
+                "nama" => "Kab. Tangerang",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3604,
+                "kode" => "36.04",
+                "nama" => "Kab. Serang",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 3671,
+                "kode" => "36.71",
+                "nama" => "Kota Tangerang",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3672,
+                "kode" => "36.72",
+                "nama" => "Kota Cilegon",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3673,
+                "kode" => "36.73",
+                "nama" => "Kota Serang",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 3674,
+                "kode" => "36.74",
+                "nama" => "Kota Tangerang Selatan",
+                "provinsi_id" => 36,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 5101,
+                "kode" => "51.01",
+                "nama" => "Kab. Jembrana",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5102,
+                "kode" => "51.02",
+                "nama" => "Kab. Tabanan",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5103,
+                "kode" => "51.03",
+                "nama" => "Kab. Badung",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5104,
+                "kode" => "51.04",
+                "nama" => "Kab. Gianyar",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5105,
+                "kode" => "51.05",
+                "nama" => "Kab. Klungkung",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5106,
+                "kode" => "51.06",
+                "nama" => "Kab. Bangli",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5107,
+                "kode" => "51.07",
+                "nama" => "Kab. Karangasem",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5108,
+                "kode" => "51.08",
+                "nama" => "Kab. Buleleng",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5171,
+                "kode" => "51.71",
+                "nama" => "Kota Denpasar",
+                "provinsi_id" => 51,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 5201,
+                "kode" => "52.01",
+                "nama" => "Kab. Lombok Barat",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5202,
+                "kode" => "52.02",
+                "nama" => "Kab. Lombok Tengah",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5203,
+                "kode" => "52.03",
+                "nama" => "Kab. Lombok Timur",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5204,
+                "kode" => "52.04",
+                "nama" => "Kab. Sumbawa",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5205,
+                "kode" => "52.05",
+                "nama" => "Kab. Dompu",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5206,
+                "kode" => "52.06",
+                "nama" => "Kab. Bima",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5207,
+                "kode" => "52.07",
+                "nama" => "Kab. Sumbawa Barat",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5208,
+                "kode" => "52.08",
+                "nama" => "Kab. Lombok Utara",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5271,
+                "kode" => "52.71",
+                "nama" => "Kota Mataram",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 5272,
+                "kode" => "52.72",
+                "nama" => "Kota Bima",
+                "provinsi_id" => 52,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 5301,
+                "kode" => "53.01",
+                "nama" => "Kab. Sumba Barat",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5302,
+                "kode" => "53.02",
+                "nama" => "Kab. Sumba Timur",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5303,
+                "kode" => "53.03",
+                "nama" => "Kab. Kupang",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5304,
+                "kode" => "53.04",
+                "nama" => "Kab Timor Tengah Selatan",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5305,
+                "kode" => "53.05",
+                "nama" => "Kab. Timor Tengah Utara",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5306,
+                "kode" => "53.06",
+                "nama" => "Kab. Belu",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5307,
+                "kode" => "53.07",
+                "nama" => "Kab. Alor",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5308,
+                "kode" => "53.08",
+                "nama" => "Kab. Lembata",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5309,
+                "kode" => "53.09",
+                "nama" => "Kab. Flores Timur",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5310,
+                "kode" => "53.10",
+                "nama" => "Kab. Sikka",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5311,
+                "kode" => "53.11",
+                "nama" => "Kab. Ende",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5312,
+                "kode" => "53.12",
+                "nama" => "Kab. Ngada",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5313,
+                "kode" => "53.13",
+                "nama" => "Kab. Manggarai",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5314,
+                "kode" => "53.14",
+                "nama" => "Kab. Rote Ndao",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5315,
+                "kode" => "53.15",
+                "nama" => "Kab. Manggarai Barat",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5316,
+                "kode" => "53.16",
+                "nama" => "Kab. Sumba Tengah",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5317,
+                "kode" => "53.17",
+                "nama" => "Kab. Sumba Barat Daya",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5318,
+                "kode" => "53.18",
+                "nama" => "Kab. Nagekeo",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5319,
+                "kode" => "53.19",
+                "nama" => "Kab. Manggarai Timur",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5320,
+                "kode" => "53.20",
+                "nama" => "Kab. Sabu Raijua",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5321,
+                "kode" => "53.21",
+                "nama" => "Kab. Malaka",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 5371,
+                "kode" => "53.71",
+                "nama" => "Kota Kupang",
+                "provinsi_id" => 53,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6101,
+                "kode" => "61.01",
+                "nama" => "Kab. Sambas",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6102,
+                "kode" => "61.02",
+                "nama" => "Kab. Bengkayang",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6103,
+                "kode" => "61.03",
+                "nama" => "Kab. Landak",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6104,
+                "kode" => "61.04",
+                "nama" => "Kab. Mempawah",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6105,
+                "kode" => "61.05",
+                "nama" => "Kab. Sanggau",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6106,
+                "kode" => "61.06",
+                "nama" => "Kab. Ketapang",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6107,
+                "kode" => "61.07",
+                "nama" => "Kab. Sintang",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6108,
+                "kode" => "61.08",
+                "nama" => "Kab. Kapuas Hulu",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6109,
+                "kode" => "61.09",
+                "nama" => "Kab. Sekadau",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6110,
+                "kode" => "61.10",
+                "nama" => "Kab. Melawi",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6111,
+                "kode" => "61.11",
+                "nama" => "Kab. Kayong Utara",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6112,
+                "kode" => "61.12",
+                "nama" => "Kab. Kubu Raya",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6171,
+                "kode" => "61.71",
+                "nama" => "Kota Pontianak",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6172,
+                "kode" => "61.72",
+                "nama" => "Kota Singkawang",
+                "provinsi_id" => 61,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6201,
+                "kode" => "62.01",
+                "nama" => "Kab. Kotawaringin Barat",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6202,
+                "kode" => "62.02",
+                "nama" => "Kab. Kotawaringin Timur",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6203,
+                "kode" => "62.03",
+                "nama" => "Kab. Kapuas",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6204,
+                "kode" => "62.04",
+                "nama" => "Kab. Barito Selatan",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6205,
+                "kode" => "62.05",
+                "nama" => "Kab. Barito Utara",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6206,
+                "kode" => "62.06",
+                "nama" => "Kab. Sukamara",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6207,
+                "kode" => "62.07",
+                "nama" => "Kab. Lamandau",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6208,
+                "kode" => "62.08",
+                "nama" => "Kab. Seruyan",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6209,
+                "kode" => "62.09",
+                "nama" => "Kab. Katingan",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6210,
+                "kode" => "62.10",
+                "nama" => "Kab. Pulang Pisau",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6211,
+                "kode" => "62.11",
+                "nama" => "Kab. Gunung Mas",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6212,
+                "kode" => "62.12",
+                "nama" => "Kab. Barito Timur",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6213,
+                "kode" => "62.13",
+                "nama" => "Kab. Murung Raya",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6271,
+                "kode" => "62.71",
+                "nama" => "Kota Palangkaraya",
+                "provinsi_id" => 62,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6301,
+                "kode" => "63.01",
+                "nama" => "Kab. Tanah Laut",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6302,
+                "kode" => "63.02",
+                "nama" => "Kab. Kotabaru",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6303,
+                "kode" => "63.03",
+                "nama" => "Kab. Banjar",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6304,
+                "kode" => "63.04",
+                "nama" => "Kab. Barito Kuala",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6305,
+                "kode" => "63.05",
+                "nama" => "Kab. Tapin",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6306,
+                "kode" => "63.06",
+                "nama" => "Kab. Hulu Sungai Selatan",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6307,
+                "kode" => "63.07",
+                "nama" => "Kab. Hulu Sungai Tengah",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6308,
+                "kode" => "63.08",
+                "nama" => "Kab. Hulu Sungai Utara",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6309,
+                "kode" => "63.09",
+                "nama" => "Kab. Tabalong",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6310,
+                "kode" => "63.10",
+                "nama" => "Kab. Tanah Bumbu",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6311,
+                "kode" => "63.11",
+                "nama" => "Kab. Balangan",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6371,
+                "kode" => "63.71",
+                "nama" => "Kota Banjarmasin",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6372,
+                "kode" => "63.72",
+                "nama" => "Kota Banjarbaru",
+                "provinsi_id" => 63,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6401,
+                "kode" => "64.01",
+                "nama" => "Kab. Paser",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6402,
+                "kode" => "64.02",
+                "nama" => "Kab. Kutai Barat",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6403,
+                "kode" => "64.03",
+                "nama" => "Kab. Kutai Kartanegara",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6404,
+                "kode" => "64.04",
+                "nama" => "Kab. Kutai Timur",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6405,
+                "kode" => "64.05",
+                "nama" => "Kab. Berau",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6409,
+                "kode" => "64.09",
+                "nama" => "Kab. Penajam Paser Utara",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6411,
+                "kode" => "64.11",
+                "nama" => "Kab. Mahakam Ulu",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6471,
+                "kode" => "64.71",
+                "nama" => "Kota Balikpapan",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6472,
+                "kode" => "64.72",
+                "nama" => "Kota Samarinda",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6474,
+                "kode" => "64.74",
+                "nama" => "Kota Bontang",
+                "provinsi_id" => 64,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 6501,
+                "kode" => "65.01",
+                "nama" => "Kab. Malinau",
+                "provinsi_id" => 65,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6502,
+                "kode" => "65.02",
+                "nama" => "Kab. Bulungan",
+                "provinsi_id" => 65,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6503,
+                "kode" => "65.03",
+                "nama" => "Kab. Tana Tidung",
+                "provinsi_id" => 65,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6504,
+                "kode" => "65.04",
+                "nama" => "Kab. Nunukan",
+                "provinsi_id" => 65,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 6571,
+                "kode" => "65.71",
+                "nama" => "Kota Tarakan",
+                "provinsi_id" => 65,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7101,
+                "kode" => "71.01",
+                "nama" => "Kab. Bolaang Mongondow",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7102,
+                "kode" => "71.02",
+                "nama" => "Kab. Minahasa",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7103,
+                "kode" => "71.03",
+                "nama" => "Kab. Kepulauan Sangihe",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7104,
+                "kode" => "71.04",
+                "nama" => "Kab. Kepulauan Talaud",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7105,
+                "kode" => "71.05",
+                "nama" => "Kab. Minahasa Selatan",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7106,
+                "kode" => "71.06",
+                "nama" => "Kab. Minahasa Utara",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7107,
+                "kode" => "71.07",
+                "nama" => "Kab. Bolaang Mongondow Utara",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7108,
+                "kode" => "71.08",
+                "nama" => "Kab. Kep. Siau Tagulandang Biaro",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7109,
+                "kode" => "71.09",
+                "nama" => "Kab. Minahasa Tenggara",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7110,
+                "kode" => "71.10",
+                "nama" => "Kab. Bolaang Mongondow Selatan",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7111,
+                "kode" => "71.11",
+                "nama" => "Kab. Bolaang Mongondow Timur",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7171,
+                "kode" => "71.71",
+                "nama" => "Kota Manado",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7172,
+                "kode" => "71.72",
+                "nama" => "Kota Bitung",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7173,
+                "kode" => "71.73",
+                "nama" => "Kota Tomohon",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7174,
+                "kode" => "71.74",
+                "nama" => "Kota Kotamobagu",
+                "provinsi_id" => 71,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7201,
+                "kode" => "72.01",
+                "nama" => "Kab. Banggai Kepulauan",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7202,
+                "kode" => "72.02",
+                "nama" => "Kab. Banggai",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7203,
+                "kode" => "72.03",
+                "nama" => "Kab. Morowali",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7204,
+                "kode" => "72.04",
+                "nama" => "Kab. Poso",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7205,
+                "kode" => "72.05",
+                "nama" => "Kab. Donggala",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7206,
+                "kode" => "72.06",
+                "nama" => "Kab. Toli Toli",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7207,
+                "kode" => "72.07",
+                "nama" => "Kab. Buol",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7208,
+                "kode" => "72.08",
+                "nama" => "Kab. Parigi Moutong",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7209,
+                "kode" => "72.09",
+                "nama" => "Kab. Tojo Una Una",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7210,
+                "kode" => "72.10",
+                "nama" => "Kab. Sigi",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7211,
+                "kode" => "72.11",
+                "nama" => "Kab. Banggai Laut",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7212,
+                "kode" => "72.12",
+                "nama" => "Kab. Morowali Utara",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7271,
+                "kode" => "72.71",
+                "nama" => "Kota Palu",
+                "provinsi_id" => 72,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7301,
+                "kode" => "73.01",
+                "nama" => "Kab. Kepulauan Selayar",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7302,
+                "kode" => "73.02",
+                "nama" => "Kab. Bulukumba",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7303,
+                "kode" => "73.03",
+                "nama" => "Kab. Bantaeng",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7304,
+                "kode" => "73.04",
+                "nama" => "Kab. Jeneponto",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7305,
+                "kode" => "73.05",
+                "nama" => "Kab. Takalar",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7306,
+                "kode" => "73.06",
+                "nama" => "Kab. Gowa",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7307,
+                "kode" => "73.07",
+                "nama" => "Kab. Sinjai",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7308,
+                "kode" => "73.08",
+                "nama" => "Kab. Maros",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7309,
+                "kode" => "73.09",
+                "nama" => "Kab. Pangkajene Dan Kepulauan",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7310,
+                "kode" => "73.10",
+                "nama" => "Kab. Barru",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7311,
+                "kode" => "73.11",
+                "nama" => "Kab. Bone",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7312,
+                "kode" => "73.12",
+                "nama" => "Kab. Soppeng",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7313,
+                "kode" => "73.13",
+                "nama" => "Kab. Wajo",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7314,
+                "kode" => "73.14",
+                "nama" => "Kab. Sidenreng Rappang",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7315,
+                "kode" => "73.15",
+                "nama" => "Kab. Pinrang",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7316,
+                "kode" => "73.16",
+                "nama" => "Kab. Enrekang",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7317,
+                "kode" => "73.17",
+                "nama" => "Kab. Luwu",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7318,
+                "kode" => "73.18",
+                "nama" => "Kab. Tana Toraja",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7322,
+                "kode" => "73.22",
+                "nama" => "Kab. Luwu Utara",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7325,
+                "kode" => "73.25",
+                "nama" => "Kab. Luwu Timur",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7326,
+                "kode" => "73.26",
+                "nama" => "Kab. Toraja Utara",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7371,
+                "kode" => "73.71",
+                "nama" => "Kota Makassar",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7372,
+                "kode" => "73.72",
+                "nama" => "Kota Parepare",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7373,
+                "kode" => "73.73",
+                "nama" => "Kota Palopo",
+                "provinsi_id" => 73,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7401,
+                "kode" => "74.01",
+                "nama" => "Kab. Buton",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7402,
+                "kode" => "74.02",
+                "nama" => "Kab. Muna",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7403,
+                "kode" => "74.03",
+                "nama" => "Kab. Konawe",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7404,
+                "kode" => "74.04",
+                "nama" => "Kab. Kolaka",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7405,
+                "kode" => "74.05",
+                "nama" => "Kab. Konawe Selatan",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7406,
+                "kode" => "74.06",
+                "nama" => "Kab. Bombana",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7407,
+                "kode" => "74.07",
+                "nama" => "Kab. Wakatobi",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7408,
+                "kode" => "74.08",
+                "nama" => "Kab. Kolaka Utara",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7409,
+                "kode" => "74.09",
+                "nama" => "Kab. Buton Utara",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7410,
+                "kode" => "74.10",
+                "nama" => "Kab. Konawe Utara",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7411,
+                "kode" => "74.11",
+                "nama" => "Kab. Kolaka Timur",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7412,
+                "kode" => "74.12",
+                "nama" => "Kab. Konawe Kepulauan",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7413,
+                "kode" => "74.13",
+                "nama" => "Kab. Muna Barat",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7414,
+                "kode" => "74.14",
+                "nama" => "Kab. Buton Tengah",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7415,
+                "kode" => "74.15",
+                "nama" => "Kab. Buton Selatan",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7471,
+                "kode" => "74.71",
+                "nama" => "Kota Kendari",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7472,
+                "kode" => "74.72",
+                "nama" => "Kota Bau Bau",
+                "provinsi_id" => 74,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7501,
+                "kode" => "75.01",
+                "nama" => "Kab. Boalemo",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7502,
+                "kode" => "75.02",
+                "nama" => "Kab. Gorontalo",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7503,
+                "kode" => "75.03",
+                "nama" => "Kab. Pohuwato",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7504,
+                "kode" => "75.04",
+                "nama" => "Kab. Bone Bolango",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7505,
+                "kode" => "75.05",
+                "nama" => "Kab. Gorontalo Utara",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7571,
+                "kode" => "75.71",
+                "nama" => "Kota Gorontalo",
+                "provinsi_id" => 75,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 7601,
+                "kode" => "76.01",
+                "nama" => "Kab. Majene",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7602,
+                "kode" => "76.02",
+                "nama" => "Kab. Polewali Mandar",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7603,
+                "kode" => "76.03",
+                "nama" => "Kab. Mamasa",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7604,
+                "kode" => "76.04",
+                "nama" => "Kab. Mamuju",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7605,
+                "kode" => "76.05",
+                "nama" => "Kab. Pasangkayu",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 7606,
+                "kode" => "76.06",
+                "nama" => "Kab. Mamuju Tengah",
+                "provinsi_id" => 76,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8101,
+                "kode" => "81.01",
+                "nama" => "Kab. Kepulauan Tanimbar",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8102,
+                "kode" => "81.02",
+                "nama" => "Kab. Maluku Tenggara",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8103,
+                "kode" => "81.03",
+                "nama" => "Kab. Maluku Tengah",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8104,
+                "kode" => "81.04",
+                "nama" => "Kab. Buru",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8105,
+                "kode" => "81.05",
+                "nama" => "Kab. Kepulauan Aru",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8106,
+                "kode" => "81.06",
+                "nama" => "Kab. Seram Bagian Barat",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8107,
+                "kode" => "81.07",
+                "nama" => "Kab. Seram Bagian Timur",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8108,
+                "kode" => "81.08",
+                "nama" => "Kab. Maluku Barat Daya",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8109,
+                "kode" => "81.09",
+                "nama" => "Kab. Buru Selatan",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8171,
+                "kode" => "81.71",
+                "nama" => "Kota Ambon",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 8172,
+                "kode" => "81.72",
+                "nama" => "Kota Tual",
+                "provinsi_id" => 81,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 8201,
+                "kode" => "82.01",
+                "nama" => "Kab. Halmahera Barat",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8202,
+                "kode" => "82.02",
+                "nama" => "Kab. Halmahera Tengah",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8203,
+                "kode" => "82.03",
+                "nama" => "Kab. Kepulauan Sula",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8204,
+                "kode" => "82.04",
+                "nama" => "Kab. Halmahera Selatan",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8205,
+                "kode" => "82.05",
+                "nama" => "Kab. Halmahera Utara",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8206,
+                "kode" => "82.06",
+                "nama" => "Kab. Halmahera Timur",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8207,
+                "kode" => "82.07",
+                "nama" => "Kab. Pulau Morotai",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8208,
+                "kode" => "82.08",
+                "nama" => "Kab. Pulau Taliabu",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 8271,
+                "kode" => "82.71",
+                "nama" => "Kota Ternate",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 8272,
+                "kode" => "82.72",
+                "nama" => "Kota Tidore Kepulauan",
+                "provinsi_id" => 82,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 9101,
+                "kode" => "91.01",
+                "nama" => "Kab. Fak Fak",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9102,
+                "kode" => "91.02",
+                "nama" => "Kab. Kaimana",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9103,
+                "kode" => "91.03",
+                "nama" => "Kab. Teluk Wondama",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9104,
+                "kode" => "91.04",
+                "nama" => "Kab. Teluk Bintuni",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9105,
+                "kode" => "91.05",
+                "nama" => "Kab. Manokwari",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9111,
+                "kode" => "91.11",
+                "nama" => "Kab. Manokwari Selatan",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9112,
+                "kode" => "91.12",
+                "nama" => "Kab. Pegunungan Arfak",
+                "provinsi_id" => 91,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9201,
+                "kode" => "92.01",
+                "nama" => "Kab. Raja Ampat",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9202,
+                "kode" => "92.02",
+                "nama" => "Kab. Sorong",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9203,
+                "kode" => "92.03",
+                "nama" => "Kab. Sorong Selatan",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9204,
+                "kode" => "92.04",
+                "nama" => "Kab. Maybrat",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9205,
+                "kode" => "92.05",
+                "nama" => "Kab. Tambrauw",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9271,
+                "kode" => "92.71",
+                "nama" => "Kota Sorong",
+                "provinsi_id" => 92,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 9403,
+                "kode" => "94.03",
+                "nama" => "Kab. Jayapura",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9408,
+                "kode" => "94.08",
+                "nama" => "Kab. Kepulauan Yapen",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9409,
+                "kode" => "94.09",
+                "nama" => "Kab. Biak Numfor",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9419,
+                "kode" => "94.19",
+                "nama" => "Kab. Sarmi",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9420,
+                "kode" => "94.20",
+                "nama" => "Kab. Keerom",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9426,
+                "kode" => "94.26",
+                "nama" => "Kab. Waropen",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9427,
+                "kode" => "94.27",
+                "nama" => "Kab. Supiori",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9428,
+                "kode" => "94.28",
+                "nama" => "Kab. Mamberamo Raya",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9471,
+                "kode" => "94.71",
+                "nama" => "Kota Jayapura",
+                "provinsi_id" => 94,
+                "aktif" => 1,
+                "type" => "Kota",
+            ],
+            [
+                "id" => 9501,
+                "kode" => "95.01",
+                "nama" => "Kab. Merauke",
+                "provinsi_id" => 95,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9502,
+                "kode" => "95.02",
+                "nama" => "Kab. Boven Digoel",
+                "provinsi_id" => 95,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9503,
+                "kode" => "95.03",
+                "nama" => "Kab. Mappi",
+                "provinsi_id" => 95,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9504,
+                "kode" => "95.04",
+                "nama" => "Kab. Asmat",
+                "provinsi_id" => 95,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9601,
+                "kode" => "96.01",
+                "nama" => "Kab. Mimika",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9602,
+                "kode" => "96.02",
+                "nama" => "Kab. Dogiyai",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9603,
+                "kode" => "96.03",
+                "nama" => "Kab. Deiyai",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9604,
+                "kode" => "96.04",
+                "nama" => "Kab. Nabire",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9605,
+                "kode" => "96.05",
+                "nama" => "Kab. Paniai",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9606,
+                "kode" => "96.06",
+                "nama" => "Kab. Intan Jaya",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9607,
+                "kode" => "96.07",
+                "nama" => "Kab. Puncak",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9608,
+                "kode" => "96.08",
+                "nama" => "Kab. Puncak Jaya",
+                "provinsi_id" => 96,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9701,
+                "kode" => "97.01",
+                "nama" => "Kab. Nduga",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9702,
+                "kode" => "97.02",
+                "nama" => "Kab. Jayawijaya",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9703,
+                "kode" => "97.03",
+                "nama" => "Kab. Lanny Jaya",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9704,
+                "kode" => "97.04",
+                "nama" => "Kab. Tolikara",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9705,
+                "kode" => "97.05",
+                "nama" => "Kab. Mamberamo Tengah",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9706,
+                "kode" => "97.06",
+                "nama" => "Kab. Yalimo",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9707,
+                "kode" => "97.07",
+                "nama" => "Kab. Yahukimo",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
+            ],
+            [
+                "id" => 9708,
+                "kode" => "97.08",
+                "nama" => "Kab. Pegunungan Bintang",
+                "provinsi_id" => 97,
+                "aktif" => 1,
+                "type" => "Kabupaten",
             ],
-            [
-                "kode"=> "97.8",
-                "nama"=> "KAB. PEGUNUNGAN BINTANG",
-                "provinsi_id"=> 97,
-                "aktif"=> 1
-            ]
         ];
         Kabupaten::insert($kabupaten);
     }

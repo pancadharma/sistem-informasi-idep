@@ -261,6 +261,7 @@ return [
     'sample_category'                => 'Contoh Kategori',
     'sample_question'                => 'Contoh Pertanyaan',
     'select_all'                     => 'Pilih semua',
+    'select_type'                    => 'Pilih Tipe',
     'select_crud_placeholder'        => 'Silakan pilih salah satu CRUD Anda',
     'select_dt_placeholder'          => 'Pilih salah satu field tanggal/waktu',
     'select_users_placeholder'       => 'Silakan pilih salah satu user Anda',

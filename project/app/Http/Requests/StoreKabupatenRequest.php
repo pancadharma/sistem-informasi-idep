@@ -22,6 +22,7 @@ class StoreKabupatenRequest extends FormRequest
             'kode'          => ['string','max:15','required','unique:kabupaten'],
             'nama'          => ['required','string', 'max:200'],
             'provinsi_id'   => ['required','integer'],
+            'type'          => ['required','string'],
             'aktif'         => ['integer'],
         ];
     }

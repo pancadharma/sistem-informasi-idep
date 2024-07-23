@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('kecamatan', function (Blueprint $table) {
             $table->id();
+            $table->string('kode',15);
+            $table->string('nama', 200);
+            $table->boolean('aktif')->default(0)->nullable();
+            $table->foreignId('kabupaten_id')->constrained('kabupaten')->onDelete('cascade');
             $table->timestamps();
         });
     }

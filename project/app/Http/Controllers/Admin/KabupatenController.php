@@ -104,7 +104,7 @@ class KabupatenController extends Controller
     public function edit(Kabupaten $kabupaten)
     {
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
-        $kabupaten->load('provinsi');   
+        $kabupaten->load('provinsi');
         return [$kabupaten, "results" => $provinsi];
     }
 
@@ -114,7 +114,6 @@ class KabupatenController extends Controller
         $data = $request->all();
         try {
             $data = $request->validated();
-            // dd($data);
             $kabupaten->update($data);
             
             return response()->json([

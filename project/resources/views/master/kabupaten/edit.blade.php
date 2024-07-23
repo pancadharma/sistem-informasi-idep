@@ -5,16 +5,23 @@
             @csrf
             <input type="hidden" name="id" id="id">
             <div class="form-group">
-                <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
+                <select id="provinsi_id" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%"></select>
+            </div>
+            <div class="form-group">
+                <label for="kode">{{ trans('cruds.kabupaten.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
                 <input type="text" id="editkode" name="kode" class="form-control" v-model="form.kode" required maxlength="5">
             </div>
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
+                <label for="nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                 <input type="text" id="editnama" name="nama" class="form-control" v-model="form.nama" required maxlength="200">
             </div>
-            <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
             <div class="form-group">
-                <select id="provinsi_id" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%"></select>
+                <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
+                <select id="type_edit" name="type" class="form-control select2 type" style="width: 100%">
+                    <option></option>
+                    <option value="Kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
+                    <option value="Kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                </select>
             </div>
             <div class="form-group">
                 <strong>{{ trans('cruds.status.title') }}</strong>

@@ -71,8 +71,6 @@
 
             let idKabupaten = $('#id').val();
             let formData = $(this).serialize();
-
-            console.log(formData);
             $.ajax({
                 url: '{{ route('kabupaten.update', ':id_p') }}'.replace(':id_p', idKabupaten),
                 method: 'PUT',
@@ -196,8 +194,8 @@
                     $('#editKabupatenModal').modal('show'); // Show the modal
                     
                     // set select 2 data
-                    let id_prov = response[0].provinsi.id;
-                    let nama_prov = response[0].provinsi.nama;
+                    let id_prov   = response[0].provinsi.id;
+                    let nama_prov = response[0].type;
                     
                     let data = response.results.map(function(item) {
                         return {
@@ -205,14 +203,28 @@
                             text: item.id+' - '+ item.nama,
                         };
                     });
+                    
+                    let type = response.results.map(function(item) {
+                        return {
+                            text: item.type,
+                        };
+                    });
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
                         data : data,
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
+                    $('#type_edit').select2({
+                        placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
+                        data : type
+                    });
                     let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
+                    let selected_data2 = new Option(response[0].type,true);
+                    
                     $('#provinsi_id').append(selected_data).trigger('change');
+                    $('#type_edit').append(selected_data2).trigger('change');
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
+                    $('#type_edit').val(response[0].type).trigger('change');
 
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -237,6 +249,9 @@
 
     //call add kabupaten modal form
     $(document).ready(function() {
+        $('#type').select2({
+            placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}"
+        });
         $('.add-kabupaten').on('click', function(e){
             e.preventDefault();
             $.ajax({
