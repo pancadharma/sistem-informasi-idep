@@ -203,12 +203,8 @@
                             text: item.id+' - '+ item.nama,
                         };
                     });
-                    
-                    let type = response.results.map(function(item) {
-                        return {
-                            text: item.type,
-                        };
-                    });
+
+                    let type = response[0].type;
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
                         data : data,
@@ -216,16 +212,11 @@
                     });
                     $('#type_edit').select2({
                         placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
-                        data : type
                     });
                     let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
-                    let selected_data2 = new Option(response[0].type,true);
-                    
                     $('#provinsi_id').append(selected_data).trigger('change');
-                    $('#type_edit').append(selected_data2).trigger('change');
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
-                    $('#type_edit').val(response[0].type).trigger('change');
-
+                    $('#type_edit').val(type).trigger('change');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
