@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\MatchProvinsiId;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreKabupatenRequest extends FormRequest
@@ -19,11 +20,11 @@ class StoreKabupatenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kode'          => ['string','max:15','required','unique:kabupaten'],
-            'nama'          => ['required','string', 'max:200'],
-            'provinsi_id'   => ['required','integer'],
-            'type'          => ['required','string'],
-            'aktif'         => ['integer'],
+            'provinsi_id' => ['required', 'integer'],
+            'kode' => [new MatchProvinsiId($this->input('provinsi_id')), 'required', 'string', 'max:15', 'min:4'],
+            'nama' => ['required', 'string', 'max:200'],
+            'type' => ['required', 'string'],
+            'aktif' => ['integer'],
         ];
     }
 

@@ -183,18 +183,11 @@ return [
             'header' => 'Master Data',
             'classes' => 'text-bold text-uppercase nav-header-pad-as-first',
         ],
-        // [
-        //     'text' => 'blog',
-        //     'url' => 'blog',
-        //     'can' => 'manage-blog',
-        // ],
         [
             'text'        => 'Setup',
-            'url'         => '#',
             'icon'        => 'fas fa-cog',
             'label_color' => 'success',
             'classes'     => 'text-bold text-uppercase nav-header-pad-as-first',
-            // 'label' => 4,
         ],
         [
             'text' => 'Regional',
@@ -206,9 +199,8 @@ return [
                     'active' => ['provinsi', 'regex:@^provinsi/[0-9]+$@', 'country', 'provinsi*','country*'],
                     'route'  => 'provinsi.index',
                     'icon'  => 'fas fa-paste',
-
-                    // 'classes' => 'text-danger text-uppercase',
-                    // 'route' => '',
+                    'classes' => 'text-warning',
+                    // 'can'   => ['provinsi_access','provinsi_edit', 'provinsi_show', 'provinsi_create'],
                 ],
                 [
                     'text' => 'kabupaten',
@@ -216,15 +208,15 @@ return [
                     'route'  => 'kabupaten.index',
                     'icon'  => 'fas fa-table',
                     // 'classes' => 'text-danger text-uppercase',
-                    // 'route' => '',
+                    // 'can'   => ['kabupaten_access','kabupaten_edit', 'kabupaten_show', 'kabupaten_create'],
                 ],
                 [
                     'text' => 'kecamatan',
-                    'active' => ['kecamatan', 'regex:@^kecamatan/[0-9]+$@'],
-                    'url'  => '#',
+                    'active' => ['kecamatan', 'kecamatan*','regex:@^kecamatan/[0-9]+$@'],
+                    'route'  => 'kecamatan.index',
                     'icon'  => 'far fa-plus-square',
+                    // 'can'   => ['kecamatan_access','kecamatan_edit', 'kecamatan_show', 'kecamatan_create'],
                     // 'classes' => 'text-danger text-uppercase',
-                    // 'route' => '',
                 ],
                 [
                     'text' => 'kelurahan',

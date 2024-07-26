@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Admin\KecamatanController;
 use App\Models\Provinsi;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -74,6 +75,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('datakabupaten', [KabupatenController::class, 'datakabupaten'])->name('data.kabupaten');
     Route::get('kabupaten.figma', [KabupatenController::class, 'figma'])->name('kabupaten.figma');
     Route::resource('kabupaten', KabupatenController::class);
+
+    Route::get('datakecamatan', [KecamatanController::class, 'datakecamatan'])->name('data.kecamatan');
+    Route::get('kecamatan.figma', [KecamatanController::class, 'figma'])->name('kecamatan.figma');
+    Route::resource('kecamatan', KecamatanController::class);
 });
 
 

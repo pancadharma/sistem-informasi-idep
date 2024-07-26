@@ -18,7 +18,7 @@ use Yajra\DataTables\Facades\DataTables;
 class KecamatanController extends Controller
 {
     public function index(){
-        abort_if(Gate::denies('kecamatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_if(Gate::denies('kecamatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $kabupaten = Kabupaten::all();
         $kecamatan = Kecamatan::all();
     }

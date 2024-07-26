@@ -17,7 +17,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1101,
                 "kode" => "11.01",
-                "nama" => "Kab. Simeulue",
+                "nama" => "Simeulue",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -25,7 +25,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1102,
                 "kode" => "11.02",
-                "nama" => "Kab. Aceh Singkil",
+                "nama" => "Aceh Singkil",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -33,7 +33,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1103,
                 "kode" => "11.03",
-                "nama" => "Kab. Aceh Selatan",
+                "nama" => "Aceh Selatan",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -41,7 +41,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1104,
                 "kode" => "11.04",
-                "nama" => "Kab. Aceh Tenggara",
+                "nama" => "Aceh Tenggara",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -49,7 +49,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1105,
                 "kode" => "11.05",
-                "nama" => "Kab. Aceh Timur",
+                "nama" => "Aceh Timur",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -57,7 +57,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1106,
                 "kode" => "11.06",
-                "nama" => "Kab. Aceh Tengah",
+                "nama" => "Aceh Tengah",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -65,7 +65,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1107,
                 "kode" => "11.07",
-                "nama" => "Kab. Aceh Barat",
+                "nama" => "Aceh Barat",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -73,7 +73,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1108,
                 "kode" => "11.08",
-                "nama" => "Kab. Aceh Besar",
+                "nama" => "Aceh Besar",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -81,7 +81,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1109,
                 "kode" => "11.09",
-                "nama" => "Kab. Pidie",
+                "nama" => "Pidie",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -89,7 +89,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1110,
                 "kode" => "11.10",
-                "nama" => "Kab. Bireuen",
+                "nama" => "Bireuen",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -97,7 +97,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1111,
                 "kode" => "11.11",
-                "nama" => "Kab. Aceh Utara",
+                "nama" => "Aceh Utara",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -105,7 +105,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1112,
                 "kode" => "11.12",
-                "nama" => "Kab. Aceh Barat Daya",
+                "nama" => "Aceh Barat Daya",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -113,7 +113,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1113,
                 "kode" => "11.13",
-                "nama" => "Kab. Gayo Lues",
+                "nama" => "Gayo Lues",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -121,7 +121,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1114,
                 "kode" => "11.14",
-                "nama" => "Kab. Aceh Tamiang",
+                "nama" => "Aceh Tamiang",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -129,7 +129,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1115,
                 "kode" => "11.15",
-                "nama" => "Kab. Nagan Raya",
+                "nama" => "Nagan Raya",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -137,7 +137,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1116,
                 "kode" => "11.16",
-                "nama" => "Kab. Aceh Jaya",
+                "nama" => "Aceh Jaya",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -145,7 +145,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1117,
                 "kode" => "11.17",
-                "nama" => "Kab. Bener Meriah",
+                "nama" => "Bener Meriah",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -153,7 +153,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1118,
                 "kode" => "11.18",
-                "nama" => "Kab. Pidie Jaya",
+                "nama" => "Pidie Jaya",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -161,7 +161,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1171,
                 "kode" => "11.71",
-                "nama" => "Kota Banda Aceh",
+                "nama" => "Banda Aceh",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -169,7 +169,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1172,
                 "kode" => "11.72",
-                "nama" => "Kota Sabang",
+                "nama" => "Sabang",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -177,7 +177,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1173,
                 "kode" => "11.73",
-                "nama" => "Kota Langsa",
+                "nama" => "Langsa",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -185,7 +185,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1174,
                 "kode" => "11.74",
-                "nama" => "Kota Lhokseumawe",
+                "nama" => "Lhokseumawe",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -193,7 +193,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1175,
                 "kode" => "11.75",
-                "nama" => "Kota Subulussalam",
+                "nama" => "Subulussalam",
                 "provinsi_id" => 11,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -201,7 +201,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1201,
                 "kode" => "12.01",
-                "nama" => "Kab. Nias",
+                "nama" => "Nias",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -209,7 +209,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1202,
                 "kode" => "12.02",
-                "nama" => "Kab. Mandailing Natal",
+                "nama" => "Mandailing Natal",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -217,7 +217,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1203,
                 "kode" => "12.03",
-                "nama" => "Kab. Tapanuli Selatan",
+                "nama" => "Tapanuli Selatan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -225,7 +225,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1204,
                 "kode" => "12.04",
-                "nama" => "Kab. Tapanuli Tengah",
+                "nama" => "Tapanuli Tengah",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -233,7 +233,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1205,
                 "kode" => "12.05",
-                "nama" => "Kab. Tapanuli Utara",
+                "nama" => "Tapanuli Utara",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -241,7 +241,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1206,
                 "kode" => "12.06",
-                "nama" => "Kab. Toba",
+                "nama" => "Toba",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -249,7 +249,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1207,
                 "kode" => "12.07",
-                "nama" => "Kab. Labuhanbatu",
+                "nama" => "Labuhanbatu",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -257,7 +257,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1208,
                 "kode" => "12.08",
-                "nama" => "Kab. Asahan",
+                "nama" => "Asahan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -265,7 +265,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1209,
                 "kode" => "12.09",
-                "nama" => "Kab. Simalungun",
+                "nama" => "Simalungun",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -273,7 +273,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1210,
                 "kode" => "12.10",
-                "nama" => "Kab. Dairi",
+                "nama" => "Dairi",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -281,7 +281,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1211,
                 "kode" => "12.11",
-                "nama" => "Kab. Karo",
+                "nama" => "Karo",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -289,7 +289,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1212,
                 "kode" => "12.12",
-                "nama" => "Kab. Deli Serdang",
+                "nama" => "Deli Serdang",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -297,7 +297,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1213,
                 "kode" => "12.13",
-                "nama" => "Kab. Langkat",
+                "nama" => "Langkat",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -305,7 +305,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1214,
                 "kode" => "12.14",
-                "nama" => "Kab. Nias Selatan",
+                "nama" => "Nias Selatan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -313,7 +313,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1215,
                 "kode" => "12.15",
-                "nama" => "Kab. Humbang Hasundutan",
+                "nama" => "Humbang Hasundutan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -321,7 +321,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1216,
                 "kode" => "12.16",
-                "nama" => "Kab. Pakpak Bharat",
+                "nama" => "Pakpak Bharat",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -329,7 +329,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1217,
                 "kode" => "12.17",
-                "nama" => "Kab. Samosir",
+                "nama" => "Samosir",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -337,7 +337,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1218,
                 "kode" => "12.18",
-                "nama" => "Kab. Serdang Bedagai",
+                "nama" => "Serdang Bedagai",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -345,7 +345,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1219,
                 "kode" => "12.19",
-                "nama" => "Kab. Batu Bara",
+                "nama" => "Batu Bara",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -353,7 +353,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1220,
                 "kode" => "12.20",
-                "nama" => "Kab. Padang Lawas Utara",
+                "nama" => "Padang Lawas Utara",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -361,7 +361,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1221,
                 "kode" => "12.21",
-                "nama" => "Kab. Padang Lawas",
+                "nama" => "Padang Lawas",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -369,7 +369,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1222,
                 "kode" => "12.22",
-                "nama" => "Kab. Labuhanbatu Selatan",
+                "nama" => "Labuhanbatu Selatan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -377,7 +377,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1223,
                 "kode" => "12.23",
-                "nama" => "Kab. Labuhanbatu Utara",
+                "nama" => "Labuhanbatu Utara",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -385,7 +385,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1224,
                 "kode" => "12.24",
-                "nama" => "Kab. Nias Utara",
+                "nama" => "Nias Utara",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -393,7 +393,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1225,
                 "kode" => "12.25",
-                "nama" => "Kab. Nias Barat",
+                "nama" => "Nias Barat",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -401,7 +401,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1271,
                 "kode" => "12.71",
-                "nama" => "Kota Sibolga",
+                "nama" => "Sibolga",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -409,7 +409,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1272,
                 "kode" => "12.72",
-                "nama" => "Kota Tanjung Balai",
+                "nama" => "Tanjung Balai",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -417,7 +417,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1273,
                 "kode" => "12.73",
-                "nama" => "Kota Pematangsiantar",
+                "nama" => "Pematangsiantar",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -425,7 +425,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1274,
                 "kode" => "12.74",
-                "nama" => "Kota Tebing Tinggi",
+                "nama" => "Tebing Tinggi",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -433,7 +433,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1275,
                 "kode" => "12.75",
-                "nama" => "Kota Medan",
+                "nama" => "Medan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -441,7 +441,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1276,
                 "kode" => "12.76",
-                "nama" => "Kota Binjai",
+                "nama" => "Binjai",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -449,7 +449,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1277,
                 "kode" => "12.77",
-                "nama" => "Kota Padang Sidempuan",
+                "nama" => "Padang Sidempuan",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -457,7 +457,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1278,
                 "kode" => "12.78",
-                "nama" => "Kota Gunungsitoli",
+                "nama" => "Gunungsitoli",
                 "provinsi_id" => 12,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -465,7 +465,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1301,
                 "kode" => "13.01",
-                "nama" => "Kab. Kepulauan Mentawai",
+                "nama" => "Kepulauan Mentawai",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -473,7 +473,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1302,
                 "kode" => "13.02",
-                "nama" => "Kab. Pesisir Selatan",
+                "nama" => "Pesisir Selatan",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -481,7 +481,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1303,
                 "kode" => "13.03",
-                "nama" => "Kab. Solok",
+                "nama" => "Solok",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -489,7 +489,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1304,
                 "kode" => "13.04",
-                "nama" => "Kab. Sijunjung",
+                "nama" => "Sijunjung",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -497,7 +497,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1305,
                 "kode" => "13.05",
-                "nama" => "Kab. Tanah Datar",
+                "nama" => "Tanah Datar",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -505,7 +505,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1306,
                 "kode" => "13.06",
-                "nama" => "Kab. Padang Pariaman",
+                "nama" => "Padang Pariaman",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -513,7 +513,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1307,
                 "kode" => "13.07",
-                "nama" => "Kab. Agam",
+                "nama" => "Agam",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -521,7 +521,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1308,
                 "kode" => "13.08",
-                "nama" => "Kab. Lima Puluh Kota",
+                "nama" => "Lima Puluh Kota",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -529,7 +529,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1309,
                 "kode" => "13.09",
-                "nama" => "Kab. Pasaman",
+                "nama" => "Pasaman",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -537,7 +537,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1310,
                 "kode" => "13.10",
-                "nama" => "Kab. Solok Selatan",
+                "nama" => "Solok Selatan",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -545,7 +545,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1311,
                 "kode" => "13.11",
-                "nama" => "Kab. Dharmasraya",
+                "nama" => "Dharmasraya",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -553,7 +553,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1312,
                 "kode" => "13.12",
-                "nama" => "Kab. Pasaman Barat",
+                "nama" => "Pasaman Barat",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -561,7 +561,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1371,
                 "kode" => "13.71",
-                "nama" => "Kota Padang",
+                "nama" => "Padang",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -569,7 +569,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1372,
                 "kode" => "13.72",
-                "nama" => "Kota Solok",
+                "nama" => "Solok",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -577,7 +577,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1373,
                 "kode" => "13.73",
-                "nama" => "Kota Sawahlunto",
+                "nama" => "Sawahlunto",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -585,7 +585,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1374,
                 "kode" => "13.74",
-                "nama" => "Kota Padang Panjang",
+                "nama" => "Padang Panjang",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -593,7 +593,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1375,
                 "kode" => "13.75",
-                "nama" => "Kota Bukittinggi",
+                "nama" => "Bukittinggi",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -601,7 +601,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1376,
                 "kode" => "13.76",
-                "nama" => "Kota Payakumbuh",
+                "nama" => "Payakumbuh",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -609,7 +609,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1377,
                 "kode" => "13.77",
-                "nama" => "Kota Pariaman",
+                "nama" => "Pariaman",
                 "provinsi_id" => 13,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -617,7 +617,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1401,
                 "kode" => "14.01",
-                "nama" => "Kab. Kuantan Singingi",
+                "nama" => "Kuantan Singingi",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -625,7 +625,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1402,
                 "kode" => "14.02",
-                "nama" => "Kab. Indragiri Hulu",
+                "nama" => "Indragiri Hulu",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -633,7 +633,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1403,
                 "kode" => "14.03",
-                "nama" => "Kab. Indragiri Hilir",
+                "nama" => "Indragiri Hilir",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -641,7 +641,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1404,
                 "kode" => "14.04",
-                "nama" => "Kab. Pelalawan",
+                "nama" => "Pelalawan",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -649,7 +649,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1405,
                 "kode" => "14.05",
-                "nama" => "Kab. Siak",
+                "nama" => "Siak",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -657,7 +657,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1406,
                 "kode" => "14.06",
-                "nama" => "Kab. Kampar",
+                "nama" => "Kampar",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -665,7 +665,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1407,
                 "kode" => "14.07",
-                "nama" => "Kab. Rokan Hulu",
+                "nama" => "Rokan Hulu",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -673,7 +673,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1408,
                 "kode" => "14.08",
-                "nama" => "Kab. Bengkalis",
+                "nama" => "Bengkalis",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -681,7 +681,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1409,
                 "kode" => "14.09",
-                "nama" => "Kab. Rokan Hilir",
+                "nama" => "Rokan Hilir",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -689,7 +689,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1410,
                 "kode" => "14.10",
-                "nama" => "Kab. Kepulauan Meranti",
+                "nama" => "Kepulauan Meranti",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -697,7 +697,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1471,
                 "kode" => "14.71",
-                "nama" => "Kota Pekanbaru",
+                "nama" => "Pekanbaru",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -705,7 +705,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1473,
                 "kode" => "14.73",
-                "nama" => "Kota Dumai",
+                "nama" => "Dumai",
                 "provinsi_id" => 14,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -713,7 +713,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1501,
                 "kode" => "15.01",
-                "nama" => "Kab. Kerinci",
+                "nama" => "Kerinci",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -721,7 +721,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1502,
                 "kode" => "15.02",
-                "nama" => "Kab. Merangin",
+                "nama" => "Merangin",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -729,7 +729,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1503,
                 "kode" => "15.03",
-                "nama" => "Kab. Sarolangun",
+                "nama" => "Sarolangun",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -737,7 +737,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1504,
                 "kode" => "15.04",
-                "nama" => "Kab. Batanghari",
+                "nama" => "Batanghari",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -745,7 +745,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1505,
                 "kode" => "15.05",
-                "nama" => "Kab. Muaro Jambi",
+                "nama" => "Muaro Jambi",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -753,7 +753,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1506,
                 "kode" => "15.06",
-                "nama" => "Kab. Tanjung Jabung Timur",
+                "nama" => "Tanjung Jabung Timur",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -761,7 +761,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1507,
                 "kode" => "15.07",
-                "nama" => "Kab. Tanjung Jabung Barat",
+                "nama" => "Tanjung Jabung Barat",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -769,7 +769,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1508,
                 "kode" => "15.08",
-                "nama" => "Kab. Tebo",
+                "nama" => "Tebo",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -777,7 +777,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1509,
                 "kode" => "15.09",
-                "nama" => "Kab. Bungo",
+                "nama" => "Bungo",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -785,7 +785,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1571,
                 "kode" => "15.71",
-                "nama" => "Kota Jambi",
+                "nama" => "Jambi",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -793,7 +793,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1572,
                 "kode" => "15.72",
-                "nama" => "Kota Sungai Penuh",
+                "nama" => "Sungai Penuh",
                 "provinsi_id" => 15,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -801,7 +801,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1601,
                 "kode" => "16.01",
-                "nama" => "Kab. Ogan Komering Ulu",
+                "nama" => "Ogan Komering Ulu",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -809,7 +809,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1602,
                 "kode" => "16.02",
-                "nama" => "Kab. Ogan Komering Ilir",
+                "nama" => "Ogan Komering Ilir",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -817,7 +817,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1603,
                 "kode" => "16.03",
-                "nama" => "Kab. Muara Enim",
+                "nama" => "Muara Enim",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -825,7 +825,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1604,
                 "kode" => "16.04",
-                "nama" => "Kab. Lahat",
+                "nama" => "Lahat",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -833,7 +833,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1605,
                 "kode" => "16.05",
-                "nama" => "Kab. Musi Rawas",
+                "nama" => "Musi Rawas",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -841,7 +841,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1606,
                 "kode" => "16.06",
-                "nama" => "Kab. Musi Banyuasin",
+                "nama" => "Musi Banyuasin",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -849,7 +849,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1607,
                 "kode" => "16.07",
-                "nama" => "Kab. Banyuasin",
+                "nama" => "Banyuasin",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -857,7 +857,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1608,
                 "kode" => "16.08",
-                "nama" => "Kab. Ogan Komering Ulu
+                "nama" => "Ogan Komering Ulu
         Selatan",
                 "provinsi_id" => 16,
                 "aktif" => 1,
@@ -866,7 +866,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1609,
                 "kode" => "16.09",
-                "nama" => "Kab. Ogan Komering Ulu Timur",
+                "nama" => "Ogan Komering Ulu Timur",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -874,7 +874,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1610,
                 "kode" => "16.10",
-                "nama" => "Kab. Ogan Ilir",
+                "nama" => "Ogan Ilir",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -882,7 +882,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1611,
                 "kode" => "16.11",
-                "nama" => "Kab. Empat Lawang",
+                "nama" => "Empat Lawang",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -890,7 +890,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1612,
                 "kode" => "16.12",
-                "nama" => "Kab. Penukal Abab Lematang
+                "nama" => "Penukal Abab Lematang
         Ilir",
                 "provinsi_id" => 16,
                 "aktif" => 1,
@@ -899,7 +899,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1613,
                 "kode" => "16.13",
-                "nama" => "Kab. Musi Rawas Utara",
+                "nama" => "Musi Rawas Utara",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -907,7 +907,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1671,
                 "kode" => "16.71",
-                "nama" => "Kota Palembang",
+                "nama" => "Palembang",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -915,7 +915,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1672,
                 "kode" => "16.72",
-                "nama" => "Kota Prabumulih",
+                "nama" => "Prabumulih",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -923,7 +923,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1673,
                 "kode" => "16.73",
-                "nama" => "Kota Pagar Alam",
+                "nama" => "Pagar Alam",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -931,7 +931,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1674,
                 "kode" => "16.74",
-                "nama" => "Kota Lubuk Linggau",
+                "nama" => "Lubuk Linggau",
                 "provinsi_id" => 16,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -939,7 +939,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1701,
                 "kode" => "17.01",
-                "nama" => "Kab. Bengkulu Selatan",
+                "nama" => "Bengkulu Selatan",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -947,7 +947,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1702,
                 "kode" => "17.02",
-                "nama" => "Kab. Rejang Lebong",
+                "nama" => "Rejang Lebong",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -955,7 +955,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1703,
                 "kode" => "17.03",
-                "nama" => "Kab. Bengkulu Utara",
+                "nama" => "Bengkulu Utara",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -963,7 +963,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1704,
                 "kode" => "17.04",
-                "nama" => "Kab. Kaur",
+                "nama" => "Kaur",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -971,7 +971,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1705,
                 "kode" => "17.05",
-                "nama" => "Kab. Seluma",
+                "nama" => "Seluma",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -979,7 +979,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1706,
                 "kode" => "17.06",
-                "nama" => "Kab. Muko Muko",
+                "nama" => "Muko Muko",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -987,7 +987,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1707,
                 "kode" => "17.07",
-                "nama" => "Kab. Lebong",
+                "nama" => "Lebong",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -995,7 +995,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1708,
                 "kode" => "17.08",
-                "nama" => "Kab. Kepahiang",
+                "nama" => "Kepahiang",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1003,7 +1003,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1709,
                 "kode" => "17.09",
-                "nama" => "Kab. Bengkulu Tengah",
+                "nama" => "Bengkulu Tengah",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1011,7 +1011,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1771,
                 "kode" => "17.71",
-                "nama" => "Kota Bengkulu",
+                "nama" => "Bengkulu",
                 "provinsi_id" => 17,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1019,7 +1019,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1801,
                 "kode" => "18.01",
-                "nama" => "Kab. Lampung Barat",
+                "nama" => "Lampung Barat",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1027,7 +1027,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1802,
                 "kode" => "18.02",
-                "nama" => "Kab. Tanggamus",
+                "nama" => "Tanggamus",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1035,7 +1035,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1803,
                 "kode" => "18.03",
-                "nama" => "Kab. Lampung Selatan",
+                "nama" => "Lampung Selatan",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1043,7 +1043,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1804,
                 "kode" => "18.04",
-                "nama" => "Kab. Lampung Timur",
+                "nama" => "Lampung Timur",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1051,7 +1051,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1805,
                 "kode" => "18.05",
-                "nama" => "Kab. Lampung Tengah",
+                "nama" => "Lampung Tengah",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1059,7 +1059,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1806,
                 "kode" => "18.06",
-                "nama" => "Kab. Lampung Utara",
+                "nama" => "Lampung Utara",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1067,7 +1067,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1807,
                 "kode" => "18.07",
-                "nama" => "Kab. Way Kanan",
+                "nama" => "Way Kanan",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1075,7 +1075,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1808,
                 "kode" => "18.08",
-                "nama" => "Kab. Tulang Bawang",
+                "nama" => "Tulang Bawang",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1083,7 +1083,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1809,
                 "kode" => "18.09",
-                "nama" => "Kab. Pesawaran",
+                "nama" => "Pesawaran",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1091,7 +1091,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1810,
                 "kode" => "18.10",
-                "nama" => "Kab. Pringsewu",
+                "nama" => "Pringsewu",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1099,7 +1099,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1811,
                 "kode" => "18.11",
-                "nama" => "Kab. Mesuji",
+                "nama" => "Mesuji",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1107,7 +1107,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1812,
                 "kode" => "18.12",
-                "nama" => "Kab. Tulang Bawang Barat",
+                "nama" => "Tulang Bawang Barat",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1115,7 +1115,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1813,
                 "kode" => "18.13",
-                "nama" => "Kab. Pesisir Barat",
+                "nama" => "Pesisir Barat",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1123,7 +1123,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1871,
                 "kode" => "18.71",
-                "nama" => "Kota Bandar Lampung",
+                "nama" => "Bandar Lampung",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1131,7 +1131,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1872,
                 "kode" => "18.72",
-                "nama" => "Kota Metro",
+                "nama" => "Metro",
                 "provinsi_id" => 18,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1139,7 +1139,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1901,
                 "kode" => "19.01",
-                "nama" => "Kab. Bangka",
+                "nama" => "Bangka",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1147,7 +1147,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1902,
                 "kode" => "19.02",
-                "nama" => "Kab. Belitung",
+                "nama" => "Belitung",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1155,7 +1155,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1903,
                 "kode" => "19.03",
-                "nama" => "Kab. Bangka Barat",
+                "nama" => "Bangka Barat",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1163,7 +1163,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1904,
                 "kode" => "19.04",
-                "nama" => "Kab. Bangka Tengah",
+                "nama" => "Bangka Tengah",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1171,7 +1171,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1905,
                 "kode" => "19.05",
-                "nama" => "Kab. Bangka Selatan",
+                "nama" => "Bangka Selatan",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1179,7 +1179,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1906,
                 "kode" => "19.06",
-                "nama" => "Kab. Belitung Timur",
+                "nama" => "Belitung Timur",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1187,7 +1187,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 1971,
                 "kode" => "19.71",
-                "nama" => "Kota Pangkal Pinang",
+                "nama" => "Pangkal Pinang",
                 "provinsi_id" => 19,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1195,7 +1195,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2101,
                 "kode" => "21.01",
-                "nama" => "Kab. Karimun",
+                "nama" => "Karimun",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1203,7 +1203,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2102,
                 "kode" => "21.02",
-                "nama" => "Kab. Bintan",
+                "nama" => "Bintan",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1211,7 +1211,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2103,
                 "kode" => "21.03",
-                "nama" => "Kab. Natuna",
+                "nama" => "Natuna",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1219,7 +1219,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2104,
                 "kode" => "21.04",
-                "nama" => "Kab. Lingga",
+                "nama" => "Lingga",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1227,7 +1227,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2105,
                 "kode" => "21.05",
-                "nama" => "Kab. Kepulauan Anambas",
+                "nama" => "Kepulauan Anambas",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1235,7 +1235,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2171,
                 "kode" => "21.71",
-                "nama" => "Kota Batam",
+                "nama" => "Batam",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1243,7 +1243,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 2172,
                 "kode" => "21.72",
-                "nama" => "Kota Tanjung Pinang",
+                "nama" => "Tanjung Pinang",
                 "provinsi_id" => 21,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1251,7 +1251,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3101,
                 "kode" => "31.01",
-                "nama" => "Kab. Adm. Kep. Seribu",
+                "nama" => "Adm. Kep. Seribu",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1259,7 +1259,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3171,
                 "kode" => "31.71",
-                "nama" => "Kota Adm. Jakarta Selatan",
+                "nama" => "Adm. Jakarta Selatan",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1267,7 +1267,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3172,
                 "kode" => "31.72",
-                "nama" => "Kota Adm. Jakarta Timur",
+                "nama" => "Adm. Jakarta Timur",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1275,7 +1275,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3173,
                 "kode" => "31.73",
-                "nama" => "Kota Adm. Jakarta Pusat",
+                "nama" => "Adm. Jakarta Pusat",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1283,7 +1283,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3174,
                 "kode" => "31.74",
-                "nama" => "Kota Adm. Jakarta Barat",
+                "nama" => "Adm. Jakarta Barat",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1291,7 +1291,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3175,
                 "kode" => "31.75",
-                "nama" => "Kota Adm. Jakarta Utara",
+                "nama" => "Adm. Jakarta Utara",
                 "provinsi_id" => 31,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1299,7 +1299,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3201,
                 "kode" => "32.01",
-                "nama" => "Kab. Bogor",
+                "nama" => "Bogor",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1307,7 +1307,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3202,
                 "kode" => "32.02",
-                "nama" => "Kab. Sukabumi",
+                "nama" => "Sukabumi",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1315,7 +1315,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3203,
                 "kode" => "32.03",
-                "nama" => "Kab. Cianjur",
+                "nama" => "Cianjur",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1323,7 +1323,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3204,
                 "kode" => "32.04",
-                "nama" => "Kab. Bandung",
+                "nama" => "Bandung",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1331,7 +1331,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3205,
                 "kode" => "32.05",
-                "nama" => "Kab. Garut",
+                "nama" => "Garut",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1339,7 +1339,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3206,
                 "kode" => "32.06",
-                "nama" => "Kab. Tasikmalaya",
+                "nama" => "Tasikmalaya",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1347,7 +1347,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3207,
                 "kode" => "32.07",
-                "nama" => "Kab. Ciamis",
+                "nama" => "Ciamis",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1355,7 +1355,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3208,
                 "kode" => "32.08",
-                "nama" => "Kab. Kuningan",
+                "nama" => "Kuningan",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1363,7 +1363,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3209,
                 "kode" => "32.09",
-                "nama" => "Kab. Cirebon",
+                "nama" => "Cirebon",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1371,7 +1371,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3210,
                 "kode" => "32.10",
-                "nama" => "Kab. Majalengka",
+                "nama" => "Majalengka",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1379,7 +1379,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3211,
                 "kode" => "32.11",
-                "nama" => "Kab. Sumedang",
+                "nama" => "Sumedang",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1387,7 +1387,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3212,
                 "kode" => "32.12",
-                "nama" => "Kab. Indramayu",
+                "nama" => "Indramayu",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1395,7 +1395,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3213,
                 "kode" => "32.13",
-                "nama" => "Kab. Subang",
+                "nama" => "Subang",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1403,7 +1403,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3214,
                 "kode" => "32.14",
-                "nama" => "Kab. Purwakarta",
+                "nama" => "Purwakarta",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1411,7 +1411,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3215,
                 "kode" => "32.15",
-                "nama" => "Kab. Karawang",
+                "nama" => "Karawang",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1419,7 +1419,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3216,
                 "kode" => "32.16",
-                "nama" => "Kab. Bekasi",
+                "nama" => "Bekasi",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1427,7 +1427,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3217,
                 "kode" => "32.17",
-                "nama" => "Kab. Bandung Barat",
+                "nama" => "Bandung Barat",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1435,7 +1435,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3218,
                 "kode" => "32.18",
-                "nama" => "Kab. Pangandaran",
+                "nama" => "Pangandaran",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1443,7 +1443,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3271,
                 "kode" => "32.71",
-                "nama" => "Kota Bogor",
+                "nama" => "Bogor",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1451,7 +1451,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3272,
                 "kode" => "32.72",
-                "nama" => "Kota Sukabumi",
+                "nama" => "Sukabumi",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1459,7 +1459,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3273,
                 "kode" => "32.73",
-                "nama" => "Kota Bandung",
+                "nama" => "Bandung",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1467,7 +1467,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3274,
                 "kode" => "32.74",
-                "nama" => "Kota Cirebon",
+                "nama" => "Cirebon",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1475,7 +1475,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3275,
                 "kode" => "32.75",
-                "nama" => "Kota Bekasi",
+                "nama" => "Bekasi",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1483,7 +1483,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3276,
                 "kode" => "32.76",
-                "nama" => "Kota Depok",
+                "nama" => "Depok",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1491,7 +1491,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3277,
                 "kode" => "32.77",
-                "nama" => "Kota Cimahi",
+                "nama" => "Cimahi",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1499,7 +1499,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3278,
                 "kode" => "32.78",
-                "nama" => "Kota Tasikmalaya",
+                "nama" => "Tasikmalaya",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1507,7 +1507,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3279,
                 "kode" => "32.79",
-                "nama" => "Kota Banjar",
+                "nama" => "Banjar",
                 "provinsi_id" => 32,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1515,7 +1515,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3301,
                 "kode" => "33.01",
-                "nama" => "Kab. Cilacap",
+                "nama" => "Cilacap",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1523,7 +1523,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3302,
                 "kode" => "33.02",
-                "nama" => "Kab. Banyumas",
+                "nama" => "Banyumas",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1531,7 +1531,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3303,
                 "kode" => "33.03",
-                "nama" => "Kab. Purbalingga",
+                "nama" => "Purbalingga",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1539,7 +1539,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3304,
                 "kode" => "33.04",
-                "nama" => "Kab. Banjarnegara",
+                "nama" => "Banjarnegara",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1547,7 +1547,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3305,
                 "kode" => "33.05",
-                "nama" => "Kab. Kebumen",
+                "nama" => "Kebumen",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1555,7 +1555,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3306,
                 "kode" => "33.06",
-                "nama" => "Kab. Purworejo",
+                "nama" => "Purworejo",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1563,7 +1563,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3307,
                 "kode" => "33.07",
-                "nama" => "Kab. Wonosobo",
+                "nama" => "Wonosobo",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1571,7 +1571,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3308,
                 "kode" => "33.08",
-                "nama" => "Kab. Magelang",
+                "nama" => "Magelang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1579,7 +1579,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3309,
                 "kode" => "33.09",
-                "nama" => "Kab. Boyolali",
+                "nama" => "Boyolali",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1587,7 +1587,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3310,
                 "kode" => "33.10",
-                "nama" => "Kab. Klaten",
+                "nama" => "Klaten",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1595,7 +1595,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3311,
                 "kode" => "33.11",
-                "nama" => "Kab. Sukoharjo",
+                "nama" => "Sukoharjo",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1603,7 +1603,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3312,
                 "kode" => "33.12",
-                "nama" => "Kab. Wonogiri",
+                "nama" => "Wonogiri",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1611,7 +1611,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3313,
                 "kode" => "33.13",
-                "nama" => "Kab. Karanganyar",
+                "nama" => "Karanganyar",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1619,7 +1619,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3314,
                 "kode" => "33.14",
-                "nama" => "Kab. Sragen",
+                "nama" => "Sragen",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1627,7 +1627,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3315,
                 "kode" => "33.15",
-                "nama" => "Kab. Grobogan",
+                "nama" => "Grobogan",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1635,7 +1635,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3316,
                 "kode" => "33.16",
-                "nama" => "Kab. Blora",
+                "nama" => "Blora",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1643,7 +1643,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3317,
                 "kode" => "33.17",
-                "nama" => "Kab. Rembang",
+                "nama" => "Rembang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1651,7 +1651,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3318,
                 "kode" => "33.18",
-                "nama" => "Kab. Pati",
+                "nama" => "Pati",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1659,7 +1659,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3319,
                 "kode" => "33.19",
-                "nama" => "Kab. Kudus",
+                "nama" => "Kudus",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1667,7 +1667,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3320,
                 "kode" => "33.20",
-                "nama" => "Kab. Jepara",
+                "nama" => "Jepara",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1675,7 +1675,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3321,
                 "kode" => "33.21",
-                "nama" => "Kab. Demak",
+                "nama" => "Demak",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1683,7 +1683,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3322,
                 "kode" => "33.22",
-                "nama" => "Kab. Semarang",
+                "nama" => "Semarang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1691,7 +1691,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3323,
                 "kode" => "33.23",
-                "nama" => "Kab. Temanggung",
+                "nama" => "Temanggung",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1699,7 +1699,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3324,
                 "kode" => "33.24",
-                "nama" => "Kab. Kendal",
+                "nama" => "Kendal",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1707,7 +1707,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3325,
                 "kode" => "33.25",
-                "nama" => "Kab. Batang",
+                "nama" => "Batang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1715,7 +1715,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3326,
                 "kode" => "33.26",
-                "nama" => "Kab. Pekalongan",
+                "nama" => "Pekalongan",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1723,7 +1723,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3327,
                 "kode" => "33.27",
-                "nama" => "Kab. Pemalang",
+                "nama" => "Pemalang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1731,7 +1731,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3328,
                 "kode" => "33.28",
-                "nama" => "Kab. Tegal",
+                "nama" => "Tegal",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1739,7 +1739,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3329,
                 "kode" => "33.29",
-                "nama" => "Kab. Brebes",
+                "nama" => "Brebes",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1747,7 +1747,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3371,
                 "kode" => "33.71",
-                "nama" => "Kota Magelang",
+                "nama" => "Magelang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1755,7 +1755,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3372,
                 "kode" => "33.72",
-                "nama" => "Kota Surakarta",
+                "nama" => "Surakarta",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1763,7 +1763,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3373,
                 "kode" => "33.73",
-                "nama" => "Kota Salatiga",
+                "nama" => "Salatiga",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1771,7 +1771,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3374,
                 "kode" => "33.74",
-                "nama" => "Kota Semarang",
+                "nama" => "Semarang",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1779,7 +1779,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3375,
                 "kode" => "33.75",
-                "nama" => "Kota Pekalongan",
+                "nama" => "Pekalongan",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1787,7 +1787,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3376,
                 "kode" => "33.76",
-                "nama" => "Kota Tegal",
+                "nama" => "Tegal",
                 "provinsi_id" => 33,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1795,7 +1795,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3401,
                 "kode" => "34.01",
-                "nama" => "Kab. Kulon Progo",
+                "nama" => "Kulon Progo",
                 "provinsi_id" => 34,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1803,7 +1803,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3402,
                 "kode" => "34.02",
-                "nama" => "Kab. Bantul",
+                "nama" => "Bantul",
                 "provinsi_id" => 34,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1811,7 +1811,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3403,
                 "kode" => "34.03",
-                "nama" => "Kab. Gunungkidul",
+                "nama" => "Gunungkidul",
                 "provinsi_id" => 34,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1819,7 +1819,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3404,
                 "kode" => "34.04",
-                "nama" => "Kab. Sleman",
+                "nama" => "Sleman",
                 "provinsi_id" => 34,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1827,7 +1827,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3471,
                 "kode" => "34.71",
-                "nama" => "Kota Yogyakarta",
+                "nama" => "Yogyakarta",
                 "provinsi_id" => 34,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -1835,7 +1835,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3501,
                 "kode" => "35.01",
-                "nama" => "Kab. Pacitan",
+                "nama" => "Pacitan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1843,7 +1843,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3502,
                 "kode" => "35.02",
-                "nama" => "Kab. Ponorogo",
+                "nama" => "Ponorogo",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1851,7 +1851,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3503,
                 "kode" => "35.03",
-                "nama" => "Kab. Trenggalek",
+                "nama" => "Trenggalek",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1859,7 +1859,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3504,
                 "kode" => "35.04",
-                "nama" => "Kab. Tulungagung",
+                "nama" => "Tulungagung",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1867,7 +1867,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3505,
                 "kode" => "35.05",
-                "nama" => "Kab. Blitar",
+                "nama" => "Blitar",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1875,7 +1875,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3506,
                 "kode" => "35.06",
-                "nama" => "Kab. Kediri",
+                "nama" => "Kediri",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1883,7 +1883,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3507,
                 "kode" => "35.07",
-                "nama" => "Kab. Malang",
+                "nama" => "Malang",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1891,7 +1891,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3508,
                 "kode" => "35.08",
-                "nama" => "Kab. Lumajang",
+                "nama" => "Lumajang",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1899,7 +1899,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3509,
                 "kode" => "35.09",
-                "nama" => "Kab. Jember",
+                "nama" => "Jember",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1907,7 +1907,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3510,
                 "kode" => "35.10",
-                "nama" => "Kab. Banyuwangi",
+                "nama" => "Banyuwangi",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1915,7 +1915,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3511,
                 "kode" => "35.11",
-                "nama" => "Kab. Bondowoso",
+                "nama" => "Bondowoso",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1923,7 +1923,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3512,
                 "kode" => "35.12",
-                "nama" => "Kab. Situbondo",
+                "nama" => "Situbondo",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1931,7 +1931,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3513,
                 "kode" => "35.13",
-                "nama" => "Kab. Probolinggo",
+                "nama" => "Probolinggo",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1939,7 +1939,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3514,
                 "kode" => "35.14",
-                "nama" => "Kab. Pasuruan",
+                "nama" => "Pasuruan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1947,7 +1947,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3515,
                 "kode" => "35.15",
-                "nama" => "Kab. Sidoarjo",
+                "nama" => "Sidoarjo",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1955,7 +1955,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3516,
                 "kode" => "35.16",
-                "nama" => "Kab. Mojokerto",
+                "nama" => "Mojokerto",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1963,7 +1963,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3517,
                 "kode" => "35.17",
-                "nama" => "Kab. Jombang",
+                "nama" => "Jombang",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1971,7 +1971,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3518,
                 "kode" => "35.18",
-                "nama" => "Kab. Nganjuk",
+                "nama" => "Nganjuk",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1979,7 +1979,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3519,
                 "kode" => "35.19",
-                "nama" => "Kab. Madiun",
+                "nama" => "Madiun",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1987,7 +1987,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3520,
                 "kode" => "35.20",
-                "nama" => "Kab. Magetan",
+                "nama" => "Magetan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -1995,7 +1995,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3521,
                 "kode" => "35.21",
-                "nama" => "Kab. Ngawi",
+                "nama" => "Ngawi",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2003,7 +2003,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3522,
                 "kode" => "35.22",
-                "nama" => "Kab. Bojonegoro",
+                "nama" => "Bojonegoro",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2011,7 +2011,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3523,
                 "kode" => "35.23",
-                "nama" => "Kab. Tuban",
+                "nama" => "Tuban",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2019,7 +2019,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3524,
                 "kode" => "35.24",
-                "nama" => "Kab. Lamongan",
+                "nama" => "Lamongan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2027,7 +2027,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3525,
                 "kode" => "35.25",
-                "nama" => "Kab. Gresik",
+                "nama" => "Gresik",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2035,7 +2035,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3526,
                 "kode" => "35.26",
-                "nama" => "Kab. Bangkalan",
+                "nama" => "Bangkalan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2043,7 +2043,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3527,
                 "kode" => "35.27",
-                "nama" => "Kab. Sampang",
+                "nama" => "Sampang",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2051,7 +2051,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3528,
                 "kode" => "35.28",
-                "nama" => "Kab. Pamekasan",
+                "nama" => "Pamekasan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2059,7 +2059,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3529,
                 "kode" => "35.29",
-                "nama" => "Kab. Sumenep",
+                "nama" => "Sumenep",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2067,7 +2067,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3571,
                 "kode" => "35.71",
-                "nama" => "Kota Kediri",
+                "nama" => "Kediri",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2075,7 +2075,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3572,
                 "kode" => "35.72",
-                "nama" => "Kota Blitar",
+                "nama" => "Blitar",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2083,7 +2083,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3573,
                 "kode" => "35.73",
-                "nama" => "Kota Malang",
+                "nama" => "Malang",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2091,7 +2091,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3574,
                 "kode" => "35.74",
-                "nama" => "Kota Probolinggo",
+                "nama" => "Probolinggo",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2099,7 +2099,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3575,
                 "kode" => "35.75",
-                "nama" => "Kota Pasuruan",
+                "nama" => "Pasuruan",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2107,7 +2107,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3576,
                 "kode" => "35.76",
-                "nama" => "Kota Mojokerto",
+                "nama" => "Mojokerto",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2115,7 +2115,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3577,
                 "kode" => "35.77",
-                "nama" => "Kota Madiun",
+                "nama" => "Madiun",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2123,7 +2123,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3578,
                 "kode" => "35.78",
-                "nama" => "Kota Surabaya",
+                "nama" => "Surabaya",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2131,7 +2131,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3579,
                 "kode" => "35.79",
-                "nama" => "Kota Batu",
+                "nama" => "Batu",
                 "provinsi_id" => 35,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2139,7 +2139,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3601,
                 "kode" => "36.01",
-                "nama" => "Kab. Pandeglang",
+                "nama" => "Pandeglang",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2147,7 +2147,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3602,
                 "kode" => "36.02",
-                "nama" => "Kab. Lebak",
+                "nama" => "Lebak",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2155,7 +2155,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3603,
                 "kode" => "36.03",
-                "nama" => "Kab. Tangerang",
+                "nama" => "Tangerang",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2163,7 +2163,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3604,
                 "kode" => "36.04",
-                "nama" => "Kab. Serang",
+                "nama" => "Serang",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2171,7 +2171,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3671,
                 "kode" => "36.71",
-                "nama" => "Kota Tangerang",
+                "nama" => "Tangerang",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2179,7 +2179,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3672,
                 "kode" => "36.72",
-                "nama" => "Kota Cilegon",
+                "nama" => "Cilegon",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2187,7 +2187,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3673,
                 "kode" => "36.73",
-                "nama" => "Kota Serang",
+                "nama" => "Serang",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2195,7 +2195,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 3674,
                 "kode" => "36.74",
-                "nama" => "Kota Tangerang Selatan",
+                "nama" => "Tangerang Selatan",
                 "provinsi_id" => 36,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2203,7 +2203,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5101,
                 "kode" => "51.01",
-                "nama" => "Kab. Jembrana",
+                "nama" => "Jembrana",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2211,7 +2211,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5102,
                 "kode" => "51.02",
-                "nama" => "Kab. Tabanan",
+                "nama" => "Tabanan",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2219,7 +2219,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5103,
                 "kode" => "51.03",
-                "nama" => "Kab. Badung",
+                "nama" => "Badung",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2227,7 +2227,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5104,
                 "kode" => "51.04",
-                "nama" => "Kab. Gianyar",
+                "nama" => "Gianyar",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2235,7 +2235,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5105,
                 "kode" => "51.05",
-                "nama" => "Kab. Klungkung",
+                "nama" => "Klungkung",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2243,7 +2243,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5106,
                 "kode" => "51.06",
-                "nama" => "Kab. Bangli",
+                "nama" => "Bangli",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2251,7 +2251,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5107,
                 "kode" => "51.07",
-                "nama" => "Kab. Karangasem",
+                "nama" => "Karangasem",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2259,7 +2259,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5108,
                 "kode" => "51.08",
-                "nama" => "Kab. Buleleng",
+                "nama" => "Buleleng",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2267,7 +2267,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5171,
                 "kode" => "51.71",
-                "nama" => "Kota Denpasar",
+                "nama" => "Denpasar",
                 "provinsi_id" => 51,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2275,7 +2275,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5201,
                 "kode" => "52.01",
-                "nama" => "Kab. Lombok Barat",
+                "nama" => "Lombok Barat",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2283,7 +2283,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5202,
                 "kode" => "52.02",
-                "nama" => "Kab. Lombok Tengah",
+                "nama" => "Lombok Tengah",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2291,7 +2291,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5203,
                 "kode" => "52.03",
-                "nama" => "Kab. Lombok Timur",
+                "nama" => "Lombok Timur",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2299,7 +2299,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5204,
                 "kode" => "52.04",
-                "nama" => "Kab. Sumbawa",
+                "nama" => "Sumbawa",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2307,7 +2307,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5205,
                 "kode" => "52.05",
-                "nama" => "Kab. Dompu",
+                "nama" => "Dompu",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2315,7 +2315,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5206,
                 "kode" => "52.06",
-                "nama" => "Kab. Bima",
+                "nama" => "Bima",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2323,7 +2323,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5207,
                 "kode" => "52.07",
-                "nama" => "Kab. Sumbawa Barat",
+                "nama" => "Sumbawa Barat",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2331,7 +2331,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5208,
                 "kode" => "52.08",
-                "nama" => "Kab. Lombok Utara",
+                "nama" => "Lombok Utara",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2339,7 +2339,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5271,
                 "kode" => "52.71",
-                "nama" => "Kota Mataram",
+                "nama" => "Mataram",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2347,7 +2347,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5272,
                 "kode" => "52.72",
-                "nama" => "Kota Bima",
+                "nama" => "Bima",
                 "provinsi_id" => 52,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2355,7 +2355,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5301,
                 "kode" => "53.01",
-                "nama" => "Kab. Sumba Barat",
+                "nama" => "Sumba Barat",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2363,7 +2363,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5302,
                 "kode" => "53.02",
-                "nama" => "Kab. Sumba Timur",
+                "nama" => "Sumba Timur",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2371,7 +2371,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5303,
                 "kode" => "53.03",
-                "nama" => "Kab. Kupang",
+                "nama" => "Kupang",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2387,7 +2387,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5305,
                 "kode" => "53.05",
-                "nama" => "Kab. Timor Tengah Utara",
+                "nama" => "Timor Tengah Utara",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2395,7 +2395,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5306,
                 "kode" => "53.06",
-                "nama" => "Kab. Belu",
+                "nama" => "Belu",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2403,7 +2403,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5307,
                 "kode" => "53.07",
-                "nama" => "Kab. Alor",
+                "nama" => "Alor",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2411,7 +2411,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5308,
                 "kode" => "53.08",
-                "nama" => "Kab. Lembata",
+                "nama" => "Lembata",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2419,7 +2419,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5309,
                 "kode" => "53.09",
-                "nama" => "Kab. Flores Timur",
+                "nama" => "Flores Timur",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2427,7 +2427,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5310,
                 "kode" => "53.10",
-                "nama" => "Kab. Sikka",
+                "nama" => "Sikka",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2435,7 +2435,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5311,
                 "kode" => "53.11",
-                "nama" => "Kab. Ende",
+                "nama" => "Ende",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2443,7 +2443,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5312,
                 "kode" => "53.12",
-                "nama" => "Kab. Ngada",
+                "nama" => "Ngada",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2451,7 +2451,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5313,
                 "kode" => "53.13",
-                "nama" => "Kab. Manggarai",
+                "nama" => "Manggarai",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2459,7 +2459,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5314,
                 "kode" => "53.14",
-                "nama" => "Kab. Rote Ndao",
+                "nama" => "Rote Ndao",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2467,7 +2467,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5315,
                 "kode" => "53.15",
-                "nama" => "Kab. Manggarai Barat",
+                "nama" => "Manggarai Barat",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2475,7 +2475,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5316,
                 "kode" => "53.16",
-                "nama" => "Kab. Sumba Tengah",
+                "nama" => "Sumba Tengah",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2483,7 +2483,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5317,
                 "kode" => "53.17",
-                "nama" => "Kab. Sumba Barat Daya",
+                "nama" => "Sumba Barat Daya",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2491,7 +2491,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5318,
                 "kode" => "53.18",
-                "nama" => "Kab. Nagekeo",
+                "nama" => "Nagekeo",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2499,7 +2499,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5319,
                 "kode" => "53.19",
-                "nama" => "Kab. Manggarai Timur",
+                "nama" => "Manggarai Timur",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2507,7 +2507,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5320,
                 "kode" => "53.20",
-                "nama" => "Kab. Sabu Raijua",
+                "nama" => "Sabu Raijua",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2515,7 +2515,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5321,
                 "kode" => "53.21",
-                "nama" => "Kab. Malaka",
+                "nama" => "Malaka",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2523,7 +2523,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 5371,
                 "kode" => "53.71",
-                "nama" => "Kota Kupang",
+                "nama" => "Kupang",
                 "provinsi_id" => 53,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2531,7 +2531,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6101,
                 "kode" => "61.01",
-                "nama" => "Kab. Sambas",
+                "nama" => "Sambas",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2539,7 +2539,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6102,
                 "kode" => "61.02",
-                "nama" => "Kab. Bengkayang",
+                "nama" => "Bengkayang",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2547,7 +2547,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6103,
                 "kode" => "61.03",
-                "nama" => "Kab. Landak",
+                "nama" => "Landak",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2555,7 +2555,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6104,
                 "kode" => "61.04",
-                "nama" => "Kab. Mempawah",
+                "nama" => "Mempawah",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2563,7 +2563,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6105,
                 "kode" => "61.05",
-                "nama" => "Kab. Sanggau",
+                "nama" => "Sanggau",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2571,7 +2571,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6106,
                 "kode" => "61.06",
-                "nama" => "Kab. Ketapang",
+                "nama" => "Ketapang",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2579,7 +2579,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6107,
                 "kode" => "61.07",
-                "nama" => "Kab. Sintang",
+                "nama" => "Sintang",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2587,7 +2587,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6108,
                 "kode" => "61.08",
-                "nama" => "Kab. Kapuas Hulu",
+                "nama" => "Kapuas Hulu",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2595,7 +2595,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6109,
                 "kode" => "61.09",
-                "nama" => "Kab. Sekadau",
+                "nama" => "Sekadau",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2603,7 +2603,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6110,
                 "kode" => "61.10",
-                "nama" => "Kab. Melawi",
+                "nama" => "Melawi",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2611,7 +2611,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6111,
                 "kode" => "61.11",
-                "nama" => "Kab. Kayong Utara",
+                "nama" => "Kayong Utara",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2619,7 +2619,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6112,
                 "kode" => "61.12",
-                "nama" => "Kab. Kubu Raya",
+                "nama" => "Kubu Raya",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2627,7 +2627,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6171,
                 "kode" => "61.71",
-                "nama" => "Kota Pontianak",
+                "nama" => "Pontianak",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2635,7 +2635,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6172,
                 "kode" => "61.72",
-                "nama" => "Kota Singkawang",
+                "nama" => "Singkawang",
                 "provinsi_id" => 61,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2643,7 +2643,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6201,
                 "kode" => "62.01",
-                "nama" => "Kab. Kotawaringin Barat",
+                "nama" => "Kotawaringin Barat",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2651,7 +2651,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6202,
                 "kode" => "62.02",
-                "nama" => "Kab. Kotawaringin Timur",
+                "nama" => "Kotawaringin Timur",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2659,7 +2659,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6203,
                 "kode" => "62.03",
-                "nama" => "Kab. Kapuas",
+                "nama" => "Kapuas",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2667,7 +2667,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6204,
                 "kode" => "62.04",
-                "nama" => "Kab. Barito Selatan",
+                "nama" => "Barito Selatan",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2675,7 +2675,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6205,
                 "kode" => "62.05",
-                "nama" => "Kab. Barito Utara",
+                "nama" => "Barito Utara",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2683,7 +2683,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6206,
                 "kode" => "62.06",
-                "nama" => "Kab. Sukamara",
+                "nama" => "Sukamara",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2691,7 +2691,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6207,
                 "kode" => "62.07",
-                "nama" => "Kab. Lamandau",
+                "nama" => "Lamandau",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2699,7 +2699,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6208,
                 "kode" => "62.08",
-                "nama" => "Kab. Seruyan",
+                "nama" => "Seruyan",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2707,7 +2707,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6209,
                 "kode" => "62.09",
-                "nama" => "Kab. Katingan",
+                "nama" => "Katingan",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2715,7 +2715,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6210,
                 "kode" => "62.10",
-                "nama" => "Kab. Pulang Pisau",
+                "nama" => "Pulang Pisau",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2723,7 +2723,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6211,
                 "kode" => "62.11",
-                "nama" => "Kab. Gunung Mas",
+                "nama" => "Gunung Mas",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2731,7 +2731,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6212,
                 "kode" => "62.12",
-                "nama" => "Kab. Barito Timur",
+                "nama" => "Barito Timur",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2739,7 +2739,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6213,
                 "kode" => "62.13",
-                "nama" => "Kab. Murung Raya",
+                "nama" => "Murung Raya",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2747,7 +2747,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6271,
                 "kode" => "62.71",
-                "nama" => "Kota Palangkaraya",
+                "nama" => "Palangkaraya",
                 "provinsi_id" => 62,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2755,7 +2755,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6301,
                 "kode" => "63.01",
-                "nama" => "Kab. Tanah Laut",
+                "nama" => "Tanah Laut",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2763,7 +2763,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6302,
                 "kode" => "63.02",
-                "nama" => "Kab. Kotabaru",
+                "nama" => "Kotabaru",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2771,7 +2771,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6303,
                 "kode" => "63.03",
-                "nama" => "Kab. Banjar",
+                "nama" => "Banjar",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2779,7 +2779,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6304,
                 "kode" => "63.04",
-                "nama" => "Kab. Barito Kuala",
+                "nama" => "Barito Kuala",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2787,7 +2787,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6305,
                 "kode" => "63.05",
-                "nama" => "Kab. Tapin",
+                "nama" => "Tapin",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2795,7 +2795,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6306,
                 "kode" => "63.06",
-                "nama" => "Kab. Hulu Sungai Selatan",
+                "nama" => "Hulu Sungai Selatan",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2803,7 +2803,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6307,
                 "kode" => "63.07",
-                "nama" => "Kab. Hulu Sungai Tengah",
+                "nama" => "Hulu Sungai Tengah",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2811,7 +2811,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6308,
                 "kode" => "63.08",
-                "nama" => "Kab. Hulu Sungai Utara",
+                "nama" => "Hulu Sungai Utara",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2819,7 +2819,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6309,
                 "kode" => "63.09",
-                "nama" => "Kab. Tabalong",
+                "nama" => "Tabalong",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2827,7 +2827,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6310,
                 "kode" => "63.10",
-                "nama" => "Kab. Tanah Bumbu",
+                "nama" => "Tanah Bumbu",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2835,7 +2835,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6311,
                 "kode" => "63.11",
-                "nama" => "Kab. Balangan",
+                "nama" => "Balangan",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2843,7 +2843,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6371,
                 "kode" => "63.71",
-                "nama" => "Kota Banjarmasin",
+                "nama" => "Banjarmasin",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2851,7 +2851,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6372,
                 "kode" => "63.72",
-                "nama" => "Kota Banjarbaru",
+                "nama" => "Banjarbaru",
                 "provinsi_id" => 63,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2859,7 +2859,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6401,
                 "kode" => "64.01",
-                "nama" => "Kab. Paser",
+                "nama" => "Paser",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2867,7 +2867,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6402,
                 "kode" => "64.02",
-                "nama" => "Kab. Kutai Barat",
+                "nama" => "Kutai Barat",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2875,7 +2875,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6403,
                 "kode" => "64.03",
-                "nama" => "Kab. Kutai Kartanegara",
+                "nama" => "Kutai Kartanegara",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2883,7 +2883,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6404,
                 "kode" => "64.04",
-                "nama" => "Kab. Kutai Timur",
+                "nama" => "Kutai Timur",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2891,7 +2891,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6405,
                 "kode" => "64.05",
-                "nama" => "Kab. Berau",
+                "nama" => "Berau",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2899,7 +2899,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6409,
                 "kode" => "64.09",
-                "nama" => "Kab. Penajam Paser Utara",
+                "nama" => "Penajam Paser Utara",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2907,7 +2907,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6411,
                 "kode" => "64.11",
-                "nama" => "Kab. Mahakam Ulu",
+                "nama" => "Mahakam Ulu",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2915,7 +2915,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6471,
                 "kode" => "64.71",
-                "nama" => "Kota Balikpapan",
+                "nama" => "Balikpapan",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2923,7 +2923,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6472,
                 "kode" => "64.72",
-                "nama" => "Kota Samarinda",
+                "nama" => "Samarinda",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2931,7 +2931,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6474,
                 "kode" => "64.74",
-                "nama" => "Kota Bontang",
+                "nama" => "Bontang",
                 "provinsi_id" => 64,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2939,7 +2939,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6501,
                 "kode" => "65.01",
-                "nama" => "Kab. Malinau",
+                "nama" => "Malinau",
                 "provinsi_id" => 65,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2947,7 +2947,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6502,
                 "kode" => "65.02",
-                "nama" => "Kab. Bulungan",
+                "nama" => "Bulungan",
                 "provinsi_id" => 65,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2955,7 +2955,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6503,
                 "kode" => "65.03",
-                "nama" => "Kab. Tana Tidung",
+                "nama" => "Tana Tidung",
                 "provinsi_id" => 65,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2963,7 +2963,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6504,
                 "kode" => "65.04",
-                "nama" => "Kab. Nunukan",
+                "nama" => "Nunukan",
                 "provinsi_id" => 65,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2971,7 +2971,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 6571,
                 "kode" => "65.71",
-                "nama" => "Kota Tarakan",
+                "nama" => "Tarakan",
                 "provinsi_id" => 65,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -2979,7 +2979,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7101,
                 "kode" => "71.01",
-                "nama" => "Kab. Bolaang Mongondow",
+                "nama" => "Bolaang Mongondow",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2987,7 +2987,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7102,
                 "kode" => "71.02",
-                "nama" => "Kab. Minahasa",
+                "nama" => "Minahasa",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -2995,7 +2995,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7103,
                 "kode" => "71.03",
-                "nama" => "Kab. Kepulauan Sangihe",
+                "nama" => "Kepulauan Sangihe",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3003,7 +3003,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7104,
                 "kode" => "71.04",
-                "nama" => "Kab. Kepulauan Talaud",
+                "nama" => "Kepulauan Talaud",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3011,7 +3011,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7105,
                 "kode" => "71.05",
-                "nama" => "Kab. Minahasa Selatan",
+                "nama" => "Minahasa Selatan",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3019,7 +3019,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7106,
                 "kode" => "71.06",
-                "nama" => "Kab. Minahasa Utara",
+                "nama" => "Minahasa Utara",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3027,7 +3027,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7107,
                 "kode" => "71.07",
-                "nama" => "Kab. Bolaang Mongondow Utara",
+                "nama" => "Bolaang Mongondow Utara",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3035,7 +3035,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7108,
                 "kode" => "71.08",
-                "nama" => "Kab. Kep. Siau Tagulandang Biaro",
+                "nama" => "Kep. Siau Tagulandang Biaro",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3043,7 +3043,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7109,
                 "kode" => "71.09",
-                "nama" => "Kab. Minahasa Tenggara",
+                "nama" => "Minahasa Tenggara",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3051,7 +3051,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7110,
                 "kode" => "71.10",
-                "nama" => "Kab. Bolaang Mongondow Selatan",
+                "nama" => "Bolaang Mongondow Selatan",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3059,7 +3059,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7111,
                 "kode" => "71.11",
-                "nama" => "Kab. Bolaang Mongondow Timur",
+                "nama" => "Bolaang Mongondow Timur",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3067,7 +3067,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7171,
                 "kode" => "71.71",
-                "nama" => "Kota Manado",
+                "nama" => "Manado",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3075,7 +3075,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7172,
                 "kode" => "71.72",
-                "nama" => "Kota Bitung",
+                "nama" => "Bitung",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3083,7 +3083,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7173,
                 "kode" => "71.73",
-                "nama" => "Kota Tomohon",
+                "nama" => "Tomohon",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3091,7 +3091,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7174,
                 "kode" => "71.74",
-                "nama" => "Kota Kotamobagu",
+                "nama" => "Kotamobagu",
                 "provinsi_id" => 71,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3099,7 +3099,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7201,
                 "kode" => "72.01",
-                "nama" => "Kab. Banggai Kepulauan",
+                "nama" => "Banggai Kepulauan",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3107,7 +3107,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7202,
                 "kode" => "72.02",
-                "nama" => "Kab. Banggai",
+                "nama" => "Banggai",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3115,7 +3115,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7203,
                 "kode" => "72.03",
-                "nama" => "Kab. Morowali",
+                "nama" => "Morowali",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3123,7 +3123,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7204,
                 "kode" => "72.04",
-                "nama" => "Kab. Poso",
+                "nama" => "Poso",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3131,7 +3131,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7205,
                 "kode" => "72.05",
-                "nama" => "Kab. Donggala",
+                "nama" => "Donggala",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3139,7 +3139,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7206,
                 "kode" => "72.06",
-                "nama" => "Kab. Toli Toli",
+                "nama" => "Toli Toli",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3147,7 +3147,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7207,
                 "kode" => "72.07",
-                "nama" => "Kab. Buol",
+                "nama" => "Buol",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3155,7 +3155,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7208,
                 "kode" => "72.08",
-                "nama" => "Kab. Parigi Moutong",
+                "nama" => "Parigi Moutong",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3163,7 +3163,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7209,
                 "kode" => "72.09",
-                "nama" => "Kab. Tojo Una Una",
+                "nama" => "Tojo Una Una",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3171,7 +3171,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7210,
                 "kode" => "72.10",
-                "nama" => "Kab. Sigi",
+                "nama" => "Sigi",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3179,7 +3179,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7211,
                 "kode" => "72.11",
-                "nama" => "Kab. Banggai Laut",
+                "nama" => "Banggai Laut",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3187,7 +3187,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7212,
                 "kode" => "72.12",
-                "nama" => "Kab. Morowali Utara",
+                "nama" => "Morowali Utara",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3195,7 +3195,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7271,
                 "kode" => "72.71",
-                "nama" => "Kota Palu",
+                "nama" => "Palu",
                 "provinsi_id" => 72,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3203,7 +3203,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7301,
                 "kode" => "73.01",
-                "nama" => "Kab. Kepulauan Selayar",
+                "nama" => "Kepulauan Selayar",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3211,7 +3211,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7302,
                 "kode" => "73.02",
-                "nama" => "Kab. Bulukumba",
+                "nama" => "Bulukumba",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3219,7 +3219,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7303,
                 "kode" => "73.03",
-                "nama" => "Kab. Bantaeng",
+                "nama" => "Bantaeng",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3227,7 +3227,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7304,
                 "kode" => "73.04",
-                "nama" => "Kab. Jeneponto",
+                "nama" => "Jeneponto",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3235,7 +3235,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7305,
                 "kode" => "73.05",
-                "nama" => "Kab. Takalar",
+                "nama" => "Takalar",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3243,7 +3243,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7306,
                 "kode" => "73.06",
-                "nama" => "Kab. Gowa",
+                "nama" => "Gowa",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3251,7 +3251,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7307,
                 "kode" => "73.07",
-                "nama" => "Kab. Sinjai",
+                "nama" => "Sinjai",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3259,7 +3259,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7308,
                 "kode" => "73.08",
-                "nama" => "Kab. Maros",
+                "nama" => "Maros",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3267,7 +3267,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7309,
                 "kode" => "73.09",
-                "nama" => "Kab. Pangkajene Dan Kepulauan",
+                "nama" => "Pangkajene Dan Kepulauan",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3275,7 +3275,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7310,
                 "kode" => "73.10",
-                "nama" => "Kab. Barru",
+                "nama" => "Barru",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3283,7 +3283,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7311,
                 "kode" => "73.11",
-                "nama" => "Kab. Bone",
+                "nama" => "Bone",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3291,7 +3291,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7312,
                 "kode" => "73.12",
-                "nama" => "Kab. Soppeng",
+                "nama" => "Soppeng",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3299,7 +3299,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7313,
                 "kode" => "73.13",
-                "nama" => "Kab. Wajo",
+                "nama" => "Wajo",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3307,7 +3307,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7314,
                 "kode" => "73.14",
-                "nama" => "Kab. Sidenreng Rappang",
+                "nama" => "Sidenreng Rappang",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3315,7 +3315,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7315,
                 "kode" => "73.15",
-                "nama" => "Kab. Pinrang",
+                "nama" => "Pinrang",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3323,7 +3323,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7316,
                 "kode" => "73.16",
-                "nama" => "Kab. Enrekang",
+                "nama" => "Enrekang",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3331,7 +3331,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7317,
                 "kode" => "73.17",
-                "nama" => "Kab. Luwu",
+                "nama" => "Luwu",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3339,7 +3339,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7318,
                 "kode" => "73.18",
-                "nama" => "Kab. Tana Toraja",
+                "nama" => "Tana Toraja",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3347,7 +3347,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7322,
                 "kode" => "73.22",
-                "nama" => "Kab. Luwu Utara",
+                "nama" => "Luwu Utara",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3355,7 +3355,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7325,
                 "kode" => "73.25",
-                "nama" => "Kab. Luwu Timur",
+                "nama" => "Luwu Timur",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3363,7 +3363,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7326,
                 "kode" => "73.26",
-                "nama" => "Kab. Toraja Utara",
+                "nama" => "Toraja Utara",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3371,7 +3371,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7371,
                 "kode" => "73.71",
-                "nama" => "Kota Makassar",
+                "nama" => "Makassar",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3379,7 +3379,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7372,
                 "kode" => "73.72",
-                "nama" => "Kota Parepare",
+                "nama" => "Parepare",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3387,7 +3387,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7373,
                 "kode" => "73.73",
-                "nama" => "Kota Palopo",
+                "nama" => "Palopo",
                 "provinsi_id" => 73,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3395,7 +3395,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7401,
                 "kode" => "74.01",
-                "nama" => "Kab. Buton",
+                "nama" => "Buton",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3403,7 +3403,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7402,
                 "kode" => "74.02",
-                "nama" => "Kab. Muna",
+                "nama" => "Muna",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3411,7 +3411,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7403,
                 "kode" => "74.03",
-                "nama" => "Kab. Konawe",
+                "nama" => "Konawe",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3419,7 +3419,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7404,
                 "kode" => "74.04",
-                "nama" => "Kab. Kolaka",
+                "nama" => "Kolaka",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3427,7 +3427,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7405,
                 "kode" => "74.05",
-                "nama" => "Kab. Konawe Selatan",
+                "nama" => "Konawe Selatan",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3435,7 +3435,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7406,
                 "kode" => "74.06",
-                "nama" => "Kab. Bombana",
+                "nama" => "Bombana",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3443,7 +3443,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7407,
                 "kode" => "74.07",
-                "nama" => "Kab. Wakatobi",
+                "nama" => "Wakatobi",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3451,7 +3451,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7408,
                 "kode" => "74.08",
-                "nama" => "Kab. Kolaka Utara",
+                "nama" => "Kolaka Utara",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3459,7 +3459,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7409,
                 "kode" => "74.09",
-                "nama" => "Kab. Buton Utara",
+                "nama" => "Buton Utara",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3467,7 +3467,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7410,
                 "kode" => "74.10",
-                "nama" => "Kab. Konawe Utara",
+                "nama" => "Konawe Utara",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3475,7 +3475,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7411,
                 "kode" => "74.11",
-                "nama" => "Kab. Kolaka Timur",
+                "nama" => "Kolaka Timur",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3483,7 +3483,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7412,
                 "kode" => "74.12",
-                "nama" => "Kab. Konawe Kepulauan",
+                "nama" => "Konawe Kepulauan",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3491,7 +3491,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7413,
                 "kode" => "74.13",
-                "nama" => "Kab. Muna Barat",
+                "nama" => "Muna Barat",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3499,7 +3499,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7414,
                 "kode" => "74.14",
-                "nama" => "Kab. Buton Tengah",
+                "nama" => "Buton Tengah",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3507,7 +3507,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7415,
                 "kode" => "74.15",
-                "nama" => "Kab. Buton Selatan",
+                "nama" => "Buton Selatan",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3515,7 +3515,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7471,
                 "kode" => "74.71",
-                "nama" => "Kota Kendari",
+                "nama" => "Kendari",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3523,7 +3523,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7472,
                 "kode" => "74.72",
-                "nama" => "Kota Bau Bau",
+                "nama" => "Bau Bau",
                 "provinsi_id" => 74,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3531,7 +3531,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7501,
                 "kode" => "75.01",
-                "nama" => "Kab. Boalemo",
+                "nama" => "Boalemo",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3539,7 +3539,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7502,
                 "kode" => "75.02",
-                "nama" => "Kab. Gorontalo",
+                "nama" => "Gorontalo",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3547,7 +3547,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7503,
                 "kode" => "75.03",
-                "nama" => "Kab. Pohuwato",
+                "nama" => "Pohuwato",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3555,7 +3555,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7504,
                 "kode" => "75.04",
-                "nama" => "Kab. Bone Bolango",
+                "nama" => "Bone Bolango",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3563,7 +3563,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7505,
                 "kode" => "75.05",
-                "nama" => "Kab. Gorontalo Utara",
+                "nama" => "Gorontalo Utara",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3571,7 +3571,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7571,
                 "kode" => "75.71",
-                "nama" => "Kota Gorontalo",
+                "nama" => "Gorontalo",
                 "provinsi_id" => 75,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3579,7 +3579,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7601,
                 "kode" => "76.01",
-                "nama" => "Kab. Majene",
+                "nama" => "Majene",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3587,7 +3587,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7602,
                 "kode" => "76.02",
-                "nama" => "Kab. Polewali Mandar",
+                "nama" => "Polewali Mandar",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3595,7 +3595,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7603,
                 "kode" => "76.03",
-                "nama" => "Kab. Mamasa",
+                "nama" => "Mamasa",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3603,7 +3603,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7604,
                 "kode" => "76.04",
-                "nama" => "Kab. Mamuju",
+                "nama" => "Mamuju",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3611,7 +3611,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7605,
                 "kode" => "76.05",
-                "nama" => "Kab. Pasangkayu",
+                "nama" => "Pasangkayu",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3619,7 +3619,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 7606,
                 "kode" => "76.06",
-                "nama" => "Kab. Mamuju Tengah",
+                "nama" => "Mamuju Tengah",
                 "provinsi_id" => 76,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3627,7 +3627,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8101,
                 "kode" => "81.01",
-                "nama" => "Kab. Kepulauan Tanimbar",
+                "nama" => "Kepulauan Tanimbar",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3635,7 +3635,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8102,
                 "kode" => "81.02",
-                "nama" => "Kab. Maluku Tenggara",
+                "nama" => "Maluku Tenggara",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3643,7 +3643,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8103,
                 "kode" => "81.03",
-                "nama" => "Kab. Maluku Tengah",
+                "nama" => "Maluku Tengah",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3651,7 +3651,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8104,
                 "kode" => "81.04",
-                "nama" => "Kab. Buru",
+                "nama" => "Buru",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3659,7 +3659,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8105,
                 "kode" => "81.05",
-                "nama" => "Kab. Kepulauan Aru",
+                "nama" => "Kepulauan Aru",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3667,7 +3667,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8106,
                 "kode" => "81.06",
-                "nama" => "Kab. Seram Bagian Barat",
+                "nama" => "Seram Bagian Barat",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3675,7 +3675,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8107,
                 "kode" => "81.07",
-                "nama" => "Kab. Seram Bagian Timur",
+                "nama" => "Seram Bagian Timur",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3683,7 +3683,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8108,
                 "kode" => "81.08",
-                "nama" => "Kab. Maluku Barat Daya",
+                "nama" => "Maluku Barat Daya",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3691,7 +3691,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8109,
                 "kode" => "81.09",
-                "nama" => "Kab. Buru Selatan",
+                "nama" => "Buru Selatan",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3699,7 +3699,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8171,
                 "kode" => "81.71",
-                "nama" => "Kota Ambon",
+                "nama" => "Ambon",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3707,7 +3707,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8172,
                 "kode" => "81.72",
-                "nama" => "Kota Tual",
+                "nama" => "Tual",
                 "provinsi_id" => 81,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3715,7 +3715,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8201,
                 "kode" => "82.01",
-                "nama" => "Kab. Halmahera Barat",
+                "nama" => "Halmahera Barat",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3723,7 +3723,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8202,
                 "kode" => "82.02",
-                "nama" => "Kab. Halmahera Tengah",
+                "nama" => "Halmahera Tengah",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3731,7 +3731,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8203,
                 "kode" => "82.03",
-                "nama" => "Kab. Kepulauan Sula",
+                "nama" => "Kepulauan Sula",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3739,7 +3739,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8204,
                 "kode" => "82.04",
-                "nama" => "Kab. Halmahera Selatan",
+                "nama" => "Halmahera Selatan",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3747,7 +3747,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8205,
                 "kode" => "82.05",
-                "nama" => "Kab. Halmahera Utara",
+                "nama" => "Halmahera Utara",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3755,7 +3755,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8206,
                 "kode" => "82.06",
-                "nama" => "Kab. Halmahera Timur",
+                "nama" => "Halmahera Timur",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3763,7 +3763,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8207,
                 "kode" => "82.07",
-                "nama" => "Kab. Pulau Morotai",
+                "nama" => "Pulau Morotai",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3771,7 +3771,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8208,
                 "kode" => "82.08",
-                "nama" => "Kab. Pulau Taliabu",
+                "nama" => "Pulau Taliabu",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3779,7 +3779,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8271,
                 "kode" => "82.71",
-                "nama" => "Kota Ternate",
+                "nama" => "Ternate",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3787,7 +3787,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 8272,
                 "kode" => "82.72",
-                "nama" => "Kota Tidore Kepulauan",
+                "nama" => "Tidore Kepulauan",
                 "provinsi_id" => 82,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3795,7 +3795,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9101,
                 "kode" => "91.01",
-                "nama" => "Kab. Fak Fak",
+                "nama" => "Fak Fak",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3803,7 +3803,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9102,
                 "kode" => "91.02",
-                "nama" => "Kab. Kaimana",
+                "nama" => "Kaimana",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3811,7 +3811,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9103,
                 "kode" => "91.03",
-                "nama" => "Kab. Teluk Wondama",
+                "nama" => "Teluk Wondama",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3819,7 +3819,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9104,
                 "kode" => "91.04",
-                "nama" => "Kab. Teluk Bintuni",
+                "nama" => "Teluk Bintuni",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3827,7 +3827,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9105,
                 "kode" => "91.05",
-                "nama" => "Kab. Manokwari",
+                "nama" => "Manokwari",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3835,7 +3835,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9111,
                 "kode" => "91.11",
-                "nama" => "Kab. Manokwari Selatan",
+                "nama" => "Manokwari Selatan",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3843,7 +3843,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9112,
                 "kode" => "91.12",
-                "nama" => "Kab. Pegunungan Arfak",
+                "nama" => "Pegunungan Arfak",
                 "provinsi_id" => 91,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3851,7 +3851,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9201,
                 "kode" => "92.01",
-                "nama" => "Kab. Raja Ampat",
+                "nama" => "Raja Ampat",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3859,7 +3859,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9202,
                 "kode" => "92.02",
-                "nama" => "Kab. Sorong",
+                "nama" => "Sorong",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3867,7 +3867,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9203,
                 "kode" => "92.03",
-                "nama" => "Kab. Sorong Selatan",
+                "nama" => "Sorong Selatan",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3875,7 +3875,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9204,
                 "kode" => "92.04",
-                "nama" => "Kab. Maybrat",
+                "nama" => "Maybrat",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3883,7 +3883,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9205,
                 "kode" => "92.05",
-                "nama" => "Kab. Tambrauw",
+                "nama" => "Tambrauw",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3891,7 +3891,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9271,
                 "kode" => "92.71",
-                "nama" => "Kota Sorong",
+                "nama" => "Sorong",
                 "provinsi_id" => 92,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3899,7 +3899,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9403,
                 "kode" => "94.03",
-                "nama" => "Kab. Jayapura",
+                "nama" => "Jayapura",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3907,7 +3907,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9408,
                 "kode" => "94.08",
-                "nama" => "Kab. Kepulauan Yapen",
+                "nama" => "Kepulauan Yapen",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3915,7 +3915,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9409,
                 "kode" => "94.09",
-                "nama" => "Kab. Biak Numfor",
+                "nama" => "Biak Numfor",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3923,7 +3923,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9419,
                 "kode" => "94.19",
-                "nama" => "Kab. Sarmi",
+                "nama" => "Sarmi",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3931,7 +3931,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9420,
                 "kode" => "94.20",
-                "nama" => "Kab. Keerom",
+                "nama" => "Keerom",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3939,7 +3939,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9426,
                 "kode" => "94.26",
-                "nama" => "Kab. Waropen",
+                "nama" => "Waropen",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3947,7 +3947,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9427,
                 "kode" => "94.27",
-                "nama" => "Kab. Supiori",
+                "nama" => "Supiori",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3955,7 +3955,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9428,
                 "kode" => "94.28",
-                "nama" => "Kab. Mamberamo Raya",
+                "nama" => "Mamberamo Raya",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3963,7 +3963,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9471,
                 "kode" => "94.71",
-                "nama" => "Kota Jayapura",
+                "nama" => "Jayapura",
                 "provinsi_id" => 94,
                 "aktif" => 1,
                 "type" => "Kota",
@@ -3971,7 +3971,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9501,
                 "kode" => "95.01",
-                "nama" => "Kab. Merauke",
+                "nama" => "Merauke",
                 "provinsi_id" => 95,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3979,7 +3979,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9502,
                 "kode" => "95.02",
-                "nama" => "Kab. Boven Digoel",
+                "nama" => "Boven Digoel",
                 "provinsi_id" => 95,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3987,7 +3987,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9503,
                 "kode" => "95.03",
-                "nama" => "Kab. Mappi",
+                "nama" => "Mappi",
                 "provinsi_id" => 95,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -3995,7 +3995,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9504,
                 "kode" => "95.04",
-                "nama" => "Kab. Asmat",
+                "nama" => "Asmat",
                 "provinsi_id" => 95,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4003,7 +4003,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9601,
                 "kode" => "96.01",
-                "nama" => "Kab. Mimika",
+                "nama" => "Mimika",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4011,7 +4011,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9602,
                 "kode" => "96.02",
-                "nama" => "Kab. Dogiyai",
+                "nama" => "Dogiyai",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4019,7 +4019,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9603,
                 "kode" => "96.03",
-                "nama" => "Kab. Deiyai",
+                "nama" => "Deiyai",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4027,7 +4027,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9604,
                 "kode" => "96.04",
-                "nama" => "Kab. Nabire",
+                "nama" => "Nabire",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4035,7 +4035,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9605,
                 "kode" => "96.05",
-                "nama" => "Kab. Paniai",
+                "nama" => "Paniai",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4043,7 +4043,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9606,
                 "kode" => "96.06",
-                "nama" => "Kab. Intan Jaya",
+                "nama" => "Intan Jaya",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4051,7 +4051,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9607,
                 "kode" => "96.07",
-                "nama" => "Kab. Puncak",
+                "nama" => "Puncak",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4059,7 +4059,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9608,
                 "kode" => "96.08",
-                "nama" => "Kab. Puncak Jaya",
+                "nama" => "Puncak Jaya",
                 "provinsi_id" => 96,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4067,7 +4067,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9701,
                 "kode" => "97.01",
-                "nama" => "Kab. Nduga",
+                "nama" => "Nduga",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4075,7 +4075,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9702,
                 "kode" => "97.02",
-                "nama" => "Kab. Jayawijaya",
+                "nama" => "Jayawijaya",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4083,7 +4083,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9703,
                 "kode" => "97.03",
-                "nama" => "Kab. Lanny Jaya",
+                "nama" => "Lanny Jaya",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4091,7 +4091,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9704,
                 "kode" => "97.04",
-                "nama" => "Kab. Tolikara",
+                "nama" => "Tolikara",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4099,7 +4099,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9705,
                 "kode" => "97.05",
-                "nama" => "Kab. Mamberamo Tengah",
+                "nama" => "Mamberamo Tengah",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4107,7 +4107,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9706,
                 "kode" => "97.06",
-                "nama" => "Kab. Yalimo",
+                "nama" => "Yalimo",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4115,7 +4115,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9707,
                 "kode" => "97.07",
-                "nama" => "Kab. Yahukimo",
+                "nama" => "Yahukimo",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
@@ -4123,7 +4123,7 @@ class KabupatenSeeder extends Seeder
             [
                 "id" => 9708,
                 "kode" => "97.08",
-                "nama" => "Kab. Pegunungan Bintang",
+                "nama" => "Pegunungan Bintang",
                 "provinsi_id" => 97,
                 "aktif" => 1,
                 "type" => "Kabupaten",
