@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('kabupaten', function (Blueprint $table) {
             $table->id();
-            $table->string('kode',15);
-            $table->string('type',15)->default('Kabupaten');
+            $table->string('kode', 15);
+            $table->string('type', 15)->default('kabupaten');
             $table->string('nama', 200);
+            $table->string('kota', 50);
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
+            $table->longText('path')->nullable();
+            $table->longText('coordinates')->nullable();
             $table->boolean('aktif')->default(0)->nullable();
             $table->foreignId('provinsi_id')->constrained('provinsi')->onDelete('cascade');
             $table->timestamps();

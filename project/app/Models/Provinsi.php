@@ -20,8 +20,13 @@ class Provinsi extends Model
     protected $fillable = [
         'kode',
         'nama',
+        'kota',
         'aktif',
         'id_negara',
+        'latitude',
+        'longitude',
+        'coordinates',
+        'path',
         'created_at',
         'updated_at',
     ];

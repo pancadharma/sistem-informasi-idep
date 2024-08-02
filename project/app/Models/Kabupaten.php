@@ -14,7 +14,7 @@ class Kabupaten extends Model
     use Auditable, HasFactory;
 
     public $table = 'kabupaten';
-    protected $fillable = ['kode', 'nama', 'type', 'provinsi_id', 'aktif', 'created_at', 'updated_at'];
+    protected $fillable = ['kode', 'nama', 'type', 'provinsi_id', 'aktif', 'latitude', 'longitude', 'coordinates', 'created_at', 'updated_at'];
     protected $dates = ['created_at','updated_at',];
 
     public function provinsi()
