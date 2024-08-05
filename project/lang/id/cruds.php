@@ -60,6 +60,16 @@ return [
         'provinsi'=>'Provinsi',
         'kota'=>'Kota',
     ],
+    'kecamatan' => [
+        'list' => 'Daftar Kecamatan',
+        'nama' => 'Nama Kecamatan',
+        'title_singular' => 'Kecamatan',
+        'title' => 'Kecamatan',
+        'kode'=>'Kode',
+        'name'=>'Nama',
+        'aktif'=>'Aktif',
+        'kota'=>'Kota',
+    ],
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',

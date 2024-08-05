@@ -64,6 +64,16 @@ return [
         'provinsi'=>'Province',
         'kota'=>'City',
     ],
+    'kecamatan' => [
+        'list' => 'List of Subdistrict',
+        'nama' => 'Subdistrict Name',
+        'title_singular' => 'Subdistrict',
+        'title' => 'Subdistrict',
+        'kode'=>'Code',
+        'name'=>'Name',
+        'aktif'=>'Active',
+        'kota'=>'City',
+    ],
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',

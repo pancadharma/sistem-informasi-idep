@@ -8,6 +8,11 @@
     <div class="card card-primary">
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
                 <div class="card-body">
                 <form action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form" id="kabupatenForm" autocomplete="off">
@@ -54,6 +59,7 @@
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
+                        <th class="center">DT II</th>
                         <th>{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</th>
                         <th>{{ trans('cruds.provinsi.title') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>
