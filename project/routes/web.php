@@ -78,7 +78,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('datakecamatan', [KecamatanController::class, 'datakecamatan'])->name('data.kecamatan');
     Route::get('prov.data', [KecamatanController::class, 'provinsi'])->name('prov.data');
-    Route::get('kab.data/{provinsi}', [KecamatanController::class, 'kab'])->name('kab.data');
+    Route::get('prov.data/{provinsi}', [KecamatanController::class, 'provinsi_details'])->name('prov_data');
+    Route::get('kab.data/{id}', [KecamatanController::class, 'kab'])->name('kab.data');
+    Route::get('kab.data/{kabupaten}', [KecamatanController::class, 'kab_details'])->name('kab_data');
     // Route::get('kec.data/{kabupaten}', [KecamatanController::class, 'kec'])->name('kec.data');
     Route::resource('kecamatan', KecamatanController::class);
 });

@@ -1,6 +1,33 @@
 <script>
     // call datatable for kecamatan
     $(document).ready(function() {
+        $('.select2').select2();
+
+        $('#provinsi_id').change(function(){
+            var provinsi_id = $(this).val();
+
+            console.log(provinsi_id);
+
+            if(provinsi_id){
+                $.ajax({
+                    type: 'GET',
+                    url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsi_id),
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(hasil) {
+                        // console.log(hasil);
+                        if(hasil){
+                            $("#kabupaten_id").empty();
+                            $("#kabupaten_id").append(" {{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}");
+                            $.each(hasil,function(nama,kode){
+                                $("#kabupaten_id").append('<option value="'+kode+'">'+nama+'</option>');
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
         $('#kecamatan_list').DataTable({
             responsive: true,
             ajax: "{{ route('data.kecamatan') }}",
@@ -90,10 +117,11 @@
     // submit button add kecamatan
     $(document).ready(function(){
         $('#provinsi_add').select2({
+            
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
             allowClear: true,
             delay: 250,
-            data : data,
+            // data : data,
         });
         $('.btn-add-kecamatan').on('click', function(e){
             e.preventDefault();

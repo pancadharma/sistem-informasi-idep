@@ -12,18 +12,26 @@
         <form action="{{ route('kecamatan.store')}}" method="POST" class="resettable-form" id="kecamatanForm" autocomplete="off">
             @csrf
             @method('POST')
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
                 <div class="form-group">
                     <select id="provinsi_add" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%">
                         <option></option>
                     </select>
                 </div>
+            </div> --}}
+            <div class="form-group">
+                <label class="required" for="provinsi_id">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
+                <select class="form-control select2 {{ $errors->has('provinsi') ? 'is-invalid' : '' }}" name="provinsi_id" id="provinsi_id" required>
+                    @foreach($provinsi as $data => $entry)
+                        <option value="{{ $data }}" {{ old('provinsi_id') == $data ? 'selected' : '' }}>{{ $data }} - {{ $entry }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group">
                 <label for="kabupaten_nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                 <div class="form-group">
-                    <select id="kabupaten_add" name="kabupaten_id" class="form-control select2 kabupaten-data" style="width: 100%">
+                    <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" style="width: 100%">
                         <option></option>
                     </select>
                 </div>
