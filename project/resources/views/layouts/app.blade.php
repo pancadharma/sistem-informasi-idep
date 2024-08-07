@@ -46,11 +46,13 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-{{-- <script>
-    $(document).ready(function() {
-        // Add your common script logic here...
+<script>
+    $(document).on('select2:open', function() {
+        setTimeout(function() {
+            document.querySelector('.select2-search__field').focus();
+        }, 100);
     });
-</script> --}}
+</script>
 @endpush
 
 {{-- Add common CSS customizations --}}

@@ -5,7 +5,6 @@
 
         $('#provinsi_id').change(function(){
             var provinsi_id = $(this).val();
-            console.log(provinsi_id);
             if(provinsi_id){
                 $.ajax({
                     type: 'GET',
@@ -35,7 +34,6 @@
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
             $('#kode').val(kode_kab+'.');
-            
         });
 
         $('#kecamatan_list').DataTable({
@@ -127,7 +125,6 @@
     // submit button add kecamatan
     $(document).ready(function(){
         $('#provinsi_add').select2({
-            
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
             allowClear: true,
             delay: 250,
@@ -137,53 +134,70 @@
             allowClear: true,
             delay: 250,
         });
+
+        //submit data kecamatan
         $('.btn-add-kecamatan').on('click', function(e){
             e.preventDefault();
-            // alert('submit');
-
+            var kabupaten_kode = $('#kabupaten_id').children('option:selected').data('id');
+            var form_kecamatan = $('#kecamatanForm').serialize();
+            form_kecamatan += '&kabupaten_kode=' + kabupaten_kode;
+            $.ajax({
+                url: '{{ route('kecamatan.store') }}',
+                method: 'POST',
+                data: form_kecamatan,
+                dataType: 'JSON',
+                success: function(response){
+                    if (response.success === true) {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success"
+                        });
+                        $('#kecamatanForm').trigger('reset');
+                        $("#provinsi_id").select2({
+                            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
+                            allowClear: true,
+                            delay: 250,
+                        });
+                        $("#kabupaten_id").empty();
+                        $('#kecamatan_list').DataTable().ajax.reload();
+                    }else{
+                        Swal.fire({
+                            title: "Something Wrong !",
+                            text: response.message,
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(xhr, status, error){
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage = response.message;
+                        }
+                        if (response.errors) {
+                            const errors = response.errors;
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            for (const field in errors) {
+                                if (errors.hasOwnProperty(field)) {
+                                    errors[field].forEach(err => {
+                                        errorMessage += `<li>${field}: ${err}</li>`;
+                                    });
+                                }
+                            }
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
         });
     });
-
-    // $(document).ready(function() {
-    //     $.ajax({
-    //         url:  '{{ route('kecamatan.create') }}',
-    //         method: 'GET',
-    //         dataType: 'json',
-    //         success: function(response){
-    //             let data = response.map(function(item) {
-    //                 return {
-    //                     id: item.id,
-    //                     text: item.id+' - '+ item.nama,
-    //                 };
-    //             });
-                
-    //             $('#provinsi_add').select2({
-    //                 placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
-    //                 allowClear: true,
-    //                 delay: 250,
-    //                 data : data,
-    //             });
-    //             $(document).on('select2:open', function() {
-    //                 setTimeout(function() {
-    //                     document.querySelector('.select2-search__field').focus();
-    //                 }, 100);
-    //             });
-    //         },error: function(jqXHR, textStatus, errorThrown) {
-    //             const errorData = JSON.parse(jqXHR.responseText);
-    //             const errors = errorData.errors; // Access the error object
-    //             let errorMessage = "";
-    //             for (const field in errors) {
-    //                 errors[field].forEach(error => {
-    //                     errorMessage +=
-    //                     `* ${error}\n`; // Build a formatted error message string
-    //                 });
-    //             }
-    //             Swal.fire({
-    //                 title: jqXHR.statusText,
-    //                 text: errorMessage,
-    //                 icon: 'error'
-    //             });
-    //         }
-    //     });
-    // });
 </script>

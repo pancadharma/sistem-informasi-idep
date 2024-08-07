@@ -12,14 +12,6 @@
         <form action="{{ route('kecamatan.store')}}" method="POST" class="resettable-form" id="kecamatanForm" autocomplete="off">
             @csrf
             @method('POST')
-            {{-- <div class="form-group">
-                <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
-                <div class="form-group">
-                    <select id="provinsi_add" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%">
-                        <option></option>
-                    </select>
-                </div>
-            </div> --}}
             <div class="form-group">
                 <label class="required" for="provinsi_id">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
                 <select class="form-control select2 {{ $errors->has('provinsi') ? 'is-invalid' : '' }}" name="provinsi_id" id="provinsi_id" required>
@@ -31,14 +23,14 @@
             <div class="form-group">
                 <label for="kabupaten_nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                 <div class="form-group">
-                    <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" style="width: 100%">
+                    <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" style="width: 100%" required>
                         <option>{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.kecamatan.kode') }} {{ trans('cruds.kecamatan.title') }}</label>
-                <input placeholder="" type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required data-toggle="tooltip" data-placement="top" maxlength="5">
+                <input placeholder="" type="text" id="kode" name="kode" class="form-control" required data-toggle="tooltip" data-placement="top" maxlength="8">
             </div>
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.kecamatan.nama') }}</label>
