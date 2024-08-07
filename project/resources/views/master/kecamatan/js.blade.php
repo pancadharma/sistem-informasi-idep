@@ -5,9 +5,7 @@
 
         $('#provinsi_id').change(function(){
             var provinsi_id = $(this).val();
-
             console.log(provinsi_id);
-
             if(provinsi_id){
                 $.ajax({
                     type: 'GET',
@@ -15,17 +13,29 @@
                     method: 'GET',
                     dataType: 'json',
                     success: function(hasil) {
-                        // console.log(hasil);
+                        $("#kabupaten_id").empty();
+                        $('#kabupaten_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
                         if(hasil){
-                            $("#kabupaten_id").empty();
-                            $("#kabupaten_id").append(" {{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}");
-                            $.each(hasil,function(nama,kode){
-                                $("#kabupaten_id").append('<option value="'+kode+'">'+nama+'</option>');
+                            $.each(hasil, function(index, item) {
+                                $("#kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
                             });
+                        }
+                        else{
+                            $("#kabupaten_id").empty();
                         }
                     }
                 });
-            }
+            }            
+            $('#kabupaten_id').select2({
+                placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+            });
+        });
+        
+        $('#kabupaten_id').change(function(){
+            var selected = $(this).find('option:selected');
+            var kode_kab = selected.data('id');
+            $('#kode').val(kode_kab+'.');
+            
         });
 
         $('#kecamatan_list').DataTable({
@@ -121,7 +131,11 @@
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
             allowClear: true,
             delay: 250,
-            // data : data,
+        });
+        $('#kabupaten_id').select2({
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+            allowClear: true,
+            delay: 250,
         });
         $('.btn-add-kecamatan').on('click', function(e){
             e.preventDefault();

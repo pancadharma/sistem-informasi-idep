@@ -48,9 +48,14 @@ class KecamatanController extends Controller
 
     }
     public function kab(Request $request){
-        $kabupaten = Kabupaten::where('aktif', 1)->get(['id','kode','nama']);
-        $kab = Kabupaten::where("provinsi_id",$request->id)->pluck('id','nama');
-
+        $kabupaten = Kabupaten::where("provinsi_id", $request->id)->get(['id', 'kode', 'nama']);
+        $kab = $kabupaten->map(function($item) {
+            return [
+                'id'        => $item->id,
+                'text'      => $item->kode . ' - ' . $item->nama,
+                'kode'      => $item->kode,
+            ];
+        });
         return response()->json($kab);
     }
 
