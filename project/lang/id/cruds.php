@@ -47,7 +47,7 @@ return [
         'title_singular' => 'Provinsi',
         'title' => 'Provinsi',
         'kode'=>'Kode',
-        'nama'=>'Name',
+        'nama'=>'Nama',
     ],
     'kabupaten' => [
         'list' => 'Daftar Kabupaten',
