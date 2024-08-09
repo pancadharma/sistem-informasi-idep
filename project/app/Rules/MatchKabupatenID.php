@@ -20,6 +20,6 @@ class MatchKabupatenID implements Rule
 
     public function message()
     {
-        return 'The :attribute must start with the first five digits of the Kabupaten Kode.';
+        return "The :attribute must start with the first five digits of the " . __("cruds.kabupaten.title") . " " .__("cruds.kabupaten.kode");
     }
 }

@@ -112,7 +112,12 @@
                         Swal.fire({
                             title: "Success",
                             html: response.message,
-                            icon: "success"
+                            icon: "success",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
                         });
                         $('#editKabupatenModal').modal('hide');
                         $('#editKabupatenForm').trigger('reset');
@@ -337,7 +342,12 @@
                         Swal.fire({
                             title: "Success",
                             text: response.message,
-                            icon: "success"
+                            icon: "success",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
                         });
                         $('#addKabupaten').modal('hide');
                         $('#kabupatenForm').trigger('reset');
@@ -392,9 +402,5 @@
             });
             
         });
-    });
-
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
     });
 </script>

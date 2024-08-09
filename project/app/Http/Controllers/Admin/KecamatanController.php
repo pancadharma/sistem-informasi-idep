@@ -49,7 +49,7 @@ class KecamatanController extends Controller
                 "data"      => $request->all(),
             ]);
         }catch (ValidationException $e) {
-            $status = 'error';
+            $status = 'gagal';
             $message = 'Validation failed: ' . implode(', ', $e->errors());
             return response()->json(['status' => $status, 'message' => $message], 422); // Use 422 Unprocessable Entity for validation errors
 
@@ -131,9 +131,9 @@ class KecamatanController extends Controller
 
         $data = DataTables::of($kecamatan)
             ->addColumn('action', function ($kecamatan) {
-                return '<button type="button" class="btn btn-sm btn-info edit-kab-btn" data-action="edit" data-kecamatan-id="'. $kecamatan->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
+                return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" data-kecamatan-id="'. $kecamatan->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
 
-                <button type="button" class="btn btn-sm btn-primary view-kecamatan-btn" data-action="view" data-kecamatan-id="'. $kecamatan->id .'" value="'. $kecamatan->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view" data-kecamatan-id="'. $kecamatan->id .'" value="'. $kecamatan->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-folder-open"></i> View</button>';
             })
             ->make(true);
         return $data;

@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    @include('master.kecamatan.edit')
+    {{-- @include('master.kecamatan.edit') --}}
     @include('master.kecamatan.show')
     @stop
     

@@ -69,6 +69,8 @@ return [
         'name'=>'Nama',
         'aktif'=>'Aktif',
         'kota'=>'Kota',
+        'kode_validation'=> 'Input Salah. Hanya angka dan karakter titik yang boleh diinputkan',
+        'nama_validation'=> 'Input Salah. Minimal 3 karakter dan harus dimulai dengan huruf.',
     ],
     'negara' => [
         'title'          => 'Negara',

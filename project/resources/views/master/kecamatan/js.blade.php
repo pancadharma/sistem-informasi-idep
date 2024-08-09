@@ -1,8 +1,24 @@
 <script>
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+        });
+        }, false);
+    })
+    ();
     // call datatable for kecamatan
     $(document).ready(function() {
-        $('.select2').select2();
-
         $('#provinsi_id').change(function(){
             var provinsi_id = $(this).val();
             if(provinsi_id){
@@ -30,18 +46,26 @@
             });
         });
         
-        $('#kabupaten_id').change(function(){
+        //autofill kecamatan_kode with kabupatan_kode
+        $('#kabupaten_id, #provinsi_id').change(function(){
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
-            $('#kode').val(kode_kab+'.');
+            if(kode_kab != undefined ){
+                $('#kode').val(kode_kab+'.');
+                $('#kode').prop("title", "add two more of kode kecamatan");
+            }else{
+                $('#kode').val('');
+                $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}");
+            }
         });
 
+        //load data kecamatan into datatables
         $('#kecamatan_list').DataTable({
             responsive: true,
             ajax: "{{ route('data.kecamatan') }}",
             processing: true,
             serverSide: true,
-            // stateSave: true,
+            stateSave: true, //to remember last position of data table browsed page
             columns: [
                 {
                     data: "kode",
@@ -124,7 +148,7 @@
     
     // submit button add kecamatan
     $(document).ready(function(){
-        $('#provinsi_add').select2({
+        $('#provinsi_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
             allowClear: true,
             delay: 250,
@@ -136,22 +160,34 @@
         });
 
         //submit data kecamatan
-        $('.btn-add-kecamatan').on('click', function(e){
+        $('#kecamatanForm').on('submit', function(e){
             e.preventDefault();
             var kabupaten_kode = $('#kabupaten_id').children('option:selected').data('id');
             var form_kecamatan = $('#kecamatanForm').serialize();
             form_kecamatan += '&kabupaten_kode=' + kabupaten_kode;
+
             $.ajax({
                 url: '{{ route('kecamatan.store') }}',
                 method: 'POST',
                 data: form_kecamatan,
                 dataType: 'JSON',
+                beforeSend: function() {
+                    $('.btn-add-kecamatan').prop('disabled', true);
+                },
+                complete: function() {
+                    $('.btn-add-kecamatan').prop('disabled', false);
+                },
                 success: function(response){
                     if (response.success === true) {
                         Swal.fire({
                             title: "Success",
                             text: response.message,
-                            icon: "success"
+                            icon: "success",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
                         });
                         $('#kecamatanForm').trigger('reset');
                         $("#provinsi_id").select2({
@@ -165,12 +201,37 @@
                         Swal.fire({
                             title: "Something Wrong !",
                             text: response.message,
-                            icon: "error"
+                            icon: "error",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            }
                         });
                     }
                 },
-                error: function(xhr, status, error){
+                error: function(xhr, status, errors){
+                    var response = JSON.parse(xhr.responseText);
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+
+                    $('#error-message').text(response.message).show();
+                    $('.invalid-feedback').prop('display:block!important', true);
+
+                    if (response.errors) {
+                        if (response.errors.kabupaten_id) {
+                            $('#kabupaten_id-error').text(response.errors.kabupaten_id.join(', ')).show();
+                        }
+                        if (response.errors.kabupaten_kode) {
+                            $('#kabupaten_id-error').text(response.errors.kabupaten_id.join(', ')).show();
+                        }
+                        if (response.errors.kode) {
+                            $('#kode-error').text(response.errors.kode.join(', ')).show();
+                        }
+                        if (response.errors.nama) {
+                            $('#nama-error').text(response.errors.nama.join(', ')).show();
+                        }
+                    }
+                    
                     try {
                         const response = JSON.parse(xhr.responseText);
                         if (response.message) {
@@ -198,6 +259,50 @@
                     });
                 }
             });
+        });
+
+        //edit kecamatan 
+        $('#kecamatan_list tbody').on('click', '.edit-kec-btn', function(e){
+            e.preventDefault();
+            let id_kec = $(this).data('kecamatan-id');
+            // let id_kec = $(this).attr('data-kecamatan-id');
+            Toast.fire({
+                icon: "success",
+                title: "Your Click is Successs",
+            });
+        });
+
+        //show kecamatan
+        $('#kecamatan_list tbody').on('click', '.view-kec-btn', function(e){
+            Toast.fire({
+                icon: "success",
+                title: "Showing Data",
+            });
+        })
+    });
+
+    //validation
+    $(document).ready(function() {
+        $('#kode').on('input', function() {
+            var value = $(this).val();
+            var regex_kode = /^[0-9.]*$/;
+            
+            if (!regex_kode.test(value)) {
+                $('#kode_error').show();
+                $(this).val(value.slice(0, -1)); // Remove the last character
+            } else {
+                $('#kode_error').hide();
+            }
+        });
+        $('#nama').on('input', function() {
+            var value = $(this).val();
+            var regex = /^[^\d][a-zA-Z\s]{2,}$/;
+
+            if (!regex.test(value)) {
+                $('#nama_error').show();
+            } else {
+                $('#nama_error').hide();
+            }
         });
     });
 </script>
