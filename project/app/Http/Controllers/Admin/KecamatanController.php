@@ -82,7 +82,9 @@ class KecamatanController extends Controller
     }
 
     public function edit(Kecamatan $kecamatan){
-
+        $provinsi = Provinsi::withActive()->get(['id', 'nama']);
+        $kecamatan->load('kabupaten');
+        return [$kecamatan, "provinsi" => $provinsi];
     }
 
     public function provinsi(){

@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\KecamatanController;
 use App\Models\Provinsi;
+use App\Http\Controllers\Admin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\ProvinsiController;
-use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\KabupatenController;
+use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 
 /*

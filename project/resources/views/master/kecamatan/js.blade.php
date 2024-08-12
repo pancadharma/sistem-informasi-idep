@@ -244,11 +244,15 @@
         $('#kecamatan_list tbody').on('click', '.edit-kec-btn', function(e){
             e.preventDefault();
             let id_kec = $(this).data('kecamatan-id');
-            // let id_kec = $(this).attr('data-kecamatan-id');
-            Toast.fire({
-                icon: "success",
-                title: "Your Click is Successs",
-            });
+            let action = $(this).data('action');
+            let url = '{{ route('kecamatan.update', ':id') }}'.replace(':id', id_kec);
+
+            $.ajax
+
+            // Toast.fire({
+            //     icon: "success",
+            //     title: "Your Click is Successs",
+            // });
         });
 
         //show kecamatan
