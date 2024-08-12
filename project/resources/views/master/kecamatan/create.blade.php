@@ -35,9 +35,6 @@
                 <input placeholder="{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}" type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="8">
                 <div id="kode-error" class="invalid-feedback"></div>
                 <span id="kode_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kode_validation') }}</span>
-                {{-- @error('kode')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                @enderror --}}
             </div>
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.kecamatan.nama') }}</label>

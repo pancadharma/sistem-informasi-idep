@@ -1,22 +1,8 @@
 <script>
-    (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-            }, false);
-        });
-        }, false);
-    })
-    ();
+    //prevent checkbox clicked in show modal 
+    $('#show-aktif, #aktif_').click(function(event) {
+        event.preventDefault();
+    });
     // call datatable for kecamatan
     $(document).ready(function() {
         $('#provinsi_id').change(function(){
@@ -214,10 +200,7 @@
                 error: function(xhr, status, errors){
                     var response = JSON.parse(xhr.responseText);
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-
-                    // $('#error-message').text(response.message).show();
                     $('.invalid-feedback').prop('display:block!important', true);
-
                     if (response.errors) {
                         if (response.errors.kabupaten_id) {
                             $('#kabupaten_id-error').text(response.errors.kabupaten_id.join(', ')).show();
@@ -229,7 +212,6 @@
                             $('#nama-error').text(response.errors.nama.join(', ')).show();
                         }
                     }
-                    
                     try {
                         const response = JSON.parse(xhr.responseText);
                         if (response.message) {
@@ -258,7 +240,6 @@
                 }
             });
         });
-
         //edit kecamatan 
         $('#kecamatan_list tbody').on('click', '.edit-kec-btn', function(e){
             e.preventDefault();
@@ -272,21 +253,59 @@
 
         //show kecamatan
         $('#kecamatan_list tbody').on('click', '.view-kec-btn', function(e){
-            Toast.fire({
-                icon: "success",
-                title: "Data Loaded",
+            e.preventDefault();
+            let kecamatanId = $(this).data('kecamatan-id');
+            let action = $(this).data('action');
+
+            $.ajax({
+                url: '{{ route('kecamatan.show', ':id') }}'.replace(':id',
+                kecamatanId), // Route with ID placeholder
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    let data = response || [];
+                    if (action === 'view') {
+                        $("#show-kode").text(data.kode);
+                        $("#show-nama").text(data.nama);
+                        $("#show-kabupaten").text(data.kabupaten.nama);
+                        if (data.aktif === 1) {
+                            $('#show-aktif').val(data.aktif);
+                            $("#show-aktif").prop("checked",true); // Set checked to true if value is 1
+                        } else {
+                            $('#show-aktif').val(0);
+                            $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
+                        }
+                        $('#showKecamatanModal').modal('show');
+                        Toast.fire({
+                            icon: "success",
+                            title: "Data Loaded",
+                            position: 'bottom-end',
+                        });
+                    } else {
+                        Swal.fire({
+                            text: "Error",
+                            message: "Failed to fetch data",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error:", textStatus, errorThrown);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred during data fetch',
+                        icon: 'error'
+                    });
+                }
             });
         })
     });
-
     //validation
     $(document).ready(function() {
-
         $('#kode, #nama, #kabupaten_id').on('input', function(){
             var kode = $('#kode').val();
             var kabupaten_id = $('#kabupaten_id').val();
             var nama = $('#nama').val();
-
             if(kode != null || kode !== ''){
                 $('#kabupaten_id-error').text('').hide();
             }
@@ -300,11 +319,9 @@
                 return true;
             }
         });
-
         $('#kode').on('input', function() {
             var value = $(this).val();
             var regex_kode = /^[0-9.]*$/;
-            
             if (!regex_kode.test(value)) {
                 $('#kode_error').show();
                 $(this).val(value.slice(0, -1)); // Remove the last character
@@ -315,7 +332,6 @@
         $('#nama').on('input', function() {
             var value = $(this).val();
             var regex = /^[^\d][a-zA-Z\s]{2,}$/;
-
             if (!regex.test(value)) {
                 $('#nama_error').show();
             } else {
