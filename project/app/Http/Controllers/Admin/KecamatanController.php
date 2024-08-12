@@ -82,9 +82,18 @@ class KecamatanController extends Controller
     }
 
     public function edit(Kecamatan $kecamatan){
-        $provinsi = Provinsi::withActive()->get(['id', 'nama']);
+        // $kabupaten = Kabupaten::where('id',$kecamatan->kabupaten_id)->get(['id','kode' ,'nama']);
+        // $kecamatan->load('kabupaten');
+        // return [$kecamatan, "kab" => $kabupaten];
+
+        $kabupaten = Kabupaten::where('id', $kecamatan->kabupaten_id)->get(['id', 'kode', 'nama']);
+        $provinsi = Provinsi::all(['id', 'nama']); // Fetch all provinsi data
         $kecamatan->load('kabupaten');
-        return [$kecamatan, "provinsi" => $provinsi];
+        return response()->json([
+            'kecamatan' => $kecamatan,
+            'kabupaten' => $kabupaten,
+            'provinsi' => $provinsi
+        ]);
     }
 
     public function provinsi(){
@@ -100,15 +109,17 @@ class KecamatanController extends Controller
 
     }
     public function kab(Request $request){
-        $kabupaten = Kabupaten::where("provinsi_id", $request->id)->get(['id', 'kode', 'nama']);
-        $kab = $kabupaten->map(function($item) {
-            return [
-                'id'        => $item->id,
-                'text'      => $item->kode . ' - ' . $item->nama,
-                'kode'      => $item->kode,
-            ];
-        });
-        return response()->json($kab);
+        $kabupaten = Kabupaten::where('provinsi_id', $request->id)
+                              ->get(['id', 'kode', 'nama'])
+                              ->map(function ($item) {
+                                  return [
+                                      'id'   => $item->id,
+                                      'text' => "{$item->kode} - {$item->nama}",
+                                      'kode' => $item->kode,
+                                  ];
+                              });
+    
+        return response()->json($kabupaten);
     }
 
     public function kab_details(Kabupaten $kabupaten)

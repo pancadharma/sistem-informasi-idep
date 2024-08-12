@@ -243,11 +243,47 @@
         //edit kecamatan 
         $('#kecamatan_list tbody').on('click', '.edit-kec-btn', function(e){
             e.preventDefault();
-            let id_kec = $(this).data('kecamatan-id');
+            let kecamatan_id = $(this).data('kecamatan-id');
             let action = $(this).data('action');
-            let url = '{{ route('kecamatan.update', ':id') }}'.replace(':id', id_kec);
+            let url_update = '{{ route('kecamatan.update', ':id') }}'.replace(':id', kecamatan_id); //change form action url 
 
-            $.ajax
+            $.ajax({
+                url: '{{ route('kecamatan.edit', ':id') }}'.replace(':id', kecamatan_id),
+                method: 'GET',
+                dataType: 'json',
+                success: function(hasil){
+                    $('#editnama').val(hasil.kecamatan.nama);
+                    $('#editkode').val(hasil.kecamatan.kode);
+                    $('#kabupaten_id').val(hasil.kecamatan.kabupaten_id).trigger('change');
+                    $('#provinsi_id').val(hasil.kecamatan.provinsi_id).trigger('change');
+                    $('#editaktif').prop('checked', hasil.kecamatan.aktif == 1);
+                    $('#edit-aktif').val(hasil.kecamatan.aktif);
+
+                    $('#provinsi_id').empty();
+                    $.each(hasil.provinsi, function(key, value) {
+                        $('#provinsi_id').append('<option value="'+ value.id +'">'+ value.nama +'</option>');
+                    });
+                    // Set the selected provinsi
+                    $('#provinsi_id').val(hasil.kecamatan.provinsi_id).trigger('change');
+
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    const errorData = JSON.parse(jqXHR.responseText);
+                    const errors = errorData.errors; // Access the error object
+                    let errorMessage = "";
+                    for (const field in errors) {
+                        errors[field].forEach(error => {
+                            errorMessage +=
+                            `* ${error}\n`; // Build a formatted error message string
+                        });
+                    }
+                    Swal.fire({
+                        title: jqXHR.statusText,
+                        text: errorMessage,
+                        icon: 'error'
+                    });
+                }
+            });
 
             // Toast.fire({
             //     icon: "success",
