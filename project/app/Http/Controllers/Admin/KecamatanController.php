@@ -82,19 +82,24 @@ class KecamatanController extends Controller
     }
 
     public function edit(Kecamatan $kecamatan){
-        // $kabupaten = Kabupaten::where('id',$kecamatan->kabupaten_id)->get(['id','kode' ,'nama']);
-        // $kecamatan->load('kabupaten');
-        // return [$kecamatan, "kab" => $kabupaten];
-
-        $kabupaten = Kabupaten::where('id', $kecamatan->kabupaten_id)->get(['id', 'kode', 'nama']);
-        $provinsi = Provinsi::all(['id', 'nama']); // Fetch all provinsi data
+        $provinsi = Provinsi::all(['id', 'kode', 'nama']);
+        $kabupaten = Kabupaten::where('provinsi_id', $kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']);
         $kecamatan->load('kabupaten');
+        // $kecamatan->with('kabupaten')->get();
+        // $kecamatan = Kecamatan::with('kabupaten:id,kode,nama,provinsi_id', 'kabupaten.provinsi:id,kode,nama')
+        // ->where('kabupaten_id', $kecamatan->kabupaten->id)
+        // ->get();
         return response()->json([
             'kecamatan' => $kecamatan,
             'kabupaten' => $kabupaten,
             'provinsi' => $provinsi
         ]);
     }
+    public function getKabupatenByProvinsi($provinsi_id) {
+        $kabupaten = Kabupaten::where('provinsi_id', $provinsi_id)->get(['id', 'kode', 'nama']);
+        return response()->json($kabupaten);
+    }
+
 
     public function provinsi(){
         $provinsi = Provinsi::withActive()->get(['id','kode','nama']);
@@ -110,14 +115,14 @@ class KecamatanController extends Controller
     }
     public function kab(Request $request){
         $kabupaten = Kabupaten::where('provinsi_id', $request->id)
-                              ->get(['id', 'kode', 'nama'])
-                              ->map(function ($item) {
-                                  return [
-                                      'id'   => $item->id,
-                                      'text' => "{$item->kode} - {$item->nama}",
-                                      'kode' => $item->kode,
-                                  ];
-                              });
+                    ->get(['id', 'kode', 'nama'])
+                    ->map(function ($item) {
+                        return [
+                            'id'   => $item->id,
+                            'text' => "{$item->kode} - {$item->nama}",
+                            'kode' => $item->kode,
+                        ];
+                    });
     
         return response()->json($kabupaten);
     }
@@ -139,8 +144,8 @@ class KecamatanController extends Controller
     }
 
     public function datakecamatan(){
-        $kecamatan = Kecamatan::where('aktif', 1)
-            ->with('kabupaten:id,nama,provinsi_id', 'kabupaten.provinsi:nama')
+        // $kecamatan = Kecamatan::where('aktif', 1)
+        $kecamatan = Kecamatan::with('kabupaten:id,nama,provinsi_id', 'kabupaten.provinsi:nama')
             ->get();
 
         $data = DataTables::of($kecamatan)

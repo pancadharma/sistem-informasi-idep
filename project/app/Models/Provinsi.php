@@ -45,6 +45,10 @@ class Provinsi extends Model
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }
+    public function kab()
+    {
+        return $this->hasMany(Kabupaten::class, 'provinsi_id');
+    }
 
     public function dataAktif()
     {
