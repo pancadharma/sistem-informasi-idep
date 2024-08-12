@@ -77,7 +77,8 @@ class KecamatanController extends Controller
 
     }
     public function show(Kecamatan $kecamatan){
-
+        $kecamatan->load('kabupaten');
+        return response()->json($kecamatan); // Return province data as JSON
     }
 
     public function edit(Kecamatan $kecamatan){

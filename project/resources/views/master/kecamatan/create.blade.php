@@ -1,4 +1,4 @@
-<div class="card card-primary collapsed-card">
+<div id="add_kecamatan" class="card card-primary collapsed-card">
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.kecamatan.title')}}
         <div class="card-tools">
@@ -27,8 +27,8 @@
                     <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" required style="width: 100%">
                         <option>{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}</option>
                     </select>
+                    <div id="kabupaten_id-error" class="invalid-feedback"></div>
                 </div>
-                <div id="kabupaten_id-error" class="invalid-feedback"></div>
             </div>
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.kecamatan.kode') }} {{ trans('cruds.kecamatan.title') }}</label>

@@ -183,12 +183,13 @@
                             title: "Success",
                             text: response.message,
                             icon: "success",
-                            timer: 4000,
+                            timer: 3000,
                             timerProgressBar: true,
                             didOpen: ()=>{
                                 Swal.showLoading();
                             },
                         });
+                        $(".btn-tool").trigger('click');
                         $('#kecamatanForm').trigger('reset');
                         $("#provinsi_id").select2({
                             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
@@ -214,14 +215,11 @@
                     var response = JSON.parse(xhr.responseText);
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
 
-                    $('#error-message').text(response.message).show();
+                    // $('#error-message').text(response.message).show();
                     $('.invalid-feedback').prop('display:block!important', true);
 
                     if (response.errors) {
                         if (response.errors.kabupaten_id) {
-                            $('#kabupaten_id-error').text(response.errors.kabupaten_id.join(', ')).show();
-                        }
-                        if (response.errors.kabupaten_kode) {
                             $('#kabupaten_id-error').text(response.errors.kabupaten_id.join(', ')).show();
                         }
                         if (response.errors.kode) {
@@ -276,13 +274,33 @@
         $('#kecamatan_list tbody').on('click', '.view-kec-btn', function(e){
             Toast.fire({
                 icon: "success",
-                title: "Showing Data",
+                title: "Data Loaded",
             });
         })
     });
 
     //validation
     $(document).ready(function() {
+
+        $('#kode, #nama, #kabupaten_id').on('input', function(){
+            var kode = $('#kode').val();
+            var kabupaten_id = $('#kabupaten_id').val();
+            var nama = $('#nama').val();
+
+            if(kode != null || kode !== ''){
+                $('#kabupaten_id-error').text('').hide();
+            }
+            if(kabupaten_id != null && kabupaten_id !== ''){
+                $('#kode-error').text('').hide();
+            }
+            if(nama != null && nama !== ''){
+                $('#nama-error').text('').hide();
+            } else {
+                // $('#nama-error').text('Nama is required').show();
+                return true;
+            }
+        });
+
         $('#kode').on('input', function() {
             var value = $(this).val();
             var regex_kode = /^[0-9.]*$/;
