@@ -20,8 +20,6 @@
                             <option value="{{ $data }}" {{ old('provinsi_id') == $data ? 'selected' : '' }}>{{ $data }} - {{ $entry }}</option>
                         @endforeach
                     </select>
-                    {{-- <select id="provinsi_id" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%"></select> --}}
-                    
                 </div>
                 <div class="form-group">
                     <label for="edit_kabupaten_id">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
@@ -29,15 +27,24 @@
                         <select id="edit_kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" style="width: 100%" required>
                             <option>{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}</option>
                         </select>
+                        <div id="edit_kabupaten_id-error" class="invalid-feedback"></div>
+                        <div id="edit_kabupaten-error" class="invalid-feedback"></div>
+                        <span id="edit_kabupaten_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kode_validation') }}</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="kode">{{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}</label>
+                    <label for="editkode">{{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}</label>
                     <input placeholder="" type="text" id="editkode" name="kode" class="form-control" required data-placement="left" title="Update {{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}" data-toggle="tooltip" data-placement="top" maxlength="8">
+
+                    <div id="editkode-error" class="invalid-feedback"></div>
+                    <span id="editkode_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kode_validation') }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="nama">{{ trans('cruds.kecamatan.nama') }}</label>
+                    <label for="editnama">{{ trans('cruds.kecamatan.nama') }}</label>
                     <input type="text" id="editnama" name="nama" class="form-control" required maxlength="200">
+
+                    <div id="editnama-error" class="invalid-feedback"></div>
+                    <span id="editnama_error" class="invalid-feedback">{{ trans('cruds.kecamatan.nama_validation') }}</span>
                 </div>
     
                 <div class="form-group">
@@ -55,15 +62,3 @@
     <x-slot name="footerSlot">
     </x-slot>
 </x-adminlte-modal>
-
-{{-- <div class="modal fade" id="editKecamatanModal2" tabindex="-1" role="dialog" aria-labelledby="editKecamatanModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="card card-primary">
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}

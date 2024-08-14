@@ -9,15 +9,16 @@ use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Exception;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StoreKecamatanRequest;
 use App\Http\Requests\UpdateKecamatanRequest;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-
-
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class KecamatanController extends Controller
 {
@@ -74,6 +75,32 @@ class KecamatanController extends Controller
     }
     public function update(UpdateKecamatanRequest $request, Kecamatan $kecamatan){
         // abort_if(Gate::denies('kecamatan_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        try{
+            $data = $request->validated();
+            // $data = Kecamatan::findOrFail($kecamatan);
+            // $data->update($request->validated());
+
+            return response()->json([
+                'success'   => true,
+                'message'   => __('cruds.data.data') .' '.__('cruds.kecamatan.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+                'data'      => $data,
+                'response'  => Response::HTTP_ACCEPTED
+            ]);
+            
+        }catch(\Exception $e){
+            Log::error('Error updating Kecamatan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false, 
+                'message' => 'An error occurred while updating the record.',
+                'error'    => Response::HTTP_NOT_ACCEPTABLE,
+            ],500);
+            // return Response::json(['success' => false, 'message' => 'An error occurred while updating the record.'], 500);
+
+        }
+
+    return redirect()->route('kecamatan.index')->with('success', 'Kecamatan updated successfully.');
+
 
     }
     public function show(Kecamatan $kecamatan){

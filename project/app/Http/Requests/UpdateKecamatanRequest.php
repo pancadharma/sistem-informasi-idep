@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\MatchKabupatenID;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateKecamatanRequest extends FormRequest
@@ -11,7 +13,8 @@ class UpdateKecamatanRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        // return Gate::allows('kecamatan_update');
+        return true;
     }
 
     /**
@@ -21,8 +24,21 @@ class UpdateKecamatanRequest extends FormRequest
      */
     public function rules(): array
     {
+        $kabupatenID = $this->input('kabupaten_kode');
+        $rule = new MatchKabupatenID($kabupatenID);
+
         return [
-            //
+            'kabupaten_id'      => ['required', 'integer'],
+            'kabupaten_kode'    => ['required', 'string', 'size:5'],
+            'kode'              => [
+                'required',
+                'string',
+                'size:8',
+                $rule,
+                Rule::unique('kecamatan')->ignore($this->route('kecamatan'))
+            ],
+            'nama'              => ['required', 'string', 'max:200', 'min:3'],
+            'aktif'             => ['integer'],
         ];
     }
 }
