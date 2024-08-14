@@ -73,8 +73,9 @@ return [
         'name'=>'Name',
         'aktif'=>'Active',
         'kota'=>'City',
-        'kode_validation'=> 'Invalid input. Only numbers and dots are allowed.',
-        'nama_validation'=> 'Invalid input. Must be at least 3 characters and cannot start with a number.',
+        'kode_validation'   => 'Invalid input. Please follow patern xx.xx.xx . Only numbers and dots are allowed.',
+        'kab_validation'    => 'Invalid input. Please Select Regency.',
+        'nama_validation'   => 'Invalid input. Must be at least 3 characters and cannot start with a number.',
     ],
     'negara' => [
         'title'          => 'Negara',

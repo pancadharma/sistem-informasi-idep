@@ -2,34 +2,9 @@
 
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Title
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the default title of your admin panel.
-    |
-    | For detailed instructions you can look the title section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
-
     'title' => 'IDEP Foundation',
     'title_prefix' => '- ',
     'title_postfix' => ' -',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Favicon
-    |--------------------------------------------------------------------------
-    |
-    | Here you can activate the favicon.
-    |
-    | For detailed instructions you can look the favicon section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
-    |
-    */
 
     'use_ico_only' => false,
     'use_full_favicon' => true,
@@ -480,6 +455,11 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/jquery-validation/jquery.validate.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/jquery-validation/additional-methods.min.js',
                 ],
             ],
         ],

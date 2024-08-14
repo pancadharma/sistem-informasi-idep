@@ -76,11 +76,10 @@
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" alt="☑️" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                                row.id + '"></label></div>';
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' +row.id+ '" data-aktif-id="' + row.id +
+                                '" class="icheck-primary" alt="☑️" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +row.id+ '"></label></div>';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' +row.id+ '" data-aktif-id="' + row.id +
                                 '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
                                 row.id + '"></label></div>';
                         }
@@ -152,9 +151,7 @@
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
             allowClear: true,
             delay: 250,
-        });
-
-        
+        });       
     });
     
     // submit button add kecamatan
@@ -255,32 +252,69 @@
             });
         });
 
+        function checkValidity(field) {
+            var $field = $(field);
+            var nama = $('#editnama');
+            if (!$field.val() || $field[0].checkValidity() === false) {
+                $field.addClass('is-invalid').removeClass('is-valid');
+                return false;
+            } else {
+                $field.addClass('is-valid').removeClass('is-invalid');
+                return true;
+            }
+        }
+        $('#editKecamatanForm').find('input, select, textarea').on('input change', function() {
+            checkValidity(this);
+        });
         //Submit Update Kecamatan Modal Form
-        $('#editKecamatan').on('submit', function(e){
-            e.preventDefault;
+        $('#editKecamatanForm').on('submit', function(e){
+            e.preventDefault();
             $('#editaktif').change(function() {
                 $('#edit-aktif').val(this.checked ? 1 : 0);
             });
+            var formIsValid = true;
+            $(this).find('input, select, textarea').each(function() {
+                if (!checkValidity(this)) {
+                    formIsValid = false;
+                }
+            });
 
-            let idKec = $('#id').val();
+            let kabupaten_kode = $('#edit_kabupaten_id').children('option:selected').data('id');
             let formData = $(this).serialize();
-            let url = $(this).attr("action");
+                formData += '&kabupaten_kode=' + kabupaten_kode;
+            let idKec = $('#id').val();
+            let url_update = '{{ route('kecamatan.update', ':kec') }}'.replace(':kec', idKec);
+            
+            if (formIsValid) {
             $.ajax({
-                url: url,
+                url: url_update,
                 type: 'PUT',
                 data: formData,
                 success: function(response) {
-                    if (response.success) {
+                    if (response.success === true ) {
                         Swal.fire({
-                            title: jqXHR.statusText,
-                            text: errorMessage,
-                            icon: 'error'
+                            title: response.data.nama,
+                            text: response.message,
+                            icon: 'success',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            }
                         });
+                        $('#editKecamatanModal').modal('hide');
+                        $(this).trigger('reset');
+                        $('#kecamatan_list').DataTable().ajax.reload();
                     } else {
                         Toast.fire({
                             icon: "error",
                             title: "Failed to Update",
                             position: 'top-end',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            }
                         });
                     }
                 },
@@ -299,10 +333,15 @@
                         text: errorMessage,
                         icon: 'error'
                     });
+                    return false;
                 }
-            })
+            });
+            return true;
+        } else {
+            e.preventDefault();
+        }//valid
 
-        });      
+        });
 
         //edit kecamatan modal show
         $('#kecamatan_list tbody').on('click', '.edit-kec-btn', function(e){
@@ -315,25 +354,18 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function(hasil){
-
                     $("#editKecamatanForm").trigger('reset');
                     $("#editKecamatanForm").attr("action", url_update);
-                    
                     $('#id').val(hasil.kecamatan.id);
                     $('#editnama').val(hasil.kecamatan.nama);
                     $('#editkode').val(hasil.kecamatan.kode);
-                    
                     $('#editaktif').prop('checked', hasil.kecamatan.aktif == 1);
                     $('#edit-aktif').val(hasil.kecamatan.aktif);
-                    
-                    
                     $('#edit_provinsi_id').empty();
                     $.each(hasil.provinsi, function(key, value) {
                         $('#edit_provinsi_id').append('<option value="'+ value.id +'">'+value.kode+' - '+ value.nama +'</option>');
                     });
-                    // $('#edit_provinsi_id').val(hasil.kecamatan.kabupaten.provinsi_id).trigger('change');
                     $('#edit_provinsi_id').val(hasil.kecamatan.kabupaten.provinsi_id).trigger('change');
-
                     let data = hasil.kabupaten.map(function(item) {
                         return {
                             id: item.id,
@@ -413,7 +445,7 @@
                     dataType: 'json',
                     success: function(hasil) {
                         $("#edit_kabupaten_id").empty();
-                        $('#edit_kabupaten_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
+                        $('#edit_kabupaten_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
                         if(hasil){
                             $.each(hasil, function(index, item) {
                                 $("#edit_kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
@@ -446,17 +478,18 @@
         $('#kode, #nama, #kabupaten_id').on('input', function(){
             var kode = $('#kode').val();
             var kabupaten_id = $('#kabupaten_id').val();
+            var edit_kabupaten_id = $('#edit_kabupaten_id').val();
             var nama = $('#nama').val();
+            var editnama = $('#editnama').val();
             if(kode != null || kode !== ''){
                 $('#kabupaten_id-error').text('').hide();
             }
-            if(kabupaten_id != null && kabupaten_id !== ''){
+            if(kabupaten_id != null && kabupaten_id !== '' || edit_kabupaten_id != null && edit_kabupaten_id !== ''){
                 $('#kode-error').text('').hide();
             }
-            if(nama != null && nama !== ''){
+            if(nama != null && nama !== '' || editnama != null && editnama !== ''){
                 $('#nama-error').text('').hide();
             } else {
-                // $('#nama-error').text('Nama is required').show();
                 return true;
             }
         });

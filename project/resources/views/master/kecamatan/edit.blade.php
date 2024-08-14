@@ -1,15 +1,7 @@
 <x-adminlte-modal id="editKecamatanModal" title=" {{ trans('global.update') .' '.trans('cruds.kecamatan.title')}}" size="lg" theme="info" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
     <div style="height:40%;">
-        {{-- <div class="modal-title">
-            {{ trans('global.create')}} {{trans('cruds.kecamatan.title')}}
-            <div class="card-tools">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div> --}}
         <div class="card-body">
-            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editKecamatanForm" autocomplete="off">
+            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editKecamatanForm" autocomplete="off" novalidate>
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -29,12 +21,12 @@
                         </select>
                         <div id="edit_kabupaten_id-error" class="invalid-feedback"></div>
                         <div id="edit_kabupaten-error" class="invalid-feedback"></div>
-                        <span id="edit_kabupaten_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kode_validation') }}</span>
+                        <span id="edit_kabupaten_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kab_validation') }}</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editkode">{{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}</label>
-                    <input placeholder="" type="text" id="editkode" name="kode" class="form-control" required data-placement="left" title="Update {{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}" data-toggle="tooltip" data-placement="top" maxlength="8">
+                    <input placeholder="Please enter in the format xx.xx.xx" type="text" id="editkode" name="kode" class="form-control" required data-placement="left" title="Update {{ trans('cruds.kecamatan.kode') .' '. trans('cruds.kecamatan.title') }}" data-toggle="tooltip" data-placement="top" maxlength="8" pattern="^\d{2}\.\d{2}\.\d{2}$" >
 
                     <div id="editkode-error" class="invalid-feedback"></div>
                     <span id="editkode_error" class="invalid-feedback">{{ trans('cruds.kecamatan.kode_validation') }}</span>
@@ -55,7 +47,7 @@
                         <label for="editaktif">{{ trans('cruds.status.aktif', [], 'en') ?: trans('cruds.status.tidak_aktif', [], 'en') }}</label>
                     </div>
                 </div>
-                <button type="submit" id="editKecamatan" class="btn btn-success float-right" ><i class="fas fa-update"></i> {{ trans('global.update') }}</button>
+                <button type="submit" id="editKecamatan" class="btn btn-success float-right btnUpdateKecamatan" ><i class="fas fa-update"></i> {{ trans('global.update') }}</button>
             </form>
         </div>
     </div>

@@ -78,30 +78,21 @@ class KecamatanController extends Controller
         
         try{
             $data = $request->validated();
-            // $data = Kecamatan::findOrFail($kecamatan);
-            // $data->update($request->validated());
-
+            $kecamatan->update($data);
             return response()->json([
                 'success'   => true,
                 'message'   => __('cruds.data.data') .' '.__('cruds.kecamatan.title') .' '. $request->nama .' '. __('cruds.data.updated'),
-                'data'      => $data,
+                'data'      => $kecamatan,
                 'response'  => Response::HTTP_ACCEPTED
-            ]);
-            
+            ], Response::HTTP_ACCEPTED);
         }catch(\Exception $e){
             Log::error('Error updating Kecamatan: ' . $e->getMessage());
             return response()->json([
                 'success' => false, 
                 'message' => 'An error occurred while updating the record.',
                 'error'    => Response::HTTP_NOT_ACCEPTABLE,
-            ],500);
-            // return Response::json(['success' => false, 'message' => 'An error occurred while updating the record.'], 500);
-
+            ],Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-    return redirect()->route('kecamatan.index')->with('success', 'Kecamatan updated successfully.');
-
-
     }
     public function show(Kecamatan $kecamatan){
         $kecamatan->load('kabupaten');
