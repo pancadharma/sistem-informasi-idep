@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin;
 use App\Models\Provinsi;
+use App\Http\Controllers\Admin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\ProvinsiController;
-use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\KabupatenController;
+use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 
 /*
@@ -74,6 +76,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('datakabupaten', [KabupatenController::class, 'datakabupaten'])->name('data.kabupaten');
     Route::get('kabupaten.figma', [KabupatenController::class, 'figma'])->name('kabupaten.figma');
     Route::resource('kabupaten', KabupatenController::class);
+
+    Route::get('datakecamatan', [KecamatanController::class, 'datakecamatan'])->name('data.kecamatan');
+    Route::get('prov.data', [KecamatanController::class, 'provinsi'])->name('prov.data');
+    Route::get('prov.data/{provinsi}', [KecamatanController::class, 'provinsi_details'])->name('prov_data');
+    Route::get('kab.data/{id}', [KecamatanController::class, 'kab'])->name('kab.data');
+    Route::get('kab.data/{kabupaten}', [KecamatanController::class, 'kab_details'])->name('kab_data');
+    
+    Route::get('kabupaten_data/{id}', [KecamatanController::class, 'getKabupatenByProvinsi'])->name('kabupaten_data');
+    Route::resource('kecamatan', KecamatanController::class);
 });
 
 

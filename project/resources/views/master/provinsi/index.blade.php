@@ -66,9 +66,9 @@
                         "render": function(data, type, row) {
 
                             if (data === 1) {
-                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" type="checkbox" disabled checked><label for="aktif_' + row.id + '"></label></div>';// return '☑️';
+                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" disabled checked><label for="aktif_' + row.id + '"></label></div>';// return '☑️';
                             } else {
-                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" type="checkbox" disabled><label for="aktif_' + row.id + '"></label></div>';
+                                return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" title="{{ trans('cruds.status.tidak_aktif')}}" type="checkbox" disabled><label for="aktif_' + row.id + '"></label></div>';
                             }
                         }
                     },
@@ -80,15 +80,41 @@
                     }
                 ],
                 layout: {
+                    topStart: {
+                        buttons: [
+                            {
+                                extend: 'print',
+                                exportOptions: {
+                                    columns: [0, 1,]
+                                }
+                            },
+                            {
+                                extend: 'excel',
+                                exportOptions: {
+                                    columns: [0, 1, ]
+                                }
+                            },{
+                                extend: 'pdf', 
+                                exportOptions: {
+                                    columns: [0, 1,]
+                                }    
+                            },{
+                                extend: 'copy',
+                                exportOptions: {
+                                    columns: [0, 1,]
+                                }
+                            },
+                            'colvis',
+                        ],
+                    },
                     bottomStart: {
-                        buttons: ['csv', 'excel', 'pdf', 'copy', 'print', 'colvis']
+                        pageLength: 5,
                     }
                 },
                 order: [
                     [2, 'asc']
                 ],
-                pageLength: 5,
-                lengthMenu: [5, 10, 50, 100, 500],
+                lengthMenu: [5, 25, 50, 100, 500],
             });
         });
     </script>

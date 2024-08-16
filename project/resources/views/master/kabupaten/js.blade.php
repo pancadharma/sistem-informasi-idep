@@ -6,16 +6,21 @@
             ajax: "{{ route('data.kabupaten') }}",
             processing: true,
             serverSide: true,
-            stateSave: true,
-            "columns": [
+            // stateSave: true,
+            columns: [
                 {
                     data: "kode",
                     width: "5%",
                     className: "text-center"
                 },
                 {
+                    data: "type",
+                    width: "5%",
+                    className: "text-center"
+                },
+                {
                     data: "nama",
-                    width: "20%"
+                    width: "10%"
                 },
                 {
                     data: 'provinsi.nama',
@@ -31,11 +36,11 @@
                     render: function(data, type, row) {
                         if (data === 1) {
                             return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" type="checkbox" checked><label for="aktif_' +
-                                row.id + '"></label></div>'; // return '☑️';
+                                '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
+                                row.id + '"></label></div>';
                         } else {
                             return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" type="checkbox" ><label for="aktif_' +
+                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
                                 row.id + '"></label></div>';
                         }
                     }
@@ -44,19 +49,45 @@
                     data: "action",
                     width: "8%",
                     className: "text-center",
-                    orderable: false
+                    orderable: false,
                 }
             ],
-            layout: {
+             layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3]
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3]
+                            }
+                        },{
+                            extend: 'pdf', 
+                            exportOptions: {
+                                columns: [0, 1, 2, 3]
+                            }    
+                        },{
+                            extend: 'copy',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3]
+                            }
+                        },
+                        'colvis',
+                    ],
+                },
                 bottomStart: {
-                    buttons: ['csv', 'excel', 'pdf', 'copy', 'print', 'colvis']
+                    pageLength: 5,
                 }
             },
             order: [
                 [2, 'asc']
             ],
-            pageLength: 5,
-            lengthMenu: [5, 10, 50, 100, 500],
+            lengthMenu: [5, 25, 50, 100, 500],
         });
     });
 
@@ -71,8 +102,6 @@
 
             let idKabupaten = $('#id').val();
             let formData = $(this).serialize();
-
-            console.log(formData);
             $.ajax({
                 url: '{{ route('kabupaten.update', ':id_p') }}'.replace(':id_p', idKabupaten),
                 method: 'PUT',
@@ -83,7 +112,12 @@
                         Swal.fire({
                             title: "Success",
                             html: response.message,
-                            icon: "success"
+                            icon: "success",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
                         });
                         $('#editKabupatenModal').modal('hide');
                         $('#editKabupatenForm').trigger('reset');
@@ -196,8 +230,8 @@
                     $('#editKabupatenModal').modal('show'); // Show the modal
                     
                     // set select 2 data
-                    let id_prov = response[0].provinsi.id;
-                    let nama_prov = response[0].provinsi.nama;
+                    let id_prov   = response[0].provinsi.id;
+                    let nama_prov = response[0].type;
                     
                     let data = response.results.map(function(item) {
                         return {
@@ -205,15 +239,20 @@
                             text: item.id+' - '+ item.nama,
                         };
                     });
+
+                    let type = response[0].type;
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
                         data : data,
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
-                    let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
-                    $('#provinsi_id').append(selected_data).trigger('change');
+                    $('#type_edit').select2({
+                        placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
+                    });
+                    // let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
+                    // $('#provinsi_id').append(selected_data).trigger('change');
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
-
+                    $('#type_edit').val(type).trigger('change');
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
@@ -237,6 +276,9 @@
 
     //call add kabupaten modal form
     $(document).ready(function() {
+        $('#type').select2({
+            placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}"
+        });
         $('.add-kabupaten').on('click', function(e){
             e.preventDefault();
             $.ajax({
@@ -272,7 +314,8 @@
                         });
                     }
                     Swal.fire({
-                        title: jqXHR.statusText,
+                        // title: jqXHR.statusText,
+                        title: 'ERROR !',
                         text: errorMessage,
                         icon: 'error'
                     });
@@ -299,7 +342,12 @@
                         Swal.fire({
                             title: "Success",
                             text: response.message,
-                            icon: "success"
+                            icon: "success",
+                            timer: 4000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
                         });
                         $('#addKabupaten').modal('hide');
                         $('#kabupatenForm').trigger('reset');
@@ -332,7 +380,7 @@
 
                         if (response.errors) {
                         const errors = response.errors;
-                        errorMessage += '<br><br><ul>';
+                        errorMessage += '<br><br><ul style="text-align:left!important">';
                         for (const field in errors) {
                             if (errors.hasOwnProperty(field)) {
                             errors[field].forEach(err => {
@@ -354,9 +402,5 @@
             });
             
         });
-    });
-
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
     });
 </script>

@@ -46,11 +46,28 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
-{{-- <script>
-    $(document).ready(function() {
-        // Add your common script logic here...
+<script>
+    $(document).on('select2:open', function() {
+        setTimeout(function() {
+            document.querySelector('.select2-search__field').focus();
+        }, 100);
     });
-</script> --}}
+    
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    const Toast = Swal.mixin({
+        toast: true,
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+</script>
 @endpush
 
 {{-- Add common CSS customizations --}}

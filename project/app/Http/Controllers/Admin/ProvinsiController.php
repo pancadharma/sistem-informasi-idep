@@ -13,6 +13,7 @@ use App\Http\Requests\UpdateProvinsiRequest;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
+use Gate;
 
 
 

@@ -7,6 +7,7 @@ use Exception;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use Illuminate\Http\Request;
+use App\Rules\MatchProvinsiId;
 use PhpParser\Node\Stmt\TryCatch;
 use Flasher\Prime\FlasherInterface;
 use App\Http\Controllers\Controller;
@@ -43,13 +44,15 @@ class KabupatenController extends Controller
     }
     public function store(StoreKabupatenRequest $request)
     {
-        // $data = $request->validated();
-        // return response()->json([
-        //     'success'   => true,
-        //     'message'   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.added'),
-        //     'data'      => $data,
-        // ], 201);
 
+        // $request->validate([
+        //     'provinsi_id' => ['required', 'integer'],
+        //     'kode' => ['required', new MatchProvinsiId($request->provinsi_id)],
+        //     'nama' => ['required', 'string', 'max:200'],
+        //     'type' => ['required', 'string'],
+        //     'aktif' => ['integer'],
+        // ]);
+        
         try {
             $data = $request->validated();
             Kabupaten::create($data);
@@ -104,7 +107,7 @@ class KabupatenController extends Controller
     public function edit(Kabupaten $kabupaten)
     {
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
-        $kabupaten->load('provinsi');   
+        $kabupaten->load('provinsi');
         return [$kabupaten, "results" => $provinsi];
     }
 
@@ -114,12 +117,12 @@ class KabupatenController extends Controller
         $data = $request->all();
         try {
             $data = $request->validated();
-            // dd($data);
             $kabupaten->update($data);
             
             return response()->json([
                 'status'    => 'success',
-                'message'   => "Data ". $request->nama ." Updated Successfully",
+                // 'message'   => "Data ". $request->nama ." Updated Successfully",
+                "message"   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.updated'),
                 'data'      => $kabupaten,
             ],201);
 

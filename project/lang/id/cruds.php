@@ -47,7 +47,7 @@ return [
         'title_singular' => 'Provinsi',
         'title' => 'Provinsi',
         'kode'=>'Kode',
-        'nama'=>'Name',
+        'nama'=>'Nama',
     ],
     'kabupaten' => [
         'list' => 'Daftar Kabupaten',
@@ -59,6 +59,19 @@ return [
         'aktif'=>'Aktif',
         'provinsi'=>'Provinsi',
         'kota'=>'Kota',
+    ],
+    'kecamatan' => [
+        'list' => 'Daftar Kecamatan',
+        'nama' => 'Nama Kecamatan',
+        'title_singular' => 'Kecamatan',
+        'title' => 'Kecamatan',
+        'kode'=>'Kode',
+        'name'=>'Nama',
+        'aktif'=>'Aktif',
+        'kota'=>'Kota',
+        'kode_validation'=> 'Input Salah. Kode harus sesuai pola xx.xx.xx . Hanya angka dan karakter titik yang boleh diinputkan',
+        'kab_validation' => 'Input Tidak Valid. Silahkan pilih Kabupaten.',
+        'nama_validation'=> 'Input Salah. Minimal 3 karakter dan harus dimulai dengan huruf.',
     ],
     'negara' => [
         'title'          => 'Negara',

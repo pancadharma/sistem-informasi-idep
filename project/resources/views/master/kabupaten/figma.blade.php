@@ -8,6 +8,11 @@
     <div class="card card-primary">
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
                 <div class="card-body">
                 <form action="{{ route('kabupaten.store')}}" method="POST" class="resettable-form" id="kabupatenForm" autocomplete="off">
@@ -22,12 +27,20 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="kode">{{ trans('cruds.kabupaten.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
                         <input placeholder="" type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required data-toggle="tooltip" data-placement="top" maxlength="5">
                     </div>
                     <div class="form-group">
-                        <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
+                        <select id="type" name="type" class="form-control select2 type" style="width: 100%">
+                            <option></option>
+                            <option value="Kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
+                            <option value="Kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                        </select>
                     </div>
                     <div class="form-group">
                     <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.kabupaten.title') }}</strong>
@@ -46,6 +59,7 @@
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
+                        <th class="center">DT II</th>
                         <th>{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</th>
                         <th>{{ trans('cruds.provinsi.title') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>

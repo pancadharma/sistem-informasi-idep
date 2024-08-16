@@ -20,8 +20,13 @@ class Provinsi extends Model
     protected $fillable = [
         'kode',
         'nama',
+        'kota',
         'aktif',
         'id_negara',
+        'latitude',
+        'longitude',
+        'coordinates',
+        'path',
         'created_at',
         'updated_at',
     ];
@@ -37,6 +42,10 @@ class Provinsi extends Model
     }
 
     public function kabupaten_kota()
+    {
+        return $this->hasMany(Kabupaten::class, 'provinsi_id');
+    }
+    public function kab()
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }

@@ -27,6 +27,7 @@ class UpdateKabupatenRequest extends FormRequest
             'kode'          => ['string','max:15','required','unique:provinsi,kode,' . request()->route('kabupaten')->id,],
             'nama'          => ['required','string', 'max:255',],
             'provinsi_id'   => ['required','integer',],
+            'type'          => ['required','string'],
             'aktif'         => ['integer',],
         ];
     }
@@ -42,8 +43,8 @@ class UpdateKabupatenRequest extends FormRequest
             'nama.required'        => 'The nama field is required.',
             'nama.string'          => 'The nama field must be a string.',
             'nama.max'             => 'The nama field may not be greater than 200 characters.',
-            'provinsi_id.required' => 'The provinsi_id field is required.',
-            'provinsi_id.integer'  => 'The provinsi_id field must be an integer.',
+            'provinsi_id.required' => 'The Provinsi field is required.',
+            'provinsi_id.integer'  => 'The Provinsi field must be an integer.',
         ];
     }
 }
