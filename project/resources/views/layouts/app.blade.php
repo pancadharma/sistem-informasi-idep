@@ -46,6 +46,7 @@
 {{-- Add common Javascript/Jquery code --}}
 
 @push('js')
+@section('plugins.Sweetalert2', true)
 <script>
     $(document).on('select2:open', function() {
         setTimeout(function() {

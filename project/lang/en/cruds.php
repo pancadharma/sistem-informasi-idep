@@ -77,6 +77,25 @@ return [
         'kab_validation'    => 'Invalid input. Please Select Regency.',
         'nama_validation'   => 'Invalid input. Must be at least 3 characters and cannot start with a number.',
     ],
+    'desa' => [
+        'list'          => 'List Villages',
+        'title'         => 'Villages',
+        'form'          => [
+            'id'        => 'ID',
+            'nama'      => 'Village Name',
+            'kode'      => 'Code',
+            'kab'       => 'Regency Name',
+            'kec'       => 'Subdistrict Name',
+            'prov'      => 'Province Name',
+            'aktif'     => 'Active',
+        ],
+        'validation'    => [
+            'nama'      => 'Invalid input. Please Input a valid Village Name.',
+            'kode'      => 'Invalid input. Please Input a valid Village Code.',
+            'kec'       => 'Invalid input. Please Select a Subdistrict.',
+            'kab'       => 'Invalid input. Please Select a Regency.',
+        ],
+    ],
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',
