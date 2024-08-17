@@ -8,40 +8,42 @@
             processing: true,
             serverSide: true,
             deferRender: true,
-            stateSave: true, 
+            stateSave: true,
             columns: [
                 {
                     data: "kode",
+                    // name: 'kelurahan.kode', //needed when using alternative query
                     width: "5%",
                     className: "text-center",
-                    orderable:false
+                    orderable: false
                 },
                 {
                     data: "nama",
+                    // name: 'kelurahan.nama',
                     width: "5%",
                     className: "text-left"
                 },
                 { 
-                    data: "nama",
+                    // data: "kecamatan_nama", // Update to match the server-side column name
+                    data: "kecamatan.nama", // Update to match the server-side column name
+                    // name: 'kecamatan.nama',
                     width: "15%", 
-                    className: "text-left",
-                    "render": function(data, type, row) {
-                        return row.kecamatan.nama;
-                    }
+                    className: "text-left"
                 },
                 {
                     data: "aktif",
+                    // name: 'kelurahan.aktif',
                     width: "5%",
                     className: "text-center",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' +row.id+ '" data-aktif-id="' + row.id +
-                                '" class="icheck-primary" alt="☑️" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +row.id+ '"></label></div>';
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="' + row.id +
+                                '" class="icheck-primary" alt="☑️" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' + row.id + '"></label></div>';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' +row.id+ '" data-aktif-id="' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="' + row.id +
+                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox"><label for="aktif_' +
                                 row.id + '"></label></div>';
                         }
                     }
@@ -53,13 +55,13 @@
                     orderable: false,
                 }
             ],
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [0, 1, 2]
+                                columns: [0, 1, 2] // Ensure these indices match your visible columns
                             }
                         },
                         {
@@ -67,12 +69,14 @@
                             exportOptions: {
                                 columns: [0, 1, 2]
                             }
-                        },{
-                            extend: 'pdf', 
+                        },
+                        {
+                            extend: 'pdf',
                             exportOptions: {
                                 columns: [0, 1, 2]
-                            }    
-                        },{
+                            }
+                        },
+                        {
                             extend: 'copy',
                             exportOptions: {
                                 columns: [0, 1, 2]
@@ -86,7 +90,7 @@
                 }
             },
             order: [
-                [2, 'asc']
+                [2, 'asc'] // Ensure this matches the index of the `kecamatan_nama` column
             ],
             lengthMenu: [5, 25, 50, 100, 500],
         });
@@ -131,6 +135,35 @@
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         $('#provinsi_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
             allowClear: true,
@@ -166,19 +199,4 @@
             dropdownParent: $('#editKecamatanModal')
         });
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
