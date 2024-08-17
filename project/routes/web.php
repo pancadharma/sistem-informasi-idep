@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('kecamatan', KecamatanController::class);
 
     Route::get('data-desa', [DesaController::class, 'getDesa'])->name('data.desa');
+    Route::get('data-kec/{id}', [DesaController::class, 'getKecamatan'])->name('kec.data');
     Route::resource('desa', DesaController::class);
 });
 

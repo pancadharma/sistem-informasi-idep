@@ -87,7 +87,7 @@ return [
         ],
         'validation'    => [
             'nama'      => 'Input Salah. Silahkan Masukan Nama Desa.',
-            'kode'      => 'Input Salah. Silahkan Masukan Kode Desa.',
+            'kode'      => 'Input Salah. Silahkan Masukan Kode Desa. Format xx.xx.xx.xxxx',
             'kec'       => 'Input Salah. Silahkan Pilih kecamatan.',
             'kab'       => 'Input Salah. Silahkan pilih Kabupaten.',
         ],

@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
 use App\Models\Provinsi;
+use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Kecamatan;
-use Illuminate\Support\Facades\Gate;
 // use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\StoreDesaRequest;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\ValidationData;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class DesaController extends Controller
 {
@@ -20,59 +26,51 @@ class DesaController extends Controller
         
         $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
         return view('master.desa.index', compact('provinsi'));
-
-        // $json = response()->json([
-        //     'provinsi'  => $provinsi,
-        //     'message'   => "Data Provinsi Loaded",
-        //     'success'   => true,
-        //     'status'    => Response::HTTP_CREATED
-        // ]);
     }
 
-    // function getDesa(Request $request) {
-    //     // $desa = Kelurahan::with('kec:id,kode,nama,kabupaten_id', 'kecamatan.kabupaten:nama')->get();
-    //     if($request->ajax()){
-    //         // $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
-    //         // $desa = Kelurahan::with('kec:id,kode,nama,kabupaten_id','kec.kabupaten:id,nama');
-    //         $desa = Kelurahan::with(['kecamatan:id,kode,nama','kecamatan.kabupaten:id,nama']);
-    //         $data = DataTables::of($desa)
-    //         ->addColumn('action', function ($desa) {
-    //             return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" 
-    //             data-kecamatan-id="'. $desa->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $desa->nama .'">
-    //             <i class="fas fa-pencil-alt"></i> Edit</button>
-                
-    //             <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view"
-    //             data-kecamatan-id="'. $desa->id .'" value="'. $desa->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $desa->nama .'">
-    //             <i class="fas fa-folder-open"></i> View</button>';
-    //         })
-    //         ->make(true);
-    //         // return view('master.desa.index', compact('provinsi'));
-    //         return $data;
-    //     }
-    //     // return response()->json(['data' => $desa]);
-        
-    // }
-
-    public function getDesa_old(Request $request) {
-        if ($request->ajax()) {
-            $desa = Kelurahan::with([
-                'kecamatan:id,nama', 
-                'kecamatan.kabupaten:id,nama'
-            ])->select('id', 'nama','kode', 'aktif', 'kecamatan_id'); // Select only necessary columns from Kelurahan
-            $data = DataTables::of($desa)
-                ->addColumn('kecamatan_nama', function ($desa) {
-                    return $desa->kecamatan ? $desa->kecamatan->nama : 'N/A'; // Add kecamatan name column
-                })
-                ->addColumn('action', function ($desa) {
-                    return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" 
-                    data-kecamatan-id="'. $desa->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $desa->nama .'">
-                    <i class="fas fa-pencil-alt"></i> Edit</button>              
-                    <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view"
-                    data-kecamatan-id="'. $desa->id .'" value="'. $desa->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $desa->nama .'">
-                    <i class="fas fa-folder-open"></i> View</button>';
-                })
-                ->make(true);                
-                return $data;
+    function store(StoreDesaRequest $request){
+        try {
+            $data = $request->validated();
+            Kelurahan::create($data);
+            return response()->json([
+                'success'   => true,
+                'message'   =>  __('cruds.data.data') .' '.__('cruds.desa.title') .' '. $request->nama .' '. __('cruds.data.added'),
+                'status'    => Response::HTTP_CREATED,
+                'data'      => $data,
+            ]);
+        } catch (ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+                'data'  => $request,
+            ], 422);
+    
+        } catch (ModelNotFoundException $e) {
+            // Handle model not found errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+                'data'  => $request,
+            ], 404);
+    
+        } catch (HttpException $e) {
+            // Handle HTTP-specific exceptions
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data'  => $request,
+            ], $e->getStatusCode());
+    
+        } catch (Exception $e) {
+            // Handle all other exceptions
+            return response()->json([
+                'success' => false,
+                'data'  => $request,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
         }
     }
     function getDesa(Request $request) {
@@ -91,6 +89,18 @@ class DesaController extends Controller
             return $data;            
         }
     }
-    
+
+    function getKecamatan(Request $request){
+        $kecamatan = Kecamatan::where('kabupaten_id', $request->id)
+        ->get(['id', 'kode', 'nama'])
+        ->map(function ($item) {
+            return [
+                'id'   => $item->id,
+                'kode' => $item->kode,
+                'text' => "{$item->kode} - {$item->nama}",
+            ];
+        });
+        return response()->json($kecamatan);
+    }    
     
 }

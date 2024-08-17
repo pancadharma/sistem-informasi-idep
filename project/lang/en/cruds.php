@@ -91,7 +91,7 @@ return [
         ],
         'validation'    => [
             'nama'      => 'Invalid input. Please Input a valid Village Name.',
-            'kode'      => 'Invalid input. Please Input a valid Village Code.',
+            'kode'      => 'Invalid input. Please Input a valid Village Code. Format xx.xx.xx.xxxx',
             'kec'       => 'Invalid input. Please Select a Subdistrict.',
             'kab'       => 'Invalid input. Please Select a Regency.',
         ],

@@ -12,7 +12,7 @@ class Kelurahan extends Model
     use Auditable, HasFactory;
     public $table = "kelurahan";
     protected $fillable = [
-        'kode', 'nama', 'aktif', 'kecamatan_id', 'created_at','updated_at'
+        'id','kode', 'nama', 'aktif', 'kecamatan_id', 'created_at','updated_at'
     ];  
     protected $casts = [
         'updated_at',

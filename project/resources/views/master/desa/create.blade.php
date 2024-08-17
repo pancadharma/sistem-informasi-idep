@@ -1,15 +1,16 @@
-<div id="add_desa" class="card card-primary collapsed-card">
+<div id="add_desa" class="card card-primary {{-- collapsed-card --}}">
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.desa.title')}}
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                <i class="fas fa-plus"></i>
+                {{-- <i class="fas fa-plus"></i> --}}
+                <i class="fas fa-minus"></i>
             </button>
         </div>
     </div>
     <div class="card-body">
         {{-- form add desa --}}
-        <form action="{{ route('desa.store')}}" method="POST" class="resettable-form" novalidate data-toggle="validator" id="desaForm" autocomplete="off" novalidate>
+        <form id="submit_desa" action="{{ route('desa.store')}}" method="POST" class="resettable-form" data-toggle="validator" id="desaForm" autocomplete="off" novalidate>
             @csrf
             @method('POST')
             {{-- Select Provinsi --}}
@@ -28,7 +29,7 @@
                     <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" required style="width: 100%">
                         <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.kabupaten.title')}}</option>
                     </select>
-                    <div id="kabupaten_id-error" class="invalid-feedback"></div>
+                    <div id="kabupaten_id-error" class="invalid-feedback">{{ trans('cruds.desa.validation.kab') }}</div>
                 </div>
             </div>
             {{-- Select Kecamatan --}}
@@ -38,21 +39,21 @@
                     <select id="kecamatan_id" name="kecamatan_id" class="form-control select2 kecamatan-data" required style="width: 100%">
                         <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}</option>
                     </select>
-                    <div id="kecamatan_id-error" class="invalid-feedback"></div>
+                    <span id="kecamatan_id_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kec') }}</span>
+                    
                 </div>
             </div>
             {{-- Input Kode Desa --}}
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.desa.form.kode') }}</label>
-                <input type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="13">
-                <div id="kode-error" class="invalid-feedback"></div>
+                <input type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="13" minlength="13" pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}">
                 <span id="kode_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kode') }}</span>
+                <span id="kode-error" class="invalid-feedback"></span>
             </div>
             {{-- Input Nama Kecamatan --}}
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.desa.nama') }}</label>
+                <label for="nama">{{ trans('cruds.desa.form.nama') }}</label>
                 <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">     
-                <div id="nama-error" class="invalid-feedback"></div>
                 <span id="nama_error" class="invalid-feedback">{{ trans('cruds.desa.validation.nama') }}</span>
             </div>
             <div class="form-group">
