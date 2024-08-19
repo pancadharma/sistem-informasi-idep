@@ -323,6 +323,149 @@
         });
 
 
+        //View Kelurahan / Desa
+
+        $('#desa_list tbody').on('click', '.view-kec-btn', function(e){
+            e.preventDefault();
+            let desaId = $(this).data('desa-id');
+            let action = $(this).data('action');
+            let url = '{{ route('desa.show', ':id') }}'.replace(':id',desaId);
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'JSON',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 1500,
+                        timerProgressBar: true,
+                    });
+                },
+                success: function(response){
+                    let data = response || [];
+                    if (action === 'view') {
+                        $("#show-kode").text(data.kode);
+                        $("#show-nama").text(data.nama);
+                        $("#show-kecamatan").text(data.kecamatan.nama);
+                        if (data.aktif === 1) {
+                            $('#show-aktif').val(data.aktif);
+                            $("#show-aktif").prop("checked",true); // Set checked to true if value is 1
+                        } else {
+                            $('#show-aktif').val(0);
+                            $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
+                        }
+                        $('#showDesaModal').modal('show');
+                    } else {
+                        Swal.fire({
+                            text: "Error",
+                            message: "Failed to fetch data",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(xhr, status, errors){
+                    var response = JSON.parse(xhr.responseText);
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage = response.message;
+                        }
+                        if (response.errors) {
+                            const errors = response.errors;
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            for (const field in errors) {
+                                if (errors.hasOwnProperty(field)) {
+                                    errors[field].forEach(err => {
+                                        errorMessage += `<li>${field}: ${err}</li>`;
+                                    });
+                                }
+                            }
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
+        });
+
+
+        $('#desa_list tbody').on('click', '.edit-kec-btn', function(e){
+            e.preventDefault();
+            let desaId = $(this).data('desa-id');
+            let action = $(this).data('action');
+            let url = '{{ route('desa.edit', ':id') }}'.replace(':id',desaId);
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'JSON',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timerProgressBar: true,
+                    });
+                },
+                success: function(response){
+                    let data = response || [];
+                    if (action === 'view') {
+                        $("#editkode").text(data.kode);
+                        $("#editnama").text(data.nama);
+                        $("#edit_kecamatan_id").text(data.kecamatan.nama);
+                        if (data.aktif === 1) {
+                            $('#show-aktif').val(data.aktif);
+                            $("#show-aktif").prop("checked",true); // Set checked to true if value is 1
+                        } else {
+                            $('#show-aktif').val(0);
+                            $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
+                        }
+                        $('#editDesaModal').modal('show');
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: "Failed to fetch data",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(xhr, status, errors){
+                    var response = JSON.parse(xhr.responseText);
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage = response.message;
+                        }
+                        if (response.errors) {
+                            const errors = response.errors;
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            for (const field in errors) {
+                                if (errors.hasOwnProperty(field)) {
+                                    errors[field].forEach(err => {
+                                        errorMessage += `<li>${field}: ${err}</li>`;
+                                    });
+                                }
+                            }
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
+        });
 
 
 
