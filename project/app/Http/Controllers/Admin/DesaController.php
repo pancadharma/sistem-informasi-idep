@@ -24,7 +24,7 @@ class DesaController extends Controller
 {
     function index() {
         abort_if(Gate::denies('desa_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
         return view('master.desa.index', compact('provinsi'));
     }
@@ -47,7 +47,7 @@ class DesaController extends Controller
                 'errors'  => $e->errors(),
                 'data'  => $request,
             ], 422);
-    
+
         } catch (ModelNotFoundException $e) {
             // Handle model not found errors
             return response()->json([
@@ -55,7 +55,7 @@ class DesaController extends Controller
                 'message' => 'Resource not found.',
                 'data'  => $request,
             ], 404);
-    
+
         } catch (HttpException $e) {
             // Handle HTTP-specific exceptions
             return response()->json([
@@ -63,7 +63,7 @@ class DesaController extends Controller
                 'message' => $e->getMessage(),
                 'data'  => $request,
             ], $e->getStatusCode());
-    
+
         } catch (Exception $e) {
             // Handle all other exceptions
             return response()->json([
@@ -79,15 +79,15 @@ class DesaController extends Controller
             $query = Kelurahan::select('kelurahan.id', 'kelurahan.kode', 'kelurahan.nama', 'kelurahan.aktif', 'kelurahan.kecamatan_id')->with('kecamatan:id,nama');
             $data = DataTables::of($query)
             ->addColumn('action', function ($desa) {
-                return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" 
+                return '<button type="button" class="btn btn-sm btn-info edit-desa-btn" data-action="edit"
                 data-desa-id="'. $desa->id .'" title="'.__('global.edit') .' '. __('cruds.desa.title') .' '. $desa->nama .'">
-                <i class="fas fa-pencil-alt"></i> Edit</button>              
-                <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view"
+                <i class="fas fa-pencil-alt"></i> Edit</button>
+                <button type="button" class="btn btn-sm btn-primary view-desa-btn" data-action="view"
                 data-desa-id="'. $desa->id .'" value="'. $desa->id .'" title="'.__('global.view') .' '. __('cruds.desa.title') .' '. $desa->nama .'">
                 <i class="fas fa-folder-open"></i> View</button>';
             })
             ->make(true);
-            return $data;            
+            return $data;
         }
     }
 
@@ -111,10 +111,11 @@ class DesaController extends Controller
     public function edit(Kelurahan $desa){
         // abort_if(Gate::denies('kecamatan_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $provinsi = Provinsi::all(['id', 'kode', 'nama']);
-        $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']);
+        // $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']); 
+        $kabupaten = Kabupaten::with('kecamatan:kabupaten_id,id,kode,nama')->where('id', $desa->kecamatan->kabupaten->id)->get(['id','kode','nama']);
         $kecamatan = Kecamatan::where('kabupaten_id', $desa->kecamatan->kabupaten->id)->get(['id', 'kode', 'nama']);
-        $desa->load('kecamatan');
         $kecamatan->load('kabupaten');
+        $desa->load('kecamatan');
         return response()->json([
             'desa'       => $desa,
             'kecamatan'  => $kecamatan,
@@ -122,10 +123,11 @@ class DesaController extends Controller
             'provinsi'   => $provinsi
         ]);
 
-        // return response()->json($desa); // Return province data as JSON
+
+        
     }
     public function update(Request $request, Kelurahan $desa){
         // abort_if(Gate::denies('kecamatan_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
-    
+
 }

@@ -10,10 +10,10 @@
     @hasSection('content_header_title')
         <h1 class="text-muted">
             @yield('content_header_title')
-            {{-- 
+            {{--
                 @hasSection('content_header_subtitle')
                 <small class="text-dark"><i class="fas fa-xs fa-angle-right text-muted"></i>@yield('content_header_subtitle')</small>
-            @endif 
+            @endif
             --}}
         </h1>
     @endif
@@ -53,7 +53,7 @@
             document.querySelector('.select2-search__field').focus();
         }, 100);
     });
-    
+
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
@@ -61,7 +61,7 @@
     const Toast = Swal.mixin({
         toast: true,
         showConfirmButton: false,
-        timer: 3000,
+        // timer: 3000,
         timerProgressBar: true,
         didOpen: (toast) => {
             toast.onmouseenter = Swal.stopTimer;
@@ -75,6 +75,6 @@
 
 @push('css')
 {{-- <style type="text/css">
-        
+
 </style> --}}
 @endpush

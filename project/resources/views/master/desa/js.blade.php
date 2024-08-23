@@ -23,11 +23,11 @@
                     width: "5%",
                     className: "text-left"
                 },
-                { 
+                {
                     // data: "kecamatan_nama", // Update to match the server-side column name
                     data: "kecamatan.nama", // Update to match the server-side column name
                     // name: 'kecamatan.nama',
-                    width: "15%", 
+                    width: "15%",
                     className: "text-left"
                 },
                 {
@@ -236,12 +236,11 @@
 
         // SUBMIT DESA DATA
         $('#submit_desa').on('submit',function(e){
-            e.preventDefault();            
+            e.preventDefault();
             let kecamatan_kode = $('#kecamatan_id').children('option:selected').data('id');
             let formData = $(this).serialize();
             formData += '&kecamatan_kode=' + kecamatan_kode;
             let url = $(this).attr('action');
-          
             var formIsValid = true;
 
             $(this).find('input, select, textarea').each(function() {
@@ -249,7 +248,6 @@
                     formIsValid = false;
                 }
             });
-
             if(formIsValid){
                 $.ajax({
                     url: '{{ route('desa.store') }}',
@@ -318,14 +316,9 @@
                     }
                 });
             }
-
-
         });
-
-
         //View Kelurahan / Desa
-
-        $('#desa_list tbody').on('click', '.view-kec-btn', function(e){
+        $('#desa_list tbody').on('click', '.view-desa-btn', function(e){
             e.preventDefault();
             let desaId = $(this).data('desa-id');
             let action = $(this).data('action');
@@ -395,13 +388,13 @@
                 }
             });
         });
-
-
-        $('#desa_list tbody').on('click', '.edit-kec-btn', function(e){
+        //edit desa modal show
+        $('#desa_list tbody').on('click', '.edit-desa-btn', function(e){
             e.preventDefault();
             let desaId = $(this).data('desa-id');
             let action = $(this).data('action');
             let url = '{{ route('desa.edit', ':id') }}'.replace(':id',desaId);
+            let url_update = '{{ route('desa.update', ':id') }}'.replace(':id', desaId);
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -411,21 +404,30 @@
                         icon: "info",
                         title: "Processing...",
                         timerProgressBar: true,
-                    });
+                        timer: 500,
+                    })
                 },
-                success: function(response){
-                    let data = response || [];
-                    if (action === 'view') {
-                        $("#editkode").text(data.kode);
-                        $("#editnama").text(data.nama);
-                        $("#edit_kecamatan_id").text(data.kecamatan.nama);
-                        if (data.aktif === 1) {
-                            $('#show-aktif').val(data.aktif);
-                            $("#show-aktif").prop("checked",true); // Set checked to true if value is 1
-                        } else {
-                            $('#show-aktif').val(0);
-                            $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
-                        }
+                success: function(hasil){
+                    let data = hasil || [];
+                    if (action === 'edit') {
+                        let provinsi_ID = hasil.kecamatan.kabupaten.provinsi_id;
+                        console.log(provinsi_ID);
+                        $("#editDesaForm").trigger('reset');
+                        $("#editDesaForm").attr('action', url_update);
+                        $('#id').val(hasil.desa.id);
+                        $("#editkode").val(hasil.desa.kode);
+                        $("#editnama").val(hasil.desa.nama);
+                        $('#editaktif').prop('checked', hasil.kecamatan.aktif == 1);
+                        $('#edit-aktif').val(hasil.kecamatan.aktif);
+                        $('#edit_provinsi_id').empty();
+                        $.each(hasil.provinsi, function(key, value) {
+                                let selected = (hasil.kecamatan.kabupaten.provinsi_id === provinsi_ID) ? 'selected' : '';
+                                // $('#edit_provinsi_id').append('<option value="'+ value.id +'">'+value.kode+' - '+ value.nama +'</option>');
+                                $('#edit_provinsi_id').append('<option value="'+ value.id +'" '+ selected +'>'+value.kode+' - '+ value.nama +'</option>');
+                            });
+                        // $('#edit_provinsi_id').val(hasil.kecamatan.kabupaten.provinsi_id).trigger('change');
+
+
                         $('#editDesaModal').modal('show');
                     } else {
                         Swal.fire({
@@ -498,29 +500,26 @@
         });
         $('#edit_provinsi_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
-            allowClear: true,
             delay: 250,
-            dropdownParent: $('#editKecamatanModal')
+            dropdownParent: $('#editDesaModal')
         });
         $('#kabupaten_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
             allowClear: true,
             delay: 250,
         });
-        $('#edit_kabupaten_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
-            allowClear: true,
-            delay: 250,
-        });
+        // $('#edit_kabupaten_id').select2({
+        //     placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+        //     delay: 250,
+        // });
         $('#kecamatan_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}",
-            allowClear: true,
             delay: 250,
         });
         $('#edit_kecamatan_id').select2({
             placeholder: "{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}",
-            allowClear: true,
             delay: 250,
+            dropdownParent: $('#editDesaModal')
         });
 
         $('#show-aktif, #aktif_').click(function(event) {

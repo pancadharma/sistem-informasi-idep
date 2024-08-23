@@ -1,7 +1,7 @@
 <x-adminlte-modal id="editDesaModal" title=" {{ trans('global.update') .' '.trans('cruds.desa.title')}}" size="lg" theme="info" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="card-body">
-            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editKecamatanForm" autocomplete="off" novalidate>
+            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editDesaForm" autocomplete="off" novalidate>
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -37,11 +37,11 @@
                     <span id="editkode_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kode') }}</span>
                 </div>
                 <div class="form-group">
-                    <label for="editnama">{{ trans('cruds.desa.nama') }}</label>
+                    <label for="editnama">{{ trans('cruds.desa.form.nama') }}</label>
                     <input type="text" id="editnama" name="nama" class="form-control" required maxlength="200">
                     <span id="editnama_error" class="invalid-feedback">{{ trans('cruds.desa.validation.nama') }}</span>
                 </div>
-    
+
                 <div class="form-group">
                     <strong>{{ trans('cruds.status.title') .' '. trans('cruds.desa.title') }}</strong>
                     <div class="icheck-primary">
