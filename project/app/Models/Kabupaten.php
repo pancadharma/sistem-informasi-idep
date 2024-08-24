@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use DateTimeZone;
 use DateTimeInterface;
 use App\Traits\Auditable;
@@ -26,12 +27,8 @@ class Kabupaten extends Model
     {
         return $this->hasMany(Kecamatan::class, 'kabupaten_id');
     }
-
-
     protected function serializeDate(DateTimeInterface $date)
     {
-        // Assuming UTC+8 is Asia/Singapore timezone
-        $date = $date->setTimezone(new DateTimeZone('Asia/Singapore'));
         return $date->format('Y-m-d H:i:s');
     }
 

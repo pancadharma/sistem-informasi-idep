@@ -73,6 +73,30 @@ return [
         'kab_validation' => 'Input Tidak Valid. Silahkan pilih Kabupaten.',
         'nama_validation'=> 'Input Salah. Minimal 3 karakter dan harus dimulai dengan huruf.',
     ],
+    'desa' => [
+        'list'          => 'List Data Desa',
+        'title'         => 'Desa',
+        'form'          => [
+            'id'        => 'ID',
+            'nama'      => 'Nama Desa',
+            'kode'      => 'Kode',
+            'kab'       => 'Nama Kabupaten',
+            'kec'       => 'Nama Kecamatan',
+            'prov'      => 'Nama Provinsi',
+            'aktif'     => 'Aktif',
+        ],
+        'validation'    => [
+            'nama'      => 'Input Salah. Silahkan Masukan Nama Desa.',
+            'req_nama'  => 'Silahkan masukan Nama Desa.',
+            'min_nama'  => 'Nama Desa minimal 3 karakter.',
+            'min_kode'  => 'Kode Desa harus 13 karakter kode. Format xx.xx.xx.xxxx',
+            'req_kode'  => 'Silahkan masukan Kode Desa.',
+            'kode'      => 'Input Salah. Silahkan Masukan Kode Desa. Format xx.xx.xx.xxxx',
+            'kec'       => 'Input Salah. Silahkan Pilih kecamatan.',
+            'kab'       => 'Input Salah. Silahkan pilih Kabupaten.',
+        ],
+    ],
+
     'negara' => [
         'title'          => 'Negara',
         'title_singular' => 'Negara',

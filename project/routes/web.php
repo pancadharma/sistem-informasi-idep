@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\Provinsi;
-use App\Http\Controllers\Admin;
+use App\Models\Kelurahan;
+// use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\DesaController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
@@ -82,9 +84,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('prov.data/{provinsi}', [KecamatanController::class, 'provinsi_details'])->name('prov_data');
     Route::get('kab.data/{id}', [KecamatanController::class, 'kab'])->name('kab.data');
     Route::get('kab.data/{kabupaten}', [KecamatanController::class, 'kab_details'])->name('kab_data');
-    
     Route::get('kabupaten_data/{id}', [KecamatanController::class, 'getKabupatenByProvinsi'])->name('kabupaten_data');
     Route::resource('kecamatan', KecamatanController::class);
+
+    Route::get('data-desa', [DesaController::class, 'getDesa'])->name('data.desa');
+    Route::get('data-kec/{id}', [DesaController::class, 'getKecamatan'])->name('kec.data');
+    Route::resource('desa', DesaController::class);
 });
 
 

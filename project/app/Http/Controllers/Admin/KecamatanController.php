@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Provinsi;
 // use App\Http\Requests\MassDestroyKecamatanRequest;
 use App\Models\Kabupaten;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 class KecamatanController extends Controller
 {
     public function index(){
-        // abort_if(Gate::denies('kecamatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('kecamatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $kabupaten = Kabupaten::all();
         $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');      
         return view("master.kecamatan.index", compact('provinsi'));
