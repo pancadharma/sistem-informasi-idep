@@ -1,10 +1,10 @@
-<div id="add_desa" class="card card-primary {{-- collapsed-card --}}">
+<div id="add_desa" class="card card-primary collapsed-card">
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.desa.title')}}
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                {{-- <i class="fas fa-plus"></i> --}}
-                <i class="fas fa-minus"></i>
+                <i class="fas fa-plus"></i>
+                {{-- <i class="fas fa-minus"></i> --}}
             </button>
         </div>
     </div>

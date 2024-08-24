@@ -91,6 +91,10 @@ return [
         ],
         'validation'    => [
             'nama'      => 'Invalid input. Please Input a valid Village Name.',
+            'req_nama'  => 'Please provide Village Name.',
+            'min_nama'  => 'Village Name must be at least 3 character.',
+            'min_kode'  => 'Village Code must be at exact 13 code.',
+            'req_kode'  => 'Please provide Village Code.',
             'kode'      => 'Invalid input. Please Input a valid Village Code. Format xx.xx.xx.xxxx',
             'kec'       => 'Invalid input. Please Select a Subdistrict.',
             'kab'       => 'Invalid input. Please Select a Regency.',

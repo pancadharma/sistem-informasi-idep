@@ -1,7 +1,7 @@
 <x-adminlte-modal id="editDesaModal" title=" {{ trans('global.update') .' '.trans('cruds.desa.title')}}" size="lg" theme="info" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="card-body">
-            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editDesaForm" autocomplete="off" novalidate>
+            <form action="#" @submit.prevent="handleSubmit" method="PATCH" class="resettable-form" id="editDesaForm" autocomplete="off">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
@@ -28,18 +28,24 @@
                         <select id="edit_kecamatan_id" name="kecamatan_id" class="form-control select2 kecamatan-data" style="width: 100%" required>
                             <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.desa.form.kec')}}</option>
                         </select>
-                        <span id="edit_kecamatan_id_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kec') }}</span>
+                        @error('kecamatan_id')
+                            <span id="edit_kecamatan_id" class="error">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="editkode">{{ trans('cruds.desa.form.kode') }}</label>
-                    <input placeholder="Please enter in the format xx.xx.xx" type="text" id="editkode" name="kode" class="form-control" required data-placement="left" title="Update {{ trans('cruds.desa.kode') .' '. trans('cruds.desa.title') }}" data-toggle="tooltip" data-placement="top" maxlength="8" pattern="^\d{2}\.\d{2}\.\d{2}$" >
-                    <span id="editkode_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kode') }}</span>
+                    <input placeholder="Please enter in the format xx.xx.xx.xxxx" type="text" id="editkode" name="kode" class="form-control" required title="Update {{ trans('cruds.desa.form.kode') .' '. trans('cruds.desa.title') }}" maxlength="13" minlength="13" pattern="^\d{2}\.\d{2}\.\d{2}\.\d{4}$">
+                    @error('kode')
+                        <span id="editkode" class="error">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="editnama">{{ trans('cruds.desa.form.nama') }}</label>
-                    <input type="text" id="editnama" name="nama" class="form-control" required maxlength="200">
-                    <span id="editnama_error" class="invalid-feedback">{{ trans('cruds.desa.validation.nama') }}</span>
+                    <input type="text" id="editnama" name="nama" class="form-control" required minlength="3" maxlength="200">
+                    @error('nama')
+                        <span id="editnama" class="error">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-group">
@@ -47,7 +53,7 @@
                     <div class="icheck-primary">
                         <input type="checkbox" id="editaktif" {{ old('aktif') == 1 ? 'checked' : '' }}>
                         <input type="hidden" name="aktif" id="edit-aktif" value="0">
-                        <label for="editaktif">{{ trans('cruds.status.aktif', [], 'en') ?: trans('cruds.status.tidak_aktif', [], 'en') }}</label>
+                        <label for="editaktif">{{ trans('cruds.status.aktif') ?: trans('cruds.status.tidak_aktif') }}</label>
                     </div>
                 </div>
                 <button type="submit" id="editDesa" class="btn btn-success float-right btnUpdateDesa" ><i class="fas fa-update"></i> {{ trans('global.update') }}</button>

@@ -111,20 +111,20 @@ class DesaController extends Controller
     public function edit(Kelurahan $desa){
         // abort_if(Gate::denies('kecamatan_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $provinsi = Provinsi::all(['id', 'kode', 'nama']);
-        // $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']); 
-        $kabupaten = Kabupaten::with('kecamatan:kabupaten_id,id,kode,nama')->where('id', $desa->kecamatan->kabupaten->id)->get(['id','kode','nama']);
+        $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']); 
         $kecamatan = Kecamatan::where('kabupaten_id', $desa->kecamatan->kabupaten->id)->get(['id', 'kode', 'nama']);
-        $kecamatan->load('kabupaten');
-        $desa->load('kecamatan');
+        $desa->load('kecamatan','kecamatan.kabupaten', 'kecamatan.kabupaten.provinsi' );
+
         return response()->json([
             'desa'       => $desa,
             'kecamatan'  => $kecamatan,
             'kabupaten'  => $kabupaten,
             'provinsi'   => $provinsi
         ]);
-
-
-        
+        // $kabupaten = Kabupaten::with('kecamatan:kabupaten_id,id,kode,nama')->where('id', $desa->kecamatan->kabupaten->id)->get(['id','kode','nama','provinsi_id']);
+        // $provinsi = Provinsi::with('kab:id,kode,nama,provinsi_id')->where('id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id','kode','nama']);
+        // $kecamatan = Kabupaten::with('kecamatan:id,nama,kode,kabupaten_id')->where('id',$desa->kecamatan->kabupaten_id)->get(['id', 'kode', 'nama']);
+        // $kecamatan = $desa->kecamatan->load('kabupaten');
     }
     public function update(Request $request, Kelurahan $desa){
         // abort_if(Gate::denies('kecamatan_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
