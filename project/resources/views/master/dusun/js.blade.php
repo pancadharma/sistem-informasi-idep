@@ -98,7 +98,7 @@ $(document).ready(function() {
         order: [
             [2, 'asc'] // Ensure this matches the index of the `dusun` column
         ],
-        lengthMenu: [5, 25, 50, 100, 500],
+        lengthMenu: [5, 10 ,25, 50, 100, 500],
     });
 
 
