@@ -104,7 +104,107 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 23,
-                'nama' => 'country_delet',
+                'nama' => 'country_delete',
+            ],
+            [
+                'id'    => 24,
+                'nama' => 'provinsi_access',
+            ],
+            [
+                'id'    => 25,
+                'nama' => 'provinsi_edit',
+            ],
+            [
+                'id'    => 26,
+                'nama' => 'provinsi_show',
+            ],
+            [
+                'id'    => 27,
+                'nama' => 'provinsi_delete',
+            ],
+            [
+                'id'    => 28,
+                'nama' => 'provinsi_create',
+            ],
+            [
+                'id'    => 29,
+                'nama' => 'kabupaten_access',
+            ],
+            [
+                'id'    => 30,
+                'nama' => 'kabupaten_create',
+            ],
+            [
+                'id'    => 31,
+                'nama' => 'kabupaten_edit',
+            ],
+            [
+                'id'    => 32,
+                'nama' => 'kabupaten_show',
+            ],
+            [
+                'id'    => 33,
+                'nama' => 'kabupaten_delete',
+            ],
+            [
+                'id'    => 34,
+                'nama' => 'kecamatan_access',
+            ],
+            [
+                'id'    => 35,
+                'nama' => 'kecamatan_create',
+            ],
+            [
+                'id'    => 36,
+                'nama' => 'kecamatan_edit',
+            ],
+            [
+                'id'    => 37,
+                'nama' => 'kecamatan_show',
+            ],
+            [
+                'id'    => 38,
+                'nama' => 'kecamatan_delete',
+            ],
+            [
+                'id'    => 39,
+                'nama' => 'desa_access',
+            ],
+            [
+                'id'    => 40,
+                'nama' => 'desa_create',
+            ],
+            [
+                'id'    => 41,
+                'nama' => 'desa_edit',
+            ],
+            [
+                'id'    => 42,
+                'nama' => 'desa_show',
+            ],
+            [
+                'id'    => 43,
+                'nama' => 'desa_delete',
+            ],
+            [
+                'id'    => 44,
+                'nama' => 'dusun_access',
+            ],
+            [
+                'id'    => 45,
+                'nama' => 'dusun_create',
+            ],
+            [
+                'id'    => 46,
+                'nama' => 'dusun_edit',
+            ],
+            [
+                'id'    => 47,
+                'nama' => 'dusun_show',
+            ],
+            [
+                'id'    => 48,
+                'nama' => 'dusun_delete',
             ],
         ];
 
