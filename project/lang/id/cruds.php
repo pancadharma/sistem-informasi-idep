@@ -96,6 +96,32 @@ return [
             'kab'       => 'Input Salah. Silahkan pilih Kabupaten.',
         ],
     ],
+    'dusun' => [
+        'list'          => 'List Data Dusun',
+        'title'         => 'Dusun',
+        'form'          => [
+            'id'        => 'ID',
+            'nama'      => 'Nama Dusun',
+            'kode'      => 'Kode',
+            'kode_pos'  => 'Kode Pos',
+            'kab'       => 'Nama Kabupaten',
+            'kec'       => 'Nama Kecamatan',
+            'des'       => 'Nama Desa',
+            'prov'      => 'Nama Provinsi',
+            'aktif'     => 'Aktif',
+        ],
+        'validation'    => [
+            'nama'      => 'Input Salah. Silahkan Masukan Nama Desa.',
+            'req_nama'  => 'Silahkan masukan Nama Desa.',
+            'min_nama'  => 'Nama Dusun minimal 3 karakter.',
+            'min_kode'  => 'Kode Dusun harus 13 karakter kode. Format xx.xx.xx.xxxx.xxxx',
+            'req_kode'  => 'Silahkan masukan Kode Dusun.',
+            'kode'      => 'Input Salah. Silahkan Masukan Kode Dusun. Format xx.xx.xx.xxxx.xxxx',
+            'kec'       => 'Input Salah. Silahkan Pilih kecamatan.',
+            'kab'       => 'Input Salah. Silahkan pilih Kabupaten.',
+            'des'       => 'Input Salah. Silahkan pilih Desa.',
+        ],
+    ],
 
     'negara' => [
         'title'          => 'Negara',

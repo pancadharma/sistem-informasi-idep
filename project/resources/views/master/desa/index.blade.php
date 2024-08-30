@@ -16,7 +16,7 @@
 
     <div class="card card-outline card-primary">
         <div class="card-body">
-            <table id="desa_list" class="table table-bordered cell-border ajaxTable datatable-desa" style="width:100%">
+            <table id="desa_list" class="table table-bordered table-striped table-hover ajaxTable datatable-dusun">
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.desa.form.kode') }}</th>
