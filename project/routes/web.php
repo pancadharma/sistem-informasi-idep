@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
-
+use App\Http\Controllers\Admin\WilayahController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -89,5 +89,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('data-dusun', [DusunController::class, 'getDusun'])->name('data.dusun');
     Route::resource('dusun', DusunController::class);
+
+    //Wilayah Call Drop Down / Select2
+    Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
+    Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
+    Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
+    Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
 
 });

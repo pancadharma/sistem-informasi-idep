@@ -15,7 +15,7 @@ class DusunController extends Controller
     public function index()
     {
         abort_if(Gate::denies('dusun_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.selectProv'), '');
         return view('master.dusun.index', compact('provinsi'));
     }
 
@@ -55,7 +55,6 @@ class DusunController extends Controller
 
     function getDusun(Request $request) {
         if ($request->ajax()) {
-            // $query_old = Kelurahan::select('kelurahan.id', 'kelurahan.kode', 'kelurahan.nama', 'kelurahan.aktif', 'kelurahan.kecamatan_id')->with('kecamatan:id,nama');
             $query = Dusun::select('dusun.id', 'dusun.kode', 'dusun.nama', 'dusun.aktif', 'dusun.kode_pos' , 'dusun.desa_id')->with('desa:id,nama');
             $data = DataTables::of($query)
             ->addColumn('action', function ($dusun) {

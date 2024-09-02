@@ -15,7 +15,7 @@
             @method('POST')
             {{-- Select Provinsi --}}
             <div class="form-group">
-                <label class="required" for="provinsi_id">{{ trans('cruds.dusun.form.prov') }}</label>
+                <label for="provinsi_id">{{ trans('cruds.dusun.form.prov') }}</label>
                 <select class="form-control select2" name="provinsi_id" id="provinsi_id" required style="width: 100%">
                     @foreach($provinsi as $data => $entry)
                         <option value="{{ $data }}" {{ old('provinsi_id') == $data ? 'selected' : '' }}>{{ $data .' - '. $entry }}</option>
@@ -27,9 +27,9 @@
                 <label for="kabupaten_id">{{ trans('cruds.dusun.form.kab') }}</label>
                 <div class="form-group">
                     <select id="kabupaten_id" name="kabupaten_id" class="form-control select2 kabupaten-data" required style="width: 100%">
-                        <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.kabupaten.title')}}</option>
+                        <option value="" selected>{{ trans('global.pleaseSelect') .' '. trans('cruds.kabupaten.title')}}</option>
                     </select>
-                    <div id="kabupaten_id-error" class="invalid-feedback">{{ trans('cruds.dusun.validation.kab') }}</div>
+                    {{-- <div id="kabupaten_id-error" class="invalid-feedback"></div> --}}
                 </div>
             </div>
             {{-- Select Kecamatan --}}
@@ -37,9 +37,9 @@
                 <label for="kecamatan_id">{{ trans('cruds.dusun.form.kec') }}</label>
                 <div class="form-group">
                     <select id="kecamatan_id" name="kecamatan_id" class="form-control select2 kecamatan-data" required style="width: 100%">
-                        <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}</option>
+                        <option value="" selected>{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}</option>
                     </select>
-                    <span id="kecamatan_id_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.kec') }}</span>
+                    {{-- <span id="kecamatan_id_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.kec') }}</span> --}}
                     
                 </div>
             </div>
@@ -47,24 +47,24 @@
                 <label for="desa_id">{{ trans('cruds.dusun.form.des') }}</label>
                 <div class="form-group">
                     <select id="desa_id" name="desa_id" class="form-control select2 desa-data" required style="width: 100%">
-                        <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.desa.title')}}</option>
+                        <option value="" selected>{{ trans('global.pleaseSelect') .' '. trans('cruds.desa.title')}}</option>
                     </select>
-                    <span id="desa_id_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.des') }}</span>
+                    {{-- <span id="desa_id_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.des') }}</span> --}}
                     
                 </div>
             </div>
             {{-- Input Kode Dusun --}}
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.dusun.form.kode') }}</label>
-                <input type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="13" minlength="13" pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}">
-                <span id="kode_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.kode') }}</span>
-                <span id="kode-error" class="invalid-feedback"></span>
+                <input type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="16" minlength="16"{{--  pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}.\d{2}" --}}>
+                {{-- <span id="kode_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.kode') }}</span> --}}
+                {{-- <span id="kode-error" class="invalid-feedback"></span> --}}
             </div>
             {{-- Input Nama Kecamatan --}}
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.dusun.form.nama') }}</label>
                 <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">     
-                <span id="nama_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.nama') }}</span>
+                {{-- <span id="nama_error" class="invalid-feedback">{{ trans('cruds.dusun.validation.nama') }}</span> --}}
             </div>
             <div class="form-group">
             <strong>{{ trans('cruds.status.title') .' '. trans('cruds.dusun.title') }}</strong>
