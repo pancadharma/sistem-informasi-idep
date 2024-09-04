@@ -5,6 +5,7 @@ $(document).ready(function() {
         placeholder: "{{ trans('global.selectProv')}}",
         allowClear: true,
     });
+    $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}");
 
     //autoformat kode dusun
     $('#kode').on('input', function() {
@@ -132,25 +133,97 @@ $(document).ready(function() {
     //Validation Form Submit
     $('#submit_dusun').on('submit', function(e) {
         e.preventDefault();
+        // let url = '{{ route('dusun.store') }}';
+        let desa_kode = $('#desa_id').children('option:selected').data('id');
+        let formData = $(this).serialize();
+        formData += '&desa_kode=' + desa_kode;
+        let url = $(this).attr('action');
+        var formIsValid = true;
         
+        $.ajax({
+            url: url,
+            dataType: "JSON",
+            method: "POST",
+            data: formData,
+            beforeSend: function(){
+                Toast.fire({
+                    icon: "info",
+                    title: "Processing...",
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: ()=>{
+                        Swal.showLoading();
+                    }
+                });
+                },
+                success: function(hasil){
+                    if(hasil.success === true){
+                        Swal.fire({
+                            title: "Success",
+                            text: hasil.message,
+                            icon: "success",
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                        });
+                        $("#kabupaten_id").empty();
+                        $("#kecamatan_id").empty();
+                        $("#desa_id").empty();
+                        $('#nama').removeClass('is-valid');
+                        $('#kode').removeClass('is-valid');
+                        $(".btn-tool").trigger('click');
+                        $('#submit_dusun').trigger('reset');
+                        $('#dusun_list').DataTable().ajax.reload();
+                        resetForm();
+                    }
+                    $("#provinsi_id").select2({
+                        placeholder: "{{ trans('global.pleaseSelect') .' '. trans('cruds.provinsi.title')}}",
+                    });
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).text(message).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                    console.log(mess);
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+        });
     });
 
+    
     function removeInvalidClass() {
         $(this).removeClass('is-invalid');
         let value_id = $(this).val();        
     }
-    $('#provinsi_id').on('change', removeInvalidClass);
-    $('#kabupaten_id').on('change', removeInvalidClass);
-    $('#kecamatan_id').on('change', removeInvalidClass);
-    $('#desa_id').on('change', removeInvalidClass);
-    $('#kode').on('input', removeInvalidClass);
-    $('#nama').on('input', removeInvalidClass);
-
-    // $('#kode, #nama').on('input', function() {
-    //     $(this).removeClass('is-invalid');
-    // });
-
-    const validator = $('#submit_dusun').validate({
+        $('#provinsi_id').on('change', removeInvalidClass);
+        $('#kabupaten_id').on('change', removeInvalidClass);
+        $('#kecamatan_id').on('change', removeInvalidClass);
+        $('#desa_id').on('change', removeInvalidClass);
+        $('#kode').on('input', removeInvalidClass);
+        $('#nama').on('input', removeInvalidClass);
+    
+        //validasi form submit dusun
+    const validator = $('#submit_dusun, #update_dusun').validate({
         rules: {
             nama: { required: true, minlength: 3 },
             kode: { required: true, minlength: 16, maxlength: 16 },
@@ -187,10 +260,6 @@ $(document).ready(function() {
         }
     });
 
-    function reset_selet2(){
-        
-    }
-
     //reset form
     function resetForm() {
         $('#edit_dusun, #submit_dusun')[0].reset();
@@ -217,6 +286,7 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    //select provinsi
     $('#provinsi_id').change(function(){
         var provinsi_id = $(this).val();
         if(provinsi_id){
@@ -227,8 +297,11 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(hasil) {
                     $("#kabupaten_id").empty();
-                    $("#kecamatan_id").val('').trigger('change');
-                    $('#kabupaten_id').html(`<option value="0" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
+                    // $("#kecamatan_id").val('').trigger('change');
+                    $('#kabupaten_id').html(`<option value="000" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
+                    $('#kecamatan_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
+                    $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+                    $('#kode').val('');
                     if(hasil){
                         $.each(hasil, function(index, item) {
                             $("#kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
@@ -244,7 +317,7 @@ $(document).ready(function() {
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
         });
     });
-
+    //select kabupaten
     $('#kabupaten_id').change(function(){
         var selected = $(this).find('option:selected');
         var kode_kab = selected.data('id');
@@ -259,6 +332,9 @@ $(document).ready(function() {
                 success: function(hasil) {
                     $("#kecamatan_id").empty();
                     $('#kecamatan_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
+                    $("#desa_id").empty();
+                    $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+                    $('#kode').val('');
                     if(hasil){
                         $.each(hasil, function(index, item) {
                             $("#kecamatan_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
@@ -271,15 +347,44 @@ $(document).ready(function() {
             });
         }
         if(kode_kab !== undefined ){
-            // $('#kode').val(kode_kab+'.');
-            // $('#kode').prop("title", "please input 4 digit additional village code");
+            $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}");
             return;
         }else{
             $('#kode').val('');
-            $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}");
         }
     });
-
+    //select kecamatan
+    $('#kecamatan_id').on('change', function() {
+        var selectedProvinsi = $('#provinsi_id').val();
+        var selectedKab = $('#kabupaten_id').val();
+        var selectedKec = $(this).val();
+        $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+        console.log(selectedKec);
+        if (selectedKec) {
+            $.getJSON('{{ route('api.desa', '') }}/' + selectedKec, function(hasil){
+                $('#desa_id').empty();
+                $('#desa_id').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
+                $.each(hasil, function(index, desa) {
+                    $("#desa_id").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
+                });
+                $('#kode').val('');
+            }).fail(function() {
+                Toast.fire({
+                    icon: "error",
+                    title: "Failed to fetch data",
+                    timer: 1500,
+                    timerProgressBar: true,
+                });
+            });
+        }
+    });
+    // select desa then fill kode dusun
+    $('#desa_id').on('change', function(){
+        var kodeDusun   = $(this).find('option:selected').data('id');
+        if(kodeDusun !== undefined){
+            $('#kode').val(kodeDusun+'.');
+        }
+    });
 
 });
 

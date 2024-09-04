@@ -13,7 +13,7 @@ class Dusun extends Model
     use Auditable, HasFactory;
     public $table = "dusun";
     protected $fillable = [
-        'id','kode', 'nama', 'aktif', 'desa_id', 'created_at','updated_at'
+        'kode', 'nama', 'aktif', 'desa_id', 'created_at','updated_at'
     ];  
     protected $casts = [
         'updated_at',
@@ -24,13 +24,6 @@ class Dusun extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-
-
-
-
-
-
-
     public function desa() {
         return $this->belongsTo(Kelurahan::class, 'desa_id');
     }
