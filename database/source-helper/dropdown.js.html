@@ -1,0 +1,537 @@
+<form id="dropdowns" action="#">
+			
+    <label>Country:</label>
+        <select id="country" name="country">
+            <option value="000">-Select Country-</option>
+        </select>
+    
+    <br />
+    
+    <label>State:</label>
+        <select id="state" name="network">
+            <option value="000">-Select State-</option>
+        </select>
+    
+    <br />
+    
+    <label>City:</label>
+        <select id="city" name="model">
+            <option value="000">-Select City-</option>
+        </select>
+    
+    <br />
+<label>Kec:</label>
+        <select id="kec" name="kecamatan">
+            <option value="000">-Select Sub-district-</option>
+        </select>
+    
+    <br />
+<label>Kel:</label>
+        <select id="kel" name="kelurahan">
+            <option value="000">-Select Village-</option>
+        </select>
+</form>
+
+
+<script>
+var myJson = {
+    "country": [
+        {
+            "name": "United States",
+            "id": "usa",
+            "states": [
+                {
+                    "name": "State 1 USA",
+                    "id": "usaState1",
+                    "cities": [
+                        {
+                            "name": "City 1",
+                            "id": "usaState1City1",
+                            "area": "12345 sqkm",
+                                "kec": [
+                                    {
+                                        "name": "Kecamatan US 1",
+                                        "id": "kecUSA1",
+                                        "pos": "80513",
+                                        "kel": [
+                                            {
+                                                "id":"kelUs1",
+                                                "nama": "Kel US 1",
+                                                "kode": "US-1",
+                                                "coordinate":"xxxx"
+                                            },
+                                            {
+                                                "id":"kelUs2",
+                                                "nama": "Kel US 2",
+                                                "kode": "US-2",
+                                                "coordinate":"xxxx2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "Kecamatan US 2",
+                                        "id": "kecUSA2",
+                                        "pos": "80512",
+                                        "kel": [
+                                            {
+                                                "id":"kelUs3",
+                                                "nama": "Kel US 3",
+                                                "kode": "US-3",
+                                                "coordinate":"xxxx"
+                                            },
+                                            {
+                                                "id":"kelUs4",
+                                                "nama": "Kel US 4",
+                                                "kode": "US-4",
+                                                "coordinate":"xxxx2"
+                                            }
+                                        ]
+                                    }
+                                ]
+                        },
+                        {
+                            "name": "City 2",
+                            "id": "usaState1City2",
+                            "area": "12345 sqkm",
+                          	"kec": [
+                                {
+                                    "name": "Kecamatan US 3",
+                                    "id": "kecUSA3",
+                                    "pos": "80513",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs5",
+                                            "nama": "Kel US 5",
+                                            "kode": "US-5",
+                                            "coordinate":"xxxx5"
+                                        },
+                                        {
+                                            "id":"kelUs6",
+                                            "nama": "Kel US 6",
+                                            "kode": "US-6",
+                                            "coordinate":"xxxx6"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kecamatan US 4",
+                                    "id": "kecUSA4",
+                                    "pos": "80512",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs7",
+                                            "nama": "Kel US 7",
+                                            "kode": "US-7",
+                                            "coordinate":"xxxx"
+                                        },
+                                        {
+                                            "id":"kelUs8",
+                                            "nama": "Kel US 8",
+                                            "kode": "US-8",
+                                            "coordinate":"xxxx2"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "State 2 USA",
+                    "id": "usaState2",
+                    "cities": [
+                        {
+                            "name": "City 3",
+                            "id": "usaState2City3",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kecamatan US 5",
+                                    "id": "kecUSA5",
+                                    "pos": "80515",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs9",
+                                            "nama": "Kel US 9",
+                                            "kode": "US-9",
+                                            "coordinate":"xxxx9"
+                                        },
+                                        {
+                                            "id":"kelUs10",
+                                            "nama": "Kel US 10",
+                                            "kode": "US-10",
+                                            "coordinate":"xxxx10"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kecamatan US 6",
+                                    "id": "kecUSA6",
+                                    "pos": "80512",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs11",
+                                            "nama": "Kel US 11",
+                                            "kode": "US-11",
+                                            "coordinate":"xxx11"
+                                        },
+                                        {
+                                            "id":"kelUs12",
+                                            "nama": "Kel US 12",
+                                            "kode": "US-12",
+                                            "coordinate":"xxxx12"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "City 4",
+                            "id": "usaState2City4",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kecamatan US 7",
+                                    "id": "kecUSA",
+                                    "pos": "80517",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs13",
+                                            "nama": "Kel US 13",
+                                            "kode": "US-13",
+                                            "coordinate":"xxxx13"
+                                        },
+                                        {
+                                            "id":"kelUs14",
+                                            "nama": "Kel US 14",
+                                            "kode": "US-14",
+                                            "coordinate":"xxxx14"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kecamatan US 8",
+                                    "id": "kecUSA8",
+                                    "pos": "80518",
+                                    "kel": [
+                                        {
+                                            "id":"kelUs15",
+                                            "nama": "Kel US 15",
+                                            "kode": "US-15",
+                                            "coordinate":"xxx15"
+                                        },
+                                        {
+                                            "id":"kelUs16",
+                                            "nama": "Kel US 16",
+                                            "kode": "US-16",
+                                            "coordinate":"xxxx16"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Australia",
+            "id": "aus",
+            "states": [
+                {
+                    "name": "State 1 Australia",
+                    "id": "ausState1",
+                    "cities": [
+                        {
+                            "name": "City 5",
+                            "id": "ausState1City5",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kec AUS 1",
+                                    "id": "kecAUS1",
+                                    "pos": "90517",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-1",
+                                            "nama": "Kel AUS 1",
+                                            "kode": "AUS-1",
+                                            "coordinate":"aus-1",
+                                        },
+                                        {
+                                            "id":"kel-AUS-2",
+                                            "nama": "Kel AUS 2",
+                                            "kode": "AUS-2",
+                                            "coordinate":"aus-2",
+                                        }
+                                    ]
+                                },                                {
+                                    "name": "Kec AUS 2",
+                                    "id": "kecAUS2",
+                                    "pos": "90512",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-3",
+                                            "nama": "Kel AUS 3",
+                                            "kode": "AUS-3",
+                                            "coordinate":"aus-3",
+                                        },
+                                        {
+                                            "id":"kel-AUS-4",
+                                            "nama": "Kel AUS 4",
+                                            "kode": "AUS-4",
+                                            "coordinate":"aus-4",
+                                        }
+                                    ]
+                                },
+                            ]
+
+                        },
+                        {
+                            "name": "City 6",
+                            "id": "ausState1City6",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kec AUS 3",
+                                    "id": "kecAUS3",
+                                    "pos": "90513",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-5",
+                                            "nama": "Kel AUS 5",
+                                            "kode": "AUS-5",
+                                            "coordinate":"aus-5",
+                                        },
+                                        {
+                                            "id":"kel-AUS-6",
+                                            "nama": "Kel AUS 6",
+                                            "kode": "AUS-6",
+                                            "coordinate":"aus-6",
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kec AUS 4",
+                                    "id": "kecAUS4",
+                                    "pos": "90514",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-7",
+                                            "nama": "Kel AUS 7",
+                                            "kode": "AUS-7",
+                                            "coordinate":"aus-7",
+                                        },
+                                        {
+                                            "id":"kel-AUS-8",
+                                            "nama": "Kel AUS 8",
+                                            "kode": "AUS-8",
+                                            "coordinate":"aus-8",
+                                        }
+                                    ]
+                                },
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "State 2 Australia",
+                    "id": "ausState2",
+                    "cities": [
+                        {
+                            "name": "City 7",
+                            "id": "ausState2City7",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kec AUS 5",
+                                    "id": "kecAUS5",
+                                    "pos": "90515",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-9",
+                                            "nama": "Kel AUS 9",
+                                            "kode": "AUS-9",
+                                            "coordinate":"aus-9",
+                                        },
+                                        {
+                                            "id":"kel-AUS-10",
+                                            "nama": "Kel AUS 10",
+                                            "kode": "AUS-10",
+                                            "coordinate":"aus-10",
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kec AUS 6",
+                                    "id": "kecAUS6",
+                                    "pos": "90516",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-11",
+                                            "nama": "Kel AUS 11",
+                                            "kode": "AUS-11",
+                                            "coordinate":"aus-11",
+                                        },
+                                        {
+                                            "id":"kel-AUS-12",
+                                            "nama": "Kel AUS 12",
+                                            "kode": "AUS-12",
+                                            "coordinate":"aus-12",
+                                        }
+                                    ]
+                                },
+                            ]
+                        },
+                        {
+                            "name": "City 8",
+                            "id": "ausState2City8",
+                            "area": "12345 sqkm",
+                            "kec": [
+                                {
+                                    "name": "Kec AUS 7",
+                                    "id": "kecAUS7",
+                                    "pos": "90517",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-13",
+                                            "nama": "Kel AUS 13",
+                                            "kode": "AUS-13",
+                                            "coordinate":"aus-13",
+                                        },
+                                        {
+                                            "id":"kel-AUS-14",
+                                            "nama": "Kel AUS 14",
+                                            "kode": "AUS-14",
+                                            "coordinate":"aus-14",
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Kec AUS 8",
+                                    "id": "kecAUS8",
+                                    "pos": "90518",
+                                    "kel": [
+                                        {
+                                            "id":"kel-AUS-15",
+                                            "nama": "Kel AUS 15",
+                                            "kode": "AUS-15",
+                                            "coordinate":"aus-15",
+                                        },
+                                        {
+                                            "id":"kel-AUS-16",
+                                            "nama": "Kel AUS 16",
+                                            "kode": "AUS-16",
+                                            "coordinate":"aus-16",
+                                        }
+                                    ]
+                                },
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+$.each(myJson.country, function (index, value) {
+    $("#country").append('<option value="'+value.id+'">'+value.name+'</option>');
+});
+
+$('#country').on('change', function(){
+    console.log($(this).val());
+    for(var i = 0; i < myJson.country.length; i++)
+    {
+      if(myJson.country[i].id == $(this).val())
+      {
+        $('#state').html('<option value="000">-Select State-</option>');
+        $('#city').html('<option value="000">-Select City-</option>');
+        $('#kec').html('<option value="000">-Select Sub-district-</option>');
+        $('#kel').html('<option value="000">-Select Village-</option>');
+        
+         $.each(myJson.country[i].states, function (index, value) {
+            $("#state").append('<option value="'+value.id+'">'+value.name+'</option>');
+        });
+      }
+    }
+});
+
+$('#state').on('change', function(){
+    console.log($(this).val());
+    var selectedCountry = $('#country').val();
+    for(var i = 0; i < myJson.country.length; i++)
+    {
+      if(myJson.country[i].id == selectedCountry)
+      {
+        for(var j = 0; j < myJson.country[i].states.length; j++)
+        {
+          if(myJson.country[i].states[j].id == $(this).val())
+          {
+            $('#city').html('<option value="000">-Select City-</option>');
+            $('#kec').html('<option value="000">-Select Sub-district-</option>');
+            $('#kel').html('<option value="000">-Select Village-</option>');
+            $.each(myJson.country[i].states[j].cities, function (index, value) {
+            	$("#city").append('<option value="'+value.id+'">'+value.name+'</option>');
+            });
+          }
+        }
+      }
+    }
+ 
+});
+
+    // On change of city
+    $('#city').on('change', function() {
+      var selectedCountry = $('#country').val();
+      var selectedState = $('#state').val();
+      var selectedCity = $(this).val();
+      console.log(selectedCity);
+      
+      $('#kec').html('<option value="000">-Select Sub-district-</option>');
+      $('#kel').html('<option value="000">-Select Village-</option>');
+
+      $.each(myJson.country, function(index, value) {
+        if (value.id == selectedCountry) {
+          $.each(value.states, function(index, state) {
+            if (state.id == selectedState) {
+              $.each(state.cities, function(index, city) {
+                if (city.id == selectedCity) {
+                  $.each(city.kec, function(index, kec) {
+                    $("#kec").append('<option value="'+kec.id+'">'+kec.name+'</option>');
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    });
+    $('#kec').on('change', function() {
+    var selectedCountry = $('#country').val();
+    var selectedState = $('#state').val();
+    var selectedCity = $('#city').val();
+    var selectedKec = $(this).val();
+    $('#kel').html('<option value="000">-Select Village-</option>');
+
+    $.each(myJson.country, function(index, value) {
+        if (value.id == selectedCountry) {
+            $.each(value.states, function(index, state) {
+                if (state.id == selectedState) {
+                    $.each(state.cities, function(index, city) {
+                        if (city.id == selectedCity) {
+                            $.each(city.kec, function(index, subdistrict) {
+                                if (subdistrict.id == selectedKec) {
+                                    $.each(subdistrict.kel, function(index, village) {
+                                        $("#kel").append('<option value="'+village.id+'">'+village.nama+'</option>'); //used nama because json parameter is nama instead of name hehe
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+</script>
