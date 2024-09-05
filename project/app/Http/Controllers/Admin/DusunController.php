@@ -8,6 +8,8 @@ use App\Models\Provinsi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\QueryException;
+use App\Http\Requests\StoreDusunRequest;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +31,7 @@ class DusunController extends Controller
         return view('master.dusun.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreDusunRequest $request)
     {
         try {
             $data = $request->validated();
@@ -60,18 +62,25 @@ class DusunController extends Controller
         } catch (HttpException $e) {
             // Handle HTTP-specific exceptions
             return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'data'  => $request,
+                'success'   => false,
+                'message'   => $e->getMessage(),
+                'data'      => $request,
             ], $e->getStatusCode());
 
         } catch (Exception $e) {
             // Handle all other exceptions
             return response()->json([
-                'success' => false,
-                'data'  => $request,
-                'message' => 'An error occurred.',
-                'error'   => $e->getMessage(),
+                'success'   => false,
+                'data'      => $request,
+                'message'   => 'An error occurred.',
+                'error'     => $e->getMessage(),
+            ], 500);
+        }catch (QueryException $e){
+            return response()->json([
+                'success'   => false,
+                'data'      => $request,
+                'message'   => 'An error occurred.',
+                'error'     => $e->getMessage(),
             ], 500);
         }
     }

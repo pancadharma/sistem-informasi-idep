@@ -13,7 +13,7 @@ class Dusun extends Model
     use Auditable, HasFactory;
     public $table = "dusun";
     protected $fillable = [
-        'kode', 'nama', 'aktif', 'desa_id', 'created_at','updated_at'
+        'kode', 'nama', 'aktif', 'desa_id', 'kode_pos', 'created_at','updated_at'
     ];  
     protected $casts = [
         'updated_at',

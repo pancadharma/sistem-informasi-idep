@@ -133,12 +133,16 @@ $(document).ready(function() {
     //Validation Form Submit
     $('#submit_dusun').on('submit', function(e) {
         e.preventDefault();
-        // let url = '{{ route('dusun.store') }}';
-        let desa_kode = $('#desa_id').children('option:selected').data('id');
+        // Check if the form is valid
+        if (!$(this).valid()) {
+            return; // Stop the form submission if validation fails
+        }
+        let kode_desa = $('#desa_id').children('option:selected').data('id');
         let formData = $(this).serialize();
-        formData += '&desa_kode=' + desa_kode;
+        formData += '&kode_desa=' + kode_desa;
         let url = $(this).attr('action');
-        var formIsValid = true;
+        
+        console.log(formData);
         
         $.ajax({
             url: url,
@@ -173,6 +177,7 @@ $(document).ready(function() {
                         $("#desa_id").empty();
                         $('#nama').removeClass('is-valid');
                         $('#kode').removeClass('is-valid');
+                        $('#kode_pos').removeClass('is-valid');
                         $(".btn-tool").trigger('click');
                         $('#submit_dusun').trigger('reset');
                         $('#dusun_list').DataTable().ajax.reload();
@@ -191,9 +196,9 @@ $(document).ready(function() {
                             $.each(response.errors, function(field, messages) {
                                 messages.forEach(message => {
                                     errorMessage += `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).text(message).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
                                     $(`#${field}`).removeClass('invalid').addClass('is-invalid');
-                                    console.log(mess);
                                 });
                             });
                             errorMessage += '</ul>';
@@ -221,6 +226,7 @@ $(document).ready(function() {
         $('#desa_id').on('change', removeInvalidClass);
         $('#kode').on('input', removeInvalidClass);
         $('#nama').on('input', removeInvalidClass);
+        $('#kode_pos').on('input', removeInvalidClass);
     
         //validasi form submit dusun
     const validator = $('#submit_dusun, #update_dusun').validate({
@@ -385,6 +391,24 @@ $(document).ready(function() {
             $('#kode').val(kodeDusun+'.');
         }
     });
+
+    $('#kode_pos').on('input', function(e){
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if (this.value.length > 5) {
+            this.value = this.value.slice(0, 5);
+        }
+        const errorElement = $('#kodepos_kurang');
+        if (this.value.length < 5) {
+                errorElement.text('Postal code must be exactly 5 digits.');
+                this.setCustomValidity('Postal code must be exactly 5 digits.');
+        } else if (this.value.length > 5) {
+            errorElement.text('Postal code cannot be more than 5 digits.');
+            this.setCustomValidity('Postal code cannot be more than 5 digits.');
+        } else {
+            errorElement.text('');
+            this.setCustomValidity('');
+        }
+    })
 
 });
 

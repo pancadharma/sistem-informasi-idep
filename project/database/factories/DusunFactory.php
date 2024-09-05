@@ -24,7 +24,7 @@ class DusunFactory extends Factory
 
 
         return [
-            'kode'          => $this->faker->regexify('[A-Z0-9]{15}'),
+            'kode'          => $this->faker->regexify('[A-Z0-9]{16}'),
             'nama'          => $this->faker->randomElement($dusunNames),
             'latitude'      => $this->faker->latitude(-10.1718, 5.88969),
             'longitude'     => $this->faker->longitude(95.31644, 140.71813),

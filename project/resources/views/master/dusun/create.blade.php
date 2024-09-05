@@ -51,13 +51,20 @@
             {{-- Input Kode Dusun --}}
             <div class="form-group">
                 <label for="kode">{{ trans('cruds.dusun.form.kode') }}</label>
-                <input type="text" id="kode" name="kode" required class="form-control" data-placement="left" data-toggle="tooltip" data-placement="top" maxlength="16" minlength="16">
+                <input type="text" id="kode" name="kode" required class="form-control" maxlength="16" minlength="16">
                 {{--  pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}.\d{2}" --}}
             </div>
             {{-- Input Nama Kecamatan --}}
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.dusun.form.nama') }}</label>
-                <input type="text" id="nama" name="nama" class="form-control" required maxlength="200" aria-describedby="nama-error" aria-invalid="true" pattern="^[A-Za-z][A-Za-z0-9 ]*$" title="Must start with a letter and can contain spaces only after the first character">
+                <input type="text" id="nama" name="nama" class="form-control" required maxlength="200" aria-describedby="nama-error" aria-invalid="true" pattern="^[A-Za-z][A-Za-z0-9 .]*$" title="Must start with a letter. Repeated character like space, dot or else are not allowed 😊">
+                {{-- ^[A-Za-z][A-Za-z0-9 .]*$ --}}
+            </div>
+            {{-- Kode Pos --}}
+            <div class="form-group">
+                <label for="kode_pos">{{ trans('cruds.dusun.form.kode_pos') }}</label>
+                <input type="text" id="kode_pos" name="kode_pos" class="form-control" minlength="5" maxlength="5" aria-describedby="kode_pos-error" aria-invalid="true" pattern="\d*" title="Only number input allowed">
+                <span class="invalid-feedback" id="kodepos_kurang"></span>
             </div>
             <div class="form-group">
             <strong>{{ trans('cruds.status.title') .' '. trans('cruds.dusun.title') }}</strong>

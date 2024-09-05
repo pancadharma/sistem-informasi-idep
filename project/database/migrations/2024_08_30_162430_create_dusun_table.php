@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('dusun', function (Blueprint $table) {
             $table->bigIncrements("id");
-            $table->string("kode", 15);
+            $table->string("kode", 16);
             $table->string("nama", 200);
             // $table->double('latitude')->nullable();
             // $table->double('longitude')->nullable();

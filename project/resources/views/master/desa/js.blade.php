@@ -301,7 +301,6 @@
                                         errorMessage += `<li>${field}: ${message}</li>`;
                                         $(`#${field}-error`).text(message).removeClass('is-valid').addClass('is-invalid');
                                         $(`#${field}`).removeClass('invalid').addClass('is-invalid');
-                                        console.log(mess);
                                     });
                                 });
                                 errorMessage += '</ul>';
