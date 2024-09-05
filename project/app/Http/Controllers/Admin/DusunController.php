@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App;
 use Exception;
 use App\Models\Dusun;
 use App\Models\Provinsi;
+use App\Models\Kabupaten;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreDusunRequest;
 use Yajra\DataTables\Facades\DataTables;
@@ -15,6 +19,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class DusunController extends Controller
 {
@@ -84,17 +89,46 @@ class DusunController extends Controller
             ], 500);
         }
     }
-
-    public function show($dusun)
+    public function show(Dusun $dusun)
     {
         abort_if(Gate::denies('dusun_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('master.dusun.show', compact('id'));
+        $dusun->load('desa');
+        return response()->json($dusun); // Return province data as JSON
     }
 
-    public function edit($dusun)
+    public function edit(Dusun $dusun)
     {
         abort_if(Gate::denies('dusun_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('master.dusun.edit', compact('id'));
+        // $provinsi  = Provinsi::get(['id', 'kode', 'nama'])->map(function ($item) {
+        //     return [
+        //         'id'   => $item->id,
+        //         'kode' => $item->kode,
+        //         'text' => "{$item->kode} - {$item->nama}",
+        //     ];
+        // });
+
+        $pro = new Request();
+        $provinsi = App::make(WilayahController::class)->getProvinsi();
+
+        $kab = new Request();
+        $kab->merge(['id' => $dusun->desa->kecamatan->kabupaten->provinsi_id]);
+        $kabupaten = App::make(WilayahController::class)->getKabupaten($kab);
+
+        $kec = new Request();
+        $kec->merge(['id'=> $dusun->desa->kecamatan->kabupaten_id]);
+        $kecamatan = App::make(WilayahController::class)->getKecamatan($kec);
+
+        $ds = new Request();
+        $ds->merge(['id'=> $dusun->desa->kecamatan_id]);
+        $desa = App::make(WilayahController::class)->getDesa($ds);
+
+        return response()->json([
+            'provinsi'   => $provinsi->original,
+            'kabupaten'  => $kabupaten->original,
+            'kecamatan'  => $kecamatan->original,
+            'desa'       => $desa->original,
+            'dusun'      => $dusun,
+        ]);
     }
 
     public function update(Request $request, $dusun)
@@ -114,10 +148,10 @@ class DusunController extends Controller
             $data = DataTables::of($query)
             ->addColumn('action', function ($dusun) {
                 return '<button type="button" class="btn btn-sm btn-info edit-dusun-btn" data-action="edit"
-                data-desa-id="'. $dusun->id .'" title="'.__('global.edit') .' '. __('cruds.dusun.title') .' '. $dusun->nama .'">
+                data-dusun-id="'. $dusun->id .'" title="'.__('global.edit') .' '. __('cruds.dusun.title') .' '. $dusun->nama .'">
                 <i class="fas fa-pencil-alt"></i> Edit</button>
                 <button type="button" class="btn btn-sm btn-primary view-dusun-btn" data-action="view"
-                data-desa-id="'. $dusun->id .'" value="'. $dusun->id .'" title="'.__('global.view') .' '. __('cruds.dusun.title') .' '. $dusun->nama .'">
+                data-dusun-id="'. $dusun->id .'" value="'. $dusun->id .'" title="'.__('global.view') .' '. __('cruds.dusun.title') .' '. $dusun->nama .'">
                 <i class="fas fa-folder-open"></i> View</button>';
             })
             ->make(true);

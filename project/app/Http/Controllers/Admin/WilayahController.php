@@ -2,15 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Dusun;
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Dusun;
-use App\Models\Kabupaten;
-use App\Models\Kelurahan;
 
 class WilayahController extends Controller
 {
+
+    function getProvinsi(){
+        // $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.selectProv'), '');
+        $provinsi = Provinsi::get(['id', 'kode', 'nama'])
+        ->map(function ($item) {
+            return [
+                'id'   => $item->id,
+                'kode' => $item->kode,
+                'text' => "{$item->kode} - {$item->nama}",
+            ];
+        });
+        return response()->json($provinsi);
+    }
     function getKabupaten(Request $request){
         $kabupaten = Kabupaten::where('provinsi_id', $request->id)
         ->get(['id', 'kode', 'nama'])

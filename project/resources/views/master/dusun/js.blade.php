@@ -214,8 +214,106 @@ $(document).ready(function() {
                 }
         });
     });
+    // call edit form & view form in single script
+    $('#dusun_list tbody').on('click','.edit-dusun-btn, .view-dusun-btn', function(e){
+        e.preventDefault();
+        let dusunID     = $(this).data('dusun-id');
+        let action      = $(this).data('action');
+        let url         = '{{ route('dusun.edit', ':id') }}'.replace(':id',dusunID);
+        let show        = '{{ route('dusun.show', ':id') }}'.replace(':id',dusunID);
+        let form_url    = '{{ route('dusun.update', ':id') }}'.replace(':id', dusunID);
 
-    
+        if(action === "edit"){
+            $.getJSON(url, function(hasil){
+                Toast.fire({
+                    icon: "info",
+                    title: "Processing...",
+                    timer: 200,
+                    timerProgressBar: true,
+                });
+
+                let provID = hasil.dusun.desa.kecamatan.kabupaten.provinsi_id;
+                let kabID = hasil.dusun.desa.kecamatan.kabupaten.id;
+                let kecID = hasil.dusun.desa.kecamatan.id;
+                let desaID = hasil.dusun.desa.id;
+                let dusunID = hasil.dusun.id;
+                let aktifVal = hasil.dusun.aktif;
+                resetForm();
+                console.log(provID, kabID, kecID,desaID);
+                $('#id_dusun').val(dusunID);
+                $("#EditDusunForm").trigger('reset');
+                $("#EditDusunForm").attr('action', form_url);
+                $('#editaktif').prop('checked', aktifVal === 1);
+                $('#edit-aktif').val(aktifVal);
+
+                $('#provinsi').empty();
+                    $.each(hasil.provinsi, function(key, value) {
+                        let selected = (value.id === provID) ? 'selected' : '';
+                        $('#provinsi').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                    });
+                $('#kabupaten').empty();
+                    $.each(hasil.kabupaten, function(key, value) {
+                        let selected = (value.id === kabID) ? 'selected' : '';
+                        $('#kabupaten').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                    });
+                $('#kecamatan').empty();
+                    $.each(hasil.kecamatan, function(key, value) {
+                        let selected = (value.id === kabID) ? 'selected' : '';
+                        $('#kecamatan').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                    });
+                $('#desa').empty();
+                    $.each(hasil.desa, function(key, value) {
+                        let selected = (value.id === kabID) ? 'selected' : '';
+                        $('#desa').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                    });
+
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                alert("Error: " + textStatus + " - " + errorThrown);
+                Swal.fire({
+                    text: textStatus,
+                    message: "Failed to fetch data "+ errorThrown,
+                    icon: "error"
+                });
+            })
+        }
+        if(action === "view"){
+            Toast.fire({
+                icon: "info",
+                title: "Processing...",
+                timer: 200,
+                timerProgressBar: true,
+            });
+            $.getJSON(show, function(data){
+                $("#show-kode").text(data.kode);
+                $("#show-nama").text(data.nama);
+                $("#show-desa").text(data.desa.nama);
+                $("#show-kode_pos").text(data.kode_pos);
+                if (data.aktif === 1) {
+                    $('#show-aktif').val(data.aktif);
+                    $("#show-aktif").prop("checked",true); 
+                } else {
+                    $('#show-aktif').val(0);
+                    $("#show-aktif").prop("checked",false);
+                }
+
+                $('#DusunModalShow').modal('show');
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                alert("Error: " + textStatus + " - " + errorThrown);
+                Swal.fire({
+                    text: textStatus,
+                    message: "Failed to fetch data "+ errorThrown,
+                    icon: "error"
+                });
+            })
+            .always(function(){
+                // 
+            });
+        }
+    });
+
+
     function removeInvalidClass() {
         $(this).removeClass('is-invalid');
         let value_id = $(this).val();        

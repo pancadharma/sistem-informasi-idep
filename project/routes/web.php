@@ -91,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('dusun', DusunController::class);
 
     //Wilayah Call Drop Down / Select2
+    Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
     Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
     Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
     Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
