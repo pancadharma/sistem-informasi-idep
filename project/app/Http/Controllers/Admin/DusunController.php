@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App;
+// use App;
+// use Illuminate\Support\Facades\App;
 use Exception;
 use App\Models\Dusun;
 use App\Models\Provinsi;
-use App\Models\Kabupaten;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreDusunRequest;
 use Yajra\DataTables\Facades\DataTables;
