@@ -193,7 +193,7 @@ return [
                     // 'classes'   => 'text-danger text-uppercase',
                 ],
                 [
-                    'text'      => 'kelurahan',
+                    'text'      => 'desa',
                     'active'    => ['desa', 'regex:@^desa/[0-9]+$@', 'desa*'],
                     'route'     => 'desa.index',
                     'icon'      => 'fas fa-map',

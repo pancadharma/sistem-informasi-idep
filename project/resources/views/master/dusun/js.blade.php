@@ -237,20 +237,22 @@ $(document).ready(function() {
                 let kecID = hasil.dusun.desa.kecamatan.id;
                 let desaID = hasil.dusun.desa.id;
                 let dusunID = hasil.dusun.id;
+                let dusunKode = hasil.dusun.kode;
+                let dusunNama = hasil.dusun.nama;
+                let pos = hasil.dusun.kode_pos;
                 let aktifVal = hasil.dusun.aktif;
-                resetForm();
                 console.log(provID, kabID, kecID,desaID);
+                resetForm();
                 $('#id_dusun').val(dusunID);
                 $("#EditDusunForm").trigger('reset');
                 $("#EditDusunForm").attr('action', form_url);
                 $('#editaktif').prop('checked', aktifVal === 1);
                 $('#edit-aktif').val(aktifVal);
-
                 $('#provinsi').empty();
-                    $.each(hasil.provinsi, function(key, value) {
-                        let selected = (value.id === provID) ? 'selected' : '';
+                $.each(hasil.provinsi, function(key, value) {
+                    let selected = (value.id === provID) ? 'selected' : '';
                         $('#provinsi').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
-                    });
+                });
                 $('#kabupaten').empty();
                     $.each(hasil.kabupaten, function(key, value) {
                         let selected = (value.id === kabID) ? 'selected' : '';
@@ -266,6 +268,10 @@ $(document).ready(function() {
                         let selected = (value.id === kabID) ? 'selected' : '';
                         $('#desa').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
+                $('#kode_dusun').val(dusunKode);
+                $('#nama_dusun').val(dusunNama);
+                $('#postcode').val(pos);
+                $('#editDesaModal').modal('show');
 
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
@@ -278,12 +284,7 @@ $(document).ready(function() {
             })
         }
         if(action === "view"){
-            Toast.fire({
-                icon: "info",
-                title: "Processing...",
-                timer: 200,
-                timerProgressBar: true,
-            });
+            Toast.fire({icon: "info",title: "Processing...",timer: 200,timerProgressBar: true,});
             $.getJSON(show, function(data){
                 $("#show-kode").text(data.kode);
                 $("#show-nama").text(data.nama);
@@ -301,11 +302,7 @@ $(document).ready(function() {
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 alert("Error: " + textStatus + " - " + errorThrown);
-                Swal.fire({
-                    text: textStatus,
-                    message: "Failed to fetch data "+ errorThrown,
-                    icon: "error"
-                });
+                Swal.fire({text: textStatus,message: "Failed to fetch data "+ errorThrown,icon: "error"});
             })
             .always(function(){
                 // 
@@ -313,6 +310,8 @@ $(document).ready(function() {
         }
     });
 
+    //update data button
+    
 
     function removeInvalidClass() {
         $(this).removeClass('is-invalid');
@@ -391,7 +390,7 @@ $(document).ready(function() {
     });
 
     //select provinsi
-    $('#provinsi_id').change(function(){
+    $('#provinsi_id, #provinsi').change(function(){
         var provinsi_id = $(this).val();
         if(provinsi_id){
             $.ajax({
@@ -400,29 +399,29 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(hasil) {
-                    $("#kabupaten_id").empty();
-                    // $("#kecamatan_id").val('').trigger('change');
-                    $('#kabupaten_id').html(`<option value="000" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
-                    $('#kecamatan_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
-                    $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
-                    $('#kode').val('');
+                    $("#kabupaten_id, #kabupaten").empty();
+                    $('#kabupaten_id, #kabupaten').html(`<option value="000" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
+                    $('#kecamatan_id, #kecamatan').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
+                    $('#desa_id, #desa').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+                    $('#kode, #kode_dusun').val('');
+                    // $('#postcode, #kode_pos').val('');
                     if(hasil){
                         $.each(hasil, function(index, item) {
-                            $("#kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                            $("#kabupaten_id, #kabupaten").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
                         });
                     }
                     else{
-                        $("#kabupaten_id").empty();
+                        $("#kabupaten_id, #kabupaten").empty();
                     }
                 }
             });
         }
-        $('#kabupaten_id').select2({
+        $('#kabupaten_id, #kabupaten').select2({
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
         });
     });
     //select kabupaten
-    $('#kabupaten_id').change(function(){
+    $('#kabupaten_id, #kabupaten').change(function(){
         var selected = $(this).find('option:selected');
         var kode_kab = selected.data('id');
         var kab_id   = selected.val();
@@ -434,44 +433,44 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(hasil) {
-                    $("#kecamatan_id").empty();
-                    $('#kecamatan_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
-                    $("#desa_id").empty();
-                    $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
-                    $('#kode').val('');
+                    $("#kecamatan_id, #kecamatan").empty();
+                    $('#kecamatan_id, #kecamatan').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
+                    $("#desa_id, #desa").empty();
+                    $('#desa_id, #desa').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+                    $('#kode, #kode_dusun').val('');
                     if(hasil){
                         $.each(hasil, function(index, item) {
-                            $("#kecamatan_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                            $("#kecamatan_id, #kecamatan").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
                         });
                     }
                     else{
-                        $("#kecamatan_id").empty();
+                        $("#kecamatan_id, #kecamatan").empty();
                     }
                 }
             });
         }
         if(kode_kab !== undefined ){
-            $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}");
+            $('#kode, #kode_dusun').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}");
             return;
         }else{
-            $('#kode').val('');
+            $('#kode, #kode_dusun').val('');
         }
     });
     //select kecamatan
-    $('#kecamatan_id').on('change', function() {
+    $('#kecamatan_id, #kecamatan').on('change', function() {
         var selectedProvinsi = $('#provinsi_id').val();
         var selectedKab = $('#kabupaten_id').val();
         var selectedKec = $(this).val();
-        $('#desa_id').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
+        $('#desa_id, #desa').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
         console.log(selectedKec);
         if (selectedKec) {
             $.getJSON('{{ route('api.desa', '') }}/' + selectedKec, function(hasil){
-                $('#desa_id').empty();
-                $('#desa_id').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
+                $('#desa_id, #desa').empty();
+                $('#desa_id, #desa').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
                 $.each(hasil, function(index, desa) {
-                    $("#desa_id").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
+                    $("#desa_id, #desa").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
                 });
-                $('#kode').val('');
+                $('#kode, #kode_dusun').val('');
             }).fail(function() {
                 Toast.fire({
                     icon: "error",
@@ -483,14 +482,14 @@ $(document).ready(function() {
         }
     });
     // select desa then fill kode dusun
-    $('#desa_id').on('change', function(){
+    $('#desa_id, #desa').on('change', function(){
         var kodeDusun   = $(this).find('option:selected').data('id');
         if(kodeDusun !== undefined){
-            $('#kode').val(kodeDusun+'.');
+            $('#kode, #kode_dusun').val(kodeDusun+'.');
         }
     });
 
-    $('#kode_pos').on('input', function(e){
+    $('#kode_pos, #postcode').on('input', function(e){
         this.value = this.value.replace(/[^0-9]/g, '');
         if (this.value.length > 5) {
             this.value = this.value.slice(0, 5);

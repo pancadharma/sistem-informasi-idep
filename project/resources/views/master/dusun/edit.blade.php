@@ -42,8 +42,8 @@
                 </div>
                 {{-- Input Kode Dusun --}}
                 <div class="form-group">
-                    <label for="kode">{{ trans('cruds.dusun.form.kode') }}</label>
-                    <input type="text" id="kode" name="kode" required class="form-control" maxlength="16" minlength="16">
+                    <label for="kode_dusun">{{ trans('cruds.dusun.form.kode') }}</label>
+                    <input type="text" id="kode_dusun" name="kode" required class="form-control" maxlength="16" minlength="16">
                     {{--  pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}.\d{2}" --}}
                 </div>
                 {{-- Input Nama Dusun --}}
@@ -68,7 +68,7 @@
                     </div>
                 </div>
             
-                <button class="btn btn-success float-right btn-update-dusun" data-toggle="tooltip" data-placement="top" type="submit" title="{{ trans('global.save') }}"><i class="fas fa-save"></i> {{ trans('global.save') }}</button>
+                <button class="btn btn-info float-right btn-update-dusun" data-toggle="tooltip" data-placement="top" type="submit" title="{{ trans('global.update') }}"><i class="fas fa-save"></i> {{ trans('global.update') }}</button>
             </form>
         </div>
     </div>
