@@ -63,7 +63,7 @@
             {{-- Kode Pos --}}
             <div class="form-group">
                 <label for="kode_pos">{{ trans('cruds.dusun.form.kode_pos') }}</label>
-                <input type="text" id="kode_pos" name="kode_pos" class="form-control" minlength="5" maxlength="5" aria-describedby="kode_pos-error" aria-invalid="true" pattern="\d*" title="Only number input allowed">
+                <input type="text" id="kode_pos" name="kode_pos" class="form-control" val="" maxlength="5" aria-describedby="kode_pos-error" aria-invalid="true" pattern="\d*" title="Only number input allowed">
                 <span class="invalid-feedback" id="kodepos_kurang"></span>
             </div>
             <div class="form-group">

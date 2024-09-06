@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\MatchDesaID;
 use Illuminate\Foundation\Http\FormRequest;
+use PhpParser\Node\NullableType;
 
 class StoreDusunRequest extends FormRequest
 {
@@ -20,7 +21,7 @@ class StoreDusunRequest extends FormRequest
             'kode_desa'    => ['required','string', 'size:13'],
             'kode'         => ['required', 'string', new MatchDesaID($this->input('kode_desa')), 'unique:dusun'],
             'nama'         => ['required', 'string', 'max:200', 'min:3'],
-            'kode_pos'     => ['string', 'max:5'],
+            'kode_pos'     => ['nullable', 'size:5'],
             'aktif'        => ['integer'],
         ];
     }
