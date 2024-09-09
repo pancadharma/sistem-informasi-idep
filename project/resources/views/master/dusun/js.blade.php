@@ -311,6 +311,59 @@ $(document).ready(function() {
     });
 
     //update data button
+    $('#update_dusun').on('submit', function(e){
+        e.preventDefault();
+
+        let kode_desa = $('#desa').children('option:selected').data('id');
+        let form = $(this);
+        let action = form.attr('action');
+        let url = form.attr('action');
+        let formData = form.serialize();
+        formData += '&kode_desa=' + kode_desa;
+
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                Toast.fire({
+                    icon: "success",
+                    title: "Data Dusun Berhasil Diubah",
+                    timer: 1500,
+                    timerProgressBar: true,
+                });
+                $('#dusun_list').DataTable().ajax.reload();
+                resetForm();
+                $('#editDesaModal').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
+    });
     
 
     function removeInvalidClass() {
