@@ -459,7 +459,7 @@ trkegiatanpeserta }o--|| trkegiatan
 trkegiatandokumen }o--|| trkegiatan
 trkegiatan }o--|| mdusun
 trevaluasi }o--|| mdusun
-trevaluasi }o--|| mparter
+trevaluasi }o--|| mpartner
 trevaluasi }o--|| trprogram
 trevaluasi }o--|| muser
 trevaluasidokumen }o--|| trevaluasi
@@ -469,5 +469,17 @@ trprogramkaitansdg }o--|| trprogram
 trprogramkaitansdg }o--|| mkaitansdg
 trprogramkelompokmarjinal }o--|| trprogram
 trprogramkelompokmarjinal }o--|| mkelompokmarjinal
+trkegiatanoutput }o--|| trprogramoutcomeoutput
+mmarjinal }o--|| mkelompokmarjinal
+mpendonor }o--|| mpendonorkategori
+trevaluasi }o--|| muser
+trkegiatanpesertamarjinal }o--|| mkelompokmarjinal
+trevaluasidokumen }o--|| trevaluasi
+trkegiatan }o--|| msatuan
+trprogramuser }o--|| mperan
+trkegiatanpenulis }o--|| mperan
+trkegiatanpenulis }o--|| trkegiatan
+trkegiatanpenulis }o--|| muser
+trkegiatan }o--|| mjenisbantuan
 trlog }o--|| muser
 @enduml
