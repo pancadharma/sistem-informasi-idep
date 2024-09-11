@@ -251,22 +251,22 @@ $(document).ready(function() {
                 $('#provinsi').empty();
                 $.each(hasil.provinsi, function(key, value) {
                     let selected = (value.id === provID) ? 'selected' : '';
-                        $('#provinsi').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                        $('#provinsi').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                 });
                 $('#kabupaten').empty();
                     $.each(hasil.kabupaten, function(key, value) {
                         let selected = (value.id === kabID) ? 'selected' : '';
-                        $('#kabupaten').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                        $('#kabupaten').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
                 $('#kecamatan').empty();
                     $.each(hasil.kecamatan, function(key, value) {
                         let selected = (value.id === kabID) ? 'selected' : '';
-                        $('#kecamatan').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                        $('#kecamatan').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
                 $('#desa').empty();
                     $.each(hasil.desa, function(key, value) {
                         let selected = (value.id === kabID) ? 'selected' : '';
-                        $('#desa').append('<option value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
+                        $('#desa').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
                 $('#kode_dusun').val(dusunKode);
                 $('#nama_dusun').val(dusunNama);
@@ -314,16 +314,24 @@ $(document).ready(function() {
     $('#update_dusun').on('submit', function(e){
         e.preventDefault();
 
-        let kode_desa = $('#desa').children('option:selected').data('id');
+        $('#editaktif').change(function() {
+            $('#edit-aktif').val(this.checked ? 1 : 0);
+        });
+
+        let kode_desa = $('#desa').children('option:selected').data('id'); //need to fix this later
         let form = $(this);
         let action = form.attr('action');
-        let url = form.attr('action');
+        let dusunID = $('#id_dusun').val();
+        let url = '{{ route('dusun.update', ':id') }}'.replace(':id', dusunID);
         let formData = form.serialize();
         formData += '&kode_desa=' + kode_desa;
+        
+        console.log(formData);
 
         $.ajax({
             url: url,
-            type: 'PUT',
+            method: 'PUT',
+            dataType:'JSON',
             data: formData,
             dataType: 'json',
             success: function(response) {
@@ -337,32 +345,41 @@ $(document).ready(function() {
                 resetForm();
                 $('#editDesaModal').modal('hide');
             },
-            error: function(xhr, status, error) {
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response.errors) {
-                            errorMessage += '<br><br><ul style="text-align:left!important">';
-                            $.each(response.errors, function(field, messages) {
-                                messages.forEach(message => {
-                                    errorMessage += `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
-                                    $(`#${field}-error`).text(message);
-                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
-                                });
-                            });
-                            errorMessage += '</ul>';
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
+            error: function(xhr, status, errors){
+                var response = JSON.parse(xhr.responseText);
+                let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        errorMessage = response.message;
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                        });
                     }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                    });
+                    if (response.errors) {
+                        const errors = response.errors;
+                        errorMessage += '<br><br><ul style="text-align:left!important">';
+                        for (const field in errors) {
+                            if (errors.hasOwnProperty(field)) {
+                                errors[field].forEach(err => {
+                                    errorMessage += `<li>${field}: ${err}</li>`;
+                                });
+                            }
+                        }
+                        errorMessage += '</ul>';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
                 }
-            });
+            }
+        });
     });
     
 
@@ -537,6 +554,7 @@ $(document).ready(function() {
     // select desa then fill kode dusun
     $('#desa_id, #desa').on('change', function(){
         var kodeDusun   = $(this).find('option:selected').data('id');
+
         if(kodeDusun !== undefined){
             $('#kode, #kode_dusun').val(kodeDusun+'.');
         }

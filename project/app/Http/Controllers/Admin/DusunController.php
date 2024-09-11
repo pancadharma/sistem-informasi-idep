@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreDusunRequest;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\UpdateDusunRequest;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -130,9 +131,25 @@ class DusunController extends Controller
         ]);
     }
 
-    public function update(Request $request, $dusun)
+    public function update(UpdateDusunRequest $request, Dusun $dusun)
     {
-        
+        try {
+            $data = $request->validated();
+            // $dusun->update($data);
+            return response()->json([
+                'success'   => true,
+                'message'   =>  __('cruds.data.data') .' '.__('cruds.dusun.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+                'status'    => Response::HTTP_CREATED,
+                'data'      => $data,
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'data'    => $request,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function destroy($dusun)
