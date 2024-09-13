@@ -6,3 +6,14 @@ https://sipedas.pertanian.go.id/api/wilayah/list_wilayah?thn=2024&lvl=11&pro=51&
 
 Desa Level
 https://sipedas.pertanian.go.id/api/wilayah/list_wilayah?thn=2024&lvl=11&pro=51&lv2=14
+
+
+
+// if (type === "kabupaten") {
+//     $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="kabupaten" selected>{{ trans("cruds.kabupaten.title") }}</option>');
+//     $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="kota">{{ trans("cruds.kabupaten.kota") }}</option>');
+// } else if (type === "kota") {
+//     $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="kabupaten">{{ trans("cruds.kabupaten.title") }}</option>');
+//     $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="kota" selected>{{ trans("cruds.kabupaten.kota") }}</option>');
+// }
+
