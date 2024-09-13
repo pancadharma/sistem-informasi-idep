@@ -18,6 +18,7 @@ use App\Http\Requests\UpdateDusunRequest;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
@@ -135,7 +136,8 @@ class DusunController extends Controller
     {
         try {
             $data = $request->validated();
-            // $dusun->update($data);
+            Log::info($data);
+            $dusun->update($data);
             return response()->json([
                 'success'   => true,
                 'message'   =>  __('cruds.data.data') .' '.__('cruds.dusun.title') .' '. $request->nama .' '. __('cruds.data.updated'),

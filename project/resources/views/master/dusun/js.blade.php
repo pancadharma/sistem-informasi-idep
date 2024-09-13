@@ -313,11 +313,6 @@ $(document).ready(function() {
     //update data button
     $('#update_dusun').on('submit', function(e){
         e.preventDefault();
-
-        $('#editaktif').change(function() {
-            $('#edit-aktif').val(this.checked ? 1 : 0);
-        });
-
         let kode_desa = $('#desa').children('option:selected').data('id'); //need to fix this later
         let form = $(this);
         let action = form.attr('action');
@@ -576,7 +571,11 @@ $(document).ready(function() {
             errorElement.text('');
             this.setCustomValidity('');
         }
-    })
+    });
+    
+    $('#editaktif').change(function() {
+        $('#edit-aktif').val(this.checked ? 1 : 0);
+    });
 
 });
 
