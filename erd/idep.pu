@@ -57,7 +57,7 @@ entity "mjenisbantuan" as mjenisbantuan {
     aktif : bit
 }
 
-entity "mkaitanidep" as mkaitanidep {
+entity "mtargetreinstra" as mtargetreinstra {
     *id : int <<auto>>
     --
     nama : varchar(200)
@@ -71,14 +71,14 @@ entity "mkaitansdg" as mkaitansdg {
     aktif : bit
 }
 
-entity "mkelompokrentan" as mkelompokrentan {
+entity "mkelompokmarjinal" as mkelompokmarjinal {
     *id : int <<auto>>
     --
     nama : varchar(200)
     aktif : bit
 }
 
-entity "mrentan" as mrentan{
+entity "mmarjinal" as mmarjinal{
     *id : int <<auto>>
     --
     nama : varchar(200)
@@ -105,6 +105,7 @@ entity "mpendonor" as mpendonor{
     --
     id_pendonorkategori : int <<FK>>
     nama : varchar(200)
+    pic : varchar(200)
     email : varchar(200) <null>
     phone : varchar(20) <null>
     aktif : bit
@@ -121,6 +122,7 @@ entity "muser" as muser {
     *id : int <<auto>>
     --
     nama : varchar(200)
+    id_jabatan : int <<fk>>
     email : varchar(200)
     username : varchar(100)
     password : varchar(100)
@@ -149,6 +151,13 @@ entity "muserrole" as muserrole {
     update_at : datetime
 }
 
+entity "mperan" as mperan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
 entity "trprogram" as trprogram {
     *id : int <<auto>>
     --
@@ -171,11 +180,11 @@ entity "trprogram" as trprogram {
     update_at : datetime
 }
 
-entity "trprogramkaitanidep" as trprogramkaitanidep {
+entity "trprogramtargetreinstra" as trprogramtargetreinstra {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
-    id_kaitanidep: int <<fk>>
+    id_targetreinstra: int <<fk>>
 }
 
 entity "trprogramkaitansdg" as trprogramkaitansdg {
@@ -185,11 +194,11 @@ entity "trprogramkaitansdg" as trprogramkaitansdg {
     id_kaitansdg: int <<fk>>
 }
 
-entity "trprogramkelompokrentan" as trprogramkelompokrentan {
+entity "trprogramkelompokmarjinal" as trprogramkelompokmarjinal {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
-    id_kelompokrentan: int <<fk>>
+    id_kelompokmarjinal: int <<fk>>
 }
 
 entity "trprogrampendonor" as trprogrampendonor {
@@ -204,6 +213,8 @@ entity "trprogrampartner" as trprogrampartner {
     --
     id_program : int <<fk>>
     id_partner : int <<fk>>
+    email : varchar(200)
+    phone : varchar(20)
 }
 
 entity "trprogramuser" as trprogramuser {
@@ -211,7 +222,7 @@ entity "trprogramuser" as trprogramuser {
     --
     id_program : int <<fk>>
     id_user : int <<fk>>
-    id_jabatan : int <<fk>>
+    id_peran : int <<fk>>
 }
 
 entity "trprogramgoal" as trprogramgoal {
@@ -240,6 +251,16 @@ entity "trprogramoutcome" as trprogramoutcome {
     indikator : varchar(500)
     target : varchar(500)
 }
+
+entity "trprogramoutcomeoutput" as trprogramoutcomeoutput {
+    *id : int <<auto>>
+    --
+    id_programoutcome : int <<fk>>
+    deskrispsi : varchar(500)
+    indikator : varchar(500)
+    target : varchar(500)
+}
+
 
 entity "trprogramlokasi" as trprogramlokasi {
     *id : int <<auto>>
@@ -285,13 +306,20 @@ entity "trkegiatan" as trkegiatan {
     luaslahan : varchar (50) null
     id_jenisbantuan : int <<fk>> null
     id_satuan : int <<fk>> null
-    hasil : varchar (500) null
     tindaklanjut : varchar (500) null
     tantangan : varchar (500) null
+    rekomendasi : varchar (500) null
     id_user : int <<fk>>
     submit : bit
     created_at : datetime
     update_at : datetime
+}
+
+entity "trkegiatanoutput" as trkegiatanoutput {
+    *id : int <<auto>>
+    --
+    id_kegiatan: int <<fk>>
+    id_programoutcomeoutput : <<fk>>
 }
 
 entity "trkegiatanpeserta" as trkegiatanpeserta {
@@ -310,6 +338,13 @@ entity "trkegiatanpeserta" as trkegiatanpeserta {
     namakepalakeluarga : varchar (50)
 }
 
+entity "trkegiatanpesertamarjinal" as trkegiatanpesertamarjinal {
+    *id : int <<auto>>
+    --
+    id_kegiatanpeserta : int <<fk>>
+    id_kelompokmarjinal : int <<fk>>
+}
+
 entity "trkegiatandokumen" as trkegiatandokumen {
     *id : int <<auto>>
     --
@@ -317,6 +352,14 @@ entity "trkegiatandokumen" as trkegiatandokumen {
     filepath : varchar (200)
     nama : varchar (200)
     keterangan : varchar (200)
+}
+
+entity "trkegiatanpenulis" as trkegiatanpenulis {
+    *id : int <<auto>>
+    --
+    id_kegiatan : int <<fk>>
+    id_user : int <<fk>>
+    id_peran : int <<fk>>
 }
 
 entity "trevaluasi" as trevaluasi {
@@ -363,7 +406,7 @@ entity "trevaluasi" as trevaluasi {
     dukunganpihaklain : varchar (50)
     dukunganpihaklain_ket : varchar (500)
     id_user : int <<fk>>
-    submit : bit
+    status : varchar(50)
     created_at : datetime
     update_at : datetime
 }
@@ -377,12 +420,24 @@ entity "trevaluasidokumen" as trevaluasidokumen {
     keterangan : varchar (200)
 }
 
+entity "trlog" as trlog {
+    *id : int <<auto>>
+    --
+    tanggal : datetime
+    ipaddress : varchar (100)
+    useragent : varchar (500)
+    host : varchar (200)
+    menu : varchar (100)
+    action : varchar (50)
+    id_user : int <<fk>>
+}
+
 mdusun }o--|| mdesa
 muserrole }o--|| muser
 muserrole }o--|| mrole
 mpendonor }o--|| mpendonorkategori
-trprogram }o--|| mkelompokrentan
-trprogram }o--|| mkaitanidep
+trprogram }o--|| mkelompokmarjinal
+trprogram }o--|| mtargetreinstra
 trprogram }o--|| mkaitansdg
 trprogram }o--|| muser
 trprogrampendonor }o--|| trprogram
@@ -404,14 +459,27 @@ trkegiatanpeserta }o--|| trkegiatan
 trkegiatandokumen }o--|| trkegiatan
 trkegiatan }o--|| mdusun
 trevaluasi }o--|| mdusun
-trevaluasi }o--|| mparter
+trevaluasi }o--|| mpartner
 trevaluasi }o--|| trprogram
 trevaluasi }o--|| muser
 trevaluasidokumen }o--|| trevaluasi
-trprogramkaitanidep }o--|| trprogram
-trprogramkaitanidep }o--|| mkaitanidep
+trprogramtargetreinstra }o--|| trprogram
+trprogramtargetreinstra }o--|| mtargetreinstra
 trprogramkaitansdg }o--|| trprogram
 trprogramkaitansdg }o--|| mkaitansdg
-trprogramkelompokrentan }o--|| trprogram
-trprogramkelompokrentan }o--|| mkelompokrentan
+trprogramkelompokmarjinal }o--|| trprogram
+trprogramkelompokmarjinal }o--|| mkelompokmarjinal
+trkegiatanoutput }o--|| trprogramoutcomeoutput
+mmarjinal }o--|| mkelompokmarjinal
+mpendonor }o--|| mpendonorkategori
+trevaluasi }o--|| muser
+trkegiatanpesertamarjinal }o--|| mkelompokmarjinal
+trevaluasidokumen }o--|| trevaluasi
+trkegiatan }o--|| msatuan
+trprogramuser }o--|| mperan
+trkegiatanpenulis }o--|| mperan
+trkegiatanpenulis }o--|| trkegiatan
+trkegiatanpenulis }o--|| muser
+trkegiatan }o--|| mjenisbantuan
+trlog }o--|| muser
 @enduml
