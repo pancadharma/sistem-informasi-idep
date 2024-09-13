@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
                 'email'          => 'rgb@idep.com',
                 'password'       => bcrypt('password'),
                 'remember_token' => null,
-                'description'    => '',
+                'description'    => 'RGBComputer Super Admin - Dev',
             ],
         ];
 

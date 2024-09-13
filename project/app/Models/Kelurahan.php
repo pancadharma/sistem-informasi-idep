@@ -37,4 +37,9 @@ class Kelurahan extends Model
     {
         return $this->hasMany(Kelurahan::class, 'kecamatan_id');
     }
+
+    public function dusun()
+    {
+        return $this->hasMany(Dusun::class, 'desa_id');
+    }
 }

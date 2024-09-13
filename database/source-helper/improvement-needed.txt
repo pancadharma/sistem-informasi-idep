@@ -1,0 +1,5 @@
+nuovo/spreadsheet-reader
+for fix trait CsvImportTrait in App\Http\Controllers\Traits;
+"nuovo/spreadsheet-reader": "^0.5.11"
+
+https://spatie.be/docs/laravel-permission/v6/installation-laravel

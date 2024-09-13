@@ -1,12 +1,10 @@
 <?php
 
-use App\Models\Provinsi;
-use App\Models\Kelurahan;
-// use App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
+use App\Http\Controllers\Admin\DusunController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
@@ -15,18 +13,7 @@ use App\Http\Controllers\Admin\AuditLogsController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+use App\Http\Controllers\Admin\WilayahController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -43,42 +30,50 @@ Route::get('/home', function () {
     }
     return redirect()->route('home');
 });
+
 Auth::routes(['register' => false]);
 
-Route::group(['middleware' => ['auth']], function () {
+Route::middleware(['auth'])->group(function () {
+// Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
     // Permissions
     // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-    // Route::resource('permissions', 'PermissionsController');
+    Route::resource('permissions', PermissionsController::class);
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
     Route::resource('roles', RolesController::class);
-    Route::resource('permissions', PermissionsController::class);
+    
+
+
     // Users
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
     Route::resource('users', UsersController::class);
 
+    //Logs
     Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
-    // Countyr
+    // Country
     Route::delete('country/destroy', [CountryCountroller::class, 'massDestroy'])->name('country.massDestroy');
     Route::post('country/media', [CountryCountroller::class, 'storeMedia'])->name('country.storeMedia');
     Route::post('country/ckmedia', [CountryCountroller::class, 'storeCKEditorImages'])->name('country.storeCKEditorImages');
     Route::resource('country', CountryCountroller::class);
     Route::get('listcountry', [CountryCountroller::class, 'countrylist'])->name('country.data');
 
-
+    //Provinsi
     Route::resource('provinsi', ProvinsiController::class);
     Route::get('dataprovinsi', [ProvinsiController::class, 'dataprovinsi'])->name('provinsi.data');
     Route::get('provinsi/getedit/{provinsi}', [ProvinsiController::class, 'get_edit'])->name('provinsi.getedit');
 
+    //Kabupaten
     Route::get('datakabupaten', [KabupatenController::class, 'datakabupaten'])->name('data.kabupaten');
     Route::get('kabupaten.figma', [KabupatenController::class, 'figma'])->name('kabupaten.figma');
     Route::resource('kabupaten', KabupatenController::class);
 
+    //Get Data in Kecamatan
     Route::get('datakecamatan', [KecamatanController::class, 'datakecamatan'])->name('data.kecamatan');
     Route::get('prov.data', [KecamatanController::class, 'provinsi'])->name('prov.data');
     Route::get('prov.data/{provinsi}', [KecamatanController::class, 'provinsi_details'])->name('prov_data');
@@ -87,31 +82,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('kabupaten_data/{id}', [KecamatanController::class, 'getKabupatenByProvinsi'])->name('kabupaten_data');
     Route::resource('kecamatan', KecamatanController::class);
 
+    //Desa
     Route::get('data-desa', [DesaController::class, 'getDesa'])->name('data.desa');
     Route::get('data-kec/{id}', [DesaController::class, 'getKecamatan'])->name('kec.data');
     Route::resource('desa', DesaController::class);
+
+    Route::get('data-dusun', [DusunController::class, 'getDusun'])->name('data.dusun');
+    Route::resource('dusun', DusunController::class);
+
+    //Wilayah Call Drop Down / Select2
+    Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
+    Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
+    Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
+    Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
+    Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
+
 });
-
-
-Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-// Auth::routes();
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-// Route::get('/home', function() {
-//     return view('home');
-// })->name('home')->middleware('auth');
-
-
-
-// Route::get('/home', function () {
-//     if (session('status')) {
-//         return redirect()->route('admin.home')->with('status', session('status'));
-//     }
-
-//     return redirect()->route('admin.home');
-// });
