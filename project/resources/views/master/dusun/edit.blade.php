@@ -1,7 +1,7 @@
 <x-adminlte-modal id="editDesaModal" title=" {{ trans('global.update') .' '.trans('cruds.desa.title')}}" size="lg" theme="info" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="card-body">
-            <form id="update_dusun" action="#" method="PUT" class="resettable-form" data-toggle="validator" id="EditDusunForm" autocomplete="off" novalidate>
+            <form id="EditDusunForm" action="#" @submit.prevent="handleSubmit" method="PUT" class="resettable-form" data-toggle="validator" autocomplete="off" novalidate>
                 @csrf
                 @method('PATCH')
                 {{-- Select Provinsi --}}
@@ -44,13 +44,12 @@
                 <div class="form-group">
                     <label for="kode_dusun">{{ trans('cruds.dusun.form.kode') }}</label>
                     <input type="text" id="kode_dusun" name="kode" required class="form-control" maxlength="16" minlength="16">
-                    {{--  pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}.\d{2}" --}}
                 </div>
                 {{-- Input Nama Dusun --}}
                 <div class="form-group">
                     <label for="nama_dusun">{{ trans('cruds.dusun.form.nama') }}</label>
                     <input type="text" id="nama_dusun" name="nama" class="form-control" required maxlength="200" aria-describedby="nama_dusun-error" aria-invalid="true" pattern="^[A-Za-z][A-Za-z0-9 .]*$" title="Must start with a letter. Repeated character like space, dot or else are not allowed 😊">
-                    {{-- ^[A-Za-z][A-Za-z0-9 .]*$ --}}
+                    {{-- <span class="invalid-feedback" id="nama_dusun-error"></span> --}}
                 </div>
                 {{-- Kode Pos --}}
                 <div class="form-group">

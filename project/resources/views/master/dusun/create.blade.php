@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         {{-- form add dusun --}}
-        <form id="submit_dusun" action="{{ route('dusun.store')}}" method="POST" class="resettable-form" data-toggle="validator" id="dusunForm" autocomplete="off" novalidate>
+        <form id="submit_dusun" action="{{ route('dusun.store')}}" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off" novalidate>
             @csrf
             @method('POST')
             {{-- Select Provinsi --}}
@@ -54,7 +54,7 @@
                 <input type="text" id="kode" name="kode" required class="form-control" maxlength="16" minlength="16">
                 {{--  pattern="\d{2}\.\d{2}\.\d{2}\.\d{4}.\d{2}" --}}
             </div>
-            {{-- Input Nama Kecamatan --}}
+            {{-- Input Nama Dusun --}}
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.dusun.form.nama') }}</label>
                 <input type="text" id="nama" name="nama" class="form-control" required maxlength="200" aria-describedby="nama-error" aria-invalid="true" pattern="^[A-Za-z][A-Za-z0-9 .]*$" title="Must start with a letter. Repeated character like space, dot or else are not allowed 😊">

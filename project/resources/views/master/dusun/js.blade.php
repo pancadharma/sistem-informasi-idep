@@ -309,19 +309,19 @@ $(document).ready(function() {
             });
         }
     });
-
-    //update data button
-    $('#update_dusun').on('submit', function(e){
+    //Update Data
+    $('#EditDusunForm').on('submit', function(e){
         e.preventDefault();
-        let kode_desa = $('#desa').children('option:selected').data('id'); //need to fix this later
+        if (!$(this).valid()) {
+            return;
+        }        
+        let kode_desa = $('#desa').children('option:selected').data('id');
         let form = $(this);
         let action = form.attr('action');
         let dusunID = $('#id_dusun').val();
         let url = '{{ route('dusun.update', ':id') }}'.replace(':id', dusunID);
         let formData = form.serialize();
         formData += '&kode_desa=' + kode_desa;
-        
-        console.log(formData);
 
         $.ajax({
             url: url,
@@ -329,41 +329,58 @@ $(document).ready(function() {
             dataType:'JSON',
             data: formData,
             dataType: 'json',
-            success: function(response) {
+            beforeSend: function(){
                 Toast.fire({
-                    icon: "success",
-                    title: "Data Dusun Berhasil Diubah",
+                    icon: "info",
+                    title: "Processing...",
                     timer: 1500,
-                    timerProgressBar: true,
-                });
-                $('#dusun_list').DataTable().ajax.reload();
-                resetForm();
-                $('#editDesaModal').modal('hide');
+                    timerProgressBar:true,
+                    didOpen: ()=>{
+                        Swal.showLoading();
+                    },
+                })
             },
-            error: function(xhr, status, errors){
-                var response = JSON.parse(xhr.responseText);
+            success: function(response) {
+                if(response.success === true){
+                    Swal.fire({
+                        title: "Updated",
+                        text: response.message,
+                        icon: "success",
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: ()=>{
+                            Swal.showLoading();
+                        },
+                    });
+                }
+                $('#dusun_list').DataTable().ajax.reload();
+                $('#editDesaModal').modal('hide');
+                resetForm();
+            },
+            error: function(xhr, status, error) {
                 let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
                 try {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.message) {
-                        errorMessage = response.message;
+                    const response = xhr.responseJSON;
+                    if (response.errors) {
+                        errorMessage += '<br><br><ul style="text-align:left!important">';
+                        $.each(response.errors, function(field, messages) {
+                            messages.forEach(message => {
+                                errorMessage += `<li>${field}: ${message}</li>`;
+                                $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                $(`#${field}-error`).text(message);
+                                $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                            });
+                        });
+                        errorMessage += '</ul>';
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
                             html: errorMessage,
                         });
                     }
-                    if (response.errors) {
-                        const errors = response.errors;
-                        errorMessage += '<br><br><ul style="text-align:left!important">';
-                        for (const field in errors) {
-                            if (errors.hasOwnProperty(field)) {
-                                errors[field].forEach(err => {
-                                    errorMessage += `<li>${field}: ${err}</li>`;
-                                });
-                            }
-                        }
-                        errorMessage += '</ul>';
+
+                    if (response.message) {
+                        errorMessage = response.message;
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
@@ -373,59 +390,101 @@ $(document).ready(function() {
                 } catch (e) {
                     console.error('Error parsing response:', e);
                 }
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: errorMessage,
+                });
             }
         });
     });
-    
 
     function removeInvalidClass() {
         $(this).removeClass('is-invalid');
         let value_id = $(this).val();        
     }
-        $('#provinsi_id').on('change', removeInvalidClass);
-        $('#kabupaten_id').on('change', removeInvalidClass);
-        $('#kecamatan_id').on('change', removeInvalidClass);
-        $('#desa_id').on('change', removeInvalidClass);
-        $('#kode').on('input', removeInvalidClass);
-        $('#nama').on('input', removeInvalidClass);
-        $('#kode_pos').on('input', removeInvalidClass);
-    
-        //validasi form submit dusun
-    const validator = $('#submit_dusun, #update_dusun').validate({
-        rules: {
-            nama: { required: true, minlength: 3 },
-            kode: { required: true, minlength: 16, maxlength: 16 },
-            provinsi_id: { required: true },
-            kabupaten_id: { required: true },
-            kecamatan_id: { required: true },
-            desa_id: { required: true }
-        },
-        messages: {
-            nama: {
-                required: "{{ trans('cruds.dusun.validation.req_nama') }}",
-                minlength: "{{ trans('cruds.dusun.validation.min_nama') }}"
+    $('#provinsi_id, #provinsi').on('change', removeInvalidClass);
+    $('#kabupaten_id, #kabupaten').on('change', removeInvalidClass);
+    $('#kecamatan_id, #kecamatan').on('change', removeInvalidClass);
+    $('#desa_id, #desa').on('change', removeInvalidClass);
+    $('#kode, #kode_dusun').on('input', removeInvalidClass);
+    $('#nama, #nama_dusun').on('input', removeInvalidClass);
+    $('#kode_pos, #postcode').on('input', removeInvalidClass);
+
+    //validasi form submit dusun
+    $(function(){
+        const addDusunValidator = $('#submit_dusun').validate({
+            rules: {
+                nama: { required: true, minlength: 3 },
+                kode: { required: true, minlength: 16, maxlength: 16 },
+                provinsi_id: { required: true },
+                kabupaten_id: { required: true },
+                kecamatan_id: { required: true },
+                desa_id: { required: true },
+                },
+            messages: {
+                nama: {
+                    required: "{{ trans('cruds.dusun.validation.req_nama') }}",
+                    minlength: "{{ trans('cruds.dusun.validation.min_nama') }}"
+                },
+                kode: {
+                    required: "{{ trans('cruds.dusun.validation.kode') }}",
+                    minlength: "{{ trans('cruds.dusun.validation.min_kode') }}",
+                    maxlength: "{{ trans('cruds.dusun.validation.max_kode') }}"
+                },
+                provinsi_id: "{{ trans('cruds.dusun.validation.prov') }}",
+                kabupaten_id: "{{ trans('cruds.dusun.validation.kab') }}",
+                kecamatan_id: "{{ trans('cruds.dusun.validation.kec') }}",
+                desa_id: "{{ trans('cruds.dusun.validation.des') }}",
             },
-            kode: {
-                required: "{{ trans('cruds.dusun.validation.kode') }}",
-                minlength: "{{ trans('cruds.dusun.validation.min_kode') }}",
-                maxlength: "{{ trans('cruds.dusun.validation.max_kode') }}"
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
             },
-            provinsi_id: "{{ trans('cruds.dusun.validation.prov') }}",
-            kabupaten_id: "{{ trans('cruds.dusun.validation.kab') }}",
-            kecamatan_id: "{{ trans('cruds.dusun.validation.kec') }}",
-            desa_id: "{{ trans('cruds.dusun.validation.des') }}"
-        },
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid').removeClass('is-valid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-valid').removeClass('is-invalid');
-        }
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-valid').removeClass('is-invalid');
+            }
+        });
+        const editDusunValidator = $('#EditDusunForm').validate({
+            rules: {
+                nama_dusun: { required: true, minlength: 3 },
+                kode_dusun: { required: true, minlength: 16, maxlength: 16 },
+                provinsi: { required: true },
+                kabupaten: { required: true },
+                kecamatan: { required: true },
+                desa: { required: true }
+            },
+            messages: {
+                nama_dusun: {
+                    required: "{{ trans('cruds.dusun.validation.req_nama') }}",
+                    minlength: "{{ trans('cruds.dusun.validation.min_nama') }}"
+                },
+                kode_dusun: {
+                    required: "{{ trans('cruds.dusun.validation.kode') }}",
+                    minlength: "{{ trans('cruds.dusun.validation.min_kode') }}",
+                    maxlength: "{{ trans('cruds.dusun.validation.max_kode') }}"
+                },
+                provinsi: "{{ trans('cruds.dusun.validation.prov') }}",
+                kabupaten: "{{ trans('cruds.dusun.validation.kab') }}",
+                kecamatan: "{{ trans('cruds.dusun.validation.kec') }}",
+                desa: "{{ trans('cruds.dusun.validation.des') }}"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-valid').removeClass('is-invalid');
+            }
+        });
     });
 
     //reset form
@@ -572,7 +631,7 @@ $(document).ready(function() {
             this.setCustomValidity('');
         }
     });
-    
+
     $('#editaktif').change(function() {
         $('#edit-aktif').val(this.checked ? 1 : 0);
     });

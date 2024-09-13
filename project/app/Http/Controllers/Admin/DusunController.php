@@ -100,14 +100,6 @@ class DusunController extends Controller
     public function edit(Dusun $dusun)
     {
         abort_if(Gate::denies('dusun_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        // $provinsi  = Provinsi::get(['id', 'kode', 'nama'])->map(function ($item) {
-        //     return [
-        //         'id'   => $item->id,
-        //         'kode' => $item->kode,
-        //         'text' => "{$item->kode} - {$item->nama}",
-        //     ];
-        // });
-
         $pro = new Request();
         $provinsi = App::make(WilayahController::class)->getProvinsi();
 
