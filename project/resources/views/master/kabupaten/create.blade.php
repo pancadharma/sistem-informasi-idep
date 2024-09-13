@@ -23,8 +23,8 @@
                 <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
                 <select id="type" name="type" class="form-control select2 type" style="width: 100%">
                     <option></option>
-                    <option value="Kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
-                    <option value="Kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                    <option value="kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
+                    <option value="kota"> {{ trans('cruds.kabupaten.kota') }} </option>
                 </select>
             </div>
             <div class="form-group">

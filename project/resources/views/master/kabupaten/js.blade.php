@@ -16,7 +16,14 @@
                 {
                     data: "type",
                     width: "5%",
-                    className: "text-center"
+                    className: "text-center",
+                    render: function(data, type, row) {
+                        if (data === "kabupaten") {
+                            return '{{ trans('cruds.kabupaten.title')}}';
+                        } else {
+                            return '{{ trans('cruds.kabupaten.kota')}}';
+                        }
+                    }
                 },
                 {
                     data: "nama",
@@ -132,14 +139,42 @@
                         });
                     }
                 },
-                error: function(jqXHR) {
-                    const errors = JSON.parse(jqXHR.responseText).errors;
-                    const errorMessage = Object.values(errors).flat().map(error =>
-                        `<p>* ${error}</p>`).join('');
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.message) {
+                            errorMessage = response.message;
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: errorMessage,
+                            });
+                        }
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}`).removeClass('is-valid').addClass('error is-invalid');
+                                    $(`#${field}`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('error is-invalid');
+                                });
+                            });
+                            errorMessage += '</ul>';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: errorMessage,
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
                     Swal.fire({
-                        title: jqXHR.statusText,
+                        icon: 'error',
+                        title: 'Error!',
                         html: errorMessage,
-                        icon: 'error'
                     });
                 }
             });
@@ -219,7 +254,7 @@
                     $("#editKabupatenForm").attr("action", newActionUrl);
                     $('#id').val(response[0].id);
                     $('#editkode').val(response[0].kode);
-                    $('#editnama').val(response[0].nama);                  
+                    $('#editnama').val(response[0].nama);
                     if (response[0].aktif === 1) {
                         $('#edit-aktif').val(response[0].aktif);
                         $("#editaktif").prop("checked",true); // Set checked to true if value is 1
@@ -227,12 +262,21 @@
                         $('#edit-aktif').val(0);
                         $("#editaktif").prop("checked",false); // Set checked to false if value is not 1
                     }
-                    $('#editKabupatenModal').modal('show'); // Show the modal
+                    let type = response[0].type;
+                    $('#type_edit').empty();
+                    var options = [
+                        { value: "kabupaten", text: "{{ trans('cruds.kabupaten.title') }}" },
+                        { value: "kota", text: "{{ trans('cruds.kabupaten.kota') }}" }
+                    ];
+                    options.forEach(function(option) {
+                        var selected = (option.value === type) ? ' selected' : '';
+                        $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="'+option.value+'"'+selected+'>'+option.text+'</option>');
+                    });
+
+                    $('#type_edit').select2();
+                    $('#editKabupatenModal').modal('show');
                     
-                    // set select 2 data
                     let id_prov   = response[0].provinsi.id;
-                    let nama_prov = response[0].type;
-                    
                     let data = response.results.map(function(item) {
                         return {
                             id: item.id,
@@ -240,19 +284,13 @@
                         };
                     });
 
-                    let type = response[0].type;
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
                         data : data,
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
-                    $('#type_edit').select2({
-                        placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
-                    });
-                    // let selected_data = new Option(response[0].provinsi.nama,response[0].provinsi.id,true,true);
-                    // $('#provinsi_id').append(selected_data).trigger('change');
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
-                    $('#type_edit').val(type).trigger('change');
+                    
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
