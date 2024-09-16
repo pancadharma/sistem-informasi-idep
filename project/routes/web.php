@@ -51,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
+    Route::get('users-api', [UsersController::class,'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 
     //Logs

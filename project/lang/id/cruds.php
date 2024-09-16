@@ -168,10 +168,13 @@ return [
     'user' => [
         'title'          => 'Daftar Pengguna',
         'title_singular' => 'User',
+        'list'           => 'Daftar Pengguna',
         'fields'         => [
             'id'                       => 'ID',
             'id_helper'                => ' ',
-            'name'                     => 'Name',
+            'name'                     => 'Nama',
+            'nama'                     => 'Nama',
+            'username'                 => 'Username',
             'name_helper'              => ' ',
             'email'                    => 'Email',
             'email_helper'             => ' ',

@@ -169,12 +169,15 @@ return [
         ],
     ],
     'user' => [
-        'title'          => 'Users',
-        'title_singular' => 'User',
-        'fields'         => [
+        'title'                        => 'Users',
+        'title_singular'               => 'User',
+        'list'                         => 'Users List',
+        'fields'                       => [
             'id'                       => 'ID',
             'id_helper'                => ' ',
             'name'                     => 'Name',
+            'nama'                     => 'Name',
+            'username'                 => 'Username',
             'name_helper'              => ' ',
             'email'                    => 'Email',
             'email_helper'             => ' ',

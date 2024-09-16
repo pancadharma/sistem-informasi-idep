@@ -39,6 +39,8 @@ class User extends Authenticatable
     protected $fillable = [
         'nama',
         'email',
+        'username',
+        'id_jabatan',
         'email_verified_at',
         'password',
         'remember_token',
@@ -104,14 +106,14 @@ class User extends Authenticatable
 
     public function getImageAttribute()
     {
-        $file = $this->getMedia('image')->last();
-        if ($file) {
-            $file->url       = $file->getUrl();
-            $file->thumbnail = $file->getUrl('thumb');
-            $file->preview   = $file->getUrl('preview');
-        }
+        // $file = $this->getMedia('image')->last();
+        // if ($file) {
+        //     $file->url       = $file->getUrl();
+        //     $file->thumbnail = $file->getUrl('thumb');
+        //     $file->preview   = $file->getUrl('preview');
+        // }
 
-        return $file;
+        // return $file;
     }
 
     public function adminlte_image()
