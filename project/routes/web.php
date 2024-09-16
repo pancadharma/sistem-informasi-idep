@@ -10,10 +10,12 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
+use Illuminate\Routing\Route as RoutingRoute;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -97,4 +99,32 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
     Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
 
+    //JenisBantuan
+    Route::resource('jenisbantuan', JenisbantuanController::class);
+    Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
+
 });
+
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+// Auth::routes();
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+// Route::get('/home', function() {
+//     return view('home');
+// })->name('home')->middleware('auth');
+
+
+
+// Route::get('/home', function () {
+//     if (session('status')) {
+//         return redirect()->route('admin.home')->with('status', session('status'));
+//     }
+
+//     return redirect()->route('admin.home');
+// }); 
