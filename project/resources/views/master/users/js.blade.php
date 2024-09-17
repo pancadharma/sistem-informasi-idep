@@ -1,7 +1,9 @@
 <script>
+$(document).ready(function(){
     $('#users_list').DataTable({
         responsive: true,
         ajax: "{{ route('users.api') }}",
+        // ajax: "{{ route('api.users') }}",
         type: "GET",
         processing: true,
         serverSide: true,
@@ -10,31 +12,32 @@
         columns: [
             {
                 data: "nama",
-                // name: 'users.nama',
                 width: "15%",
                 className: "text-left"
             },
             {
-                data: "username", // Update to match the server-side column name
-                // name: 'users.username',
+                data: "username",
                 width: "15%",
                 className: "text-left"
             },
             {
-                data: "email", // 
-                // name: 'users.email',
+                data: "email",
                 width: "15%",
                 className: "text-left"
             },
             {
-                data: "roles.nama", // 
-                // name: 'roles.nama',
+                data: "roles",
+                // render: function(data, type, row) {
+                //     // return data.map(role => role.nama).join(", ");
+                //     return data.map(role => `<span class="btn btn-warning btn-xs">${role.nama}</span>`).join(" - ");
+                // },
                 width: "15%",
-                className: "text-left"
+                className: "text-left",
+                searchable: true,
+                orderable: true,
             },
             {
                 data: "aktif",
-                // name: 'users.aktif',
                 width: "5%",
                 className: "text-center",
                 orderable: false,
@@ -96,6 +99,7 @@
         ],
         lengthMenu: [5, 10 ,25, 50, 100, 200],
     });
+})
 
 
 

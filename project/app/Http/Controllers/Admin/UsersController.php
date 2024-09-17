@@ -180,7 +180,8 @@ class UsersController extends Controller
 
     public function getUsers(Request $request){
         if ($request->ajax()) {
-            $query = User::with('roles')->get();
+            $query = User::select('users.id', 'users.nama', 'users.username', 'users.description', 'users.email', 'users.aktif')->with('roles:id,nama');
+            // $query = User::with('roles');
             $data = DataTables::of($query)
             ->addColumn('action', function ($user) {
                 return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
@@ -195,18 +196,28 @@ class UsersController extends Controller
         }
     }
 
-    public function api(){
-        $query = User::with('roles')->get();
-        $data = DataTables::of($query)
-        ->addColumn('action', function ($user) {
-            return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
-            data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
-            <i class="fas fa-pencil-alt"></i> Edit</button>
-            <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
-            data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
-            <i class="fas fa-folder-open"></i> View</button>';
-        })
-        ->make(true);
-        return $data;
+    public function api(Request $request) {
+        if ($request->ajax()) {
+            $query = User::with('roles');
+            $data = DataTables::of($query)
+                ->addColumn('roles', function ($user) {
+                    return $user->roles->map(function($role) {
+                        return '<span class="btn btn-warning btn-xs">' . $role->nama . '</span>';
+                    })->join(' - ');
+                })
+                ->addColumn('action', function ($user) {
+                    return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
+                    data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                    <i class="fas fa-pencil-alt"></i> Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
+                    data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                    <i class="fas fa-folder-open"></i> View</button>';
+                })
+                ->rawColumns(['roles', 'action'])
+                ->make(true);
+    
+            return $data;
+        }
     }
+    
 }

@@ -24,7 +24,7 @@
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.email') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.roles') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
-                        <th class="text-center align-middle">{{ trans('cruds.user.fields.created_at') }}</th>
+                        {{-- <th class="text-center align-middle">{{ trans('cruds.user.fields.created_at') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>
                     </tr>
                 </thead>
