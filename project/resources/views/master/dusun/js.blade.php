@@ -326,7 +326,6 @@ $(document).ready(function() {
         $.ajax({
             url: url,
             method: 'PUT',
-            dataType:'JSON',
             data: formData,
             dataType: 'json',
             beforeSend: function(){
