@@ -9,10 +9,11 @@
                 </tr> --}}
                 <tr>
                     <th>{{ __('cruds.jenisbantuan.nama') }}</th>
-                    <td id="show-nama"> </td>
+                    <th>{{ __('cruds.status.title') }}</th>
+                    
                 </tr>
                 <tr>
-                    <th>{{ __('cruds.status.title') }}</th>
+                    <td id="show-nama"> </td>
                     <td>
                         <div class="icheck-primary">
                             <input type="checkbox" id="show-aktif">

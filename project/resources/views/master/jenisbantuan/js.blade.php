@@ -8,18 +8,22 @@
             serverSide: true,
             // stateSave: true,
            
-            //menambahkan nomor
-            "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": -1
+//-------------menambahkan nomor----------------
+            columnDefs: [ {
+            searchable: false,
+            orderable: false,
+            targets: 0,
+            
         } ],
-        "order": [[ 0, 'asc' ]],
+
+        order: [[ 1, 'asc' ]],
             
             columns: [
-                {
+                
+               {
                     data: "id",
-                    width: "5%",
+                    width: "1%",
+                    className: "text-center",
                     
                 },
                 
@@ -30,18 +34,20 @@
                 {
                     data: "aktif",
                     width: "5%",
-                    
+                    className: "text-center",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                                row.id + '"></label></div>';
+                            return '<span class="badge bg-success">Aktif</span>'
+                            // '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                            //     '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
+                            //     row.id + '"></label></div>';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
-                                row.id + '"></label></div>';
+                            return '<span class="badge bg-danger">Tidak Aktif</span>'
+                            // '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                            //     '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
+                            //     row.id + '"></label></div>';
                         }
                     }
                 },
@@ -50,7 +56,8 @@
                     width: "8%",
                     className: "text-center",
                     orderable: false,
-                }
+                },
+
             ],
 
 
@@ -93,7 +100,7 @@
         });
 
         t.on( 'draw.dt', function () {
-    var PageInfo = $('#jenisbantuan').DataTable().page.info();
+        var PageInfo = $('#jenisbantuan').DataTable().page.info();
          t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
             cell.innerHTML = i + 1 + PageInfo.start;
         } );
@@ -109,8 +116,7 @@
 
     });
 
-
-    //call modal edit and populate data into modal form
+//------panggil modal edit and populate data into modal form
     $(document).ready(function() {
         $('#jenisbantuan tbody').on('click', '.edit-jenisbantuan-btn', function(e) {
             e.preventDefault();
@@ -156,7 +162,10 @@
             });
         });
     });
-// SUBMIT UPDATE FORM - EDIT
+
+
+ //------------   
+//-------------SUBMIT UPDATE FORM - EDIT
 $(document).ready(function() {
         $('#editaktif').change(function() {
             $('#edit-aktif').val(this.checked ? 1 : 0);
@@ -180,7 +189,7 @@ $(document).ready(function() {
                             title: "Success",
                             html: response.message,
                             icon: "success",
-                            timer: 4000,
+                            timer: 3000,
                             timerProgressBar: true,
                             didOpen: ()=>{
                                 Swal.showLoading();

@@ -45,6 +45,7 @@
                         <th>{{ trans('cruds.status.title') }}</th>
                         <th>{{ trans('cruds.status.action') }}</th>
                         
+                        
                     </tr>
                 </thead>
             </table>

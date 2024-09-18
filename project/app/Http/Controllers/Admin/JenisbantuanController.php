@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Jenis_Bantuan;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreJenisbantuanRequest;
 use App\Http\Requests\UpdateDesaRequest;
 use App\Http\Requests\UpdateJenisbantuanRequest;
 use Illuminate\Database\QueryException;
@@ -33,7 +34,7 @@ class JenisbantuanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreJenisbantuanRequest $request)
     {
         // try {
             // $data = Jenis_Bantuan::create($request->all());
@@ -57,15 +58,15 @@ class JenisbantuanController extends Controller
         //     return response()->json(['status' => $status, 'message' => $message], 400); // Use 400 Bad Request for validation errors
         // }
         
-        $request->validate([
-            'nama' => ['required', 'string', 'max:200'],
-            'aktif' => ['required'] 
-        ]);
+        // $request->validate([
+        //     'nama' => ['required', 'string', 'max:200'],
+        //     'aktif' => ['required'] 
+        // ]);
 
         try {
-            // $data = $request->validated();
-            // Jenis_Bantuan::create($data);
-            $data = Jenis_Bantuan::create($request->all());
+            $data = $request->validated();
+            Jenis_Bantuan::create($data);
+            //$data = Jenis_Bantuan::create($request->all());
             
             return response()->json([
                 "success"    => true,
