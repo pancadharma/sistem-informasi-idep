@@ -118,7 +118,7 @@ class User extends Authenticatable
 
     public function adminlte_image()
     {
-        return 'vendor/adminlte/dist/img/idep.png';
+        return '/vendor/adminlte/dist/img/idep.png';
     }
 
     public function adminlte_desc()

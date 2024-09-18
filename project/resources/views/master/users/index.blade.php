@@ -32,8 +32,8 @@
     </div>
     
 
-    @include('master.users.edit')
-    @include('master.users.show')
+    {{-- @include('master.users.edit') --}}
+    {{-- @include('master.users.show') --}}
     @stop
     
     @push('css')
@@ -48,4 +48,4 @@
     @section('plugins.Validation', true)
     
     @include('master.users.js')
-@endpush
+    @endpush
