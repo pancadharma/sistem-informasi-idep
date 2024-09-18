@@ -1,17 +1,26 @@
 <script>
 //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
-        $('#jenisbantuan').DataTable({
+      var t = $('#jenisbantuan').DataTable({
             responsive: true,
             ajax: "{{ route('data.jenisbantuan') }}",
             processing: true,
             serverSide: true,
             // stateSave: true,
+           
+            //menambahkan nomor
+            "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": -1
+        } ],
+        "order": [[ 0, 'asc' ]],
+            
             columns: [
                 {
                     data: "id",
                     width: "5%",
-                    className: "text-center"
+                    
                 },
                 
                 {
@@ -21,7 +30,7 @@
                 {
                     data: "aktif",
                     width: "5%",
-                    className: "text-center",
+                    
                     orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
@@ -43,6 +52,8 @@
                     orderable: false,
                 }
             ],
+
+
              layout: {
                 topStart: {
                     buttons: [
@@ -76,10 +87,26 @@
                 }
             },
             order: [
-                [2, 'asc']
+                [1, 'asc']
             ],
             lengthMenu: [5, 25, 50, 100, 500],
         });
+
+        t.on( 'draw.dt', function () {
+    var PageInfo = $('#jenisbantuan').DataTable().page.info();
+         t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+            cell.innerHTML = i + 1 + PageInfo.start;
+        } );
+    } );
+
+    // t.on('draw.dt', function(){
+    // let n = 0;
+    // $(".number").each(function () {
+    //         $(this).html(++n);
+    //     })
+    // });
+
+
     });
 
 

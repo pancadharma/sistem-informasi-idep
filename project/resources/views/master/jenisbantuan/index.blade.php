@@ -39,10 +39,12 @@
             <table id="jenisbantuan" class="table table-bordered cell-border ajaxTable datatable-jenisbantuan" style="width:100%">
                 <thead>
                     <tr>
+                        
                         <th class="center">{{ trans('cruds.jenisbantuan.no') }}</th>
                         <th>{{ trans('cruds.jenisbantuan.title') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>
                         <th>{{ trans('cruds.status.action') }}</th>
+                        
                     </tr>
                 </thead>
             </table>
