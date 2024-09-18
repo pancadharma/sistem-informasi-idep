@@ -16,7 +16,7 @@
 
     <div class="card card-outline card-primary">
         <div class="card-body">
-            <table id="users_list" class="table table-bordered table-striped table-hover ajaxTable datatable-users">
+            <table id="users_list" class="table table-bordered table-striped table-hover dataTable dtr-inline">
                 <thead>
                     <tr>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.name') }}</th>
@@ -24,7 +24,6 @@
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.email') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.roles') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
-                        {{-- <th class="text-center align-middle">{{ trans('cruds.user.fields.created_at') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>
                     </tr>
                 </thead>
@@ -33,8 +32,8 @@
     </div>
     
 
-    @include('master.users.edit')
-    @include('master.users.show')
+    {{-- @include('master.users.edit') --}}
+    {{-- @include('master.users.show') --}}
     @stop
     
     @push('css')
@@ -49,4 +48,4 @@
     @section('plugins.Validation', true)
     
     @include('master.users.js')
-@endpush
+    @endpush
