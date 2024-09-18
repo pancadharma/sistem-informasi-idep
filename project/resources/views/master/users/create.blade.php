@@ -18,7 +18,7 @@
             <label for="nama">{{ __('cruds.user.fields.nama') }}</label>
             <div class="input-group mb-3">
                 <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
-                        value="{{ old('nama') }}" placeholder="{{ __('adminlte.full_name') }}" autofocus required maxlength="200" minlength="3">
+                        value="{{ old('nama') }}" placeholder="{{ __('adminlte.full_name') }}" autofocus required maxlength="200" minlength="3" id="nama" autocomplete="off">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -35,7 +35,7 @@
             <label for="username">{{ __('cruds.user.fields.username') }}</label>
             <div class="input-group mb-3">
                 <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                        value="{{ old('username') }}" placeholder="{{ __('cruds.user.fields.username') }}" autofocus required maxlength="100" minlength="3">
+                        value="{{ old('username') }}" placeholder="{{ __('cruds.user.fields.username') }}" autofocus required maxlength="100" minlength="3" id="username" autocomplete="off">
 
                 <div class="input-group-append">
                     <div class="input-group-text">
@@ -54,7 +54,7 @@
             <label for="email">{{ __('cruds.user.fields.email') }}</label>
             <div class="input-group mb-3">
                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                        value="{{ old('email') }}" placeholder="{{ __('adminlte.email') }}" required maxlength="200">
+                        value="{{ old('email') }}" placeholder="{{ __('adminlte.email') }}" required maxlength="200" id="email" autocomplete="off">
 
                 <div class="input-group-append">
                     <div class="input-group-text">
@@ -73,7 +73,7 @@
             <label for="password">{{ __('cruds.user.fields.password') }}</label>
             <div class="input-group mb-3">
                 <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                        placeholder="{{ __('adminlte.password') }}" required maxlength="100">
+                        placeholder="{{ __('adminlte.password') }}" required maxlength="100" id="password" autocomplete="new-password">
 
                 <div class="input-group-append">
                     <div class="input-group-text">
@@ -93,7 +93,7 @@
             <div class="input-group mb-3">
                 <input type="password" name="password_confirmation"
                         class="form-control @error('password_confirmation') is-invalid @enderror"
-                        placeholder="{{ __('adminlte.retype_password') }}" required maxlength="100">
+                        placeholder="{{ __('adminlte.retype_password') }}" required maxlength="100" id="password_confirmation" autocomplete="new-password">
 
                 <div class="input-group-append">
                     <div class="input-group-text">

@@ -31,9 +31,8 @@
         </div>
     </div>
     
-
     {{-- @include('master.users.edit') --}}
-    {{-- @include('master.users.show') --}}
+    @include('master.users.show-modal')
     @stop
     
     @push('css')

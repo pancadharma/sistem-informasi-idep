@@ -183,6 +183,7 @@ return [
             'password'                 => 'Password',
             'password_helper'          => ' ',
             'jabatan'                  => 'Posisi',
+            'role'                     => 'Role',
             'roles'                    => 'Roles',
             'roles_helper'             => ' ',
             'remember_token'           => 'Remember Token',

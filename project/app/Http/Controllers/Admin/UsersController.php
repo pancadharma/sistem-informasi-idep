@@ -54,7 +54,7 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $roles = Role::pluck('title', 'id');
+        $roles = Role::pluck('nama', 'id');
 
         $user->load('roles');
 
@@ -83,10 +83,18 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        
         $user->load('roles');
-
         return view('master.users.show', compact('user'));
+    }public function showModal($id)
+    {
+        $user = User::with('roles')->findOrFail($id);
+        // dd($user->toArray());
+    
+        return response()->json($user);
     }
+    
+    
 
     public function destroy(User $user)
     {

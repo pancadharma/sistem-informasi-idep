@@ -20,14 +20,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class User extends Authenticatable
 {
 
-    use HasApiTokens, SoftDeletes, Notifiable, Auditable, HasFactory;
-    // public $table = 'users';
-
-    // public $table = 'muser';
-
-    protected $appends = [
-        'image',
-    ];
+    use Auditable;
+    protected $table = 'users';
 
     protected $dates = [
         'email_verified_at',

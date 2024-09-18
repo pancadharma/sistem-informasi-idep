@@ -187,6 +187,7 @@ return [
             'password_helper'          => ' ',
             'jabatan'                  => 'Position',
             'roles'                    => 'Roles',
+            'role'                     => 'Role',
             'roles_helper'             => ' ',
             'remember_token'           => 'Remember Token',
             'remember_token_helper'    => ' ',

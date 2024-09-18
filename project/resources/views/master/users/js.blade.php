@@ -47,5 +47,53 @@
             ],
             lengthMenu: [5, 10 ,25, 50, 100, 200],
         });
+
+
+        //CALL VIEW MODAL FOR USERS
+        $('#users_list tbody').on('click', '.edit-user-btn, .view-user-btn', function (e){
+            e.preventDefault();
+            let action    = $(this).data('action');
+            let id_users  = $(this).data('user-id');
+            let url_show  = '{{ route('users.showmodal', ':id') }}'.replace(':id',id_users);
+
+            console.log(url_show);
+            if(action === "view"){
+                $.ajax({
+                    url: url_show,
+                    method: 'GET',
+                    dataType: 'json',
+                    beforeSend: function(){
+                        Toast.fire({icon: "info",title: "Processing...",timer: 500,timerProgressBar: true,});
+                    },
+                    success: function(data) {
+                        // let roles_data = data.roles.map(role => role.nama).join(', ');
+                        // console.log(roles_data);                       
+                        $('#view_nama').text(data.nama);
+                        $('#view_username').text(data.username);
+                        $('#view_email').text(data.email);
+                        // $('#view_jabatan').text(data.jabatan.nama);
+
+                        // $('#view_roles').text(roles_data);
+                        $('#view_roles').empty();
+                        data.roles.forEach(role => {
+                            $('#view_roles').append(`<span class="btn-xs bg-warning">${role.nama}</span> `);
+                        });
+                        if (data.aktif === 1) {
+                            $('#aktif_show').val(data.aktif);
+                            $("#aktif_show").prop("checked",true); 
+                        } else {
+                            $('#aktif_show').val(0);
+                            $("#aktif_show").prop("checked",false);
+                        }
+                        $('#status').text(data.aktif === 1? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
+                        $('#showUsersModal .modal-title').text(data.nama);
+                        $('#showUsersModal').modal('show');
+                    }
+                });                
+            }
+
+        });
+
+
     });
 </script>
