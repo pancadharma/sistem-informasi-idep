@@ -78,6 +78,12 @@ entity "mkelompokmarjinal" as mkelompokmarjinal {
     aktif : bit
 }
 
+entity "mmarjinal" as mmarjinal{
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
 
 entity "mpartner" as mpartner {
     *id : int <<auto>>
@@ -464,6 +470,7 @@ trprogramkaitansdg }o--|| mkaitansdg
 trprogramkelompokmarjinal }o--|| trprogram
 trprogramkelompokmarjinal }o--|| mkelompokmarjinal
 trkegiatanoutput }o--|| trprogramoutcomeoutput
+mmarjinal }o--|| mkelompokmarjinal
 mpendonor }o--|| mpendonorkategori
 trevaluasi }o--|| muser
 trkegiatanpesertamarjinal }o--|| mkelompokmarjinal

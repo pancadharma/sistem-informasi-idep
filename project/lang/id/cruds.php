@@ -226,15 +226,6 @@ return [
         'added'     => 'Berhasil ditambahkan',
         'updated'   => 'Berhasil ditambahkan',
         'deleted'   => 'Berhasil dihapus' 
-    ],
-    'jenisbantuan' => [
-        'list' => 'Jenis Bantuan',
-        'title_singular' => 'Jenis Bantuan',
-        'title' => 'Jenis Bantuan',
-        'kode'=>'Kode',
-        'no'=>'No',
-        'nama'=>'Nama',
-        'aktif'=>'Aktif',
-    ],
+    ]
 
 ];
