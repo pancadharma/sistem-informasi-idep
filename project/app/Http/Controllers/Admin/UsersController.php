@@ -178,31 +178,50 @@ class UsersController extends Controller
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
 
-    public function getUsers(Request $request){
+    public function api(Request $request) {
         if ($request->ajax()) {
-            $query = User::select('users.id', 'users.nama', 'users.username', 'users.description', 'users.email', 'users.aktif')->with('roles:id,nama');
-            // $query = User::with('roles');
+            $query = User::with('roles')->select('users.*');
             $data = DataTables::of($query)
-            ->addColumn('action', function ($user) {
-                return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
-                data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
-                <i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
-                data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
-                <i class="fas fa-folder-open"></i> View</button>';
-            })
-            ->make(true);
+                ->addColumn('roles', function ($user) {
+                    return $user->roles->map(function ($role) {
+                        return "<span class=\"btn btn-warning btn-xs\">{$role->nama}</span>";
+                    })->implode(' ');
+                })
+                ->addColumn('status', function($user){
+                    return match ($user->aktif) {
+                        1 => '<div class="icheck-primary d-inline">
+                                <input id="aktif_' . $user->id . '" data-aktif-id="' . $user->id . '" class="icheck-primary" alt="☑️ aktif" title="' . __("cruds.status.aktif") . '" type="checkbox" checked>
+                                <label for="aktif_' . $user->id . '"></label>
+                              </div>',
+                        0 => '<div class="icheck-primary d-inline">
+                                <input id="aktif_' . $user->id . '" data-aktif-id="' . $user->id . '" class="icheck-primary" alt="aktif" title="' . __("cruds.status.aktif") . '" type="checkbox">
+                                <label for="aktif_' . $user->id . '"></label>
+                              </div>',
+                    };
+                })
+                ->addColumn('action', function ($user) {
+                    return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
+                            data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                            <i class="fas fa-pencil-alt"></i> Edit</button>
+                            <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
+                            data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                            <i class="fas fa-folder-open"></i> View</button>';
+                })
+                ->rawColumns(['roles', 'action', 'status'])
+                ->make(true);
+    
             return $data;
         }
     }
+    
 
-    public function api(Request $request) {
+    public function getUsers(Request $request) {
         if ($request->ajax()) {
             $query = User::with('roles');
             $data = DataTables::of($query)
                 ->addColumn('roles', function ($user) {
                     return $user->roles->map(function($role) {
-                        return '<span class="btn btn-warning btn-xs">' . $role->nama . '</span>';
+                        return "<span class=\"btn btn-warning btn-xs\">{$role->name}</span>";
                     })->join(' - ');
                 })
                 ->addColumn('action', function ($user) {
