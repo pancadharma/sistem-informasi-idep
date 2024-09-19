@@ -229,6 +229,15 @@ return [
         'added'     => 'Added Successfully',
         'updated'   => 'Updated Successfully',
         'deleted'   => 'Has Been Deleted' 
-    ]
+    ],
+    'jenisbantuan' => [
+        'list' => 'Daftar Jenis Bantuan',
+        'jenisbantuan' => 'Jenis Bantuan',
+        'title_singular' => 'Jenis Bantuan',
+        'title' => 'Jenis Bantuan',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+    ],
 
 ];
