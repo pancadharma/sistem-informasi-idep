@@ -9,7 +9,7 @@ use App\Traits\Auditable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Traits\HasRoles;
+use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
