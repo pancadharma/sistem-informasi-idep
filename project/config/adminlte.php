@@ -269,7 +269,8 @@ return [
                 ],
                 [
                     'text' => 'jenis_bantuan',
-                    'url' => '#',
+                    // 'url' => '#',
+                    'route' => 'jenisbantuan.index',
                     'icon' => '',
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
                 ],
