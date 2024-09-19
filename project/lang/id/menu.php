@@ -33,6 +33,7 @@ return [
     'users'             => 'Pengguna',
     'kelompok_rentan'   => 'Kelompok Rentan',
     'pendonor'          => 'Pendonor',
+    'kategoripendonor'  => 'Kategori Pendonor',
     'partner'           => 'Partner',
     'jenis_bantuan'     => 'Jenis Bantuan',
     'sdg'               => 'Kaitan SDG',

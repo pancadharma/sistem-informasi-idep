@@ -239,5 +239,14 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
+    'kategoripendonor' => [
+        'list' => 'Category Donatur List',
+        'kategoripendonor' => 'Donatur',
+        'title_singular' => 'Category Donatur',
+        'title' => 'Category Donatur',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Name',
+    ],
 
 ];

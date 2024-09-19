@@ -236,5 +236,14 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
+    'kategoripendonor' => [
+        'list' => 'List Kategori Pendonor',
+        'kategoripendonor' => 'Kategori Pendonor',
+        'title_singular' => 'Kategori Pendonor',
+        'title' => 'Kategori Pendonor',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+    ],
 
 ];

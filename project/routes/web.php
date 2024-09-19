@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\KategoripendonorController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -101,5 +102,9 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
+    
+    //Master Kategori Pendonor
+    Route::resource('kategoripendonor', KategoripendonorController::class);
+    Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
 
 });
