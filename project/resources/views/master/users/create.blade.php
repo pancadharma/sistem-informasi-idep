@@ -13,7 +13,7 @@
     </div>
     <div class="card-body">
         {{-- form add user --}}
-        <form id="AddUserForm" action="{{ route('users.store')}}" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off">
+        <form id="AddUserForm" novalidate method="POST" class="resettable-form" data-toggle="validator" autocomplete="off">
             @csrf
             @method('POST')
             {{-- Name field --}}

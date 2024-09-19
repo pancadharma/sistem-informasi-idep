@@ -28,6 +28,7 @@ class StoreUserRequest extends FormRequest
             'password'  => ['required','max:100'],
             'roles.*'   => ['integer',],
             'roles'     => ['required','array',],
+            'aktif'     => ['integer'],
         ];
     }
 }
