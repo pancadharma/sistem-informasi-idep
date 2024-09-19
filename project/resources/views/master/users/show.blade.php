@@ -49,8 +49,15 @@
         </div>
         </div>
     </div>
-@stop
 
+@can('user_show')
+    <a href="{{ route('users.index') }}" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }}">
+        <span class="fas fa-user-plus"></span>{{ __('global.back') }}
+    </a>
+@endcan
+
+
+@stop
 
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">

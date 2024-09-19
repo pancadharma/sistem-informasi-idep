@@ -2,10 +2,13 @@
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.user.title')}}
         <div class="card-tools">
+            
+            {{--   --}}
+            @can(['user_create', 'user_edit'])
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-plus"></i>
-                {{-- <i class="fas fa-minus"></i> --}}
             </button>
+            @endcan
         </div>
     </div>
     <div class="card-body">
@@ -123,6 +126,11 @@
         </form>
     </div>
 </div>
+
+
+{{-- @if(auth()->user()->can('user_create') || Auth::user()->can('user_edit'))
+      Using this for permission of user ability to do in the system      
+@endif --}}
 
 @push('js')
 
