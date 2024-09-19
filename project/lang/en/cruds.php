@@ -198,6 +198,15 @@ return [
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
         ],
+        'validation'          => [
+            'nama'            => 'Name must be at least 5 characters.',
+            'username'        => 'Username must be at least 5 characters.',
+            'email'           => 'Invalid email format.',
+            'user_unique'     => 'Username must be unique.',
+            'taken'           => 'has been taken.',
+            'email_unique'    => 'Email has already been taken.',
+            'password'        => 'Password must be at least 8 characters.',
+        ],
     ],
     'auditLog' => [
         'title'          => 'Audit Logs',

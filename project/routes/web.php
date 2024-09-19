@@ -53,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
     // Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
     Route::get('users-show/{users}', [UsersController::class,'showModal'])->name('users.showmodal');
+    Route::get('username-check', [UsersController::class,'checkUsername'])->name('check.username');
+    Route::get('email-check', [UsersController::class,'checkEmail'])->name('check.email');
     Route::get('users-api', [UsersController::class,'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 

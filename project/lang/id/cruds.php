@@ -195,6 +195,15 @@ return [
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
         ],
+        'validation'          => [
+            'nama'            => 'Nama harus setidaknya 5 karakter',
+            'username'        => 'Nama pengguna harus terdiri dari setidaknya 5 karakter.',
+            'email'           => 'Format email tidak valid.',
+            'user_unique'     => 'Nama pengguna harus unik.',
+            'taken'           => 'telah diambil.',
+            'email_unique'    => 'Email sudah diambil.',
+            'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',            
+        ],
     ],
     'auditLog' => [
         'title'          => 'Audit Logs',
