@@ -4,6 +4,7 @@ return [
     'details'                        => 'Detail',
     'actions'                        => 'Aksi',
     'add'                            => 'Tambah',
+    'success'                        => 'Sukses',
     'allRightsReserved'              => 'All rights reserved.',
     'areYouSure'                     => 'Apakah Anda yakin?',
     'clickHereToVerify'              => 'Klik di sini untuk memverifikasi',
