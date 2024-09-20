@@ -213,6 +213,24 @@
             });
         });
 
+        //UPDATE USER BUTTON CLICKED
+        $('#EditUserForm').on('submit', function(e){
+            e.preventDefault();
+
+            if (!$(this).valid()) {
+                return;
+            }
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You want to update this user?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            })
+        })
+
 
         //VALIDATE FORM
         $(function(){
