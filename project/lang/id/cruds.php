@@ -245,6 +245,18 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
+    'mpendonor' => [
+        'list' => 'List Pendonor',
+        'mpendonor' => 'Pendonor',
+        'title_singular' => 'Pendonor',
+        'title' => 'Pendonor',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+        'phone'=>'HP/WA',
+        'email'=>'Email',
+        'pic'=>'PIC',
+    ],
     'kelompokmarjinal' => [
         'list' => 'List Kelompok Marjinal',
         'kelompokmarjinal' => 'Kelompok Marjinal',

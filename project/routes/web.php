@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\MPendonorController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -107,6 +108,9 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
+
+    //Master Pendonor
+    Route::resource('pendonor', MPendonorController::class);
 
     //Master Kelompok Marjinal
     Route::resource('kelompokmarjinal', KelompokmarjinalController::class);

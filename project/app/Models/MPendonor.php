@@ -5,16 +5,18 @@ namespace App\Models;
 use DateTimeInterface;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Kategori_Pendonor extends Model
+class MPendonor extends Model
 {
     use Auditable, HasFactory;
-    protected $table = 'mpendonorkategori';
-    
+    protected $table = 'mpendonor';
     protected $fillable = [
+        'mpendonorkategori_id',
         'nama',
+        'pic',
+        'email',
+        'phone',
         'aktif',
         'created_at',
         'updated_at',
@@ -30,14 +32,8 @@ class Kategori_Pendonor extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function pendonor()
+    public function mpendonnorkategori()
     {
-        return $this->hasMany(MPendonor::class, 'mpendonorkategori_id');
+        return $this->belongsTo(Kategori_Pendonor::class, 'mpendonorkategori_id');
     }
-
-    public function scopeWithActive(Builder $query)
-    {
-        return $query->where('aktif', 1);
-    }
-
 }

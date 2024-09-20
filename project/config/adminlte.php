@@ -265,7 +265,8 @@ return [
                 ],
                 [
                     'text' => 'pendonor',
-                    'url' => '#',
+                    // 'url' => '#',
+                    'route' => 'pendonor.index',
                     'icon' => '',
                     'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
