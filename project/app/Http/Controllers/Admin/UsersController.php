@@ -93,14 +93,14 @@ class UsersController extends Controller
         $user->load('roles');
         return view('master.users.show', compact('user'));
     }
-    
+
     public function showModal($id)
     {
         $user = User::with('roles')->findOrFail($id);
         return response()->json($user);
     }
-    
-    
+
+
 
     public function destroy(User $user)
     {
@@ -163,11 +163,11 @@ class UsersController extends Controller
                 })
                 ->rawColumns(['roles', 'action', 'status'])
                 ->make(true);
-    
+
             return $data;
         }
     }
-    
+
     //get data to datatable
     public function getUsers(Request $request) {
         if ($request->ajax()) {
@@ -188,7 +188,7 @@ class UsersController extends Controller
                 })
                 ->rawColumns(['roles', 'action'])
                 ->make(true);
-    
+
             return $data;
         }
     }
@@ -196,30 +196,35 @@ class UsersController extends Controller
     //check username
     public function checkUsername(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        // \Log::info("check username", $request->all()); // Log the request data for debugging
+        $rules = [
             'username' => 'required|unique:users,username'
-        ]);
-
+        ];
+        if ($request->has('id')) {
+            $userId = $request->input('id');
+            $rules['username'] = "required|unique:users,username,{$userId}";
+        }
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json(__('cruds.user.fields.username').' '.$request->username.' '.__('cruds.user.validation.taken'));
         }
-
         return response()->json("true");
     }
-    
+
     public function checkEmail(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|unique:users,email'
-        ]);
-
+        // \Log::info('Request Data: ', $request->all()); // Log the request data
+        $rules = [
+            'email' => 'required|email|unique:users,email'
+        ];
+        if ($request->has('id')) {
+            $userId = $request->input('id');
+            $rules['email'] = "required|email|unique:users,email,{$userId},id";
+        }
+        $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json(__('cruds.user.fields.email').' '.$request->email.' '.__('cruds.user.validation.taken'));
         }
-
         return response()->json("true");
     }
-
-
-
 }

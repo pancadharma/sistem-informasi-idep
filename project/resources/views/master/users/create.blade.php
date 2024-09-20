@@ -2,7 +2,7 @@
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.user.title')}}
         <div class="card-tools">
-            
+
             {{--   --}}
             @can(['user_create', 'user_edit'])
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -73,9 +73,9 @@
                     @enderror
                 </div>
             </div>
-            
+
             {{-- Password field --}}
-            <div class="form-group">  
+            <div class="form-group">
                 <label for="password">{{ __('cruds.user.fields.password') }}</label>
                 <div class="input-group">
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
@@ -94,7 +94,7 @@
                 </div>
             </div>
             {{-- Confirm password field --}}
-            <div class="form-group">           
+            <div class="form-group">
                 <label for="password_confirmation">{{ __('adminlte.retype_password') }}</label>
                 <div class="input-group">
                     <input type="password" name="password_confirmation"
@@ -115,20 +115,20 @@
             </div>
 
             {{-- User Role --}}
-            
+
             <div class="form-group">
                 <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>
-                <div class="input-group">
+                <div class="input-group select2-purple">
                     <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}" name="roles[]" id="roles" multiple required>
                         @foreach($roles as $id => $role)
                         <option value="{{ $id }}" {{ in_array($id, old('roles', [])) ? 'selected' : '' }}>{{ $role }}</option>
                         @endforeach
                     </select>
-                    <div class="input-group-append">
+                    {{-- <div class="input-group-append"> --}}
                         <div class="input-group-text">
                             <span class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></span>
                         </div>
-                    </div>
+                    {{-- </div> --}}
                     {{-- @if($errors->has('roles'))
                      <span class="text-danger">{{ $errors->first('roles') }}</span>
                     @endif --}}
