@@ -53,7 +53,7 @@
         });
 
 
-        //CALL VIEW MODAL FOR USERS
+        //CALL VIEW & EDIT MODAL USERS
         $('#users_list tbody').on('click', '.edit-user-btn, .view-user-btn', function (e){
             e.preventDefault();
             let action    = $(this).data('action');
@@ -103,6 +103,7 @@
                         Toast.fire({icon: "info", title: "Processing...",timer: 500, timerProgressBar: true,});
                     },
                     success: function(data) {
+                        resetForm();
                         $('#AddUserForm').trigger('reset');
                         $('#AddUserForm').attr('action', url_update);
                         $('#id_user').val(data.id);
@@ -433,5 +434,11 @@
             });
         });
 
+        function resetForm() {
+            $('#AddUserForm').trigger('reset'); // Reset the form fields
+            $('#AddUserForm').find('.is-invalid').removeClass('is-invalid'); // Remove invalid classes
+            $('#AddUserForm').find('.invalid-feedback').remove(); // Remove error messages
+            $('#AddUserForm').find('.error').remove(); // Remove error messages
+        }
     });
 </script>
