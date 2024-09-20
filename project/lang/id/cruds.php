@@ -183,6 +183,7 @@ return [
             'password'                 => 'Password',
             'password_helper'          => ' ',
             'jabatan'                  => 'Posisi',
+            'role'                     => 'Role',
             'roles'                    => 'Roles',
             'roles_helper'             => ' ',
             'remember_token'           => 'Remember Token',
@@ -193,6 +194,15 @@ return [
             'updated_at_helper'        => ' ',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
+        ],
+        'validation'          => [
+            'nama'            => 'Nama harus setidaknya 5 karakter',
+            'username'        => 'Nama pengguna harus terdiri dari setidaknya 5 karakter.',
+            'email'           => 'Format email tidak valid.',
+            'user_unique'     => 'Nama pengguna harus unik.',
+            'taken'           => 'telah diambil.',
+            'email_unique'    => 'Email sudah diambil.',
+            'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',            
         ],
     ],
     'auditLog' => [

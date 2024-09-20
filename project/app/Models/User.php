@@ -3,31 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Traits\Auditable;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Auditable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Hash;
+use GedeAdi\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class User extends Authenticatable
 {
 
-    use HasApiTokens, SoftDeletes, Notifiable, Auditable, HasFactory;
-    // public $table = 'users';
-
-    // public $table = 'muser';
-
-    protected $appends = [
-        'image',
-    ];
+    use Auditable, HasRoles;
+    protected $table = 'users';
 
     protected $dates = [
         'email_verified_at',
