@@ -61,7 +61,7 @@
             let url_show  = '{{ route('users.showmodal', ':id') }}'.replace(':id',id_users);
             let url_edit  = '{{ route('users.edit', ':id') }}'.replace(':id',id_users);
             let url_update  = '{{ route('users.update', ':id') }}'.replace(':id',id_users);
-
+            resetFormEdit();
             // if button view clicked
             if(action === "view"){
                 $.ajax({
@@ -69,7 +69,7 @@
                     method: 'GET',
                     dataType: 'json',
                     beforeSend: function(){
-                        Toast.fire({icon: "info",title: "Processing...",timer: 500,timerProgressBar: true,});
+                        Toast.fire({icon: "info",title: "Processing...",timer: 300,timerProgressBar: true,});
                     },
                     success: function(data) {
                         $('#view_nama').text(data.nama);
@@ -95,7 +95,6 @@
             }
             // if button edit clicked
             if(action === "edit"){
-                resetFormEdit();
                 $.ajax({
                     url: url_edit,
                     method: 'GET',
@@ -104,30 +103,35 @@
                         Toast.fire({icon: "info", title: "Processing...",timer: 500, timerProgressBar: true,});
                     },
                     success: function(data) {
-                        $('#AddUserForm').trigger('reset');
-                        $('#AddUserForm').attr('action', url_update);
-                        $('#id_user').val(data.id);
-                        $('#edit_nama').val(data.nama);
-                        $('#edit_username').val(data.username);
-                        if (data.username === '' || data.username === null) {
-                            $('#edit_username').prop('disabled', false);
-                        } else {
-                            $('#edit_username').prop('disabled', true);
-                        }
-                        $('#edit_email').val(data.email);
-                        $('#edit_password').val('');
-                        $('#edit_password_confirmation').val('');
+                        setTimeout(() => {
+                            $('#EditUserForm').trigger('reset');
+                            $('#EditUserForm').attr('action', url_update);
+                            $('#id_user').val(data.id);
+                            $('#edit_nama').val(data.nama);
+                            $('#edit_username').val(data.username);
+                            if (data.username === '' || data.username === null) {
+                                $('#edit_username').prop('readonly', false); // Enable editing
+                                $('#edit_username').prop('disabled', false); // Enable the field
+                            } else {
+                                $('#edit_username').prop('readonly', true);  // Disable editing
+                                $('#edit_username').prop('disabled', false); // Keep the field enabled, but readonly
+                            }
 
-                        var selectedRoles = data.roles.map(function(role) {
-                            return role.id;
-                        });
-                        $('#edit_roles').val(selectedRoles).trigger('change');
+                            $('#edit_email').val(data.email);
+                            $('#edit_password').val('');
+                            $('#edit_password_confirmation').val('');
 
-                        $('#edit_aktif').prop('checked', data.aktif == 1);
-                        $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
-                        // $('#edit_jabatan').val(data.jabatan.nama || '');
-                        $('#EditUsersModal .modal-title').text("Edit Data" +data.nama);
-                        $('#EditUsersModal').modal('show');
+                            var selectedRoles = data.roles.map(function(role) {
+                                return role.id;
+                            });
+                            $('#edit_roles').val(selectedRoles).trigger('change');
+
+                            $('#edit_aktif').prop('checked', data.aktif == 1);
+                            $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
+                            // $('#edit_jabatan').val(data.jabatan.nama || '');
+                            $('#EditUsersModal .modal-title').text("Edit Data" +data.nama);
+                            $('#EditUsersModal').modal('show');
+                        }, 400);
                     },
                     error: function(xhr, status, error) {
                         let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
@@ -169,6 +173,7 @@
                         });
                     }
                 });
+                return false;
             }
         });
 
@@ -186,7 +191,7 @@
                 data: formData,
                 dataType: 'json',
                 beforeSend: function(){
-                    Toast.fire({icon: "info", title: "Processing...",timer: 500, timerProgressBar: true,});
+                    Toast.fire({icon: "info", title: "Processing...",timer: 300, timerProgressBar: true,});
                 },
                 success: function(response) {
                     if(response.success){
@@ -210,28 +215,108 @@
                     }else{
                         Toast.fire({icon: "error", title: response.message});
                     }
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
                 }
             });
         });
 
-        //UPDATE USER BUTTON CLICKED
-        $('#EditUserForm').on('submit', function(e){
+        //UPDATE USER BUTTON CLICKED with ID BUTTON OF #UpdateUserData
+        $('#UpdateUserData').on('click', function(e){
             e.preventDefault();
-
             if (!$(this).valid()) {
                 return;
             }
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You want to update this user?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, update it!'
-            })
-        })
+            $('#EditUserForm').find('button[type="submit"]').attr('disabled', 'disabled');
+            let formData = $('#EditUserForm').serialize();
+            let url = $('#EditUserForm').attr('action');
 
+            $.ajax({
+                url: url,
+                method: 'PUT',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({icon: "info", title: "Processing...", timer: 500, timerProgressBar: true});
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        if(response.success === true){
+                            Swal.fire({
+                                title: "{{ __('global.success') }}",
+                                text: response.message,
+                                icon: "success",
+                                timer: 1500,
+                                timerProgressBar: true,
+                            });
+                            $('#EditUserForm')[0].reset();
+                            $('#EditUserForm').trigger('reset');
+                            $('#users_list').DataTable().ajax.reload();
+                            $('#edit_roles').val(null).trigger('change');
+                            $('#EditUsersModal').modal('hide');
+                            $(this).trigger('reset');
+                        }
+                    }, 500);
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                },
+                complete: function() {
+
+                    setTimeout(() => {
+                        $('#EditUserForm').find('button[type="submit"]').removeAttr('disabled');
+                        console.log('Tombol Update Disable Attribut Di Hapuskan');
+                    }, 500);
+
+                }
+            });
+
+        });
 
         //VALIDATE FORM
         $(function(){
@@ -347,6 +432,9 @@
                                 _token: "{{ csrf_token() }}",
                                 username: function() {
                                     return $('#edit_username').val();
+                                },
+                                id: function() {
+                                    return $('#id_user').val();
                                 }
                             },
                             delay: 3000,
@@ -374,7 +462,7 @@
                     'roles[]': {
                         required: true,
                         },
-                    password_confirmation: {required: false, equalTo: "#password"},
+                    password_confirmation: {required: false, equalTo: "#edit_password"},
                 },
                 messages: {
                     nama: {
@@ -434,11 +522,12 @@
             });
         });
 
+        //RESET FORM EDIT
         function resetFormEdit() {
             $('#EditUserForm').trigger('reset'); // Reset the form fields
             $('#EditUserForm').find('.is-invalid').removeClass('is-invalid'); // Remove invalid classes
             $('#EditUserForm').find('.invalid-feedback').remove(); // Remove error messages
-            $('#EditUserForm').find('.error').remove(); // Remove error messages
+            $('#EditUserForm').find('.error').remove();
         }
     });
 </script>

@@ -1,5 +1,5 @@
 <x-adminlte-modal id="EditUsersModal" title="" theme="purple" icon="fas fa-bolt" size='lg' disable-animations>
-    <form id="EditUserForm" novalidate method="PUT" class="resettable-form" data-toggle="validator" autocomplete="off" data-id>
+    <form id="EditUserForm" novalidate method="PUT" class="resettable-form" data-toggle="validator" autocomplete="off">
         @csrf
         @method('PUT')
         {{-- Name field --}}
@@ -24,7 +24,7 @@
             <label for="edit_username">{{ __('cruds.user.fields.username') }}</label>
             <div class="input-group">
                 <input type="text" id="edit_username" name="username" class="form-control @error('username') is-invalid @enderror"
-                value="{{ old('username') }}" placeholder="{{ __('cruds.user.fields.username') }}" autofocus required disabled maxlength="100" minlength="5" autocomplete="off" remote="email">
+                value="{{ old('username') }}" placeholder="{{ __('cruds.user.fields.username') }}" autofocus required maxlength="100" minlength="5" autocomplete="off" remote="username">
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
@@ -119,7 +119,7 @@
                 <label for="edit_aktif"><span id="status"></span></label>
             </div>
         </div>
-        <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-edit-user">
+        <button type="submit" id="UpdateUserData" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} EDIT_USERS">
             <span class="fas fa-user-plus"></span>
             {{ __('global.update') }}
         </button>

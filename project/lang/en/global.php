@@ -3,6 +3,7 @@
 return [
     'details'                        => 'Details',
     'actions'                        => 'Actions',
+    'success'                        => 'Success',
     'add'                            => 'Add',
     'allRightsReserved'              => 'All rights reserved.',
     'areYouSure'                     => 'Are you sure?',
