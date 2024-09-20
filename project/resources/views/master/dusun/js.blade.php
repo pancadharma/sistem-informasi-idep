@@ -260,12 +260,12 @@ $(document).ready(function() {
                     });
                 $('#kecamatan').empty();
                     $.each(hasil.kecamatan, function(key, value) {
-                        let selected = (value.id === kabID) ? 'selected' : '';
+                        let selected = (value.id === kecID) ? 'selected' : '';
                         $('#kecamatan').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
                 $('#desa').empty();
                     $.each(hasil.desa, function(key, value) {
-                        let selected = (value.id === kabID) ? 'selected' : '';
+                        let selected = (value.id === desaID) ? 'selected' : '';
                         $('#desa').append('<option data-id="'+value.kode+'" value="'+ value.id +'" '+ selected +'>'+ value.text +'</option>');
                     });
                 $('#kode_dusun').val(dusunKode);
@@ -326,7 +326,6 @@ $(document).ready(function() {
         $.ajax({
             url: url,
             method: 'PUT',
-            dataType:'JSON',
             data: formData,
             dataType: 'json',
             beforeSend: function(){

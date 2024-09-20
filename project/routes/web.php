@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\KategoripendonorController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -52,6 +53,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    // Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
+    Route::get('users-show/{users}', [UsersController::class,'showModal'])->name('users.showmodal');
+    Route::get('username-check', [UsersController::class,'checkUsername'])->name('check.username');
+    Route::get('email-check', [UsersController::class,'checkEmail'])->name('check.email');
+    Route::get('users-api', [UsersController::class,'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 
     //Logs
@@ -101,5 +107,9 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
+    
+    //Master Kategori Pendonor
+    Route::resource('kategoripendonor', KategoripendonorController::class);
+    Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
 
 });
