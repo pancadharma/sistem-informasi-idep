@@ -257,6 +257,13 @@ return [
                     'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
                 [
+                    'text' => 'kategoripendonor',
+                    // 'url' => '#',
+                    'route' => 'kategoripendonor.index',
+                    'icon' => '',
+                    'active' => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
+                ],
+                [
                     'text' => 'pendonor',
                     'url' => '#',
                     'icon' => '',
@@ -270,7 +277,8 @@ return [
                 ],
                 [
                     'text' => 'jenis_bantuan',
-                    'url' => '#',
+                    // 'url' => '#',
+                    'route' => 'jenisbantuan.index',
                     'icon' => '',
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
                 ],

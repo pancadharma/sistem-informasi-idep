@@ -233,6 +233,24 @@ return [
         'added'     => 'Added Successfully',
         'updated'   => 'Updated Successfully',
         'deleted'   => 'Has Been Deleted' 
-    ]
+    ],
+    'jenisbantuan' => [
+        'list' => 'Daftar Jenis Bantuan',
+        'jenisbantuan' => 'Jenis Bantuan',
+        'title_singular' => 'Jenis Bantuan',
+        'title' => 'Jenis Bantuan',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+    ],
+    'kategoripendonor' => [
+        'list' => 'Category Donatur List',
+        'kategoripendonor' => 'Donatur',
+        'title_singular' => 'Category Donatur',
+        'title' => 'Category Donatur',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Name',
+    ],
 
 ];

@@ -10,10 +10,12 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\CountryCountroller;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\KategoripendonorController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -98,5 +100,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
     Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
     Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
+
+    //Master Jenis Bantuan
+    Route::resource('jenisbantuan', JenisbantuanController::class);
+    Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
+    
+    //Master Kategori Pendonor
+    Route::resource('kategoripendonor', KategoripendonorController::class);
+    Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
 
 });

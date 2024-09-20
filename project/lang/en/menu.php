@@ -34,6 +34,7 @@ return [
     'users'             => 'Users',
     'kelompok_rentan'   => 'Vulnerable Groups',
     'pendonor'          => 'Donator',
+    'kategoripendonor'  => 'Donator Category',
     'partner'           => 'Partner',
     'jenis_bantuan'     => 'Help Type',
     'sdg'               => 'SDG Link',
