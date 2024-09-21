@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreKategoripendonorRequest extends FormRequest
+class StoreKelompokmarjinalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,9 +30,9 @@ class StoreKategoripendonorRequest extends FormRequest
     public function messages(): array
     {
         return[
-            'nama.string' => 'Kolom nama kategori pendonor harus berupa text',
-            'nama.max' => 'Kolom nama kategori pendonor maksimal 200 karakter',
-            'nama.required' => 'Kolom kategori pendonor wajib diisi !',
+            'nama.string' => 'Kolom nama kelompok marjinal harus berupa text',
+            'nama.max' => 'Kolom nama kelompok marjinal maksimal 200 karakter',
+            'nama.required' => 'Kolom kelompok marjinal wajib diisi !',
             'aktif.accepted' => 'Check box wajib dipilih',
         ];
     }

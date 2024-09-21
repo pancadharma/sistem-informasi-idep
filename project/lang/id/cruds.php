@@ -264,5 +264,13 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
+    'kelompokmarjinal' => [
+        'list' => 'List Kelompok Marjinal',
+        'kelompokmarjinal' => 'Kelompok Marjinal',
+        'title' => 'Kelompok Marjinal',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+    ],
 
 ];

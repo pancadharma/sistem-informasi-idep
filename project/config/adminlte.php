@@ -250,7 +250,8 @@ return [
             'submenu' => [
                 [
                     'text' => 'kelompok_rentan',
-                    'url' => '#',
+                    //'url' => '#',
+                    'route' => 'kelompokmarjinal.index',
                     'icon' => '',
                     'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
