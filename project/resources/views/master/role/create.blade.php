@@ -33,23 +33,21 @@
                     @enderror
                 </div>
             </div>
-            {{-- Permission --}}            
+            {{-- Permission --}}
             <div class="form-group">
-                <label class="required" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
+                <label class="required control-label" for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                 <div class="input-group select2-purple">
-                    
-                    <select class="form-control select2 {{ $errors->has('permissions') ? 'is-invalid' : '' }}" 
-                        name="permissions[]" id="permissions" multiple required>
-                        
-                        @foreach($permissions as $id => $permission)
-                            <option value="{{ $id }}" {{ in_array($id, old('permissions', [])) ? 'selected' : '' }}>{{ $permission }}</option>
-                        @endforeach
+                    <select class="form-control {{ $errors->has('permissions') ? 'is-invalid' : '' }}"
+                        name="permissions[]" id="permissions" multiple="multiple" required >
+                        {{-- @foreach($permissions as $id => $permission) --}}
+                            {{-- <option value="{{ $id }}" {{ in_array($id, old('permissions', [])) ? 'selected' : '' }}>{{ $permission }}</option> --}}
+                        {{-- @endforeach --}}
                     </select>
-                    
-                    <div class="input-group-text">
-                        <span class="fas fa-shield-alt {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                    </div>
-                    
+                    {{-- <div class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-select2-open="permissions">
+                            <span class="fas fa-shield-alt {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                        </button>
+                    </div> --}}
                     @error('permissions')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -65,7 +63,7 @@
                     <label for="aktif"></label>
                 </div>
             </div>
-            
+
             <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
                 <span class="fas fa-user-secret"></span>
                 {{ __('global.add') }}

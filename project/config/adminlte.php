@@ -309,12 +309,12 @@ return [
                     'icon' => 'nav-icon fas fa-project-diagram',
                     // 'route' => 'program',
                     'url' => 'program',
-                    
+
                     'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kegiatan',
-                    'icon' => 'nav-icon fa fa-user-graduate',                
+                    'icon' => 'nav-icon fa fa-user-graduate',
                     // 'route' => 'kegiatan',
                     'url' => 'kegiatan',
                     'active' => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
@@ -480,12 +480,14 @@ return [
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
                     'location' => '/vendor/select2/js/select2.min.js',
+                    // 'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.css',
                     'location' => '/vendor/select2/css/select2.css',
+                    // 'location' => '/vendor/select2-bootstrap4-theme/css/select2-bootstrap4.css',
                 ],
             ],
         ],

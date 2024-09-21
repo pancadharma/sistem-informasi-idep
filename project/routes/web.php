@@ -48,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('roles-permission', [RolesController::class,'getPermission'])->name('roles.permission');
     Route::get('roles-api', [RolesController::class,'getRole'])->name('roles.api');
     Route::resource('roles', RolesController::class);
-    
+
 
 
     // Users
@@ -109,7 +109,7 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
-    
+
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
