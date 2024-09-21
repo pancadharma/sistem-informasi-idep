@@ -45,6 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
+    Route::get('roles-permission', [RolesController::class,'getPermission'])->name('roles.permission');
+    Route::get('roles-api', [RolesController::class,'getRole'])->name('roles.api');
     Route::resource('roles', RolesController::class);
     
 

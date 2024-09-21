@@ -218,13 +218,11 @@ return [
             'icon'   => 'far fa-image',
             'submenu' => [
                 [
-                    'text'  => 'role',
-                    'url'   => 'role',
-                    'can'   => ['role_create',],
-                    'icon' => 'far fa-check-circle',
-                    'active' => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
-                    // 'route' => 'home',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'text'      => 'role',
+                    'can'       => ['role_create','role_show'],
+                    'icon'      => 'far fa-check-circle',
+                    'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
+                    'route' => 'roles.index',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
                 ],
                 [
@@ -238,10 +236,10 @@ return [
                 [
                     'text'      => 'user',
                     'url'       => 'users',
-                    // 'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
-                    'can'       => ['user_access'],
+                    'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
+                    // 'can'       => ['user_access'],
                     'route'     => 'users.index',
-                    'icon'      => 'fas fa-users',
+                    'icon'      => 'fas fa-chalkboard-teacher',
                     'active'    => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
                 ],
             ],

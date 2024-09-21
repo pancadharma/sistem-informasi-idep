@@ -153,10 +153,11 @@ return [
     'role' => [
         'title'          => 'Roles',
         'title_singular' => 'Role',
+        'list'           => 'Role List',
         'fields'         => [
             'id'                 => 'ID',
             'id_helper'          => ' ',
-            'title'              => 'Title',
+            'nama'               => 'Role Name',
             'title_helper'       => ' ',
             'permissions'        => 'Permissions',
             'permissions_helper' => ' ',
@@ -166,6 +167,10 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+        ],
+        'validation'             => [
+            'nama'               => 'Role Name must be at least 3 characters.',
+            'permission'         => 'Please select at least one permission.',
         ],
     ],
     'user' => [
