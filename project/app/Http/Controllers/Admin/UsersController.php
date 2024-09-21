@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use App\Http\Controllers\Traits\MediaUploadingTrait;
-use App\Http\Requests\MassDestroyUserRequest;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use Gate;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Gate;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use Illuminate\Database\QueryException;
+use App\Http\Requests\UpdateUserRequest;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\MassDestroyUserRequest;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersController extends Controller
 {
@@ -23,158 +29,328 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        if ($request->ajax()) {
-            $query = User::with(['roles'])->select(sprintf('%s.*', (new User)->table));
-            $table = Datatables::of($query);
-
-            $table->addColumn('placeholder', '&nbsp;');
-            $table->addColumn('actions', '&nbsp;');
-
-            $table->editColumn('actions', function ($row) {
-                $viewGate      = 'user_show';
-                $editGate      = 'user_edit';
-                $deleteGate    = 'user_delete';
-                $crudRoutePart = 'users';
-
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
-                    'crudRoutePart',
-                    'row'
-                ));
-            });
-
-            $table->editColumn('name', function ($row) {
-                return $row->name ? $row->name : '';
-            });
-            $table->editColumn('email', function ($row) {
-                return $row->email ? $row->email : '';
-            });
-
-            $table->editColumn('roles', function ($row) {
-                $labels = [];
-                foreach ($row->roles as $role) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $role->title);
-                }
-
-                return implode(' ', $labels);
-            });
-            $table->editColumn('image', function ($row) {
-                if ($photo = $row->image) {
-                    return sprintf(
-                        '<a href="%s" target="_blank"><img src="%s" width="50px" height="50px"></a>',
-                        $photo->url,
-                        $photo->thumbnail
-                    );
-                }
-
-                return '';
-            });
-            $table->editColumn('aktif', function ($row) {
-                return '<input type="checkbox" disabled ' . ($row->aktif ? 'checked' : null) . '>';
-            });
-
-            $table->rawColumns(['actions', 'placeholder', 'roles', 'image', 'aktif']);
-
-            return $table->make(true);
-        }
-
-        return view('admin.users.index');
+        $roles = Role::pluck('nama', 'id');
+        return view('master.users.index', compact('roles'));
     }
 
     public function create()
     {
         abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $roles = Role::pluck('title', 'id');
-
-        return view('admin.users.create', compact('roles'));
+        $roles = Role::pluck('nama', 'id');
+        return view('master.users.create', compact('roles'));
     }
 
     public function store(StoreUserRequest $request)
     {
-        $user = User::create($request->all());
-        $user->roles()->sync($request->input('roles', []));
-        if ($request->input('image', false)) {
-            $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
-        }
+        try {
+            $data = $request->validated();
+            $user = User::create($data);
+            $user->roles()->sync($request->input('roles', []));
 
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $user->id]);
+            return response()->json([
+                'success'   => true,
+                'data'      => $data,
+                "message"   => __('cruds.data.data') .' '.__('cruds.user.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+            ], 201);
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Database error: ' . $e->getMessage(),
+                'status'    => Response::HTTP_UNPROCESSABLE_ENTITY,
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 402);
         }
-
-        return redirect()->route('admin.users.index');
     }
 
     public function edit(User $user)
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $roles = Role::pluck('title', 'id');
-
         $user->load('roles');
-
-        return view('admin.users.edit', compact('roles', 'user'));
+        return response()->json($user);
     }
+
+    // public function update(UpdateUserRequest $request, User $user)
+    // {
+    //     try {
+    //         // Find the user by ID
+    //         $data = $request->validated();
+    //         User::updateOrCreate($data);
+    //         $data->nama     = $request->input('nama');
+    //         $data->username = $request->input('username');
+    //         $data->email    = $request->input('email');
+    //         $data->aktif    = $request->input('aktif');
+
+    //         if ($request->filled('password')) {
+    //             $data->password = bcrypt($request->input('password'));
+    //         }
+    //         // Update roles
+    //         $user->roles()->sync($request->input('roles'));
+
+    //         // Update other fields
+    //         $user->aktif = $request->input('aktif');
+
+    //         // Save the updated user
+    //         $user->save();
+
+    //         // Return JSON response
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'User updated successfully.',
+    //             'data' => $user
+    //         ], 200);
+
+    //     } catch (ValidationException $e) {
+    //         // Handle validation errors
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Validation failed.',
+    //             'errors'  => $e->errors(),
+    //             'data'  => $request,
+    //         ], 422);
+
+    //     } catch (ModelNotFoundException $e) {
+    //         // Handle model not found errors
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Resource not found.',
+    //             'data'  => $request,
+    //         ], 404);
+
+    //     } catch (HttpException $e) {
+    //         // Handle HTTP-specific exceptions
+    //         return response()->json([
+    //             'success'   => false,
+    //             'message'   => $e->getMessage(),
+    //             'data'      => $request,
+    //         ], $e->getStatusCode());
+
+    //     } catch (Exception $e) {
+    //         // Handle all other exceptions
+    //         return response()->json([
+    //             'success'   => false,
+    //             'data'      => $request,
+    //             'message'   => 'An error occurred.',
+    //             'error'     => $e->getMessage(),
+    //         ], 500);
+    //     }catch (QueryException $e){
+    //         return response()->json([
+    //             'success'   => false,
+    //             'data'      => $request,
+    //             'message'   => 'An error occurred.',
+    //             'error'     => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->all());
-        $user->roles()->sync($request->input('roles', []));
-        if ($request->input('image', false)) {
-            if (! $user->image || $request->input('image') !== $user->image->file_name) {
-                if ($user->image) {
-                    $user->image->delete();
-                }
-                $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
-            }
-        } elseif ($user->image) {
-            $user->image->delete();
-        }
+        try {
+            // Get the validated data
+            $data = $request->validated();
 
-        return redirect()->route('admin.users.index');
+            // Update user data excluding roles and password
+            $user->fill([
+                'nama'      => $data['nama'],
+                'username'  => $data['username'],
+                'email'     => $data['email'],
+                'aktif'     => $data['aktif'],
+            ]);
+
+            // Handle password if provided (nullable in validation)
+            if ($request->filled('password')) {
+                $user->password = bcrypt($data['password']);
+            }
+
+            // Save the updated user details
+            $user->save();
+
+            // Sync roles only if they are provided in the request
+            if (isset($data['roles'])) {
+                $user->roles()->sync($data['roles']);
+            }
+
+            // Return JSON success response
+            return response()->json([
+                'success'   => true,
+                'message'   =>  __('cruds.data.data') .' '.__('cruds.user.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+                'status'    => Response::HTTP_CREATED,
+                'data'      => $user
+            ], 200);
+
+        } catch (ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], 422);
+
+        } catch (ModelNotFoundException $e) {
+            // Handle model not found errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+            ], 404);
+
+        } catch (HttpException $e) {
+            // Handle HTTP-specific exceptions
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+
+        } catch (Exception $e) {
+            // Handle all other exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function show(User $user)
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
         $user->load('roles');
-
-        return view('admin.users.show', compact('user'));
+        return view('master.users.show', compact('user'));
     }
+
+    public function showModal($id)
+    {
+        $user = User::with('roles')->findOrFail($id);
+        return response()->json($user);
+    }
+
+
 
     public function destroy(User $user)
     {
         abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $user->delete();
-
-        return back();
+        // $user->delete();
+        // return back();
     }
 
     public function massDestroy(MassDestroyUserRequest $request)
     {
-        $users = User::find(request('ids'));
+        // $users = User::find(request('ids'));
 
-        foreach ($users as $user) {
-            $user->delete();
-        }
+        // foreach ($users as $user) {
+        //     $user->delete();
+        // }
 
-        return response(null, Response::HTTP_NO_CONTENT);
+        // return response(null, Response::HTTP_NO_CONTENT);
     }
 
     public function storeCKEditorImages(Request $request)
     {
         abort_if(Gate::denies('user_create') && Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $model         = new User();
-        $model->id     = $request->input('crud_id', 0);
-        $model->exists = true;
-        $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
+        // $model         = new User();
+        // $model->id     = $request->input('crud_id', 0);
+        // $model->exists = true;
+        // $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
-        return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+        // return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+
+    public function api(Request $request) {
+        if ($request->ajax()) {
+            $query = User::with('roles')->select('users.*');
+            $data = DataTables::of($query)
+                ->addColumn('roles', function ($user) {
+                    return $user->roles->map(function ($role) {
+                        return "<span class=\"btn btn-warning btn-xs\">{$role->nama}</span>";
+                    })->implode(' ');
+                })
+                ->addColumn('status', function($user){
+                    return match ($user->aktif) {
+                        1 => '<div class="icheck-primary d-inline">
+                                <input id="aktif_' . $user->id . '" data-aktif-id="' . $user->id . '" class="icheck-primary" alt="☑️ aktif" title="' . __("cruds.status.aktif") . '" type="checkbox" checked>
+                                <label for="aktif_' . $user->id . '"></label>
+                              </div>',
+                        0 => '<div class="icheck-primary d-inline">
+                                <input id="aktif_' . $user->id . '" data-aktif-id="' . $user->id . '" class="icheck-primary" alt="aktif" title="' . __("cruds.status.aktif") . '" type="checkbox">
+                                <label for="aktif_' . $user->id . '"></label>
+                              </div>',
+                    };
+                })
+                ->addColumn('action', function ($user) {
+                    return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
+                            data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                            <i class="fas fa-pencil-alt"></i> Edit</button>
+                            <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
+                            data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                            <i class="fas fa-folder-open"></i> View</button>';
+                })
+                ->rawColumns(['roles', 'action', 'status'])
+                ->make(true);
+
+            return $data;
+        }
+    }
+
+    //get data to datatable
+    public function getUsers(Request $request) {
+        if ($request->ajax()) {
+            $query = User::with('roles');
+            $data = DataTables::of($query)
+                ->addColumn('roles', function ($user) {
+                    return $user->roles->map(function($role) {
+                        return "<span class=\"btn btn-warning btn-xs\">{$role->name}</span>";
+                    })->join(' - ');
+                })
+                ->addColumn('action', function ($user) {
+                    return '<button type="button" class="btn btn-sm btn-info edit-user-btn" data-action="edit"
+                    data-user-id="'. $user->id .'" title="'.__('global.edit') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                    <i class="fas fa-pencil-alt"></i> Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary view-user-btn" data-action="view"
+                    data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
+                    <i class="fas fa-folder-open"></i> View</button>';
+                })
+                ->rawColumns(['roles', 'action'])
+                ->make(true);
+
+            return $data;
+        }
+    }
+
+    //check username
+    public function checkUsername(Request $request)
+    {
+        // \Log::info("check username", $request->all()); // Log the request data for debugging
+        $rules = [
+            'username' => 'required|unique:users,username'
+        ];
+        if ($request->has('id')) {
+            $userId = $request->input('id');
+            $rules['username'] = "required|unique:users,username,{$userId},id";
+        }
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(__('cruds.user.fields.username').' '.$request->username.' '.__('cruds.user.validation.taken'));
+        }
+        return response()->json("true");
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $rules = [
+            'email' => 'required|email|unique:users,email'
+        ];
+        if ($request->has('id')) {
+            $userId = $request->input('id');
+            $rules['email'] = "required|email|unique:users,email,{$userId},id";
+        }
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json(__('cruds.user.fields.email').' '.$request->email.' '.__('cruds.user.validation.taken'));
+        }
+        return response()->json("true");
     }
 }
