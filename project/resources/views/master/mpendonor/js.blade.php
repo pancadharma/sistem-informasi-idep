@@ -120,71 +120,33 @@
 // Form Add / submit ------------------------------------------------------
 
 $(document).ready(function() {
-     // persiapan data select 2 -----------------
-     $.ajax({
-                url:  '{{ route('pendonor.create') }}',
-                method: 'GET',
-                dataType: 'json',
-                success: function(response){
-                    let data = response.map(function(item) {
-                        return {
-                            id: item.id,
-                            text: item.id+' - '+ item.nama,
-                        };
-                    });
-                    
-                    $('#kategoripendonor_add').select2({
-                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kategoripendonor.title')}}",
-                        allowClear: true,
-                        delay: 250,
-                        data : data,
-                    });
-                    $(document).on('select2:open', function() {
-                        setTimeout(function() {
-                            document.querySelector('.select2-search__field').focus();
-                        }, 100);
-                    });
-                },error: function(jqXHR, textStatus, errorThrown) {
-                    const errorData = JSON.parse(jqXHR.responseText);
-                    const errors = errorData.errors; // Access the error object
-                    let errorMessage = "";
-                    for (const field in errors) {
-                        errors[field].forEach(error => {
-                            errorMessage +=
-                            `* ${error}\n`; // Build a formatted error message string
-                        });
-                    }
-                    Swal.fire({
-                        title: jqXHR.statusText,
-                        text: errorMessage,
-                        icon: 'error'
-                    });
-                }
-            });  
+     // persiapan data select 2  harus di index-----------------
+     
     // Submit form---------
-        $('.btn-add-kelompokmarjinal').on('click', function(e) {
+        $('.btn-add-mpendonor').on('click', function(e) {
             e.preventDefault();
-            var formDatakelompokmarjinal = $('#kelompokmarjinalForm').serialize();
+            var formDatampendonor = $('#mpendonorForm').serialize();
             $.ajax({
                 method: "POST",
-                url: '{{ route('kelompokmarjinal.store') }}', // Get form action URL
-                data: formDatakelompokmarjinal,
+                url: '{{ route('pendonor.store') }}', // Get form action URL
+                data: formDatampendonor,
                 dataType: 'json',
                 success: function(response) {
+                    //console.log(response);
                     if (response.success === true) {
                         Swal.fire({
                             title: "Success",
                             text: response.message,
                             icon: "success",
-                            timer: 2000,
+                            timer: 20000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
                             },
                         });
-                        $('#addkelompokmarjinal').modal('hide');
-                        $('#kelompokmarjinalForm').trigger('reset');
-                        $('#kelompokmarjinal').DataTable().ajax.reload();
+                        $('#addmpendonor').modal('hide');
+                        $('#mpendonorForm').trigger('reset');
+                        $('#mpendonor').DataTable().ajax.reload();
                     } else {
                         var errorMessage = response.message;
                         if (response.status === 400) {
@@ -200,7 +162,7 @@ $(document).ready(function() {
                             html: errorMessage,
                             icon: "error"
                         });
-                        //$('#addkelompokmarjinal').modal('hide');
+                        //$('#addmpendonor').modal('hide');
                     }
                 },
                 error: function(xhr, status, error) {

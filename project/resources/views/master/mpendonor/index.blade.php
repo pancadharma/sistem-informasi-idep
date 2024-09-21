@@ -21,7 +21,7 @@
                     <div class="form-group"> {{--  id kategori pendonor --}}
                         <label for="kategoripendonor_nama">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
                         <div class="form-group">
-                            <select id="kategoripendonor_add" name="kategoripendonor_id" class="form-control select2 kategoripendonor-data" style="width: 100%">
+                            <select id="kategoripendonor_add" required name="mpendonorkategori_id" class="form-control select2 kategoripendonor-data" style="width: 100%">
                                 <option></option>
                             </select>
                         </div>
@@ -73,9 +73,9 @@
         </div>
     </div>
    
-    {{-- @include('master.kelompokmarjinal.create') --}}
-    @include('master.kelompokmarjinal.edit')
-    @include('master.kelompokmarjinal.show')
+    {{-- @include('master.mpendonor.create') --}}
+    @include('master.mpendonor.edit')
+    @include('master.mpendonor.show')
     @stop
     
     @push('css')
@@ -89,7 +89,12 @@
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
 
-    @include('master.kelompokmarjinal.js')
+    @include('master.mpendonor.js')
+    
+    
+    {{-- Mempersiapkan isian dari select2
+    harus disini ternyata script ne wkwk 
+    @Gedeadi sesat wkwkwk --}}
     <script>
         $.ajax({
                 url:  '{{ route('pendonor.create') }}',
