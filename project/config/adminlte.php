@@ -218,13 +218,11 @@ return [
             'icon'   => 'far fa-image',
             'submenu' => [
                 [
-                    'text'  => 'role',
-                    'url'   => 'role',
-                    'can'   => ['role_create',],
-                    'icon' => 'far fa-check-circle',
-                    'active' => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
-                    // 'route' => 'home',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'text'      => 'role',
+                    'can'       => ['role_create','role_show'],
+                    'icon'      => 'far fa-check-circle',
+                    'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
+                    'route' => 'roles.index',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
                 ],
                 [
@@ -238,10 +236,10 @@ return [
                 [
                     'text'      => 'user',
                     'url'       => 'users',
-                    // 'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
-                    'can'       => ['user_access'],
+                    'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
+                    // 'can'       => ['user_access'],
                     'route'     => 'users.index',
-                    'icon'      => 'fas fa-users',
+                    'icon'      => 'fas fa-chalkboard-teacher',
                     'active'    => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
                 ],
             ],
@@ -312,12 +310,12 @@ return [
                     'icon' => 'nav-icon fas fa-project-diagram',
                     // 'route' => 'program',
                     'url' => 'program',
-                    
+
                     'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kegiatan',
-                    'icon' => 'nav-icon fa fa-user-graduate',                
+                    'icon' => 'nav-icon fa fa-user-graduate',
                     // 'route' => 'kegiatan',
                     'url' => 'kegiatan',
                     'active' => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
@@ -483,12 +481,14 @@ return [
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
                     'location' => '/vendor/select2/js/select2.min.js',
+                    // 'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.css',
                     'location' => '/vendor/select2/css/select2.css',
+                    // 'location' => '/vendor/select2-bootstrap4-theme/css/select2-bootstrap4.css',
                 ],
             ],
         ],

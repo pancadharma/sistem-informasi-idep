@@ -148,12 +148,13 @@ return [
         ],
     ],
     'role' => [
-        'title'          => 'Peranan',
-        'title_singular' => 'Peranan',
+        'title'          => 'Role Sistem',
+        'title_singular' => 'Role Sistem',
+        'list'           => 'Daftar Role',
         'fields'         => [
             'id'                 => 'ID',
             'id_helper'          => ' ',
-            'title'              => 'Title',
+            'nama'               => 'Nama Role',
             'title_helper'       => ' ',
             'permissions'        => 'Permissions',
             'permissions_helper' => ' ',
@@ -163,6 +164,10 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
+        ],
+        'validation'             => [
+            'nama'               => 'Nama role harus terdiri dari 5 karakter.',
+            'permission'         => 'Pilih salah satu permision.',
         ],
     ],
     'user' => [
