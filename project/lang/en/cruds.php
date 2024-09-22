@@ -247,7 +247,7 @@ return [
         'data'      => 'Data',
         'added'     => 'Added Successfully',
         'updated'   => 'Updated Successfully',
-        'deleted'   => 'Has Been Deleted' 
+        'deleted'   => 'Has Been Deleted'
     ],
     'jenisbantuan' => [
         'list' => 'Daftar Jenis Bantuan',
@@ -276,5 +276,18 @@ return [
         'no'=>'No',
         'nama'=>'Name',
     ],
+    'partner'               => [
+        'title'             => 'Partners',
+        'list'              => 'Partners List',
+        'title_singular'    => 'Partner',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_partner'  => 'Partner Name',
+            'ket'           => 'Information',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+        ]
+    ]
 
 ];

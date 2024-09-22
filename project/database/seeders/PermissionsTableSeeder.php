@@ -206,6 +206,38 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => 48,
                 'nama' => 'dusun_delete',
             ],
+            [
+                'id'    => 49,
+                'nama' => 'partner_access',
+            ],
+            [
+                'id'    => 50,
+                'nama' => 'partner_create',
+            ],
+            [
+                'id'    => 51,
+                'nama' => 'partner_edit',
+            ],
+            [
+                'id'    => 52,
+                'nama' => 'partner_delete',
+            ],
+            [
+                'id'    => 53,
+                'nama' => 'permission_access',
+            ],
+            [
+                'id'    => 54,
+                'nama' => 'permission_create',
+            ],
+            [
+                'id'    => 55,
+                'nama' => 'permission_edit',
+            ],
+            [
+                'id'    => 56,
+                'nama' => 'permission_delete',
+            ],
         ];
 
         Permission::insert($permissions);

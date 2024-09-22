@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\PartnersController;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -118,5 +119,10 @@ Route::middleware(['auth'])->group(function () {
     //Master Kelompok Marjinal
     Route::resource('kelompokmarjinal', KelompokmarjinalController::class);
     Route::get('datakelompokmarjinal', [KelompokmarjinalController::class, 'datakelompokmarjinal'])->name('data.kelompokmarjinal');
+
+    //Master Partners
+    Route::resource('partner', PartnersController::class);
+    Route::get('partners-api', [PartnersController::class, 'getPartners'])->name('partners.api');
+
 
 });
