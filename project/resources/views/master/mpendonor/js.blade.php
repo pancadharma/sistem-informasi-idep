@@ -90,7 +90,7 @@ $(document).ready(function() {
                 data: formDatampendonor,
                 dataType: 'json',
                 success: function(response) {
-                    //console.log(response);
+                    // console.log(response);
                     if (response.success === true) {
                         Swal.fire({
                             title: "Success",
@@ -230,90 +230,6 @@ $(document).ready(function() {
 //---------------------------------------  
 //-------------SUBMIT UPDATE FORM - EDIT
 //--------------------------------------- 
-// $(document).ready(function() {
-//         $('#editaktif').change(function() {
-//             $('#edit-aktif').val(this.checked ? 1 : 0);
-//         });
-
-//         $('#mpendonorForm').submit(function(e) {
-//             e.preventDefault();
-
-//             let idmpendonor = $('#id_edit').val();
-//             let formData = $(this).serialize();
-//             let url=$(this).attr('action');
-//             $.ajax({
-//                 //url: '{{ route('pendonor.update', ':id_mpendonor') }}'.replace(':id_mpendonor', idmpendonor),
-//                 url:url,
-//                 method: 'PUT',
-//                 dataType: 'JSON',
-//                 data: formData,
-//                 success: function(response) {
-//                     if (response.status === 'success') {
-//                         Swal.fire({
-//                             title: "Success",
-//                             html: response.message,
-//                             icon: "success",
-//                             timer: 2000,
-//                             timerProgressBar: true,
-//                             didOpen: ()=>{
-//                                 Swal.showLoading();
-//                             },
-//                         });
-//                         $('#editmpendonorModal').modal('hide');
-//                         $('#editmpendonorForm').trigger('reset');
-//                         $('#mpendonor').DataTable().ajax.reload();
-//                     } else if(response.status === "error" || response.status === "warning"){
-//                         console.log(response);
-//                         console.log(response.status);
-//                         Swal.fire({
-//                             title: 'Unable to Update Data !',
-//                             html: response.message,
-//                             icon: 'error'
-//                         });
-//                     }
-//                 },
-//                 error: function(xhr, status, error) {
-//                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-//                     try {
-//                         const response = xhr.responseJSON;
-//                         if (response.message) {
-//                             errorMessage = response.message;
-//                             Swal.fire({
-//                                 icon: 'error',
-//                                 title: 'Error!',
-//                                 html: errorMessage,
-//                             });
-//                         }
-//                         if (response.errors) {
-//                             errorMessage += '<br><br><ul style="text-align:left!important">';
-//                             $.each(response.errors, function(field, messages) {
-//                                 messages.forEach(message => {
-//                                     errorMessage += `<li>${field}: ${message}</li>`;
-//                                     $(`#${field}`).removeClass('is-valid').addClass('error is-invalid');
-//                                     $(`#${field}`).text(message);
-//                                     $(`#${field}`).removeClass('invalid').addClass('error is-invalid');
-//                                 });
-//                             });
-//                             errorMessage += '</ul>';
-//                             Swal.fire({
-//                                 icon: 'error',
-//                                 title: 'Error!',
-//                                 html: errorMessage,
-//                             });
-//                         }
-//                     } catch (e) {
-//                         console.error('Error parsing response:', e);
-//                     }
-//                     Swal.fire({
-//                         icon: 'error',
-//                         title: 'Error!',
-//                         html: errorMessage,
-//                     });
-//                 }
-//             });
-//         });
-//     });
-
 
     $(document).ready(function() {
         $('#editaktif').change(function() {
@@ -322,18 +238,19 @@ $(document).ready(function() {
 
         $('#editmpendonorForm').submit(function(e) {
             e.preventDefault();
-            let idmpendonor = $('#id_edit').val();
+            let idmpendonor = $('#id').val();
             let formData = $(this).serialize();
             let url=$(this).attr('action');
-            // let idmpendonor = $('#id').val();
-            // let formData = $(this).serialize();
+            // console.log('idmpendonor:', idmpendonor);
+            // console.log('formData:', formData);
+            // console.log('url:', url);
             $.ajax({
-                //url: '{{ route('pendonor.update', ':id_p') }}'.replace(':id_p', idmpendonor),
                 url:url,
                 method: 'PUT',
                 dataType: 'JSON',
                 data: formData,
                 success: function(response) {
+                    // console.log('Response data:', response.data);
                     if (response.status === 'success') {
                         Swal.fire({
                             title: "Success",
@@ -414,7 +331,7 @@ $(document).ready(function() {
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     let data = response || [];
                     
 

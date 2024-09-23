@@ -19,7 +19,7 @@
                     @csrf
                     @method('POST')
                     <div class="form-group"> {{--  id kategori pendonor --}}
-                        <label for="kategoripendonor_nama">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
+                        <label for="kategoripendonor_add">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
                         <div class="form-group">
                             <select id="kategoripendonor_add" required name="mpendonorkategori_id" class="form-control select2 kategoripendonor-data" style="width: 100%">
                                 <option></option>

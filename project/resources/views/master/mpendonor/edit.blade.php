@@ -3,9 +3,10 @@
         <form @submit.prevent="handleSubmit" id="editmpendonorForm" method="PATCH">
             @csrf
             @method('PATCH')
-            <input type="hidden" name="id" id="id_edit">
+            {{-- <input type="hidden" name="id" id="id_edit"> --}}
+            <input type="hidden" name="id" id="id">
             <div class="form-group">
-                <label for="kategoripendonor_nama">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
+                <label for="mpendonorkategori_id">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
                 <select id="mpendonorkategori_id" name="mpendonorkategori_id" class="form-control select2 mpendonorkategori-data" style="width: 100%">
                 </select>
             </div>
@@ -28,8 +29,10 @@
             <div class="form-group">
                 <strong>{{ trans('cruds.status.title') }}</strong>
                 <div class="icheck-primary">
-                    <input type="checkbox" id="editaktif" {{ old('aktif') == 1 ? 'checked' : '' }}>
-                    <input type="hidden" name="aktif" id="edit-aktif" value="0">
+                    {{-- <input type="checkbox" id="editaktif" {{ old('aktif') == 1 ? 'checked' : '' }}>
+                    <input type="hidden" name="aktif" id="edit-aktif" value="0"> --}}
+                    <input type="checkbox" id="editaktif" v-model="form.aktif" {{ old('aktif') == 1 ? 'checked' : '' }}>
+                    <input type="hidden" name="aktif" id="edit-aktif" :value="form.aktif">
                     <label for="editaktif"></label>
                 </div>
             </div>

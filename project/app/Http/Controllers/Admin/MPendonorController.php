@@ -107,27 +107,41 @@ class MPendonorController extends Controller
      */
     public function update(UpdateMpendonorRequest $request, MPendonor $pendonor)
     {
-        $data = $request->all();
-        //dd($data);
+        //dump($request);
         try {
+            // Validate the request data
             $data = $request->validated();
+            // Update  model with the validated data
             $pendonor->update($data);
-            
-            return response()->json([
-                'status'    => 'success',
-                // 'message'   => "Data ". $request->nama ." Updated Successfully",
-                "message"   => __('cruds.data.data') .' '.__('cruds.mpendonor.title') .' '. $request->nama .' '. __('cruds.data.updated'),
-                'data'      => $pendonor,
-            ],201);
+            // Update manual kolom data "aktif" karena tidak ke detect otomatis
+            $pendonor->aktif = $request->input('aktif');
+            $pendonor->save();
+            $status = "success";
+            $message = "Data " . $request->nama . " was updated successfully!";
+            return response()->json(['status' => $status, 'message' => $message, 'data' =>$data], 200); // Use 200 OK for successful updates
+
+        } catch (ValidationException $e) {
+            $status = 'error';
+            $message = 'Validation failed: ' . implode(', ', $e->errors());
+            return response()->json(['status' => $status, 'message' => $message], 422); // Use 422 Unprocessable Entity for validation errors
+
+        } catch (QueryException $e) {
+            // Handle specific database errors
+            $status = 'error';
+            if ($e->getCode() === '22003') {
+                // MySQL numeric value out of range
+                $message = 'The provided code is too large for the database. Please enter a valid code within the allowed range.';
+            } else {
+                // Other database errors
+                $message = 'Database error: ' . $e->getMessage();
+            }
+            return response()->json(['status' => $status, 'message' => $message], 400); // Use 400 Bad Request for database errors
 
         } catch (Exception $e) {
+            // Handle any other exceptions
             $status = 'error';
-            $message = $e->getMessage();
-            return response()->json([
-                'status'    => $status,
-                'message'   => $message,
-                'data'      => $data,
-            ], 400);
+            $message = 'An unexpected error occurred: ' . $e->getMessage();
+            return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
         }
     }
 

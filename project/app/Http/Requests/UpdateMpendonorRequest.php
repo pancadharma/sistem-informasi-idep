@@ -31,22 +31,4 @@ class UpdateMpendonorRequest extends FormRequest
             
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'mpendonorkategori_id.required' => 'Kolom kategori pendonor wajib dipilih!',
-            'nama.string' => 'Kolom nama pendonor harus berupa teks.',
-            'nama.max' => 'Kolom nama pendonor maksimal 200 karakter.',
-            'nama.required' => 'Kolom nama pendonor wajib diisi!',
-            'pic.string' => 'Kolom PIC harus berupa teks.',
-            'pic.max' => 'Kolom PIC maksimal 200 karakter.',
-            'pic.required' => 'Kolom PIC wajib diisi!',
-            'email.required' => 'Kolom email wajib diisi!',
-            'email.email' => 'Kolom email harus berupa format email yang valid.',
-            'email.max' => 'Kolom email maksimal 200 karakter.',
-            'phone.required' => 'Kolom telepon wajib diisi!',
-            'phone.regex' => 'Kolom telepon harus berupa angka dengan panjang antara 10 hingga 20 karakter.',
-        ];
-    }
 }
