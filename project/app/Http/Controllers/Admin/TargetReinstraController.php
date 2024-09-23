@@ -136,6 +136,7 @@ class TargetReinstraController extends Controller
         if ($request->ajax()) {
             $query = TargetReinstra::all();
             $data = DataTables::of($query)
+                ->addIndexColumn()
                 ->addColumn('status', function($reinstra) {
                     return match ($reinstra->aktif) {
                         1 => '<div class="icheck-primary d-inline">

@@ -8,10 +8,11 @@
     @include('master.target_reinstra.create')
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="role_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
+            <table id="rencana_strategi_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
                 <thead>
                     <tr>
-                        <th class="text-center align-middle">{{ trans('cruds.reinstra.fields.nama') }}</th>
+                        <th class="text-center align-middle"><strong>No.</strong></th>
+                        <th class="align-middle">{{ trans('cruds.reinstra.fields.nama_reinstra') }}</th>
                         {{-- <th class="text-center align-middle">{{ trans('cruds.reinstra.fields.permissions') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>
@@ -38,4 +39,3 @@
 
     @include('master.target_reinstra.js')
     @endpush
-    1 408 043 244

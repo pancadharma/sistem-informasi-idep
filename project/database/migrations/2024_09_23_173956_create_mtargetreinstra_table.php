@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama', 200);
             $table->integer('aktif')->defaultValue(0)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
