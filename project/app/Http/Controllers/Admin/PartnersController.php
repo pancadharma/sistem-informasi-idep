@@ -8,6 +8,7 @@ use App\Models\Partner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePartnerRequest;
+use App\Http\Requests\UpdatePartnerRequest;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,6 +68,57 @@ class PartnersController extends Controller
             ], 500);
         }
 
+    }
+
+    public function edit(Partner $partner) {
+        return response()->json($partner);
+    }
+
+    public function show(Partner $partner) {
+        return response()->json($partner);
+    }
+
+    public function update(UpdatePartnerRequest $request, Partner $partner){
+        try {
+            $data = $request->validated();
+            $partner->update($data);
+            return response()->json([
+                'success' => true,
+                "message" => __('cruds.data.data') .' '.__('cruds.partner.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+                'data'    => $data,
+            ], Response::HTTP_OK);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $e->errors(),
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (ModelNotFoundException $e) {
+            // Handle model not found errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+                'errors' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+                'errors' =>  $e->getMessage()
+            ], 404);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function getPartners(Request $request) {

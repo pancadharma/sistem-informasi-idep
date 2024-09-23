@@ -7,9 +7,9 @@
 @section('content_body')
     @include('master.partner.create')
     <div class="card card-outline card-primary">
-        <div class="card-body">
+        <div class="card-body table-responsive-sm">
             <table id="partner_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
-                <thead>
+                <thead class="bg-dark">
                     <tr>
                         <th class="text-center align-middle">{{ trans('cruds.partner.fields.nama') }}</th>
                         {{-- <th class="text-center align-middle">{{ trans('cruds.partner.fields.ket') }}</th> --}}

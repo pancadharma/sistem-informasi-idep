@@ -7,7 +7,7 @@
 @section('content_body')
     @include('master.role.create')
     <div class="card card-outline card-primary">
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="role_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
                 <thead>
                     <tr>

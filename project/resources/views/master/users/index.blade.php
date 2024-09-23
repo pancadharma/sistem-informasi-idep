@@ -14,7 +14,7 @@
     </div>
 
     <div class="card card-outline card-primary">
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="users_list" class="table table-bordered table-striped table-hover dataTable dtr-inline">
                 <thead>
                     <tr>
