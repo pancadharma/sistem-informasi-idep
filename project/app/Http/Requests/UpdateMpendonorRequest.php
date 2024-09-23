@@ -28,7 +28,7 @@ class UpdateMpendonorRequest extends FormRequest
             'pic' => ['string', 'max:200', 'required'],
             'email' => ['required', 'email', 'max:200'],
             'phone' => ['required', 'regex:/^\+?[0-9]{10,20}$/'],
-            
+            'aktif' => ['integer'],
         ];
     }
 }

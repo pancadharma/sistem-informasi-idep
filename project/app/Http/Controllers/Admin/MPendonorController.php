@@ -114,8 +114,8 @@ class MPendonorController extends Controller
             // Update  model with the validated data
             $pendonor->update($data);
             // Update manual kolom data "aktif" karena tidak ke detect otomatis
-            $pendonor->aktif = $request->input('aktif');
-            $pendonor->save();
+            // $pendonor->aktif = $request->input('aktif');
+            // $pendonor->save();
             $status = "success";
             $message = "Data " . $request->nama . " was updated successfully!";
             return response()->json(['status' => $status, 'message' => $message, 'data' =>$data], 200); // Use 200 OK for successful updates

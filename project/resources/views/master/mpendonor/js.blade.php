@@ -96,7 +96,7 @@ $(document).ready(function() {
                             title: "Success",
                             text: response.message,
                             icon: "success",
-                            timer: 20000,
+                            timer: 2000,
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
@@ -250,13 +250,13 @@ $(document).ready(function() {
                 dataType: 'JSON',
                 data: formData,
                 success: function(response) {
-                    // console.log('Response data:', response.data);
+                    //console.log('Response data:', response.data);
                     if (response.status === 'success') {
                         Swal.fire({
                             title: "Success",
                             html: response.message,
                             icon: "success",
-                            timer: 4000,
+                            timer: 2000,
                             timerProgressBar: true,
                             didOpen: ()=>{
                                 Swal.showLoading();
