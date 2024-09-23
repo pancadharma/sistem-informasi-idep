@@ -22,7 +22,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
 
-    use Auditable, HasRoles;
+    use Auditable, HasRoles, HasApiTokens, Notifiable, SoftDeletes;
     protected $table = 'users';
 
     protected $dates = [

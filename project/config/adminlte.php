@@ -300,6 +300,13 @@ return [
                     'icon' => '',
                     'active' => ['idep', 'idep*', 'regex:@^idep/[0-9]+$@'],
                 ],
+                [
+                    'text'      => 'target_reinstra',
+                    'route'     => 'target-reinstra.index',
+                    'icon'      => 'fas fa-shapes',
+                    'active'    => ['target_reinstra', 'target_reinstra*', 'regex:@^target_reinstra/[0-9]+$@'],
+                    // 'can'       => ['target_reinstra_access'],
+                ],
             ],
         ],
         [

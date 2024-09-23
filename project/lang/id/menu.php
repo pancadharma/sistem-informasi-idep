@@ -46,4 +46,5 @@ return [
     'laporan'           => 'Laporan',
     'cari'              => 'Pencarian',
     'satuan'            => 'Satuan',
+    'target_reinstra'   => 'Target Reinstra',
 ];

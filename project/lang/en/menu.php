@@ -47,4 +47,5 @@ return [
     'laporan'           => 'Report',
     'cari'              => 'Search',
     'satuan'            => 'Unit',
+    'target_reinstra'   => 'Target Reinstra',
 ];

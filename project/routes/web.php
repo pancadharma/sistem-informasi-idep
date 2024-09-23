@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\TargetReinstraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\PartnersController;
+use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -123,6 +125,12 @@ Route::middleware(['auth'])->group(function () {
     //Master Partners
     Route::resource('partner', PartnersController::class);
     Route::get('partners-api', [PartnersController::class, 'getPartners'])->name('partners.api');
+
+
+    //Master Target Reinstra
+    Route::resource('target-reinstra', TargetReinstraController::class);
+    Route::get('target-reinstra-api', [TargetReinstraController::class, 'getTargetReinstra'])->name('reinstra.api');
+
 
 
 });
