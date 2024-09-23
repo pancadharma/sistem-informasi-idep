@@ -14,7 +14,7 @@ $(document).ready(function(){
         ajax: {
             url: url_permission,
             method: 'GET',
-            delay: 250,
+            delay: 1000,
             processResults: function (data) {
                 return {
                     results: data.data.map(function (item) {
@@ -37,7 +37,7 @@ $(document).ready(function(){
 
 
 
-    $('.select2-edit').select2({
+    $('#edit_permissions').select2({
         placeholder: placeholder,
         width: '100%',
         allowClear : true
@@ -126,7 +126,29 @@ $(document).ready(function(){
                         dropdownParent: $('#EditRoleModal'),
                         placeholder: "{{ __('global.pleaseSelect') }}",
                         width: '100%',
-                        allowClear: true
+                        allowClear: true,
+                        ajax: {
+                            url: url_permission,
+                            method: 'GET',
+                            delay: 1000,
+                            processResults: function (data) {
+                                return {
+                                    results: data.data.map(function (item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nama // Mapping 'nama' to 'text'
+                                        };
+                                    })
+                                };
+                            },
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    page: params.page || 1
+                                };
+                                return query;
+                            }
+                        }
                     });
                     if (rolePermissions.length > 0) {
                         $('#edit_permissions').val(rolePermissions).trigger('change');

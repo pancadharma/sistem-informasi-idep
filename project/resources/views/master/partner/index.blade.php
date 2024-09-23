@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.role.list'))
-@section('content_header_title', __('cruds.role.list'))
-@section('sub_breadcumb', __('cruds.role.title'))
+@section('subtitle', __('cruds.partner.list'))
+@section('content_header_title', __('cruds.partner.list'))
+@section('sub_breadcumb', __('cruds.partner.title'))
 
 @section('content_body')
-    @include('master.role.create')
+    @include('master.partner.create')
     <div class="card card-outline card-primary">
-        <div class="card-body table-responsive">
-            <table id="role_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
-                <thead>
+        <div class="card-body table-responsive-sm">
+            <table id="partner_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
+                <thead class="bg-dark">
                     <tr>
-                        <th class="text-center align-middle">{{ trans('cruds.role.fields.nama') }}</th>
-                        {{-- <th class="text-center align-middle">{{ trans('cruds.role.fields.permissions') }}</th> --}}
+                        <th class="text-center align-middle">{{ trans('cruds.partner.fields.nama') }}</th>
+                        {{-- <th class="text-center align-middle">{{ trans('cruds.partner.fields.ket') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>
                     </tr>
@@ -21,8 +21,8 @@
         </div>
     </div>
 
-    @include('master.role.edit')
-    @include('master.role.show')
+    @include('master.partner.edit')
+    @include('master.partner.show')
     @stop
 
     @push('css')
@@ -36,5 +36,5 @@
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
 
-    @include('master.role.js')
+    @include('master.partner.js')
     @endpush

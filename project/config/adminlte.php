@@ -269,10 +269,11 @@ return [
                     'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'partner',
-                    'url' => '#',
-                    'icon' => '',
-                    'active' => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
+                    'text'      => 'partner',
+                    'route'     => 'partner.index',
+                    'icon'      => 'fas fa-handshake',
+                    'can'       => ['partner_access','partner_edit', 'partner_show', 'partner_create'],
+                    'active'    => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
                 ],
                 [
                     'text' => 'jenis_bantuan',

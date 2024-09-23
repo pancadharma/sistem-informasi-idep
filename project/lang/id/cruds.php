@@ -207,7 +207,7 @@ return [
             'user_unique'     => 'Nama pengguna harus unik.',
             'taken'           => 'telah diambil.',
             'email_unique'    => 'Email sudah diambil.',
-            'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',            
+            'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',
         ],
     ],
     'auditLog' => [
@@ -243,8 +243,8 @@ return [
     'data' => [
         'data'      => 'Data',
         'added'     => 'Berhasil ditambahkan',
-        'updated'   => 'Berhasil ditambahkan',
-        'deleted'   => 'Berhasil dihapus' 
+        'updated'   => 'Berhasil diperbaharui',
+        'deleted'   => 'Berhasil dihapus'
     ],
     'jenisbantuan' => [
         'list' => 'Daftar Jenis Bantuan',
@@ -272,5 +272,17 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
-
+    'partner'               => [
+        'title'             => 'Mitra',
+        'list'              => 'Daftar Mitra',
+        'title_singular'    => 'Mitra',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_partner'  => 'Nama Mitra',
+            'ket'           => 'Keterangan',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbarui pada',
+        ]
+    ]
 ];
