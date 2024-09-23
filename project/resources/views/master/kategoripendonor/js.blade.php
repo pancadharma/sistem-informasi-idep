@@ -1,29 +1,25 @@
 <script>
 //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
-      var t = $('#kategoripendonor').DataTable({
+      var table = $('#kategoripendonor').DataTable({
             responsive: true,
             ajax: "{{ route('data.kategoripendonor') }}",
             processing: true,
             serverSide: true,
             // stateSave: true,
-           
-        //----menambahkan nomor---
-            columnDefs: [ {
-            searchable: false,
-            orderable: false,
-            targets: 0,
-            
-        } ],
 
         order: [[ 1, 'asc' ]],
             
             columns: [
                 
                {
-                    data: "id",
-                    width: "1%",
-                    className: "text-center",
+                data: null, // Ganti "id" dengan null untuk menghitung penomoran
+                width: "1%",
+                className: "text-center",
+                orderable: false,
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
+                }
                     
                 },
                 
@@ -98,20 +94,6 @@
             ],
             lengthMenu: [5, 25, 50, 100, 500],
         });
-
-        t.on( 'draw.dt', function () {
-        var PageInfo = $('#kategoripendonor').DataTable().page.info();
-         t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
-            cell.innerHTML = i + 1 + PageInfo.start;
-        } );
-    } );
-
-    // t.on('draw.dt', function(){
-    // let n = 0;
-    // $(".number").each(function () {
-    //         $(this).html(++n);
-    //     })
-    // });
 
 
     });
