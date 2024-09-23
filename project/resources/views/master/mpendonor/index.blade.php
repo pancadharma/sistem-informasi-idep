@@ -62,10 +62,13 @@
                     <tr>
                         
                         <th class="center">{{ trans('cruds.mpendonor.no') }}</th>
+                        <th>{{ trans('cruds.kategoripendonor.title') }}</th>
                         <th>{{ trans('cruds.mpendonor.title') }}</th>
+                        <th>{{ trans('cruds.mpendonor.pic') }}</th>
+                        <th>{{ trans('cruds.mpendonor.email') }}</th>
+                        <th>{{ trans('cruds.mpendonor.phone') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>
-                        <th>{{ trans('cruds.status.action') }}</th>
-                        
+                        <th>{{ trans('cruds.status.action') }}</th> 
                         
                     </tr>
                 </thead>

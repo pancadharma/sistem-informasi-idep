@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Yajra\DataTables\DataTables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -11,6 +12,7 @@ class MPendonor extends Model
 {
     use Auditable, HasFactory;
     protected $table = 'mpendonor';
+    
     protected $fillable = [
         'mpendonorkategori_id',
         'nama',
@@ -36,4 +38,6 @@ class MPendonor extends Model
     {
         return $this->belongsTo(Kategori_Pendonor::class, 'mpendonorkategori_id');
     }
+    
+
 }

@@ -111,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Master Pendonor
     Route::resource('pendonor', MPendonorController::class);
+    Route::get('datapendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
+
 
     //Master Kelompok Marjinal
     Route::resource('kelompokmarjinal', KelompokmarjinalController::class);
