@@ -24,7 +24,7 @@
             <h2 class="card-title">{{ trans('cruds.country.list') }}</h2>
         </div>
         <div class="card-body table-responsive">
-            <table id="example" class="table table-bordered table-striped table-hover ajaxTable datatable datatable-Country" style="width:100%">
+            <table id="example" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap datatable-Country" style="width:100%">
                 <thead>
                     <tr>
                         <th width="10"></th>

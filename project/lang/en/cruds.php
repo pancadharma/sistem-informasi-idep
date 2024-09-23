@@ -288,6 +288,19 @@ return [
             'created_at'    => 'Created at',
             'updated_at'    => 'Updated at',
         ]
-    ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Reinstra Targets',
+        'list'              => 'Reinstra Target List',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_reinstra' => 'Reinstra Target Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
 
 ];

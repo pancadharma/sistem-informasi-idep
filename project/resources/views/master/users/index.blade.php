@@ -15,7 +15,7 @@
 
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="users_list" class="table table-bordered table-striped table-hover dataTable dtr-inline">
+            <table id="users_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap">
                 <thead>
                     <tr>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.name') }}</th>

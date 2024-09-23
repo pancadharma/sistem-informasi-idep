@@ -66,13 +66,12 @@ $(document).ready(function(){
                         });
                         $(this).trigger('reset');
                         $('#partner_list').DataTable().ajax.reload();
-                        $('#permission').val(null).trigger('change');
                         $('#AddPartnerForm')[0].reset();
                         $('#AddPartnerForm').trigger('reset');
-                        $('#AddPartnerForm').modal('hide');
                         $(".btn-tool").trigger('click');
-                        // $('#AddRole').modal('hide');
-                        // $('#permissions').val(null).trigger('change');
+                        $('#AddPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+                        $('#AddPartnerForm').find('.is-invalid').removeClass('is-invalid'); // Remove invalid classes
+                        $('#AddPartnerForm').find('.is-valid').removeClass('is-valid'); // Remove valid classes
                     }
                 }, 500);
             },

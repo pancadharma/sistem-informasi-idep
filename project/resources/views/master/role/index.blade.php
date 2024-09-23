@@ -8,7 +8,7 @@
     @include('master.role.create')
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="role_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
+            <table id="role_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
                 <thead>
                     <tr>
                         <th class="text-center align-middle">{{ trans('cruds.role.fields.nama') }}</th>

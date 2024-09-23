@@ -55,7 +55,7 @@
         </div>
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="kabupaten" class="table table-bordered cell-border ajaxTable datatable-kabupaten" style="width:100%">
+            <table id="kabupaten" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kabupaten" style="width:100%">
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
