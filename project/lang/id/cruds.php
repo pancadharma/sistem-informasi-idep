@@ -243,7 +243,7 @@ return [
     'data' => [
         'data'      => 'Data',
         'added'     => 'Berhasil ditambahkan',
-        'updated'   => 'Berhasil ditambahkan',
+        'updated'   => 'Berhasil diperbaharui',
         'deleted'   => 'Berhasil dihapus'
     ],
     'jenisbantuan' => [

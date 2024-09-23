@@ -35,7 +35,7 @@ $(document).ready(function(){
         lengthMenu: [5, 10 ,25, 50, 100],
     });
 
-    //Add Form
+    //ADD PARTNER FORM
     $("#AddPartnerForm").on('submit', function(e){
         e.preventDefault();
         if (!$(this).valid()) {
@@ -113,8 +113,218 @@ $(document).ready(function(){
 
     });
 
-    //EDIT FORM
+    //EDIT PARTNER FORM (MODAL)
+    $('#partner_list tbody').on('click', '.edit-partner-btn, .view-partner-btn', function(e){
+        e.preventDefault();
+        let action    = $(this).data('action');
+        let id_partner  = $(this).data('partner-id');
+        let url_show  = '{{ route('partner.show', ':id') }}'.replace(':id',id_partner);
+        let url_edit  = '{{ route('partner.edit', ':id') }}'.replace(':id',id_partner);
+        let url_update  = '{{ route('partner.update', ':id') }}'.replace(':id',id_partner);
 
+        if(action === "edit"){
+            $.ajax({
+                url: url_edit,
+                method: 'GET',
+                dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info", title: "Processing...", timer: 300, timerProgressBar: true,
+                    });
+                },
+                success: function(data) {
+                    setTimeout(() => {
+                        resetFormEdit();
+                        $('#EditPartnerForm').trigger('reset');
+                        $('#EditPartnerForm').attr('action', url_update);;
+
+                        $('#partner_id').val(data.id);
+                        $('#edit_nama').val(data.nama);
+                        $('#edit_keterangan').val(data.keterangan);
+
+                        $('#status').text(data.aktif === 1 ? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
+                        $('#EditPartnerModal .modal-title').html(`<i class="fas fa-pencil-alt"></i> {{ __('global.edit') }} ${data.nama}`);
+                        $('#EditPartnerModal').modal('show');
+                    }, 500);
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: errorMessage,
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                },
+                complete: function() {
+                    setTimeout(() => {
+                        // console.log('Tombol Update Disable Attribut Di Hapuskan');
+                    }, 500);
+                }
+            });
+        }
+        if(action === "view"){
+            $.ajax({
+                url: url_show,
+                method: 'GET',
+                dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({icon: "info",title: "Processing...",timer: 300,timerProgressBar: true,});
+                },
+                success: function(data) {
+                    setTimeout(() => {
+                        $('#view_nama').text(data.nama);
+                        $('#view_nama').text(data.keterangan);
+                        if (data.aktif === 1) {
+                            $('#aktif_show').val(data.aktif);
+                            $("#aktif_show").prop("checked",true);
+                        } else {
+                            $('#aktif_show').val(0);
+                            $("#aktif_show").prop("checked",false);
+                        }
+                        $('#status').text(data.aktif === 1? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
+                        $('#showPartnerModal .modal-title').html(`<i class="fas fa-folder-open"></i> {{ __('global.view') }} ${data.nama}`);
+                        $('#showPartnerModal').modal('show');
+                    }, 500)
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: errorMessage,
+                                });
+                            });
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
+            return
+        }
+    });
+
+    //UPDATE PARTNER DATA FROM EDIT MODAL
+    $('#EditPartnerForm').on('submit', function(e){
+        e.preventDefault();
+        if (!$(this).valid()) {
+            return;
+        }
+        $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+        let formData = $(this).serialize();
+        let url = $(this).attr('action');
+        console.log(formData);
+
+        $.ajax({
+            url: url,
+            method: 'PUT',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function(e){
+                Toast.fire({
+                    icon: "info", title: "Processing...", timer: 300, timerProgressBar: true,
+                });
+            },
+            success: function(partner) {
+                setTimeout(() => {
+                    if(partner.success === true) {
+                        Swal.fire({
+                            title: "{{ __('global.success') }}",
+                            text: partner.message,
+                            icon: "success",
+                            timer: 1500,
+                            timerProgressBar: true,
+                            didOpen: ()=>{
+                                Swal.showLoading();
+                            },
+                        });
+                        $(this).trigger('reset');
+                        $('#EditPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+                        $('#partner_list').DataTable().ajax.reload();
+                        $('#EditPartnerModal').modal('hide');
+                        resetFormEdit()
+                    }
+                }, 300)
+            },
+            complete: function(){
+                setTimeout(() => {
+
+                }, 500);
+            },
+            error: function(xhr, status, error) {
+                let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                try {
+                    const response = xhr.responseJSON;
+                    if (response.errors) {
+                        errorMessage += '<br><br><ul style="text-align:left!important">';
+                        $.each(response.errors, function(field, messages) {
+                            messages.forEach(message => {
+                                errorMessage += `<li>${field}: ${message}</li>`;
+                                $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                $(`#${field}-error`).text(message);
+                                $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                            });
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                html: errorMessage,
+                            });
+                            $(this).find('button[type="submit"]').removeAttr('disabled');
+                        });
+                        errorMessage += '</ul>';
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+                $('#EditPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: errorMessage,
+                });
+            },
+
+        });
+    });
 
 
     //VALIDATE FORM (IF USING JQUERY TO ADD)
@@ -191,6 +401,15 @@ $(document).ready(function(){
             },
         });
     });
+
+    function resetFormEdit() {
+        $('#EditPartnerForm').trigger('reset'); // Reset the form fields
+        $('#EditPartnerForm').find('.is-invalid').removeClass('is-invalid'); // Remove invalid classes
+        $('#EditPartnerForm').find('.is-valid').removeClass('is-valid'); // Remove valid classes
+        $('#EditPartnerForm').find('.invalid-feedback').remove(); // Remove error messages
+        $('#EditPartnerForm').find('.error').remove();
+        $('#EditPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+    }
 
 });
 
