@@ -12,7 +12,7 @@ return [
         'allowed' => false,
     ],
     'logo' => '<b>IDEP </b>Foundation',
-    'logo_img' => 'vendor/adminlte/dist/img/idep.png',
+    'logo_img' => '/vendor/adminlte/dist/img/idep.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -20,7 +20,7 @@ return [
     'auth_logo' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/idep.png',
+            'path' => '/vendor/adminlte/dist/img/idep.png',
             'alt' => 'IDEP Foundation Logo',
             'class' => '',
             'width' => 50,
@@ -31,7 +31,7 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/idep.png',
+            'path' => '/vendor/adminlte/dist/img/idep.png',
             'alt' => 'IDEP Foundation Preloader Image',
             'effect' => 'animation__shake',
             'width' => 120,
@@ -218,13 +218,11 @@ return [
             'icon'   => 'far fa-image',
             'submenu' => [
                 [
-                    'text'  => 'role',
-                    'url'   => 'role',
-                    'can'   => ['role_create',],
-                    'icon' => 'far fa-check-circle',
-                    'active' => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
-                    // 'route' => 'home',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'text'      => 'role',
+                    'can'       => ['role_create','role_show'],
+                    'icon'      => 'far fa-check-circle',
+                    'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
+                    'route' => 'roles.index',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
                 ],
                 [
@@ -236,12 +234,13 @@ return [
                     'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
                 ],
                 [
-                    'text'  => 'user',
-                    'url'   => 'users',
-                    // 'can' => 'view_jabatan',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
-                    'icon' => 'fas fa-users',
-                    'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
+                    'text'      => 'user',
+                    'url'       => 'users',
+                    'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
+                    // 'can'       => ['user_access'],
+                    'route'     => 'users.index',
+                    'icon'      => 'fas fa-chalkboard-teacher',
+                    'active'    => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
                 ],
             ],
         ],
@@ -251,7 +250,8 @@ return [
             'submenu' => [
                 [
                     'text' => 'kelompok_rentan',
-                    'url' => '#',
+                    //'url' => '#',
+                    'route' => 'kelompokmarjinal.index',
                     'icon' => '',
                     'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
@@ -269,10 +269,11 @@ return [
                     'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'partner',
-                    'url' => '#',
-                    'icon' => '',
-                    'active' => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
+                    'text'      => 'partner',
+                    'route'     => 'partner.index',
+                    'icon'      => 'fas fa-handshake',
+                    'can'       => ['partner_access','partner_edit', 'partner_show', 'partner_create'],
+                    'active'    => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
                 ],
                 [
                     'text' => 'jenis_bantuan',
@@ -310,12 +311,12 @@ return [
                     'icon' => 'nav-icon fas fa-project-diagram',
                     // 'route' => 'program',
                     'url' => 'program',
-                    
+
                     'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kegiatan',
-                    'icon' => 'nav-icon fa fa-user-graduate',                
+                    'icon' => 'nav-icon fa fa-user-graduate',
                     // 'route' => 'kegiatan',
                     'url' => 'kegiatan',
                     'active' => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
@@ -481,12 +482,14 @@ return [
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
                     'location' => '/vendor/select2/js/select2.min.js',
+                    // 'location' => '/vendor/select2/js/select2.min.js',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.css',
                     'location' => '/vendor/select2/css/select2.css',
+                    // 'location' => '/vendor/select2-bootstrap4-theme/css/select2-bootstrap4.css',
                 ],
             ],
         ],

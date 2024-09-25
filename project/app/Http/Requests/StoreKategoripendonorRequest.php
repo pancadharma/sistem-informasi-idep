@@ -23,7 +23,7 @@ class StoreKategoripendonorRequest extends FormRequest
     {
         return [
             'nama' => ['string','max:200','required',],
-            'aktif' => ['integer'],
+            'aktif' => ['accepted'],
         ];
     }
 
@@ -33,7 +33,7 @@ class StoreKategoripendonorRequest extends FormRequest
             'nama.string' => 'Kolom nama kategori pendonor harus berupa text',
             'nama.max' => 'Kolom nama kategori pendonor maksimal 200 karakter',
             'nama.required' => 'Kolom kategori pendonor wajib diisi !',
-            'aktif.boolean' => 'Check box wajib dipilih',
+            'aktif.accepted' => 'Check box wajib dipilih',
         ];
     }
 }
