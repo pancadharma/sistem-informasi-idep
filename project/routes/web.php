@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SatuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -131,6 +132,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('target-reinstra', TargetReinstraController::class);
     Route::get('target-reinstra-api', [TargetReinstraController::class, 'getTargetReinstra'])->name('reinstra.api');
 
+    //Master Satuan
+    Route::resource('satuan', SatuanController::class);
+    Route::get('satuan-api', [SatuanController::class, 'getSatuan'])->name('satuan.api');
 
 
 });

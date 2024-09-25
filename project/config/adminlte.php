@@ -283,10 +283,11 @@ return [
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'satuan',
-                    'url' => '#',
-                    'icon' => '',
-                    'active' => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
+                    'text'      => 'satuan',
+                    'url'       => '#',
+                    'icon'      => 'fas fa-sort-numeric-down',
+                    'active'    => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
+                    'can'       => ['satuan_access','satuan_edit', 'satuan_show', 'satuan_create'],
                 ],
                 // [
                 //     'text' => 'sdg',
