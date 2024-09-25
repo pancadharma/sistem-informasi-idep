@@ -76,9 +76,14 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 58, 'nama' => 'target_reinstra_create'],
                 ['id' => 59, 'nama' => 'target_reinstra_edit'],
                 ['id' => 60, 'nama' => 'target_reinstra_delete'],
+                ['id' => 61, 'nama' => 'satuan_access'],
+                ['id' => 62, 'nama' => 'satuan_create'],
+                ['id' => 63, 'nama' => 'satuan_edit'],
+                ['id' => 64, 'nama' => 'satuan_delete'],
             ];
-
-            Permission::insert($permissions);
+            foreach ($permissions as $data) {
+                Permission::updateOrCreate(['id' => $data['id']], $data);
+            }
         });
     }
 }

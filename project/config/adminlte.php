@@ -174,7 +174,7 @@ return [
                     'active'    => ['provinsi', 'regex:@^provinsi/[0-9]+$@', 'country', 'provinsi*','country*'],
                     'route'     => 'provinsi.index',
                     'icon'      => 'fas fa-paste',
-                    // 'can'       => ['provinsi_access','provinsi_edit', 'provinsi_show', 'provinsi_create'],
+                    'can'       => ['provinsi_access','provinsi_edit', 'provinsi_show', 'provinsi_create'],
                 ],
                 [
                     'text'      => 'kabupaten',
@@ -182,14 +182,14 @@ return [
                     'route'     => 'kabupaten.index',
                     'icon'      => 'fas fa-table',
                     // 'classes'   => 'text-danger text-uppercase',
-                    // 'can'       => ['kabupaten_access','kabupaten_edit', 'kabupaten_show', 'kabupaten_create'],
+                    'can'       => ['kabupaten_access','kabupaten_edit', 'kabupaten_show', 'kabupaten_create'],
                 ],
                 [
                     'text'      => 'kecamatan',
                     'active'    => ['kecamatan', 'kecamatan*','regex:@^kecamatan/[0-9]+$@'],
                     'route'     => 'kecamatan.index',
                     'icon'      => 'far fa-plus-square',
-                    // 'can'       => ['kecamatan_access','kecamatan_edit', 'kecamatan_show', 'kecamatan_create'],
+                    'can'       => ['kecamatan_access','kecamatan_edit', 'kecamatan_show', 'kecamatan_create'],
                     // 'classes'   => 'text-danger text-uppercase',
                 ],
                 [
@@ -197,7 +197,7 @@ return [
                     'active'    => ['desa', 'regex:@^desa/[0-9]+$@', 'desa*'],
                     'route'     => 'desa.index',
                     'icon'      => 'fas fa-map',
-                    // 'can'   => ['desa_access','desa_edit', 'desa_show', 'desa_create'],
+                    'can'       => ['desa_access','desa_edit', 'desa_show', 'desa_create'],
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
@@ -222,7 +222,7 @@ return [
                     'can'       => ['role_create','role_show'],
                     'icon'      => 'far fa-check-circle',
                     'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
-                    'route' => 'roles.index',
+                    'route'     => 'roles.index',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
                 ],
                 [
@@ -284,7 +284,7 @@ return [
                 ],
                 [
                     'text'      => 'satuan',
-                    'url'       => '#',
+                    'route'     => 'satuan.index',
                     'icon'      => 'fas fa-sort-numeric-down',
                     'active'    => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
                     'can'       => ['satuan_access','satuan_edit', 'satuan_show', 'satuan_create'],

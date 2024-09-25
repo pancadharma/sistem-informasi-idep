@@ -302,5 +302,18 @@ return [
             'deleted_at'    => 'Deleted at',
         ]
     ],
+    'satuan'               => [
+        'title'             => 'Units',
+        'list'              => 'Unit List',
+        'title_singular'    => 'Unit',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_satuan'   => 'Unit Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
 
 ];

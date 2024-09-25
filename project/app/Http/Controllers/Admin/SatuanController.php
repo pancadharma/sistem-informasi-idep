@@ -2,15 +2,26 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Gate;
 use App\Models\Satuan;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSatuanRequest;
+use App\Http\Requests\UpdateSatuanRequest;
+use App\Models\User;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SatuanController extends Controller
 {
     public function index(){
-
+        abort_if(Gate::denies('satuan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return view('master.satuan.index');
     }
     public function show(Satuan $satuan){
         return response()->json($satuan);
@@ -21,11 +32,85 @@ class SatuanController extends Controller
     public function create(){
 
     }
-    public function store(){
-
+    public function store(StoreSatuanRequest $request, Satuan $satuan){
+        try {
+            $data = $request->validated();
+            $satuan->create($data);
+            return response()->json([
+                'success' => true,
+                "message" => __('cruds.data.data') .' '.__('cruds.satuan.title') .' '. $request->nama .' '. __('cruds.data.added'),
+                'data'    => $data,
+            ], Response::HTTP_OK);
+            } catch (ValidationException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors(),
+                ], Response::HTTP_BAD_REQUEST);
+            } catch (ModelNotFoundException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource not found.',
+                    'errors' => $e->getMessage(),
+                ], Response::HTTP_NOT_FOUND);
+            } catch (QueryException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource not found.',
+                    'errors' =>  $e->getMessage()
+                ], 404);
+            } catch (HttpException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], $e->getStatusCode());
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred.',
+                    'error' => $e->getMessage(),
+                ], 500);
+        }
     }
-    public function update(){
-
+    public function update(UpdateSatuanRequest $request, Satuan $satuan){
+        try {
+            $data = $request->validated();
+            $satuan->update($data);
+            return response()->json([
+                'success' => true,
+                "message" => __('cruds.data.data') .' '.__('cruds.satuan.title') .' '. $request->nama .' '. __('cruds.data.updated'),
+                'data'    => $data,
+            ], Response::HTTP_OK);
+            } catch (ValidationException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $e->errors(),
+                ], Response::HTTP_BAD_REQUEST);
+            } catch (ModelNotFoundException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource not found.',
+                    'errors' => $e->getMessage(),
+                ], Response::HTTP_NOT_FOUND);
+            } catch (QueryException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource not found.',
+                    'errors' =>  $e->getMessage()
+                ], 404);
+            } catch (HttpException $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], $e->getStatusCode());
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred.',
+                    'error' => $e->getMessage(),
+                ], 500);
+        }
     }
     public function getSatuan(Request $request){
         if ($request->ajax()) {

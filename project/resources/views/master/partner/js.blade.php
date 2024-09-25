@@ -135,8 +135,7 @@ $(document).ready(function(){
                     setTimeout(() => {
                         resetFormEdit();
                         $('#EditPartnerForm').trigger('reset');
-                        $('#EditPartnerForm').attr('action', url_update);;
-
+                        $('#EditPartnerForm').attr('action', url_update);
                         $('#partner_id').val(data.id);
                         $('#edit_nama').val(data.nama);
                         $('#edit_keterangan').val(data.keterangan);
@@ -194,7 +193,7 @@ $(document).ready(function(){
                 success: function(data) {
                     setTimeout(() => {
                         $('#view_nama').text(data.nama);
-                        $('#view_nama').text(data.keterangan);
+                        $('#view_ket').text(data.keterangan);
                         if (data.aktif === 1) {
                             $('#aktif_show').val(data.aktif);
                             $("#aktif_show").prop("checked",true);

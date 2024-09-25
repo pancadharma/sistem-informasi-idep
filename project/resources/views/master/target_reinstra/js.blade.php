@@ -309,11 +309,11 @@
                         title: 'Error!',
                         html: errorMessage,
                     });
-                    $('#AddPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+                    $('#AddTargetReinstraForm').find('button[type="submit"]').removeAttr('disabled');
                 },
                 complete: function() {
                     setTimeout(() => {
-                        $('#AddRole').find('button[type="submit"]').removeAttr('disabled');
+                        $('#AddTargetReinstraForm').find('button[type="submit"]').removeAttr('disabled');
                         // console.log('Tombol Update Disable Attribut Di Hapuskan');
                     }, 500);
 
