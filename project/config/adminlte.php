@@ -288,18 +288,18 @@ return [
                     'icon' => '',
                     'active' => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
                 ],
-                [
-                    'text' => 'sdg',
-                    'url' => '#',
-                    'icon' => '',
-                    'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
-                ],
-                [
-                    'text' => 'idep',
-                    'url' => '#',
-                    'icon' => '',
-                    'active' => ['idep', 'idep*', 'regex:@^idep/[0-9]+$@'],
-                ],
+                // [
+                //     'text' => 'sdg',
+                //     'url' => '#',
+                //     'icon' => '',
+                //     'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                // ],
+                // [
+                //     'text' => 'idep',
+                //     'url' => '#',
+                //     'icon' => '',
+                //     'active' => ['idep', 'idep*', 'regex:@^idep/[0-9]+$@'],
+                // ],
                 [
                     'text'      => 'target_reinstra',
                     'route'     => 'target-reinstra.index',
