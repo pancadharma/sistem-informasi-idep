@@ -267,6 +267,18 @@ return [
         'no'=>'No',
         'nama'=>'Name',
     ],
+    'mpendonor' => [
+        'list' => 'Donatur List',
+        'mpendonor' => 'Donatur',
+        'title_singular' => 'Donatur',
+        'title' => 'Donatur',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Name',
+        'phone'=>'Phone/WA',
+        'email'=>'Email',
+        'pic'=>'PIC',
+    ],
     'kelompokmarjinal' => [
         'list' => 'List of Vulnerable Groups',
         'kelompokmarjinal' => 'Vulnerable Groups',

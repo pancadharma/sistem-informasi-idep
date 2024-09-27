@@ -1,18 +1,14 @@
 <script>
 //Ajax Request data using server side data table to reduce large data load --}}
-    $(document).ready(function() {
-      var t = $('#kelompokmarjinal').DataTable({
-            responsive: true,
-            ajax: "{{ route('data.kelompokmarjinal') }}",
-            processing: true,
-            serverSide: true,
-            // stateSave: true,
-
-        order: [[ 1, 'asc' ]],
-            
-            columns: [
-                
-               {
+$(document).ready(function() {
+    var table = $('#mpendonor').DataTable({
+        responsive: true,
+        ajax: "{{ route('data.pendonor') }}",
+        processing: true,
+        serverSide: true,
+        order: [[1, 'asc']],
+        columns: [
+            {
                 data: null, // Ganti "id" dengan null untuk menghitung penomoran
                 width: "1%",
                 className: "text-center",
@@ -20,97 +16,81 @@
                 render: function(data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
                 }
-                    
-                },
-                
-                {
-                    data: "nama",
-                    width: "10%"
-                },
-                {
-                    data: "aktif",
-                    width: "5%",
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false,
-                    render: function(data, type, row) {
-                        if (data === 1) {
-                            return '<span class="badge bg-success">Aktif</span>'
-                            // return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                            //     row.id + '"></label></div>';
-                        } else {
-                            return '<span class="badge bg-danger">Tidak Aktif</span>'
-                            // return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
-                            //     row.id + '"></label></div>';
-                        }
-                    }
-                },
-                {
-                    data: "action",
-                    width: "8%",
-                    className: "text-center",
-                    orderable: false,
-                },
-
-            ],
-
-
-             layout: {
-                topStart: {
-                    buttons: [
-                        {
-                            extend: 'print',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },
-                        {
-                            extend: 'excel',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },{
-                            extend: 'pdf', 
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }    
-                        },{
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }
-                        },
-                        'colvis',
-                    ],
-                },
-                bottomStart: {
-                    pageLength: 5,
+            },
+            {
+                data: "mpendonnorkategori.nama",
+                name: "mpendonnorkategori.nama",
+                width: "10%"
+            },
+            {
+                data: "nama",
+                width: "10%"
+            },
+            {
+                data: "pic",
+                width: "10%"
+            },
+            {
+                data: "email",
+                width: "10%"
+            },
+            {
+                data: "phone",
+                width: "10%"
+            },
+            {
+                data: "aktif",
+                width: "5%",
+                className: "text-center",
+                orderable: false,
+                searchable: false,
+                render: function(data) {
+                    return data === 1 ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-danger">Tidak Aktif</span>';
                 }
             },
-            order: [
-                [1, 'asc']
-            ],
-            lengthMenu: [5, 25, 50, 100, 500],
-        });
-
+            {
+                data: "action",
+                width: "10%",
+                className: "text-center",
+                orderable: false,
+            },
+        ],
+        layout: {
+            topStart: {
+                buttons: [
+                    { extend: 'print', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'excel', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'pdf', exportOptions: { columns: [0, 1, 2, 3] } },
+                    { extend: 'copy', exportOptions: { columns: [0, 1, 2, 3] } },
+                    'colvis',
+                ],
+            },
+            bottomStart: {
+                pageLength: 5,
+            }
+        },
+        lengthMenu: [5, 25, 50, 100, 500],
     });
+});
 
 //-------------------------------------------------------------------------
 // Form Add / submit ------------------------------------------------------
+//-------------------------------------------------------------------------
 
 $(document).ready(function() {
-        // Submit form
-        $('.btn-add-kelompokmarjinal').on('click', function(e) {
+     // persiapan data select 2  harus di index-----------------
+     
+    // Submit form---------
+        $('.btn-add-mpendonor').on('click', function(e) {
             e.preventDefault();
-            var formDatakelompokmarjinal = $('#kelompokmarjinalForm').serialize();
+            var formDatampendonor = $('#mpendonorForm').serialize();
             $.ajax({
                 method: "POST",
-                url: '{{ route('kelompokmarjinal.store') }}', // Get form action URL
-                data: formDatakelompokmarjinal,
+                url: '{{ route('pendonor.store') }}', // Get form action URL
+                data: formDatampendonor,
                 dataType: 'json',
                 success: function(response) {
+                    // console.log(response);
                     if (response.success === true) {
                         Swal.fire({
                             title: "Success",
@@ -122,9 +102,9 @@ $(document).ready(function() {
                                 Swal.showLoading();
                             },
                         });
-                        $('#addkelompokmarjinal').modal('hide');
-                        $('#kelompokmarjinalForm').trigger('reset');
-                        $('#kelompokmarjinal').DataTable().ajax.reload();
+                        $('#addmpendonor').modal('hide');
+                        $('#mpendonorForm').trigger('reset');
+                        $('#mpendonor').DataTable().ajax.reload();
                     } else {
                         var errorMessage = response.message;
                         if (response.status === 400) {
@@ -140,7 +120,7 @@ $(document).ready(function() {
                             html: errorMessage,
                             icon: "error"
                         });
-                        //$('#addkelompokmarjinal').modal('hide');
+                        //$('#addmpendonor').modal('hide');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -181,30 +161,49 @@ $(document).ready(function() {
 //-----------------------------------------------------------
 //------panggil modal edit and populate data into modal form
 //-----------------------------------------------------------
-    $(document).ready(function() {
-        $('#kelompokmarjinal tbody').on('click', '.edit-kelompokmarjinal-btn', function(e) {
+$(document).ready(function() {
+        $('#mpendonor tbody').on('click', '.edit-mpendonor-btn', function(e) {
             e.preventDefault();
 
-            let kelompokmarjinalId = $(this).data('kelompokmarjinal-id');
-            let newActionUrl = '{{ route('kelompokmarjinal.update', ':id') }}'.replace(':id', kelompokmarjinalId);
+            let mpendonorId = $(this).data('mpendonor-id');
+            let newActionUrl = '{{ route('pendonor.update', ':id') }}'.replace(':id', mpendonorId);
             $.ajax({
-                url: '{{ route('kelompokmarjinal.edit', ':id') }}'.replace(':id', kelompokmarjinalId),
+                url: '{{ route('pendonor.edit', ':id') }}'.replace(':id', mpendonorId),
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
-                    $('#id_edit').val(kelompokmarjinalId);
-                    $('#editkelompokmarjinalModal').modal('show');
-                    $("#editkelompokmarjinalForm").trigger('reset');
-                    $("#editkelompokmarjinalForm").attr("action", newActionUrl);
-                    $('#editnama').val(response.nama);
-                    if (response.aktif === 1) {
-                        $('#edit-aktif').val(response.aktif);
+                    $("#editmpendonorForm").trigger('reset');
+                    $("#editmpendonorForm").attr("action", newActionUrl);
+                    $('#id').val(response[0].id);
+                    $('#editnama').val(response[0].nama);
+                    $('#editpic').val(response[0].pic);
+                    $('#editemail').val(response[0].email);
+                    $('#editphone').val(response[0].phone);
+                    if (response[0].aktif === 1) {
+                        $('#edit-aktif').val(response[0].aktif);
                         $("#editaktif").prop("checked",true); // Set checked to true if value is 1
                     } else {
                         $('#edit-aktif').val(0);
                         $("#editaktif").prop("checked",false); // Set checked to false if value is not 1
                     }
+
+                    $('#type_edit').select2();
+                    $('#editmpendonorModal').modal('show');
+                    
+                    let id_kategori   = response[0].mpendonnorkategori.id;
+                    let data = response.results.map(function(item) {
+                        return {
+                            id: item.id,
+                            text:item.nama,
+                        };
+                    });
+
+                    $('#mpendonorkategori_id').select2({
+                        dropdownParent: $('#editmpendonorModal'),
+                        data : data,
+                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kategoripendonor.title')}}",
+                    });
+                    $('#mpendonorkategori_id').val(response[0].mpendonnorkategori.id).trigger('change');
                     
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -231,24 +230,27 @@ $(document).ready(function() {
 //---------------------------------------  
 //-------------SUBMIT UPDATE FORM - EDIT
 //--------------------------------------- 
-$(document).ready(function() {
+
+    $(document).ready(function() {
         $('#editaktif').change(function() {
             $('#edit-aktif').val(this.checked ? 1 : 0);
         });
 
-        $('#editkelompokmarjinalForm').submit(function(e) {
+        $('#editmpendonorForm').submit(function(e) {
             e.preventDefault();
-
-            let idkelompokmarjinal = $('#id_edit').val();
+            let idmpendonor = $('#id').val();
             let formData = $(this).serialize();
             let url=$(this).attr('action');
+            // console.log('idmpendonor:', idmpendonor);
+            // console.log('formData:', formData);
+            // console.log('url:', url);
             $.ajax({
-                //url: '{{ route('kelompokmarjinal.update', ':id_kelompokmarjinal') }}'.replace(':id_kelompokmarjinal', idkelompokmarjinal),
                 url:url,
                 method: 'PUT',
                 dataType: 'JSON',
                 data: formData,
                 success: function(response) {
+                    //console.log('Response data:', response.data);
                     if (response.status === 'success') {
                         Swal.fire({
                             title: "Success",
@@ -260,12 +262,13 @@ $(document).ready(function() {
                                 Swal.showLoading();
                             },
                         });
-                        $('#editkelompokmarjinalModal').modal('hide');
-                        $('#editkelompokmarjinalForm').trigger('reset');
-                        $('#kelompokmarjinal').DataTable().ajax.reload();
+                        //$('#editmpendonorModal').modal('show');
+                        $('#editmpendonorModal').modal('hide');
+                        $('#editmpendonorForm').trigger('reset');
+                        $('#mpendonorkategori_id').val(null).trigger('change');
+                        $('#mpendonor').DataTable().ajax.reload();
                     } else if(response.status === "error" || response.status === "warning"){
-                        console.log(response);
-                        console.log(response.status);
+                        // console.log(response.status);
                         Swal.fire({
                             title: 'Unable to Update Data !',
                             html: response.message,
@@ -317,24 +320,28 @@ $(document).ready(function() {
 
     // AJAX CALL DETAILS
     $(document).ready(function() {
-        $('#kelompokmarjinal tbody').on('click', '.view-kelompokmarjinal-btn', function(e) {
+        $('#mpendonor tbody').on('click', '.view-mpendonor-btn', function(e) {
             e.preventDefault();
-            let kelompokmarjinalId = $(this).data('kelompokmarjinal-id');
+            let mpendonorId = $(this).data('mpendonor-id');
             let action = $(this).data('action');
 
             $.ajax({
-                url: '{{ route('kelompokmarjinal.show', ':id') }}'.replace(':id',
-                kelompokmarjinalId), // Route with ID placeholder
+                url: '{{ route('pendonor.show', ':id') }}'.replace(':id',
+                mpendonorId), // Route with ID placeholder
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-
+                    // console.log(response);
                     let data = response || [];
                     
 
                     if (action === 'view') {
                         // $("#show-kode").text(data.id);
+                        $("#show-mpendonnorkategori").text(data.mpendonnorkategori.nama);
                         $("#show-nama").text(data.nama);
+                        $("#show-phone").text(data.phone);
+                        $("#show-pic").text(data.pic);
+                        $("#show-email").text(data.email);
                         //    $("#show-aktif").prop("checked", data.aktif === 1 );
                         if (data.aktif === 1) {
                             $('#show-aktif').val(data.aktif);
@@ -344,7 +351,7 @@ $(document).ready(function() {
                             $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
                         }
 
-                        $('#showkelompokmarjinalModal').modal('show');
+                        $('#showmpendonorModal').modal('show');
                     } else {
                         Swal.fire({
                             text: "Error",
