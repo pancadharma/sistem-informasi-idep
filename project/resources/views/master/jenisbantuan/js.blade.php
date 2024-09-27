@@ -33,15 +33,15 @@
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<span class="badge bg-success">Aktif</span>'
-                            // '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                            //     row.id + '"></label></div>';
+                            // return '<span class="badge bg-success">Aktif</span>'
+                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
+                                row.id + '"></label></div>';
                         } else {
-                            return '<span class="badge bg-danger">Tidak Aktif</span>'
-                            // '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
-                            //     row.id + '"></label></div>';
+                            //return '<span class="badge bg-danger">Tidak Aktif</span>'
+                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
+                                row.id + '"></label></div>';
                         }
                     }
                 },
@@ -61,23 +61,23 @@
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                columns: [0, 1, 2]
                             }
                         },
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                columns: [0, 1, 2]
                             }
                         },{
                             extend: 'pdf', 
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                columns: [0, 1, 2]
                             }    
                         },{
                             extend: 'copy',
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                columns: [0, 1, 2]
                             }
                         },
                         'colvis',

@@ -5,12 +5,12 @@
 @section('sub_breadcumb', __('cruds.kabupaten.title')) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 @section('content_body')
-    <div class="card card-primary">
+    <div class="card card-primary collapsed-card">
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>

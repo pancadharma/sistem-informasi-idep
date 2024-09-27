@@ -74,7 +74,7 @@
                     },
                     {
                         "data": "action",
-                        width: "8%",
+                        width: "10%",
                         className: "text-center",
                         orderable: false
                     }
