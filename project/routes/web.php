@@ -1,28 +1,29 @@
 <?php
 
-use App\Http\Controllers\Admin\SatuanController;
-use App\Http\Controllers\Admin\TargetReinstraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
 use App\Http\Controllers\Admin\DusunController;
+use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\MjabatanController;
+use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\KabupatenController;
-use App\Http\Controllers\Admin\KecamatanController;
-use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\WilayahController;
-use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\KaitanSdgController;
-use App\Http\Controllers\Admin\PeranController;
+use App\Http\Controllers\Admin\KecamatanController;
+use App\Http\Controllers\Admin\MPendonorController;
+use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\JenisbantuanController;
+use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
-use App\Http\Controllers\Admin\PartnersController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
