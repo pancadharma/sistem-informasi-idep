@@ -17,7 +17,7 @@
 
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="kecamatan_list" class="table table-bordered cell-border ajaxTable datatable-kecamatan" style="width:100%">
+            <table id="kecamatan_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kecamatan" style="width:100%">
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kecamatan.kode') }}</th>

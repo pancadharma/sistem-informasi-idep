@@ -284,5 +284,18 @@ return [
             'created_at'    => 'Dibuat pada',
             'updated_at'    => 'Diperbarui pada',
         ]
-    ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Target Reinstra',
+        'list'              => 'Daftar Target Reinstra',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_reinstra' => 'Nama Target Reinstra',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
 ];
