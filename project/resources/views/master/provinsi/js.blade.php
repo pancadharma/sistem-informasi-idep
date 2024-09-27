@@ -1,23 +1,27 @@
 <script>
     $(document).ready(function() {
-        $("#provinsiForm").validate({
-            errorElement: 'span',
-            errorPlacement: function(error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function(element) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function(element) {
-                $(element).removeClass('is-invalid');
-            },
-            submitHandler: function(form) {
-                var formData = $(form).serialize();
+        // $("#provinsiForm").validate({
+        //     errorElement: 'span',
+        //     errorPlacement: function(error, element) {
+        //         error.addClass('invalid-feedback');
+        //         element.closest('.form-group').append(error);
+        //     },
+        //     highlight: function(element) {
+        //         $(element).addClass('is-invalid');
+        //     },
+        //     unhighlight: function(element) {
+        //         $(element).removeClass('is-invalid');
+        //     },
+            // submitHandler: function(form) {
+            //     var formData = $(form).serialize();
+            $('.btn-add-provinsi').on('click', function(e) {
+            e.preventDefault();
+            var formDataprovinsi = $('#provinsiForm').serialize();
                 $.ajax({
                     method: "POST",
                     url: '{{ route('provinsi.store') }}', // Get form action URL
-                    data: formData,
+                    // data: formData,
+                    data: formDataprovinsi,
                     dataType: 'json',
                     success: function(response) {
                         if (response.status === 'success') {
@@ -26,7 +30,7 @@
                                 text: response.message,
                                 icon: "success"
                             });
-                            $('#addProvinsi').modal('hide');
+                            // $('#addProvinsi').modal('hide');
                             $('#provinsiForm').trigger('reset');
                             $('#provinsi').DataTable().ajax.reload();
                         } else {
@@ -58,7 +62,8 @@
                         $('#provinsiForm').trigger('reset');
                     }
                 });
-            }
+            });
+            // }
         });
-    });
+    // });
 </script>

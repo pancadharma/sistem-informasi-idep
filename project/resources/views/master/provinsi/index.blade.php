@@ -5,11 +5,49 @@
 @section('sub_breadcumb', __('cruds.provinsi.title')) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 @section('content_body')
-    <div class="row mb-2">
+    {{-- <div class="row mb-2">
         <div class="col-lg-6">
             <x-adminlte-button label="{{ trans('global.add') }} {{ trans('cruds.provinsi.title_singular') }}" data-toggle="modal" data-target="#addProvinsi" class="bg-success"/>
         </div>
+    </div> --}}
+
+    <div class="card card-primary collapsed-card">
+        <div class="card-header">
+            {{ trans('global.create')}} {{trans('cruds.provinsi.title')}}
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <form @submit.prevent="handleSubmit" id="provinsiForm" action="{{ route('provinsi.store')}}" method="POST" class="resettable-form">
+                @csrf
+                  @method('POST')
+                  <div class="form-group">
+                    <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.provinsi.title') }}</label>
+                    <input type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required pattern="[0-9]+" maxlength="2">
+                  </div>
+                  <div class="form-group">
+                    <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.provinsi.title') }}</label>
+                    <input type="text" id="nama" name="nama" class="form-control" pattern="^[A-Za-z][A-Za-z0-9]{1,}$" required maxlength="200">
+                  </div>
+                  <div class="form-group">
+                  <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.provinsi.title') }}</strong>
+                      <div class="icheck-primary">
+                          <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                          <label for="aktif"></label>
+                    </div>
+                    {{-- <input type="checkbox" name="aktif" id="aktif" {{ old('aktif', 0) == 1 || old('aktif') === null ? 'checked' : '' }} value="1"> --}}
+                    {{-- <input type="checkbox" name="aktif" id="aktif" value="1" > --}}
+                  </div>
+                  {{-- <button type="submit" class="btn btn-success float-right" @disabled($errors->isNotEmpty())><i class="fas fa-save"></i> {{ trans('global.submit') }}</button> --}}
+                  <button type="submit" class="btn btn-success float-right btn-add-provinsi" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
+               
+              </form>
+        </div>
     </div>
+
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
             <table id="provinsi" class="table table-bordered cell-border ajaxTable datatable-provinsi" style="width:100%">
@@ -25,9 +63,11 @@
             </table>
         </div>
     </div>
-    @include('master.provinsi.create')
+    {{-- @include('master.provinsi.create') --}}
     @include('master.provinsi.edit')
     @include('master.provinsi.show')
+    
+    
 @stop
 
 @push('css')
@@ -38,6 +78,9 @@
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Validation', true)
+     {{-- AJAX CALL CREATE FORM --}}
+     @include('master.provinsi.js')
+   
 
     {{-- Ajax Request data using server side data table to reduce large data load --}}
     <script>
@@ -119,8 +162,7 @@
         });
     </script>
 
-    {{-- AJAX CALL CREATE FORM --}}
-    @include('master.provinsi.js')
+    
 
     {{-- AJAX CALL EDIT FORM--}}
     <script>

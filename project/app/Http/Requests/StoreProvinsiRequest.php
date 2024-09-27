@@ -24,6 +24,21 @@ class StoreProvinsiRequest extends FormRequest
         return [
             'kode' => ['string','max:15','required','unique:provinsi',],
             'nama' => ['string','max:200','required',],
+            'aktif' => ['integer','accepted'],
         ];
     }
+    public function messages(): array
+{
+    return [
+        'kode.required' => 'Kolom kode provinsi wajib diisi!',
+        'kode.string' => 'Kolom kode provinsi harus berupa teks.',
+        'kode.max' => 'Kolom kode provinsi maksimal 15 karakter.',
+        'kode.unique' => 'Kode provinsi sudah ada, gunakan kode yang berbeda.',
+        'nama.required' => 'Kolom nama provinsi wajib diisi!',
+        'nama.string' => 'Kolom nama provinsi harus berupa teks.',
+        'nama.max' => 'Kolom nama provinsi maksimal 200 karakter.',
+        'aktif.accepted' => 'Check box wajib dipilih',
+        'aktif.integer' => 'Check box wajib dipilih',
+    ];
+}
 }
