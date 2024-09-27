@@ -1,8 +1,6 @@
 <?php
 
 namespace Database\Seeders;
-
-namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
