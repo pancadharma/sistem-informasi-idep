@@ -397,7 +397,11 @@ $(document).ready(function() {
                         for (const field in errors) {
                             if (errors.hasOwnProperty(field)) {
                             errors[field].forEach(err => {
-                                errorMessage += `<li>${field}: ${err}</li>`;
+                               // error message dengan menunjukan nama field
+                                // errorMessage += `<li>${field}: ${err}</li>`;
+                                
+                                // error message tanpa menunjukan nama field
+                                errorMessage += `<li>${err}</li>`;
                             });
                             }
                         }
