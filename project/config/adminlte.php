@@ -260,21 +260,21 @@ return [
                     'text' => 'kelompok_rentan',
                     //'url' => '#',
                     'route' => 'kelompokmarjinal.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-people-arrows',
                     'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kategoripendonor',
-                    // 'url' => '#',
+                    // where is the can like this ?
+                    //'can'       => ['kategoripendonor_access','kategoripendonor_edit', 'kategoripendonor_show', 'kategoripendonor_create'],
                     'route' => 'kategoripendonor.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-medkit',
                     'active' => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
                 ],
                 [
                     'text' => 'pendonor',
-                    // 'url' => '#',
                     'route' => 'pendonor.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-hand-holding-medical',
                     'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
                 [
@@ -286,9 +286,9 @@ return [
                 ],
                 [
                     'text' => 'jenis_bantuan',
-                    // 'url' => '#',
+                     //'can'       => ['jenis_bantuanr_access','jenis_bantuan_edit', 'jenis_bantuan_show', 'jenis_bantuan_create'],
                     'route' => 'jenisbantuan.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-hands-helping',
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
                 ],
                 [
@@ -301,7 +301,7 @@ return [
                 [
                     'text' => 'sdg',
                     'route' => 'kaitan_sdg.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-external-link-square-alt',
                     'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
                 ],
                 // [
