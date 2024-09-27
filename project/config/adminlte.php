@@ -227,7 +227,7 @@ return [
                 ],
                 [
                     'text'  => 'roles',
-                    'url'   => 'jabatan',
+                    'route'   => 'mjabatan.index',
                     // 'can' => 'view_jabatan',
                     // 'route' => ['admin.profile', ['userID' => '673']],
                     'icon' => 'fas fa-user-tie',
@@ -241,6 +241,14 @@ return [
                     'route'     => 'users.index',
                     'icon'      => 'fas fa-chalkboard-teacher',
                     'active'    => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
+                ],
+                [
+                    'text'  => 'peran',
+                    'route'   => 'peran.index',
+                    // 'can' => 'view_jabatan',
+                    // 'route' => ['admin.profile', ['userID' => '673']],
+                    'icon' => 'fas fa-users',
+                    // 'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
                 ],
             ],
         ],
@@ -289,12 +297,12 @@ return [
                     'active'    => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
                     'can'       => ['satuan_access','satuan_edit', 'satuan_show', 'satuan_create'],
                 ],
-                // [
-                //     'text' => 'sdg',
-                //     'url' => '#',
-                //     'icon' => '',
-                //     'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
-                // ],
+                [
+                    'text' => 'sdg',
+                    'route' => 'kaitan_sdg.index',
+                    'icon' => '',
+                    'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                ],
                 // [
                 //     'text' => 'idep',
                 //     'url' => '#',
