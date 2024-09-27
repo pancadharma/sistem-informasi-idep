@@ -153,10 +153,11 @@ return [
     'role' => [
         'title'          => 'Roles',
         'title_singular' => 'Role',
+        'list'           => 'Role List',
         'fields'         => [
             'id'                 => 'ID',
             'id_helper'          => ' ',
-            'title'              => 'Title',
+            'nama'               => 'Role Name',
             'title_helper'       => ' ',
             'permissions'        => 'Permissions',
             'permissions_helper' => ' ',
@@ -167,14 +168,21 @@ return [
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
         ],
+        'validation'             => [
+            'nama'               => 'Role Name must be at least 3 characters.',
+            'permission'         => 'Please select at least one permission.',
+        ],
     ],
     'user' => [
-        'title'          => 'Users',
-        'title_singular' => 'User',
-        'fields'         => [
+        'title'                        => 'Users',
+        'title_singular'               => 'User',
+        'list'                         => 'Users List',
+        'fields'                       => [
             'id'                       => 'ID',
             'id_helper'                => ' ',
             'name'                     => 'Name',
+            'nama'                     => 'Name',
+            'username'                 => 'Username',
             'name_helper'              => ' ',
             'email'                    => 'Email',
             'email_helper'             => ' ',
@@ -182,7 +190,9 @@ return [
             'email_verified_at_helper' => ' ',
             'password'                 => 'Password',
             'password_helper'          => ' ',
+            'jabatan'                  => 'Position',
             'roles'                    => 'Roles',
+            'role'                     => 'Role',
             'roles_helper'             => ' ',
             'remember_token'           => 'Remember Token',
             'remember_token_helper'    => ' ',
@@ -192,6 +202,15 @@ return [
             'updated_at_helper'        => ' ',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
+        ],
+        'validation'          => [
+            'nama'            => 'Name must be at least 5 characters.',
+            'username'        => 'Username must be at least 5 characters.',
+            'email'           => 'Invalid email format.',
+            'user_unique'     => 'Username must be unique.',
+            'taken'           => 'has been taken.',
+            'email_unique'    => 'Email has already been taken.',
+            'password'        => 'Password must be at least 8 characters.',
         ],
     ],
     'auditLog' => [
@@ -228,7 +247,7 @@ return [
         'data'      => 'Data',
         'added'     => 'Added Successfully',
         'updated'   => 'Updated Successfully',
-        'deleted'   => 'Has Been Deleted' 
+        'deleted'   => 'Has Been Deleted'
     ],
     'jenisbantuan' => [
         'list' => 'Daftar Jenis Bantuan',
@@ -268,6 +287,69 @@ return [
         'kode'=>'Kode',
         'no'=>'No',
         'nama'=>'Name',
+    ],
+    'partner'               => [
+        'title'             => 'Partners',
+        'list'              => 'Partners List',
+        'title_singular'    => 'Partner',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_partner'  => 'Partner Name',
+            'ket'           => 'Information',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+        ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Strategy Plan Targets',
+        'list'              => 'Strategy Plan Target List',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_reinstra' => 'Strategy Plan Target Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+    'satuan'               => [
+        'title'             => 'Units',
+        'list'              => 'Unit List',
+        'title_singular'    => 'Unit',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_satuan'   => 'Unit Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+
+    'mjabatan' => [
+        'list' => 'List',
+        'title_singular' => 'Position',
+        'title' => 'Position',
+        'nama'=>'Position',
+        'status' => 'Status',
+    ],
+
+    'kaitan_sdg' => [
+        'list' => 'List',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
+
+    'peran' => [
+        'list' => 'List',
+        'title_singular' => 'Peran',
+        'title' => 'Peran',
+        'nama'=>'Peran',
+        'status' => 'Status',
     ],
 
 ];

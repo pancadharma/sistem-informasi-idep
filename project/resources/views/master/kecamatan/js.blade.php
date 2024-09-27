@@ -47,11 +47,9 @@
 
         //load data kecamatan into datatables
         $('#kecamatan_list').DataTable({
-            responsive: true,
             ajax: "{{ route('data.kecamatan') }}",
-            processing: true,
-            serverSide: true,
-            stateSave: true, //to remember last position of data table browsed page
+            responsive: true,lengthChange: false,
+            processing: true,autoWidth: false,serverSide: true,deferRender: true, stateSave: true,
             columns: [
                 {
                     data: "kode",

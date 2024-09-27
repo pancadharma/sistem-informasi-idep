@@ -23,8 +23,8 @@
         <div class="card-header">
             <h2 class="card-title">{{ trans('cruds.country.list') }}</h2>
         </div>
-        <div class="card-body">
-            <table id="example" class="table table-bordered table-striped table-hover ajaxTable datatable datatable-Country" style="width:100%">
+        <div class="card-body table-responsive">
+            <table id="example" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap datatable-Country" style="width:100%">
                 <thead>
                     <tr>
                         <th width="10"></th>
@@ -59,7 +59,7 @@ icon="fas fa-bell" v-centered static-backdrop scrollable>
 {{-- Push extra scripts --}}
 
 @push('js')
-    @section('plugins.Datatables', true) 
+    @section('plugins.Datatables', true)
     <script>
         // new DataTable('#example', {
         //     ajax: {{ $countries }},
@@ -90,7 +90,7 @@ icon="fas fa-bell" v-centered static-backdrop scrollable>
                         "render": function(data, type, row){
                             return '<img src="/images/flag/'+data+'" />'
                         }
-                                   
+
                     }
                 ]
             });

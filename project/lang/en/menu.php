@@ -29,7 +29,7 @@ return [
     'dusun'             => 'Hamlet',
     'user_management'   => 'User Management',
     'role'              => 'Role',
-    'roles'             => 'Roles',
+    'roles'             => 'Position',
     'user'              => 'User',
     'users'             => 'Users',
     'kelompok_rentan'   => 'Vulnerable Groups',
@@ -46,5 +46,6 @@ return [
     'log'               => 'Log',
     'laporan'           => 'Report',
     'cari'              => 'Search',
-    'satuan'            => 'Unit',
+    'satuan'            => 'Units',
+    'target_reinstra'   => 'Target Reinstra',
 ];

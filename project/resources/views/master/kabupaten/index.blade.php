@@ -54,8 +54,8 @@
             </div>
         </div>
     <div class="card card-outline card-primary">
-        <div class="card-body">
-            <table id="kabupaten" class="table table-bordered cell-border ajaxTable datatable-kabupaten" style="width:100%">
+        <div class="card-body table-responsive">
+            <table id="kabupaten" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kabupaten" style="width:100%">
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
@@ -73,18 +73,18 @@
     @include('master.kabupaten.edit')
     @include('master.kabupaten.show')
     @stop
-    
+
     @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @endpush
-    
+
 @push('js')
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Select2', true)
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
-    
+
     @include('master.kabupaten.js')
     <script>
         $(document).ready(function() {
@@ -99,7 +99,7 @@
                             text: item.id+' - '+ item.nama,
                         };
                     });
-                    
+
                     $('#provinsi_add').select2({
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                         allowClear: true,

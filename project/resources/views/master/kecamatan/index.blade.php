@@ -16,8 +16,8 @@
     </div>
 
     <div class="card card-outline card-primary">
-        <div class="card-body">
-            <table id="kecamatan_list" class="table table-bordered cell-border ajaxTable datatable-kecamatan" style="width:100%">
+        <div class="card-body table-responsive">
+            <table id="kecamatan_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kecamatan" style="width:100%">
                 <thead>
                     <tr>
                         <th class="center">{{ trans('cruds.kecamatan.kode') }}</th>
@@ -34,17 +34,17 @@
     @include('master.kecamatan.edit')
     @include('master.kecamatan.show')
     @stop
-    
+
     @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @endpush
-    
+
     @push('js')
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Select2', true)
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
-    
+
     @include('master.kecamatan.js')
 @endpush

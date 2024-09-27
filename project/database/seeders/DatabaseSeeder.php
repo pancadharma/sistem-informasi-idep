@@ -24,11 +24,15 @@ class DatabaseSeeder extends Seeder
             PermissionRoleTableSeeder::class,
             UsersTableSeeder::class,
             RoleUserTableSeeder::class,
+            UpdatePermission::class,
             CountryTableSeeder::class,
             ProvinsiSeeder::class,
             KabupatenSeeder::class,
             KecamatanSeeder::class,
             KelurahanSeeder::class,
+            MjabatanSeeder::class,
+            KaitanSdgSeeder::class,
+            PeranSeeder::class,
         ]);
     }
 }

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="card card-outline card-primary">
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="provinsi" class="table table-bordered cell-border ajaxTable datatable-provinsi" style="width:100%">
                 <thead>
                     <tr>
@@ -38,8 +38,8 @@
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Validation', true)
-    
-    {{-- Ajax Request data using server side data table to reduce large data load --}}    
+
+    {{-- Ajax Request data using server side data table to reduce large data load --}}
     <script>
         $(document).ready(function() {
             $('#provinsi').DataTable({
@@ -94,10 +94,10 @@
                                     columns: [0, 1, ]
                                 }
                             },{
-                                extend: 'pdf', 
+                                extend: 'pdf',
                                 exportOptions: {
                                     columns: [0, 1,]
-                                }    
+                                }
                             },{
                                 extend: 'copy',
                                 exportOptions: {
@@ -128,7 +128,7 @@
             $('#editaktif').change(function() {
                 $('#edit-aktif').val(this.checked ? 1 : 0);
             });
-       
+
             $('#editProvinceForm').submit(function(e){
                 e.preventDefault();
 
@@ -177,7 +177,7 @@
                 // Make Ajax request to fetch province data for editing
                 $.ajax({
                     url: '{{ route('provinsi.getedit', ':id') }}'.replace(':id', id_provinsi), // Route with ID placeholder
-                    
+
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -187,7 +187,7 @@
                         $('#id').val(response.id);
                         $('#editkode').val(response.kode);
                         $('#editnama').val(response.nama);
-                        
+
                         if (response.aktif === 1) {
                             $('#edit-aktif').val(response.aktif);
                             $("#editaktif").prop("checked", true); // Set checked to true if value is 1

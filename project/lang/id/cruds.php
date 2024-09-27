@@ -148,12 +148,13 @@ return [
         ],
     ],
     'role' => [
-        'title'          => 'Peranan',
-        'title_singular' => 'Peranan',
+        'title'          => 'Role Sistem',
+        'title_singular' => 'Role Sistem',
+        'list'           => 'Daftar Role',
         'fields'         => [
             'id'                 => 'ID',
             'id_helper'          => ' ',
-            'title'              => 'Title',
+            'nama'               => 'Nama Role',
             'title_helper'       => ' ',
             'permissions'        => 'Permissions',
             'permissions_helper' => ' ',
@@ -164,14 +165,21 @@ return [
             'deleted_at'         => 'Deleted at',
             'deleted_at_helper'  => ' ',
         ],
+        'validation'             => [
+            'nama'               => 'Nama role harus terdiri dari 5 karakter.',
+            'permission'         => 'Pilih salah satu permision.',
+        ],
     ],
     'user' => [
         'title'          => 'Daftar Pengguna',
         'title_singular' => 'User',
+        'list'           => 'Daftar Pengguna',
         'fields'         => [
             'id'                       => 'ID',
             'id_helper'                => ' ',
-            'name'                     => 'Name',
+            'name'                     => 'Nama',
+            'nama'                     => 'Nama',
+            'username'                 => 'Username',
             'name_helper'              => ' ',
             'email'                    => 'Email',
             'email_helper'             => ' ',
@@ -179,6 +187,8 @@ return [
             'email_verified_at_helper' => ' ',
             'password'                 => 'Password',
             'password_helper'          => ' ',
+            'jabatan'                  => 'Posisi',
+            'role'                     => 'Role',
             'roles'                    => 'Roles',
             'roles_helper'             => ' ',
             'remember_token'           => 'Remember Token',
@@ -189,6 +199,15 @@ return [
             'updated_at_helper'        => ' ',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
+        ],
+        'validation'          => [
+            'nama'            => 'Nama harus setidaknya 5 karakter',
+            'username'        => 'Nama pengguna harus terdiri dari setidaknya 5 karakter.',
+            'email'           => 'Format email tidak valid.',
+            'user_unique'     => 'Nama pengguna harus unik.',
+            'taken'           => 'telah diambil.',
+            'email_unique'    => 'Email sudah diambil.',
+            'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',
         ],
     ],
     'auditLog' => [
@@ -224,8 +243,8 @@ return [
     'data' => [
         'data'      => 'Data',
         'added'     => 'Berhasil ditambahkan',
-        'updated'   => 'Berhasil ditambahkan',
-        'deleted'   => 'Berhasil dihapus' 
+        'updated'   => 'Berhasil diperbaharui',
+        'deleted'   => 'Berhasil dihapus'
     ],
     'jenisbantuan' => [
         'list' => 'Daftar Jenis Bantuan',
@@ -265,5 +284,43 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
-
+    'partner'               => [
+        'title'             => 'Mitra',
+        'list'              => 'Daftar Mitra',
+        'title_singular'    => 'Mitra',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_partner'  => 'Nama Mitra',
+            'ket'           => 'Keterangan',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbarui pada',
+        ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Target Reinstra',
+        'list'              => 'Daftar Target Reinstra',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_reinstra' => 'Nama Target Reinstra',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+    'satuan'               => [
+        'title'             => 'Satuan',
+        'list'              => 'Daftar Satuan',
+        'title_singular'    => 'Satuan',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_satuan'   => 'Nama Satuan',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbaharui pada',
+            'deleted_at'    => 'Dihapus pada',
+        ]
+    ],
 ];
