@@ -29,7 +29,7 @@ return [
     'dusun'             => 'Hamlet',
     'user_management'   => 'User Management',
     'role'              => 'Role',
-    'roles'             => 'Roles',
+    'roles'             => 'Position',
     'user'              => 'User',
     'users'             => 'Users',
     'kelompok_rentan'   => 'Vulnerable Groups',

@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\MjabatanController;
+use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\PartnersController;
@@ -118,6 +120,10 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
+    
+    //Master Jabatan
+    Route::resource('mjabatan', MjabatanController::class);
+    Route::get('data/mjabatan', [MjabatanController::class, 'getData'])->name('data.mjabatan');
 
     //Master Kelompok Marjinal
     Route::resource('kelompokmarjinal', KelompokmarjinalController::class);

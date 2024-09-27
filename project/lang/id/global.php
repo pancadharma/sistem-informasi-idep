@@ -2,7 +2,7 @@
 
 return [
     'details'                        => 'Detail',
-    'actions'                        => 'Aksi',
+    'actions'                        => 'Opsi',
     'add'                            => 'Tambah',
     'success'                        => 'Sukses',
     'allRightsReserved'              => 'All rights reserved.',
@@ -59,7 +59,7 @@ return [
     'yes'                            => 'Ya',
     'youAreLoggedIn'                 => 'Anda berhasil masuk!',
     'yourAccountNeedsAdminApproval'  => 'Akun Anda membutuhkan persetujuan administrator untuk masuk',
-    'submit'                         => 'Ajukan',
+    'submit'                         => 'Simpan',
     'relatedData'                    => 'Data yang berhubungan',
     'update_profile_success'         => 'Profil berhasil diperbarui',
     'change_password_success'        => 'Password berhasil diubah',
@@ -108,7 +108,7 @@ return [
     'create_success'                       => 'Item Anda telah berhasil tersimpan',
     'update_success'                       => 'Item berhasil diubah.',
     'delete_success'                       => 'Item berhasil dihapus',
-    'action'                               => 'Aksi',
+    'action'                               => 'Opsi',
     'action_id'                            => 'Id Aksi',
     'action_model'                         => 'Model Aksi',
     'address'                              => 'Alamat',
