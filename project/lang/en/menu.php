@@ -46,6 +46,6 @@ return [
     'log'               => 'Log',
     'laporan'           => 'Report',
     'cari'              => 'Search',
-    'satuan'            => 'Unit',
+    'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
 ];

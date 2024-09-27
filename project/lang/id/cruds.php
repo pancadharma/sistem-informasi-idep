@@ -298,4 +298,17 @@ return [
             'deleted_at'    => 'Deleted at',
         ]
     ],
+    'satuan'               => [
+        'title'             => 'Satuan',
+        'list'              => 'Daftar Satuan',
+        'title_singular'    => 'Satuan',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_satuan'   => 'Nama Satuan',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbaharui pada',
+            'deleted_at'    => 'Dihapus pada',
+        ]
+    ],
 ];
