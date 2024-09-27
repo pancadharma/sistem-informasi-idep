@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\KaitanSdgController;
+use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\PartnersController;
@@ -142,5 +143,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('satuan', SatuanController::class);
     Route::get('satuan-api', [SatuanController::class, 'getSatuan'])->name('satuan.api');
 
+    //Master Peran
+    Route::resource('peran', MjabatanController::class);
+    Route::get('data/peran', [MjabatanController::class, 'getData'])->name('data.peran');
+
+    //Master Kaitan SDG
+    Route::resource('kaitan_sdg', KaitanSdgController::class);
+    Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
 
 });

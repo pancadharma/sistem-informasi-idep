@@ -297,12 +297,12 @@ return [
                     'active'    => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
                     'can'       => ['satuan_access','satuan_edit', 'satuan_show', 'satuan_create'],
                 ],
-                // [
-                //     'text' => 'sdg',
-                //     'url' => '#',
-                //     'icon' => '',
-                //     'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
-                // ],
+                [
+                    'text' => 'sdg',
+                    'route' => 'kaitan_sdg.index',
+                    'icon' => '',
+                    'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                ],
                 // [
                 //     'text' => 'idep',
                 //     'url' => '#',
