@@ -83,7 +83,7 @@
                                 columns: [0,1,2,3]
                             }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
                                 format: {
                                     body: function (data, row, column, node) {

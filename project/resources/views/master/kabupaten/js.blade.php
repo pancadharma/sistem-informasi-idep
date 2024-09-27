@@ -2,21 +2,21 @@
     //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
         $('#kabupaten').DataTable({
-            responsive: true,
-            ajax: "{{ route('data.kabupaten') }}",
-            processing: true,
-            serverSide: true,
-            // stateSave: true,
+            responsive: true, processing: true, serverSide: true, deferRender: true, stateSave: false,
+            ajax: {
+                url : "{{ route('data.kabupaten') }}",
+                type: "GET",
+                dataType: 'JSON',
+            },
             columns: [
                 {
-                    data: "kode",
-                    width: "5%",
-                    className: "text-center"
+                    data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
                 },
                 {
-                    data: "type",
-                    width: "5%",
-                    className: "text-center",
+                    data: "kode", width: "5%", className: "align-middle text-center"
+                },
+                {
+                    data: "type", width: "5%", className: "align-middle text-center",
                     render: function(data, type, row) {
                         if (data === "kabupaten") {
                             return '{{ trans('cruds.kabupaten.title')}}';
@@ -26,20 +26,13 @@
                     }
                 },
                 {
-                    data: "nama",
-                    width: "10%"
+                    data: "nama", width: "15%",
                 },
                 {
-                    data: 'provinsi.nama',
-                    name: 'provinsi.nama',
-                    width: "15%"
+                    data: 'provinsi.nama', name: 'provinsi.nama', width: "20%"
                 },
                 {
-                    data: "aktif",
-                    width: "5%",
-                    className: "text-center",
-                    orderable: false,
-                    searchable: false,
+                    data: "aktif", width: "5%", className: "text-center align-middle", orderable: false, searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
                             return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
@@ -53,38 +46,76 @@
                     }
                 },
                 {
-                    data: "action",
-                    width: "8%",
-                    className: "text-center",
-                    orderable: false,
+                    data: "action", width: "10%", className: "align-middle text-center", orderable: false, searchable: false
                 }
             ],
              layout: {
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3,4,5]
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3,4,5]
                             }
                         },{
-                            extend: 'pdf', 
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }    
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3,4,5]
+                            }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3,4,5]
                             }
                         },
-                        'colvis',
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {
@@ -94,7 +125,7 @@
             order: [
                 [2, 'asc']
             ],
-            lengthMenu: [5, 25, 50, 100, 500],
+            lengthMenu: [5, 10, 25, ,50, 100, 500],
         });
     });
 
@@ -196,7 +227,7 @@
                 success: function(response) {
 
                     let data = response || [];
-                    
+
 
                     if (action === 'view') {
                         $("#show-kode").text(data.kode);
@@ -232,7 +263,7 @@
         });
     });
 
-    //prevent checkbox clicked in show modal 
+    //prevent checkbox clicked in show modal
     $(document).ready(function() {
         $('#show-aktif, #aktif_').click(function(event) {
             event.preventDefault();
@@ -275,7 +306,7 @@
 
                     $('#type_edit').select2();
                     $('#editKabupatenModal').modal('show');
-                    
+
                     let id_prov   = response[0].provinsi.id;
                     let data = response.results.map(function(item) {
                         return {
@@ -290,7 +321,7 @@
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                     });
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
-                    
+
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
@@ -364,9 +395,9 @@
         $('#provinsi_add').on('change', function() {
             let val_prov_id = $('#provinsi_add').val();
             $('#kode').val(val_prov_id+'.');
-        });        
+        });
 
-    // submit form 
+    // submit form
         $('.btn-add-kabupaten').on('click', function(e, form) {
             e.preventDefault();
             var formDataKab = $('#kabupatenForm').serialize();
@@ -438,7 +469,7 @@
                     });
                 }
             });
-            
+
         });
     });
 </script>
