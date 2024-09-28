@@ -29,7 +29,7 @@ class Program_Target_Reinstra extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function program()
+    public function programtargetreinstra()
     {
         return $this->belongsTo(Program::class, 'program_id');
     }
