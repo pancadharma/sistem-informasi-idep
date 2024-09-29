@@ -16,7 +16,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'No.', orderable: false, searchable: false, className: "text-center", width: "5%"},
                 {
-                    data: "nama", orderable: true, searchable: true,
+                    data: "nama", orderable: true, searchable: true, width: "70%"
                 },
                 {
                     data: "status", className: "text-center", orderable: false, searchable: false, width: "5%",
@@ -39,8 +39,8 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) { //select column 2 for column aktif/status to exported still has html render
-                                            return data;
-                                            // return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ? `\u2611` : '<span class="material-symbols-outlined">check_box_outline_blank</span>';
+                                            // return data;
                                         }
                                         return data;
                                     }
@@ -50,11 +50,10 @@
                         {
                             extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
-                                columns: [0, 1, 2], stripHTML: false,
+                                columns: [0, 1, 2], stripHTML: true,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
@@ -65,17 +64,18 @@
                         },
                         {
                             extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            orientation: 'portrait',
+                            pageSize: 'A4',
                             exportOptions: {
                                 columns: [0, 1,2], stripHTML: false,
-                                format: {
-                                    body: function (data, row, column, node) {
-                                        if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '☑️' : '☐';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-                                        }
-                                        return data;
-                                    }
-                                }
+                                // format: {
+                                //     body: function (data, row, column, node) {
+                                //         if (column === 2) {
+                                //             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                //         }
+                                //         return data;
+                                //     }
+                                // }
                             }
                         },
                         {
@@ -85,7 +85,7 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) {
-                                            return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '✅' : '❌';
                                         }
                                         return data;
                                     }

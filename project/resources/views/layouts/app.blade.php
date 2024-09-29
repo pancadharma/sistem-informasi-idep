@@ -48,6 +48,58 @@
 @push('js')
 @section('plugins.Sweetalert2', true)
 <script>
+    $(document).ready(function() {
+        window._token = $('meta[name="csrf-token"]').attr('content')
+
+        // moment.updateLocale('en', {
+        //     week: {dow: 1} // Monday is the first day of the week
+        // })
+
+        // $('.date').datetimepicker({
+        //     format: 'YYYY-MM-DD',
+        //     locale: 'en',
+        //     icons: {
+        //         up: 'fas fa-chevron-up',
+        //         down: 'fas fa-chevron-down',
+        //         previous: 'fas fa-chevron-left',
+        //         next: 'fas fa-chevron-right'
+        //     }
+        // })
+
+        // $('.datetime').datetimepicker({
+        //     format: 'YYYY-MM-DD HH:mm:ss',
+        //     locale: 'en',
+        //     sideBySide: true,
+        //     icons: {
+        //         up: 'fas fa-chevron-up',
+        //         down: 'fas fa-chevron-down',
+        //         previous: 'fas fa-chevron-left',
+        //         next: 'fas fa-chevron-right'
+        //     }
+        // })
+
+        // $('.timepicker').datetimepicker({
+        //     format: 'HH:mm:ss',
+        //     icons: {
+        //         up: 'fas fa-chevron-up',
+        //         down: 'fas fa-chevron-down',
+        //         previous: 'fas fa-chevron-left',
+        //         next: 'fas fa-chevron-right'
+        //     }
+        // })
+
+        $('.select-all').click(function () {
+            let $select2 = $(this).parent().siblings('.select2')
+            $select2.find('option').prop('selected', 'selected')
+            $select2.trigger('change')
+        })
+        $('.deselect-all').click(function () {
+            let $select2 = $(this).parent().siblings('.select2')
+            $select2.find('option').prop('selected', '')
+            $select2.trigger('change')
+        })
+    });
+
     $(document).on('select2:open', function() {
         setTimeout(function() {
             document.querySelector('.select2-search__field').focus();
@@ -68,6 +120,21 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
+
+    pdfMake.fonts = {
+        Roboto: {
+            normal: "DejaVuSans.ttf",
+            bold: "DejaVuSans-Bold.ttf",
+            italics: "DejaVuSans.ttf",
+            bolditalics: "DejaVuSans-Bold.ttf"
+        },
+        DejaVuSans: {
+            normal: "DejaVuSans.ttf",
+            bold: "DejaVuSans-Bold.ttf",
+            italics: "DejaVuSans-Bold.ttf",
+            bolditalics: "DejaVuSans-Bold.ttf"
+        }
+    };
 </script>
 @endpush
 

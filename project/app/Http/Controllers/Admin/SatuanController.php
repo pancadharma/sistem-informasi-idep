@@ -121,11 +121,11 @@ class SatuanController extends Controller
                     return match ($satuan->aktif) {
                         1 => '<div class="icheck-primary d-inline">
                                 <input id="aktif_' . $satuan->id . '" data-aktif-id="' . $satuan->id . '" class="icheck-primary" alt="☑️ aktif" title="' . __("cruds.status.aktif") . '" type="checkbox" checked>
-                                <label for="aktif_' . $satuan->id . '"></label>
+                                <label for="aktif_' . $satuan->id . '"><span class="badge bg-success">' . __("cruds.status.aktif") . '</span></label>
                               </div>',
                         0 => '<div class="icheck-primary d-inline">
-                                <input id="aktif_' . $satuan->id . '" data-aktif-id="' . $satuan->id . '" class="icheck-primary" alt="aktif" title="' . __("cruds.status.aktif") . '" type="checkbox">
-                                <label for="aktif_' . $satuan->id . '"></label>
+                                <input id="aktif_' . $satuan->id . '" data-aktif-id="' . $satuan->id . '" class="icheck-primary" alt="aktif" title="' . __("cruds.status.tidak_aktif") . '" type="checkbox">
+                                <label for="aktif_' . $satuan->id . '"><span class="badge bg-danger">' . __("cruds.status.tidak_aktif") . '</span></label>
                               </div>',
                     };
                 })

@@ -437,17 +437,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '/vendor/datatables-new/datatables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
                     'location' => '/vendor/datatables-new/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
                 ],
                 [
                     'type' => 'css',
@@ -572,48 +572,20 @@ return [
                 ],
             ],
         ],
-        'DatatablesPlugins' => [
+
+
+        'PDFmake' => [
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.print.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],

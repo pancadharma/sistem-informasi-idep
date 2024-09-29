@@ -24,7 +24,7 @@
                         if (data === 1) {
                             return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" disabled checked><label for="aktif_' + row.id + '"></label></div>';// return '☑️';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" title="{{ trans('cruds.status.tidak_aktif')}}" type="checkbox" disabled><label for="aktif_' + row.id + '"></label></div>';
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="aktif_' + row.id + '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" disabled><label for="aktif_' + row.id + '"></label></div>';
                         }
                     }
                 },
@@ -42,7 +42,6 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 3) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
@@ -58,7 +57,6 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 3) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
@@ -73,8 +71,7 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 3) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
 
@@ -88,7 +85,6 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 3) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
