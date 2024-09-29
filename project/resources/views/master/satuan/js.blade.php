@@ -39,7 +39,7 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) { //select column 2 for column aktif/status to exported still has html render
-                                            return $(data).find('input').is(':checked') ? `\u2611` : '<span class="material-symbols-outlined">check_box_outline_blank</span>';
+                                            return $(data).find('input').is(':checked') ? `\u2611` : '\u2610';
                                             // return data;
                                         }
                                         return data;
