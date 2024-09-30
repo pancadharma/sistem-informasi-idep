@@ -25,5 +25,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('program__kelompok__marjinals');
+        // Schema::dropIfExists('trprogramkelompokmarjinals'); //if roleback table should be dropped the same table otherwise if related to different table it could be added here to (if possible)
     }
 };

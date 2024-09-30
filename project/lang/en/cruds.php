@@ -9,7 +9,7 @@ return [
     [
         'title' => 'Status',
         'aktif' => 'Active',
-        'tidak_aktif'=> 'Non Active',
+        'tidak_aktif'=> 'Inactive',
         'action'=> 'Action',
     ],
     'permission' => [
