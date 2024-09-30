@@ -48,4 +48,5 @@ return [
     'cari'              => 'Search',
     'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
+    'peran'             => 'Responsibility',
 ];
