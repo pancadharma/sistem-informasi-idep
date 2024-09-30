@@ -17,6 +17,8 @@ class UsersTableSeeder extends Seeder
             [
                 'id'             => 1,
                 'nama'           => 'RGBComputer Super Admin',
+                'username'       => 'admin',
+                'jabatan_id'     => 1,
                 'email'          => 'rgb@idep.com',
                 'password'       => bcrypt('password'),
                 'remember_token' => null,
