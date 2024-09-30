@@ -346,9 +346,9 @@ return [
 
     'peran' => [
         'list' => 'List',
-        'title_singular' => 'Peran',
-        'title' => 'Peran',
-        'nama'=>'Peran',
+        'title_singular' => 'Responsibility',
+        'title' => 'Responsibility',
+        'nama'=>'Responsibility',
         'status' => 'Status',
     ],
 
