@@ -120,21 +120,6 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
-
-    pdfMake.fonts = {
-        Roboto: {
-            normal: "DejaVuSans.ttf",
-            bold: "DejaVuSans-Bold.ttf",
-            italics: "DejaVuSans.ttf",
-            bolditalics: "DejaVuSans-Bold.ttf"
-        },
-        DejaVuSans: {
-            normal: "DejaVuSans.ttf",
-            bold: "DejaVuSans-Bold.ttf",
-            italics: "DejaVuSans-Bold.ttf",
-            bolditalics: "DejaVuSans-Bold.ttf"
-        }
-    };
 </script>
 @endpush
 
