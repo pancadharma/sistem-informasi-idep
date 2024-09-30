@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('program_id')->constrained('trprogram')->onDelete('cascade');
             $table->foreignId('pendonor_id')->constrained('mpendonor')->onDelete('cascade');
+            $table->decimal('nilaidonasi')->nullable();
             $table->timestamps();
         });
     }
