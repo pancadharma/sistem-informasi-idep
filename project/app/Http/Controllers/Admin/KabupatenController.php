@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreKabupatenRequest;
 use App\Http\Requests\UpdateKabupatenRequest;
 use Illuminate\Validation\ValidationException;
+use Yajra\DataTables\DataTables;
 
 class KabupatenController extends Controller
 {
@@ -30,17 +31,28 @@ class KabupatenController extends Controller
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
         return view("master.kabupaten.figma");
     }
-    
+
     public function create()
     {
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
         return response()->json($provinsi);
     }
 
-    public function datakabupaten(){
-        $kab = new Kabupaten();
-        $data = $kab->dataKabupaten();
-        return $data;
+    public function dataKabupaten(Request $request){
+        if ($request->ajax()) {
+
+            $kabupaten = Kabupaten::with('provinsi');
+            $data = DataTables::of($kabupaten)
+            ->addIndexColumn()
+            ->addColumn('action', function ($kabupaten) {
+                return '<button type="button" class="btn btn-sm btn-info edit-kab-btn" data-action="edit" data-kabupaten-id="'. $kabupaten->id .'" title="'.__('global.edit') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
+
+                <button type="button" class="btn btn-sm btn-primary view-kabupaten-btn" data-action="view" data-kabupaten-id="'. $kabupaten->id .'" value="'. $kabupaten->id .'" title="'.__('global.view') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+            return $data;
+        }
     }
     public function store(StoreKabupatenRequest $request)
     {
@@ -52,11 +64,11 @@ class KabupatenController extends Controller
         //     'type' => ['required', 'string'],
         //     'aktif' => ['integer'],
         // ]);
-        
+
         try {
             $data = $request->validated();
             Kabupaten::create($data);
-            
+
             return response()->json([
                 "success"    => true,
                 "message"   => __('cruds.data.data') .' '.__('cruds.kabupaten.title') .' '. $request->nama .' '. __('cruds.data.added'),
@@ -91,19 +103,19 @@ class KabupatenController extends Controller
             return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
         } catch (Exception $e) {
             $status = 'error';
-            $message = 'An unexpected error occurred: ' . $e->getMessage(); 
+            $message = 'An unexpected error occurred: ' . $e->getMessage();
             return response()->json(['status' => $status, 'message' => $message], 419); // Use 500 Internal Server Error for general errors
         }
     }
 
-    
+
     public function show(Kabupaten $kabupaten)
     {
         $kabupaten->load('provinsi');
         return response()->json($kabupaten); // Return province data as JSON
     }
 
-    
+
     public function edit(Kabupaten $kabupaten)
     {
         $provinsi = Provinsi::withActive()->get(['id', 'nama']);
@@ -111,14 +123,14 @@ class KabupatenController extends Controller
         return [$kabupaten, "results" => $provinsi];
     }
 
-    
+
     public function update(UpdateKabupatenRequest $request, Kabupaten $kabupaten)
     {
         $data = $request->all();
         try {
             $data = $request->validated();
             $kabupaten->update($data);
-            
+
             return response()->json([
                 'status'    => 'success',
                 // 'message'   => "Data ". $request->nama ." Updated Successfully",

@@ -260,21 +260,21 @@ return [
                     'text' => 'kelompok_rentan',
                     //'url' => '#',
                     'route' => 'kelompokmarjinal.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-people-arrows',
                     'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kategoripendonor',
-                    // 'url' => '#',
+                    // where is the can like this ?
+                    //'can'       => ['kategoripendonor_access','kategoripendonor_edit', 'kategoripendonor_show', 'kategoripendonor_create'],
                     'route' => 'kategoripendonor.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-medkit',
                     'active' => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
                 ],
                 [
                     'text' => 'pendonor',
-                    // 'url' => '#',
                     'route' => 'pendonor.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-hand-holding-medical',
                     'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
                 [
@@ -286,9 +286,9 @@ return [
                 ],
                 [
                     'text' => 'jenis_bantuan',
-                    // 'url' => '#',
+                     //'can'       => ['jenis_bantuanr_access','jenis_bantuan_edit', 'jenis_bantuan_show', 'jenis_bantuan_create'],
                     'route' => 'jenisbantuan.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-hands-helping',
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
                 ],
                 [
@@ -301,7 +301,7 @@ return [
                 [
                     'text' => 'sdg',
                     'route' => 'kaitan_sdg.index',
-                    'icon' => '',
+                    'icon' => 'fas fa-external-link-square-alt',
                     'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
                 ],
                 // [
@@ -437,17 +437,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '/vendor/datatables-new/datatables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
                     'location' => '/vendor/datatables-new/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
                 ],
                 [
                     'type' => 'css',
@@ -572,48 +572,20 @@ return [
                 ],
             ],
         ],
-        'DatatablesPlugins' => [
+
+
+        'PDFmake' => [
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.print.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],
