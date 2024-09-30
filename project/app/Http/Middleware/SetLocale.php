@@ -15,18 +15,21 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (request('change_language')) {
-            session()->put('language', request('change_language'));
-            $language = request('change_language');
-        } elseif (session('language')) {
+        if ($request->has('change_language')) {
+            session()->put('language', $request->input('change_language'));
+            $language = $request->input('change_language');
+        } elseif (session()->has('language')) {
             $language = session('language');
         } elseif (config('panel.primary_language')) {
             $language = config('panel.primary_language');
+        } else {
+            $language = $request->getPreferredLanguage(['id', 'en' ]); // Add more languages as needed
         }
 
         if (isset($language)) {
             app()->setLocale($language);
         }
+
         return $next($request);
     }
 }
