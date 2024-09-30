@@ -200,6 +200,7 @@ entity "trprogrampendonor" as trprogrampendonor {
     --
     id_program : int <<fk>>
     id_pendonor : int <<fk>>
+    nilaidonasi : decimal null
 }
 
 entity "trprogrampartner" as trprogrampartner {
