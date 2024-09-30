@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             PermissionRoleTableSeeder::class,
+            MjabatanSeeder::class,
             UsersTableSeeder::class,
             RoleUserTableSeeder::class,
             UpdatePermission::class,
@@ -30,7 +31,6 @@ class DatabaseSeeder extends Seeder
             KabupatenSeeder::class,
             KecamatanSeeder::class,
             KelurahanSeeder::class,
-            MjabatanSeeder::class,
             KaitanSdgSeeder::class,
             PeranSeeder::class,
         ]);

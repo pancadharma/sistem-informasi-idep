@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -26,6 +27,8 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         User::insert($users);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
