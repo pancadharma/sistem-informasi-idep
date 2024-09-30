@@ -99,6 +99,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+    public function jabatans()
+    {
+        return $this->belongsTo(related: Mjabatan::class);
+    }
 
     public function getImageAttribute()
     {

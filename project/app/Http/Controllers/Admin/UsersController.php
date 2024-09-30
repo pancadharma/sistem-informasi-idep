@@ -158,6 +158,7 @@ class UsersController extends Controller
                 'nama'      => $data['nama'],
                 'username'  => $data['username'],
                 'email'     => $data['email'],
+                'jabatan_id'=> $data['jabatan_id'],
                 'aktif'     => $data['aktif'],
             ]);
 
@@ -264,6 +265,11 @@ class UsersController extends Controller
             $query = User::with('roles')->select('users.*');
             $data = DataTables::of($query)
                 ->addIndexColumn()
+                ->addColumn('jabatan', function ($user) {
+                    return $user->jabatans->map(function ($jabatan) {
+                        return "<span class=\"btn btn-warning btn-xs\">{$jabatan->nama}</span>";
+                    })->implode(' ');
+                })
                 ->addColumn('roles', function ($user) {
                     return $user->roles->map(function ($role) {
                         return "<span class=\"btn btn-warning btn-xs\">{$role->nama}</span>";

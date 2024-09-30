@@ -25,7 +25,7 @@
                     <tr>
                     <tr>
                         <th>{{ __('cruds.user.fields.jabatan') }}</th>
-                        <td>{{-- {{ $user->jabatan->nama }} --}}</td>
+                        <td>{{ $user->jabatans->nama }}</td>
                     </tr>
                     <tr>
                         <th>{{ __('cruds.user.fields.roles') }}</th>

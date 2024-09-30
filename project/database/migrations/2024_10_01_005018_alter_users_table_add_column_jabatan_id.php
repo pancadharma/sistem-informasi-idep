@@ -11,15 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('users', function (Blueprint $table) {
-        //     $table->foreignId('jabatan_id')->constrained('mjabatan')->cascadeOnDelete();
-        // });
         Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('jabatan_id')->constrained('mjabatan')->cascadeOnDelete();
+        });
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('username', 200)
+            ->nullable()
+            ->change()
+            ->after('nama');
+            // $table->foreignId('jabatan_id')
+            //       ->nullable(false)
+            //       ->constrained('mjabatan')
+            //       ->cascadeOnDelete();
+
             $table->foreignId('jabatan_id')
-                  ->nullable()
-                  ->constrained('mjabatan')
-                  ->cascadeOnDelete()
-                  ->after('email');
+            ->change()
+            ->nullable(false)
+            ->after('username');
         });
     }
 
