@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_trprogrampendonor', function (Blueprint $table) {
+        Schema::create('trprogrampendonor', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('program_id')->constrained('trprogram')->onDelete('cascade');
+            $table->foreignId('pendonor_id')->constrained('mpendonor')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -22,6 +24,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_trprogrampendonor');
+        // Drop foreign key constraints
+        Schema::table('trprogrampendonor', function (Blueprint $table) {
+            $table->dropForeign(['program_id']);
+            $table->dropForeign(['pendonor_id']);
+        });
+
+        // Drop the table
+        Schema::dropIfExists('trprogrampendonor');
     }
 };
