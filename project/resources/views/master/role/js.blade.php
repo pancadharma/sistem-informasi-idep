@@ -51,38 +51,73 @@ $(document).ready(function(){
         },
         processing: true,serverSide: true,deferRender: true,stateSave: true,
         columns: [
-            {data: "nama", orderable: true, searchable: true},
-            {data: "status", width: "5%", className: "text-center", orderable: false, searchable: false},
-            {data: "action", className: "text-center",orderable: false,width: "20%",}
+            {
+                data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
+            },
+            {data: "nama", width: "60%", className: "text-left align-middle", orderable: true, searchable: true},
+            {data: "status", width: "10%", className: "text-center align-middle", orderable: false, searchable: false},
+            {data: "action", width: "10%", className: "text-center align-middle", orderable: false,width: "20%",}
         ],
         layout: {
             topStart: {
                 buttons: [
                     {
-                        extend: 'print',
+                        extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                         exportOptions: {
-                            columns: [0, 1] // Ensure these indices match your visible columns
+                        format: {
+                            body: function (data, row, column, node) {
+                                if (column === 2) {
+                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                }
+                                return data;
+                            }
+                        },
+                            columns: [0,1,2] // Ensure these indices match your visible columns
                         }
                     },
                     {
-                        extend: 'excel',
+                        extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                         exportOptions: {
-                            columns: [0, 1]
+                        format: {
+                            body: function (data, row, column, node) {
+                                if (column === 2) {
+                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                }
+                                return data;
+                            }
+                        },
+                            columns: [0,1,2]
                         }
                     },
                     {
-                        extend: 'pdf',
+                        extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                         exportOptions: {
-                            columns: [0, 1]
+                        format: {
+                            body: function (data, row, column, node) {
+                                if (column === 2) {
+                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                }
+                                return data;
+                            }
+                        },
+                            columns: [0,1,2]
                         }
                     },
                     {
-                        extend: 'copy',
+                        extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                         exportOptions: {
-                            columns: [0, 1]
+                        format: {
+                            body: function (data, row, column, node) {
+                                if (column === 2) {
+                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                }
+                                return data;
+                            }
+                        },
+                            columns: [0,1,2]
                         }
                     },
-                    'colvis',
+                    {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                 ],
             },
             bottomStart: {

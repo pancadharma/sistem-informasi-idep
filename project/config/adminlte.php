@@ -437,17 +437,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
                     'location' => '/vendor/datatables-new/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '/vendor/datatables-new/datatables.min.js',
                 ],
                 [
                     'type' => 'css',

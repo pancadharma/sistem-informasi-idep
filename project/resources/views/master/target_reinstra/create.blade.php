@@ -35,7 +35,7 @@
             </div>
             {{-- Target Reinstra Name --}}
             <div class="form-group">
-                <strong> {{ trans('cruds.reinstra.title_singular') .' '. trans('cruds.status.title')  }}  </strong>
+                <strong> {{ trans('cruds.status.title')  }}  </strong>
                 <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
                 <div class="icheck-primary">
                     <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
