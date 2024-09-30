@@ -323,4 +323,11 @@ return [
             'deleted_at'    => 'Dihapus pada',
         ]
     ],
+    'peran' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Peran',
+        'title' => 'Peran',
+        'nama'=>'Peran',
+        'status' => 'Status',
+    ],
 ];
