@@ -47,6 +47,7 @@
 
 @push('js')
 @section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
 <script>
     $(document).ready(function() {
         window._token = $('meta[name="csrf-token"]').attr('content')
