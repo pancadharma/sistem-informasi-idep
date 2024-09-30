@@ -340,4 +340,12 @@ return [
         'status' => 'Status',
     ],
 
+    'kaitan_sdg' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
+
 ];
