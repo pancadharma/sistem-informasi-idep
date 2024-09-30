@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::table('trprogramkaitansdg', function (Blueprint $table) {
             // Drop the foreign key constraint
             $table->dropForeign(['kaitansdg_id']);
-                
+
             // Now, re-add the foreign key with the new reference to mkaitansdg
             $table->foreign('kaitansdg_id')->references('id')->on('mkaitansdg')->onDelete('cascade');
             });
@@ -30,9 +30,9 @@ return new class extends Migration
         Schema::table('trprogramkaitansdg', function (Blueprint $table) {
             // Drop the updated foreign key
             $table->dropForeign(['kaitansdg_id']);
-            
+
             // Re-add the original foreign key constraint
-            $table->foreign('kaitansdg_id')->references('id')->on('mkaitan_sdg')->onDelete('cascade');
+            $table->foreign('kaitansdg_id')->references('id')->on('mkaitansdg')->onDelete('cascade');
         });
     }
 };
