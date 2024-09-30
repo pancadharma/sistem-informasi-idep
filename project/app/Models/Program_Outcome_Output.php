@@ -33,4 +33,9 @@ class Program_Outcome_Output extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
+    public function program_outcome()
+    {
+        return $this->belongsTo(Program_Outcome::class);
+    }
+
 }
