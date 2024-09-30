@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +12,11 @@ class Program_Kelompok_Marjinal extends Model
     use Auditable, HasFactory;
     public $table = "trprogramkelompokmarjinal";
     protected $fillable = [
-        'program_id', 
-        'kelompokmarjinal_id', 
+        'program_id',
+        'kelompokmarjinal_id',
         'created_at',
         'updated_at'
-    ];  
+    ];
     protected $casts = [
         'updated_at',
         'created_at'
@@ -26,7 +28,7 @@ class Program_Kelompok_Marjinal extends Model
     }
 
     public function program() {
-        return $this->belongsTo(Porgram::class, 'program_id');
+        return $this->belongsTo(Program::class, 'program_id');
     }
 
     public function kelompokmarjinal() {
