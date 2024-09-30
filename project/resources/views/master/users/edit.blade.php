@@ -73,7 +73,7 @@
             </div>
         </div>
         {{-- Jabatan Input --}}
-        {{--
+
         <div class="form-group">
             <label for="jabatan">{{ __('cruds.user.fields.jabatan') }}</label>
             <div class="input-group">
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-        --}}
+
 
         {{-- User Role --}}
         <div class="form-group">
@@ -113,9 +113,9 @@
         </div>
         {{-- Status user --}}
         <div class="form-group">
-            <strong> {{ trans('cruds.user.title') .' '. trans('cruds.status.title')  }}  </strong>
+            <strong>{{  __('cruds.status.title')  }}</strong>
+            <input type="hidden" name="aktif" value="0"> {{-- when modal edit fields aktif is unchecked --}}
             <div class="icheck-primary">
-                <input type="hidden" name="aktif" value="0"> {{-- when modal edit fields aktif is unchecked --}}
                 <input type="checkbox" name="aktif" id="edit_aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
                 <label for="edit_aktif"><span id="status"></span></label>
             </div>
@@ -125,4 +125,6 @@
             {{ __('global.update') }}
         </button>
     </form>
+    <x-slot name="footerSlot">
+    </x-slot>
 </x-adminlte-modal>

@@ -263,6 +263,7 @@ class UsersController extends Controller
         if ($request->ajax()) {
             $query = User::with('roles')->select('users.*');
             $data = DataTables::of($query)
+                ->addIndexColumn()
                 ->addColumn('roles', function ($user) {
                     return $user->roles->map(function ($role) {
                         return "<span class=\"btn btn-warning btn-xs\">{$role->nama}</span>";
