@@ -13,7 +13,7 @@ class KaitanSdgSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('mkaitan_sdg')->insert([
+        DB::table('mkaitansdg')->insert([
             ['nama' => 'No Poverty', 'aktif' => 1],
             ['nama' => 'Zero Hunger', 'aktif' => 1],
             ['nama' => 'Good Health and Well-Being', 'aktif' => 1],
