@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class KaitanSdg extends Model
 {
-    protected $table = 'mkaitan_sdg';
+    protected $table = 'mkaitansdg';
 
     protected $fillable = [
         'nama',

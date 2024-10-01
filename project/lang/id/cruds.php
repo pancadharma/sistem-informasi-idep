@@ -408,5 +408,29 @@ return [
 
     ],
 
+    
+    'peran' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Peran',
+        'title' => 'Peran',
+        'nama'=>'Peran',
+        'status' => 'Status',
+    ],
+
+    'mjabatan' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Jabatan',
+        'title' => 'Jabatan',
+        'nama'=>'Jabatan',
+        'status' => 'Status',
+    ],
+
+    'kaitan_sdg' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
 
 ];

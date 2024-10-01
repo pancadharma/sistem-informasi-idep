@@ -151,8 +151,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('satuan-api', [SatuanController::class, 'getSatuan'])->name('satuan.api');
 
     //Master Peran
-    Route::resource('peran', MjabatanController::class);
-    Route::get('data/peran', [MjabatanController::class, 'getData'])->name('data.peran');
+    Route::resource('peran', PeranController::class);
+    Route::get('data/peran', [PeranController::class, 'getData'])->name('data.peran');
 
     //Master Kaitan SDG
     Route::resource('kaitan_sdg', KaitanSdgController::class);
