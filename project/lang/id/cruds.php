@@ -264,6 +264,18 @@ return [
         'no'=>'No',
         'nama'=>'Nama',
     ],
+    'mpendonor' => [
+        'list' => 'List Pendonor',
+        'mpendonor' => 'Pendonor',
+        'title_singular' => 'Pendonor',
+        'title' => 'Pendonor',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Nama',
+        'phone'=>'HP/WA',
+        'email'=>'Email',
+        'pic'=>'PIC',
+    ],
     'kelompokmarjinal' => [
         'list' => 'List Kelompok Marjinal',
         'kelompokmarjinal' => 'Kelompok Marjinal',
@@ -284,5 +296,56 @@ return [
             'created_at'    => 'Dibuat pada',
             'updated_at'    => 'Diperbarui pada',
         ]
-    ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Target Reinstra',
+        'list'              => 'Daftar Target Reinstra',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_reinstra' => 'Nama Target Reinstra',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+    'satuan'               => [
+        'title'             => 'Satuan',
+        'list'              => 'Daftar Satuan',
+        'title_singular'    => 'Satuan',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'nama_satuan'   => 'Nama Satuan',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbaharui pada',
+            'deleted_at'    => 'Dihapus pada',
+        ]
+    ],
+    
+    'peran' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Peran',
+        'title' => 'Peran',
+        'nama'=>'Peran',
+        'status' => 'Status',
+    ],
+
+    'mjabatan' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Jabatan',
+        'title' => 'Jabatan',
+        'nama'=>'Jabatan',
+        'status' => 'Status',
+    ],
+
+    'kaitan_sdg' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
+
 ];

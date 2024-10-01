@@ -30,7 +30,7 @@
                 <strong> {{ trans('cruds.partner.title') .' '. trans('cruds.status.title')  }}  </strong>
                 <div class="icheck-primary">
                     <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
-                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                    <input type="checkbox" name="aktif" id="edit_aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
                     <label for="aktif"></label>
                 </div>
             </div>

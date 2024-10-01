@@ -5,12 +5,12 @@
 @section('sub_breadcumb', __('cruds.kabupaten.title')) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 @section('content_body')
-    <div class="card card-primary">
+    <div class="card card-primary collapsed-card">
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
@@ -55,15 +55,16 @@
         </div>
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <table id="kabupaten" class="table table-bordered cell-border ajaxTable datatable-kabupaten" style="width:100%">
+            <table id="kabupaten" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" style="width:100%">
                 <thead>
                     <tr>
+                        <th class="center align-middle">No. </th>
                         <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
                         <th class="center">DT II</th>
-                        <th>{{ trans('cruds.kabupaten.title') }}</th>
-                        <th>{{ trans('cruds.provinsi.title') }}</th>
-                        <th>{{ trans('cruds.status.title') }}</th>
-                        <th>{{ trans('cruds.status.action') }}</th>
+                        <th class="align-middle">{{ trans('cruds.kabupaten.title') }}</th>
+                        <th class="align-middle">{{ trans('cruds.provinsi.title') }}</th>
+                        <th class="center align-middle">{{ trans('cruds.status.title') }}</th>
+                        <th class="center align-middle">{{ trans('cruds.status.action') }}</th>
                     </tr>
                 </thead>
             </table>

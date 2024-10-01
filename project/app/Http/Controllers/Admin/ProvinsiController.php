@@ -27,21 +27,32 @@ class ProvinsiController extends Controller
         return view('master.provinsi.index');
     }
 
-    public function dataprovinsi(){
-        $activeProvinsi = Provinsi::get();
-        // Prepare data for DataTables (without modifying original collection)
-        $data = DataTables::of($activeProvinsi)
-            ->addColumn('action', function ($provinsi) {
-                $editUrl = route('provinsi.edit', $provinsi->id);
-                $viewUrl = route('provinsi.show', $provinsi->id);
-                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
-                //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
+    public function dataprovinsi(Request $request){
+        if ($request->ajax()) {
 
-                return '<button type="button" class="btn btn-sm btn-info edit-province-btn" data-action="edit" data-provinsi-id="'. $provinsi->id .'" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-province-btn" data-action="view" data-province-id="'. $provinsi->id .'" value="'. $provinsi->id .'" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+            $activeProvinsi = Provinsi::all();
+            $data = DataTables::of($activeProvinsi)
+            ->addIndexColumn()
+            ->addColumn('action', function($provinsi) {
+                $editButton = '';
+                $viewButton = '';
+                $deleteButton = '';
+                if (auth()->user()->can("provinsi_edit")) {
+                    $editButton = "<button type=\"button\" class=\"btn btn-sm btn-info edit-provinsi-btn\"
+                    data-action=\"edit\" data-provinsi-id=\"{$provinsi->id}\"
+                    title=\"" . __('global.edit') . " " . __('cruds.provinsi.title') . " {$provinsi->nama}\">
+                    <i class=\"fas fa-pencil-alt\"></i>" . __('global.edit') . "</button>";
+                }
+                    $viewButton = "<button type=\"button\" class=\"btn btn-sm btn-primary view-provinsi-btn\"
+                    data-action=\"view\" data-provinsi-id=\"{$provinsi->id}\"
+                    title=\"" . __('global.view') . " " . __('cruds.provinsi.title') . " {$provinsi->nama}\">
+                    <i class=\"fas fa-folder-open\"></i>" . __('global.view') . "</button>";
+                return "$editButton $viewButton";
             })
+            ->rawColumns(['action'])
             ->make(true);
-        return $data;
+            return $data;
+        }
     }
 
     public function create()
@@ -77,7 +88,7 @@ class ProvinsiController extends Controller
     public function show(Provinsi $provinsi)
     {
         return response()->json($provinsi); // Return province data as JSON
-     
+
     }
 
     public function edit(Provinsi $provinsi)

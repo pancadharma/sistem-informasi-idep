@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTimeInterface;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kategori_Pendonor extends Model
@@ -28,4 +29,15 @@ class Kategori_Pendonor extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function pendonor()
+    {
+        return $this->hasMany(MPendonor::class, 'mpendonorkategori_id');
+    }
+
+    public function scopeWithActive(Builder $query)
+    {
+        return $query->where('aktif', 1);
+    }
+
 }

@@ -66,13 +66,12 @@ $(document).ready(function(){
                         });
                         $(this).trigger('reset');
                         $('#partner_list').DataTable().ajax.reload();
-                        $('#permission').val(null).trigger('change');
                         $('#AddPartnerForm')[0].reset();
                         $('#AddPartnerForm').trigger('reset');
-                        $('#AddPartnerForm').modal('hide');
                         $(".btn-tool").trigger('click');
-                        // $('#AddRole').modal('hide');
-                        // $('#permissions').val(null).trigger('change');
+                        $('#AddPartnerForm').find('button[type="submit"]').removeAttr('disabled');
+                        $('#AddPartnerForm').find('.is-invalid').removeClass('is-invalid'); // Remove invalid classes
+                        $('#AddPartnerForm').find('.is-valid').removeClass('is-valid'); // Remove valid classes
                     }
                 }, 500);
             },
@@ -136,12 +135,11 @@ $(document).ready(function(){
                     setTimeout(() => {
                         resetFormEdit();
                         $('#EditPartnerForm').trigger('reset');
-                        $('#EditPartnerForm').attr('action', url_update);;
-
+                        $('#EditPartnerForm').attr('action', url_update);
                         $('#partner_id').val(data.id);
                         $('#edit_nama').val(data.nama);
                         $('#edit_keterangan').val(data.keterangan);
-
+                        $('#edit_aktif').prop('checked', data.aktif == 1);
                         $('#status').text(data.aktif === 1 ? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
                         $('#EditPartnerModal .modal-title').html(`<i class="fas fa-pencil-alt"></i> {{ __('global.edit') }} ${data.nama}`);
                         $('#EditPartnerModal').modal('show');
@@ -195,7 +193,7 @@ $(document).ready(function(){
                 success: function(data) {
                     setTimeout(() => {
                         $('#view_nama').text(data.nama);
-                        $('#view_nama').text(data.keterangan);
+                        $('#view_ket').text(data.keterangan);
                         if (data.aktif === 1) {
                             $('#aktif_show').val(data.aktif);
                             $("#aktif_show").prop("checked",true);

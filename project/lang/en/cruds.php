@@ -9,7 +9,7 @@ return [
     [
         'title' => 'Status',
         'aktif' => 'Active',
-        'tidak_aktif'=> 'Non Active',
+        'tidak_aktif'=> 'Inactive',
         'action'=> 'Action',
     ],
     'permission' => [
@@ -267,6 +267,18 @@ return [
         'no'=>'No',
         'nama'=>'Name',
     ],
+    'mpendonor' => [
+        'list' => 'Donatur List',
+        'mpendonor' => 'Donatur',
+        'title_singular' => 'Donatur',
+        'title' => 'Donatur',
+        'kode'=>'Kode',
+        'no'=>'No',
+        'nama'=>'Name',
+        'phone'=>'Phone/WA',
+        'email'=>'Email',
+        'pic'=>'PIC',
+    ],
     'kelompokmarjinal' => [
         'list' => 'List of Vulnerable Groups',
         'kelompokmarjinal' => 'Vulnerable Groups',
@@ -288,6 +300,56 @@ return [
             'created_at'    => 'Created at',
             'updated_at'    => 'Updated at',
         ]
-    ]
+    ],
+    'reinstra'               => [
+        'title'             => 'Strategy Plan Targets',
+        'list'              => 'Strategy Plan Target List',
+        'title_singular'    => 'Reinstra Target',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_reinstra' => 'Strategy Plan Target Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+    'satuan'               => [
+        'title'             => 'Units',
+        'list'              => 'Unit List',
+        'title_singular'    => 'Unit',
+        'fields'            => [
+            'id'            => 'ID',
+            'nama'          => 'Name',
+            'nama_satuan'   => 'Unit Name',
+            'created_at'    => 'Created at',
+            'updated_at'    => 'Updated at',
+            'deleted_at'    => 'Deleted at',
+        ]
+    ],
+
+    'mjabatan' => [
+        'list' => 'List',
+        'title_singular' => 'Position',
+        'title' => 'Position',
+        'nama'=>'Position',
+        'status' => 'Status',
+    ],
+
+    'kaitan_sdg' => [
+        'list' => 'List',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
+
+    'peran' => [
+        'list' => 'List',
+        'title_singular' => 'Responsibility',
+        'title' => 'Responsibility',
+        'nama'=>'Responsibility',
+        'status' => 'Status',
+    ],
 
 ];

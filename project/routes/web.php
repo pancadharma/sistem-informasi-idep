@@ -5,19 +5,26 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
 use App\Http\Controllers\Admin\DusunController;
+use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\MjabatanController;
+use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\KabupatenController;
+use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
+use App\Http\Controllers\Admin\MPendonorController;
 use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\JenisbantuanController;
+use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
-use App\Http\Controllers\Admin\PartnersController;
+use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -115,6 +122,15 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
+    
+    //Master Jabatan
+    Route::resource('mjabatan', MjabatanController::class);
+    Route::get('data/mjabatan', [MjabatanController::class, 'getData'])->name('data.mjabatan');
+
+    //Master Pendonor
+    Route::resource('pendonor', MPendonorController::class);
+    Route::get('datapendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
+
 
     //Master Kelompok Marjinal
     Route::resource('kelompokmarjinal', KelompokmarjinalController::class);
@@ -124,5 +140,21 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('partner', PartnersController::class);
     Route::get('partners-api', [PartnersController::class, 'getPartners'])->name('partners.api');
 
+
+    //Master Target Reinstra
+    Route::resource('target-reinstra', TargetReinstraController::class);
+    Route::get('target-reinstra-api', [TargetReinstraController::class, 'getTargetReinstra'])->name('reinstra.api');
+
+    //Master Satuan
+    Route::resource('satuan', SatuanController::class);
+    Route::get('satuan-api', [SatuanController::class, 'getSatuan'])->name('satuan.api');
+
+    //Master Peran
+    Route::resource('peran', PeranController::class);
+    Route::get('data/peran', [PeranController::class, 'getData'])->name('data.peran');
+
+    //Master Kaitan SDG
+    Route::resource('kaitan_sdg', KaitanSdgController::class);
+    Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
 
 });

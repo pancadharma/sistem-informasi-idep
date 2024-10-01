@@ -115,6 +115,7 @@
         <div class="form-group">
             <strong> {{ trans('cruds.user.title') .' '. trans('cruds.status.title')  }}  </strong>
             <div class="icheck-primary">
+                <input type="hidden" name="aktif" value="0"> {{-- when modal edit fields aktif is unchecked --}}
                 <input type="checkbox" name="aktif" id="edit_aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
                 <label for="edit_aktif"><span id="status"></span></label>
             </div>

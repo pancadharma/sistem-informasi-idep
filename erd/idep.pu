@@ -169,7 +169,7 @@ entity "trprogram" as trprogram {
     deskripsiprojek : varchar (500)
     analisamasalah : varchar (500)
     id_user : int <<fk>>
-    submit: bit
+    status: varchar(50)
     created_at : datetime
     update_at : datetime
 }
@@ -200,6 +200,7 @@ entity "trprogrampendonor" as trprogrampendonor {
     --
     id_program : int <<fk>>
     id_pendonor : int <<fk>>
+    nilaidonasi : decimal null
 }
 
 entity "trprogrampartner" as trprogrampartner {

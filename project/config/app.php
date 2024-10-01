@@ -12,7 +12,7 @@ return [
     'asset_url'       => env('ASSET_URL'),
     'timezone'        => 'Asia/Singapore',
     'locale'          => 'id',
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'id',
     'faker_locale'    => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
@@ -43,6 +43,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
