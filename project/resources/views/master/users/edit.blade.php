@@ -80,10 +80,10 @@
                 <i class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></i>
             </label>
             <div class="input-group">
-                <input type="hidden" id="edit_jabatan" name="jabatan_id">
-                    <select class="form-control select2 {{ $errors->has('jabatans') ? 'is-invalid' : '' }}" name="jabatan_id" id="edit_jabatan">
+                {{-- <input type="hidden" id="edit_jabatan" name="jabatan_id"> --}}
+                    <select class="form-control select2 {{ $errors->has('jabatan') ? 'is-invalid' : '' }}" name="jabatan_id" id="edit_jabatan">
                         @foreach($jabatans as $id => $entry)
-                            <option value="{{ $id }}" {{ old('jabatan_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                            <option value="{{ $id }}" {{ (old('jabatan_id') ? old('jabatan_id') : $user->jabatan->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                         @endforeach
                     </select>
                     @if($errors->has('jabatans'))

@@ -181,10 +181,9 @@
                                 return role.id;
                             });
                             $('#edit_roles').val(selectedRoles).trigger('change');
-
+                            $('#edit_jabatan').val(data.jabatans.id).trigger('change');
                             $('#edit_aktif').prop('checked', data.aktif == 1);
                             $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
-                            // $('#edit_jabatan').val(data.jabatan.nama || '');
                             $('#EditUsersModal .modal-title').text("Edit Data " +data.nama);
                             $('#EditUsersModal').modal('show');
                         }, 400);
