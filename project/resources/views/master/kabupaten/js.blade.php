@@ -415,8 +415,11 @@
                                 Swal.showLoading();
                             },
                         });
+                        $(".btn-tool").trigger('click');
                         $('#addKabupaten').modal('hide');
-                        $('#kabupatenForm').trigger('reset');
+                        $("#provinsi_add").val('').trigger('change');
+                        $("#type").val('').trigger('change');
+                        $('#kabupatenForm')[0].reset();
                         $('#kabupaten').DataTable().ajax.reload();
                     } else {
                         var errorMessage = response.message;
