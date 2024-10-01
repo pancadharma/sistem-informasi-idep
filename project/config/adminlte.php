@@ -254,7 +254,7 @@ return [
         ],
         [
             'text' => 'setup',
-            'icon' => 'far fa-image',
+            'icon' => 'fas fa-cog',
             'submenu' => [
                 [
                     'text' => 'kelompok_rentan',
@@ -320,16 +320,16 @@ return [
             ],
         ],
         [
-            'text' => 'transaksi',
-            'icon' => 'fas fa-file-invoice',
-            'submenu' => [
+            'text'              => 'transaksi',
+            // 'header'            => 'transaksi',
+            'icon'              => 'fas fa-tasks',
+            'submenu'           => [
                 [
-                    'text' => 'program',
-                    'icon' => 'nav-icon fas fa-project-diagram',
-                    // 'route' => 'program',
-                    'url' => 'program',
-
-                    'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
+                    'text'      => 'program',
+                    'icon'      => 'nav-icon fas fa-project-diagram',
+                    'route'     => 'program.index',
+                    'can'       => ['program_access'],
+                    'active'    => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kegiatan',
