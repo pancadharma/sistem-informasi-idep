@@ -38,16 +38,18 @@
                 <strong> {{ trans('cruds.satuan.title_singular') .' '. trans('cruds.status.title')  }}  </strong>
                 <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
                 <div class="icheck-primary">
-                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-                    <label for="aktif"></label>
+                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
+                    <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
+            {{-- <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
                 <span class="fas fa-ruler"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.satuan.title_singular') }}
-            </button>
+            </button> --}}
+            <button type="submit" class="btn btn-success float-right btn-add-role" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
+                
         </form>
     </div>
 </div>

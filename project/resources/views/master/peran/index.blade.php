@@ -11,7 +11,7 @@
             <table id="peran-list" class="table table-bordered table-striped cell-border ajaxTable datatable-peran" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">#</th>
+                        <th style="width: 5%;">No. </th>
                         <th>{{ trans('cruds.peran.nama') }}</th>
                         <th style="width: 5%;">{{ trans('cruds.status.title') }}</th>
                         <th style="width: 15%;">{{ trans('global.action') }}</th>

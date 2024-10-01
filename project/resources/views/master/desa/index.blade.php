@@ -19,6 +19,7 @@
             <table id="desa_list" class="table table-bordered table-striped table-hover ajaxTable datatable-dusun">
                 <thead>
                     <tr>
+                        <th class="center align-middle">No. </th>
                         <th class="center">{{ trans('cruds.desa.form.kode') }}</th>
                         <th>{{ trans('cruds.desa.form.nama') }}</th>
                         <th>{{ trans('cruds.desa.form.kec') }}</th>

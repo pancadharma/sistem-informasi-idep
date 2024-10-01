@@ -15,11 +15,11 @@
                 <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
             </div>
             <div class="form-group">
-                <strong>{{ trans('cruds.status.title') }}</strong>
+                <strong>{{ trans('cruds.status.title') .' '. trans('cruds.mjabatan.title') }}</strong>
                 <input type="hidden" name="aktif" value="0">
                 <div class="icheck-primary">
-                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-                    <label for="aktif"></label>
+                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
+                    <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
                 </div>
             </div>
             <button type="submit" class="btn btn-success float-right btn-add-mjabatan"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>

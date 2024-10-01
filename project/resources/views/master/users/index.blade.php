@@ -18,6 +18,7 @@
             <table id="users_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap">
                 <thead>
                     <tr>
+                        <th class="center align-middle">No. </th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.name') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.username') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.email') }}</th>

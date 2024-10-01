@@ -42,7 +42,7 @@ $(document).ready(function(){
         width: '100%',
         allowClear : true
     })
-    $('#role_list').DataTable({
+    var trolist = $('#role_list').DataTable({
         responsive: true,
         ajax: {
             url : "{{ route('roles.api') }}",
@@ -51,46 +51,94 @@ $(document).ready(function(){
         },
         processing: true,serverSide: true,deferRender: true,stateSave: true,
         columns: [
+            {
+                    data: null, // Ganti "id" dengan null untuk menghitung penomoran
+                    width: "1%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
+                    }
+            },
             {data: "nama", orderable: true, searchable: true},
             {data: "status", width: "5%", className: "text-center", orderable: false, searchable: false},
             {data: "action", className: "text-center",orderable: false,width: "20%",}
         ],
         layout: {
-            topStart: {
-                buttons: [
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: [0, 1] // Ensure these indices match your visible columns
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: [0, 1]
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: [0, 1]
-                        }
-                    },
-                    {
-                        extend: 'copy',
-                        exportOptions: {
-                            columns: [0, 1]
-                        }
-                    },
-                    'colvis',
-                ],
+                topStart: {
+                    buttons: [
+                        {
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                            exportOptions: {
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },{
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },{
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                    ],
+                },
+                bottomStart: {
+                    pageLength: 5,
+                }
             },
-            bottomStart: {
-                pageLength: 5,
-            }
-        },
         order: [
-            [0, 'asc'] // Ensure this matches the index of the `dusun` column
+            [1, 'asc'] // Ensure this matches the index of the `dusun` column
         ],
         lengthMenu: [5, 10 ,25, 50, 100, 200],
     });

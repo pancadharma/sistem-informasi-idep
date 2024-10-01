@@ -25,6 +25,15 @@
                 }
             },
             columns: [
+                {
+                    data: null, // Ganti "id" dengan null untuk menghitung penomoran
+                    width: "1%",
+                    className: "text-center",
+                    orderable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
+                    }
+                },
                 {data: "nama", width: "15%", className: "text-left"},
                 {data: "username",width: "15%",className: "text-left"},
                 {data: "email",width: "15%",className: "text-left"},
@@ -35,11 +44,70 @@
             layout: {
                 topStart: {
                     buttons: [
-                        {extend: 'print',exportOptions: {columns: [0, 1, 2, 3]}},// Ensure these indices match your visible columns
-                        {extend: 'excel',exportOptions: {columns: [0, 1, 2, 3]}},
-                        {extend: 'pdf',exportOptions: {columns: [0, 1, 2, 3]}},
-                        {extend: 'copy',exportOptions: {columns: [0, 1, 2, 3]}},
-                        'colvis',
+                        {
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                            exportOptions: {
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3, 4, 5]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3, 4, 5]
+                            }
+                        },{
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3, 4, 5]
+                            }
+                        },{
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 5) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2, 3, 4, 5]
+                            }
+                        },
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {
@@ -47,7 +115,7 @@
                 }
             },
             order: [
-                [2, 'asc'] // Ensure this matches the index of the `users` column
+                [1, 'asc'] // Ensure this matches the index of the `users` column
             ],
             lengthMenu: [5, 10 ,25, 50, 100, 200],
         });

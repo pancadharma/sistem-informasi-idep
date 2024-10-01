@@ -17,14 +17,74 @@
                 {data: "status", className: "text-center", orderable: false, searchable: false, width: "5%", },
                 {data: "action", className: "text-center", orderable: false, searchable: false, width: "20%",}
             ],
+            
             layout: {
                 topStart: {
                     buttons: [
-                        {extend: 'print', exportOptions: {columns: [0, 1]}},
-                        {extend: 'excel', exportOptions: {columns: [0, 1]}},
-                        {extend: 'pdf', exportOptions: {columns: [0, 1]}},
-                        {extend: 'copy', exportOptions: {columns: [0, 1]}},
-                        'colvis',
+                        {
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                            exportOptions: {
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },{
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },{
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
+                        },
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {pageLength: 10}
@@ -32,7 +92,7 @@
             order: [
                 [1, 'asc']
             ],
-            lengthMenu: [5, 10 ,25, 50, 100],
+            lengthMenu: [10, 25, 50, 100],
         });
 
         //EDIT & VIEW TARGET REINSTRA FORM (MODAL)
