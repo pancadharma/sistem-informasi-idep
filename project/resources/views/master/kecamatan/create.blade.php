@@ -43,7 +43,7 @@
                 <span id="nama_error" class="invalid-feedback">{{ __('cruds.kecamatan.nama_validation') }}</span>
             </div>
             <div class="form-group">
-            <strong>{{ __('cruds.kecamatan.title') }}</strong>
+            <strong>{{ __('cruds.status.title') }}</strong>
                 <div class="icheck-primary">
                     <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
                     <label for="aktif">{{ __('cruds.status.aktif') }}</label>
