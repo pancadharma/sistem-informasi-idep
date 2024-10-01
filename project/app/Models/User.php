@@ -36,7 +36,7 @@ class User extends Authenticatable
         'nama',
         'email',
         'username',
-        'id_jabatan',
+        'jabatan_id',
         'email_verified_at',
         'password',
         'remember_token',
@@ -101,7 +101,7 @@ class User extends Authenticatable
     }
     public function jabatans()
     {
-        return $this->belongsTo(related: Mjabatan::class);
+        return $this->belongsTo(Mjabatan::class, 'jabatan_id');
     }
 
     public function getImageAttribute()

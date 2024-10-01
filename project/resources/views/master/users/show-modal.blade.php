@@ -15,8 +15,8 @@
             </tr>
             <tr>
             <tr>
-                <th>{{ __('cruds.user.fields.jabatan') }}</th>
-                <td id="view_jabatan"></td>
+                <th>{{ __('cruds.mjabatan.title') }}</th>
+                <td id="jabatan_views"><span id="view_jabatan" class="btn-xs bg-info"></span></td>
             </tr>
             <tr>
                 <th>{{ __('cruds.user.fields.role') }}</th>

@@ -3,6 +3,7 @@
         $('.select2').select2({
             placeholder: "{{ trans('global.pleaseSelect')}}",
             allowClear: true,
+            width: "100%",
         });
         $(document).on('click', '#show-aktif, [id^="aktif_"]', function(e) {
             e.preventDefault(); //not allow user to click the checkbox for aktif checbox
@@ -28,7 +29,8 @@
                 {data: 'DT_RowIndex', className: "text-center align-middle", orderable: false, searchable: false, width: "5%"},
                 {data: "nama", className: "text-left align-middle", width: "15%"},
                 {data: "username",width: "10%",className: "text-left align-middle"},
-                {data: "email",width: "15%",className: "text-left align-middle"},
+                {data: "email",width: "10%",className: "text-left align-middle"},
+                {data: "jabatans", name: "jabatans.nama", width: "15%",className: "text-left align-middle"},
                 {data: "roles", name: "roles.nama", width: "10%", className: "text-left align-middle", searchable: true, orderable: false,}, //added name:"roles.name" to get eager relation of users to roles
                 {data: "status",width: "10%", className: "text-center", orderable: false, searchable: false,}, //change column aktif into status by adding ->addColumn in Controller that send DataTables
                 {data: "action", width: "10%", orderable: false, searchable: false}
@@ -129,7 +131,7 @@
                         $('#view_nama').text(data.nama);
                         $('#view_username').text(data.username);
                         $('#view_email').text(data.email);
-                        // $('#view_jabatan').text(data.jabatan.nama); //use to display jabatan if jabatan modul finish
+                        $('#view_jabatan').text(data.jabatans.nama); //use to display jabatan if jabatan modul finish
                         $('#view_roles').empty();
                         data.roles.forEach(role => {
                             $('#view_roles').append(`<span class="btn-xs bg-warning">${role.nama}</span> `);
@@ -183,7 +185,7 @@
                             $('#edit_aktif').prop('checked', data.aktif == 1);
                             $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
                             // $('#edit_jabatan').val(data.jabatan.nama || '');
-                            $('#EditUsersModal .modal-title').text("Edit Data" +data.nama);
+                            $('#EditUsersModal .modal-title').text("Edit Data " +data.nama);
                             $('#EditUsersModal').modal('show');
                         }, 400);
                     },

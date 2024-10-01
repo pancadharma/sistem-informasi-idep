@@ -16,6 +16,7 @@
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.name') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.username') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.email') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.mjabatan.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.roles') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>

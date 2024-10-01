@@ -75,40 +75,36 @@
         {{-- Jabatan Input --}}
 
         <div class="form-group">
-            <label for="jabatan">{{ __('cruds.user.fields.jabatan') }}</label>
+            <label for="jabatan">
+                {{ __('cruds.mjabatan.title') }}
+                <i class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></i>
+            </label>
             <div class="input-group">
-                <input type="hidden" id="jabatan_id" name="jabatan_id">
-                <input type="text" name="jabatan"
-                    class="form-control @error('jabatan') is-invalid @enderror"
-                    placeholder="{{ __('adminlte.retype_password') }}" required maxlength="100" id="edit_jabatan" autocomplete="off">
-                <select name="jabatan" id="jabatan">
-                    @foreach($jabatans as $jabatan)
-                        <option value="{{ $jabatan->id }}">{{ $jabatan->nama }}</option>
-                    @endforeach
-                </select>
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                    </div>
-                </div>
+                <input type="hidden" id="edit_jabatan" name="jabatan_id">
+                    <select class="form-control select2 {{ $errors->has('jabatans') ? 'is-invalid' : '' }}" name="jabatan_id" id="edit_jabatan">
+                        @foreach($jabatans as $id => $entry)
+                            <option value="{{ $id }}" {{ old('jabatan_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('jabatans'))
+                        <span class="text-danger">{{ $errors->first('jabatans') }}</span>
+                    @endif
             </div>
         </div>
 
 
         {{-- User Role --}}
         <div class="form-group">
-            <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>
+            <label class="required" for="roles">
+                {{ trans('cruds.user.fields.roles') }}
+                <i class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></i>
+            </label>
             <div class="input-group select2-purple">
                 <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}" name="roles[]" id="edit_roles" multiple required>
                     @foreach($roles as $id => $role)
                         <option value="{{ $id }}" {{ in_array($id, old('roles', [])) ? 'selected' : '' }}>{{ $role }}</option>
                     @endforeach
                 </select>
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                    </div>
-                </div>
             </div>
         </div>
         {{-- Status user --}}
