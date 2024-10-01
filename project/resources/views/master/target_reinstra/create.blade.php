@@ -47,10 +47,7 @@
                 <span class="fas fa-window-restore"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.reinstra.title_singular') }}
-            </button> --}}
-            <button type="submit" class="btn btn-success float-right btn-add-role">
-                <i class="fas fa-save"></i> {{ trans('global.submit') }}
-            </button>
+            </button> 
         </form>
     </div>
 </div>

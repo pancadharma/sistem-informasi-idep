@@ -47,9 +47,7 @@
                 <span class="fas fa-ruler"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.satuan.title_singular') }}
-            </button> --}}
-            <button type="submit" class="btn btn-success float-right btn-add-role" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
-                
+            </button>    
         </form>
     </div>
 </div>
