@@ -358,7 +358,7 @@ return [
         'title_singular'    => 'Program',
         'info_dasar'        => 'Basic Information',
         'expektasi'         => 'Beneficiary Expectations',
-        'marjinal'          => 'Marginalized Group',
+
         'reinstra'          => 'Target Reinstra',
         'list_reinstra'     => 'List Target Reinstra',
         'sdg'               => 'SDG Linkages',
@@ -370,8 +370,8 @@ return [
         'pilih_file'        => 'Select Files',
         'form'              => [
             'id'            => 'ID',
-            'nama'          => 'Program Name',
-            'kode'          => 'Program Code',
+            'nama'          => 'Name',
+            'kode'          => 'Code',
             'tgl_mulai'     => 'Start Date',
             'tgl_selesai'   => 'Finish Date',
             'total_nilai'   => 'Total Program Value (IDR)',
@@ -379,7 +379,7 @@ return [
             'wanita'        => 'Women',
             'laki'          => 'Boys',
             'perempuan'     => 'Daughters',
-            'total'         => 'Total',
+            'total'         => 'Total Beneficiary Expectations',
             'created_at'    => 'Created at',
             'updated_at'    => 'Updated at',
             'deleted_at'    => 'Deleted at',
@@ -434,6 +434,12 @@ return [
             'indicator'     => 'Indicator',
             'target'        => 'Target',
         ],
+        'marjinal'            => [
+            'label'         => 'Marginalized Group',
+            'list'          => 'List of Marginalized Group',
+            'select'        => 'Select Marginalized Group',
+        ],
+
     ],
 
 ];
