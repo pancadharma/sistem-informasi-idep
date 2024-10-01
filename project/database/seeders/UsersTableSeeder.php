@@ -27,8 +27,15 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        User::insert($users);
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // User::insert($users);
+
+        foreach ($users as $user) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            User::updateOrInsert(
+                ['id' => $user['id']], // Condition to check if the row exists
+                $user // Data to update or insert
+            );
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
     }
 }
