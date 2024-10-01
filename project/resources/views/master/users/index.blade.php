@@ -6,22 +6,17 @@
 
 @section('content_body')
     @include('master.users.create')
-    <div class="container-fluid content-header">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-            </div>
-        </div>
-    </div>
 
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
             <table id="users_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap">
                 <thead>
                     <tr>
-                        <th class="center align-middle">No. </th>
+                        <th class="text-center align-middle">#</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.name') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.username') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.email') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.mjabatan.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.user.fields.roles') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.status.action') }}</th>

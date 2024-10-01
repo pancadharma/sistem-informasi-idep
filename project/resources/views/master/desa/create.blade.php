@@ -40,7 +40,7 @@
                         <option>{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}</option>
                     </select>
                     <span id="kecamatan_id_error" class="invalid-feedback">{{ trans('cruds.desa.validation.kec') }}</span>
-                    
+
                 </div>
             </div>
             {{-- Input Kode Desa --}}
@@ -53,11 +53,11 @@
             {{-- Input Nama Kecamatan --}}
             <div class="form-group">
                 <label for="nama">{{ trans('cruds.desa.form.nama') }}</label>
-                <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">     
+                <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                 <span id="nama_error" class="invalid-feedback">{{ trans('cruds.desa.validation.nama') }}</span>
             </div>
             <div class="form-group">
-            <strong>{{ trans('cruds.status.title') .' '. trans('cruds.desa.title') }}</strong>
+            <strong>{{ trans('cruds.status.title') }}</strong>
                 <div class="icheck-primary">
                     <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
                     <label for="aktif">{{ trans('cruds.status.aktif') }}</label>

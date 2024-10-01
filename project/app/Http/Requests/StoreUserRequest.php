@@ -25,6 +25,7 @@ class StoreUserRequest extends FormRequest
             'nama'      => ['string','required','max:100'],
             'username'  => ['required','unique:users','max:50'],
             'email'     => ['required','unique:users','max:100'],
+            'jabatan_id'=> ['required',],
             'password'  => ['required','max:100'],
             'roles.*'   => ['integer',],
             'roles'     => ['required','array',],

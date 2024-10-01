@@ -9,9 +9,9 @@
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive-sm">
             <table id="partner_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
-                <thead class="">
+                <thead class="align-middle">
                     <tr>
-                        <th class="text-center align-middle">No.</th>
+                        <th class="text-center align-middle">#</th>
                         <th class="text-center align-middle">{{ trans('cruds.partner.fields.nama') }}</th>
                         {{-- <th class="text-center align-middle">{{ trans('cruds.partner.fields.ket') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>

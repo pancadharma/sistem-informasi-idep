@@ -3,6 +3,7 @@
         $('.select2').select2({
             placeholder: "{{ trans('global.pleaseSelect')}}",
             allowClear: true,
+            width: "100%",
         });
         $(document).on('click', '#show-aktif, [id^="aktif_"]', function(e) {
             e.preventDefault(); //not allow user to click the checkbox for aktif checbox
@@ -25,20 +26,13 @@
                 }
             },
             columns: [
-                {
-                    data: null, // Ganti "id" dengan null untuk menghitung penomoran
-                    width: "1%",
-                    className: "text-center",
-                    orderable: false,
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
-                    }
-                },
-                {data: "nama", width: "15%", className: "text-left"},
-                {data: "username",width: "15%",className: "text-left"},
-                {data: "email",width: "15%",className: "text-left"},
-                {data: "roles", name: "roles.nama", width: "15%", className: "text-left", searchable: true, orderable: false,}, //added name:"roles.name" to get eager relation of users to roles
-                {data: "status",width: "5%", className: "text-center", orderable: false, searchable: false,}, //change column aktif into status by adding ->addColumn in Controller that send DataTables
+                {data: 'DT_RowIndex', className: "text-center align-middle", orderable: false, searchable: false, width: "5%"},
+                {data: "nama", className: "text-left align-middle", width: "15%"},
+                {data: "username",width: "10%",className: "text-left align-middle"},
+                {data: "email",width: "10%",className: "text-left align-middle"},
+                {data: "jabatans", name: "jabatans.nama", width: "15%",className: "text-left align-middle"},
+                {data: "roles", name: "roles.nama", width: "10%", className: "text-left align-middle", searchable: true, orderable: false,}, //added name:"roles.name" to get eager relation of users to roles
+                {data: "status",width: "10%", className: "text-center", orderable: false, searchable: false,}, //change column aktif into status by adding ->addColumn in Controller that send DataTables
                 {data: "action", width: "10%", orderable: false, searchable: false}
             ],
             layout: {
@@ -47,72 +41,66 @@
                         {
                             extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                stripHTML: false,
+                                columns: [0,1,2,3,4,5], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
-                                        if (column === 5) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        if (column === 5) { //select column 2 for column aktif/status to exported still has html re4der
+                                            return $(data).find('input').is(':checked') ? `\u2611` : '\u2610';
+                                            // return data;
                                         }
                                         return data;
-
                                     }
                                 },
-                                columns: [0, 1, 2, 3, 4, 5]
                             }
                         },
                         {
                             extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
+                                columns: [0,1,2,3,4,5], stripHTML: true,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 5) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2, 3, 4, 5]
+                                }
                             }
-                        },{
+                        },
+                        {
                             extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            orientation: 'portrait',
+                            pageSize: 'A4',
                             exportOptions: {
+                                columns: [0,1,2,3,4,5], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 5) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2, 3, 4, 5]
+                                }
                             }
-                        },{
+                        },
+                        {
                             extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
+                                columns: [0,1,2,3,4,5], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 5) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ? '✅' : '❌';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2, 3, 4, 5]
+                                }
                             }
                         },
                         {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
-                bottomStart: {
-                    pageLength: 5,
-                }
+                bottomStart: {pageLength: 10}
             },
             order: [
                 [1, 'asc'] // Ensure this matches the index of the `users` column
@@ -143,7 +131,7 @@
                         $('#view_nama').text(data.nama);
                         $('#view_username').text(data.username);
                         $('#view_email').text(data.email);
-                        // $('#view_jabatan').text(data.jabatan.nama); //use to display jabatan if jabatan modul finish
+                        $('#view_jabatan').text(data.jabatans.nama); //use to display jabatan if jabatan modul finish
                         $('#view_roles').empty();
                         data.roles.forEach(role => {
                             $('#view_roles').append(`<span class="btn-xs bg-warning">${role.nama}</span> `);
@@ -193,11 +181,10 @@
                                 return role.id;
                             });
                             $('#edit_roles').val(selectedRoles).trigger('change');
-
+                            $('#edit_jabatan').val(data.jabatans.id).trigger('change');
                             $('#edit_aktif').prop('checked', data.aktif == 1);
                             $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
-                            // $('#edit_jabatan').val(data.jabatan.nama || '');
-                            $('#EditUsersModal .modal-title').text("Edit Data" +data.nama);
+                            $('#EditUsersModal .modal-title').text("Edit Data " +data.nama);
                             $('#EditUsersModal').modal('show');
                         }, 400);
                     },
@@ -422,6 +409,7 @@
                         }
                     },
                     password: { required: true, maxlength: 100 },
+                    jabatan: { required: true },
                     'roles[]': {
                         required: true,
                         },
@@ -431,6 +419,9 @@
                     nama: {
                         required: "Nama is required",
                         maxlength: "Nama cannot be more than 100 characters"
+                    },
+                    jabatan: {
+                        required: "Jabatan is required",
                     },
                     username: {
                         required: "Username is required",
@@ -536,6 +527,9 @@
                     nama: {
                         required: "Nama is required",
                         maxlength: "Nama cannot be more than 100 characters"
+                    },
+                    jabatan: {
+                        required: "Jabatan is required",
                     },
                     username: {
                         required: "Username is required",

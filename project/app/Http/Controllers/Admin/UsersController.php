@@ -18,6 +18,7 @@ use App\Http\Requests\MassDestroyUserRequest;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
+use App\Models\Mjabatan;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -30,7 +31,9 @@ class UsersController extends Controller
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $roles = Role::pluck('nama', 'id');
-        return view('master.users.index', compact('roles'));
+        // $jabatans = Mjabatan::pluck('nama', 'id');
+        $jabatans = Mjabatan::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
+        return view('master.users.index', compact('jabatans', 'roles'));
     }
 
     public function create()
@@ -69,7 +72,8 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $user->load('roles');
+        $jabatans = Mjabatan::pluck('nama', 'id');
+        $user->load('roles','jabatans');
         return response()->json($user);
     }
 
@@ -158,6 +162,7 @@ class UsersController extends Controller
                 'nama'      => $data['nama'],
                 'username'  => $data['username'],
                 'email'     => $data['email'],
+                'jabatan_id'=> $data['jabatan_id'],
                 'aktif'     => $data['aktif'],
             ]);
 
@@ -217,13 +222,13 @@ class UsersController extends Controller
     public function show(User $user)
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $user->load('roles');
+        $user->load('roles', 'jabatans');
         return view('master.users.show', compact('user'));
     }
 
     public function showModal($id)
     {
-        $user = User::with('roles')->findOrFail($id);
+        $user = User::with('roles', 'jabatans')->findOrFail($id);
         return response()->json($user);
     }
 
@@ -261,12 +266,20 @@ class UsersController extends Controller
 
     public function api(Request $request) {
         if ($request->ajax()) {
-            $query = User::with('roles')->select('users.*');
+            $query = User::with('roles', "jabatans")->select('users.*');
             $data = DataTables::of($query)
+                ->addIndexColumn()
                 ->addColumn('roles', function ($user) {
                     return $user->roles->map(function ($role) {
                         return "<span class=\"btn btn-warning btn-xs\">{$role->nama}</span>";
                     })->implode(' ');
+                })
+                ->addColumn('jabatans', function ($user) {
+                    $jabatan = $user->jabatans;
+                    if ($jabatan) {
+                        return "<span class=\"btn btn-info btn-xs\">{$jabatan->nama}</span>";
+                    }
+                    return '';
                 })
                 ->addColumn('status', function($user){
                     return match ($user->aktif) {
@@ -288,7 +301,7 @@ class UsersController extends Controller
                             data-user-id="'. $user->id .'" value="'. $user->id .'" title="'.__('global.view') .' '. __('cruds.user.title') .' '. $user->nama .'">
                             <i class="fas fa-folder-open"></i> View</button>';
                 })
-                ->rawColumns(['roles', 'action', 'status'])
+                ->rawColumns(['roles', 'action', 'status', 'jabatans'])
                 ->make(true);
 
             return $data;

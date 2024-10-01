@@ -74,6 +74,24 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="required" for="jabatan">
+                    {{ __('cruds.mjabatan.title') }}
+                    <i class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></i>
+                </label>
+                <div class="input-group select2-purple">
+                    <select class="form-control select2 {{ $errors->has('jabatans') ? 'is-invalid' : '' }}" name="jabatan_id" id="jabatan">
+                        @foreach($jabatans as $id => $entry)
+                            <option value="{{ $id }}" {{ old('jabatan_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                        @endforeach
+                    </select>
+                    @error('jabatans')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+            </div>
             {{-- Password field --}}
             <div class="form-group">
                 <label for="password">{{ __('cruds.user.fields.password') }}</label>
@@ -117,21 +135,16 @@
             {{-- User Role --}}
 
             <div class="form-group">
-                <label class="required" for="roles">{{ trans('cruds.user.fields.roles') }}</label>
+                <label class="required" for="roles">
+                    {{ trans('cruds.user.fields.roles') }}
+                    <i class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></i>
+                </label>
                 <div class="input-group select2-purple">
                     <select class="form-control select2 {{ $errors->has('roles') ? 'is-invalid' : '' }}" name="roles[]" id="roles" multiple required>
                         @foreach($roles as $id => $role)
                         <option value="{{ $id }}" {{ in_array($id, old('roles', [])) ? 'selected' : '' }}>{{ $role }}</option>
                         @endforeach
                     </select>
-                    {{-- <div class="input-group-append"> --}}
-                        <div class="input-group-text">
-                            <span class="fas fa-user-tie {{ config('adminlte.classes_auth_icon', '') }}"></span>
-                        </div>
-                    {{-- </div> --}}
-                    {{-- @if($errors->has('roles'))
-                     <span class="text-danger">{{ $errors->first('roles') }}</span>
-                    @endif --}}
                     @error('roles')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

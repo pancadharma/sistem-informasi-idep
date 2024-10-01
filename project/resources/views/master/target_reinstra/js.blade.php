@@ -12,10 +12,10 @@
                 dataType: 'JSON',
             },
             columns: [
-                {data: 'DT_RowIndex', name: 'No.', orderable: false, searchable: false, className: "text-center", width: "5%"},
-                {data: "nama", orderable: true, searchable: true},
-                {data: "status", className: "text-center", orderable: false, searchable: false, width: "5%", },
-                {data: "action", className: "text-center", orderable: false, searchable: false, width: "20%",}
+                {data: 'DT_RowIndex', className: "text-center align-middle", orderable: false, searchable: false, width: "5%"},
+                {data: "nama", className: "text-left align-middle", orderable: true, searchable: true, width: "40%"},
+                {data: "status", className: "text-center align-middle", orderable: false, searchable: false, width: "10%", },
+                {data: "action", className: "text-center align-middle", orderable: false, searchable: false, width: "10%",}
             ],
             
             layout: {
@@ -24,64 +24,60 @@
                         {
                             extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                stripHTML: false,
+                                columns: [0, 1, 2], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
-                                        if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        if (column === 2) { //select column 2 for column aktif/status to exported still has html render
+                                            return $(data).find('input').is(':checked') ? `\u2611` : '\u2610';
+                                            // return data;
                                         }
                                         return data;
-
                                     }
                                 },
-                                columns: [0, 1, 2]
                             }
                         },
                         {
                             extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
+                                columns: [0, 1, 2], stripHTML: true,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2]
+                                }
                             }
-                        },{
+                        },
+                        {
                             extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            orientation: 'portrait',
+                            pageSize: 'A4',
                             exportOptions: {
+                                columns: [0, 1,2], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2]
+                                }
                             }
-                        },{
+                        },
+                        {
                             extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
+                                columns: [0, 1,2], stripHTML: false,
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 2) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ? '✅' : '❌';
                                         }
                                         return data;
-
                                     }
-                                },
-                                columns: [0, 1, 2]
+                                }
                             }
                         },
                         {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},

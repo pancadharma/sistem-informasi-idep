@@ -11,7 +11,7 @@
             <table id="role_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
                 <thead>
                     <tr>
-                        <th class="center align-middle">No. </th>
+                        <th class="text-center align-middle">#</th>
                         <th class="text-center align-middle">{{ trans('cruds.role.fields.nama') }}</th>
                         {{-- <th class="text-center align-middle">{{ trans('cruds.role.fields.permissions') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>
