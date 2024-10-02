@@ -9,9 +9,9 @@
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
             <table id="rencana_strategi_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
-                <thead class="bg-dark">
+                <thead class="align-middle">
                     <tr>
-                        <th class="text-center align-middle"><strong>No.</strong></th>
+                        <th class="text-center align-middle"><strong>#</strong></th>
                         <th class="align-middle">{{ trans('cruds.reinstra.fields.nama_reinstra') }}</th>
                         {{-- <th class="text-center align-middle">{{ trans('cruds.reinstra.fields.permissions') }}</th> --}}
                         <th class="text-center align-middle">{{ trans('cruds.status.title') }}</th>

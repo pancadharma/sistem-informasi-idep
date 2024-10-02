@@ -310,7 +310,7 @@ return [
             'deleted_at'    => 'Deleted at',
         ]
     ],
-    'satuan'               => [
+    'satuan'                => [
         'title'             => 'Satuan',
         'list'              => 'Daftar Satuan',
         'title_singular'    => 'Satuan',
@@ -323,6 +323,91 @@ return [
             'deleted_at'    => 'Dihapus pada',
         ]
     ],
+    'program'               => [
+        'title'             => 'Informasi Program',
+        'list'              => 'Daftar Program',
+        'title_singular'    => 'Program',
+        'info_dasar'        => 'Informasi Dasar',
+        'expektasi'         => 'Ekspektasi Penerima Manfaat',
+        'marjinal'          => 'Kelompok Marjinal',
+        'reinstra'          => 'Target Reinstra',
+        'list_reinstra'     => 'Daftar Target Reinstra',
+        'sdg'               => 'Keterkaitan SDG',
+        'list_sdg'          => 'Daftar SDG',
+        'deskripsi'         => 'Deskripsi Program',
+        'analisis'          => 'Analisis Masalah Program',
+        'files'             => 'Berkas Pendukung',
+        'upload'            => 'Unggah Berkas',
+        'pilih_file'        => 'Pilih Berkas',
+        'form'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama Program',
+            'kode'          => 'Kode Program',
+            'tgl_mulai'     => 'Tanggal Mulai',
+            'tgl_selesai'   => 'Tanggal Selesai',
+            'total_nilai'   => 'Total Nilai Program (IDR)',
+            'pria'          => 'Pria',
+            'wanita'        => 'Wanita',
+            'laki'          => 'Anak Laki-laki',
+            'perempuan'     => 'Anak Perempuan',
+            'total'         => 'Total',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbarui pada',
+            'deleted_at'    => 'Dihapus pada',
+        ],
+        'lokasi'            => [
+            'lokasi'        => 'Lokasi',
+            'pro'           => 'Provinsi',
+            'sel_pro'       => 'Pilih Provinsi',
+            'kab'           => 'Kabupaten',
+            'sel_kab'       => 'Pilih Kabupaten',
+            'kec'           => 'Kecamatan',
+            'sel_kec'       => 'Pilih Kecamatan',
+            'des'           => 'Desa',
+            'sel_des'       => 'Pilih Desa',
+            'dus'           => 'Dusun',
+            'select_dus'    => 'Pilih Dusun',
+        ],
+        'donor'             => [
+            'nama'          => 'Nama Donor',
+            'email'         => 'Email',
+            'ph'            => 'Nomor Telepon',
+            'val'           => 'Nilai Donasi',
+        ],
+        'staff'             => [
+            'label'         => 'Staf',
+            'select'        => 'Pilih Staf',
+            'peran'         => 'Peran',
+            'sel_peran'     => 'Pilih Peran',
+        ],
+        'outcome'           => [
+            'label'         => 'Hasil',
+            'desc'          => 'Deskripsi',
+            'indicator'     => 'Indikator',
+            'target'        => 'Target',
+        ],
+        'partner'           => [
+            'label'         => 'Mitra',
+            'select'        => 'Pilih Mitra',
+        ],
+        'report'            => [
+            'label'         => 'Jadwal Laporan',
+            'to'            => 'Laporan ke',
+            'mulai'         => 'Tanggal Mulai',
+            'selesai'       => 'Tanggal Selesai',
+        ],
+        'objective'         => [
+            'label'         => 'Tujuan',
+        ],
+        'goals'             => [
+            'label'         => 'Sasaran',
+            'desc'          => 'Deskripsi',
+            'indicator'     => 'Indikator',
+            'target'        => 'Target',
+        ],
+
+    ],
+
     
     'peran' => [
         'list' => 'Daftar',

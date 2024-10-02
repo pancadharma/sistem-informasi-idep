@@ -35,15 +35,15 @@
             </div>
             {{-- Target Reinstra Name --}}
             <div class="form-group">
-                <strong> {{ trans('cruds.reinstra.title_singular') .' '. trans('cruds.status.title')  }}  </strong>
+                <strong> {{ trans('cruds.status.title')  }}  </strong>
                 <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
                 <div class="icheck-primary">
                     <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-                    <label for="aktif"></label>
+                    <label for="aktif">{{ trans('cruds.status.aktif')  }}</label>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
+            <button type="submit" class="btn float-right {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
                 <span class="fas fa-window-restore"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.reinstra.title_singular') }}

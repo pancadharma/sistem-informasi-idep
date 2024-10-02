@@ -19,6 +19,7 @@
             <table id="dusun_list" class="table table-bordered table-striped table-hover ajaxTable datatable-dusun">
                 <thead>
                     <tr>
+                        <th class="text-center align-middle">#</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.kode') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.nama') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.des') }}</th>

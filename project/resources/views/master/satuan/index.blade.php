@@ -9,7 +9,7 @@
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
             <table id="satuan_list" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" width="100%">
-                <thead class="bg-dark">
+                <thead class="align-middle">
                     <tr>
                         <th class="text-center align-middle"><strong>No.</strong></th>
                         <th class="align-middle">{{ trans('cruds.satuan.fields.nama_satuan') }}</th>
