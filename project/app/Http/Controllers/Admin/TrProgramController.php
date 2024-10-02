@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\KaitanSdg;
-use App\Models\Kelompok_Marjinal;
-use App\Models\Program_Target_Reinstra;
 use App\Models\Program;
-use App\Models\TargetReinstra;
+use App\Models\KaitanSdg;
 use Illuminate\Http\Request;
+use App\Models\TargetReinstra;
 use PhpParser\Builder\Function_;
+use App\Models\Kelompok_Marjinal;
+use App\Http\Controllers\Controller;
+use App\Models\Program_Target_Reinstra;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class TrProgramController extends Controller
 {
+    use MediaUploadingTrait;
     public function index(){
 
         return view('tr.program.index');
@@ -56,5 +59,9 @@ class TrProgramController extends Controller
         $page = $request->input('page', 1);
         $sdg = KaitanSdg::where('nama', 'like', "%{$search}%")->get();
         return response()->json($sdg);
+    }
+
+    public function filePendukung(Request $request){
+
     }
 }

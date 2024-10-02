@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    {{-- <form action="">
+    {{-- <form action="" multipart/form-data >
     </form> --}}
 
     {{-- Informasi Dasar --}}
@@ -258,11 +258,11 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive pt-0">
+                <div class="card-body table-responsive">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="10" class="form-control"
+                                <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
                                     placeholder="{{ __('cruds.program.deskripsi') }}" required maxlength="500"></textarea>
                             </div>
                         </div>
@@ -283,12 +283,46 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive pt-0">
+                <div class="card-body table-responsive">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <textarea id="analisis" name="analisis" cols="30" rows="10" class="form-control"
+                                <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
                                     placeholder="{{ __('cruds.program.analisis') }}" required maxlength="500"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- File Uploads --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <strong>
+                        {{ __('cruds.program.files') }}
+                    </strong>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body table-responsive pt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="status" class="small control-label">
+                                    <strong>
+                                        {{ __('cruds.program.upload') }}
+                                    </strong>
+                                </label>
+                                {{-- <form action="{{ route('program.storeMedia') }}" class="dropzone" enctype="multipart/form-data"> --}}
+                                    <div class="needsclick dropzone {{ $errors->has('file_pendukung') ? 'is-invalid' : '' }}" id="file_pendukung-dropzone">
+                                    </div>
+                                {{-- </form> --}}
                             </div>
                         </div>
                     </div>
@@ -354,15 +388,18 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
 @endpush
 
 @push('js')
-    @section('plugins.Sweetalert2', true)
-    {{-- @section('plugins.DatatablesNew', true) --}}
+@section('plugins.Sweetalert2', true)
+{{-- @section('plugins.DatatablesNew', true) --}}
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
 @include('tr.program.js')
+
 
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
