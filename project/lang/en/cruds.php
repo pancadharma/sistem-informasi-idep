@@ -361,6 +361,7 @@ return [
 
         'reinstra'          => 'Target Reinstra',
         'list_reinstra'     => 'List Target Reinstra',
+        'select_reinstra'   => 'Select Target Reinstra',
         'sdg'               => 'SDG Linkages',
         'list_sdg'          => 'SDG List',
         'deskripsi'         => 'Program Description',

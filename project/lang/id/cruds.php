@@ -332,6 +332,7 @@ return [
 
         'reinstra'          => 'Target Reinstra',
         'list_reinstra'     => 'Daftar Target Reinstra',
+        'select_reinstra'   => 'Pilih Target Reinstra',
         'sdg'               => 'Kaitan SDG',
         'list_sdg'          => 'Daftar SDG',
         'deskripsi'         => 'Deskripsi Program',
