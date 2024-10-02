@@ -103,7 +103,7 @@
                 bottomStart: {pageLength: 10}
             },
             order: [
-                [2, 'asc'] // Ensure this matches the index of the `users` column
+                [1, 'asc'] // Ensure this matches the index of the `users` column
             ],
             lengthMenu: [5, 10 ,25, 50, 100, 200],
         });

@@ -31,7 +31,7 @@ return [
     'roles'             => 'Jabatan',
     'user'              => 'Pengguna',
     'users'             => 'Pengguna',
-    'kelompok_rentan'   => 'Kelompok Rentan',
+    'kelompok_rentan'   => 'Kelompok Marjinal',
     'pendonor'          => 'Pendonor',
     'kategoripendonor'  => 'Kategori Pendonor',
     'partner'           => 'Partner',

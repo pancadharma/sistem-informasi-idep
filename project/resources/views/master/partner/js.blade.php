@@ -83,8 +83,7 @@ $(document).ready(function(){
                     {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                 ],
             },
-            bottomStart: {pageLength: 10}
-        },
+        },    
         order: [
             [1, 'asc']
         ],

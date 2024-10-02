@@ -58,77 +58,79 @@ $(document).ready(function(){
             {data: "status", width: "10%", className: "text-center align-middle", orderable: false, searchable: false},
             {data: "action", width: "10%", className: "text-center align-middle", orderable: false,width: "20%",}
         ],
+        
         layout: {
-            topStart: {
-                buttons: [
-                    {
-                        extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
-                        exportOptions: {
-                        format: {
-                            body: function (data, row, column, node) {
-                                if (column === 2) {
-                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-                                }
-                                return data;
+                topStart: {
+                    buttons: [
+                        {
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                            exportOptions: {
+                                columns: [0, 1, 2], stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) { //select column 2 for column aktif/status to exported still has html render
+                                            return $(data).find('input').is(':checked') ? `\u2611` : '\u2610';
+                                            // return data;
+                                        }
+                                        return data;
+                                    }
+                                },
                             }
                         },
-                            columns: [0,1,2] // Ensure these indices match your visible columns
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
-                        exportOptions: {
-                        format: {
-                            body: function (data, row, column, node) {
-                                if (column === 2) {
-                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                        {
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            exportOptions: {
+                                columns: [0, 1, 2], stripHTML: true,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+                                    }
                                 }
-                                return data;
                             }
                         },
-                            columns: [0,1,2]
-                        }
-                    },
-                    {
-                        extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
-                        exportOptions: {
-                        format: {
-                            body: function (data, row, column, node) {
-                                if (column === 2) {
-                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                        {
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            orientation: 'portrait',
+                            pageSize: 'A4',
+                            exportOptions: {
+                                columns: [0, 1,2], stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+                                    }
                                 }
-                                return data;
                             }
                         },
-                            columns: [0,1,2]
-                        }
-                    },
-                    {
-                        extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
-                        exportOptions: {
-                        format: {
-                            body: function (data, row, column, node) {
-                                if (column === 2) {
-                                    return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                        {
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            exportOptions: {
+                                columns: [0, 1,2], stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            return $(data).find('input').is(':checked') ? '✅' : '❌';
+                                        }
+                                        return data;
+                                    }
                                 }
-                                return data;
                             }
                         },
-                            columns: [0,1,2]
-                        }
-                    },
-                    {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
-                ],
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                    ],
+                },
+                bottomStart: {pageLength: 10}
             },
-            bottomStart: {
-                pageLength: 5,
-            }
-        },
-        order: [
-            [0, 'asc'] // Ensure this matches the index of the `dusun` column
-        ],
-        lengthMenu: [5, 10 ,25, 50, 100, 200],
-    });
+            order: [
+                [1, 'asc']
+            ],
+            lengthMenu: [10, 25, 50, 100],
+        });
 
     $('#role_list tbody').on('click', '.edit-role-btn, .view-role-btn', function (e) {
         e.preventDefault();

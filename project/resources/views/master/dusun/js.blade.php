@@ -63,7 +63,7 @@ $(document).ready(function() {
                 data: "desa.nama", // Update to match the server-side column name
                 // name: 'dusun.nama',
                 width: "20%",
-                className: "text-lef align-middlet"
+                className: "text-lef align-middle"
             },
             {
                 data: "kode_pos", //
@@ -91,7 +91,7 @@ $(document).ready(function() {
             },
             {
                 data: "action",
-                width: "10%",
+                width: "15%",
                 className: "text-center align-middle",
                 orderable: false,
             }
@@ -162,10 +162,7 @@ $(document).ready(function() {
                     {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                 ],
             },
-            bottomStart: {
-                pageLength: 5,
-            }
-        },
+        },      
         order: [
             [2, 'asc'] // Ensure this matches the index of the `dusun` column
         ],

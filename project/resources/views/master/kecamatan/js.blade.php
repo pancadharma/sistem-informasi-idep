@@ -33,7 +33,7 @@
         });
 
         //autofill kecamatan_kode with kabupatan_kode
-        $('#kabupaten_id, #provinsi_id').change(function(){
+       $('#kabupaten_id, #provinsi_id').change(function(){
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
             if(kode_kab !== undefined ){
@@ -46,7 +46,7 @@
         });
 
         //load data kecamatan into datatables
-        $('#kecamatan_list').DataTable({
+        var t = $('#kecamatan_list').DataTable({
             ajax: "{{ route('data.kecamatan') }}",
             responsive: true,lengthChange: false,
             processing: true,autoWidth: false,serverSide: true,deferRender: true, stateSave: true,
@@ -93,7 +93,7 @@
                     orderable: false,
                 }
             ],
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
