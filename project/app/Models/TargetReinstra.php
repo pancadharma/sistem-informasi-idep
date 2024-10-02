@@ -32,4 +32,8 @@ class TargetReinstra extends Model
         'deleted_at',
     ];
 
+    public function program() {
+        return $this->belongsToMany(Program::class, 'trprogramtargetreinstra', 'targetreinstra_id', 'program_id');
+    }
+
 }
