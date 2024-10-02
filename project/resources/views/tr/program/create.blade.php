@@ -35,13 +35,13 @@
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <label for="nama" class="small">{{ __('cruds.program.form.nama') }}</label>
+                                <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
                                 <input type="text" id="nama_program" name="nama" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
-                                <label for="kode" class="small">{{ __('cruds.program.form.kode') }}</label>
+                                <label for="kode_program" class="small">{{ __('cruds.program.form.kode') }}</label>
                                 <input type="text" id="kode_program" name="kode" class="form-control" required>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="totalnilai" class="small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required>
+                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required step=".01",>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="wanita"
                                     class="small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
@@ -101,7 +101,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="laki"
                                     class="small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
@@ -109,7 +109,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="perempuan"
                                     class="small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
@@ -117,14 +117,23 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        {{-- <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="total"
                                     class="small"><strong>{{ __('cruds.program.form.total') }}</strong></label>
                                 <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
+                        </div> --}}
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="ex_indirect" class="small">{{ __('cruds.program.ex_indirect') }}</label>
+                                <textarea id="ex_indirect" maxlength="100" name="ekspektasipenerimamanfaattidaklangsung" class="form-control" rows="2" placeholder="{{ __('cruds.program.ex_indirect') }}"></textarea>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -218,7 +227,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <label for="kelompokmarjinal" class="small control-label">
+                                <label for="kaitansdg" class="small control-label">
                                     <strong>
                                         {{ __('cruds.program.list_sdg') }}
                                     </strong>
@@ -235,8 +244,8 @@
             </div>
         </div>
     </div>
-    {{-- Deskripsi Program --}}
     <div class="row">
+    {{-- Deskripsi Program --}}
         <div class="col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -261,7 +270,7 @@
                 </div>
             </div>
         </div>
-        {{-- Analisis Program --}}
+    {{-- Analisis Program --}}
         <div class="col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -287,6 +296,59 @@
             </div>
         </div>
     </div>
+    {{-- Status --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <strong>
+                        {{ __('cruds.status.title') }}
+                    </strong>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body table-responsive">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="status" class="small control-label">
+                                    <strong>
+                                        {{ __('cruds.status.title') }}
+                                    </strong>
+                                </label>
+                                <div class="select2-green">
+                                    <select class="form-control select2" name="status" id="status" required>
+                                        <optgroup label="Status Progran">
+                                            <option value="draft">Draft</option>
+                                            <option value="running">Running</option>
+                                            <option value="submit">Submit</option>
+                                            <option value="completed">Completed</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="users" class="small control-label">
+                                    <strong>
+                                       User Program {{-- {{ auth()->user()->nama }} --}}
+                                    </strong>
+                                </label>
+                                <div class="select2-green">
+                                    <input type="text" class="form-control" value="{{ auth()->user()->nama }}" id="user_id" name="user_id" readonly>
+                                    <input type="hidden" class="form-control" value="{{ auth()->user()->id }}" name="user_id">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @stop
 
@@ -305,15 +367,17 @@
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
     $(document).ready(function() {
-
+        $('#status').select2();
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
+        var data_sdg = "{{ route('program.api.sdg') }}";
 
         $('#kelompokmarjinal').select2({
             placeholder: '{{ __('cruds.program.marjinal.select') }}',
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
+            dropdownPosition: 'below',
             ajax: {
                 url: data_kelompokmarjinal,
                 method: 'GET',
@@ -343,6 +407,7 @@
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
+            dropdownPosition: 'below',
             ajax: {
                 url: data_reinstra,
                 method: 'GET',
@@ -366,6 +431,40 @@
                 }
             }
         });
+
+        //KAITAN SDG SELECT2
+
+        $('#kaitansdg').select2({
+            placeholder: '{{ __('cruds.program.select_sdg') }}',
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownPosition: 'below',
+            ajax: {
+                url: data_sdg,
+                method: 'GET',
+                delay: 1000,
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama // Mapping 'nama' to 'text'
+                            };
+                        })
+                    };
+                },
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                    return query;
+                }
+            }
+        });
+
+
     });
 </script>
 @endpush

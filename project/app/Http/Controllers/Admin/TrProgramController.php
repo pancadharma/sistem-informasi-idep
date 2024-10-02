@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\Program_Target_Reinstra;
 use App\Models\Program;
 use App\Models\TargetReinstra;
 use Illuminate\Http\Request;
+use PhpParser\Builder\Function_;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrProgramController extends Controller
@@ -47,5 +49,12 @@ class TrProgramController extends Controller
         $page = $request->input('page', 1);
         $marjinal = Kelompok_Marjinal::where('nama', 'like', "%{$search}%")->get();
         return response()->json($marjinal);
+    }
+
+    public function KaitanSDG(Request $request){
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $sdg = KaitanSdg::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($sdg);
     }
 }
