@@ -261,7 +261,7 @@
                 </div>
             </div>
         </div>
-        {{-- Deskripsi Program --}}
+        {{-- Analisis Program --}}
         <div class="col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -313,6 +313,7 @@
             placeholder: '{{ __('cruds.program.marjinal.select') }}',
             width: '100%',
             allowClear: true,
+            closeOnSelect: false,
             ajax: {
                 url: data_kelompokmarjinal,
                 method: 'GET',
@@ -336,12 +337,12 @@
                 }
             }
         });
-
-
+        // SELECT2 For Target Reinstra
         $('#targetreinstra').select2({
             placeholder: '{{ __('cruds.program.select_reinstra') }}',
             width: '100%',
             allowClear: true,
+            closeOnSelect: false,
             ajax: {
                 url: data_reinstra,
                 method: 'GET',
