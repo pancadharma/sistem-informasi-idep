@@ -20,7 +20,7 @@
             <table id="kecamatan_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kecamatan" style="width:100%">
                 <thead>
                     <tr>
-                        <th class="center align-middle">#</th>
+                        <th class="center align-middle">No.</th>
                         <th class="center align-middle">{{ __('cruds.kecamatan.kode') }}</th>
                         <th class="center align-middle">{{ __('cruds.kecamatan.nama') }}</th>
                         <th class="center align-middle">{{ __('cruds.kabupaten.title') }}</th>

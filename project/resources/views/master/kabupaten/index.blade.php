@@ -45,7 +45,7 @@
                     <div class="form-group">
                     <strong>{{ __('cruds.status.title') .' '. __('cruds.kabupaten.title') }}</strong>
                         <div class="icheck-primary">
-                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
                             <label for="aktif">{{ __('cruds.status.aktif') }}</label>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
             <table id="kabupaten" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th class="center align-middle">#</th>
+                        <th class="center align-middle">No.</th>
                         <th class="center">{{ __('cruds.kabupaten.kode') }}</th>
                         <th class="center">DT II</th>
                         <th class="align-middle">{{ __('cruds.kabupaten.title') }}</th>

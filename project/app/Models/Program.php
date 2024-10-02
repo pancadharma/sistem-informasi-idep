@@ -44,4 +44,12 @@ class Program extends Model
     public function users() {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function targetReinstra()
+    {
+        return $this->belongsToMany(TargetReinstra::class, 'trprogramtargetreinstra', 'program_id', 'targetreinstra_id');
+    }
+    public function kelompokMarjinal()
+    {
+        return $this->belongsToMany(Kelompok_Marjinal::class, 'trprogramkelompokmarjinal', 'program_id', 'kelompokmarjinal_id');
+    }
 }

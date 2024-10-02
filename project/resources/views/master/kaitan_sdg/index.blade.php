@@ -11,7 +11,7 @@
             <table id="kaitan_sdg_list" class="table table-bordered table-striped cell-border ajaxTable datatable-kaitan_sdg" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">#</th>
+                        <th style="width: 5%;">No. </th>
                         <th>{{trans('cruds.kaitan_sdg.nama')}}</th>
                         <th style="width: 5%;">{{ trans('cruds.status.title') }}</th>
                         <th style="width: 15%;">{{ trans('global.action') }}</th>

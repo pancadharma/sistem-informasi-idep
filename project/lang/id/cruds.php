@@ -329,10 +329,11 @@ return [
         'title_singular'    => 'Program',
         'info_dasar'        => 'Informasi Dasar',
         'expektasi'         => 'Ekspektasi Penerima Manfaat',
-        'marjinal'          => 'Kelompok Marjinal',
+
         'reinstra'          => 'Target Reinstra',
         'list_reinstra'     => 'Daftar Target Reinstra',
-        'sdg'               => 'Keterkaitan SDG',
+        'select_reinstra'   => 'Pilih Target Reinstra',
+        'sdg'               => 'Kaitan SDG',
         'list_sdg'          => 'Daftar SDG',
         'deskripsi'         => 'Deskripsi Program',
         'analisis'          => 'Analisis Masalah Program',
@@ -341,16 +342,16 @@ return [
         'pilih_file'        => 'Pilih Berkas',
         'form'            => [
             'id'            => 'ID',
-            'nama'          => 'Nama Program',
-            'kode'          => 'Kode Program',
-            'tgl_mulai'     => 'Tanggal Mulai',
-            'tgl_selesai'   => 'Tanggal Selesai',
+            'nama'          => 'Nama',
+            'kode'          => 'Kode',
+            'tgl_mulai'     => 'Tgl Mulai',
+            'tgl_selesai'   => 'Tgl Selesai',
             'total_nilai'   => 'Total Nilai Program (IDR)',
             'pria'          => 'Pria',
             'wanita'        => 'Wanita',
             'laki'          => 'Anak Laki-laki',
             'perempuan'     => 'Anak Perempuan',
-            'total'         => 'Total',
+            'total'         => 'Total Ekpektasi Penerima Manfaat',
             'created_at'    => 'Dibuat pada',
             'updated_at'    => 'Diperbarui pada',
             'deleted_at'    => 'Dihapus pada',
@@ -405,10 +406,15 @@ return [
             'indicator'     => 'Indikator',
             'target'        => 'Target',
         ],
+        'marjinal'            => [
+            'label'         => 'Kelompok Marjinal',
+            'list'          => 'List Kelompok Marjinal',
+            'select'        => 'Pilih Kelompok Marjinal',
+        ],
 
     ],
 
-    
+
     'peran' => [
         'list' => 'Daftar',
         'title_singular' => 'Peran',

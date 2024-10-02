@@ -161,5 +161,8 @@ Route::middleware(['auth'])->group(function () {
     // Transaction Program
 
     Route::resource('program', TrProgramController::class);
+    // get data for select 2 form
+    Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
+    Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
 
 });

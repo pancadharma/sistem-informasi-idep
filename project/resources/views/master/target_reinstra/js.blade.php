@@ -17,6 +17,7 @@
                 {data: "status", className: "text-center align-middle", orderable: false, searchable: false, width: "10%", },
                 {data: "action", className: "text-center align-middle", orderable: false, searchable: false, width: "10%",}
             ],
+            
             layout: {
                 topStart: {
                     buttons: [
@@ -87,7 +88,7 @@
             order: [
                 [1, 'asc']
             ],
-            lengthMenu: [5, 10 ,25, 50, 100],
+            lengthMenu: [10, 25, 50, 100],
         });
 
         //EDIT & VIEW TARGET REINSTRA FORM (MODAL)

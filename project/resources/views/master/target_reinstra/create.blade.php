@@ -38,7 +38,7 @@
                 <strong> {{ trans('cruds.status.title')  }}  </strong>
                 <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
                 <div class="icheck-primary">
-                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
                     <label for="aktif">{{ trans('cruds.status.aktif')  }}</label>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 <span class="fas fa-window-restore"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.reinstra.title_singular') }}
-            </button>
+            </button> 
         </form>
     </div>
 </div>

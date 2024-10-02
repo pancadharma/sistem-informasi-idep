@@ -26,7 +26,7 @@
                     <div class="form-group">
                     <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.jenisbantuan.title') }}</strong>
                         <div class="icheck-primary">
-                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
                             <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
                         </div>
                     </div>
