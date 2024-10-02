@@ -33,43 +33,49 @@ $(document).ready(function() {
     //Dusun DataTables
     $('#dusun_list').DataTable({
         responsive: true,
-        ajax: "{{ route('data.dusun') }}",
-        type: "GET",
+        ajax: {
+            url: "{{ route('data.dusun') }}",
+            method: 'GET',
+            dataType: 'JSON',
+        },
         processing: true,
         serverSide: true,
         deferRender: true,
         stateSave: true,
         columns: [
             {
+                    data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
+            },
+            {
                 data: "kode",
                 // name: 'kelurahan.kode', //needed when using alternative query
-                width: "5%",
-                className: "text-center",
+                width: "15%",
+                className: "text-center align-middle",
                 orderable: false
             },
             {
                 data: "nama",
                 // name: 'kelurahan.nama',
-                width: "15%",
-                className: "text-left"
+                width: "25%",
+                className: "text-left align-middle"
             },
             {
                 data: "desa.nama", // Update to match the server-side column name
                 // name: 'dusun.nama',
-                width: "15%",
-                className: "text-left"
+                width: "20%",
+                className: "text-lef align-middle"
             },
             {
-                data: "kode_pos", // 
+                data: "kode_pos", //
                 // name: 'dusun.nama',
-                width: "15%",
-                className: "text-left"
+                width: "10%",
+                className: "text-left align-middle"
             },
             {
                 data: "aktif",
                 // name: 'kelurahan.aktif',
-                width: "5%",
-                className: "text-center",
+                width: "10%",
+                className: "text-center align-middle",
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
@@ -85,8 +91,8 @@ $(document).ready(function() {
             },
             {
                 data: "action",
-                width: "10%",
-                className: "text-center",
+                width: "15%",
+                className: "text-center align-middle",
                 orderable: false,
             }
         ],
@@ -94,36 +100,69 @@ $(document).ready(function() {
             topStart: {
                 buttons: [
                     {
-                        extend: 'print',
+                        extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                         exportOptions: {
-                            columns: [0, 1, 2, 3] // Ensure these indices match your visible columns
+                            stripHTML: false,
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 5) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+
+                                }
+                            },
+                            columns: [0, 1, 2, 3,4,5] // Ensure these indices match your visible columns
                         }
                     },
                     {
-                        extend: 'excel',
+                        extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 5) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+
+                                }
+                            },
+                            columns: [0, 1, 2, 3,4,5]
                         }
                     },
                     {
-                        extend: 'pdf',
+                        extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 5) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+
+                                }
+                            },
+                            columns: [0, 1, 2, 3,4,5]
                         }
                     },
                     {
-                        extend: 'copy',
+                        extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                         exportOptions: {
-                            columns: [0, 1, 2, 3]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 5) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+                                }
+                            },
+                            columns: [0, 1, 2, 3,4,5]
                         }
                     },
-                    'colvis',
+                    {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                 ],
             },
-            bottomStart: {
-                pageLength: 5,
-            }
-        },
+        },      
         order: [
             [2, 'asc'] // Ensure this matches the index of the `dusun` column
         ],
@@ -141,9 +180,9 @@ $(document).ready(function() {
         let formData = $(this).serialize();
         formData += '&kode_desa=' + kode_desa;
         let url = $(this).attr('action');
-        
+
         console.log(formData);
-        
+
         $.ajax({
             url: url,
             dataType: "JSON",
@@ -292,7 +331,7 @@ $(document).ready(function() {
                 $("#show-kode_pos").text(data.kode_pos);
                 if (data.aktif === 1) {
                     $('#show-aktif').val(data.aktif);
-                    $("#show-aktif").prop("checked",true); 
+                    $("#show-aktif").prop("checked",true);
                 } else {
                     $('#show-aktif').val(0);
                     $("#show-aktif").prop("checked",false);
@@ -305,7 +344,7 @@ $(document).ready(function() {
                 Swal.fire({text: textStatus,message: "Failed to fetch data "+ errorThrown,icon: "error"});
             })
             .always(function(){
-                // 
+                //
             });
         }
     });
@@ -314,7 +353,7 @@ $(document).ready(function() {
         e.preventDefault();
         if (!$(this).valid()) {
             return;
-        }        
+        }
         let kode_desa = $('#desa').children('option:selected').data('id');
         let form = $(this);
         let action = form.attr('action');
@@ -400,7 +439,7 @@ $(document).ready(function() {
 
     function removeInvalidClass() {
         $(this).removeClass('is-invalid');
-        let value_id = $(this).val();        
+        let value_id = $(this).val();
     }
     $('#provinsi_id, #provinsi').on('change', removeInvalidClass);
     $('#kabupaten_id, #kabupaten').on('change', removeInvalidClass);
@@ -493,7 +532,7 @@ $(document).ready(function() {
         $('.form-group').find('.is-valid').removeClass('is-valid');
         $('.form-group').find('.invalid-feedback').text(''); // Clear text in error spans
     }
-    
+
     //UpperCase Input Nama Form
     function capitalizeWords(str) {
         return str.replace(/\b\w/g, function(char) {

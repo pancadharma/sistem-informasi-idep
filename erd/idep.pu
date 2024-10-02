@@ -43,6 +43,13 @@ entity "mprovinsi" as mprovinsi {
     aktif : bit
 }
 
+entity "mkategorilokasikegiatan" as mkategorilokasikegiatan {
+    *id : int <<auto>>
+    --
+    nama : varchar(200)
+    aktif : bit
+}
+
 entity "mjabatan" as mjabatan {
     *id : int <<auto>>
     --
@@ -292,6 +299,7 @@ entity "trkegiatan" as trkegiatan {
     id_dusun : int <<fk>>
     long : decimal (9,6)
     lat : decimal (9,6)
+    id_kategorilokasikegiatan : int <<fk>>
     tempat : varchar (200)
     deskripsi : varchar (500) null
     tujuan : varchar (500) null
@@ -475,5 +483,6 @@ trkegiatanpenulis }o--|| mperan
 trkegiatanpenulis }o--|| trkegiatan
 trkegiatanpenulis }o--|| muser
 trkegiatan }o--|| mjenisbantuan
+trkegiatan }o--|| mkategorilokasikegiatan
 trlog }o--|| muser
 @enduml

@@ -1,4 +1,4 @@
-<x-adminlte-modal id="addKabupaten" title="{{ trans('global.add') }} {{ trans('cruds.kabupaten.title_singular') }}"
+<x-adminlte-modal id="addKabupaten" title="{{ __('global.add') .' '. __('cruds.kabupaten.title_singular') }}"
     size="lg" theme="success" icon="fa fa-plus" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="modal-body">
@@ -6,35 +6,35 @@
             @csrf
             @method('POST')
             <div class="form-group">
-                <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
+                <label for="provinsi_nama">{{ __('cruds.provinsi.nama') .' '. __('cruds.provinsi.title') }}</label>
                 <div class="form-group">
                     <select id="provinsi_add" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%"><option></option></select>
                 </div>
             </div>
             <div class="form-group">
-              <label for="kode">{{ trans('cruds.form.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
+              <label for="kode">{{ __('cruds.form.kode') .' '. __('cruds.kabupaten.title') }}</label>
               <input placeholder="" type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required data-toggle="tooltip" data-placement="top" maxlength="5">
             </div>
             <div class="form-group">
-              <label for="nama">{{ trans('cruds.form.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
+              <label for="nama">{{ __('cruds.form.nama') .' '. __('cruds.kabupaten.title') }}</label>
               <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
             </div>
             <div class="form-group">
-                <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
+                <label for="type">{{ __('cruds.kabupaten.title') .' / '. __('cruds.kabupaten.kota') }}</label>
                 <select id="type" name="type" class="form-control select2 type" style="width: 100%">
                     <option></option>
-                    <option value="kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
-                    <option value="kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                    <option value="kabupaten"> {{ __('cruds.kabupaten.title') }} </option>
+                    <option value="kota"> {{ __('cruds.kabupaten.kota') }} </option>
                 </select>
             </div>
             <div class="form-group">
-            <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.kabupaten.title') }}</strong>
+            <strong>{{ __('cruds.kabupaten.title') }}</strong>
 				<div class="icheck-primary">
-					<input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-					<label for="aktif">{{ trans('cruds.status.aktif') }}</label>
+					<input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
+					<label for="aktif">{{ __('cruds.status.aktif') }}</label>
             	</div>
             </div>
-            <button type="submit" class="btn btn-success float-right btn-add-kabupaten" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
+            <button type="submit" class="btn btn-success float-right btn-add-kabupaten" data-toggle="tooltip" data-placement="top" title="{{ __('global.submit') }}"><i class="fas fa-save"></i> {{ __('global.submit') }}</button>
         </form>
         </div>
     </div>

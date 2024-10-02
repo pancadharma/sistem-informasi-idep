@@ -23,7 +23,7 @@ class StoreJenisbantuanRequest extends FormRequest
     {
         return [
             'nama' => ['string','max:200','required',],
-            'aktif' => ['integer','accepted'],
+            'aktif' => ['integer'],
         ];
     }
 
@@ -33,8 +33,7 @@ class StoreJenisbantuanRequest extends FormRequest
             'nama.string' => 'Kolom nama jenis bantuan harus berupa text',
             'nama.max' => 'Kolom nama jenis bantuan maksimal 200 karakter',
             'nama.required' => 'Kolom nama jenis bantuan wajib diisi !',
-            'aktif.accepted' => 'Check box wajib dipilih',
-            'aktif.boolean' => 'Check box wajib dipilih',
+            // 'aktif.integer' => 'Check box wajib dipilih',
         ];
     }
 }

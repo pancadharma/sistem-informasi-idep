@@ -125,6 +125,7 @@ class PartnersController extends Controller
         if ($request->ajax()) {
             $query = Partner::all();
             $data = DataTables::of($query)
+                ->addIndexColumn()
                 ->addColumn('status', function($partner) {
                     return match ($partner->aktif) {
                         1 => '<div class="icheck-primary d-inline">

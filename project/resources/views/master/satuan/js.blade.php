@@ -68,14 +68,14 @@
                             pageSize: 'A4',
                             exportOptions: {
                                 columns: [0, 1,2], stripHTML: false,
-                                // format: {
-                                //     body: function (data, row, column, node) {
-                                //         if (column === 2) {
-                                //             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-                                //         }
-                                //         return data;
-                                //     }
-                                // }
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+                                    }
+                                }
                             }
                         },
                         {

@@ -1,5 +1,5 @@
 <script>
-    //prevent checkbox clicked in show modal 
+    //prevent checkbox clicked in show modal
     $('#show-aktif, #aktif_').click(function(event) {
         event.preventDefault();
     });
@@ -26,14 +26,14 @@
                         }
                     }
                 });
-            }            
+            }
             $('#kabupaten_id').select2({
                 placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
             });
         });
-        
+
         //autofill kecamatan_kode with kabupatan_kode
-        $('#kabupaten_id, #provinsi_id').change(function(){
+       $('#kabupaten_id, #provinsi_id').change(function(){
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
             if(kode_kab !== undefined ){
@@ -46,30 +46,33 @@
         });
 
         //load data kecamatan into datatables
-        $('#kecamatan_list').DataTable({
+        var t = $('#kecamatan_list').DataTable({
             ajax: "{{ route('data.kecamatan') }}",
             responsive: true,lengthChange: false,
             processing: true,autoWidth: false,serverSide: true,deferRender: true, stateSave: true,
             columns: [
                 {
+                    data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
+                },
+                {
                     data: "kode",
-                    width: "5%",
-                    className: "text-center"
+                    width: "10%",
+                    className: "text-center align-middle"
                 },
                 {
                     data: "nama",
-                    width: "5%",
-                    className: "text-left"
+                    width: "20%",
+                    className: "text-left align-middle"
                 },
                 {
                     data: 'kabupaten.nama',
-                    width: "15%",
-                    className: "text-left"
+                    width: "20%",
+                    className: "text-left align-middle"
                 },
                 {
                     data: "aktif",
-                    width: "5%",
-                    className: "text-center",
+                    width: "10%",
+                    className: "text-center align-middle",
                     orderable: false,
                     searchable: false,
                     render: function(data, type, row) {
@@ -85,37 +88,69 @@
                 },
                 {
                     data: "action",
-                    width: "8%",
+                    width: "10%",
                     className: "text-center",
                     orderable: false,
                 }
             ],
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                columns: [0, 1, 2]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 4) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+                                }
+                            },
+                                columns: [0,1,2,3,4]
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
-                                columns: [0, 1, 2]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 4) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+                                }
+                            },
+                                columns: [0,1,2,3,4]
                             }
                         },{
-                            extend: 'pdf', 
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
-                                columns: [0, 1, 2]
-                            }    
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 4) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+                                }
+                            },
+                                columns: [0,1,2,3,4]
+                            }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
-                                columns: [0, 1, 2]
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if (column === 4) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                    }
+                                    return data;
+                                }
+                            },
+                                columns: [0,1,2,3,4]
                             }
                         },
-                        'colvis',
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {
@@ -149,9 +184,9 @@
             placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
             allowClear: true,
             delay: 250,
-        });       
+        });
     });
-    
+
     // submit button add kecamatan
     $(document).ready(function(){
         // add / submit data kecamatan
@@ -282,7 +317,7 @@
                 formData += '&kabupaten_kode=' + kabupaten_kode;
             let idKec = $('#id').val();
             let url_update = '{{ route('kecamatan.update', ':kec') }}'.replace(':kec', idKec);
-            
+
             if (formIsValid) {
             $.ajax({
                 url: url_update,
@@ -510,7 +545,7 @@
                 $('#nama_error').hide();
             }
         });
-       
+
         //show kecamatan
         $('#kecamatan_list tbody').on('click', '.view-kec-btn', function(e){
             e.preventDefault();

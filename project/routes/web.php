@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\TrProgramController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
@@ -122,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
-    
+
     //Master Jabatan
     Route::resource('mjabatan', MjabatanController::class);
     Route::get('data/mjabatan', [MjabatanController::class, 'getData'])->name('data.mjabatan');
@@ -156,5 +157,12 @@ Route::middleware(['auth'])->group(function () {
     //Master Kaitan SDG
     Route::resource('kaitan_sdg', KaitanSdgController::class);
     Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
+
+    // Transaction Program
+
+    Route::resource('program', TrProgramController::class);
+    // get data for select 2 form
+    Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
+    Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
 
 });

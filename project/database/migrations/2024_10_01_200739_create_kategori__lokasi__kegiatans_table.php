@@ -11,7 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('mkaitan_sdg', 'mkaitansdg');
+        Schema::create('mkategorilokasikegiatan', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama', 200);
+            $table->boolean('aktif')->default(1); 
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('mkaitansdg', 'mkaitan_sdg');
+        Schema::dropIfExists('mkategorilokasikegiatan');
     }
 };

@@ -86,6 +86,7 @@ class RolesController extends Controller
         if ($request->ajax()) {
             $query = Role::with('permissions');
             $data = DataTables::of($query)
+                ->addIndexColumn()
                 ->addColumn('permissions', function ($role) {
                     return $role->permissions->map(function ($permission) {
                         return "<span class=\"btn btn-warning btn-xs\">{$permission->nama}</span>";

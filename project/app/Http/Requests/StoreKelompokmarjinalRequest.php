@@ -23,7 +23,7 @@ class StoreKelompokmarjinalRequest extends FormRequest
     {
         return [
             'nama' => ['string','max:200','required',],
-            'aktif' => ['accepted'],
+            'aktif' => ['integer'],
         ];
     }
 
@@ -33,7 +33,7 @@ class StoreKelompokmarjinalRequest extends FormRequest
             'nama.string' => 'Kolom nama kelompok marjinal harus berupa text',
             'nama.max' => 'Kolom nama kelompok marjinal maksimal 200 karakter',
             'nama.required' => 'Kolom kelompok marjinal wajib diisi !',
-            'aktif.accepted' => 'Check box wajib dipilih',
+            // 'aktif.integer' => 'Check box wajib dipilih',
         ];
     }
 }
