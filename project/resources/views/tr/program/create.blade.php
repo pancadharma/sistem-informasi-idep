@@ -31,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="form-group">
@@ -83,7 +83,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-3">
                             <div class="form-group">
@@ -188,7 +188,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
@@ -223,7 +223,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
@@ -258,7 +258,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -283,7 +283,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -310,7 +310,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body table-responsive">
+                <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
