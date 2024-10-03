@@ -690,7 +690,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/js/locales/en.js',
+                    'location' => 'vendor/krajee-fileinput/themes/bs5/theme.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/locales/id.js',
                 ],
             ],
         ],

@@ -58,7 +58,7 @@ $(document).ready(function(){
             {data: "status", width: "10%", className: "text-center align-middle", orderable: false, searchable: false},
             {data: "action", width: "10%", className: "text-center align-middle", orderable: false,width: "20%",}
         ],
-        
+
         layout: {
                 topStart: {
                     buttons: [

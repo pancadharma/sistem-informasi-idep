@@ -14,6 +14,12 @@ class Program extends Model implements HasMedia
     use Auditable, HasFactory, InteractsWithMedia;
 
     protected $table = 'trprogram';
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
     protected $fillable = [
         'nama',
         'kode',
@@ -58,5 +64,17 @@ class Program extends Model implements HasMedia
     public function kaitanSDG()
     {
         return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
+    }
+
+    public function getImageAttribute()
+    {
+        $file = $this->getMedia('image')->last();
+        if ($file) {
+            $file->url       = $file->getUrl();
+            $file->thumbnail = $file->getUrl('thumb');
+            $file->preview   = $file->getUrl('preview');
+        }
+
+        return $file;
     }
 }

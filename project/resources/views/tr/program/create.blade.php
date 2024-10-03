@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.create') . ' ' . __('cruds.program.title_singular'))
+@section('subtitle', __('global.edit') . ' ' . __('cruds.program.title_singular'))
 @section('content_header_title', __('global.create') . ' ' . __('cruds.program.title_singular'))
 @section('sub_breadcumb', __('cruds.program.title'))
 
@@ -14,9 +14,9 @@
             </div>
         </div>
     </div>
-    {{-- <form action="" multipart/form-data >
-    </form> --}}
-
+    <form id="createProgram" action="{{ route('program.store')}}" method="POST" class="resettable-form" data-toggle="validator" id="desaForm" autocomplete="off" enctype="multipart/form-data">
+    @csrf
+    @method('POST')
     {{-- Informasi Dasar --}}
     <div class="row">
         <div class="col-12">
@@ -33,36 +33,34 @@
                 </div>
                 <div class="card-body table-responsive pt-0">
                     <div class="row">
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
-                                <input type="text" id="nama_program" name="nama" class="form-control" required>
+                                <input type="text" id="nama_program" name="nama" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="kode_program" class="small">{{ __('cruds.program.form.kode') }}</label>
-                                <input type="text" id="kode_program" name="kode" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <label for="tanggalselesai" class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control"
-                                    required>
+                                <input type="text" id="kode_program" name="kode" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="tanggalmulai" class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control" required>
+                                <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="tanggalselesai" class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="totalnilai" class="small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required
-                                    step=".01",>
+                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" maxlength="15" minlength="0" step=".01",>
                             </div>
                         </div>
                     </div>
@@ -86,7 +84,7 @@
                 </div>
                 <div class="card-body table-responsive pt-0">
                     <div class="row">
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="pria"
                                     class="small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
@@ -94,7 +92,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="wanita"
                                     class="small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
@@ -102,7 +100,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="laki"
                                     class="small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
@@ -110,7 +108,7 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="perempuan"
                                     class="small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
@@ -118,16 +116,16 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        {{-- <div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="total"
                                     class="small"><strong>{{ __('cruds.program.form.total') }}</strong></label>
                                 <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
-                                    class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                    class="form-control" oninput="this.value = Math.max(0, this.value)">
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="ex_indirect" class="small">{{ __('cruds.program.ex_indirect') }}</label>
@@ -136,7 +134,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -200,8 +198,8 @@
                                     </strong>
                                 </label>
                                 <div class="select2-orange">
-                                    <select class="form-control" name="targetreinstra[]" id="targetreinstra"
-                                        multiple="multiple" required>
+                                    <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
+                                        id="targetreinstra" multiple="multiple" required>
                                     </select>
                                 </div>
                             </div>
@@ -315,17 +313,14 @@
                 <div class="card-body table-responsive pt-0">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="form-group">
+                            <div class="form-group file-loading">
                                 <label for="status" class="small control-label">
                                     <strong>
                                         {{ __('cruds.program.upload') }}
                                     </strong>
                                 </label>
-                                {{-- <form action="{{ route('program.storeMedia') }}" class="dropzone" enctype="multipart/form-data"> --}}
-                                <div class="needsclick dropzone {{ $errors->has('file_pendukung') ? 'is-invalid' : '' }}"
-                                    id="file_pendukung-dropzone">
-                                </div>
-                                {{-- </form> --}}
+                                <input id="file_pendukung" name="file_pendukung[]" type="file"
+                                    class="file form-control" multiple data-show-upload="false" data-show-caption="true">
                             </div>
                         </div>
                     </div>
@@ -384,16 +379,25 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Submit Button --}}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary float-right">
+                                    {{ __('global.add') .' '. __('cruds.program.title_singular')}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+</form>
 @stop
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
 @endpush
 
 @push('js')
@@ -401,15 +405,26 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-{{-- @section('plugins.KrajeeFileinput', true) --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
-@include('tr.program.js')
-
+@section('plugins.KrajeeFileinput', true)
 
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
+    $("#file_pendukung").fileinput({
+        uploadUrl: "{{ route('program.store') }}",
+        showUpload: false,
+        showCaption: true,
+        maxFileSize: 2000,
+        browseClass: "btn btn-primary",
+        allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp"],
+        dropZoneEnabled: false,
+        multiple: true
+    });
+
     $(document).ready(function() {
+
         $('#status').select2();
+
+
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
         var data_sdg = "{{ route('program.api.sdg') }}";
@@ -506,6 +521,74 @@
             }
         });
 
+        $('#createProgram').on('submit', function(e){
+            e.preventDefault();
+            // Get form data
+            $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: "{{ route('program.store') }}",
+                method: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    setTimeout(() => {
+                    if(response.success === true){
+                        Swal.fire({
+                            title: "{{ __('global.success') }}",
+                            text: response.message,
+                            icon: "success",
+                            timer: 1500,
+                            timerProgressBar: true,
+                        });
+                        $(this).trigger('reset');
+                        $('#createProgram')[0].reset();
+                        $('#createProgram').trigger('reset');
+                        $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                        $(".btn-tool").trigger('click');
+                    }
+                }, 500);
+                },
+                error: function(xhr, status, error) {
+                        $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
+                        let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                        try {
+                            const response = xhr.responseJSON;
+                            if (response.errors) {
+                                errorMessage += '<br><br><ul style="text-align:left!important">';
+                                $.each(response.errors, function(field, messages) {
+                                    messages.forEach(message => {
+                                        errorMessage += `<li>${field}: ${message}</li>`;
+                                        $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                        $(`#${field}-error`).text(message);
+                                        $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                    });
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        html: errorMessage,
+                                    });
+                                });
+                                errorMessage += '</ul>';
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                        });
+                    },
+                    complete: function() {
+                        setTimeout(() => {
+                            $(this).find('button[type="submit"]').removeAttr('disabled');
+                        }, 500);
+                    }
+            });
+
+        });
 
     });
 </script>

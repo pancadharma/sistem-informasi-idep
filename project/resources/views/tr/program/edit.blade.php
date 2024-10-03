@@ -14,9 +14,9 @@
             </div>
         </div>
     </div>
-    {{-- <form action="" multipart/form-data >
-    </form> --}}
-
+    <form id="submit_desa" action="{{ route('program.store')}}" method="POST" class="resettable-form" data-toggle="validator" id="desaForm" autocomplete="off">
+    @csrf
+    @method('POST')
     {{-- Informasi Dasar --}}
     <div class="row">
         <div class="col-12">
@@ -36,33 +36,31 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
-                                <input type="text" id="nama_program" name="nama" class="form-control" required>
+                                <input type="text" id="nama_program" name="nama" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="kode_program" class="small">{{ __('cruds.program.form.kode') }}</label>
-                                <input type="text" id="kode_program" name="kode" class="form-control" required>
+                                <input type="text" id="kode_program" name="kode" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="tanggalselesai" class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control"
-                                    required>
+                                <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
                                 <label for="tanggalmulai" class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control" required>
+                                <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="totalnilai" class="small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required
-                                    step=".01",>
+                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" minlength="0" step=".01",>
                             </div>
                         </div>
                     </div>
@@ -118,16 +116,16 @@
                                     class="form-control" required oninput="this.value = Math.max(0, this.value)">
                             </div>
                         </div>
-                        {{-- <div class="col-lg-3">
+                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="total"
                                     class="small"><strong>{{ __('cruds.program.form.total') }}</strong></label>
                                 <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
-                                    class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                    class="form-control" oninput="this.value = Math.max(0, this.value)">
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="ex_indirect" class="small">{{ __('cruds.program.ex_indirect') }}</label>
@@ -136,7 +134,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -381,11 +379,21 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Submit Button --}}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary float-right">
+                                    {{ __('global.add') .' '. __('cruds.program.title_singular')}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+</form>
 @stop
 
 @push('css')
