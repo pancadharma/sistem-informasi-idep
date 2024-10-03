@@ -4,12 +4,15 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Program extends Model
+class Program extends Model implements HasMedia
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, InteractsWithMedia;
+
     protected $table = 'trprogram';
     protected $fillable = [
         'nama',
@@ -51,5 +54,9 @@ class Program extends Model
     public function kelompokMarjinal()
     {
         return $this->belongsToMany(Kelompok_Marjinal::class, 'trprogramkelompokmarjinal', 'program_id', 'kelompokmarjinal_id');
+    }
+    public function kaitanSDG()
+    {
+        return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
     }
 }

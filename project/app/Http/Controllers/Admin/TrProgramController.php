@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Program_Target_Reinstra;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
+use App\Http\Requests\StoreProgramRequest;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class TrProgramController extends Controller
@@ -34,11 +35,36 @@ class TrProgramController extends Controller
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
 
-            return view('tr.program.edit');
+            return view('tr.program.edit')
+            ;
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit Program');
     }
 
+    // STORE DATA
+    public function store(StoreProgramRequest $request, Program $program){
+        // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
+        $data = $request->validated();
+        $program = Program::create($data);
+        $program->targetReinstra()->sync($request->input('targetreinstra', []));
+        $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+        $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+
+        // Unggah dan simpan berkas menggunakan Spatie Media Library
+        if ($request->hasFile('file_pendukung')) {
+            foreach ($request->file('file_pendukung') as $file) {
+                $program->addMedia($file)
+                        ->toMediaCollection('file_pendukung_program', 'program_uploads');
+            }
+        }
+    }
+
+
+
+
+
+
+    // GET DATA
     public function dataProgramTargetReinstra(Request $request)
     {
         if ($request->ajax()) {
