@@ -30,6 +30,14 @@ class TrProgramController extends Controller
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
+    public function show(){
+
+        if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+
+            return view('tr.program.edit');
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit Program');
+    }
 
     public function dataProgramTargetReinstra(Request $request)
     {

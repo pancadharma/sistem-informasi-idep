@@ -61,7 +61,8 @@
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label for="totalnilai" class="small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required step=".01",>
+                                <input type="number" id="totalnilai" name="totalnilai" class="form-control" required
+                                    step=".01",>
                             </div>
                         </div>
                     </div>
@@ -130,7 +131,8 @@
                         <div class="col-lg-12">
                             <div class="form-group">
                                 <label for="ex_indirect" class="small">{{ __('cruds.program.ex_indirect') }}</label>
-                                <textarea id="ex_indirect" maxlength="100" name="ekspektasipenerimamanfaattidaklangsung" class="form-control" rows="2" placeholder="{{ __('cruds.program.ex_indirect') }}"></textarea>
+                                <textarea id="ex_indirect" maxlength="100" name="ekspektasipenerimamanfaattidaklangsung" class="form-control"
+                                    rows="2" placeholder="{{ __('cruds.program.ex_indirect') }}"></textarea>
                             </div>
                         </div>
 
@@ -245,7 +247,7 @@
         </div>
     </div>
     <div class="row">
-    {{-- Deskripsi Program --}}
+        {{-- Deskripsi Program --}}
         <div class="col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -270,7 +272,7 @@
                 </div>
             </div>
         </div>
-    {{-- Analisis Program --}}
+        {{-- Analisis Program --}}
         <div class="col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
@@ -320,8 +322,9 @@
                                     </strong>
                                 </label>
                                 {{-- <form action="{{ route('program.storeMedia') }}" class="dropzone" enctype="multipart/form-data"> --}}
-                                    <div class="needsclick dropzone {{ $errors->has('file_pendukung') ? 'is-invalid' : '' }}" id="file_pendukung-dropzone">
-                                    </div>
+                                <div class="needsclick dropzone {{ $errors->has('file_pendukung') ? 'is-invalid' : '' }}"
+                                    id="file_pendukung-dropzone">
+                                </div>
                                 {{-- </form> --}}
                             </div>
                         </div>
@@ -369,12 +372,14 @@
                             <div class="form-group">
                                 <label for="users" class="small control-label">
                                     <strong>
-                                       User Program {{-- {{ auth()->user()->nama }} --}}
+                                        User Program {{-- {{ auth()->user()->nama }} --}}
                                     </strong>
                                 </label>
                                 <div class="select2-green">
-                                    <input type="text" class="form-control" value="{{ auth()->user()->nama }}" id="user_id" name="user_id" readonly>
-                                    <input type="hidden" class="form-control" value="{{ auth()->user()->id }}" name="user_id">
+                                    <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
+                                        id="user_id" name="user_id" readonly>
+                                    <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
+                                        name="user_id">
                                 </div>
                             </div>
                         </div>
@@ -392,11 +397,11 @@
 @endpush
 
 @push('js')
-@section('plugins.Sweetalert2', true)
-{{-- @section('plugins.DatatablesNew', true) --}}
+    @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+{{-- @section('plugins.KrajeeFileinput', true) --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
 @include('tr.program.js')
 
