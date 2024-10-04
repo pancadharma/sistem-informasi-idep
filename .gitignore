@@ -21,4 +21,4 @@ project/yarn-error.log
 /.vscode
 .vscode
 .idea
-project/public/uploads/program
+project/public/uploads/program/*
