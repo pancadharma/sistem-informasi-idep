@@ -413,9 +413,9 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
-<script src="{{ asset('vendor/krajee-fileinput/js/buffer.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/sortable.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/piexif.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
@@ -423,6 +423,36 @@
     //SCRIPT FOR CREATE PROGRAM FORM
 
     $(document).ready(function() {
+        // $("#file_pendukung").fileinput({
+        //     showRemove: true,
+        //     previewZoomButtonTitles: true,
+        //     dropZoneEnabled: false,
+        //     removeIcon: '<i class="bi bi-trash"></i>',
+        //     showDrag: true,
+        //     dragIcon: '<i class="bi-arrows-move"></i>',
+        //     showZoom: true,
+        //     showDrag: true,
+        //     showRotate: true,
+        //     showCaption: true,
+        // });
+        // $("#file_pendukung").fileinput({
+        //     uploadUrl: "{{ route('program.store') }}",
+        //     uploadAsync: false,
+        //     showUpload: false,
+        //     showCaption: true,
+        //     maxFileSize: 2048,
+        //     allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
+        //     dropZoneEnabled: false,
+        //     multiple: true
+        // });
+        // $("#file_pendukung").fileinput({
+        //     'uploadUrl': "{{ route('program.store') }}",
+        //     'uploadAsync': false,
+        //     'maxFileSize': 4096,
+        //     'allowedFileExtensions': ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
+        //     'multiple': true
+        // });
+
         $("#file_pendukung").fileinput({
             showRemove: true,
             previewZoomButtonTitles: true,
@@ -431,30 +461,30 @@
             showDrag: true,
             dragIcon: '<i class="bi-arrows-move"></i>',
             showZoom: true,
-            showDrag: true,
+            showUpload: false,
             showRotate: true,
             showCaption: true,
-        });
-
-        $("#file_pendukung").fileinput({
-            'uploadUrl': "{{ route('program.store') }}",
-            'uploadAsync': false,
-            'maxFileSize': 4096,
-            'allowedFileExtensions': ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-            'multiple': true
-        });
-        $('#status').select2();
-
-        $("#file_pendukung").fileinput({
             uploadUrl: "{{ route('program.store') }}",
             uploadAsync: false,
-            showUpload: false,
-            showCaption: true,
-            maxFileSize: 2048,
+            maxFileSize: 4096,
             allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-            dropZoneEnabled: false,
-            multiple: true
+            append: true
         });
+
+        $('#file_pendukung').on('change', function(event) {
+            const files = event.target.files;
+            const dataTransfer = new DataTransfer();
+            for (let i = 0; i < this.files.length; i++) {
+                dataTransfer.items.add(this.files[i]);
+            }
+            for (let file of files) {
+                dataTransfer.items.add(file);
+            }
+            this.files = dataTransfer.files;
+        });
+
+        $('#status').select2();
+
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
         var data_sdg = "{{ route('program.api.sdg') }}";

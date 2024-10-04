@@ -66,6 +66,7 @@ class TrProgramController extends Controller
 
                     \Log::info('Uploading file: ' . $fileName);
                     $program->addMedia($file)
+                            ->usingName("{$programName}_{$fileCount}")
                             ->usingFileName($fileName)
                             ->toMediaCollection('file_pendukung_program', 'program_uploads');
 
