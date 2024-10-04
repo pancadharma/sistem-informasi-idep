@@ -7,10 +7,8 @@ use App\Models\KaitanSdg;
 use Illuminate\Http\Request;
 use App\Models\TargetReinstra;
 use Illuminate\Validation\ValidationException;
-use PhpParser\Builder\Function_;
 use App\Models\Kelompok_Marjinal;
 use App\Http\Controllers\Controller;
-use App\Models\Program_Target_Reinstra;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProgramRequest;
@@ -63,8 +61,8 @@ class TrProgramController extends Controller
                 foreach ($request->file('file_pendukung') as $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
-                    $programName = str_replace(' ', '_', $program->name);
-                    $fileName = "{$programName}_{$fileCount}_{$timestamp}.{$extension}";
+                    $programName = str_replace(' ', '_', $program->nama);
+                    $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
 
                     \Log::info('Uploading file: ' . $fileName);
                     $program->addMedia($file)
@@ -82,7 +80,6 @@ class TrProgramController extends Controller
                     \Log::info('No files found in the request.');
                 }
             }
-
             return response()->json([
                 'success' => true,
                 'data' => $program,

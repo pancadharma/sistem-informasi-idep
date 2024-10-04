@@ -403,9 +403,7 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css"
-        crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}" >
 @endpush
 
 @push('js')
@@ -414,12 +412,37 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-{{-- @section('plugins.KrajeeFileinput', true) --}}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/js/fileinput.min.js"></script>
+
+<script src="{{ asset('vendor/krajee-fileinput/js/buffer.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/sortable.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/piexif.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
+
     $(document).ready(function() {
+        $("#file_pendukung").fileinput({
+            showRemove: true,
+            previewZoomButtonTitles: true,
+            dropZoneEnabled: false,
+            removeIcon: '<i class="bi bi-trash"></i>',
+            showDrag: true,
+            dragIcon: '<i class="bi-arrows-move"></i>',
+            showZoom: true,
+            showDrag: true,
+            showRotate: true,
+            showCaption: true,
+        });
+
+        $("#file_pendukung").fileinput({
+            'uploadUrl': "{{ route('program.store') }}",
+            'uploadAsync': false,
+            'maxFileSize': 4096,
+            'allowedFileExtensions': ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
+            'multiple': true
+        });
         $('#status').select2();
 
         $("#file_pendukung").fileinput({
