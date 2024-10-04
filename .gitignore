@@ -22,3 +22,4 @@ project/yarn-error.log
 .vscode
 .idea
 project/public/uploads/program/*
+project/storage/media-library
