@@ -428,14 +428,33 @@
         var url_update = $('#editProgram').attr('action');
 
         $("#file_pendukung").fileinput({
+            showRemove: true,
+            previewZoomButtonTitles: true,
+            dropZoneEnabled: false,
+            removeIcon: '<i class="bi bi-trash"></i>',
+            showDrag: true,
+            dragIcon: '<i class="bi-arrows-move"></i>',
+            showZoom: true,
+            showUpload: false,
+            showRotate: true,
+            showCaption: true,
             uploadUrl: url_update,
             uploadAsync: false,
-            showUpload: false,
-            showCaption: true,
-            maxFileSize: 2048,
+            maxFileSize: 4096,
             allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-            dropZoneEnabled: false,
-            multiple: true
+            append: true
+        });
+
+        $('#file_pendukung').on('change', function(event) {
+            const files = event.target.files;
+            const dataTransfer = new DataTransfer();
+            for (let i = 0; i < this.files.length; i++) {
+                dataTransfer.items.add(this.files[i]);
+            }
+            for (let file of files) {
+                dataTransfer.items.add(file);
+            }
+            this.files = dataTransfer.files;
         });
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
