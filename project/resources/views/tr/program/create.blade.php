@@ -34,7 +34,7 @@
                     </div>
                     <div class="card-body table-responsive pt-0">
                         <div class="row">
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
                                     <input type="text" id="nama_program" name="nama" class="form-control">
