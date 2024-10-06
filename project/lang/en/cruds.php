@@ -352,4 +352,24 @@ return [
         'status' => 'Status',
     ],
 
+    'program' => [
+        'list' => 'List',
+        'title_singular' => 'Program',
+        'title' => 'Program',
+        'nama' => 'Program Name',
+        'kode' => 'Code',
+        'tanggalmulai' => 'Start Date',
+        'tanggalselesai' => 'End Date',
+        'totalnilai' => 'Total Value',
+        'ekspektasipenerimamanfaat' => 'Expected Beneficiaries',
+        'ekspektasipenerimamanfaatwoman' => 'Expected Women Beneficiaries',
+        'ekspektasipenerimamanfaatman' => 'Expected Men Beneficiaries',
+        'ekspektasipenerimamanfaatgirl' => 'Expected Girl Beneficiaries',
+        'ekspektasipenerimamanfaatboy' => 'Expected Boy Beneficiaries',
+        'ekspektasipenerimamanfaattidaklangsung' => 'Indirect Beneficiaries',
+        'deskripsiprojek' => 'Project Description',
+        'analisamasalah' => 'Problem Analysis',
+        'status' => 'Status',
+    ],
+
 ];

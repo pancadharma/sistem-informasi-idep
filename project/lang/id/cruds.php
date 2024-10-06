@@ -348,4 +348,24 @@ return [
         'status' => 'Status',
     ],
 
+    'program' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Program',
+        'title' => 'Program',
+        'nama' => 'Nama Program',
+        'kode' => 'Kode',
+        'tanggalmulai' => 'Tanggal Mulai',
+        'tanggalselesai' => 'Tanggal Selesai',
+        'totalnilai' => 'Total Nilai',
+        'ekspektasipenerimamanfaat' => 'Ekspektasi Penerima Manfaat',
+        'ekspektasipenerimamanfaatwoman' => 'Ekspektasi Penerima Manfaat Wanita',
+        'ekspektasipenerimamanfaatman' => 'Ekspektasi Penerima Manfaat Pria',
+        'ekspektasipenerimamanfaatgirl' => 'Ekspektasi Penerima Manfaat Perempuan',
+        'ekspektasipenerimamanfaatboy' => 'Ekspektasi Penerima Manfaat Laki-laki',
+        'ekspektasipenerimamanfaattidaklangsung' => 'Penerima Manfaat Tidak Langsung',
+        'deskripsiprojek' => 'Deskripsi Proyek',
+        'analisamasalah' => 'Analisa Masalah',
+        'status' => 'Status',
+    ],
+
 ];

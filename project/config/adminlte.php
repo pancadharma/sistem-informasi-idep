@@ -326,8 +326,8 @@ return [
                 [
                     'text' => 'program',
                     'icon' => 'nav-icon fas fa-project-diagram',
-                    // 'route' => 'program',
-                    'url' => 'program',
+                    'route' => 'program.index',
+                    // 'url' => 'program',
 
                     'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],

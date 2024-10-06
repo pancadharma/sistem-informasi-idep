@@ -72,7 +72,14 @@ $(document).ready(function() {
                     { extend: 'excel', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] } },
                     { extend: 'pdf', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] } },
                     { extend: 'copy', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] } },
-                    'colvis',
+                    {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            className: 'btn btn-warning',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        },
                 ],
             },
             bottomStart: {

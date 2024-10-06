@@ -82,7 +82,14 @@ $(document).ready(function(){
                             columns: [0, 1]
                         }
                     },
-                    'colvis',
+                    {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            className: 'btn btn-warning',
+                            exportOptions: {
+                                columns: [0, 1]
+                            }
+                        },
                 ],
             },
             bottomStart: {

@@ -24,7 +24,14 @@ $(document).ready(function(){
                     {extend: 'excel',exportOptions: {columns: [0, 1]}},
                     {extend: 'pdf',exportOptions: {columns: [0, 1]}},
                     {extend: 'copy',exportOptions: {columns: [0, 1]}},
-                    'colvis',
+                    {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            className: 'btn btn-warning',
+                            exportOptions: {
+                                columns: [0, 1]
+                            }
+                        },
                 ],
             },
             bottomStart: {pageLength: 10}

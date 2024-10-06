@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\ProgramController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
@@ -156,5 +157,9 @@ Route::middleware(['auth'])->group(function () {
     //Master Kaitan SDG
     Route::resource('kaitan_sdg', KaitanSdgController::class);
     Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
+
+    //Program
+    Route::resource('program', ProgramController::class);
+    Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
 
 });
