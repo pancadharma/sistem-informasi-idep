@@ -17,6 +17,10 @@ use App\Http\Requests\StoreProgramRequest;
 use App\Models\TargetReinstra;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\UpdateProgramRequest;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+
 
 class ProgramController extends Controller
 {
@@ -127,5 +131,61 @@ class ProgramController extends Controller
                 'error'   => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function edit(Program $program)
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+            $mediaFiles = $program->getMedia('file_pendukung_program');
+            $initialPreview = [];
+            $initialPreviewConfig = [];
+
+            foreach ($mediaFiles as $media) {
+                if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif'])) {
+                    $initialPreview[] = $media->getUrl();
+                } else {
+                    $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for non-image files
+                }
+
+                $initialPreviewConfig[] = [
+                    'caption' => $media->file_name,
+                    'url' => route('program.media.destroy', ['media' => $media->id]), // Route to handle file deletion
+                    'key' => $media->id,
+                    'type' => $media->mime_type == 'application/pdf' ? 'pdf' : 'image',
+                ];
+            }
+
+            // return $media->human_readable_size;
+            // return [$initialPreviewConfig, $initialPreviewConfig, $media, $program];
+
+            return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
+    }
+    public function update(UpdateProgramRequest $request, Program $program)
+    {
+        $program->update($request->all());
+
+        if (count($program->file_pendukung) > 0) {
+            foreach ($program->file_pendukung as $media) {
+                if (! in_array($media->file_name, $request->input('file_pendukung', []))) {
+                    $media->delete();
+                }
+            }
+        }
+        $media = $program->file_pendukung->pluck('file_name')->toArray();
+        foreach ($request->input('file_pendukung', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $program->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('file_pendukung');
+            }
+        }
+        return redirect()->route('tr.programs.index');
+    }
+
+    public function ProgramMediaDestroy(Media $media)
+    {
+        $media->delete();
+        return response()->json(['success' => true]);
     }
 }

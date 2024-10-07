@@ -14,9 +14,9 @@
             </div>
         </div>
     </div>
-    <form id="editProgram" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"
-        enctype="multipart/form-data">
-        {{-- <form method="POST" id="editProgram" action="{{ route('programs.update', [$program->id]) }}" enctype="multipart/form-data"> --}}
+    {{-- <form id="editProgram" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"
+        enctype="multipart/form-data"> --}}
+    <form method="POST" id="editProgram" action="{{ route('program.update', [$program->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" name="id">
@@ -322,9 +322,7 @@
                             <div class="col-lg-12">
                                 <div class="form-group file-loading">
                                     <label for="status" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.upload') }}
-                                        </strong>
+                                        <strong>{{ __('cruds.program.upload') }}</strong>
                                     </label>
                                     <input id="file_pendukung" name="file_pendukung[]" type="file"
                                         class="form-control" multiple data-show-upload="false" data-show-caption="true">
@@ -374,7 +372,7 @@
                                 <div class="form-group">
                                     <label for="users" class="small control-label">
                                         <strong>
-                                            User Program {{-- {{ auth()->user()->nama }} --}}
+                                            User Program
                                         </strong>
                                     </label>
                                     <div class="select2-green">
@@ -405,11 +403,11 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}" >
+    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
 @endpush
 
 @push('js')
-@section('plugins.Sweetalert2', true)
+    @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
@@ -427,35 +425,46 @@
         $('#status').select2();
         var url_update = $('#editProgram').attr('action');
 
-        $("#file_pendukung").fileinput({
-            showRemove: true,
-            previewZoomButtonTitles: true,
-            dropZoneEnabled: false,
-            removeIcon: '<i class="bi bi-trash"></i>',
-            showDrag: true,
-            dragIcon: '<i class="bi-arrows-move"></i>',
-            showZoom: true,
-            showUpload: false,
-            showRotate: true,
-            showCaption: true,
-            uploadUrl: url_update,
-            uploadAsync: false,
-            maxFileSize: 4096,
-            allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-            append: true
+        $(document).ready(function() {
+            $("#file_pendukung").fileinput({
+                theme: 'fa',
+                showRemove: true,
+                previewZoomButtonTitles: true,
+                dropZoneEnabled: false,
+                removeIcon: '<i class="bi bi-trash"></i>',
+                showDrag: true,
+                dragIcon: '<i class="bi-arrows-move"></i>',
+                showZoom: true,
+                showUpload: false,
+                showRotate: true,
+                showCaption: true,
+                uploadUrl: url_update,
+                uploadAsync: false,
+                maxFileSize: 4096,
+                allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc",
+                    "docx"
+                ],
+                append: true,
+                initialPreview: @json($initialPreview),
+                initialPreviewAsData: true,
+                initialPreviewConfig: @json($initialPreviewConfig),
+
+                overwriteInitial: false,
+            });
+
+            $('#file_pendukung').on('change', function(event) {
+                const files = event.target.files;
+                const dataTransfer = new DataTransfer();
+                for (let i = 0; i < this.files.length; i++) {
+                    dataTransfer.items.add(this.files[i]);
+                }
+                for (let file of files) {
+                    dataTransfer.items.add(file);
+                }
+                this.files = dataTransfer.files;
+            });
         });
 
-        $('#file_pendukung').on('change', function(event) {
-            const files = event.target.files;
-            const dataTransfer = new DataTransfer();
-            for (let i = 0; i < this.files.length; i++) {
-                dataTransfer.items.add(this.files[i]);
-            }
-            for (let file of files) {
-                dataTransfer.items.add(file);
-            }
-            this.files = dataTransfer.files;
-        });
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
         var data_sdg = "{{ route('program.api.sdg') }}";

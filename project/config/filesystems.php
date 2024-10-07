@@ -39,7 +39,7 @@ return [
         'program_uploads' => [
             'driver' => 'local',
             'root' => public_path('uploads/program'),
-            'url' => env('APP_URL').'/uploads/program',
+            'url' => '/uploads/program',
             'visibility' => 'public',
         ],
 

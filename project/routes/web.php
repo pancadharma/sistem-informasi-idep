@@ -180,10 +180,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
     Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
     Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
-    
+
     //Route Program by Siva
     //Program
     Route::resource('program', ProgramController::class);
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
-    
+
+    Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
+
 });
