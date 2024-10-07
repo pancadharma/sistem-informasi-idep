@@ -18,9 +18,9 @@
         enctype="multipart/form-data">
         @csrf
         @method('POST')
-        {{-- Informasi Dasar --}}
+
         <div class="row">
-            <div class="col-12">
+            <div class="col-sm-12">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
                         <strong>
@@ -32,49 +32,258 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Informasi Dasar --}}
+                    <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
+                                    <label for="nama_program" class="control-label mb-0 small">{{ __('cruds.program.nama') }}</label>
                                     <input type="text" id="nama_program" name="nama" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program" class="small">{{ __('cruds.program.form.kode') }}</label>
+                                    <label for="kode_program" class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
                                     <input type="text" id="kode_program" name="kode" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalmulai"
-                                        class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_mulai') }}</label>
                                     <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalselesai"
-                                        class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_selesai') }}</label>
                                     <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="totalnilai"
-                                        class="small">{{ __('cruds.program.form.total_nilai') }}</label>
+                                        class="control-label mb-0 small">{{ __('cruds.program.form.total_nilai') }}</label>
                                     <input type="number" id="totalnilai" name="totalnilai" class="form-control"
                                         maxlength="15" minlength="0" step=".01",>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{-- Ekspektasi Penerima Manfaat --}}
+                    <div class="card-body pt-0 pb-0">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="ekspektasipenerimamanfaat"
+                                        class="control-label mb-0 small">{{ __('cruds.program.expektasi') }}</label>
+                                    <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat" class="form-control"
+                                        placeholder="{{ __('cruds.program.expektasi') }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label for="pria"
+                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
+                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label for="wanita"
+                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                    <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
+                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="laki"
+                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                    <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
+                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="perempuan"
+                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                    <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
+                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="total"
+                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                    <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
+                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Kelompok Marjinal --}}
+                    <div class="card-body pt-0 pb-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="kelompokmarjinal" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.program.marjinal.list') }}
+                                        </strong>
+                                    </label>
+                                    <div class="select2-purple">
+                                        <select class="form-control select2" name="kelompokmarjinal[]"
+                                            id="kelompokmarjinal" multiple="multiple">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Target Reinstra --}}
+                    <div class="card-body pt-0 pb-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="targetreinstra" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.program.list_reinstra') }}
+                                        </strong>
+                                    </label>
+                                    <div class="select2-orange">
+                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
+                                            id="targetreinstra" multiple="multiple">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Kaitan SDG --}}
+                    <div class="card-body pt-0 pb-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="kaitansdg" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.program.list_sdg') }}
+                                        </strong>
+                                    </label>
+                                    <div class="select2-orange">
+                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
+                                            multiple="multiple">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Deskripsi Program --}}
+                    <div class="card-body pt-0 pb-0">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="users" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.program.deskripsi') }}
+                                        </strong>
+                                    </label>
+                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
+                                    placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
+                                </div>
+                            </div>
+                    {{-- Analisis Program --}}
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="users" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.program.analisis') }}
+                                        </strong>
+                                    </label>
+                                    <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
+                                    placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- File Uploads --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="file_pendukung" class="control-label mb-0 small">
+                                    <strong>
+                                        {{ __('cruds.program.upload') }}
+                                    </strong>
+                                </label>
+                                <div class="form-group file-loading">
+                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
+                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Status --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="status" class="control-label mb-0 small">
+                                        <strong>
+                                            {{ __('cruds.status.title') }}
+                                        </strong>
+                                    </label>
+                                    <div class="select2-green">
+                                        <select class="form-control select2" name="status" id="status" required>
+                                            <optgroup label="Status Progran">
+                                                <option value="draft">Draft</option>
+                                                <option value="running" disabled>Running</option>
+                                                <option value="submit" disabled>Submit</option>
+                                                <option value="completed" disabled>Completed</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="users" class="control-label mb-0 small">
+                                        <strong>
+                                            User Program
+                                        </strong>
+                                    </label>
+                                    <div class="select2-green">
+                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
+                                            id="user_id" name="user_id" readonly>
+                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
+                                            name="user_id">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- Submit Button --}}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        {{ __('global.add') . ' ' . __('cruds.program.title_singular') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
-        {{-- Ekspektasi Penerima Manfaat --}}
-        <div class="row">
+
+        {{-- OLD FORM --}}
+        {{-- <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
@@ -87,64 +296,11 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaat"
-                                        class="small">{{ __('cruds.program.expektasi') }}</label>
-                                    <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000"
-                                        name="ekspektasipenerimamanfaat" class="form-control"
-                                        placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-1">
-                                <div class="form-group">
-                                    <label for="pria"
-                                        class="small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
-                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-1">
-                                <div class="form-group">
-                                    <label for="wanita"
-                                        class="small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
-                                    <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="laki"
-                                        class="small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
-                                    <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="perempuan"
-                                        class="small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
-                                    <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="total"
-                                        class="small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
-                                    <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
-                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
-        {{-- Kelompok Marjinal --}}
+
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
@@ -179,7 +335,7 @@
                 </div>
             </div>
         </div>
-        {{-- Target Reinstra --}}
+
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
@@ -214,7 +370,7 @@
                 </div>
             </div>
         </div>
-        {{-- Kaitan SDG --}}
+
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
@@ -250,7 +406,7 @@
             </div>
         </div>
         <div class="row">
-            {{-- Deskripsi Program --}}
+
             <div class="col-lg-6">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
@@ -275,7 +431,7 @@
                     </div>
                 </div>
             </div>
-            {{-- Analisis Program --}}
+
             <div class="col-lg-6">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
@@ -301,7 +457,7 @@
                 </div>
             </div>
         </div>
-        {{-- File Uploads --}}
+
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
@@ -333,7 +489,7 @@
                 </div>
             </div>
         </div>
-        {{-- Status --}}
+
         <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-outline">
@@ -372,8 +528,7 @@
                                 <div class="form-group">
                                     <label for="users" class="small control-label">
                                         <strong>
-                                            User Program {{-- {{ auth()->user()->nama }} --}}
-                                        </strong>
+                                            User Program
                                     </label>
                                     <div class="select2-green">
                                         <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
@@ -384,7 +539,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- Submit Button --}}
+
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
@@ -397,7 +552,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </form>
 @stop
 
@@ -407,7 +562,7 @@
 @endpush
 
 @push('js')
-    @section('plugins.Sweetalert2', true)
+@section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
@@ -423,37 +578,10 @@
     //SCRIPT FOR CREATE PROGRAM FORM
 
     $(document).ready(function() {
-        // $("#file_pendukung").fileinput({
-        //     showRemove: true,
-        //     previewZoomButtonTitles: true,
-        //     dropZoneEnabled: false,
-        //     removeIcon: '<i class="bi bi-trash"></i>',
-        //     showDrag: true,
-        //     dragIcon: '<i class="bi-arrows-move"></i>',
-        //     showZoom: true,
-        //     showDrag: true,
-        //     showRotate: true,
-        //     showCaption: true,
-        // });
-        // $("#file_pendukung").fileinput({
-        //     uploadUrl: "{{ route('program.store') }}",
-        //     uploadAsync: false,
-        //     showUpload: false,
-        //     showCaption: true,
-        //     maxFileSize: 2048,
-        //     allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-        //     dropZoneEnabled: false,
-        //     multiple: true
-        // });
-        // $("#file_pendukung").fileinput({
-        //     'uploadUrl': "{{ route('program.store') }}",
-        //     'uploadAsync': false,
-        //     'maxFileSize': 4096,
-        //     'allowedFileExtensions': ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-        //     'multiple': true
-        // });
 
         $("#file_pendukung").fileinput({
+            uploadUrl: "{{ route('program.store') }}",
+            theme: 'fa',
             showRemove: true,
             previewZoomButtonTitles: true,
             dropZoneEnabled: false,
@@ -464,24 +592,23 @@
             showUpload: false,
             showRotate: true,
             showCaption: true,
-            uploadUrl: "{{ route('program.store') }}",
             uploadAsync: false,
             maxFileSize: 4096,
             allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
             append: true
         });
 
-        $('#file_pendukung').on('change', function(event) {
-            const files = event.target.files;
-            const dataTransfer = new DataTransfer();
-            for (let i = 0; i < this.files.length; i++) {
-                dataTransfer.items.add(this.files[i]);
-            }
-            for (let file of files) {
-                dataTransfer.items.add(file);
-            }
-            this.files = dataTransfer.files;
-        });
+        // $('#file_pendukung').on('change', function(event) {
+        //     const files = event.target.files;
+        //     const dataTransfer = new DataTransfer();
+        //     for (let i = 0; i < this.files.length; i++) {
+        //         dataTransfer.items.add(this.files[i]);
+        //     }
+        //     for (let file of files) {
+        //         dataTransfer.items.add(file);
+        //     }
+        //     this.files = dataTransfer.files;
+        // });
 
         $('#status').select2();
 

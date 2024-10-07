@@ -38,8 +38,8 @@ class ProgramController extends Controller
         $data = DataTables::of($programs)
             ->addIndexColumn()
             ->addColumn('action', function ($program) {
-                return '<button type="button" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline">' . trans('global.edit') . '</span></button>
-                        <button type="button" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline">' . trans('global.view') . '</span></button>';
+                return '<div class="button-container"><button type="button" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline">' . trans('global.edit') . '</span></button>
+                        <button type="button" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline">' . trans('global.view') . '</span></button></div>';
             })
             ->make(true);
         return $data;
@@ -69,7 +69,7 @@ class ProgramController extends Controller
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
-            if ($request->hasFile('file_pendukung')) {
+            if ($request->hasFile('file_pendukung') && $request->validated()) {
                 $timestamp = now()->format('Ymd_His');
                 $fileCount = 1;
 
@@ -79,7 +79,7 @@ class ProgramController extends Controller
                     $programName = str_replace(' ', '_', $program->nama);
                     $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
 
-                    \Log::info('Uploading file: ' . $fileName);
+                    \Log::info('Uploading file: ' . $fileName .' Orignal Name: '. $originalName);
                     $program->addMedia($file)
                             ->usingName("{$programName}_{$fileCount}")
                             ->usingFileName($fileName)

@@ -51,15 +51,15 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalmulai"
-                                        class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
+                                        class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                    <input type="datetime" id="tanggalmulai" name="tanggalmulai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalselesai"
-                                        class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
+                                        class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                    <input type="datetime" id="tanggalselesai" name="tanggalselesai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-3">
