@@ -22,4 +22,8 @@ class KaitanSdg extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function program() {
+        return $this->belongsToMany(Program::class, 'trprogramkaitansdg', 'kaitansdg_id', 'program_id');
+    }
 }

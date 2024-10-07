@@ -92,7 +92,7 @@
                                 columns: [0, 1, 2]
                             }
                         },
-                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i><span class="d-none d-md-inline">Column visibility</span>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {
