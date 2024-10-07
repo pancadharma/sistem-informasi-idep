@@ -28,7 +28,7 @@ class StoreMpendonorRequest extends FormRequest
             'pic' => ['string', 'max:200', 'required'],
             'email' => ['required', 'email', 'max:200'],
             'phone' => ['required', 'regex:/^\+?[0-9]{10,20}$/'],
-            'aktif' => ['accepted'],
+            'aktif' => ['integer'],
         ];
     }
 
@@ -47,7 +47,7 @@ class StoreMpendonorRequest extends FormRequest
             'email.max' => 'Kolom email maksimal 200 karakter.',
             'phone.required' => 'Kolom telepon wajib diisi!',
             'phone.regex' => 'Kolom telepon harus berupa angka dengan panjang antara 10 hingga 20 karakter.',
-            'aktif.accepted' => 'Check box wajib dipilih.',
+            // 'aktif.integer' => 'Check box wajib dipilih.',
         ];
     }
 }

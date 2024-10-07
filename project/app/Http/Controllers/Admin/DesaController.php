@@ -78,6 +78,7 @@ class DesaController extends Controller
         if ($request->ajax()) {
             $query = Kelurahan::select('kelurahan.id', 'kelurahan.kode', 'kelurahan.nama', 'kelurahan.aktif', 'kelurahan.kecamatan_id')->with('kecamatan:id,nama');
             $data = DataTables::of($query)
+            ->addIndexColumn()
             ->addColumn('action', function ($desa) {
                 return '<button type="button" class="btn btn-sm btn-info edit-desa-btn" data-action="edit"
                 data-desa-id="'. $desa->id .'" title="'.__('global.edit') .' '. __('cruds.desa.title') .' '. $desa->nama .'">
@@ -111,7 +112,7 @@ class DesaController extends Controller
     public function edit(Kelurahan $desa){
         // abort_if(Gate::denies('desa_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $provinsi = Provinsi::all(['id', 'kode', 'nama']);
-        $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']); 
+        $kabupaten = Kabupaten::where('provinsi_id', $desa->kecamatan->kabupaten->provinsi_id)->get(['id', 'kode', 'nama']);
         $kecamatan = Kecamatan::where('kabupaten_id', $desa->kecamatan->kabupaten->id)->get(['id', 'kode', 'nama']);
         $desa->load('kecamatan','kecamatan.kabupaten', 'kecamatan.kabupaten.provinsi' );
 

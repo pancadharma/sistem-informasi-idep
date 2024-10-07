@@ -21,7 +21,7 @@ class UpdateUserRequest extends FormRequest
             'nama'      => ['string','required','max:100'],
             'username'  => ["required", "unique:users,username,{$userId}", "max:50"],
             'email'     => ["required", "unique:users,email,{$userId}", "max:100"],
-            // 'email'     => ["required", "max:100", "unique:users,email,". request()->route('users')->id],
+            'jabatan_id'=> ['required',],
             'password'  => ['nullable','max:100'],
             'roles.*'   => ['integer',],
             'roles'     => ['required','array',],

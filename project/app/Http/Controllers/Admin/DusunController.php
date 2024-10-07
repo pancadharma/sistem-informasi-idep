@@ -148,7 +148,7 @@ class DusunController extends Controller
 
     public function destroy($dusun)
     {
-        
+
     }
 
 
@@ -156,6 +156,7 @@ class DusunController extends Controller
         if ($request->ajax()) {
             $query = Dusun::select('dusun.id', 'dusun.kode', 'dusun.nama', 'dusun.aktif', 'dusun.kode_pos' , 'dusun.desa_id')->with('desa:id,nama');
             $data = DataTables::of($query)
+            ->addIndexColumn()
             ->addColumn('action', function ($dusun) {
                 return '<button type="button" class="btn btn-sm btn-info edit-dusun-btn" data-action="edit"
                 data-dusun-id="'. $dusun->id .'" title="'.__('global.edit') .' '. __('cruds.dusun.title') .' '. $dusun->nama .'">
