@@ -172,7 +172,7 @@ entity "trprogram" as trprogram {
     ekspektasipenerimamanfaatman : int
     ekspektasipenerimamanfaatgirl : int
     ekspektasipenerimamanfaatboy : int
-    ekspektasipenerimamanfaattidaklangsung : varchar (100)
+    ekspektasipenerimamanfaattidaklangsung : int
     deskripsiprojek : varchar (500)
     analisamasalah : varchar (500)
     id_user : int <<fk>>
