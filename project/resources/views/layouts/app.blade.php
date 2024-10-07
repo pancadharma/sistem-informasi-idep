@@ -33,7 +33,7 @@
 @section('content')
     @yield('content_body') {{-- Will showing where the main content is on CRUD --}}
 @stop
-
+@extends('layouts.responsive-btn')
 {{-- Create a common footer --}}
 
 @section('footer')

@@ -323,10 +323,49 @@ return [
             'deleted_at'    => 'Dihapus pada',
         ]
     ],
-    'program'               => [
-        'title'             => 'Informasi Program',
-        'list'              => 'Daftar Program',
-        'title_singular'    => 'Program',
+
+    'peran' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Peran',
+        'title' => 'Peran',
+        'nama'=>'Peran',
+        'status' => 'Status',
+    ],
+
+    'mjabatan' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Jabatan',
+        'title' => 'Jabatan',
+        'nama'=>'Jabatan',
+        'status' => 'Status',
+    ],
+
+    'kaitan_sdg' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Sustainable Development Goals',
+        'title' => 'Sustainable Development Goals',
+        'nama'=>'Sustainable Development Goals',
+        'status' => 'Status',
+    ],
+
+    'program' => [
+        'list' => 'Daftar',
+        'title_singular' => 'Program',
+        'title' => 'Program',
+        'nama' => 'Nama Program',
+        'kode' => 'Kode',
+        'tanggalmulai' => 'Tanggal Mulai',
+        'tanggalselesai' => 'Tanggal Selesai',
+        'totalnilai' => 'Total Nilai',
+        'ekspektasipenerimamanfaat' => 'Ekspektasi Penerima Manfaat',
+        'ekspektasipenerimamanfaatwoman' => 'Ekspektasi Penerima Manfaat Wanita',
+        'ekspektasipenerimamanfaatman' => 'Ekspektasi Penerima Manfaat Pria',
+        'ekspektasipenerimamanfaatgirl' => 'Ekspektasi Penerima Manfaat Perempuan',
+        'ekspektasipenerimamanfaatboy' => 'Ekspektasi Penerima Manfaat Laki-laki',
+        'ekspektasipenerimamanfaattidaklangsung' => 'Penerima Manfaat Tidak Langsung',
+        'deskripsiprojek' => 'Deskripsi Proyek',
+        'analisamasalah' => 'Analisa Masalah',
+        'status' => 'Status',
         'info_dasar'        => 'Informasi Dasar',
         'expektasi'         => 'Eksp. Penerima Manfaat',
         'ex_indirect'       => 'Eksp. Penerima Manfaat Tak Langsung',
@@ -343,6 +382,8 @@ return [
         'pilih_file'        => 'Pilih Berkas',
         'form'            => [
             'id'            => 'ID',
+            'title'         => 'Informasi Program',
+            'list'          => 'Daftar Program',
             'nama'          => 'Nama',
             'kode'          => 'Kode',
             'tgl_mulai'     => 'Tgl Mulai',
@@ -413,51 +454,6 @@ return [
             'select'        => 'Pilih Kelompok Marjinal',
         ],
 
-    ],
-
-
-    'peran' => [
-        'list' => 'Daftar',
-        'title_singular' => 'Peran',
-        'title' => 'Peran',
-        'nama'=>'Peran',
-        'status' => 'Status',
-    ],
-
-    'mjabatan' => [
-        'list' => 'Daftar',
-        'title_singular' => 'Jabatan',
-        'title' => 'Jabatan',
-        'nama'=>'Jabatan',
-        'status' => 'Status',
-    ],
-
-    'kaitan_sdg' => [
-        'list' => 'Daftar',
-        'title_singular' => 'Sustainable Development Goals',
-        'title' => 'Sustainable Development Goals',
-        'nama'=>'Sustainable Development Goals',
-        'status' => 'Status',
-    ],
-
-    'program' => [
-        'list' => 'Daftar',
-        'title_singular' => 'Program',
-        'title' => 'Program',
-        'nama' => 'Nama Program',
-        'kode' => 'Kode',
-        'tanggalmulai' => 'Tanggal Mulai',
-        'tanggalselesai' => 'Tanggal Selesai',
-        'totalnilai' => 'Total Nilai',
-        'ekspektasipenerimamanfaat' => 'Ekspektasi Penerima Manfaat',
-        'ekspektasipenerimamanfaatwoman' => 'Ekspektasi Penerima Manfaat Wanita',
-        'ekspektasipenerimamanfaatman' => 'Ekspektasi Penerima Manfaat Pria',
-        'ekspektasipenerimamanfaatgirl' => 'Ekspektasi Penerima Manfaat Perempuan',
-        'ekspektasipenerimamanfaatboy' => 'Ekspektasi Penerima Manfaat Laki-laki',
-        'ekspektasipenerimamanfaattidaklangsung' => 'Penerima Manfaat Tidak Langsung',
-        'deskripsiprojek' => 'Deskripsi Proyek',
-        'analisamasalah' => 'Analisa Masalah',
-        'status' => 'Status',
     ],
 
 ];

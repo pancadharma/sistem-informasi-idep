@@ -118,11 +118,6 @@ class TrProgramController extends Controller
         }
     }
 
-
-
-
-
-
     // GET DATA
     public function dataProgramTargetReinstra(Request $request)
     {

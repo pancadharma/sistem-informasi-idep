@@ -24,8 +24,8 @@
                         <th>{{ trans('cruds.program.ekspektasipenerimamanfaattidaklangsung') }}</th>
                         <th>{{ trans('cruds.program.deskripsiprojek') }}</th>
                         <th>{{ trans('cruds.program.analisamasalah') }}</th>
-                        <th style="width: 5%;">{{ trans('cruds.status.title') }}</th>
-                        <th style="width: 15%;">{{ trans('global.action') }}</th>
+                        <th>{{ trans('cruds.status.title') }}</th>
+                        <th>{{ trans('global.action') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -44,6 +44,6 @@
     @section('plugins.Select2', true)
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
-    
+
     @include('tr.program.js')
 @endpush

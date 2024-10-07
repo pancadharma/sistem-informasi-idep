@@ -370,7 +370,6 @@ return [
     	'analisamasalah' 						 => 'Problem Analysis',
         'status' 						 		 => 'Status',
         'list'              => 'List Program',
-        'title_singular'    => 'Program',
         'info_dasar'        => 'Basic Information',
         'expektasi'         => 'Beneficiary Expectations',
         'ex_indirect'       => 'Expected Indirect Benefit Receipt',
@@ -388,6 +387,8 @@ return [
         'pilih_file'        => 'Select Files',
         'form'              => [
             'id'            => 'ID',
+            'title'         => 'Program Information',
+            'list'          => 'Program List',
             'nama'          => 'Name',
             'kode'          => 'Code',
             'tgl_mulai'     => 'Start Date',
