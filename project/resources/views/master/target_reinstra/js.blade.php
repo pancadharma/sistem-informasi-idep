@@ -17,7 +17,7 @@
                 {data: "status", className: "text-center align-middle", orderable: false, searchable: false, width: "10%", },
                 {data: "action", className: "text-center align-middle", orderable: false, searchable: false, width: "10%",}
             ],
-            
+
             layout: {
                 topStart: {
                     buttons: [
@@ -80,7 +80,7 @@
                                 }
                             }
                         },
-                        {extend: 'colvis', text: `<i class="fas fa-eye"></i><i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {pageLength: 10}
