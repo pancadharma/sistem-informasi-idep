@@ -36,6 +36,13 @@ return [
             'throw' => false,
         ],
 
+        'program_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/program'),
+            'url' => '/uploads/program',
+            'visibility' => 'public',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
