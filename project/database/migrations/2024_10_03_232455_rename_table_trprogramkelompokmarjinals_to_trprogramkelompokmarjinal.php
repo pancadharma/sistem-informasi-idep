@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('mkaitan_sdg', 'mkaitansdg');
+        Schema::table('trprogramkelompokmarjinal', function (Blueprint $table) {
+            Schema::rename('trprogramkelompokmarjinals', 'trprogramkelompokmarjinal');
+        });
     }
 
     /**
@@ -19,6 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('mkaitansdg', 'mkaitan_sdg');
+
+        Schema::rename('trprogramkelompokmarjinal', 'trprogramkelompokmarjinals');
     }
 };

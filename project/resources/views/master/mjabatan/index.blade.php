@@ -11,7 +11,7 @@
             <table id="mjabatan_list" class="table table-bordered table-striped cell-border ajaxTable datatable-mjabatan" style="width:100%">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">#</th>
+                        <th style="width: 5%;">No. </th>
                         <th>{{trans('cruds.mjabatan.nama')}}</th>
                         <th style="width: 5%;">{{ trans('cruds.status.title') }}</th>
                         <th style="width: 15%;">{{ trans('global.action') }}</th>

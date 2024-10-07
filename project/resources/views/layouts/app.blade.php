@@ -47,6 +47,7 @@
 
 @push('js')
 @section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
 <script>
     $(document).ready(function() {
         window._token = $('meta[name="csrf-token"]').attr('content')
@@ -100,10 +101,20 @@
         })
     });
 
-    $(document).on('select2:open', function() {
-        setTimeout(function() {
-            document.querySelector('.select2-search__field').focus();
-        }, 100);
+    // $(document).on('select2:open', function() {
+    //     setTimeout(function() {
+    //         document.querySelector('.select2-search__field').focus();
+    //     }, 100);
+    // });
+
+    $(document).on('focus', '.select2-selection.select2-selection--single', function (e) {
+        $(this).closest(".select2-container").siblings('select:enabled').select2('open');
+    });
+        // steal focus during close - only capture once and stop propogation
+    $('select.select2').on('select2:closing', function (e) {
+        $(e.target).data("select2").$selection.one('focus focusin', function (e) {
+            e.stopPropagation();
+        });
     });
 
     $(function () {
@@ -120,21 +131,8 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
+    $.fn.dataTable.ext.errMode = 'throw';
 
-    pdfMake.fonts = {
-        Roboto: {
-            normal: "DejaVuSans.ttf",
-            bold: "DejaVuSans-Bold.ttf",
-            italics: "DejaVuSans.ttf",
-            bolditalics: "DejaVuSans-Bold.ttf"
-        },
-        DejaVuSans: {
-            normal: "DejaVuSans.ttf",
-            bold: "DejaVuSans-Bold.ttf",
-            italics: "DejaVuSans-Bold.ttf",
-            bolditalics: "DejaVuSans-Bold.ttf"
-        }
-    };
 </script>
 @endpush
 

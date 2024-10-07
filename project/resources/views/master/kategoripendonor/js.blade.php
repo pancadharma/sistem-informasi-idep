@@ -7,8 +7,6 @@
             processing: true,
             serverSide: true,
             // stateSave: true,
-
-        order: [[ 1, 'asc' ]],
             
             columns: [
                 
@@ -55,30 +53,69 @@
                 },
 
             ],
-
-
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },{
-                            extend: 'pdf', 
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
-                            }    
+                            }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },
@@ -96,6 +133,7 @@
                     pageLength: 5,
                 }
             },
+
             order: [
                 [1, 'asc']
             ],

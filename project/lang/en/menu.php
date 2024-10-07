@@ -32,7 +32,7 @@ return [
     'roles'             => 'Position',
     'user'              => 'User',
     'users'             => 'Users',
-    'kelompok_rentan'   => 'Vulnerable Groups',
+    'kelompok_rentan'   => 'Marginalized Groups',
     'pendonor'          => 'Donator',
     'kategoripendonor'  => 'Donator Category',
     'partner'           => 'Partner',

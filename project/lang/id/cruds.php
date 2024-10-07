@@ -310,7 +310,7 @@ return [
             'deleted_at'    => 'Deleted at',
         ]
     ],
-    'satuan'               => [
+    'satuan'                => [
         'title'             => 'Satuan',
         'list'              => 'Daftar Satuan',
         'title_singular'    => 'Satuan',
@@ -323,7 +323,99 @@ return [
             'deleted_at'    => 'Dihapus pada',
         ]
     ],
-    
+    'program'               => [
+        'title'             => 'Informasi Program',
+        'list'              => 'Daftar Program',
+        'title_singular'    => 'Program',
+        'info_dasar'        => 'Informasi Dasar',
+        'expektasi'         => 'Eksp. Penerima Manfaat',
+        'ex_indirect'       => 'Eksp. Penerima Manfaat Tak Langsung',
+        'reinstra'          => 'Target Reinstra',
+        'list_reinstra'     => 'Daftar Target Reinstra',
+        'select_reinstra'   => 'Pilih Target Reinstra',
+        'sdg'               => 'Kaitan SDG',
+        'list_sdg'          => 'Daftar SDG',
+        'select_sdg'        => 'Pilih SDG',
+        'deskripsi'         => 'Deskripsi Program',
+        'analisis'          => 'Analisis Masalah Program',
+        'files'             => 'Berkas Pendukung',
+        'upload'            => 'Unggah Berkas',
+        'pilih_file'        => 'Pilih Berkas',
+        'form'            => [
+            'id'            => 'ID',
+            'nama'          => 'Nama',
+            'kode'          => 'Kode',
+            'tgl_mulai'     => 'Tgl Mulai',
+            'tgl_selesai'   => 'Tgl Selesai',
+            'total_nilai'   => 'Total Nilai Program (IDR)',
+            'pria'          => 'Pria',
+            'wanita'        => 'Wanita',
+            'laki'          => 'Anak Laki-laki',
+            'perempuan'     => 'Anak Perempuan',
+            'total'         => 'Total Ekpektasi Penerima Manfaat',
+            'created_at'    => 'Dibuat pada',
+            'updated_at'    => 'Diperbarui pada',
+            'deleted_at'    => 'Dihapus pada',
+        ],
+        'lokasi'            => [
+            'lokasi'        => 'Lokasi',
+            'pro'           => 'Provinsi',
+            'sel_pro'       => 'Pilih Provinsi',
+            'kab'           => 'Kabupaten',
+            'sel_kab'       => 'Pilih Kabupaten',
+            'kec'           => 'Kecamatan',
+            'sel_kec'       => 'Pilih Kecamatan',
+            'des'           => 'Desa',
+            'sel_des'       => 'Pilih Desa',
+            'dus'           => 'Dusun',
+            'select_dus'    => 'Pilih Dusun',
+        ],
+        'donor'             => [
+            'nama'          => 'Nama Donor',
+            'email'         => 'Email',
+            'ph'            => 'Nomor Telepon',
+            'val'           => 'Nilai Donasi',
+        ],
+        'staff'             => [
+            'label'         => 'Staf',
+            'select'        => 'Pilih Staf',
+            'peran'         => 'Peran',
+            'sel_peran'     => 'Pilih Peran',
+        ],
+        'outcome'           => [
+            'label'         => 'Hasil',
+            'desc'          => 'Deskripsi',
+            'indicator'     => 'Indikator',
+            'target'        => 'Target',
+        ],
+        'partner'           => [
+            'label'         => 'Mitra',
+            'select'        => 'Pilih Mitra',
+        ],
+        'report'            => [
+            'label'         => 'Jadwal Laporan',
+            'to'            => 'Laporan ke',
+            'mulai'         => 'Tanggal Mulai',
+            'selesai'       => 'Tanggal Selesai',
+        ],
+        'objective'         => [
+            'label'         => 'Tujuan',
+        ],
+        'goals'             => [
+            'label'         => 'Sasaran',
+            'desc'          => 'Deskripsi',
+            'indicator'     => 'Indikator',
+            'target'        => 'Target',
+        ],
+        'marjinal'            => [
+            'label'         => 'Kelompok Marjinal',
+            'list'          => 'List Kelompok Marjinal',
+            'select'        => 'Pilih Kelompok Marjinal',
+        ],
+
+    ],
+
+
     'peran' => [
         'list' => 'Daftar',
         'title_singular' => 'Peran',

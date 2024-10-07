@@ -55,30 +55,69 @@
                 },
 
             ],
-
-
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },{
-                            extend: 'pdf', 
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
-                            }    
+                            }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
                                 columns: [0, 1, 2]
                             }
                         },
@@ -86,6 +125,7 @@
                             extend: 'colvis',
                             text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
                             className: 'btn btn-warning',
+                            titleAttr: "Select Visible Column",
                             exportOptions: {
                                 columns: [0, 1, 2]
                             }

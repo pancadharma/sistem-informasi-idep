@@ -24,8 +24,22 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\TrProgramController;
 use App\Http\Controllers\Admin\ProgramController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
+
+// Insert Usable class controller after this line to avoid conflict with others member for developent
+// Need to resolve wether use ProgramController or TrProgramController
+
+
+
+
+
+
+
+
+
+
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -123,7 +137,7 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
-    
+
     //Master Jabatan
     Route::resource('mjabatan', MjabatanController::class);
     Route::get('data/mjabatan', [MjabatanController::class, 'getData'])->name('data.mjabatan');
@@ -158,8 +172,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('kaitan_sdg', KaitanSdgController::class);
     Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
 
+    // Transaction Program
+
+    //Route::resource('program', TrProgramController::class);
+    // get data for select 2 form
+    Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
+    Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
+    Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
+    Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
+    
+    //Route Program by Siva
     //Program
     Route::resource('program', ProgramController::class);
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
-
+    
 });

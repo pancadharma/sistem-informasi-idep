@@ -254,7 +254,7 @@ return [
         ],
         [
             'text' => 'setup',
-            'icon' => 'far fa-image',
+            'icon' => 'fas fa-cog',
             'submenu' => [
                 [
                     'text' => 'kelompok_rentan',
@@ -320,16 +320,15 @@ return [
             ],
         ],
         [
-            'text' => 'transaksi',
-            'icon' => 'fas fa-file-invoice',
-            'submenu' => [
+            'text'              => 'transaksi',
+            'icon'              => 'fas fa-tasks',
+            'submenu'           => [
                 [
-                    'text' => 'program',
-                    'icon' => 'nav-icon fas fa-project-diagram',
-                    'route' => 'program.index',
-                    // 'url' => 'program',
-
-                    'active' => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
+                    'text'      => 'program',
+                    'icon'      => 'nav-icon fas fa-project-diagram',
+                    'route'     => 'program.index',
+                    'can'       => ['program_access'],
+                    'active'    => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
                     'text' => 'kegiatan',
@@ -437,17 +436,17 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
+                    'location' => '/vendor/datatables-new/datatables.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
                     'location' => '/vendor/datatables-new/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => '/vendor/datatables-new/datatables.min.js',
                 ],
                 [
                     'type' => 'css',
@@ -665,32 +664,57 @@ return [
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/css/fileinput.min.css',
+                    'location' => 'vendor/bootstrap-icons/font/bootstrap-icons.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.css',
+                    'location' => 'vendor/krajee-fileinput/css/fileinput.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/buffer.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/filetype.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/piexif.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/sortable.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/krajee-fileinput/js/fileinput.min.js',
                 ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/fa5/theme.min.js',
+                // ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/bs5/theme.min.js',
+                // ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.js',
+                // ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/fa5/theme.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/js/locales/en.js',
+                    'location' => 'vendor/krajee-fileinput/js/locales/id.js',
                 ],
             ],
         ],

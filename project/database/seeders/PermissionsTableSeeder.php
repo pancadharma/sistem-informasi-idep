@@ -80,6 +80,10 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 62, 'nama' => 'satuan_create'],
                 ['id' => 63, 'nama' => 'satuan_edit'],
                 ['id' => 64, 'nama' => 'satuan_delete'],
+                ['id' => 65, 'nama' => 'program_access'],
+                ['id' => 66, 'nama' => 'program_create'],
+                ['id' => 67, 'nama' => 'program_edit'],
+                ['id' => 68, 'nama' => 'program_delete'],
             ];
             foreach ($permissions as $data) {
                 Permission::updateOrCreate(['id' => $data['id']], $data);

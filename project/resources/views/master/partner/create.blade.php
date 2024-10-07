@@ -45,19 +45,21 @@
 
             {{-- Status Partner --}}
             <div class="form-group">
-                <strong> {{ trans('cruds.partner.title') .' '. trans('cruds.status.title')  }}  </strong>
+                <strong> {{ __('cruds.status.title')  }}  </strong>
+                <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
                 <div class="icheck-primary">
-                    <input type="hidden" name="aktif" value="0"> {{-- add to add default value --}}
-                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-                    <label for="aktif"></label>
+                    <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
+                    <label for="aktif">{{ __('cruds.status.aktif') }}</label>
                 </div>
+                
             </div>
 
-            <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn', 'btn-flat btn-primary') }} btn-add-role">
+            <button type="submit" class="btn float-right {{ config('adminlte.classes_auth_btn', 'btn-primary') }} btn-add-role">
                 <span class="fas fa-user-secret"></span>
                 {{ __('global.add') }}
                 {{ __('cruds.partner.title_singular') }}
             </button>
+                
         </form>
     </div>
 </div>

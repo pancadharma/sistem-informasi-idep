@@ -90,11 +90,9 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (column === 5) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
                                 },
                                 columns: [0, 1, 2, 3,4,5]
@@ -109,7 +107,6 @@
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
                                         return data;
-
                                     }
                                 },
                                 columns: [0, 1, 2, 3,4,5]
@@ -425,8 +422,11 @@
                                 Swal.showLoading();
                             },
                         });
+                        $(".btn-tool").trigger('click');
                         $('#addKabupaten').modal('hide');
-                        $('#kabupatenForm').trigger('reset');
+                        $("#provinsi_add").val('').trigger('change');
+                        $("#type").val('').trigger('change');
+                        $('#kabupatenForm')[0].reset();
                         $('#kabupaten').DataTable().ajax.reload();
                     } else {
                         var errorMessage = response.message;
