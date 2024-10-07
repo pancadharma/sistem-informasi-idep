@@ -21,11 +21,11 @@
                 <div class="input-group">
                     <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
                     value="{{ old('nama') }}" placeholder="{{ __('cruds.satuan.fields.nama_satuan') }}" autofocus required maxlength="200" minlength="3" id="nama" autocomplete="off">
-                    <div class="input-group-append">
+                    {{-- <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-ruler {{ config('adminlte.classes_auth_icon', '') }}"></span>
                         </div>
-                    </div>
+                    </div> --}}
                     @error('nama')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -43,10 +43,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary float-right {{ config('adminlte.classes_auth_btn', 'btn-primary') }}">
-                <span class="fas fa-ruler"></span>
+            <button type="submit" class="btn btn-success float-right {{ config('adminlte.classes_auth_btn', 'btn-primary') }}">
+                <span class="fas fa-save"></span>
                 {{ __('global.add') }}
-                {{ __('cruds.satuan.title_singular') }}
             </button>    
         </form>
     </div>
