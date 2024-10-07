@@ -34,7 +34,7 @@ class StoreProgramRequest extends FormRequest
             'kode'                                  => ['string', 'max:50'],
             'tanggalmulai'                          => ['date_format:Y-m-d'],
             'tanggalselesai'                        => ['date_format:Y-m-d', 'after_or_equal:tanggalmulai'],
-            'totalnilai'                            => ['decimal'],
+            'totalnilai'                            => ['numeric'],
             'ekspektasipenerimamanfaat'             => ['integer'],
             'ekspektasipenerimamanfaatwoman'        => ['integer'],
             'ekspektasipenerimamanfaatman'          => ['integer'],
