@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Image\Enums\Fit;
 
 class User extends Authenticatable
 {
@@ -36,7 +37,7 @@ class User extends Authenticatable
         'nama',
         'email',
         'username',
-        'id_jabatan',
+        'jabatan_id',
         'email_verified_at',
         'password',
         'remember_token',
@@ -69,8 +70,8 @@ class User extends Authenticatable
 
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->fit('crop', 50, 50);
-        $this->addMediaConversion('preview')->fit('crop', 120, 120);
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 50, 50);
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 120, 120);
     }
 
     public function getEmailVerifiedAtAttribute($value)
@@ -98,6 +99,10 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+    public function jabatans()
+    {
+        return $this->belongsTo(Mjabatan::class, 'jabatan_id');
     }
 
     public function getImageAttribute()
