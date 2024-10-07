@@ -103,60 +103,6 @@
 </script>
 
 <script>
-    // var uploadedFilePendukungMap = {}
-    // Dropzone.options.filePendukungDropzone = {
-    //     url: "{{ route('program.storeMedia') }}",
-    //     maxFilesize: 2, // MB
-    //     addRemoveLinks: true,
-    //     headers: {
-    //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
-    //     },
-    //     params: {
-    //         size: 2
-    //     },
-    //     success: function (file, response) {
-    //         $('form').append('<input type="hidden" name="file_pendukung[]" value="' + response.name + '">')
-    //         uploadedFilePendukungMap[file.name] = response.name
-    //     },
-    //     removedfile: function (file) {
-    //     file.previewElement.remove()
-    //     var name = ''
-    //     if (typeof file.file_name !== 'undefined') {
-    //         name = file.file_name
-    //     } else {
-    //         name = uploadedFilePendukungMap[file.name]
-    //     }
-    //     $('form').find('input[name="file_pendukung[]"][value="' + name + '"]').remove()
-    //     },
-    //     init: function () {
-    //         @if(isset($program) && $program->file_pendukung)
-    //         var files =
-    //             {!! json_encode($program->file_pendukung) !!}
-    //             for (var i in files) {
-    //             var file = files[i]
-    //             this.options.addedfile.call(this, file)
-    //             file.previewElement.classList.add('dz-complete')
-    //             $('form').append('<input type="hidden" name="file_pendukung[]" value="' + file.file_name + '">')
-    //             }
-    // @endif
-    //     },
-    //     error: function (file, response) {
-    //         if ($.type(response) === 'string') {
-    //             var message = response //dropzone sends it's own error messages in string
-    //         } else {
-    //             var message = response.errors.file
-    //         }
-    //         file.previewElement.classList.add('dz-error')
-    //         _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
-    //         _results = []
-    //         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    //             node = _ref[_i]
-    //             _results.push(node.textContent = message)
-    //         }
-
-    //         return _results
-    //     }
-    // }
 
 // Data Table
 $(document).ready(function() {
