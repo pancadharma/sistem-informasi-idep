@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('subtitle', __('global.edit') . ' ' . __('cruds.program.title_singular'))
-@section('content_header_title', __('global.create') . ' ' . __('cruds.program.title_singular'))
-@section('sub_breadcumb', __('cruds.program.title'))
+@section('content_header_title', __('cruds.program.title_singular'))
+@section('sub_breadcumb', __('global.create') . ' ' . __('cruds.program.title'))
 
 @section('content_body')
     <div class="row">
@@ -37,13 +37,15 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program" class="control-label mb-0 small">{{ __('cruds.program.nama') }}</label>
+                                    <label for="nama_program"
+                                        class="control-label mb-0 small">{{ __('cruds.program.nama') }}</label>
                                     <input type="text" id="nama_program" name="nama" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program" class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
+                                    <label for="kode_program"
+                                        class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
                                     <input type="text" id="kode_program" name="kode" class="form-control">
                                 </div>
                             </div>
@@ -65,8 +67,8 @@
                                 <div class="form-group">
                                     <label for="totalnilai"
                                         class="control-label mb-0 small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="number" id="totalnilai" name="totalnilai" class="form-control"
-                                        maxlength="15" minlength="0" step=".01",>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control"
+                                        minlength="0" step=".01",>
                                 </div>
                             </div>
                         </div>
@@ -78,8 +80,8 @@
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaat"
                                         class="control-label mb-0 small">{{ __('cruds.program.expektasi') }}</label>
-                                    <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat" class="form-control"
-                                        placeholder="{{ __('cruds.program.expektasi') }}"
+                                    <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat"
+                                        class="form-control" placeholder="{{ __('cruds.program.expektasi') }}"
                                         oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
@@ -188,25 +190,25 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="deskripsi" class="control-label mb-0 small">
                                         <strong>
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
                                     </label>
                                     <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                    placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
+                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
                                 </div>
                             </div>
-                    {{-- Analisis Program --}}
+                            {{-- Analisis Program --}}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="analisis" class="control-label mb-0 small">
                                         <strong>
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
                                     </label>
-                                    <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
-                                    placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
+                                    <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
+                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -219,6 +221,9 @@
                                     <strong>
                                         {{ __('cruds.program.upload') }}
                                     </strong>
+                                    <span class="text-red">
+                                        ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
+                                    </span>
                                 </label>
                                 <div class="form-group file-loading">
                                     <input id="file_pendukung" name="file_pendukung[]" type="file"
@@ -558,16 +563,17 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}" >
+    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
 @endpush
 
 @push('js')
-@section('plugins.Sweetalert2', true)
+    @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
+<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
@@ -576,11 +582,17 @@
 
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
-
+    $('#totalnilai').maskMoney({
+        prefix: 'Rp. ',
+        allowNegative: true,
+        thousands: '.',
+        decimal: ',',
+        affixesStay: false
+    });
     $(document).ready(function() {
 
         $("#file_pendukung").fileinput({
-            uploadUrl: "{{ route('program.store') }}",
+            // uploadUrl: "{{ route('program.store') }}",
             theme: 'fa',
             showRemove: true,
             previewZoomButtonTitles: true,
@@ -712,7 +724,8 @@
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
             var formData = new FormData(this);
-            // var formData = $(this).serialize();
+            var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
+            formData.set('totalnilai', unmaskedValue);
 
             $.ajax({
                 url: "{{ route('program.store') }}",
@@ -721,6 +734,14 @@
                 processData: false,
                 contentType: false,
                 // dataType: 'json',
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 2000,
+                        timerProgressBar: true,
+                    });
+                },
                 success: function(response) {
                     setTimeout(() => {
                         if (response.success === true) {

@@ -18,6 +18,8 @@ use App\Models\TargetReinstra;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\UpdateProgramRequest;
+use App\Models\KaitanSdg;
+use App\Models\Kelompok_Marjinal;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
@@ -69,7 +71,7 @@ class ProgramController extends Controller
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
-            if ($request->hasFile('file_pendukung') && $request->validated()) {
+            if ($request->hasFile('file_pendukung')) {
                 $timestamp = now()->format('Ymd_His');
                 $fileCount = 1;
 
@@ -79,9 +81,10 @@ class ProgramController extends Controller
                     $programName = str_replace(' ', '_', $program->nama);
                     $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
 
-                    \Log::info('Uploading file: ' . $fileName .' Orignal Name: '. $originalName);
+                    \Log::info('Uploading file: ' . $fileName .' Orignal Name: '. $originalName . ' User ID: ' . auth()->user()->nama);
                     $program->addMedia($file)
-                            ->usingName("{$programName}_{$fileCount}")
+                            ->withCustomProperties(['user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
+                            ->usingName("{$programName}_{$originalName}_{$fileCount}")
                             ->usingFileName($fileName)
                             ->toMediaCollection('file_pendukung_program', 'program_uploads');
 
@@ -136,6 +139,13 @@ class ProgramController extends Controller
     public function edit(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+
+        $targetReinstra = TargetReinstra::pluck('nama', 'id');
+        $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
+        $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
+        $program->load( 'targetReinstra', 'kelompokMarjinal', 'kaitanSDG');
+
+
             $mediaFiles = $program->getMedia('file_pendukung_program');
             $initialPreview = [];
             $initialPreviewConfig = [];
@@ -155,7 +165,8 @@ class ProgramController extends Controller
                 ];
             }
 
-            // return $media->human_readable_size;
+            // return $program;
+            // return response()->json(['program' => $program]);
             // return [$initialPreviewConfig, $initialPreviewConfig, $media, $program];
 
             return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
