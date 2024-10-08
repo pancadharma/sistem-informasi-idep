@@ -39,13 +39,10 @@
             <table id="kategoripendonor" class="table table-bordered cell-border ajaxTable datatable-kategoripendonor" style="width:100%">
                 <thead>
                     <tr>
-                        
                         <th class="center">No.</th>
                         <th>{{ trans('cruds.kategoripendonor.title') }}</th>
                         <th>{{ trans('cruds.status.title') }}</th>
                         <th>{{ trans('cruds.status.action') }}</th>
-                        
-                        
                     </tr>
                 </thead>
             </table>

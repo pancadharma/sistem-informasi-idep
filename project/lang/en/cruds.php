@@ -458,7 +458,5 @@ return [
             'list'          => 'List of Marginalized Group',
             'select'        => 'Select Marginalized Group',
         ],
-
-    ],
-
+    ]
 ];
