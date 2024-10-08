@@ -21,11 +21,11 @@
                 <div class="input-group">
                     <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
                     value="{{ old('nama') }}" placeholder="{{ __('adminlte.full_name') }}" autofocus required maxlength="200" minlength="3" id="nama" autocomplete="off">
-                    <div class="input-group-append">
+                    {{-- <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-user-secret {{ config('adminlte.classes_auth_icon', '') }}"></span>
                         </div>
-                    </div>
+                    </div> --}}
                     @error('nama')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -64,10 +64,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary float-right btn-add-role">
-                <span class="fas fa-user-secret"></span>
-                {{ __('global.add') }}
-                {{ __('cruds.role.title') }}
+            <button type="submit" class="btn btn-success float-right btn-add-role">
+                <span class="fas fa-save"></span>
+                {{ __('global.submit') }}
             </button>
         </form>
     </div>

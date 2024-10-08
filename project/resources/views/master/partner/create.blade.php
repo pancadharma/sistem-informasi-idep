@@ -21,11 +21,11 @@
                 <div class="input-group">
                     <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
                     value="{{ old('nama') }}" placeholder="{{ __('cruds.partner.fields.nama_partner') }}" autofocus required maxlength="200" minlength="3" id="nama" autocomplete="off">
-                    <div class="input-group-append">
+                    {{-- <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-handshake {{ config('adminlte.classes_auth_icon', '') }}"></span>
                         </div>
-                    </div>
+                    </div> --}}
                     @error('nama')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -37,9 +37,9 @@
             <x-adminlte-textarea id="keterangan" name="keterangan" label="{{ __(('cruds.partner.fields.ket')) }}" rows=5
                 placeholder="{{ __(('cruds.partner.fields.ket')) }}" maxlength="200" label-class="">
                 <x-slot name="appendSlot">
-                    <div class="input-group-text bg-white">
+                    {{-- <div class="input-group-text bg-white">
                         <i class="fas fa-lg fa-file-alt text-warning"></i>
-                    </div>
+                    </div> --}}
                 </x-slot>
             </x-adminlte-textarea>
 
@@ -54,10 +54,9 @@
                 
             </div>
 
-            <button type="submit" class="btn float-right {{ config('adminlte.classes_auth_btn', 'btn-primary') }} btn-add-role">
-                <span class="fas fa-user-secret"></span>
-                {{ __('global.add') }}
-                {{ __('cruds.partner.title_singular') }}
+            <button type="submit" class="btn btn-success float-right {{ config('adminlte.classes_auth_btn', 'btn-success') }} btn-add-role">
+                <span class="fas fa-save"></span>
+                {{ __('global.submit') }}
             </button>
                 
         </form>
