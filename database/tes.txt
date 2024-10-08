@@ -17,3 +17,16 @@ https://sipedas.pertanian.go.id/api/wilayah/list_wilayah?thn=2024&lvl=11&pro=51&
 //     $('#type_edit').append('<option data-id="'+response["0"].kode+'" value="kota" selected>{{ trans("cruds.kabupaten.kota") }}</option>');
 // }
 
+
+
+
+  "intelephense.telemetry.enabled": false,
+  "intelephense.completion.triggerParameterHints": true,
+  "intelephense.completion.insertUseDeclaration": true,
+  "intelephense.trace.server": "messages",
+  "intelephense.diagnostics.undefinedClassConstants": false,
+  "intelephense.diagnostics.undefinedFunctions": false,
+  "intelephense.diagnostics.undefinedConstants": false,
+  "intelephense.diagnostics.undefinedProperties": false,
+  "intelephense.diagnostics.undefinedTypes": false,
+  "intelephense.diagnostics.undefinedMethods": false,

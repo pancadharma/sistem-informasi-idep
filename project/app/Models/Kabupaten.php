@@ -34,8 +34,8 @@ class Kabupaten extends Model
 
     public function dataKabupaten(){
         $kabupaten = Kabupaten::with('provinsi')->get();
-        // Prepare data for DataTables (without modifying original collection)
         $data = DataTables::of($kabupaten)
+            ->addIndexColumn()
             ->addColumn('action', function ($kabupaten) {
                 return '<button type="button" class="btn btn-sm btn-info edit-kab-btn" data-action="edit" data-kabupaten-id="'. $kabupaten->id .'" title="'.__('global.edit') .' '. __('cruds.kabupaten.title') .' '. $kabupaten->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
 
@@ -44,5 +44,5 @@ class Kabupaten extends Model
             ->make(true);
         return $data;
     }
-    
+
 }

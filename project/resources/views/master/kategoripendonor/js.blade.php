@@ -1,7 +1,7 @@
 <script>
 //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
-      var t = $('#kategoripendonor').DataTable({
+      var table = $('#kategoripendonor').DataTable({
             responsive: true,
             ajax: "{{ route('data.kategoripendonor') }}",
             processing: true,
@@ -21,10 +21,13 @@
             columns: [
                 
                {
-                    data: "id",
-                    width: "1%",
-                    className: "text-center",
-                    
+                data: null, // Ganti "id" dengan null untuk menghitung penomoran
+                width: "1%",
+                className: "text-center",
+                orderable: false,
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
+                }   
                 },
                 
                 {
@@ -39,15 +42,15 @@
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<span class="badge bg-success">Aktif</span>'
-                            // return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                            //     row.id + '"></label></div>';
+                            // return '<span class="badge bg-success">Aktif</span>'
+                           return  '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
+                                row.id + '"></label></div>';
                         } else {
-                            return '<span class="badge bg-danger">Tidak Aktif</span>'
-                            // return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                            //     '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
-                            //     row.id + '"></label></div>';
+                            //return '<span class="badge bg-danger">Tidak Aktif</span>'
+                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
+                                row.id + '"></label></div>';
                         }
                     }
                 },
@@ -59,34 +62,80 @@
                 },
 
             ],
-
-
-             layout: {
+            layout: {
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
                             }
                         },{
-                            extend: 'pdf', 
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
-                            }    
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? 'Aktif' : '-';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
+                            }
                         },{
-                            extend: 'copy',
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
-                                columns: [0, 1, 2, 3]
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 2) {
+                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1, 2]
                             }
                         },
-                        'colvis',
+                        {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            className: 'btn btn-warning',
+                            exportOptions: {
+                                columns: [0, 1, 2]
+                            }
+                        },
                     ],
                 },
                 bottomStart: {
@@ -98,22 +147,6 @@
             ],
             lengthMenu: [5, 25, 50, 100, 500],
         });
-
-        t.on( 'draw.dt', function () {
-        var PageInfo = $('#kategoripendonor').DataTable().page.info();
-         t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
-            cell.innerHTML = i + 1 + PageInfo.start;
-        } );
-    } );
-
-    // t.on('draw.dt', function(){
-    // let n = 0;
-    // $(".number").each(function () {
-    //         $(this).html(++n);
-    //     })
-    // });
-
-
     });
 
 //-------------------------------------------------------------------------
@@ -176,7 +209,11 @@ $(document).ready(function() {
                         for (const field in errors) {
                             if (errors.hasOwnProperty(field)) {
                             errors[field].forEach(err => {
-                                errorMessage += `<li>${field}: ${err}</li>`;
+                                // error message dengan menunjukan nama field
+                                // errorMessage += `<li>${field}: ${err}</li>`;
+                                
+                                // error message tanpa menunjukan nama field
+                                errorMessage += `<li>${err}</li>`;
                             });
                             }
                         }

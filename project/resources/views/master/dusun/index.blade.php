@@ -15,10 +15,11 @@
     </div>
 
     <div class="card card-outline card-primary">
-        <div class="card-body">
+        <div class="card-body table-responsive">
             <table id="dusun_list" class="table table-bordered table-striped table-hover ajaxTable datatable-dusun">
                 <thead>
                     <tr>
+                        <th class="text-center align-middle">#</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.kode') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.nama') }}</th>
                         <th class="text-center align-middle">{{ trans('cruds.dusun.form.des') }}</th>
@@ -30,22 +31,22 @@
             </table>
         </div>
     </div>
-    
+
 
     @include('master.dusun.edit')
     @include('master.dusun.show')
     @stop
-    
+
     @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @endpush
-    
+
     @push('js')
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Select2', true)
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
-    
+
     @include('master.dusun.js')
 @endpush

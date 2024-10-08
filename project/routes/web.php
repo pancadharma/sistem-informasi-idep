@@ -5,17 +5,31 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
 use App\Http\Controllers\Admin\DusunController;
+use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\MjabatanController;
+use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\KabupatenController;
+use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
+use App\Http\Controllers\Admin\MPendonorController;
 use App\Http\Controllers\Admin\PermissionsController;
-use App\Http\Controllers\Admin\WilayahController;
+use App\Http\Controllers\Admin\JenisbantuanController;
+use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
+use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\TrProgramController;
+use App\Http\Controllers\Admin\ProgramController;
+use Symfony\Component\Translation\Catalogue\TargetOperation;
+
+// Insert Usable class controller after this line to avoid conflict with others member for developent
+// Need to resolve wether use ProgramController or TrProgramController
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -45,14 +59,21 @@ Route::middleware(['auth'])->group(function () {
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
+    Route::get('roles-permission', [RolesController::class,'getPermission'])->name('roles.permission');
+    Route::get('roles-api', [RolesController::class,'getRole'])->name('roles.api');
     Route::resource('roles', RolesController::class);
-    
+
 
 
     // Users
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    // Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
+    Route::get('users-show/{users}', [UsersController::class,'showModal'])->name('users.showmodal');
+    Route::get('username-check', [UsersController::class,'checkUsername'])->name('check.username');
+    Route::get('email-check', [UsersController::class,'checkEmail'])->name('check.email');
+    Route::get('users-api', [UsersController::class,'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 
     //Logs
@@ -106,5 +127,59 @@ Route::middleware(['auth'])->group(function () {
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
+
+    //Master Kategori Pendonor
+    Route::resource('kategoripendonor', KategoripendonorController::class);
+    Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
+
+    //Master Jabatan
+    Route::resource('mjabatan', MjabatanController::class);
+    Route::get('data/mjabatan', [MjabatanController::class, 'getData'])->name('data.mjabatan');
+
+    //Master Pendonor
+    Route::resource('pendonor', MPendonorController::class);
+    Route::get('datapendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
+
+
+    //Master Kelompok Marjinal
+    Route::resource('kelompokmarjinal', KelompokmarjinalController::class);
+    Route::get('datakelompokmarjinal', [KelompokmarjinalController::class, 'datakelompokmarjinal'])->name('data.kelompokmarjinal');
+
+    //Master Partners
+    Route::resource('partner', PartnersController::class);
+    Route::get('partners-api', [PartnersController::class, 'getPartners'])->name('partners.api');
+
+
+    //Master Target Reinstra
+    Route::resource('target-reinstra', TargetReinstraController::class);
+    Route::get('target-reinstra-api', [TargetReinstraController::class, 'getTargetReinstra'])->name('reinstra.api');
+
+    //Master Satuan
+    Route::resource('satuan', SatuanController::class);
+    Route::get('satuan-api', [SatuanController::class, 'getSatuan'])->name('satuan.api');
+
+    //Master Peran
+    Route::resource('peran', PeranController::class);
+    Route::get('data/peran', [PeranController::class, 'getData'])->name('data.peran');
+
+    //Master Kaitan SDG
+    Route::resource('kaitan_sdg', KaitanSdgController::class);
+    Route::get('data/kaitan_sdg', [KaitanSdgController::class, 'getData'])->name('data.kaitan_sdg');
+
+    // Transaction Program
+
+    //Route::resource('program', TrProgramController::class);
+    // get data for select 2 form
+    Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
+    Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
+    Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
+    Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
+
+    //Route Program by Siva
+    //Program
+    Route::resource('program', ProgramController::class);
+    Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
+
+    Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
 
 });

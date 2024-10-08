@@ -5,12 +5,12 @@
 @section('sub_breadcumb', __('cruds.jenisbantuan.title')) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 @section('content_body')
-    <div class="card card-primary">
+    <div class="card card-primary collapsed-card">
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.jenisbantuan.title')}}
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <div class="form-group">
                     <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.jenisbantuan.title') }}</strong>
                         <div class="icheck-primary">
-                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
+                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
                             <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
                         </div>
                     </div>

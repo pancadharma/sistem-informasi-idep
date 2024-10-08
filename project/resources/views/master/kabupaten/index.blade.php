@@ -5,12 +5,12 @@
 @section('sub_breadcumb', __('cruds.kabupaten.title')) {{-- Menjadi Bradcumb Setelah Menu di Atas --}}
 
 @section('content_body')
-    <div class="card card-primary">
+    <div class="card card-primary collapsed-card">
             <div class="card-header">
-                {{ trans('global.create')}} {{trans('cruds.kabupaten.title')}}
+                {{ __('global.create').' '. __('cruds.kabupaten.title')}}
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     @csrf
                     @method('POST')
                     <div class="form-group">
-                        <label for="provinsi_nama">{{ trans('cruds.provinsi.nama') }} {{ trans('cruds.provinsi.title') }}</label>
+                        <label for="provinsi_nama">{{ __('cruds.provinsi.nama') .' '. __('cruds.provinsi.title') }}</label>
                         <div class="form-group">
                             <select id="provinsi_add" name="provinsi_id" class="form-control select2 provinsi-data" style="width: 100%">
                                 <option></option>
@@ -27,43 +27,44 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kode">{{ trans('cruds.kabupaten.kode') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="kode">{{ __('cruds.kabupaten.kode') .' '. __('cruds.kabupaten.title') }}</label>
                         <input placeholder="" type="text" id="kode" name="kode" class="form-control" v-model="form.kode" required data-toggle="tooltip" data-placement="top" maxlength="5">
                     </div>
                     <div class="form-group">
-                        <label for="nama">{{ trans('cruds.kabupaten.nama') }} {{ trans('cruds.kabupaten.title') }}</label>
+                        <label for="nama">{{ __('cruds.kabupaten.nama') .' '. __('cruds.kabupaten.title') }}</label>
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
-                        <label for="type">{{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}</label>
+                        <label for="type">{{ __('cruds.kabupaten.title') .' / '. __('cruds.kabupaten.kota') }}</label>
                         <select id="type" name="type" class="form-control select2 type" style="width: 100%">
                             <option></option>
-                            <option value="Kabupaten"> {{ trans('cruds.kabupaten.title') }} </option>
-                            <option value="Kota"> {{ trans('cruds.kabupaten.kota') }} </option>
+                            <option value="Kabupaten"> {{ __('cruds.kabupaten.title') }} </option>
+                            <option value="Kota"> {{ __('cruds.kabupaten.kota') }} </option>
                         </select>
                     </div>
                     <div class="form-group">
-                    <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.kabupaten.title') }}</strong>
+                    <strong>{{ __('cruds.status.title') .' '. __('cruds.kabupaten.title') }}</strong>
                         <div class="icheck-primary">
-                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif') == 1 ? 'checked' : '' }} value="1">
-                            <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
+                            <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
+                            <label for="aktif">{{ __('cruds.status.aktif') }}</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success float-right btn-add-kabupaten" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
+                    <button type="submit" class="btn btn-success float-right btn-add-kabupaten" data-toggle="tooltip" data-placement="top" title="{{ __('global.submit') }}"><i class="fas fa-save"></i> {{ __('global.submit') }}</button>
                 </form>
             </div>
         </div>
     <div class="card card-outline card-primary">
-        <div class="card-body">
-            <table id="kabupaten" class="table table-bordered cell-border ajaxTable datatable-kabupaten" style="width:100%">
+        <div class="card-body table-responsive">
+            <table id="kabupaten" class="table table table-bordered table-striped table-hover row-border display compact responsive nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th class="center">{{ trans('cruds.kabupaten.kode') }}</th>
+                        <th class="center align-middle">No.</th>
+                        <th class="center">{{ __('cruds.kabupaten.kode') }}</th>
                         <th class="center">DT II</th>
-                        <th>{{ trans('cruds.kabupaten.title') }}</th>
-                        <th>{{ trans('cruds.provinsi.title') }}</th>
-                        <th>{{ trans('cruds.status.title') }}</th>
-                        <th>{{ trans('cruds.status.action') }}</th>
+                        <th class="align-middle">{{ __('cruds.kabupaten.title') }}</th>
+                        <th class="align-middle">{{ __('cruds.provinsi.title') }}</th>
+                        <th class="center align-middle">{{ __('cruds.status.title') }}</th>
+                        <th class="center align-middle">{{ __('cruds.status.action') }}</th>
                     </tr>
                 </thead>
             </table>
@@ -73,18 +74,18 @@
     @include('master.kabupaten.edit')
     @include('master.kabupaten.show')
     @stop
-    
+
     @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @endpush
-    
+
 @push('js')
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
     @section('plugins.Select2', true)
     @section('plugins.Toastr', true)
     @section('plugins.Validation', true)
-    
+
     @include('master.kabupaten.js')
     <script>
         $(document).ready(function() {
@@ -99,7 +100,7 @@
                             text: item.id+' - '+ item.nama,
                         };
                     });
-                    
+
                     $('#provinsi_add').select2({
                         placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
                         allowClear: true,

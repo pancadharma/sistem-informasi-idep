@@ -2,14 +2,17 @@
     $(document).ready(function() {
         //load data desa into datatables
         $('#desa_list').DataTable({
-            responsive: true,
-            ajax: "{{ route('data.desa') }}",
-            type: "GET",
-            processing: true,
-            serverSide: true,
-            deferRender: true,
-            stateSave: true,
+            responsive: true, processing: true, serverSide: true, deferRender: true, stateSave: true,
+            // ajax: "{{ route('data.desa') }}",
+            ajax: {
+                url: "{{ route('data.desa') }}",
+                method: "GET",
+                dataType: "json",
+            },
             columns: [
+                {
+                    data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
+                },
                 {
                     data: "kode",
                     // name: 'kelurahan.kode', //needed when using alternative query
@@ -20,20 +23,20 @@
                 {
                     data: "nama",
                     // name: 'kelurahan.nama',
-                    width: "5%",
+                    width: "30%",
                     className: "text-left"
                 },
                 {
                     // data: "kecamatan_nama", // Update to match the server-side column name
                     data: "kecamatan.nama", // Update to match the server-side column name
                     // name: 'kecamatan.nama',
-                    width: "15%",
+                    width: "30%",
                     className: "text-left"
                 },
                 {
                     data: "aktif",
                     // name: 'kelurahan.aktif',
-                    width: "5%",
+                    width: "10%",
                     className: "text-center",
                     orderable: false,
                     searchable: false,
@@ -50,7 +53,7 @@
                 },
                 {
                     data: "action",
-                    width: "8%",
+                    width: "15%",
                     className: "text-center",
                     orderable: false,
                 }
@@ -59,30 +62,75 @@
                 topStart: {
                     buttons: [
                         {
-                            extend: 'print',
+                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
                             exportOptions: {
-                                columns: [0, 1, 2] // Ensure these indices match your visible columns
+                                stripHTML: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 4) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1,2,3,4] // Ensure these indices match your visible columns
                             }
                         },
                         {
-                            extend: 'excel',
+                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 4) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1,2,3,4]
+                            }
+                        },
+                        {
+                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 4) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1,2,3,4]
+                            }
+                        },
+                        {
+                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            exportOptions: {
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (column === 4) {
+                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                        }
+                                        return data;
+
+                                    }
+                                },
+                                columns: [0, 1,2,3,4]
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            className: 'btn btn-warning',
+                            titleAttr: "Select Visible Column",
                             exportOptions: {
                                 columns: [0, 1, 2]
                             }
                         },
-                        {
-                            extend: 'pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2]
-                            }
-                        },
-                        {
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: [0, 1, 2]
-                            }
-                        },
-                        'colvis',
                     ],
                 },
                 bottomStart: {
@@ -403,7 +451,7 @@
                     Toast.fire({
                         icon: "info",
                         title: "Processing...",
-                        timerProgressBar: true, 
+                        timerProgressBar: true,
                         timer: 500,
                     })
                 },
@@ -497,7 +545,7 @@
             }
             $(this).val(input);
         });
-        
+
         $(function () {
             $.validator.setDefaults({
                 submitHandler: function () {
@@ -578,7 +626,7 @@
                         Toast.fire({
                             icon: "info",
                             title: "Updating...",
-                            timerProgressBar: true, 
+                            timerProgressBar: true,
                             timer: 500,
                         });
                     },
@@ -707,7 +755,7 @@
         $('#edit_kabupaten_id').on('change', function(){
             let KabupatenID = $(this).val();
             var kab_load = $("#edit_kabupaten_id").find('option:selected');
-            var KabKode = kab_load.data('id');            
+            var KabKode = kab_load.data('id');
             loadKec(KabupatenID);
 
         });

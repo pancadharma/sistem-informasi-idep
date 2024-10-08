@@ -25,17 +25,17 @@ class KecamatanController extends Controller
     public function index(){
         abort_if(Gate::denies('kecamatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $kabupaten = Kabupaten::all();
-        $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');      
+        $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
         return view("master.kecamatan.index", compact('provinsi'));
     }
 
     public function store(StoreKecamatanRequest $request){
         // abort_if(Gate::denies('kecamatan_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         try {
             $data = $request->validated();
             Kecamatan::create($data);
-            
+
             return response()->json([
                 "success"    => true,
                 "message"   => __('cruds.data.data') .' '.__('cruds.kecamatan.title') .' '. $request->nama .' '. __('cruds.data.added'),
@@ -69,13 +69,13 @@ class KecamatanController extends Controller
             return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
         } catch (Exception $e) {
             $status = 'error';
-            $message = 'An unexpected error occurred: ' . $e->getMessage(); 
+            $message = 'An unexpected error occurred: ' . $e->getMessage();
             return response()->json(['status' => $status, 'message' => $message], 419); // Use 500 Internal Server Error for general errors
         }
     }
     public function update(UpdateKecamatanRequest $request, Kecamatan $kecamatan){
         // abort_if(Gate::denies('kecamatan_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         try{
             $data = $request->validated();
             $kecamatan->update($data);
@@ -88,7 +88,7 @@ class KecamatanController extends Controller
         }catch(\Exception $e){
             Log::error('Error updating Kecamatan: ' . $e->getMessage());
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'An error occurred while updating the record.',
                 'error'    => Response::HTTP_NOT_ACCEPTABLE,
             ],Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -141,7 +141,7 @@ class KecamatanController extends Controller
                             'kode' => $item->kode,
                         ];
                     });
-    
+
         return response()->json($kabupaten);
     }
 
@@ -152,7 +152,7 @@ class KecamatanController extends Controller
             ->get(['id','kode','nama']);
         return response()->json($kabupaten);
     }
-    
+
     public function kec(Kabupaten $kabupaten)
     {
         $kabupaten = Kecamatan::with('kabupaten')->where('kabupaten_id', $kabupaten->id)
@@ -161,18 +161,18 @@ class KecamatanController extends Controller
         return response()->json($kabupaten);
     }
 
-    public function datakecamatan(){
-        // $kecamatan = Kecamatan::where('aktif', 1)
-        $kecamatan = Kecamatan::with('kabupaten:id,nama,provinsi_id', 'kabupaten.provinsi:nama')
-            ->get();
+    public function datakecamatan(Request $request){
+        if ($request->ajax()) {
+            $kecamatan = Kecamatan::with('kabupaten:id,nama,provinsi_id', 'kabupaten.provinsi:nama');
+            $data = DataTables::of($kecamatan)
+                ->addIndexColumn()
+                ->addColumn('action', function ($kecamatan) {
+                    return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" data-kecamatan-id="'. $kecamatan->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
 
-        $data = DataTables::of($kecamatan)
-            ->addColumn('action', function ($kecamatan) {
-                return '<button type="button" class="btn btn-sm btn-info edit-kec-btn" data-action="edit" data-kecamatan-id="'. $kecamatan->id .'" title="'.__('global.edit') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-
-                <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view" data-kecamatan-id="'. $kecamatan->id .'" value="'. $kecamatan->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-folder-open"></i> View</button>';
-            })
-            ->make(true);
-        return $data;
+                    <button type="button" class="btn btn-sm btn-primary view-kec-btn" data-action="view" data-kecamatan-id="'. $kecamatan->id .'" value="'. $kecamatan->id .'" title="'.__('global.view') .' '. __('cruds.kecamatan.title') .' '. $kecamatan->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                })
+                ->make(true);
+            return $data;
+        }
     }
 }
