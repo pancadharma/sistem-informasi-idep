@@ -17,7 +17,7 @@
                 {data: "status", className: "text-center align-middle", orderable: false, searchable: false, width: "10%", },
                 {data: "action", className: "text-center align-middle", orderable: false, searchable: false, width: "10%",}
             ],
-            
+
             layout: {
                 topStart: {
                     buttons: [

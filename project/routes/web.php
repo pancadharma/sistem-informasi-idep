@@ -25,7 +25,21 @@ use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\TrProgramController;
+use App\Http\Controllers\Admin\ProgramController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
+
+// Insert Usable class controller after this line to avoid conflict with others member for developent
+// Need to resolve wether use ProgramController or TrProgramController
+
+
+
+
+
+
+
+
+
+
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -160,9 +174,18 @@ Route::middleware(['auth'])->group(function () {
 
     // Transaction Program
 
-    Route::resource('program', TrProgramController::class);
+    //Route::resource('program', TrProgramController::class);
     // get data for select 2 form
     Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
+    Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
+    Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
+
+    //Route Program by Siva
+    //Program
+    Route::resource('program', ProgramController::class);
+    Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
+
+    Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
 
 });

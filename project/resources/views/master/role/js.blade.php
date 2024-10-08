@@ -58,7 +58,7 @@ $(document).ready(function(){
             {data: "status", width: "10%", className: "text-center align-middle", orderable: false, searchable: false},
             {data: "action", width: "10%", className: "text-center align-middle", orderable: false,width: "20%",}
         ],
-        
+
         layout: {
                 topStart: {
                     buttons: [
@@ -121,7 +121,7 @@ $(document).ready(function(){
                                 }
                             }
                         },
-                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                        {extend: 'colvis', text: `<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                     ],
                 },
                 bottomStart: {pageLength: 10}

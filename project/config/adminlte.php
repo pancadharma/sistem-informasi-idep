@@ -321,7 +321,6 @@ return [
         ],
         [
             'text'              => 'transaksi',
-            // 'header'            => 'transaksi',
             'icon'              => 'fas fa-tasks',
             'submenu'           => [
                 [
@@ -665,32 +664,57 @@ return [
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/css/fileinput.min.css',
+                    'location' => 'vendor/bootstrap-icons/font/bootstrap-icons.min.css',
                 ],
                 [
                     'type' => 'css',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.css',
+                    'location' => 'vendor/krajee-fileinput/css/fileinput.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/buffer.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/filetype.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/piexif.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/krajee-fileinput/js/plugins/sortable.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/krajee-fileinput/js/fileinput.min.js',
                 ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/fa5/theme.min.js',
+                // ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/bs5/theme.min.js',
+                // ],
+                // [
+                //     'type' => 'js',
+                //     'asset' => true,
+                //     'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.js',
+                // ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/fa5/theme.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/themes/explorer-fa5/theme.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/krajee-fileinput/js/locales/en.js',
+                    'location' => 'vendor/krajee-fileinput/js/locales/id.js',
                 ],
             ],
         ],
