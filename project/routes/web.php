@@ -123,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
-    
+
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
@@ -177,6 +177,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('program/documents', [TrProgramController::class, 'uploadDoc'])->name('program.docs');
     Route::get('program/doc', [TrProgramController::class, 'doc'])->name('program.test.doc');
     Route::get('program/editdoc/{id}', [TrProgramController::class, 'docEdit'])->name('program.test.edit'); //program/editdoc/10
+    // Route::PUT('trprogram/updatedoc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc'); //program/editdoc/10
+    Route::put('trprogram/update/doc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc');
+
+    Route::delete('trprogram/media/{media}', [TrProgramController::class, 'deleteDoc'])->name('trprogram.delete.doc');
 
     //Route Program by Siva
     //Program

@@ -8,9 +8,9 @@
     @include('master.role.create')
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
-            <form action="{{ route('program.docs') }}" id="upload-form" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('trprogram.update.doc', [$program->id]) }}" id="upload-form" method="POST" enctype="multipart/form-data">
                 @csrf
-                @method('post')
+                @method('PUT')
                 <div class="form-group">
                     <label for="files">Select Files</label>
                     <div class="file-loading">
@@ -52,6 +52,48 @@
                 maxFileSize: 10000,
                 maxFilesNum: 10,
                 overwriteInitial: false, // Ensure new files are added without removing previous ones
+                append: true,
+                initialPreview: @json($initialPreview),
+                initialPreviewAsData: true,
+                initialPreviewConfig: @json($initialPreviewConfig),
+                overwriteInitial: false,
+                previewFileType: 'any', // Ensure all file types are previewed
+                fileActionSettings: {
+                    showZoom: function(config) {
+                        return config.type === 'pdf'; // Enable zoom for PDFs
+                    },
+                    showRemove: true, // Show remove button
+                    removeIcon: '<i class="fa fa-trash"></i>',
+                    removeClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
+                    removeTitle: 'Delete file',
+                    removeError: 'Error deleting file',
+                    removeUrl: function(config) {
+                        return config.url;
+                    },
+                    removeMethod: 'DELETE',
+                    remove: function(config) {
+                        var url = config.url;
+                        console.log('Sending DELETE request to:', url); // Debugging line
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    console.log('File deleted successfully');
+                                } else {
+                                    console.error('Error deleting file');
+                                }
+                            },
+                            error: function(xhr) {
+                                console.error('Error deleting file');
+                            }
+                        });
+                    }
+                },
+
             }).on('fileloaded', function(event, file, previewId, index, reader) {
                 // Increment the file index for each new file
                 fileIndex++;
@@ -95,16 +137,17 @@
             });
         });
         $('#upload-form').on('submit', function(e) {
-            e.preventDefault();
+        e.preventDefault();
             var formData = new FormData(this);
-            // allFiles.forEach(file => formData.append('files[]', file));
-
             $.ajax({
                 url: $(this).attr('action'),
-                type: 'POST',
+                type: 'post',
                 data: formData,
                 contentType: false,
                 processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 beforeSend: function() {
                     Toast.fire({
                         icon: "info",
@@ -120,15 +163,48 @@
                         icon: 'success',
                         timer: 2000,
                     });
-                    // alert('Files uploaded successfully');
                     $('#upload-form').trigger('reset');
-                    // window.location.reload();
                 },
                 error: function(response) {
                     alert('File upload failed');
                 }
             });
         });
+        // $('#upload-form').on('submit', function(e) {
+        //     e.preventDefault();
+        //     var formData = new FormData(this);
+        //     // allFiles.forEach(file => formData.append('files[]', file));
+
+        //     $.ajax({
+        //         url: $(this).attr('action'),
+        //         type: 'POST',
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         beforeSend: function() {
+        //             Toast.fire({
+        //                 icon: "info",
+        //                 title: "Uploading...",
+        //                 timer: 2000,
+        //                 timerProgressBar: true,
+        //             });
+        //         },
+        //         success: function(response) {
+        //             Swal.fire({
+        //                 title: "Success",
+        //                 text: response.success,
+        //                 icon: 'success',
+        //                 timer: 2000,
+        //             });
+        //             // alert('Files uploaded successfully');
+        //             $('#upload-form').trigger('reset');
+        //             // window.location.reload();
+        //         },
+        //         error: function(response) {
+        //             alert('File upload failed');
+        //         }
+        //     });
+        // });
     </script>
     @section('plugins.Toastr', true)
 @endpush

@@ -197,50 +197,141 @@ class TrProgramController extends Controller
         foreach ($mediaFiles as $media) {
             if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif'])) {
                 $initialPreview[] = $media->getUrl();
+            } elseif ($media->mime_type == 'application/pdf') {
+                $initialPreview[] = $media->getUrl(); // Use the actual URL for PDFs
             } else {
-                $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for non-image files
+                $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
             }
 
             $initialPreviewConfig[] = [
-                'caption' => $media->file_name,
-                'url' => route('program.media.destroy', ['media' => $media->id]), // Route to handle file deletion
+                // 'caption' => $media->file_name,
+                'caption' => $media->getCustomProperty('keterangan'),
+                'description' => $media->getCustomProperty('keterangan'),
+                'url' => route('trprogram.delete.doc', ['media' => $media->id]), // Route to handle file deletion
                 'key' => $media->id,
                 'type' => $media->mime_type == 'application/pdf' ? 'pdf' : 'image',
+                'downloadUrl' => $media->getUrl(),
+                'filename' => $media->getCustomProperty('keterangan'),
             ];
         }
-        return view('tr.program.tab.edit');
+
+        return view('tr.program.tab.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }
 
-    public function editDoc(Request $request)
+    public function updateDoc(Request $request, Program $program)
     {
-
         try {
             $request->validate([
                 'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
                 'captions.*' => 'nullable|string|max:255',
             ]);
-            $user = Program::find(10); // Adjust to your logic
+
+            $program->update($request->all());
+
+            if (is_countable($program->media) && count($program->media) > 0) {
+                foreach ($program->media as $media) {
+                    if (!in_array($media->file_name, $request->input('files', []))) {
+                        $media->delete();
+                    }
+                }
+            }
+
             if ($request->hasFile('files')) {
-                $timestamp = now()->format('Ymd_His');
-                $fileCount = 1;
                 foreach ($request->file('files') as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
                     $caption = $request->input('captions')[$index] ?? '';
-                    $user->addMedia($file)
-                        // ->withProperties(['caption' => $caption]) // perlu kolom di table media untuk simpan keterangan file ('caption')
-                        ->withCustomProperties(['keterangan_file' => $caption, 'user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
-                        ->toMediaCollection('test-upload');
+
+                    $program->addMedia($file)
+                        ->usingName($originalName)
+                        ->withCustomProperties([
+                            'keterangan' => $caption,
+                            'user_id' => auth()->user()->id,
+                            'original_name' => $originalName,
+                            'extension' => $extension
+                        ])
+                        ->toMediaCollection('file_pendukung_program');
                 }
             }
-            return response()->json(['success' => 'Files uploaded successfully']);
+
+            return response()->json(['success' => 'Files uploaded successfully', 'program' => $program]);
         } catch (Exception $e) {
-            // Handle all other exceptions
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred.',
                 'error'   => $e->getMessage(),
             ], 500);
         }
+    }
+
+
+    // public function updateDoc(Request $request, Program $program)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
+    //             'captions.*' => 'nullable|string|max:255',
+    //         ]);
+
+    //         // Eagerly load files relationship
+    //         $program = Program::with('files')->findOrFail($program->id);
+    //         $program->update($request->all());
+
+    //         // Ensure $program->files is countable and not null
+    //         if (is_countable($program->files) && count($program->files) > 0) {
+    //             foreach ($program->files as $media) {
+    //                 if (!in_array($media->file_name, $request->input('files', []))) {
+    //                     $media->delete();
+    //                 }
+    //             }
+    //         }
+
+    //         $media = $program->files ? $program->files->pluck('file_name')->toArray() : [];
+    //         $media = array_diff($media, $request->input('files', []));
+
+    //         if ($request->hasFile('files')) {
+    //             foreach ($request->file('files') as $index => $file) {
+    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    //                 $extension = $file->getClientOriginalExtension();
+    //                 $caption = $request->input('captions')[$index] ?? '';
+
+    //                 if (count($media) === 0 || !in_array($file->getClientOriginalName(), $media)) {
+    //                     $program->addMedia($file)
+    //                         ->withCustomProperties([
+    //                             'keterangan' => $caption,
+    //                             'user_id' => auth()->user()->id,
+    //                             'original_name' => $originalName,
+    //                             'extension' => $extension
+    //                         ])
+    //                         ->toMediaCollection('test-upload');
+    //                 }
+    //             }
+    //         }
+
+    //         return response()->json(['success' => 'Files uploaded successfully']);
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred.',
+    //             'error'   => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
+
+
+    // public function deleteDoc($id)
+    public function deleteDoc(Media $media)
+    {
+        // Debugging statement
+        \Log::info("Delete request received for media ID : " . $media->id);
+
+        $media->delete();
+        return response()->json(['success' => true]);
+
+        // $media = Media::findOrFail($id);
+        // $media->delete();
+
+        // return response()->json(['success' => true]);
     }
 }
