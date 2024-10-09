@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProgramRequest;
+use App\Models\Provinsi;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -147,6 +148,13 @@ class TrProgramController extends Controller
         $page = $request->input('page', 1);
         $sdg = KaitanSdg::where('nama', 'like', "%{$search}%")->get();
         return response()->json($sdg);
+    }
+
+    public function lokasi(Request $request){
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $provinsi = Provinsi::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($provinsi);
     }
 
     public function filePendukung(Request $request){

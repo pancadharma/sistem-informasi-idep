@@ -398,6 +398,37 @@
                 </div>
             </div>
         </div>
+
+        {{-- nav tab --}}
+
+        <div class="card card-primary card-outline card-tabs">
+    <div class="card-header p-0 pt-1 border-bottom-0">
+        <ul class="nav nav-tabs" id="menu-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="menu1-tab" data-toggle="pill" href="#menu1" role="tab" aria-controls="menu1">Lokasi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="menu2-tab" data-toggle="pill" href="#menu2" role="tab" aria-controls="menu2">menu2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="menu3-tab" data-toggle="pill" href="#menu3" role="tab" aria-controls="menu3">menu3</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="menu-tab-tabContent">
+            <div class="tab-pane fade show active" id="menu1" role="tabpanel" aria-labelledby="menu1-tab">
+                @include('tr.program.createlokasi')
+            </div>
+            <div class="tab-pane fade" id="menu2" role="tabpanel" aria-labelledby="menu2-tab">
+                isi menu 2
+            </div>
+            <div class="tab-pane fade" id="menu3" role="tabpanel" aria-labelledby="menu3-tab">
+                isi menu 3
+            </div>
+        </div>
+    </div>
+</div>
     </form>
 @stop
 
@@ -488,7 +519,38 @@
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
         var data_sdg = "{{ route('program.api.sdg') }}";
+        var data_lokasi = "{{ route('program.api.lokasi') }}";
 
+        $('#lokasi').select2({
+            placeholder: '{{ __('cruds.program.lokasi.select') }}',
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownPosition: 'below',
+            ajax: {
+                url: data_lokasi,
+                method: 'GET',
+                delay: 1000,
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama // Mapping 'nama' to 'text'
+                            };
+                        })
+                    };
+                },
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                    return query;
+                }
+            }
+        });
+        // SELECT2 For Tkelompok Marjinal
         $('#kelompokmarjinal').select2({
             placeholder: '{{ __('cruds.program.marjinal.select') }}',
             width: '100%',
