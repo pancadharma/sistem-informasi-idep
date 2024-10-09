@@ -37,16 +37,16 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program"
+                                    <label for="nama"
                                         class="control-label mb-0 small">{{ __('cruds.program.nama') }}</label>
-                                    <input type="text" id="nama_program" name="nama" class="form-control">
+                                    <input type="text" id="nama" name="nama" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program"
+                                    <label for="kode"
                                         class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode_program" name="kode" class="form-control">
+                                    <input type="text" id="kode" name="kode" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -87,41 +87,41 @@
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="pria"
+                                    <label for="ekspektasipenerimamanfaatman"
                                         class="control-label mb-0 small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
-                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
+                                    <input type="number" id="ekspektasipenerimamanfaatman" name="ekspektasipenerimamanfaatman"
                                         class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="wanita"
+                                    <label for="ekspektasipenerimamanfaatwoman"
                                         class="control-label mb-0 small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
-                                    <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
+                                    <input type="number" id="ekspektasipenerimamanfaatwoman" name="ekspektasipenerimamanfaatwoman"
                                         class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="laki"
+                                    <label for="ekspektasipenerimamanfaatboy"
                                         class="control-label mb-0 small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
-                                    <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
+                                    <input type="number" id="ekspektasipenerimamanfaatboy" name="ekspektasipenerimamanfaatboy"
                                         class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="perempuan"
+                                    <label for="ekspektasipenerimamanfaatgirl"
                                         class="control-label mb-0 small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
-                                    <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
+                                    <input type="number" id="ekspektasipenerimamanfaatgirl" name="ekspektasipenerimamanfaatgirl"
                                         class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="total"
+                                    <label for="ekspektasipenerimamanfaattidaklangsung"
                                         class="control-label mb-0 small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
-                                    <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
+                                    <input type="number" id="ekspektasipenerimamanfaattidaklangsung" name="ekspektasipenerimamanfaattidaklangsung"
                                         class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
@@ -190,25 +190,32 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="deskripsi" class="control-label mb-0 small">
+                                    <label for="deskripsiprojek" class="control-label mb-0 small ">
                                         <strong>
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
                                     </label>
-                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
+                                    <textarea id="deskripsiprojek" name="deskripsiprojek" cols="30" rows="5" class="form-control {{ $errors->has('deskripsiprojek') ? 'is-invalid' : '' }}"
                                         placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
+                                        @if ($errors->has('deskripsiprojek'))
+                                            <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
+                                        @endif
                                 </div>
                             </div>
                             {{-- Analisis Program --}}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="analisis" class="control-label mb-0 small">
+                                    <label for="analisamasalah" class="control-label mb-0 small">
                                         <strong>
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
                                     </label>
-                                    <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
+                                    <textarea id="analisamasalah" name="analisamasalah" cols="30" rows="5" class="form-control {{ $errors->has('analisamasalah') ? 'is-invalid' : '' }}"
                                         placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
+
+                                    @if ($errors->has('deskripsiprojek'))
+                                    <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -229,6 +236,7 @@
                                     <input id="file_pendukung" name="file_pendukung[]" type="file"
                                         class="form-control" multiple data-show-upload="false" data-show-caption="true">
                                 </div>
+                                <div id="captions-container"></div>
                             </div>
                         </div>
                     </div>
@@ -281,283 +289,9 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-
-        {{-- OLD FORM --}}
-        {{-- <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.expektasi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.marjinal.label') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="kelompokmarjinal" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.marjinal.list') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-purple">
-                                        <select class="form-control select2" name="kelompokmarjinal[]"
-                                            id="kelompokmarjinal" multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.reinstra') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="targetreinstra" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.list_reinstra') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-orange">
-                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
-                                            id="targetreinstra" multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.sdg') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="kaitansdg" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.list_sdg') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-orange">
-                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
-                                            multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-
-            <div class="col-lg-6">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.deskripsi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.analisis') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.files') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group file-loading">
-                                    <label for="status" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.upload') }}
-                                        </strong>
-                                    </label>
-                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
-                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.status.title') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="status" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.status.title') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-green">
-                                        <select class="form-control select2" name="status" id="status" required>
-                                            <optgroup label="Status Progran">
-                                                <option value="draft">Draft</option>
-                                                <option value="running">Running</option>
-                                                <option value="submit">Submit</option>
-                                                <option value="completed">Completed</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="users" class="small control-label">
-                                        <strong>
-                                            User Program
-                                    </label>
-                                    <div class="select2-green">
-                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
-                                            id="user_id" name="user_id" readonly>
-                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
-                                            name="user_id">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary float-right">
-                                        {{ __('global.add') . ' ' . __('cruds.program.title_singular') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </form>
 @stop
 
@@ -591,36 +325,76 @@
     });
     $(document).ready(function() {
 
-        $("#file_pendukung").fileinput({
-            // uploadUrl: "{{ route('program.store') }}",
-            theme: 'fa',
-            showRemove: true,
-            previewZoomButtonTitles: true,
-            dropZoneEnabled: false,
-            removeIcon: '<i class="bi bi-trash"></i>',
-            showDrag: true,
-            dragIcon: '<i class="bi-arrows-move"></i>',
-            showZoom: true,
-            showUpload: false,
-            showRotate: true,
-            showCaption: true,
-            uploadAsync: false,
-            maxFileSize: 4096,
-            allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-            append: true
-        });
-
-        // $('#file_pendukung').on('change', function(event) {
-        //     const files = event.target.files;
-        //     const dataTransfer = new DataTransfer();
-        //     for (let i = 0; i < this.files.length; i++) {
-        //         dataTransfer.items.add(this.files[i]);
-        //     }
-        //     for (let file of files) {
-        //         dataTransfer.items.add(file);
-        //     }
-        //     this.files = dataTransfer.files;
+        // $("#file_pendukung").fileinput({
+        //     // uploadUrl: "{{ route('program.store') }}",
+        //     theme: 'fa',
+        //     showRemove: true,
+        //     previewZoomButtonTitles: true,
+        //     dropZoneEnabled: false,
+        //     removeIcon: '<i class="bi bi-trash"></i>',
+        //     showDrag: true,
+        //     dragIcon: '<i class="bi-arrows-move"></i>',
+        //     showZoom: true,
+        //     showUpload: false,
+        //     showRotate: true,
+        //     showCaption: true,
+        //     uploadAsync: false,
+        //     maxFileSize: 4096,
+        //     allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
+        //     append: true
         // });
+        var fileIndex = 0;
+        var fileCaptions = {}; // Object to track files and captions
+
+        $("#file_pendukung").fileinput({
+            theme: "fa",
+            showUpload: false,
+            showRemove: false,
+            browseOnZoneClick: true,
+            allowedFileExtensions: ['jpg', 'png', 'jpeg', 'pdf', 'doc'],
+            maxFileSize: 4096,
+            // maxFilesNum: 10,
+            overwriteInitial: false, // Ensure new files are added without removing previous ones
+        }).on('fileloaded', function(event, file, previewId, index, reader) {
+            // Increment the file index for each new file
+            fileIndex++;
+            var uniqueId = 'file-' + fileIndex;
+            fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
+            $('#captions-container').append(
+                `<div class="form-group" id="caption-group-${uniqueId}">
+                    <label for="caption-${uniqueId}"> {{ __('cruds.program.ket_file') }} ${file.name}</label>
+                    <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
+                    </div>`
+            );
+            // Store the unique identifier in the file preview element
+            $(`#${previewId}`).attr('data-unique-id', uniqueId);
+        }).on('fileremoved', function(event, id) {
+            // Remove the corresponding caption input
+            var uniqueId = $(`#${id}`).attr('data-unique-id');
+            delete fileCaptions[uniqueId]; // Remove the file from the tracking object
+            $(`#caption-group-${uniqueId}`).remove();
+        }).on('fileclear', function(event) {
+            // Clear all caption inputs when files are cleared
+            fileCaptions = {}; // Reset the tracking object
+            $('#captions-container').empty();
+        }).on('filebatchselected', function(event, files) {
+            // Clear all caption inputs when new files are selected
+            fileCaptions = {}; // Reset the tracking object
+            $('#captions-container').empty();
+            // Iterate over each selected file and trigger the fileloaded event manually
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                fileIndex++;
+                var uniqueId = 'file-' + fileIndex;
+                fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
+                $('#captions-container').append(
+                    `<div class="form-group" id="caption-group-${uniqueId}">
+                        <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+                        <input type="text" class="form-control" name="captions[]" id="caption-${uniqueId}">
+                        </div>`
+                );
+            }
+        });
 
         $('#status').select2();
 
@@ -733,12 +507,11 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                // dataType: 'json',
                 beforeSend: function() {
                     Toast.fire({
                         icon: "info",
                         title: "Processing...",
-                        timer: 2000,
+                        timer: 3000,
                         timerProgressBar: true,
                     });
                 },

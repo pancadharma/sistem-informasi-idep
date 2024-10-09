@@ -385,6 +385,7 @@ return [
         'files'             => 'Supporting Files',
         'upload'            => 'Upload Files',
         'pilih_file'        => 'Select Files',
+        'ket_file'          => 'Input File Information',
         'form'              => [
             'id'            => 'ID',
             'title'         => 'Program Information',

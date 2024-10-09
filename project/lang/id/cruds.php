@@ -380,6 +380,7 @@ return [
         'files'             => 'Berkas Pendukung',
         'upload'            => 'Unggah Berkas',
         'pilih_file'        => 'Pilih Berkas',
+        'ket_file'          => 'Masukan Keterangan File',
         'form'            => [
             'id'            => 'ID',
             'title'         => 'Informasi Program',

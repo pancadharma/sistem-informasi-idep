@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\UpdateProgramRequest;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
+use App\Models\User;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
@@ -75,15 +76,16 @@ class ProgramController extends Controller
                 $timestamp = now()->format('Ymd_His');
                 $fileCount = 1;
 
-                foreach ($request->file('file_pendukung') as $file) {
+                foreach ($request->file('file_pendukung') as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
                     $programName = str_replace(' ', '_', $program->nama);
                     $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
+                    $keterangan = $request->input('captions')[$index] ?? '';
 
                     \Log::info('Uploading file: ' . $fileName .' Orignal Name: '. $originalName . ' User ID: ' . auth()->user()->nama);
                     $program->addMedia($file)
-                            ->withCustomProperties(['user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
+                            ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
                             ->usingName("{$programName}_{$originalName}_{$fileCount}")
                             ->usingFileName($fileName)
                             ->toMediaCollection('file_pendukung_program', 'program_uploads');

@@ -52,6 +52,7 @@ class StoreProgramRequest extends FormRequest
             'file_pendukung'                        => ['array'],
             'file_pendukung.*'                      => ['file', 'mimes:jpg,png,pdf,docx', 'max:4096'],
             'status'                                => ['string', 'max:50'],
+            'keterangan.*'                     => 'nullable|string|max:255',
         ];
     }
 }
