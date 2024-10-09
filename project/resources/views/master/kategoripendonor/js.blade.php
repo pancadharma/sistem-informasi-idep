@@ -7,6 +7,16 @@
             processing: true,
             serverSide: true,
             // stateSave: true,
+           
+        //----menambahkan nomor---
+            columnDefs: [ {
+            searchable: false,
+            orderable: false,
+            targets: 0,
+            
+        } ],
+
+        order: [[ 1, 'asc' ]],
             
             columns: [
                 
@@ -17,8 +27,7 @@
                 orderable: false,
                 render: function(data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1; // Menghitung nomor
-                }
-                    
+                }   
                 },
                 
                 {
@@ -133,14 +142,11 @@
                     pageLength: 5,
                 }
             },
-
             order: [
                 [1, 'asc']
             ],
             lengthMenu: [5, 25, 50, 100, 500],
         });
-
-
     });
 
 //-------------------------------------------------------------------------

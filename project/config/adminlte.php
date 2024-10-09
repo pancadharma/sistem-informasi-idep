@@ -265,8 +265,6 @@ return [
                 ],
                 [
                     'text' => 'kategoripendonor',
-                    // where is the can like this ?
-                    //'can'       => ['kategoripendonor_access','kategoripendonor_edit', 'kategoripendonor_show', 'kategoripendonor_create'],
                     'route' => 'kategoripendonor.index',
                     'icon' => 'fas fa-medkit',
                     'active' => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
