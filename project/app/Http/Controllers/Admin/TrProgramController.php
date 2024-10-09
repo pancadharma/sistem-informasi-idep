@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProgramRequest;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -20,12 +21,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class TrProgramController extends Controller
 {
     use MediaUploadingTrait;
-    public function index(){
+    public function index()
+    {
 
         return view('tr.program.index');
-
     }
-    public function create(){
+    public function create()
+    {
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_create')) {
             $targetreinstra = TargetReinstra::pluck('id', 'nama');
@@ -33,18 +35,19 @@ class TrProgramController extends Controller
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
-    public function show(){
+    public function show()
+    {
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
 
-            return view('tr.program.edit')
-            ;
+            return view('tr.program.edit');
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit Program');
     }
 
     // STORE DATA
-    public function store(StoreProgramRequest $request, Program $program){
+    public function store(StoreProgramRequest $request, Program $program)
+    {
         try {
             // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
             $data = $request->validated();
@@ -66,9 +69,9 @@ class TrProgramController extends Controller
 
                     \Log::info('Uploading file: ' . $fileName);
                     $program->addMedia($file)
-                            ->usingName("{$programName}_{$fileCount}")
-                            ->usingFileName($fileName)
-                            ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        ->usingName("{$programName}_{$fileCount}")
+                        ->usingFileName($fileName)
+                        ->toMediaCollection('file_pendukung_program', 'program_uploads');
 
                     $fileCount++;
                 }
@@ -93,21 +96,18 @@ class TrProgramController extends Controller
                 'message' => 'Validation failed.',
                 'errors'  => $e->errors(),
             ], 422);
-
         } catch (ModelNotFoundException $e) {
 
             return response()->json([
                 'success' => false,
                 'message' => 'Resource not found.',
             ], 404);
-
         } catch (HttpException $e) {
             // Handle HTTP-specific exceptions
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], $e->getStatusCode());
-
         } catch (Exception $e) {
             // Handle all other exceptions
             return response()->json([
@@ -142,14 +142,105 @@ class TrProgramController extends Controller
         return response()->json($marjinal);
     }
 
-    public function KaitanSDG(Request $request){
+    public function KaitanSDG(Request $request)
+    {
         $search = $request->input('search');
         $page = $request->input('page', 1);
         $sdg = KaitanSdg::where('nama', 'like', "%{$search}%")->get();
         return response()->json($sdg);
     }
 
-    public function filePendukung(Request $request){
+    public function filePendukung(Request $request) {}
+    public function uploadDoc(Request $request)
+    {
 
+        try {
+            $request->validate([
+                'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
+                'captions.*' => 'nullable|string|max:255',
+            ]);
+            $user = Program::find(10); // Adjust to your logic
+            if ($request->hasFile('files')) {
+                $timestamp = now()->format('Ymd_His');
+                $fileCount = 1;
+                foreach ($request->file('files') as $index => $file) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $caption = $request->input('captions')[$index] ?? '';
+                    $user->addMedia($file)
+                        // ->withProperties(['caption' => $caption]) // perlu kolom di table media untuk simpan keterangan file ('caption')
+                        ->withCustomProperties(['keterangan_file' => $caption, 'user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
+                        ->toMediaCollection('test-upload');
+                }
+            }
+            return response()->json(['success' => 'Files uploaded successfully']);
+        } catch (Exception $e) {
+            // Handle all other exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function doc()
+    {
+        return view('tr.program.tab.test');
+    }
+    public function docEdit($id)
+    {
+        $program = Program::find($id);
+        $mediaFiles = $program->getMedia('file_pendukung_program');
+        $initialPreview = [];
+        $initialPreviewConfig = [];
+
+        foreach ($mediaFiles as $media) {
+            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif'])) {
+                $initialPreview[] = $media->getUrl();
+            } else {
+                $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for non-image files
+            }
+
+            $initialPreviewConfig[] = [
+                'caption' => $media->file_name,
+                'url' => route('program.media.destroy', ['media' => $media->id]), // Route to handle file deletion
+                'key' => $media->id,
+                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : 'image',
+            ];
+        }
+        return view('tr.program.tab.edit');
+    }
+
+    public function editDoc(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
+                'captions.*' => 'nullable|string|max:255',
+            ]);
+            $user = Program::find(10); // Adjust to your logic
+            if ($request->hasFile('files')) {
+                $timestamp = now()->format('Ymd_His');
+                $fileCount = 1;
+                foreach ($request->file('files') as $index => $file) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $caption = $request->input('captions')[$index] ?? '';
+                    $user->addMedia($file)
+                        // ->withProperties(['caption' => $caption]) // perlu kolom di table media untuk simpan keterangan file ('caption')
+                        ->withCustomProperties(['keterangan_file' => $caption, 'user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
+                        ->toMediaCollection('test-upload');
+                }
+            }
+            return response()->json(['success' => 'Files uploaded successfully']);
+        } catch (Exception $e) {
+            // Handle all other exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 }

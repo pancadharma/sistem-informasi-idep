@@ -43,7 +43,7 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
-    return view('auth.login', ['title'=> $title]);
+    return view('auth.login', ['title' => $title]);
 });
 
 Route::get('/login', function () {
@@ -60,7 +60,7 @@ Route::get('/home', function () {
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
-// Route::group(['middleware' => ['auth']], function () {
+    // Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Permissions
@@ -69,8 +69,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
-    Route::get('roles-permission', [RolesController::class,'getPermission'])->name('roles.permission');
-    Route::get('roles-api', [RolesController::class,'getRole'])->name('roles.api');
+    Route::get('roles-permission', [RolesController::class, 'getPermission'])->name('roles.permission');
+    Route::get('roles-api', [RolesController::class, 'getRole'])->name('roles.api');
     Route::resource('roles', RolesController::class);
 
 
@@ -78,12 +78,12 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
-    Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    Route::post('users/ckmedia', [UsersController::class, 'storeCKEditorImages'])->name('users.storeCKEditorImages');
     // Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
-    Route::get('users-show/{users}', [UsersController::class,'showModal'])->name('users.showmodal');
-    Route::get('username-check', [UsersController::class,'checkUsername'])->name('check.username');
-    Route::get('email-check', [UsersController::class,'checkEmail'])->name('check.email');
-    Route::get('users-api', [UsersController::class,'api'])->name('users.api');
+    Route::get('users-show/{users}', [UsersController::class, 'showModal'])->name('users.showmodal');
+    Route::get('username-check', [UsersController::class, 'checkUsername'])->name('check.username');
+    Route::get('email-check', [UsersController::class, 'checkEmail'])->name('check.email');
+    Route::get('users-api', [UsersController::class, 'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 
     //Logs
@@ -180,6 +180,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
     Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
     Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
+    Route::post('program/documents', [TrProgramController::class, 'uploadDoc'])->name('program.docs');
+    Route::get('program/doc', [TrProgramController::class, 'doc'])->name('program.test.doc');
+    Route::get('program/editdoc/{id}', [TrProgramController::class, 'docEdit'])->name('program.test.edit'); //program/editdoc/10
 
     //Route Program by Siva
     //Program
@@ -187,5 +190,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
 
     Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
-
 });
