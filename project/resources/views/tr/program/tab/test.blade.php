@@ -48,7 +48,9 @@
                 showUpload: false,
                 showRemove: false,
                 browseOnZoneClick: true,
-                allowedFileExtensions: ['jpg', 'png', 'gif', 'pdf'],
+                allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
+                    'gif', 'pdf'
+                ],
                 maxFileSize: 10000,
                 maxFilesNum: 10,
                 overwriteInitial: false, // Ensure new files are added without removing previous ones

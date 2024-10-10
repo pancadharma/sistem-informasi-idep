@@ -53,7 +53,8 @@ class ProgramController extends Controller
         return response()->json($program);
     }
 
-    public function create(){
+    public function create()
+    {
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_create')) {
             // $targetreinstra = TargetReinstra::pluck('id', 'nama');
@@ -62,7 +63,8 @@ class ProgramController extends Controller
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
 
-    public function store(StoreProgramRequest $request, Program $program){
+    public function store(StoreProgramRequest $request, Program $program)
+    {
         try {
             // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
             $data = $request->validated();
@@ -81,14 +83,14 @@ class ProgramController extends Controller
                     $extension = $file->getClientOriginalExtension();
                     $programName = str_replace(' ', '_', $program->nama);
                     $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
-                    $keterangan = $request->input('captions')[$index] ?? '';
+                    $keterangan = $request->input('captions')[$index] ?? "{$fileName}";
 
-                    \Log::info('Uploading file: ' . $fileName .' Orignal Name: '. $originalName . ' User ID: ' . auth()->user()->nama);
+                    \Log::info('Uploading file: ' . $fileName . ' Orignal Name: ' . $originalName . ' User ID: ' . auth()->user()->nama);
                     $program->addMedia($file)
-                            ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
-                            ->usingName("{$programName}_{$originalName}_{$fileCount}")
-                            ->usingFileName($fileName)
-                            ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
+                        ->usingName("{$programName}_{$originalName}_{$fileCount}")
+                        ->usingFileName($fileName)
+                        ->toMediaCollection('file_pendukung_program', 'program_uploads');
 
                     $fileCount++;
                 }
@@ -113,21 +115,18 @@ class ProgramController extends Controller
                 'message' => 'Validation failed.',
                 'errors'  => $e->errors(),
             ], 422);
-
         } catch (ModelNotFoundException $e) {
 
             return response()->json([
                 'success' => false,
                 'message' => 'Resource not found.',
             ], 404);
-
         } catch (HttpException $e) {
             // Handle HTTP-specific exceptions
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
             ], $e->getStatusCode());
-
         } catch (Exception $e) {
             // Handle all other exceptions
             return response()->json([
@@ -142,10 +141,10 @@ class ProgramController extends Controller
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
 
-        $targetReinstra = TargetReinstra::pluck('nama', 'id');
-        $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
-        $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-        $program->load( 'targetReinstra', 'kelompokMarjinal', 'kaitanSDG');
+            $targetReinstra = TargetReinstra::pluck('nama', 'id');
+            $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
+            $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
+            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG');
 
 
             $mediaFiles = $program->getMedia('file_pendukung_program');
@@ -172,7 +171,6 @@ class ProgramController extends Controller
             // return [$initialPreviewConfig, $initialPreviewConfig, $media, $program];
 
             return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
-
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
     }

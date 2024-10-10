@@ -156,7 +156,7 @@ class TrProgramController extends Controller
 
         try {
             $request->validate([
-                'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
+                'files.*' => 'required|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
                 'captions.*' => 'nullable|string|max:255',
             ]);
             $user = Program::find(10); // Adjust to your logic
@@ -169,8 +169,8 @@ class TrProgramController extends Controller
                     $caption = $request->input('captions')[$index] ?? '';
                     $user->addMedia($file)
                         // ->withProperties(['caption' => $caption]) // perlu kolom di table media untuk simpan keterangan file ('caption')
-                        ->withCustomProperties(['keterangan_file' => $caption, 'user_id'  => $request->user_id, 'original_name' => $originalName, 'extension' => $extension])
-                        ->toMediaCollection('test-upload');
+                        ->withCustomProperties(['keterangan' => $caption, 'user_id'  => auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
+                        ->toMediaCollection('file_pendukung_program');
                 }
             }
             return response()->json(['success' => 'Files uploaded successfully']);
@@ -195,22 +195,24 @@ class TrProgramController extends Controller
         $initialPreviewConfig = [];
 
         foreach ($mediaFiles as $media) {
-            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif'])) {
+            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
                 $initialPreview[] = $media->getUrl();
             } elseif ($media->mime_type == 'application/pdf') {
+                $initialPreview[] = $media->getUrl(); // Use the actual URL for PDFs
+            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
                 $initialPreview[] = $media->getUrl(); // Use the actual URL for PDFs
             } else {
                 $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
             }
 
             $initialPreviewConfig[] = [
-                // 'caption' => $media->file_name,
-                'caption' => $media->getCustomProperty('keterangan'),
-                'description' => $media->getCustomProperty('keterangan'),
-                'url' => route('trprogram.delete.doc', ['media' => $media->id]), // Route to handle file deletion
-                'key' => $media->id,
-                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : 'image',
-                'downloadUrl' => $media->getUrl(),
+                'caption' => $media->getCustomProperty('keterangan') ?? $media->name,
+                'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                // 'url' => route('trprogram.delete.doc', ['media' => $media->id]) ?? '', // Route to handle file deletion
+                'key' => $media->id ?? '',
+                'size' => $media->size,
+                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
+                'downloadUrl' => $media->getUrl() ?? '',
                 'filename' => $media->getCustomProperty('keterangan'),
             ];
         }
@@ -222,7 +224,7 @@ class TrProgramController extends Controller
     {
         try {
             $request->validate([
-                'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
+                'files.*' => 'file|mimes:jpg,png,gif,pdf,doc,docx,csv,ppt,pptx,xls,xlsx|max:14048',
                 'captions.*' => 'nullable|string|max:255',
             ]);
 
@@ -245,10 +247,11 @@ class TrProgramController extends Controller
                     $program->addMedia($file)
                         ->usingName($originalName)
                         ->withCustomProperties([
-                            'keterangan' => $caption,
+                            'keterangan' => $caption ? '' : $originalName,
                             'user_id' => auth()->user()->id,
                             'original_name' => $originalName,
-                            'extension' => $extension
+                            'extension' => $extension,
+                            'updated_by' => auth()->user()->id
                         ])
                         ->toMediaCollection('file_pendukung_program');
                 }
