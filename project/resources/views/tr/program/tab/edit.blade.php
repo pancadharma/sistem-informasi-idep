@@ -40,56 +40,40 @@
     <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
     <script>
         // Good to Remove Caption / Keterangan Input Field When user click/ re-browse to select more files
-
         $(document).on('click', '.kv-file-remove', function() {
-
             let mediaID = $(this).data('key');
             let url = '{{ route('trprogram.delete.doc', ':id') }}'.replace(':id', mediaID);
-
-            console.log('Sending DELETE request to:', url); // Debugging line
             $.ajax({
                 url: url,
                 type: 'DELETE',
                 data: {
                     _token: '{{ csrf_token() }}'
                 },
-                // beforeSend: function() {
-                //     Toast.fire({
-                //         icon: "info",
-                //         title: "Deleting...",
-                //         timer: 2000,
-                //         timerProgressBar: true,
-                //     });
-                // },
                 success: function(response) {
                     console.log('AJAX success:', response);
                     if (response.success) {
                         Toast.fire({
                             icon: "success",
                             title: "Files Deleted",
-                            timer: 2000,
+                            timer: 500,
                             timerProgressBar: true,
                         });
                     } else {
                         Swal.fire({
                             title: "Error",
                             icon: 'error',
-                            timer: 2000,
+                            timer: 500,
                         });
                     }
-                    // window.location.reload();
                     let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest(
                         '.file-preview-frame');
                     filePreview.remove();
                 },
-
                 error: function(xhr) {
                     console.error('AJAX error:', xhr);
                 }
             });
         });
-
-
 
         // INIT LOAD MEDIA
         $(document).ready(function() {
@@ -111,10 +95,10 @@
                 initialPreview: {!! json_encode($initialPreview) !!},
                 initialPreviewAsData: true,
                 initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!}, //+
-                previewFileType: 'any',
+                previewFileType: ['image/*', 'pdf', 'media'],
                 previewFileIconSettings: { // configure your icon file extensions
-                    // 'doc': '<i class="fas fa-file-word text-primary"></i>',
-                    // 'docx': '<i class="fas fa-file-word text-primary"></i>',
+                    'doc': '<i class="fas fa-file-word text-primary"></i>',
+                    'docx': '<i class="fas fa-file-word text-primary"></i>',
                     'xls': '<i class="fas fa-file-excel text-success"></i>',
                     'xlsx': '<i class="fas fa-file-excel text-success"></i>',
                     'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
@@ -184,9 +168,13 @@
                 }
             });
         });
+
+        // Update File Pendukung Tanpa Hapus Existing Files
         $('#upload-form').on('submit', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
+            formData.append('_method', 'PUT'); // Method spoofing for PUT request
+
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -211,10 +199,28 @@
                         icon: 'success',
                         timer: 2000,
                     });
-                    $('#upload-form').trigger('reset');
+                    window.location.reload();
                 },
                 error: function(response) {
-                    alert('File upload failed');
+                    var errors = response.responseJSON.errors;
+                    var errorMessages = '';
+                    for (var key in errors) {
+                        if (errors.hasOwnProperty(key)) {
+                            errorMessages += errors[key].join('<br>') + '<br>';
+                        }
+                        Swal.fire({
+                            title: "Error",
+                            html: errorMessages,
+                            icon: 'error',
+                            timer: 5000,
+                        });
+                    }
+                    Swal.fire({
+                        title: response.responseJSON.message,
+                        text: response.responseJSON.error,
+                        icon: 'error',
+                        timer: 5000,
+                    });
                 }
             });
         });

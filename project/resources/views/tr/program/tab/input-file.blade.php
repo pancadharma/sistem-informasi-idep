@@ -138,7 +138,7 @@
         }).on('filebatchselected', function(event, files) {
             fileCaptions = {};
             $('#captions-container').empty();
-            for (var i = 0; i < files.length; i++) {
+            for (var i = 0; i <script files.length; i++) {
                 var file = files[i];
                 fileIndex++;
                 var uniqueId = 'file-' + fileIndex;
@@ -152,7 +152,6 @@
             }
         });
     });
-
 
     $(document).on('click', '.kv-file-remove', function() {
         var url = $(this).data('url');
@@ -216,89 +215,19 @@
                 });
             },
             success: function(response) {
+                $('#upload-form').trigger('reset');
                 Swal.fire({
                     title: "Success",
                     text: response.success,
                     icon: 'success',
                     timer: 2000,
                 });
-                $('#upload-form').trigger('reset');
             },
             error: function(response) {
                 alert('File upload failed');
             }
         });
     });
-
-    // $('#upload-form').on('submit', function(e) {
-    //     e.preventDefault();
-    //     var formData = new FormData(this);
-    //     $.ajax({
-    //         url: $(this).attr('action'),
-    //         type: 'PUT',
-    //         data: formData,
-    //         contentType: false,
-    //         processData: false,
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         beforeSend: function() {
-    //             Toast.fire({
-    //                 icon: "info",
-    //                 title: "Uploading...",
-    //                 timer: 2000,
-    //                 timerProgressBar: true,
-    //             });
-    //         },
-    //         success: function(response) {
-    //             Swal.fire({
-    //                 title: "Success",
-    //                 text: response.success,
-    //                 icon: 'success',
-    //                 timer: 2000,
-    //             });
-    //             $('#upload-form').trigger('reset');
-    //         },
-    //         error: function(response) {
-    //             alert('File upload failed');
-    //         }
-    //     });
-    // });
-
-    // $('#upload-form').on('submit', function(e) {
-    //     e.preventDefault();
-    //     var _token = '{{ csrf_token() }}';
-    //     var formData = new FormData(this);
-    //     $.ajax({
-    //         url: $(this).attr('action'),
-    //         type: 'PUT',
-    //         data: formData,
-    //         contentType: false,
-    //         processData: false,
-    //         beforeSend: function() {
-    //             Toast.fire({
-    //                 icon: "info",
-    //                 title: "Uploading...",
-    //                 timer: 2000,
-    //                 timerProgressBar: true,
-    //             });
-    //         },
-    //         success: function(response) {
-    //             Swal.fire({
-    //                 title: "Success",
-    //                 text: response.success,
-    //                 icon: 'success',
-    //                 timer: 2000,
-    //             });
-    //             // alert('Files uploaded successfully');
-    //             $('#upload-form').trigger('reset');
-    //             // window.location.reload();
-    //         },
-    //         error: function(response) {
-    //             alert('File upload failed');
-    //         }
-    //     });
-    // });
 </script>
 @section('plugins.Toastr', true)
 @endpush

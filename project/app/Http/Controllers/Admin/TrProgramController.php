@@ -44,7 +44,6 @@ class TrProgramController extends Controller
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit Program');
     }
-
     // STORE DATA
     public function store(StoreProgramRequest $request, Program $program)
     {
@@ -153,22 +152,26 @@ class TrProgramController extends Controller
     public function filePendukung(Request $request) {}
     public function uploadDoc(Request $request)
     {
-
         try {
             $request->validate([
-                'files.*' => 'required|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
+                'files.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
                 'captions.*' => 'nullable|string|max:255',
             ]);
-            $user = Program::find(10); // Adjust to your logic
+            // Assuming you have a user with ID 19, you can adjust this to your logic.
+            // this is experimental purposes only
+            $user = Program::find(18); // Adjust to your logic
+
             if ($request->hasFile('files')) {
                 $timestamp = now()->format('Ymd_His');
                 $fileCount = 1;
                 foreach ($request->file('files') as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
-                    $caption = $request->input('captions')[$index] ?? '';
+                    $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
+
                     $user->addMedia($file)
-                        // ->withProperties(['caption' => $caption]) // perlu kolom di table media untuk simpan keterangan file ('caption')
+                        ->usingName("{$originalName}.{$extension}")
+                        ->usingFileName("{$originalName}.{$extension}")
                         ->withCustomProperties(['keterangan' => $caption, 'user_id'  => auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
                         ->toMediaCollection('file_pendukung_program');
                 }
@@ -205,49 +208,63 @@ class TrProgramController extends Controller
                 $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
             }
 
+            $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
             $initialPreviewConfig[] = [
-                'caption' => $media->getCustomProperty('keterangan') ?? $media->name,
+                'caption' => "<span class='text-red strong'>{$caption}</span>",
                 'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
-                // 'url' => route('trprogram.delete.doc', ['media' => $media->id]) ?? '', // Route to handle file deletion
                 'key' => $media->id ?? '',
                 'size' => $media->size,
                 'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
                 'downloadUrl' => $media->getUrl() ?? '',
-                'filename' => $media->getCustomProperty('keterangan'),
+                'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
             ];
         }
 
         return view('tr.program.tab.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }
 
+    // Update File Pendukung Tanpa Hapus Existing Files
     public function updateDoc(Request $request, Program $program)
     {
         try {
             $request->validate([
-                'files.*' => 'file|mimes:jpg,png,gif,pdf,doc,docx,csv,ppt,pptx,xls,xlsx|max:14048',
+                'files.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
                 'captions.*' => 'nullable|string|max:255',
             ]);
 
             $program->update($request->all());
 
+            $newFiles = $request->file('files', []);
+            $newFileNames = array_map(function ($file) {
+                return $file->getClientOriginalName();
+            }, $newFiles);
+            \Log::info(  $newFileNames);
             if (is_countable($program->media) && count($program->media) > 0) {
                 foreach ($program->media as $media) {
-                    if (!in_array($media->file_name, $request->input('files', []))) {
+                    if (in_array($media->name, $newFileNames)) {
+                        \Log::info('Deleting Media: ' . $media->name);
                         $media->delete();
+                        $data = response()->json([
+                            "message" => "File Exists {$media->name} and will be replaced",
+                            "success" => true,
+                            "file_name" => $media->name,
+                            "file_id" => $media->id,
+                            'files' => $newFiles
+                        ]);
                     }
                 }
             }
 
             if ($request->hasFile('files')) {
-                foreach ($request->file('files') as $index => $file) {
+                foreach ($newFiles as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
-                    $caption = $request->input('captions')[$index] ?? '';
+                    $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
 
                     $program->addMedia($file)
-                        ->usingName($originalName)
+                        ->usingName("{$originalName}.{$extension}")
                         ->withCustomProperties([
-                            'keterangan' => $caption ? '' : $originalName,
+                            'keterangan' => $caption,
                             'user_id' => auth()->user()->id,
                             'original_name' => $originalName,
                             'extension' => $extension,
@@ -256,8 +273,7 @@ class TrProgramController extends Controller
                         ->toMediaCollection('file_pendukung_program');
                 }
             }
-
-            return response()->json(['success' => 'Files uploaded successfully', 'program' => $program]);
+            return response()->json(['success' => 'Files uploaded successfully', 'program' => $program, 'files' => $newFiles]);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -267,74 +283,11 @@ class TrProgramController extends Controller
         }
     }
 
-
-    // public function updateDoc(Request $request, Program $program)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'files.*' => 'required|file|mimes:jpg,png,gif,pdf|max:14048',
-    //             'captions.*' => 'nullable|string|max:255',
-    //         ]);
-
-    //         // Eagerly load files relationship
-    //         $program = Program::with('files')->findOrFail($program->id);
-    //         $program->update($request->all());
-
-    //         // Ensure $program->files is countable and not null
-    //         if (is_countable($program->files) && count($program->files) > 0) {
-    //             foreach ($program->files as $media) {
-    //                 if (!in_array($media->file_name, $request->input('files', []))) {
-    //                     $media->delete();
-    //                 }
-    //             }
-    //         }
-
-    //         $media = $program->files ? $program->files->pluck('file_name')->toArray() : [];
-    //         $media = array_diff($media, $request->input('files', []));
-
-    //         if ($request->hasFile('files')) {
-    //             foreach ($request->file('files') as $index => $file) {
-    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //                 $extension = $file->getClientOriginalExtension();
-    //                 $caption = $request->input('captions')[$index] ?? '';
-
-    //                 if (count($media) === 0 || !in_array($file->getClientOriginalName(), $media)) {
-    //                     $program->addMedia($file)
-    //                         ->withCustomProperties([
-    //                             'keterangan' => $caption,
-    //                             'user_id' => auth()->user()->id,
-    //                             'original_name' => $originalName,
-    //                             'extension' => $extension
-    //                         ])
-    //                         ->toMediaCollection('test-upload');
-    //                 }
-    //             }
-    //         }
-
-    //         return response()->json(['success' => 'Files uploaded successfully']);
-    //     } catch (Exception $e) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'An error occurred.',
-    //             'error'   => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
-
-
-
-    // public function deleteDoc($id)
     public function deleteDoc(Media $media)
     {
-        // Debugging statement
         \Log::info("Delete request received for media ID : " . $media->id);
 
         $media->delete();
         return response()->json(['success' => true]);
-
-        // $media = Media::findOrFail($id);
-        // $media->delete();
-
-        // return response()->json(['success' => true]);
     }
 }
