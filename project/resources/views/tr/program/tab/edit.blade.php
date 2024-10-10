@@ -108,54 +108,17 @@
                 maxFileSize: 10000,
                 overwriteInitial: false, // Ensure new files are added without removing previous ones
                 append: true,
-                initialPreview: @json($initialPreview),
+                initialPreview: {!! json_encode($initialPreview) !!},
                 initialPreviewAsData: true,
-                initialPreviewConfig: @json($initialPreviewConfig),
-                previewFileType: 'any', // Ensure all file types are previewed
-                fileActionSettings: {
-                    showZoom: function(config) {
-                        return config.type === 'pdf'; // Enable zoom for PDFs
-                    },
-                    showZoom: function(config) {
-                        return config.type === 'image/*'; // Enable zoom for PDFs
-                    },
-                    showZoom: function(config) {
-                        return config.type === 'office'; // Enable zoom for PDFs
-                    },
-                    removeIcon: '<i class="fa fa-trash"></i>',
-                    removeClass: 'btn btn-sm btn-kv btn-default btn-outline-secondary',
-                    removeTitle: 'Delete file',
-                    removeError: 'Error deleting file',
-                    removeUrl: function(config) {
-                        return config.url;
-                    },
-                    removeMethod: 'DELETE',
-                    remove: function(config) {
-                        var url = config.url;
-                        console.log('Sending DELETE request to:', url); // Debugging line
-                        $.ajax({
-                            url: url,
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    console.log('File deleted successfully');
-                                } else {
-                                    console.error('Error deleting file');
-                                }
-                            },
-                            error: function(xhr) {
-                                console.error('Error deleting file');
-                            }
-                        });
-                    }
-                },
+                initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!}, //+
+                previewFileType: 'any',
                 previewFileIconSettings: { // configure your icon file extensions
-                    'doc': '<i class="fas fa-file-word text-primary"></i>',
+                    // 'doc': '<i class="fas fa-file-word text-primary"></i>',
+                    // 'docx': '<i class="fas fa-file-word text-primary"></i>',
                     'xls': '<i class="fas fa-file-excel text-success"></i>',
+                    'xlsx': '<i class="fas fa-file-excel text-success"></i>',
                     'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                    'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
                     'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
                     'zip': '<i class="fas fa-file-archive text-muted"></i>',
                     'htm': '<i class="fas fa-file-code text-info"></i>',
