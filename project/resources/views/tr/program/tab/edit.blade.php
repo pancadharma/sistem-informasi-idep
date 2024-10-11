@@ -95,8 +95,8 @@
                 initialPreview: {!! json_encode($initialPreview) !!},
                 initialPreviewAsData: true,
                 initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!}, //+
-                previewFileType: ['image/*', 'pdf', 'media'],
-                previewFileIconSettings: { // configure your icon file extensions
+                previewFileType: ['image/*', 'application/pdf', 'video/*'],
+                previewFileIconSettings: {
                     'doc': '<i class="fas fa-file-word text-primary"></i>',
                     'docx': '<i class="fas fa-file-word text-primary"></i>',
                     'xls': '<i class="fas fa-file-excel text-success"></i>',
@@ -108,7 +108,7 @@
                     'htm': '<i class="fas fa-file-code text-info"></i>',
                     'txt': '<i class="fas fa-file-alt text-info"></i>',
                 },
-                previewFileExtSettings: { // configure the logic for determining icon file extensions
+                previewFileExtSettings: {
                     'doc': function(ext) {
                         return ext.match(/(doc|docx)$/i);
                     },

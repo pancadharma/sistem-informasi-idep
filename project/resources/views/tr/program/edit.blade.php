@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.edit') . ' ' . __('cruds.program.title_singular'))
-@section('content_header_title', __('global.edit') . ' ' . __('cruds.program.title_singular'))
+@section('subtitle', __('global.update') . ' ' . __('cruds.program.title_singular'))
+@section('content_header_title', __('global.update') . ' ' . __('cruds.program.title_singular'))
 @section('sub_breadcumb', __('cruds.program.title'))
 
 @section('content_body')
@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card card-info collapsed-card">
                 <div class="card-header">
-                    <h6>{{ __('global.edit') . ' ' . __('cruds.program.title_singular') }}</h6>
+                    <h6>{{ __('global.update') . ' ' . __('cruds.program.title_singular') }}</h6>
                 </div>
             </div>
         </div>
@@ -203,12 +203,6 @@
                                         </strong>
                                     </label>
                                     <div class="select2-purple">
-                                        {{-- <div style="padding-bottom: 4px">
-                                            <span class="btn btn-info btn-xs select-all"
-                                                style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                            <span class="btn btn-info btn-xs deselect-all"
-                                                style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                                        </div> --}}
                                         <select
                                             class="form-control select2 {{ $errors->has('kelompokmarjinal') ? 'is-invalid' : '' }}"
                                             name="kelompokmarjinal[]" id="kelompokmarjinal" multiple="multiple">
@@ -302,289 +296,32 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-        </div>
-
-        {{-- Ekspektasi Penerima Manfaat --}}
-
-        {{-- <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.expektasi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaat"
-                                        class="small">{{ __('cruds.program.expektasi') }}</label>
-                                    <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000"
-                                        name="ekspektasipenerimamanfaat" class="form-control"
-                                        placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-1">
-                                <div class="form-group">
-                                    <label for="pria"
-                                        class="small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
-                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-1">
-                                <div class="form-group">
-                                    <label for="wanita"
-                                        class="small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
-                                    <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="laki"
-                                        class="small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
-                                    <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="perempuan"
-                                        class="small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
-                                    <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="total"
-                                        class="small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
-                                    <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
-                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- Kelompok Marjinal --}}
-        {{-- <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.marjinal.label') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- File Uploads --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="kelompokmarjinal" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.marjinal.list') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-purple">
-                                        <select class="form-control select2" name="kelompokmarjinal[]"
-                                            id="kelompokmarjinal" multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- Target Reinstra --}}
-        {{-- <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.reinstra') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="targetreinstra" class="small control-label">
-                                        <strong>
-                                            {{ __('cruds.program.list_reinstra') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-orange">
-                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
-                                            id="targetreinstra" multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- Kaitan SDG --}}
-        {{-- <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.sdg') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label for="kaitansdg" class="control-label mb-0 small">
-                                        <strong>
-                                            {{ __('cruds.program.list_sdg') }}
-                                        </strong>
-                                    </label>
-                                    <div class="select2-orange">
-                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
-                                            multiple="multiple" required>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- Deskripsi Program --}}
-        {{-- <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.deskripsi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body pt-0 pb-0">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.analisis') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- File Uploads --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.files') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-lg-12">
+                                <label for="file_pendukung" class="control-label mb-0 small">
+                                    <strong>
+                                        {{ __('cruds.program.upload') }}
+                                    </strong>
+                                    <span class="text-red">
+                                        ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
+                                    </span>
+                                </label>
                                 <div class="form-group file-loading">
-                                    <label for="status" class="small control-label">
-                                        <strong>{{ __('cruds.program.upload') }}</strong>
-                                    </label>
                                     <input id="file_pendukung" name="file_pendukung[]" type="file"
                                         class="form-control" multiple data-show-upload="false" data-show-caption="true">
                                 </div>
+                                <div id="captions-container"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        {{-- Status --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.status.title') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Status --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="status" class="small control-label">
+                                    <label for="status" class="control-label mb-0 small">
                                         <strong>
                                             {{ __('cruds.status.title') }}
                                         </strong>
@@ -603,21 +340,24 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="small control-label">
+                                    <label for="users" class="control-label mb-0 small">
                                         <strong>
-                                            Updated By User Program
+                                            Program Created / Updated by
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
-                                            id="user_id" name="user_id" readonly>
+                                        <input type="text" class="form-control"
+                                            value="{{ old('nama', $program->users->nama) }}" id="user_id"
+                                            name="user_id" readonly>
                                         <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
                                             name="user_id">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- Submit Button --}}
+                    </div>
+                    {{-- Submit Update Button --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
@@ -653,293 +393,5 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
-
-<script>
-    $('#totalnilai').maskMoney({
-        prefix: 'Rp. ',
-        allowNegative: true,
-        thousands: '.',
-        decimal: ',',
-        affixesStay: false
-    });
-    //SCRIPT FOR CREATE PROGRAM FORM
-
-    $(document).ready(function() {
-        $('#status').select2();
-        var url_update = $('#editProgram').attr('action');
-
-        $(document).ready(function() {
-            $("#file_pendukung").fileinput({
-                theme: 'fa',
-                showRemove: true,
-                previewZoomButtonTitles: true,
-                dropZoneEnabled: false,
-                removeIcon: '<i class="bi bi-trash"></i>',
-                showDrag: true,
-                dragIcon: '<i class="bi-arrows-move"></i>',
-                showZoom: true,
-                showUpload: false,
-                showRotate: true,
-                showCaption: true,
-                uploadUrl: url_update,
-                uploadAsync: false,
-                maxFileSize: 4096,
-                allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc",
-                    "docx"
-                ],
-                append: true,
-                initialPreview: @json($initialPreview),
-                initialPreviewAsData: true,
-                initialPreviewConfig: @json($initialPreviewConfig),
-
-                overwriteInitial: false,
-            });
-
-            $('#file_pendukung').on('change', function(event) {
-                const files = event.target.files;
-                const dataTransfer = new DataTransfer();
-                for (let i = 0; i < this.files.length; i++) {
-                    dataTransfer.items.add(this.files[i]);
-                }
-                for (let file of files) {
-                    dataTransfer.items.add(file);
-                }
-                this.files = dataTransfer.files;
-            });
-        });
-
-        // SELECT2 GET DATA
-        var data_reinstra = "{{ route('program.api.reinstra') }}";
-        var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
-        var data_sdg = "{{ route('program.api.sdg') }}";
-
-        var edit_reinstra_data = @json(
-            $program->targetReinstra->map(function ($targetReinstra) {
-                return ['id' => $targetReinstra->id, 'text' => $targetReinstra->nama];
-            }))
-
-        var target_reinstra = @json(
-            $program->targetReinstra->map(function ($targetReinstra) {
-                return $targetReinstra->id;
-            }));
-        var edit_kelompokmarjinal = @json(
-            $program->kelompokMarjinal->map(function ($kelompokMarjinal) {
-                return ['id' => $kelompokMarjinal->id, 'text' => $kelompokMarjinal->nama];
-            }))
-
-        var kelompokmarjinals = @json(
-            $program->kelompokMarjinal->map(function ($kelompokMarjinal) {
-                return $kelompokMarjinal->id;
-            }));
-        var edit_kaitansdg = @json(
-            $program->kaitanSDG->map(function ($data) {
-                return ['id' => $data->id, 'text' => $data->nama];
-            }))
-
-        var kaitansdgs = @json(
-            $program->kaitanSDG->map(function ($data) {
-                return $data->id;
-            }));
-
-        $('#kelompokmarjinal').select2({
-            placeholder: '{{ __('cruds.program.marjinal.select') }}',
-            width: '100%',
-            allowClear: true,
-            data: edit_kelompokmarjinal,
-            // closeOnSelect: false,
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_kelompokmarjinal,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-        // SELECT2 For Target Reinstra
-        $('#targetreinstra').select2({
-            placeholder: '{{ __('cruds.program.select_reinstra') }}',
-            width: '100%',
-            data: edit_reinstra_data,
-            allowClear: true,
-            // closeOnSelect: false,
-            width: '100%',
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_reinstra,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-        //KAITAN SDG SELECT2
-        $('#kaitansdg').select2({
-            placeholder: '{{ __('cruds.program.select_sdg') }}',
-            width: '100%',
-            allowClear: true,
-            closeOnSelect: false,
-            data: edit_kaitansdg,
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_sdg,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-
-        if (target_reinstra.length > 0) {
-            $('#targetreinstra').val(target_reinstra).trigger('change');
-        }
-        if (kelompokmarjinals.length > 0) {
-            $('#kelompokmarjinal').val(kelompokmarjinals).trigger('change');
-        }
-        if (kaitansdgs.length > 0) {
-            $('#kaitansdg').val(kaitansdgs).trigger('change');
-        }
-
-        $('#editProgram').on('submit', function(e) {
-            e.preventDefault();
-            $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-            var formData = new FormData(this);
-            // let url = $(this).attr('action');
-            var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-            formData.set('totalnilai', unmaskedValue);
-
-            $.ajax({
-                url: url_update,
-                method: 'PUT',
-                data: formData,
-                processData: false,
-                contentType: false,
-                // dataType: 'json',
-                success: function(response) {
-                    setTimeout(() => {
-                        if (response.success === true) {
-                            Swal.fire({
-                                title: "{{ __('global.success') }}",
-                                text: response.message,
-                                icon: "success",
-                                timer: 1500,
-                                timerProgressBar: true,
-                            });
-                            $(this).trigger('reset');
-                            $('#editProgram')[0].reset();
-                            $('#editProgram').trigger('reset');
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
-                                '').trigger('change');
-                            $(".btn-tool").trigger('click');
-                            $('#editProgram').find('button[type="submit"]')
-                                .removeAttr('disabled');
-                        }
-                    }, 500);
-                },
-                error: function(xhr, status, error) {
-                    $('#editProgram').find('button[type="submit"]').removeAttr(
-                        'disabled');
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response.errors) {
-                            errorMessage +=
-                                '<br><br><ul style="text-align:left!important">';
-                            $.each(response.errors, function(field, messages) {
-                                messages.forEach(message => {
-                                    errorMessage +=
-                                        `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).removeClass(
-                                        'is-valid').addClass(
-                                        'is-invalid');
-                                    $(`#${field}-error`).text(message);
-                                    $(`#${field}`).removeClass('invalid')
-                                        .addClass('is-invalid');
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    html: errorMessage,
-                                });
-                            });
-                            errorMessage += '</ul>';
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                    });
-                },
-                complete: function() {
-                    setTimeout(() => {
-                        $(this).find('button[type="submit"]').removeAttr(
-                            'disabled');
-                    }, 500);
-                }
-            });
-
-        });
-
-    });
-
-
-    $('.select-all').click(function() {
-        let $select2 = $(this).parent().siblings('.select2')
-        $select2.find('option').prop('selected', 'selected')
-        $select2.trigger('change')
-    })
-    $('.deselect-all').click(function() {
-        let $select2 = $(this).parent().siblings('.select2')
-        $select2.find('option').prop('selected', '')
-        $select2.trigger('change')
-    })
-</script>
+@include('tr.program.js.edit')
 @endpush
