@@ -286,6 +286,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    @include('tr.program.detail.create')
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {{-- Submit Button --}}
                     <div class="card-body pt-0">
                         <div class="row">
