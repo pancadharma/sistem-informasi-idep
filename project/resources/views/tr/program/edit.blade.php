@@ -394,12 +394,5 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
-<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
-
 @include('tr.program.js.edit')
 @endpush

@@ -1,3 +1,9 @@
+<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 <script>
     $('#totalnilai').maskMoney({
         prefix: 'Rp. ',
@@ -32,8 +38,7 @@
                         timer: 500,
                     });
                 }
-                let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest(
-                    '.file-preview-frame');
+                let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest('.file-preview-frame');
                 filePreview.remove();
             },
             error: function(xhr) {
@@ -111,7 +116,7 @@
                 `<div class="form-group" id="caption-group-${uniqueId}"><label for="caption-${uniqueId}">Caption for ${file.name}</label>
                         <input type="text" class="form-control" name="captions[]" id="caption-${uniqueId}">
                     </div>`);
-            $(`#${previewId}`).attr('data-unique-id', uniqueId);
+            // $(`#${previewId}`).attr('data-unique-id', uniqueId);
         }).on('fileremoved', function(event, id) {
             var uniqueId = $(`#${id}`).attr('data-unique-id');
             delete fileCaptions[uniqueId];
