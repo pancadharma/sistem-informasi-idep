@@ -60,10 +60,11 @@
                                 <div class="form-group">
                                     <label for="tanggalmulai"
                                         class="control-label mb-0 small">{{ __('cruds.program.form.tgl_mulai') }}</label>
-
-                                    <input type="datetime" id="tanggalmulai" name="tanggalmulai"
+                                    <input type="date" id="tanggalmulai" name="tanggalmulai"
                                         class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalmulai', $program->tanggalmulai) }}">
+                                        value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}">
+
+
                                     @if ($errors->has('tanggalmulai'))
                                         <span class="text-danger">{{ $errors->first('tanggalmulai') }}</span>
                                     @endif
@@ -73,9 +74,13 @@
                                 <div class="form-group">
                                     <label for="tanggalselesai"
                                         class="control-label mb-0 small">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    <input type="datetime" id="tanggalselesai" name="tanggalselesai"
-                                        class="form-control{{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalselesai', $program->tanggalselesai) }}">
+                                    {{-- <input type="date" id="tanggalselesai" name="tanggalselesai"
+                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
+                                        value="{{ old('tanggalselesai', $program->tanggalselesai) }}"> --}}
+
+                                    <input type="date" id="tanggalselesai" name="tanggalselesai"
+                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
+                                        value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}">
 
                                     @if ($errors->has('tanggalselesai'))
                                         <span class="text-danger">{{ $errors->first('tanggalselesai') }}</span>
@@ -327,13 +332,16 @@
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <select class="form-control select2" name="status" id="status" required>
-                                            <optgroup label="Status Progran">
-                                                <option value="draft">Draft</option>
-                                                <option value="running">Running</option>
-                                                <option value="submit">Submit</option>
-                                                <option value="completed">Completed</option>
-                                            </optgroup>
+                                        <select
+                                            class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
+                                            name="status" id="status">
+                                            <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>
+                                                {{ trans('global.pleaseSelect') }}</option>
+                                            @foreach (App\Models\Program::STATUS_SELECT as $key => $label)
+                                                <option value="{{ $key }}"
+                                                    {{ old('status', $program->status) === (string) $key ? 'selected' : '' }}>
+                                                    {{ $label }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>

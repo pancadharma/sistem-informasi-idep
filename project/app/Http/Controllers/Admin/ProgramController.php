@@ -21,6 +21,7 @@ use App\Http\Requests\UpdateProgramRequest;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
@@ -146,52 +147,136 @@ class ProgramController extends Controller
             $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
             $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG');
 
-
-            $mediaFiles = $program->getMedia('file_pendukung_program');
+            $file_pendukung = Program::find($program->id);
+            $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
             $initialPreview = [];
             $initialPreviewConfig = [];
 
             foreach ($mediaFiles as $media) {
-                if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif'])) {
+                if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
+                    $initialPreview[] = $media->getUrl();
+                } elseif ($media->mime_type == 'application/pdf') {
+                    $initialPreview[] = $media->getUrl();
+                } elseif ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
                     $initialPreview[] = $media->getUrl();
                 } else {
-                    $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for non-image files
+                    $initialPreview[] =
+                        $media->getUrl();;
                 }
 
+                $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
                 $initialPreviewConfig[] = [
-                    'caption' => $media->file_name,
-                    'url' => route('program.media.destroy', ['media' => $media->id]), // Route to handle file deletion
-                    'key' => $media->id,
-                    'type' => $media->mime_type == 'application/pdf' ? 'pdf' : 'image',
+                    'caption' => "<span class='text-red strong'>{$caption}</span>",
+                    'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                    'key' => $media->id ?? '',
+                    'size' => $media->size ?? '',
+                    'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
+                    'downloadUrl' => $media->getUrl() ?? '',
+                    'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+
                 ];
             }
-
-            // return $program;
-            // return response()->json(['program' => $program]);
-            // return [$initialPreviewConfig, $initialPreviewConfig, $media, $program];
 
             return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
     }
+    // public function update(UpdateProgramRequest $request, Program $program)
+    // {
+    // $program->update($request->all());
+
+    //  $newFiles = $request->file('files', []);
+    //  $newFileNames = array_map(function ($file) {
+    //      return $file->getClientOriginalName();
+    //  }, $newFiles);
+    //  \Log::info(  $newFileNames);
+    //  if (is_countable($program->media) && count($program->media) > 0) {
+    //      foreach ($program->media as $media) {
+    //          if (in_array($media->name, $newFileNames)) {
+    //              \Log::info('Deleting Media: ' . $media->name);
+    //              $media->delete();
+    //              $data = response()->json([
+    //                  "message" => "File Exists {$media->name} and will be replaced",
+    //                  "success" => true,
+    //                  "file_name" => $media->name,
+    //                  "file_id" => $media->id,
+    //                  'files' => $newFiles
+    //              ]);
+    //          }
+    //      }
+    //  }
+
+    //  if ($request->hasFile('files')) {
+    //      foreach ($newFiles as $index => $file) {
+    //          $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    //          $extension = $file->getClientOriginalExtension();
+    //          $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
+
+    //          $program->addMedia($file)
+    //              ->usingName("{$originalName}.{$extension}")
+    //              ->withCustomProperties([
+    //                  'keterangan' => $caption,
+    //                  'user_id' => auth()->user()->id,
+    //                  'original_name' => $originalName,
+    //                  'extension' => $extension,
+    //                  'updated_by' => auth()->user()->id
+    //              ])
+    //              ->toMediaCollection('file_pendukung_program');
+    //      }
+    //  }
+    // }
+
     public function update(UpdateProgramRequest $request, Program $program)
     {
-        $program->update($request->all());
 
-        if (count($program->file_pendukung) > 0) {
-            foreach ($program->file_pendukung as $media) {
-                if (! in_array($media->file_name, $request->input('file_pendukung', []))) {
-                    $media->delete();
+        try {
+            // DB::transaction(function () use ($request, $program) {
+            $request->validated();
+            $program->update($request->all());
+
+            $newFiles = $request->file('file_pendukung', []);
+            $newFileNames = array_map(function ($file) {
+                return $file->getClientOriginalName();
+            }, $newFiles);
+            \Log::info($newFileNames);
+
+            if (is_countable($program->media) && count($program->media) > 0) {
+                foreach ($program->media as $media) {
+                    if (in_array($media->name, $newFileNames)) {
+                        \Log::info('Deleting Media: ' . $media->name);
+                        $media->delete();
+                    }
                 }
             }
-        }
-        $media = $program->file_pendukung->pluck('file_name')->toArray();
-        foreach ($request->input('file_pendukung', []) as $file) {
-            if (count($media) === 0 || ! in_array($file, $media)) {
-                $program->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('file_pendukung');
+
+            if ($request->hasFile('file_pendukung')) {
+                foreach ($newFiles as $index => $file) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
+
+                    $program->addMedia($file)
+                        ->usingName("{$originalName}.{$extension}")
+                        ->withCustomProperties([
+                            'keterangan' => $caption,
+                            'user_id' => auth()->user()->id,
+                            'original_name' => $originalName,
+                            'extension' => $extension,
+                            'updated_by' => auth()->user()->id
+                        ])
+                        ->toMediaCollection('file_pendukung_program');
+                }
             }
+            // });
+
+            return response()->json(['success' => 'Files uploaded successfully', 'program' => $program]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred.',
+                'error'   => $e->getMessage(),
+            ], 500);
         }
-        return redirect()->route('tr.programs.index');
     }
 
     public function ProgramMediaDestroy(Media $media)

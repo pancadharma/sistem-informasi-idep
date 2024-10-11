@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -52,7 +53,8 @@ class Program extends Model implements HasMedia
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
     public function targetReinstra()
@@ -90,5 +92,32 @@ class Program extends Model implements HasMedia
     public function getFilePendukungAttribute()
     {
         return $this->getMedia('file_pendukung_program');
+    }
+
+    public const STATUS_SELECT = [
+        'draft'    => 'Draft',
+        'running'  => 'Running',
+        'submit'   => 'Submit',
+        'complete' => 'Complete',
+    ];
+
+    public function getTglMulaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglMulaiAttribute($value)
+    {
+        $this->attributes['tgl_mulai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getTglSelesaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglSelesaiAttribute($value)
+    {
+        $this->attributes['tgl_selesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 }

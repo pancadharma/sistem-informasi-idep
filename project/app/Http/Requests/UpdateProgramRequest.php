@@ -18,7 +18,6 @@ class UpdateProgramRequest extends FormRequest
         }
         // Check if the user has the 'role_edit' permission
         return Gate::allows('program_edit');
-
     }
 
     /**
@@ -40,7 +39,7 @@ class UpdateProgramRequest extends FormRequest
             'ekspektasipenerimamanfaatman'          => ['integer'],
             'ekspektasipenerimamanfaatgirl'         => ['integer'],
             'ekspektasipenerimamanfaatboy'          => ['integer'],
-            'ekspektasipenerimamanfaattidaklangsung'=> ['string', 'max:100'],
+            'ekspektasipenerimamanfaattidaklangsung' => ['string', 'max:100'],
             'deskripsiprojek'                       => ['string', 'max:500'],
             'analisamasalah'                        => ['string', 'max:500'],
             'targetreinstra'                        => ['array'],
@@ -50,8 +49,9 @@ class UpdateProgramRequest extends FormRequest
             'kaitansdg'                             => ['array'],
             'kaitansdg.*'                           => ['exists:mkaitansdg,id'],
             'file_pendukung'                        => ['array'],
-            'file_pendukung.*'                      => ['file', 'mimes:jpg,png,pdf,docx', 'max:2048'],
+            'file_pendukung.*'                      => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
             'status'                                => ['string', 'max:50'],
+            'keterangan.*'                          => 'nullable|string|max:255',
         ];
     }
 }

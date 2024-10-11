@@ -6,52 +6,142 @@
         decimal: ',',
         affixesStay: false
     });
-    //SCRIPT FOR CREATE PROGRAM FORM
+    // DELETE EXISTING MEDIA FILE FROM CURRENT PROGRAM
+    $(document).on('click', '.kv-file-remove', function() {
+        let mediaID = $(this).data('key');
+        let url = '{{ route('program.media.destroy', ':id') }}'.replace(':id', mediaID);
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            data: {
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                console.log('AJAX success:', response);
+                if (response.success) {
+                    Toast.fire({
+                        icon: "success",
+                        title: "Files Deleted",
+                        timer: 500,
+                        timerProgressBar: true,
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        icon: 'error',
+                        timer: 500,
+                    });
+                }
+                let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest(
+                    '.file-preview-frame');
+                filePreview.remove();
+            },
+            error: function(xhr) {
+                console.error('AJAX error:', xhr);
+            }
+        });
+    });
+    // INIT LOAD MEDIA
+    $(document).ready(function() {
+        var fileIndex = 0;
+        var fileCaptions = {};
+        $("#file_pendukung").fileinput({
+            theme: "fa5",
+            showUpload: false,
+            showBrowse: false,
+            browseOnZoneClick: true,
+            showRemove: false,
+            allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
+                'csv', 'gif', 'pdf',
+            ],
+            autoReplace: true,
+            maxFileSize: 10000,
+            overwriteInitial: false, // Ensure new files are added without removing previous ones
+            append: true,
+            initialPreviewAsData: true,
+            initialPreviewFileType: 'image',
+            initialPreview: {!! json_encode($initialPreview) !!},
+            initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!}, //+
+            previewFileType: ['image/*', 'application/pdf', 'video/*'],
+            allowedPreviewTypes: 'any',
+            previewFileIconSettings: {
+                'doc': '<i class="fas fa-file-word text-primary"></i>',
+                'docx': '<i class="fas fa-file-word text-primary"></i>',
+                'xls': '<i class="fas fa-file-excel text-success"></i>',
+                'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+                'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                'htm': '<i class="fas fa-file-code text-info"></i>',
+                'txt': '<i class="fas fa-file-alt text-info"></i>',
+            },
+            previewFileExtSettings: {
+                'doc': function(ext) {
+                    return ext.match(/(doc|docx)$/i);
+                },
+                'xls': function(ext) {
+                    return ext.match(/(xls|xlsx)$/i);
+                },
+                'ppt': function(ext) {
+                    return ext.match(/(ppt|pptx)$/i);
+                },
+                'zip': function(ext) {
+                    return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+                },
+                'htm': function(ext) {
+                    return ext.match(/(htm|html)$/i);
+                },
+                'txt': function(ext) {
+                    return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+                },
+                'mov': function(ext) {
+                    return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+                },
+                'mp3': function(ext) {
+                    return ext.match(/(mp3|wav)$/i);
+                }
+            },
 
+        }).on('fileloaded', function(event, file, previewId, index, reader) {
+            fileIndex++;
+            var uniqueId = 'file-' + fileIndex;
+            fileCaptions[uniqueId] = file.name;
+            $('#captions-container').append(
+                `<div class="form-group" id="caption-group-${uniqueId}"><label for="caption-${uniqueId}">Caption for ${file.name}</label>
+                        <input type="text" class="form-control" name="captions[]" id="caption-${uniqueId}">
+                    </div>`);
+            $(`#${previewId}`).attr('data-unique-id', uniqueId);
+        }).on('fileremoved', function(event, id) {
+            var uniqueId = $(`#${id}`).attr('data-unique-id');
+            delete fileCaptions[uniqueId];
+            $(`#caption-group-${uniqueId}`).remove();
+        }).on('fileclear', function(event) {
+            fileCaptions = {};
+            $('#captions-container').empty();
+        }).on('filebatchselected', function(event, files) {
+            fileCaptions = {};
+            $('#captions-container').empty();
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                fileIndex++;
+                var uniqueId = 'file-' + fileIndex;
+                fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
+                $('#captions-container').append(
+                    `<div class="form-group" id="caption-group-${uniqueId}">
+                            <label for="caption-${uniqueId}">Caption for ${file.name}</label>
+                            <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
+                        </div>`
+                );
+            }
+        });
+    });
+
+
+    // POPULATE EDIT FORM
     $(document).ready(function() {
         $('#status').select2();
         var url_update = $('#editProgram').attr('action');
-
-        $(document).ready(function() {
-            $("#file_pendukung").fileinput({
-                theme: 'fa',
-                showRemove: true,
-                previewZoomButtonTitles: true,
-                dropZoneEnabled: false,
-                removeIcon: '<i class="bi bi-trash"></i>',
-                showDrag: true,
-                dragIcon: '<i class="bi-arrows-move"></i>',
-                showZoom: true,
-                showUpload: false,
-                showRotate: true,
-                showCaption: true,
-                uploadUrl: url_update,
-                uploadAsync: false,
-                maxFileSize: 4096,
-                allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc",
-                    "docx"
-                ],
-                append: true,
-                initialPreview: @json($initialPreview),
-                initialPreviewAsData: true,
-                initialPreviewConfig: @json($initialPreviewConfig),
-
-                overwriteInitial: false,
-            });
-
-            $('#file_pendukung').on('change', function(event) {
-                const files = event.target.files;
-                const dataTransfer = new DataTransfer();
-                for (let i = 0; i < this.files.length; i++) {
-                    dataTransfer.items.add(this.files[i]);
-                }
-                for (let file of files) {
-                    dataTransfer.items.add(file);
-                }
-                this.files = dataTransfer.files;
-            });
-        });
-
         // SELECT2 GET DATA
         var data_reinstra = "{{ route('program.api.reinstra') }}";
         var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
@@ -85,6 +175,7 @@
                 return $data->id;
             }));
 
+        // KELOMPOK MARJINAL LOADS DATA
         $('#kelompokmarjinal').select2({
             placeholder: '{{ __('cruds.program.marjinal.select') }}',
             width: '100%',
@@ -189,21 +280,38 @@
             $('#kaitansdg').val(kaitansdgs).trigger('change');
         }
 
+    });
+
+
+
+    $(document).ready(function() {
+        // UPDATE PROGRAM
         $('#editProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+
             var formData = new FormData(this);
-            // let url = $(this).attr('action');
             var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
             formData.set('totalnilai', unmaskedValue);
+            formData.append('_method', 'PUT');
 
             $.ajax({
-                url: url_update,
-                method: 'PUT',
+                url: $(this).attr('action'),
+                type: 'post',
                 data: formData,
-                processData: false,
                 contentType: false,
-                // dataType: 'json',
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Uploading...",
+                        timer: 2000,
+                        timerProgressBar: true,
+                    });
+                },
                 success: function(response) {
                     setTimeout(() => {
                         if (response.success === true) {
@@ -223,6 +331,7 @@
                             $('#editProgram').find('button[type="submit"]')
                                 .removeAttr('disabled');
                         }
+                        window.location.reload();
                     }, 500);
                 },
                 error: function(xhr, status, error) {
@@ -271,7 +380,6 @@
             });
 
         });
-
     });
 
 

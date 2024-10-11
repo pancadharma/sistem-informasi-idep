@@ -177,7 +177,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('program/documents', [TrProgramController::class, 'uploadDoc'])->name('program.docs');
     Route::get('program/doc', [TrProgramController::class, 'doc'])->name('program.test.doc');
     Route::get('program/editdoc/{id}', [TrProgramController::class, 'docEdit'])->name('program.test.edit'); //program/editdoc/10
-    // Route::PUT('trprogram/updatedoc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc'); //program/editdoc/10
+    Route::get('trprogram/{id}/media', [TrProgramController::class, 'getMedia'])->name('trprogram.getMedia');
+
     Route::put('trprogram/update/doc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc');
 
     Route::delete('trprogram/media/{media}', [TrProgramController::class, 'deleteDoc'])->name('trprogram.delete.doc');

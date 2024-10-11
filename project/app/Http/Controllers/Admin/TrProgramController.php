@@ -194,22 +194,22 @@ class TrProgramController extends Controller
     {
         $program = Program::find($id);
         $mediaFiles = $program->getMedia('file_pendukung_program');
-        $initialPreview = [];
-        $initialPreviewConfig = [];
+        $preview_pendukung = [];
+        $config_pendukung = [];
 
         foreach ($mediaFiles as $media) {
             if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-                $initialPreview[] = $media->getUrl();
+                $preview_pendukung[] = $media->getUrl();
             } elseif ($media->mime_type == 'application/pdf') {
-                $initialPreview[] = $media->getUrl(); // Use the actual URL for PDFs
+                $preview_pendukung[] = $media->getUrl(); // Use the actual URL for PDFs
             } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-                $initialPreview[] = $media->getUrl(); // Use the actual URL for PDFs
+                $preview_pendukung[] = $media->getUrl(); // Use the actual URL for PDFs
             } else {
-                $initialPreview[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
+                $preview_pendukung[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
             }
 
             $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-            $initialPreviewConfig[] = [
+            $config_pendukung[] = [
                 'caption' => "<span class='text-red strong'>{$caption}</span>",
                 'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
                 'key' => $media->id ?? '',
@@ -220,7 +220,7 @@ class TrProgramController extends Controller
             ];
         }
 
-        return view('tr.program.tab.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+        return view('tr.program.tab.edit', compact('program', 'preview_pendukung', 'config_pendukung'));
     }
 
     // Update File Pendukung Tanpa Hapus Existing Files
@@ -238,7 +238,7 @@ class TrProgramController extends Controller
             $newFileNames = array_map(function ($file) {
                 return $file->getClientOriginalName();
             }, $newFiles);
-            \Log::info(  $newFileNames);
+            \Log::info($newFileNames);
             if (is_countable($program->media) && count($program->media) > 0) {
                 foreach ($program->media as $media) {
                     if (in_array($media->name, $newFileNames)) {
@@ -289,5 +289,42 @@ class TrProgramController extends Controller
 
         $media->delete();
         return response()->json(['success' => true]);
+    }
+
+
+    public function getMedia($id)
+    {
+        $program = Program::find($id);
+        $mediaFiles = $program->getMedia('file_pendukung_program');
+        $preview_pendukung = [];
+        $config_pendukung = [];
+
+        foreach ($mediaFiles as $media) {
+            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
+                $preview_pendukung[] = $media->getUrl();
+            } elseif ($media->mime_type == 'application/pdf') {
+                $preview_pendukung[] = $media->getUrl();
+            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+                $preview_pendukung[] = $media->getUrl();
+            } else {
+                $preview_pendukung[] = asset('path/to/pdf-icon.png');
+            }
+
+            $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
+            $config_pendukung[] = [
+                'caption' => "<span class='text-red strong'>{$caption}</span>",
+                'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                'key' => $media->id ?? '',
+                'size' => $media->size,
+                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
+                'downloadUrl' => $media->getUrl() ?? '',
+                'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+            ];
+        }
+
+        return response()->json([
+            'initialPreview' => $preview_pendukung,
+            'initialPreviewConfig' => $config_pendukung,
+        ]);
     }
 }
