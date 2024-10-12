@@ -38,7 +38,8 @@
                         timer: 500,
                     });
                 }
-                let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest('.file-preview-frame');
+                let filePreview = $(`.kv-file-remove[data-key="${mediaID}"]`).closest(
+                    '.file-preview-frame');
                 filePreview.remove();
             },
             error: function(xhr) {
@@ -61,8 +62,9 @@
             ],
             autoReplace: true,
             maxFileSize: 10000,
+            maxFilePreviewSize: 2048,
             overwriteInitial: false, // Ensure new files are added without removing previous ones
-            append: true,
+            append: false,
             initialPreviewAsData: true,
             initialPreviewFileType: 'image',
             initialPreview: {!! json_encode($initialPreview) !!},

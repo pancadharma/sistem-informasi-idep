@@ -205,7 +205,7 @@ class TrProgramController extends Controller
             } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
                 $preview_pendukung[] = $media->getUrl(); // Use the actual URL for PDFs
             } else {
-                $preview_pendukung[] = asset('path/to/pdf-icon.png'); // Placeholder for other non-image files
+                $preview_pendukung[] = $media->getUrl(); // Placeholder for other non-image files
             }
 
             $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
