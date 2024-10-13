@@ -228,13 +228,13 @@ class TrProgramController extends Controller
     {
         try {
             $request->validate([
-                'files.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
-                'captions.*' => 'nullable|string|max:255',
+                'file_pendukung.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
+                'keterangan.*' => 'nullable|string|max:255',
             ]);
 
             $program->update($request->all());
 
-            $newFiles = $request->file('files', []);
+            $newFiles = $request->file('file_pendukung', []);
             $newFileNames = array_map(function ($file) {
                 return $file->getClientOriginalName();
             }, $newFiles);
@@ -255,11 +255,11 @@ class TrProgramController extends Controller
                 }
             }
 
-            if ($request->hasFile('files')) {
+            if ($request->hasFile('file_pendukung')) {
                 foreach ($newFiles as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
-                    $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
+                    $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
 
                     $program->addMedia($file)
                         ->usingName("{$originalName}.{$extension}")
@@ -304,10 +304,10 @@ class TrProgramController extends Controller
                 $preview_pendukung[] = $media->getUrl();
             } elseif ($media->mime_type == 'application/pdf') {
                 $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint' ) {
                 $preview_pendukung[] = $media->getUrl();
             } else {
-                $preview_pendukung[] = asset('path/to/pdf-icon.png');
+                $preview_pendukung[] = $media->getUrl();
             }
 
             $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;

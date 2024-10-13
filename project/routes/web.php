@@ -178,9 +178,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/doc', [TrProgramController::class, 'doc'])->name('program.test.doc');
     Route::get('program/editdoc/{id}', [TrProgramController::class, 'docEdit'])->name('program.test.edit'); //program/editdoc/10
     Route::get('trprogram/{id}/media', [TrProgramController::class, 'getMedia'])->name('trprogram.getMedia');
-
     Route::put('trprogram/update/doc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc');
-
     Route::delete('trprogram/media/{media}', [TrProgramController::class, 'deleteDoc'])->name('trprogram.delete.doc');
 
     //Route Program by Siva
@@ -188,5 +186,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('program', ProgramController::class);
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
 
+    Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
     Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
 });

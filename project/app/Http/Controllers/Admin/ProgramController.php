@@ -228,11 +228,13 @@ class ProgramController extends Controller
 
     public function update(UpdateProgramRequest $request, Program $program)
     {
-
         try {
-            // DB::transaction(function () use ($request, $program) {
-            $request->validated();
+            DB::transaction(function () use ($request, $program) {
+            $data = $request->validated();
             $program->update($request->all());
+            $program->targetReinstra()->sync($request->input('targetreinstra', []));
+            $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+            $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
             $newFiles = $request->file('file_pendukung', []);
             $newFileNames = array_map(function ($file) {
@@ -267,7 +269,7 @@ class ProgramController extends Controller
                         ->toMediaCollection('file_pendukung_program');
                 }
             }
-            // });
+            });
 
             return response()->json(['success' => 'Files uploaded successfully', 'program' => $program]);
         } catch (Exception $e) {
@@ -283,5 +285,41 @@ class ProgramController extends Controller
     {
         $media->delete();
         return response()->json(['success' => true]);
+    }
+    // Get Files with collection of file_pendukung_program using JSON
+    public function getProgramFilesPendukung($id)
+    {
+        $program = Program::find($id);
+        $mediaFiles = $program->getMedia('file_pendukung_program');
+        $preview_pendukung = [];
+        $config_pendukung = [];
+
+        foreach ($mediaFiles as $media) {
+            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
+                $preview_pendukung[] = $media->getUrl();
+            } elseif ($media->mime_type == 'application/pdf') {
+                $preview_pendukung[] = $media->getUrl();
+            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint' ) {
+                $preview_pendukung[] = $media->getUrl();
+            } else {
+                $preview_pendukung[] = $media->getUrl();
+            }
+
+            $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
+            $config_pendukung[] = [
+                'caption' => "<span class='text-red strong'>{$caption}</span>",
+                'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                'key' => $media->id ?? '',
+                'size' => $media->size,
+                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
+                'downloadUrl' => $media->getUrl() ?? '',
+                'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+            ];
+        }
+
+        return response()->json([
+            'initialPreview' => $preview_pendukung,
+            'initialPreviewConfig' => $config_pendukung,
+        ]);
     }
 }

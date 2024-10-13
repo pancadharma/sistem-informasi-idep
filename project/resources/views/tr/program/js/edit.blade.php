@@ -60,17 +60,14 @@
             allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
-            autoReplace: true,
             maxFileSize: 10000,
             maxFilePreviewSize: 2048,
-            overwriteInitial: false, // Ensure new files are added without removing previous ones
+            overwriteInitial: true,
             append: false,
             initialPreviewAsData: true,
-            initialPreviewFileType: 'image',
             initialPreview: {!! json_encode($initialPreview) !!},
-            initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!}, //+
-            previewFileType: ['image/*', 'application/pdf', 'video/*'],
-            allowedPreviewTypes: 'any',
+            initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!},
+            removeFromPreviewOnError: true,
             previewFileIconSettings: {
                 'doc': '<i class="fas fa-file-word text-primary"></i>',
                 'docx': '<i class="fas fa-file-word text-primary"></i>',
@@ -143,7 +140,6 @@
             }
         });
     });
-
 
     // POPULATE EDIT FORM
     $(document).ready(function() {
@@ -290,9 +286,9 @@
     });
 
 
+    // BUTTON SUBMIT UPDATE PROGRAM
 
     $(document).ready(function() {
-        // UPDATE PROGRAM
         $('#editProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
