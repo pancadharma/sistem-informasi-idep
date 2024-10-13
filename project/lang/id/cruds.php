@@ -381,6 +381,7 @@ return [
         'upload'            => 'Unggah Berkas',
         'pilih_file'        => 'Pilih Berkas',
         'ket_file'          => 'Masukan Keterangan File',
+        'edit_file'          => 'Privew akan menampilkan file yang dipilih dan akan diunggah, file sebelumnya akan tetep ada kecuali tombol hapus diklik',
         'form'            => [
             'id'            => 'ID',
             'title'         => 'Informasi Program',

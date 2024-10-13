@@ -386,6 +386,7 @@ return [
         'upload'            => 'Upload Files',
         'pilih_file'        => 'Select Files',
         'ket_file'          => 'Input File Information',
+        'edit_file'          => 'Privew will display the selected file and will upload it, the previous file will remain unless the delete button is clicked.',
         'form'              => [
             'id'            => 'ID',
             'title'         => 'Program Information',

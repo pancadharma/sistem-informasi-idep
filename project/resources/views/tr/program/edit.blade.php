@@ -312,6 +312,7 @@
                                     <span class="text-red">
                                         ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
                                     </span>
+                                    <div class="small">{{ __('cruds.program.edit_file') }}</div>
                                 </label>
                                 <div class="form-group file-loading">
                                     <input id="file_pendukung" name="file_pendukung[]" type="file"
