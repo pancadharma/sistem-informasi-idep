@@ -260,6 +260,10 @@
                             $(".btn-tool").trigger('click');
                             $('#createProgram').find('button[type="submit"]')
                                 .removeAttr('disabled');
+                            setTimeout(function() {
+                                window.location.href =
+                                    "{{ route('program.index') }}";
+                            }, 1000);
                         }
                     }, 500);
                 },
