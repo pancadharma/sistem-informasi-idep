@@ -183,8 +183,12 @@ Route::middleware(['auth'])->group(function () {
 
     //Route Program by Siva
     //Program
-    Route::resource('program', ProgramController::class);
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
+    Route::get('program/api/pendonor/{id}', [ProgramController::class, 'getProgramPendonor'])->name('api.program.pendonor');
+    Route::get('program/api/donor', [ProgramController::class, 'getProgramDonor'])->name('api.program.donor');
+    Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff');
+    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
+    Route::resource('program', ProgramController::class);
 
     Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
     Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');

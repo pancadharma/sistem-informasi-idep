@@ -69,6 +69,10 @@ class Program extends Model implements HasMedia
     {
         return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
     }
+    public function pendonor()
+    {
+        return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id');
+    }
 
     public function getImageAttribute()
     {

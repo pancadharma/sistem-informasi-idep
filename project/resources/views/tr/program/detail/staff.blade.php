@@ -1,40 +1,51 @@
 {{-- delete the form tag --}}
 <div class="col-md-12">
-    <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title">Staff</h3>
+    <div class="form-group">
+        <label for="lokasi" class="small control-label">
+            <strong>
+                {{ __('cruds.program.staff.label') }}
+            </strong>
+        </label>
+        <div class="select2-orange">
+            <select class="form-control select2" name="staff[]" id="staff" multiple="multiple">
+            </select>
         </div>
-        <form>
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="exampleInputFile">
-                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
     </div>
 </div>
+@push('js')
+    <script>
+        // var data_staff = "{{ route('api.prov') }}";
+        var data_staff = "{{ route('api.program.staff') }}";
+        var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.staff.label') }}";
+
+        $('#staff').select2({
+            placeholder: placeholder,
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownPosition: 'below',
+            ajax: {
+                url: data_staff,
+                method: 'GET',
+                delay: 1000,
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama // Mapping 'nama' to 'text'
+                            };
+                        })
+                    };
+                },
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                    return query;
+                }
+            }
+        });
+    </script>
+@endpush

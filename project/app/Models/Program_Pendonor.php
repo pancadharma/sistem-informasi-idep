@@ -17,6 +17,7 @@ class Program_Pendonor extends Model
     protected $fillable = [
         'program_id',
         'pendonor_id',
+        'nilaidonasi',
         'created_at',
         'updated_at',
     ];
@@ -34,5 +35,4 @@ class Program_Pendonor extends Model
     {
         return $this->belongsTo(MPendonor::class);
     }
-
 }

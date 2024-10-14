@@ -38,48 +38,48 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="nama"
-                                        class="control-label mb-0 small">{{ __('cruds.program.nama') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.nama') }}</label>
                                     <input type="text" id="nama" name="nama" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="kode"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
                                     <input type="text" id="kode" name="kode" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalmulai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
                                     <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalselesai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
                                     <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="totalnilai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control"
+                                        class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency"
                                         minlength="0" step=".01",>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{-- Ekspektasi Penerima Manfaat --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaat"
-                                        class="control-label mb-0 small">{{ __('cruds.program.expektasi') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
                                     <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat"
                                         class="form-control" placeholder="{{ __('cruds.program.expektasi') }}"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -88,7 +88,7 @@
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaatman"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
                                     <input type="number" id="ekspektasipenerimamanfaatman"
                                         name="ekspektasipenerimamanfaatman" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -97,7 +97,7 @@
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaatwoman"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
                                     <input type="number" id="ekspektasipenerimamanfaatwoman"
                                         name="ekspektasipenerimamanfaatwoman" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -106,7 +106,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaatboy"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
                                     <input type="number" id="ekspektasipenerimamanfaatboy"
                                         name="ekspektasipenerimamanfaatboy" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -115,7 +115,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaatgirl"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
                                     <input type="number" id="ekspektasipenerimamanfaatgirl"
                                         name="ekspektasipenerimamanfaatgirl" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -124,7 +124,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaattidaklangsung"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
                                     <input type="number" id="ekspektasipenerimamanfaattidaklangsung"
                                         name="ekspektasipenerimamanfaattidaklangsung" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
@@ -133,11 +133,11 @@
                         </div>
                     </div>
                     {{-- Kelompok Marjinal --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kelompokmarjinal" class="control-label mb-0 small">
+                                    <label for="kelompokmarjinal" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.marjinal.list') }}
                                         </strong>
@@ -152,11 +152,11 @@
                         </div>
                     </div>
                     {{-- Target Reinstra --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="targetreinstra" class="control-label mb-0 small">
+                                    <label for="targetreinstra" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_reinstra') }}
                                         </strong>
@@ -171,11 +171,11 @@
                         </div>
                     </div>
                     {{-- Kaitan SDG --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kaitansdg" class="control-label mb-0 small">
+                                    <label for="kaitansdg" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_sdg') }}
                                         </strong>
@@ -191,11 +191,11 @@
                     </div>
 
                     {{-- Deskripsi Program --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="deskripsiprojek" class="control-label mb-0 small ">
+                                    <label for="deskripsiprojek" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
@@ -211,7 +211,7 @@
                             {{-- Analisis Program --}}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="analisamasalah" class="control-label mb-0 small">
+                                    <label for="analisamasalah" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
@@ -231,7 +231,7 @@
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-12">
-                                <label for="file_pendukung" class="control-label mb-0 small">
+                                <label for="file_pendukung" class="control-label small mb-0">
                                     <strong>
                                         {{ __('cruds.program.upload') }}
                                     </strong>
@@ -252,7 +252,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="status" class="control-label mb-0 small">
+                                    <label for="status" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.status.title') }}
                                         </strong>
@@ -271,7 +271,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="users" class="control-label small mb-0">
                                         <strong>
                                             User Program
                                         </strong>
@@ -326,6 +326,7 @@
 @section('plugins.Validation', true)
 
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
@@ -333,4 +334,5 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @include('tr.program.js.create')
+@include('tr.program.js.donor')
 @endpush

@@ -1,32 +1,20 @@
 <script>
     //SCRIPT FOR CREATE PROGRAM FORM
-    $('#totalnilai').maskMoney({
-        prefix: 'Rp. ',
-        allowNegative: false,
-        thousands: '.',
-        decimal: ',',
-        affixesStay: false
-    });
+    // $('#totalnilai').maskMoney({
+    //     prefix: 'Rp. ',
+    //     allowNegative: false,
+    //     thousands: '.',
+    //     decimal: ',',
+    //     affixesStay: false
+    // });
     $(document).ready(function() {
+        new AutoNumeric('#totalnilai', {
+            digitGroupSeparator: '.',
+            decimalCharacter: ',',
+            currencySymbol: 'Rp ',
+            modifyValueOnWheel: false
+        });
 
-        // $("#file_pendukung").fileinput({
-        //     // uploadUrl: "{{ route('program.store') }}",
-        //     theme: 'fa',
-        //     showRemove: true,
-        //     previewZoomButtonTitles: true,
-        //     dropZoneEnabled: false,
-        //     removeIcon: '<i class="bi bi-trash"></i>',
-        //     showDrag: true,
-        //     dragIcon: '<i class="bi-arrows-move"></i>',
-        //     showZoom: true,
-        //     showUpload: false,
-        //     showRotate: true,
-        //     showCaption: true,
-        //     uploadAsync: false,
-        //     maxFileSize: 4096,
-        //     allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc", "docx"],
-        //     append: true
-        // });
         var fileIndex = 0;
         var fileCaptions = {}; // Object to track files and captions
 
@@ -225,8 +213,18 @@
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
             var formData = new FormData(this);
-            var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-            formData.set('totalnilai', unmaskedValue);
+            // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
+            // formData.set('totalnilai', unmaskedValue);
+
+            $('input.currency').each(function() {
+                var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+                formData.set($(this).attr('name'), unmaskedValue);
+            });
+
+            // Log the FormData for debugging
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
 
             $.ajax({
                 url: "{{ route('program.store') }}",
@@ -261,8 +259,8 @@
                             $('#createProgram').find('button[type="submit"]')
                                 .removeAttr('disabled');
                             setTimeout(function() {
-                                window.location.href =
-                                    "{{ route('program.index') }}";
+                                // window.location.href =
+                                //     "{{ route('program.index') }}";
                             }, 1000);
                         }
                     }, 500);
