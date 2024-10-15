@@ -7,19 +7,21 @@
 
     <div class="card card-outline card-primary">
         @can('program_create')
-        <div class="card-header">
-            <a class="pb-0" href="{{ route('program.create') }}" class="col-6">
-                {{ trans('global.create') }} {{ trans('cruds.peran.title') }}
-            </a>
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" onclick="window.location.href='{{ route('program.create') }}'" title="{{ __('global.create') .' '.__('cruds.program.title') }}">
-                    <i class="fas fa-plus"></i>
-                </button>
+            <div class="card-header">
+                <a class="pb-0" href="{{ route('program.create') }}" class="col-6">
+                    {{ trans('global.create') }} {{ trans('cruds.peran.title') }}
+                </a>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" onclick="window.location.href='{{ route('program.create') }}'"
+                        title="{{ __('global.create') . ' ' . __('cruds.program.title') }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
             </div>
-        </div>
         @endcan
         <div class="card-body">
-            <table id="program-list" class="table table-bordered table-striped cell-border ajaxTable datatable-program" style="width:100%">
+            <table id="program-list" class="table table-bordered table-striped cell-border ajaxTable datatable-program"
+                style="width:100%">
                 <thead>
                     <tr>
                         <th class="text-center align-middle" style="width: 5%;">No.</th>
@@ -51,7 +53,7 @@
 @endpush
 
 @push('js')
-@section('plugins.Sweetalert2', true)
+    @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
