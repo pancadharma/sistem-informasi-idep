@@ -209,6 +209,7 @@
             }
         });
 
+        // CREATE PROGRAM AND SAVE SOME DETAILS
         $('#createProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
@@ -216,25 +217,33 @@
             // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
             // formData.set('totalnilai', unmaskedValue);
 
-            var initialEntries = [];
-            for (var pair of formData.entries()) {
-                initialEntries.push(pair[0]);
-            }
+            // Log the initial entries for debugging
+            // console.log("Initial entries:");
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
 
+            // Collect fields to remove masked values
+            // input field with class currency is beeing collected
+            var fieldsToRemove = [];
+            $('input.currency').each(function() {
+                fieldsToRemove.push($(this).attr('name'));
+            });
+            // Remove original masked `nilaidonasi` values from FormData
+            fieldsToRemove.forEach(function(field) {
+                formData.delete(field);
+            });
+            // Unmask all AutoNumeric fields and append unmasked values
             $('input.currency').each(function() {
                 var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-                formData.delete($(this).attr('name')); // Clear any previously set values
                 formData.append($(this).attr('name'), unmaskedValue);
             });
-            initialEntries.forEach(function(entry) {
-                if (entry.startsWith('nilaidonasi')) {
-                    formData.delete(entry);
-                }
-            });
-            console.log("FormData entries:");
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
+
+            // Log the FormData entries for debugging
+            // console.log("FormData entries after unmasking:");
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
 
             $.ajax({
                 url: "{{ route('program.store') }}",
@@ -257,7 +266,7 @@
                                 title: "{{ __('global.success') }}",
                                 text: response.message,
                                 icon: "success",
-                                timer: 1500,
+                                timer: 500,
                                 timerProgressBar: true,
                             });
                             $(this).trigger('reset');
@@ -269,8 +278,8 @@
                             $('#createProgram').find('button[type="submit"]')
                                 .removeAttr('disabled');
                             setTimeout(function() {
-                                // window.location.href =
-                                //     "{{ route('program.index') }}";
+                                window.location.href =
+                                    "{{ route('program.index') }}"; //redirect into index program
                             }, 1000);
                         }
                     }, 500);

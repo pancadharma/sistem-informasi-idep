@@ -21,6 +21,10 @@ class Program_Pendonor extends Model
         'created_at',
         'updated_at',
     ];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
 
     protected function serializeDate(DateTimeInterface $date)
     {
