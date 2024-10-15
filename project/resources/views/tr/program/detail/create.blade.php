@@ -72,7 +72,7 @@
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-objective" role="tabpanel"
                     aria-labelledby="custom-tabs-four-objective-tab">
-                    XXXX
+                    @include('tr.program.detail.objective')
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-goals" role="tabpanel"
                     aria-labelledby="custom-tabs-four-goals-tab">

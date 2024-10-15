@@ -428,7 +428,7 @@ return [
             'sel_peran'     => 'Pilih Peran',
         ],
         'outcome'           => [
-            'label'         => 'Hasil',
+            'label'         => 'Hasil Akhir',
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',

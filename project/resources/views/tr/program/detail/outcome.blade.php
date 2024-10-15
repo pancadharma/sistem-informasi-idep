@@ -1,40 +1,32 @@
 {{-- delete the form tag --}}
-<div class="col-md-12">
-    <div class="card card-primary">
-        <div class="card-header">
-            <h3 class="card-title">Outcome</h3>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label for="deskripsi" class="control-label small mb-0">{{ __('cruds.program.outcome.desc') }}</label>
+            <textarea type="textarea" id="deskripsi" name="deskripsi" class="form-control"
+                placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="500"></textarea>
         </div>
-        <form>
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="exampleInputFile">
-                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                        </div>
-                        <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            <label for="indikator" class="control-label small mb-0">{{ __('cruds.program.outcome.indicator') }}</label>
+            <textarea id="indikator" name="indikator" cols="30"
+                class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
+                placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="500" rows="1"></textarea>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="form-group">
+            <label for="target" class="control-label small mb-0">{{ __('cruds.program.outcome.target') }}</label>
+            <textarea id="target" name="target" cols="30"
+                class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
+                placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="500" rows="1"></textarea>
+        </div>
     </div>
 </div>
+<div class="col-md-12" id="pendonor-container">
+
+</div>
+
+{{-- WANT TO PUT THE JS HERE INSTEAD at js/donor.blade.php --}}
+{{-- Use @push('js') close by @endpush --}}
