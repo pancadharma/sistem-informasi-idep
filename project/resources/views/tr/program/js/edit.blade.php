@@ -1,17 +1,12 @@
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 <script>
-    $('#totalnilai').maskMoney({
-        prefix: 'Rp. ',
-        allowNegative: false,
-        thousands: '.',
-        decimal: ',',
-        affixesStay: false
-    });
+
     // DELETE EXISTING MEDIA FILE FROM CURRENT PROGRAM
     $(document).on('click', '.kv-file-remove', function() {
         let mediaID = $(this).data('key');
@@ -133,7 +128,7 @@
                 fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
                 $('#captions-container').append(
                     `<div class="form-group" id="caption-group-${uniqueId}">
-                            <label for="caption-${uniqueId}">Caption for ${file.name}</label>
+                        <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
                             <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
                         </div>`
                 );
@@ -289,13 +284,27 @@
     // BUTTON SUBMIT UPDATE PROGRAM
 
     $(document).ready(function() {
+
+        new AutoNumeric('#totalnilai', {
+            digitGroupSeparator: '.',
+            decimalCharacter: ',',
+            currencySymbol: 'Rp ',
+            modifyValueOnWheel: false
+        });
+
         $('#editProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
 
             var formData = new FormData(this);
-            var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-            formData.set('totalnilai', unmaskedValue);
+            // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
+            // formData.set('totalnilai', unmaskedValue);
+
+            $('input.currency').each(function() {
+                var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+                formData.set($(this).attr('name'), unmaskedValue);
+            });
+
             formData.append('_method', 'PUT');
 
             $.ajax({

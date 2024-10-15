@@ -122,21 +122,46 @@ class ProgramController extends Controller
             // }
 
             // Save donor details
-            $pendonorIds = $request->input('pendonor_id', []);
-            $nilaidonasiValues = $request->input('nilaidonasi', []);
+            // $pendonorIds = $request->input('pendonor_id', []);
+            // $nilaidonasiValues = $request->input('nilaidonasi', []);
 
-            if (count($pendonorIds) !== count($nilaidonasiValues)) {
+            // if (count($pendonorIds) !== count($nilaidonasiValues)) {
+            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            // }
+
+            // foreach ($pendonorIds as $index => $pendonor_id) {
+            //     if (isset($nilaidonasiValues[$index])) {
+            //         $nilaidonasi = $nilaidonasiValues[$index];
+            //         $program->pendonor()->attach($pendonor_id, ['nilaidonasi' => $nilaidonasi]);
+            //     } else {
+            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            //     }
+            // }
+
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+
+            if (count($newPendonor) !== count($nilaiD)) {
                 throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
             }
 
-            foreach ($pendonorIds as $index => $pendonor_id) {
-                if (isset($nilaidonasiValues[$index])) {
-                    $nilaidonasi = $nilaidonasiValues[$index];
-                    $program->pendonor()->attach($pendonor_id, ['nilaidonasi' => $nilaidonasi]);
+            $newDonasi = [];
+            foreach ($newPendonor as $index => $pendonor_id) {
+                if (isset($nilaiD[$index])) {
+                    $newDonasi[] = [
+                        'pendonor_id' => $pendonor_id,
+                        'nilaidonasi' => $nilaiD[$index]
+                    ];
                 } else {
                     throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
                 }
             }
+
+            foreach ($newDonasi as $donation) {
+                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            }
+
+
 
             DB::commit();
             return response()->json([

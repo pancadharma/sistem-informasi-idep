@@ -105,7 +105,7 @@
                 $('#captions-container').append(
                     `<div class="form-group" id="caption-group-${uniqueId}">
                         <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
-                        <input type="text" class="form-control" name="captions[]" id="caption-${uniqueId}">
+                        <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}">
                         </div>`
                 );
             }
@@ -216,12 +216,22 @@
             // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
             // formData.set('totalnilai', unmaskedValue);
 
+            var initialEntries = [];
+            for (var pair of formData.entries()) {
+                initialEntries.push(pair[0]);
+            }
+
             $('input.currency').each(function() {
                 var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-                formData.set($(this).attr('name'), unmaskedValue);
+                formData.delete($(this).attr('name')); // Clear any previously set values
+                formData.append($(this).attr('name'), unmaskedValue);
             });
-
-            // Log the FormData for debugging
+            initialEntries.forEach(function(entry) {
+                if (entry.startsWith('nilaidonasi')) {
+                    formData.delete(entry);
+                }
+            });
+            console.log("FormData entries:");
             for (var pair of formData.entries()) {
                 console.log(pair[0] + ': ' + pair[1]);
             }

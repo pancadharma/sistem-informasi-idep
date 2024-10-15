@@ -16,3 +16,4 @@
 </div>
 
 {{-- WANT TO PUT THE JS HERE INSTEAD at js/donor.blade.php --}}
+{{-- Use @push('js') close by @endpush --}}

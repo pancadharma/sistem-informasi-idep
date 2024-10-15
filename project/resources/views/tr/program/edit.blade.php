@@ -92,7 +92,7 @@
                                     <label for="totalnilai"
                                         class="control-label mb-0 small">{{ __('cruds.program.form.total_nilai') }}</label>
                                     <input type="text" id="totalnilai" name="totalnilai"
-                                        class="form-control {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}"
+                                        class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}"
                                         minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}"
                                         step="0.001">
 
