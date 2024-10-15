@@ -39,5 +39,4 @@ class Kategori_Pendonor extends Model
     {
         return $query->where('aktif', 1);
     }
-
 }

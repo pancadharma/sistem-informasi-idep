@@ -453,7 +453,5 @@ return [
             'list'          => 'List Kelompok Marjinal',
             'select'        => 'Pilih Kelompok Marjinal',
         ],
-
     ],
-
 ];

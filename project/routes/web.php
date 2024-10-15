@@ -31,16 +31,6 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
 
-
-
-
-
-
-
-
-
-
-
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
     return view('auth.login', ['title'=> $title]);
@@ -133,6 +123,10 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
+    
+    //Master Kategori Pendonor
+    Route::resource('kategoripendonor', KategoripendonorController::class);
+    Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
 
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);

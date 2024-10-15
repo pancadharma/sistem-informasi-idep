@@ -33,7 +33,7 @@ class StoreKategoripendonorRequest extends FormRequest
             'nama.string' => 'Kolom nama kategori pendonor harus berupa text',
             'nama.max' => 'Kolom nama kategori pendonor maksimal 200 karakter',
             'nama.required' => 'Kolom kategori pendonor wajib diisi !',
-            // 'aktif.integer' => 'Check box wajib dipilih',
+            'aktif.boolean' => 'Check box wajib dipilih'
         ];
     }
 }
