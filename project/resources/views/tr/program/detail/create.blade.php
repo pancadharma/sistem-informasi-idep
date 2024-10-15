@@ -68,11 +68,11 @@
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-report" role="tabpanel"
                     aria-labelledby="custom-tabs-four-report-tab">
-                    Report
+                    ZZZZZ
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-objective" role="tabpanel"
                     aria-labelledby="custom-tabs-four-objective-tab">
-                    Objective
+                    XXXX
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-goals" role="tabpanel"
                     aria-labelledby="custom-tabs-four-goals-tab">

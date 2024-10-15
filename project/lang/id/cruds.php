@@ -444,7 +444,7 @@ return [
             'selesai'       => 'Tanggal Selesai',
         ],
         'objective'         => [
-            'label'         => 'Tujuan',
+            'label'         => 'Objective',
         ],
         'goals'             => [
             'label'         => 'Sasaran',
