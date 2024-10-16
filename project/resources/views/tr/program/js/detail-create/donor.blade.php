@@ -61,7 +61,7 @@
                                     <div class="form-group">
                                         <label for="pendonor_id" class="control-label small mb-0">{{ __('cruds.program.donor.nama') }}</label>
                                         <input type="hidden" name="pendonor_id[]" value="${data.id}" id="pendonor-${data.id}">
-                                        <input type="text" id="nama-${data.id}" name="nama" class="form-control" value="${data.nama}" readonly>
+                                        <input type="text" id="nama-${data.id}" name="nama_pendonor" class="form-control" value="${data.nama}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
@@ -116,16 +116,6 @@
                 $('#' + targetId).remove();
             });
         });
-
-
-
-
-
-
-
-
-
-
 
 
 

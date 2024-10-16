@@ -108,36 +108,6 @@ class ProgramController extends Controller
                 }
             }
 
-            // // Save donor details
-            // $pendonorIds = $request->input('pendonor_id', []);
-            // $nilaidonasiValues = $request->input('nilaidonasi', []);
-
-            // foreach ($pendonorIds as $index => $pendonor_id) {
-            //     if (isset($nilaidonasiValues[$index])) {
-            //         $nilaidonasi = $nilaidonasiValues[$index];
-            //         $program->pendonor()->attach($pendonor_id, ['nilaidonasi' => $nilaidonasi]);
-            //     } else {
-            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-            //     }
-            // }
-
-            // Save donor details
-            // $pendonorIds = $request->input('pendonor_id', []);
-            // $nilaidonasiValues = $request->input('nilaidonasi', []);
-
-            // if (count($pendonorIds) !== count($nilaidonasiValues)) {
-            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            // }
-
-            // foreach ($pendonorIds as $index => $pendonor_id) {
-            //     if (isset($nilaidonasiValues[$index])) {
-            //         $nilaidonasi = $nilaidonasiValues[$index];
-            //         $program->pendonor()->attach($pendonor_id, ['nilaidonasi' => $nilaidonasi]);
-            //     } else {
-            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-            //     }
-            // }
-
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 
