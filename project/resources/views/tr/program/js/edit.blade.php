@@ -1,12 +1,4 @@
-<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
-<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 <script>
-
     // DELETE EXISTING MEDIA FILE FROM CURRENT PROGRAM
     $(document).on('click', '.kv-file-remove', function() {
         let mediaID = $(this).data('key');
@@ -282,9 +274,7 @@
 
 
     // BUTTON SUBMIT UPDATE PROGRAM
-
     $(document).ready(function() {
-
         new AutoNumeric('#totalnilai', {
             digitGroupSeparator: '.',
             decimalCharacter: ',',
@@ -295,17 +285,31 @@
         $('#editProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-
             var formData = new FormData(this);
-            // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-            // formData.set('totalnilai', unmaskedValue);
-
-            $('input.currency').each(function() {
-                var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-                formData.set($(this).attr('name'), unmaskedValue);
-            });
 
             formData.append('_method', 'PUT');
+
+            // Collect fields to remove masked values
+            var fieldsToRemove = [];
+            $('input.currency').each(function() {
+                fieldsToRemove.push($(this).attr('name'));
+            });
+
+            // Remove original masked `nilaidonasi` values from FormData
+            fieldsToRemove.forEach(function(field) {
+                formData.delete(field);
+            });
+
+            // Unmask all AutoNumeric fields before submitting
+            $('input.currency').each(function() {
+                var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+                if (autoNumericElement !== null) {
+                    var unmaskedValue = autoNumericElement.getNumericString();
+                    formData.append($(this).attr('name'), unmaskedValue);
+                } else {
+                    console.error('AutoNumeric not initialized for:', this);
+                }
+            });
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -328,33 +332,33 @@
                     setTimeout(() => {
                         if (response.success === true) {
                             Swal.fire({
-                                title: "{{ __('global.success') }}",
+                                title: "Sukses",
                                 text: response.message,
                                 icon: "success",
                                 timer: 1500,
                                 timerProgressBar: true,
                             });
-                            $(this).trigger('reset');
-                            $('#editProgram')[0].reset();
+
                             $('#editProgram').trigger('reset');
                             $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
                                 '').trigger('change');
                             $(".btn-tool").trigger('click');
                             $('#editProgram').find('button[type="submit"]')
                                 .removeAttr('disabled');
+
+                            window.location.reload();
                         }
-                        window.location.reload();
                     }, 500);
                 },
                 error: function(xhr, status, error) {
-                    $('#editProgram').find('button[type="submit"]').removeAttr(
-                        'disabled');
+                    $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+
                     try {
                         const response = xhr.responseJSON;
                         if (response.errors) {
                             errorMessage +=
-                                '<br><br><ul style="text-align:left!important">';
+                            '<br><br><ul style="text-align:left!important">';
                             $.each(response.errors, function(field, messages) {
                                 messages.forEach(message => {
                                     errorMessage +=
@@ -366,17 +370,18 @@
                                     $(`#${field}`).removeClass('invalid')
                                         .addClass('is-invalid');
                                 });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    html: errorMessage,
-                                });
                             });
                             errorMessage += '</ul>';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: errorMessage,
+                            });
                         }
                     } catch (e) {
                         console.error('Error parsing response:', e);
                     }
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -386,23 +391,134 @@
                 complete: function() {
                     setTimeout(() => {
                         $(this).find('button[type="submit"]').removeAttr(
-                            'disabled');
+                        'disabled');
                     }, 500);
                 }
             });
-
         });
     });
 
+    // $(document).ready(function() {
 
-    $('.select-all').click(function() {
-        let $select2 = $(this).parent().siblings('.select2')
-        $select2.find('option').prop('selected', 'selected')
-        $select2.trigger('change')
-    })
-    $('.deselect-all').click(function() {
-        let $select2 = $(this).parent().siblings('.select2')
-        $select2.find('option').prop('selected', '')
-        $select2.trigger('change')
-    })
+    //     new AutoNumeric('#totalnilai', {
+    //         digitGroupSeparator: '.',
+    //         decimalCharacter: ',',
+    //         currencySymbol: 'Rp ',
+    //         modifyValueOnWheel: false
+    //     });
+
+    //     $('#editProgram').on('submit', function(e) {
+    //         e.preventDefault();
+    //         $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+
+    //         var formData = new FormData(this);
+    //         // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
+    //         // formData.set('totalnilai', unmaskedValue);
+    //         // $('input.currency').each(function() {
+    //         //     var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+    //         //     formData.set($(this).attr('name'), unmaskedValue);
+    //         // });
+
+    //         formData.append('_method', 'PUT');
+    //         var fieldsToRemove = [];
+    //         $('input.currency').each(function() {
+    //             fieldsToRemove.push($(this).attr('name'));
+    //         });
+    //         // Remove original masked `nilaidonasi` values from FormData
+    //         fieldsToRemove.forEach(function(field) {
+    //             formData.delete(field);
+    //         });
+    //         // Unmask all AutoNumeric fields and append unmasked values
+    //         $('input.currency').each(function() {
+    //             var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+    //             formData.append($(this).attr('name'), unmaskedValue);
+    //         });
+
+
+    //         $.ajax({
+    //             url: $(this).attr('action'),
+    //             type: 'post',
+    //             data: formData,
+    //             contentType: false,
+    //             processData: false,
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             },
+    //             beforeSend: function() {
+    //                 Toast.fire({
+    //                     icon: "info",
+    //                     title: "Uploading...",
+    //                     timer: 2000,
+    //                     timerProgressBar: true,
+    //                 });
+    //             },
+    //             success: function(response) {
+    //                 setTimeout(() => {
+    //                     if (response.success === true) {
+    //                         Swal.fire({
+    //                             title: "{{ __('global.success') }}",
+    //                             text: response.message,
+    //                             icon: "success",
+    //                             timer: 1500,
+    //                             timerProgressBar: true,
+    //                         });
+    //                         $(this).trigger('reset');
+    //                         $('#editProgram')[0].reset();
+    //                         $('#editProgram').trigger('reset');
+    //                         $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
+    //                             '').trigger('change');
+    //                         $(".btn-tool").trigger('click');
+    //                         $('#editProgram').find('button[type="submit"]')
+    //                             .removeAttr('disabled');
+    //                     }
+    //                     window.location.reload();
+    //                 }, 500);
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 $('#editProgram').find('button[type="submit"]').removeAttr(
+    //                     'disabled');
+    //                 let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+    //                 try {
+    //                     const response = xhr.responseJSON;
+    //                     if (response.errors) {
+    //                         errorMessage +=
+    //                             '<br><br><ul style="text-align:left!important">';
+    //                         $.each(response.errors, function(field, messages) {
+    //                             messages.forEach(message => {
+    //                                 errorMessage +=
+    //                                     `<li>${field}: ${message}</li>`;
+    //                                 $(`#${field}-error`).removeClass(
+    //                                     'is-valid').addClass(
+    //                                     'is-invalid');
+    //                                 $(`#${field}-error`).text(message);
+    //                                 $(`#${field}`).removeClass('invalid')
+    //                                     .addClass('is-invalid');
+    //                             });
+    //                             Swal.fire({
+    //                                 icon: 'error',
+    //                                 title: 'Error!',
+    //                                 html: errorMessage,
+    //                             });
+    //                         });
+    //                         errorMessage += '</ul>';
+    //                     }
+    //                 } catch (e) {
+    //                     console.error('Error parsing response:', e);
+    //                 }
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error!',
+    //                     html: errorMessage,
+    //                 });
+    //             },
+    //             complete: function() {
+    //                 setTimeout(() => {
+    //                     $(this).find('button[type="submit"]').removeAttr(
+    //                         'disabled');
+    //                 }, 500);
+    //             }
+    //         });
+
+    //     });
+    // });
 </script>

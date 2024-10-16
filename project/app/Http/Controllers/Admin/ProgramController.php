@@ -261,74 +261,73 @@ class ProgramController extends Controller
 
     public function update(UpdateProgramRequest $request, Program $program)
     {
+        DB::beginTransaction();
         try {
-            DB::transaction(function () use ($request, $program) {
-                $data = $request->validated();
-                $program->update($request->all());
-                $program->targetReinstra()->sync($request->input('targetreinstra', []));
-                $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
-                $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+            $data = $request->validated();
+            $program->update($request->all());
+            $program->targetReinstra()->sync($request->input('targetreinstra', []));
+            $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+            $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
-                $newFiles = $request->file('file_pendukung', []);
-                $newFileNames = array_map(function ($file) {
-                    return $file->getClientOriginalName();
-                }, $newFiles);
-                \Log::info($newFileNames);
+            $newFiles = $request->file('file_pendukung', []);
+            $newFileNames = array_map(function ($file) {
+                return $file->getClientOriginalName();
+            }, $newFiles);
+            \Log::info($newFileNames);
 
-                if (is_countable($program->media) && count($program->media) > 0) {
-                    foreach ($program->media as $media) {
-                        if (in_array($media->name, $newFileNames)) {
-                            \Log::info('Deleting Media: ' . $media->name);
-                            $media->delete();
-                        }
+            if (is_countable($program->media) && count($program->media) > 0) {
+                foreach ($program->media as $media) {
+                    if (in_array($media->name, $newFileNames)) {
+                        \Log::info('Deleting Media: ' . $media->name);
+                        $media->delete();
                     }
                 }
+            }
 
-                if ($request->hasFile('file_pendukung')) {
-                    foreach ($newFiles as $index => $file) {
-                        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                        $extension = $file->getClientOriginalExtension();
-                        $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
+            if ($request->hasFile('file_pendukung')) {
+                foreach ($newFiles as $index => $file) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
 
-                        $program->addMedia($file)
-                            ->usingName("{$originalName}.{$extension}")
-                            ->withCustomProperties([
-                                'keterangan' => $caption,
-                                'user_id' => auth()->user()->id,
-                                'original_name' => $originalName,
-                                'extension' => $extension,
-                                'updated_by' => auth()->user()->id
-                            ])
-                            ->toMediaCollection('file_pendukung_program');
-                    }
+                    $program->addMedia($file)
+                        ->usingName("{$originalName}.{$extension}")
+                        ->withCustomProperties([
+                            'keterangan' => $caption,
+                            'user_id' => auth()->user()->id,
+                            'original_name' => $originalName,
+                            'extension' => $extension,
+                            'updated_by' => auth()->user()->id
+                        ])
+                        ->toMediaCollection('file_pendukung_program');
                 }
-                // update program lokasi
-                $program->lokasi()->sync($request->input('lokasi', []));
+            }
+            // update program lokasi
+            $program->lokasi()->sync($request->input('lokasi', []));
 
-                // update program donatur
-                $newPendonor = $request->input('pendonor_id', []);
-                $nilaiD = $request->input('nilaidonasi', []);
+            // update program donatur
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
 
-                if (count($newPendonor) !== count($nilaiD)) {
-                    throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+
+            $newDonasi = [];
+            foreach ($newPendonor as $index => $pendonor_id) {
+                if (isset($nilaiD[$index])) {
+                    $newDonasi[] = [
+                        'pendonor_id' => $pendonor_id,
+                        'nilaidonasi' => $nilaiD[$index]
+                    ];
+                } else {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
                 }
+            }
 
-                $newDonasi = [];
-                foreach ($newPendonor as $index => $pendonor_id) {
-                    if (isset($nilaiD[$index])) {
-                        $newDonasi[] = [
-                            'pendonor_id' => $pendonor_id,
-                            'nilaidonasi' => $nilaiD[$index]
-                        ];
-                    } else {
-                        throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-                    }
-                }
-
-                foreach ($newDonasi as $donation) {
-                    $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-                }
-            });
+            foreach ($newDonasi as $donation) {
+                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            }
 
             DB::commit();
             return response()->json([

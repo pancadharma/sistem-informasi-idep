@@ -38,7 +38,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="nama_program"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.nama') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
                                     <input type="text" id="nama_program" name="nama"
                                         class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}"
                                         value="{{ old('nama', $program->nama) }}">
@@ -47,7 +47,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="kode_program"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.kode') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
                                     <input type="text" id="kode_program" name="kode"
                                         class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}"
                                         value="{{ old('kode', $program->kode) }}">
@@ -59,7 +59,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalmulai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
                                     <input type="date" id="tanggalmulai" name="tanggalmulai"
                                         class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}"
                                         value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}">
@@ -73,7 +73,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalselesai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
                                     {{-- <input type="date" id="tanggalselesai" name="tanggalselesai"
                                         class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
                                         value="{{ old('tanggalselesai', $program->tanggalselesai) }}"> --}}
@@ -90,7 +90,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="totalnilai"
-                                        class="control-label mb-0 small">{{ __('cruds.program.form.total_nilai') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
                                     <input type="text" id="totalnilai" name="totalnilai"
                                         class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}"
                                         minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}"
@@ -104,12 +104,12 @@
                         </div>
                     </div>
                     {{-- Ekspektasi Penerima Manfaat --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaat"
-                                        class="control-label mb-0 small">{{ __('cruds.program.expektasi') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
                                     <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000"
                                         name="ekspektasipenerimamanfaat"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
@@ -125,7 +125,7 @@
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="pria"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
                                     <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatman') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaatman', $program->ekspektasipenerimamanfaatman) }}"
@@ -140,7 +140,7 @@
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="wanita"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
                                     <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatwoman') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaatwoman', $program->ekspektasipenerimamanfaatwoman) }}"
@@ -155,7 +155,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="laki"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
                                     <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatboy') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaatboy', $program->ekspektasipenerimamanfaatboy) }}"
@@ -170,7 +170,7 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="perempuan"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
                                     <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatgirl') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaatgirl', $program->ekspektasipenerimamanfaatgirl) }}"
@@ -184,7 +184,7 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="total"
-                                        class="control-label mb-0 small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
                                     <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaattidaklangsung') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaattidaklangsung', $program->ekspektasipenerimamanfaattidaklangsung) }}"
@@ -202,7 +202,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kelompokmarjinal" class="control-label mb-0 small">
+                                    <label for="kelompokmarjinal" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.marjinal.list') }}
                                         </strong>
@@ -225,14 +225,14 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="targetreinstra" class="control-label mb-0 small">
+                                    <label for="targetreinstra" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_reinstra') }}
                                         </strong>
                                     </label>
                                     <div class="select2-orange">
                                         <select
-                                            class="form-control select2-hidden-accessible  {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}"
+                                            class="form-control select2-hidden-accessible {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}"
                                             name="targetreinstra[]" id="targetreinstra" multiple="multiple" required>
                                         </select>
                                     </div>
@@ -248,14 +248,14 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kaitansdg" class="control-label mb-0 small">
+                                    <label for="kaitansdg" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_sdg') }}
                                         </strong>
                                     </label>
                                     <div class="select2-cyan">
                                         <select
-                                            class="form-control select2  {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}"
+                                            class="form-control select2 {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}"
                                             name="kaitansdg[]" id="kaitansdg" multiple="multiple" required>
                                         </select>
                                     </div>
@@ -267,11 +267,11 @@
                         </div>
                     </div>
                     {{-- Deskripsi Program --}}
-                    <div class="card-body pt-0 pb-0">
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="users" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
@@ -287,7 +287,7 @@
                             {{-- Analisis Program --}}
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="users" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
@@ -305,7 +305,7 @@
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-12">
-                                <label for="file_pendukung" class="control-label mb-0 small">
+                                <label for="file_pendukung" class="control-label small mb-0">
                                     <strong>
                                         {{ __('cruds.program.upload') }}
                                     </strong>
@@ -327,7 +327,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="status" class="control-label mb-0 small">
+                                    <label for="status" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.status.title') }}
                                         </strong>
@@ -349,7 +349,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="control-label mb-0 small">
+                                    <label for="users" class="control-label small mb-0">
                                         <strong>
                                             Program Created / Updated by
                                         </strong>
@@ -380,7 +380,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
-                                    <button type="submit" class="btn btn-info  btn-block float-right">
+                                    <button type="submit" class="btn btn-info btn-block float-right">
                                         {{ __('global.update') . ' ' . __('cruds.program.title_singular') }}
                                     </button>
                                 </div>
@@ -404,6 +404,16 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+
+<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
+
+
 {{-- call every js for edit and it's tab detail --}}
 @include('tr.program.js.edit')
 @include('tr.program.js.detail-edit.donor')
