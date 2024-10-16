@@ -366,13 +366,36 @@ class ProgramController extends Controller
         $pendonor = MPendonor::where('nama', 'like', "%{$search}%")->get();
         return response()->json($pendonor);
     }
+    // public function getProgramPendonor(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $pendonor = MPendonor::findOrFail($request->id);
+    //         return response()->json($pendonor);
+    //     }
+    // }
+
     public function getProgramPendonor(Request $request)
     {
         if ($request->ajax()) {
-            $pendonor = MPendonor::findOrFail($request->id);
+            $program = Program::with('pendonor')->findOrFail($request->id);
+
+            $pendonor = $program->pendonor->map(function ($item) {
+                return [
+                    'id'           => $item->id,
+                    'nama'         => $item->nama,
+                    'email'        => $item->email,
+                    'phone'        => $item->phone,
+                    'nilaidonasi'  => $item->pivot->nilaidonasi ?? 0, // Accessing nilaidonasi from the pivot table
+                    'text'         => $item->nama,
+                ];
+            });
+
             return response()->json($pendonor);
         }
     }
+
+
+
     public function getProgramStaff(Request $request)
     {
         // Used to Search staff in DATABASEfor select2 selection
@@ -404,7 +427,7 @@ class ProgramController extends Controller
                 'email'        => $pendonor->email,
                 'phone'        => $pendonor->phone,
                 'nilaidonasi'  => $pendonor->pivot->nilaidonasi, // Getting nilaidonasi from the pivot table
-                'text'         => "{$pendonor->id} - {$pendonor->nama}",
+                'text'         => $pendonor->nama,
             ];
         });
         return response()->json($pendonorData);
