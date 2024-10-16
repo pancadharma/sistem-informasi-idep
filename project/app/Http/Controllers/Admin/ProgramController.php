@@ -180,7 +180,7 @@ class ProgramController extends Controller
             $targetReinstra = TargetReinstra::pluck('nama', 'id');
             $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
             $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG');
+            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi');
 
             $file_pendukung = Program::find($program->id);
             $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
