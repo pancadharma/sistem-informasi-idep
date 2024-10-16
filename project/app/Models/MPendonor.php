@@ -41,6 +41,6 @@ class MPendonor extends Model
 
     public function program()
     {
-        return $this->belongsToMany(Program::class, 'trprogrampendonor', 'pendonor_id', 'program_id');
+        return $this->belongsToMany(Program::class, 'trprogrampendonor', 'pendonor_id', 'program_id')->withPivot('nilaidonasi');;
     }
 }
