@@ -40,12 +40,12 @@
 
             $('#donor').change(function() {
                 var selected = $(this).val(); // This gets all selected values as an array
-                console.log(selected); // For debugging purposes
+                // console.log(selected); // For debugging purposes
 
                 selected.forEach(function(pendonor_id) {
                     // Check if donor is already appended
                     if ($('#pendonor-container').find(`#pendonor-${pendonor_id}`).length === 0) {
-                        var data_pendonor = '{{ route('api.program.pendonor', ':id') }}'.replace(
+                        var data_pendonor = '{{ route('api.search.pendonor', ':id') }}'.replace(
                             ':id', pendonor_id);
 
                         $.ajax({
@@ -113,9 +113,6 @@
                 $('#' + targetId).remove();
             });
         });
-
-
-
 
         //UpperCase Input Nama Form
         function capitalizeWords(str) {
