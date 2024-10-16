@@ -56,6 +56,8 @@ class StoreProgramRequest extends FormRequest
             'pendonor_id.*'                         => ['integer'],
             'nilaidonasi'                           => ['array'],
             'nilaidonasi.*'                         => ['numeric'],
+            'lokasi'                                => ['array'],
+            'lokasi.*'                              => ['nullable|integer'],
 
         ];
     }

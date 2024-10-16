@@ -76,6 +76,7 @@ class ProgramController extends Controller
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+            $program->lokasi()->sync($request->input('lokasi', []));
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
             if ($request->hasFile('file_pendukung')) {

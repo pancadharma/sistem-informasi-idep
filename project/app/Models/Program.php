@@ -21,6 +21,8 @@ class Program extends Model implements HasMedia
     protected $dates = [
         'created_at',
         'updated_at',
+        'tanggalmulai',
+        'tanggalselesai'
     ];
 
     protected $fillable = [
@@ -43,10 +45,6 @@ class Program extends Model implements HasMedia
         'updated_at',
     ];
 
-    protected $date = [
-        'created_at',
-        'updated_at',
-    ];
 
     protected function serializeDate(DateTimeInterface $date)
     {
@@ -69,6 +67,12 @@ class Program extends Model implements HasMedia
     {
         return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
     }
+    // Program Lokasi Relation
+    public function lokasi()
+    {
+        return $this->belongsToMany(Provinsi::class, 'trprogramlokasi', 'program_id', 'provinsi_id');
+    }
+
     public function pendonor()
     {
         return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id');
@@ -112,7 +116,7 @@ class Program extends Model implements HasMedia
 
     public function setTglMulaiAttribute($value)
     {
-        $this->attributes['tgl_mulai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+        $this->attributes['tanggalmulai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
     public function getTglSelesaiAttribute($value)
@@ -122,6 +126,6 @@ class Program extends Model implements HasMedia
 
     public function setTglSelesaiAttribute($value)
     {
-        $this->attributes['tgl_selesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+        $this->attributes['tanggalselesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 }

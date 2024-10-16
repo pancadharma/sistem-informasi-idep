@@ -180,7 +180,7 @@
                                             {{ __('cruds.program.list_sdg') }}
                                         </strong>
                                     </label>
-                                    <div class="select2-orange">
+                                    <div class="select2-cyan">
                                         <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
                                             multiple="multiple">
                                         </select>
