@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.edit') . ' ' . __('cruds.program.title_singular'))
+@section('subtitle', __('global.create') . ' ' . __('cruds.program.title_singular'))
 @section('content_header_title', __('global.create') . ' ' . __('cruds.program.title_singular'))
 @section('sub_breadcumb', __('cruds.program.title_singular'))
 
