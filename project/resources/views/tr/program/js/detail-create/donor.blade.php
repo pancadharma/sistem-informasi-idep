@@ -56,39 +56,36 @@
                                 console.log(data);
                                 let containerId = `pendonor-container-${data.id}`;
                                 $('#pendonor-container').append(
-                                    `<div class="row" id="${containerId}" style="border-bottom: 2px solid #0000000d;">
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label for="pendonor_id" class="control-label small mb-0">{{ __('cruds.program.donor.nama') }}</label>
-                                        <input type="hidden" name="pendonor_id[]" value="${data.id}" id="pendonor-${data.id}">
-                                        <input type="text" id="nama-${data.id}" name="nama_pendonor" class="form-control" value="${data.nama}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <label for="email-${data.id}" class="control-label small mb-0">{{ __('cruds.program.donor.email') }}</label>
-                                        <input type="text" id="email-${data.id}" name="email" class="form-control" value="${data.email}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label for="phone-${data.id}" class="control-label small mb-0">{{ __('cruds.program.donor.ph') }}</label>
-                                        <input type="text" id="phone-${data.id}" name="phone" class="form-control" value="${data.phone}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <div class="form-group">
-                                        <label for="nilaidonasi" class="control-label small mb-0">{{ __('cruds.program.donor.val') }}</label>
-                                        <input type="text" id="nilaidonasi-${data.id}" name="nilaidonasi[]" class="form-control currency">
-                                    </div>
-                                </div>
-                                <div class="col-sm-1">
-                                    <div class="form-group">
-                                        <label for="nilaidonasi" class="control-label small mb-0"><span> &nbsp; </span></label>
-                                        <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi" data-target="${containerId}"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>`
+                                    `<div class="row" id="${containerId}">
+                                        <div class="col-lg-3 form-group">
+                                            <div class="input-group">
+                                                <label for="pendonor_id" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
+                                                <input type="hidden" name="pendonor_id[]" value="${data.id}" id="pendonor-${data.id}">
+                                                <input type="text" id="nama-${data.id}" name="nama" class="form-control" value="${data.nama}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <div class="input-group">
+                                                <label for="email-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.email') }}</label>
+                                                <input type="text" id="email-${data.id}" name="email" class="form-control" value="${data.email}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2 form-group">
+                                            <div class="input-group">
+                                                <label for="phone-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.ph') }}</label>
+                                                <input type="text" id="phone-${data.id}" name="phone" class="form-control" value="${data.phone}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <div class="input-group">
+                                                <label for="nilaidonasi" class="input-group small mb-0">{{ __('cruds.program.donor.val') }}</label>
+                                                <input type="text" id="nilaidonasi-${data.id}" name="nilaidonasi[]" class="form-control currency">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi btn-flat" data-target="${containerId}"><i class="bi bi-trash"></i></button>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>`
                                 );
                                 // Initialize AutoNumeric on the new input
                                 if (!AutoNumeric.getAutoNumericElement(

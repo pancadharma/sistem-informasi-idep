@@ -9,7 +9,7 @@
         @can('program_create')
             <div class="card-header">
                 <a class="pb-0" href="{{ route('program.create') }}" class="col-6">
-                    {{ trans('global.create') }} {{ trans('cruds.peran.title') }}
+                    {{ trans('global.create') }} {{ trans('cruds.program.title') }}
                 </a>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" onclick="window.location.href='{{ route('program.create') }}'"
