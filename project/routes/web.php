@@ -184,10 +184,10 @@ Route::middleware(['auth'])->group(function () {
     //Route Program by Siva
     //Program
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
-    Route::get('program/api/pendonor/{id}', [ProgramController::class, 'getProgramPendonor'])->name('api.program.pendonor'); // fill form from selected pendonor
-    Route::get('program/api/pendonor/{id}/data', [ProgramController::class, 'getPendonorDataEdit'])->name('api.pendonor.data'); // fill form from selected pendonor
+    Route::get('program/api/pendonor/{id}/search', [ProgramController::class, 'searchPendonor'])->name('api.search.pendonor'); //for create data
+    Route::get('program/api/pendonor/{id}/data', [ProgramController::class, 'getPendonorDataEdit'])->name('api.pendonor.data'); // fill form for selected pendonor in edit program
     Route::get('program/api/donor', [ProgramController::class, 'getProgramDonor'])->name('api.program.donor'); // get all pendonor data
-    Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff');
+    Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff'); // can be used to get data staff for program
     Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
     Route::resource('program', ProgramController::class);
 
