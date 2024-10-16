@@ -76,7 +76,7 @@ class ProgramController extends Controller
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
-            $program->lokasi()->sync($request->input('lokasi', []));
+
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
             if ($request->hasFile('file_pendukung')) {
@@ -108,6 +108,9 @@ class ProgramController extends Controller
                     \Log::info('No files found in the request.');
                 }
             }
+
+            // save program lokasi
+            $program->lokasi()->sync($request->input('lokasi', []));
 
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
