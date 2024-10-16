@@ -3,7 +3,7 @@
     <div class="form-group">
         <label for="donor" class="small control-label">
             <strong>
-                {{ __('cruds.program.donor.label') }}
+                {{ __('cruds.program.donor.select') }}
             </strong>
         </label>
         <div class="select2-orange">
