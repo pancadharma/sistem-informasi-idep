@@ -214,17 +214,7 @@
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
             var formData = new FormData(this);
-            // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-            // formData.set('totalnilai', unmaskedValue);
 
-            // Log the initial entries for debugging
-            // console.log("Initial entries:");
-            // for (var pair of formData.entries()) {
-            //     console.log(pair[0] + ': ' + pair[1]);
-            // }
-
-            // Collect fields to remove masked values
-            // input field with class currency is beeing collected
             var fieldsToRemove = [];
             $('input.currency').each(function() {
                 fieldsToRemove.push($(this).attr('name'));
@@ -238,12 +228,6 @@
                 var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
                 formData.append($(this).attr('name'), unmaskedValue);
             });
-
-            // Log the FormData entries for debugging
-            // console.log("FormData entries after unmasking:");
-            // for (var pair of formData.entries()) {
-            //     console.log(pair[0] + ': ' + pair[1]);
-            // }
 
             $.ajax({
                 url: "{{ route('program.store') }}",
