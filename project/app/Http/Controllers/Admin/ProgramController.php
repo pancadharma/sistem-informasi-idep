@@ -112,6 +112,21 @@ class ProgramController extends Controller
             // save program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
 
+            // save report schedule 
+            // Ambil input array
+            $tanggalArray = $request->input('tanggallaporan');
+            $keteranganArray = $request->input('keteranganlaporan');
+            // Iterasi setiap input tanggal dan keterangan
+            foreach ($tanggalArray as $index => $tanggal) {
+                // Simpan data ke tabel trprogramreportschedule dengan foreign key program_id
+                $program->trProgramReportSchedule()->create([
+                    'tanggal'    => $tanggal,
+                    'keterangan' => $keteranganArray[$index] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 

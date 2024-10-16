@@ -58,6 +58,10 @@ class StoreProgramRequest extends FormRequest
             'nilaidonasi.*'                         => ['nullable', 'numeric'],
             'lokasi'                                => ['array'],
             'lokasi.*'                              => ['nullable', 'integer', 'exists:provinsi,id'],
+            'tanggal.*'                             => ['nullable', 'date_format:Y-m-d'],
+            'keterangan.*'                          => ['nullable', 'string', 'max:255'],
+            
+
 
         ];
     }
