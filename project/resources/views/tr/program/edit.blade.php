@@ -404,7 +404,8 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-
+{{-- call every js for edit and it's tab detail --}}
 @include('tr.program.js.edit')
 @include('tr.program.js.detail-edit.donor')
+@include('tr.program.js.detail-edit.lokasi')
 @endpush
