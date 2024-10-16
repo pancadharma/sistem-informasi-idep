@@ -286,6 +286,7 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Call Detail Program Blade for Create Here --}}
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-12">
@@ -334,5 +335,5 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @include('tr.program.js.create')
-@include('tr.program.js.donor')
+@include('tr.program.js.detail-create.donor')
 @endpush

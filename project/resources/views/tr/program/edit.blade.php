@@ -365,6 +365,16 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Call Detail Program Blade for Create Here --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    @include('tr.program.detail.edit')
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {{-- Submit Update Button --}}
                     <div class="card-body pt-0">
                         <div class="row">
@@ -396,4 +406,5 @@
 @section('plugins.Validation', true)
 
 @include('tr.program.js.edit')
+@include('tr.program.js.detail-edit.donor')
 @endpush
