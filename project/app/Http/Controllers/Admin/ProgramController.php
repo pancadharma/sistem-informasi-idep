@@ -135,14 +135,12 @@ class ProgramController extends Controller
                 $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
             }
 
-
-
             DB::commit();
             return response()->json([
                 'success' => true,
                 'data' => $program,
-                'message' => 'Data Program Berhasil Ditambahkan',
-            ]);
+                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
+            ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -304,10 +302,61 @@ class ProgramController extends Controller
                             ->toMediaCollection('file_pendukung_program');
                     }
                 }
+                // update program lokasi
+                $program->lokasi()->sync($request->input('lokasi', []));
+
+                // update program donatur
+                $newPendonor = $request->input('pendonor_id', []);
+                $nilaiD = $request->input('nilaidonasi', []);
+
+                if (count($newPendonor) !== count($nilaiD)) {
+                    throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+                }
+
+                $newDonasi = [];
+                foreach ($newPendonor as $index => $pendonor_id) {
+                    if (isset($nilaiD[$index])) {
+                        $newDonasi[] = [
+                            'pendonor_id' => $pendonor_id,
+                            'nilaidonasi' => $nilaiD[$index]
+                        ];
+                    } else {
+                        throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+                    }
+                }
+
+                foreach ($newDonasi as $donation) {
+                    $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+                }
             });
 
-            return response()->json(['success' => 'Files uploaded successfully', 'program' => $program]);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $program,
+                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.updated'),
+            ], Response::HTTP_CREATED);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+            ], 404);
+        } catch (HttpException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred.',
@@ -358,7 +407,7 @@ class ProgramController extends Controller
         ]);
     }
 
-
+    // Method digunakan untuk pencaraian data di select2 program tab donor
     public function getProgramDonor(Request $request)
     {
         $search = $request->input('search');
@@ -366,52 +415,30 @@ class ProgramController extends Controller
         $pendonor = MPendonor::where('nama', 'like', "%{$search}%")->get();
         return response()->json($pendonor);
     }
-    // public function getProgramPendonor(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $pendonor = MPendonor::findOrFail($request->id);
-    //         return response()->json($pendonor);
-    //     }
-    // }
 
-    public function getProgramPendonor(Request $request)
+    //method digunakan untuk menampilkan data setelah select2 pada program dipilih, baik pada program create/edit
+    public function searchPendonor(Request $request)
     {
         if ($request->ajax()) {
-            $program = Program::with('pendonor')->findOrFail($request->id);
+            $pendonor = MPendonor::findOrFail($request->id);
 
-            $pendonor = $program->pendonor->map(function ($item) {
-                return [
-                    'id'           => $item->id,
-                    'nama'         => $item->nama,
-                    'email'        => $item->email,
-                    'phone'        => $item->phone,
-                    'nilaidonasi'  => $item->pivot->nilaidonasi ?? 0, // Accessing nilaidonasi from the pivot table
-                    'text'         => $item->nama,
-                ];
-            });
+            // Fetch any program-related donation data if it exists
+            $programPendonor = Program::with(['pendonor' => function ($query) use ($request) {
+                $query->where('mpendonor.id', $request->id);
+            }])->whereHas('pendonor', function ($query) use ($request) {
+                $query->where('mpendonor.id', $request->id);
+            })->first();
 
-            return response()->json($pendonor);
+            $nilaidonasi = $programPendonor ? $programPendonor->pendonor->first()->pivot->nilaidonasi : 0;
+
+            return response()->json([
+                'id' => $pendonor->id,
+                'nama' => $pendonor->nama,
+                'email' => $pendonor->email,
+                'phone' => $pendonor->phone,
+                'nilaidonasi' => $nilaidonasi, // Include nilaidonasi if available
+            ]);
         }
-    }
-
-
-
-    public function getProgramStaff(Request $request)
-    {
-        // Used to Search staff in DATABASEfor select2 selection
-        $search = $request->input('search');
-        $page = $request->input('page', 1);
-        $staff = User::where('nama', 'like', "%{$search}%")->get();
-        return response()->json($staff);
-    }
-
-    // not used yet
-    public function TargetReinstra(Request $request)
-    {
-        $search = $request->input('search');
-        $page = $request->input('page', 1);
-        $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
-        return response()->json($targetreinstra);
     }
 
     function getPendonorDataEdit(Request $request)
@@ -431,5 +458,23 @@ class ProgramController extends Controller
             ];
         });
         return response()->json($pendonorData);
+    }
+
+    public function getProgramStaff(Request $request)
+    {
+        // Used to Search staff in DATABASEfor select2 selection
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $staff = User::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($staff);
+    }
+
+    // not used yet
+    public function TargetReinstra(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($targetreinstra);
     }
 }
