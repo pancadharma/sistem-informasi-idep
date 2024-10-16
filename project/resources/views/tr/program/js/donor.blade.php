@@ -82,10 +82,10 @@
                                         <input type="text" id="nilaidonasi-${data.id}" name="nilaidonasi[]" class="form-control currency">
                                     </div>
                                 </div>
-                                <div class="col-lg-1">
+                                <div class="col-sm-1">
                                     <div class="form-group">
-                                        <label for="nilaidonasi" class="control-label small mb-0">-</label>
-                                        <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi" data-target="${containerId}">-</button>
+                                        <label for="nilaidonasi" class="control-label small mb-0"><span> &nbsp; </span></label>
+                                        <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi" data-target="${containerId}"><i class="bi bi-trash"></i></button>
                                     </div>
                                 </div>
                             </div>`
