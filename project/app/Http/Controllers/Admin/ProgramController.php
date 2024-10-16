@@ -381,4 +381,12 @@ class ProgramController extends Controller
         $staff = User::where('nama', 'like', "%{$search}%")->get();
         return response()->json($staff);
     }
+
+    public function TargetReinstra(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($targetreinstra);
+    }
 }
