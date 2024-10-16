@@ -304,7 +304,7 @@ class TrProgramController extends Controller
                 $preview_pendukung[] = $media->getUrl();
             } elseif ($media->mime_type == 'application/pdf') {
                 $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint' ) {
+            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint') {
                 $preview_pendukung[] = $media->getUrl();
             } else {
                 $preview_pendukung[] = $media->getUrl();

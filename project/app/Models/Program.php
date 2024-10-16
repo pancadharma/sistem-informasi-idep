@@ -75,7 +75,8 @@ class Program extends Model implements HasMedia
 
     public function pendonor()
     {
-        return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id');
+        return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id')
+            ->withPivot('nilaidonasi');
     }
 
     public function getImageAttribute()

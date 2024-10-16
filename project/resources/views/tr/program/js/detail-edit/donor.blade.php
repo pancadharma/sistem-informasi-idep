@@ -1,39 +1,82 @@
 @push('js')
     <script>
-        var data_donor = "{{ route('api.program.donor') }}";
-        var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.donor.label') }}";
-
         $(document).ready(function() {
+            var programId = {{ $program->id }};
+            var url_program_pendonor = "{{ route('api.pendonor.data', ':id') }}".replace(':id', programId);
 
-            $('#donor').select2({
-                placeholder: placeholder,
-                width: '100%',
-                allowClear: true,
-                closeOnSelect: false,
-                dropdownPosition: 'below',
-                ajax: {
-                    url: data_donor,
-                    method: 'GET',
-                    delay: 1000,
-                    processResults: function(data) {
-                        return {
-                            results: data.map(function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama // Mapping 'nama' to 'text'
-                                };
-                            })
-                        };
-                    },
-                    data: function(params) {
-                        var query = {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                        return query;
-                    }
-                }
+            var data_donor = "{{ route('api.program.donor') }}";
+            var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.donor.label') }}";
+
+            var selected_pendonor = url_program_pendonor;
+
+
+            $.getJSON(url_program_pendonor, function(data) {
+                var edit_program_pendonor = data.map(function(item) {
+                    return {
+                        id: item.id,
+                        text: item.text,
+                        email: item.email,
+                        phone: item.phone,
+                        nilaidonasi: item.nilaidonasi
+                    };
+                });
+
+                var selected_pendonor = data.map(function(item) {
+                    return item.id;
+                });
+
+                console.log('Edit Program Pendonor:', edit_program_pendonor);
+                console.log('Selected Pendonor:', selected_pendonor);
+
+                // Initialize select2
+                $('#donor').select2({
+                    placeholder: placeholder,
+                    width: '100%',
+                    allowClear: true,
+                    data: edit_program_pendonor,
+                    closeOnSelect: false
+                });
+
+                // Set the selected values
+                $('#donor').val(selected_pendonor).trigger('change');
             });
+
+
+
+
+            // $('#donor').select2({
+            //     placeholder: placeholder,
+            //     width: '100%',
+            //     allowClear: true,
+            //     data: selected_pendonor,
+            //     closeOnSelect: false,
+            //     dropdownPosition: 'below',
+            //     ajax: {
+            //         url: data_donor,
+            //         method: 'GET',
+            //         delay: 1000,
+            //         processResults: function(data) {
+            //             return {
+            //                 results: data.map(function(item) {
+            //                     return {
+            //                         id: item.id,
+            //                         text: item.nama // Mapping 'nama' to 'text'
+            //                     };
+            //                 })
+            //             };
+            //         },
+            //         data: function(params) {
+            //             var query = {
+            //                 search: params.term,
+            //                 page: params.page || 1
+            //             };
+            //             return query;
+            //         }
+            //     }
+            // });
+
+
+            //
 
             $('#donor').change(function() {
                 var selected = $(this).val(); // This gets all selected values as an array

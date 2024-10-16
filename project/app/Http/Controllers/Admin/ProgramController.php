@@ -9,9 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException;
-
-
-
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Http\Requests\StoreProgramRequest;
 use App\Models\TargetReinstra;
@@ -24,6 +21,9 @@ use App\Models\MPendonor;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+
+
 
 
 
@@ -180,7 +180,7 @@ class ProgramController extends Controller
             $targetReinstra = TargetReinstra::pluck('nama', 'id');
             $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
             $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi');
+            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor');
 
             $file_pendukung = Program::find($program->id);
             $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
@@ -382,11 +382,31 @@ class ProgramController extends Controller
         return response()->json($staff);
     }
 
+    // not used yet
     public function TargetReinstra(Request $request)
     {
         $search = $request->input('search');
         $page = $request->input('page', 1);
         $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
         return response()->json($targetreinstra);
+    }
+
+    function getPendonorDataEdit(Request $request)
+    {
+        $program = Program::with(['pendonor' => function ($query) {
+            $query->select('mpendonor.id', 'nama', 'email', 'phone', 'trprogrampendonor.nilaidonasi');
+        }])->where('id', $request->id)->first();
+
+        $pendonorData = $program->pendonor->map(function ($pendonor) {
+            return [
+                'id'           => $pendonor->id,
+                'nama'         => $pendonor->nama,
+                'email'        => $pendonor->email,
+                'phone'        => $pendonor->phone,
+                'nilaidonasi'  => $pendonor->pivot->nilaidonasi, // Getting nilaidonasi from the pivot table
+                'text'         => "{$pendonor->id} - {$pendonor->nama}",
+            ];
+        });
+        return response()->json($pendonorData);
     }
 }
