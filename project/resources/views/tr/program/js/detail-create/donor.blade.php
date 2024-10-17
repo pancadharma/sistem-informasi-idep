@@ -8,7 +8,7 @@
                 placeholder: placeholder,
                 width: '100%',
                 allowClear: true,
-                closeOnSelect: false,
+                closeOnSelect: true,
                 dropdownPosition: 'below',
                 ajax: {
                     url: data_donor,
@@ -57,10 +57,10 @@
                                                     <div class="row" id="${containerId}">
                                                         <div class="col-lg-3 form-group">
                                                             <div class="input-group">
-                                                                <label for="nama-${pendonor.id}" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
+                                                                <label for="nama_pendonor-${pendonor.id}" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
                                                                 <input type="hidden" name="pendonor_id[]" value="${pendonor.id}" id="pendonor-${pendonor.id}">
                                                                 <input type="hidden" name="program_id[]" value="${pendonor.id}" id="pendonor-${pendonor.id}">
-                                                                <input type="text" id="nama-${pendonor.id}" name="nama" class="form-control" value="${pendonor.nama || ''}" readonly>
+                                                                <input type="text" id="nama_pendonor-${pendonor.id}" name="nama_pendonor" class="form-control" value="${pendonor.nama || ''}" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-3 form-group">
