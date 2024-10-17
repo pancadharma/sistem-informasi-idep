@@ -53,12 +53,14 @@
                         }
                     }
                 });
+
                 $('#donor').val(selected_pendonor).trigger('change');
             });
 
             $('#donor').change(function() {
                 var selected = $(this).val();
                 $('#pendonor-container').empty();
+
                 selected.forEach(function(pendonor_id) {
                     if ($('#pendonor-container').find(`#pendonor-${pendonor_id}`).length === 0) {
                         var data_pendonor = '{{ route('api.search.pendonor', ':id') }}'.replace(
@@ -108,9 +110,7 @@
                                     var nilaidonasiElement = `#nilaidonasi-${data.id}`;
                                     if (!AutoNumeric.getAutoNumericElement(
                                             nilaidonasiElement)) {
-                                        console.log(`
-                                        Initializing AutoNumeric for ${nilaidonasiElement}
-                                        with value: ${data.nilaidonasi}`);
+                                        // console.log(`Initializing AutoNumeric for ${nilaidonasiElement}with value: ${data.nilaidonasi}`);
                                         new AutoNumeric(nilaidonasiElement, {
                                             digitGroupSeparator: '.',
                                             decimalCharacter: ',',

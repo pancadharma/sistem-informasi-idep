@@ -299,16 +299,18 @@
                 formData.delete(field);
             });
 
-            // Unmask all AutoNumeric fields before submitting
+            // Unmask all AutoNumeric fields before submitting, excluding #totalnilai
             var nilaidonasiValues = [];
             $('input.currency').each(function() {
-                var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
-                if (autoNumericElement !== null) {
-                    var unmaskedValue = autoNumericElement.getNumericString();
-                    formData.append($(this).attr('name'), unmaskedValue);
-                    nilaidonasiValues.push(unmaskedValue);
-                } else {
-                    console.error('AutoNumeric not initialized for:', this);
+                if ($(this).attr('id') !== 'totalnilai') {
+                    var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+                    if (autoNumericElement !== null) {
+                        var unmaskedValue = autoNumericElement.getNumericString();
+                        formData.append($(this).attr('name'), unmaskedValue);
+                        nilaidonasiValues.push(unmaskedValue);
+                    } else {
+                        console.error('AutoNumeric not initialized for:', this);
+                    }
                 }
             });
 
@@ -316,6 +318,11 @@
             var pendonorIds = formData.getAll('pendonor_id[]');
             console.log('pendonor_id[]:', pendonorIds);
             console.log('nilaidonasi[]:', nilaidonasiValues);
+
+            // Detailed logging
+            for (var pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
 
             // Check for length mismatch
             if (pendonorIds.length !== nilaidonasiValues.length) {

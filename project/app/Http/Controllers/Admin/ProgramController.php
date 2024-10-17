@@ -316,18 +316,12 @@ class ProgramController extends Controller
             $newDonasi = [];
             foreach ($newPendonor as $index => $pendonor_id) {
                 if (isset($nilaiD[$index])) {
-                    $newDonasi[] = [
-                        'pendonor_id' => $pendonor_id,
-                        'nilaidonasi' => $nilaiD[$index]
-                    ];
+                    $newDonasi[$pendonor_id] = ['nilaidonasi' => $nilaiD[$index]]; // Use associative array for sync
                 } else {
                     throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
                 }
             }
-
-            foreach ($newDonasi as $donation) {
-                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-            }
+            $program->pendonor()->sync($newDonasi); // Use sync to update or add new records
 
             DB::commit();
             return response()->json([
