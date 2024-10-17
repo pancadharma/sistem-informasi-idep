@@ -214,50 +214,6 @@ class ProgramController extends Controller
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
     }
-    // public function update(UpdateProgramRequest $request, Program $program)
-    // {
-    // $program->update($request->all());
-
-    //  $newFiles = $request->file('files', []);
-    //  $newFileNames = array_map(function ($file) {
-    //      return $file->getClientOriginalName();
-    //  }, $newFiles);
-    //  \Log::info(  $newFileNames);
-    //  if (is_countable($program->media) && count($program->media) > 0) {
-    //      foreach ($program->media as $media) {
-    //          if (in_array($media->name, $newFileNames)) {
-    //              \Log::info('Deleting Media: ' . $media->name);
-    //              $media->delete();
-    //              $data = response()->json([
-    //                  "message" => "File Exists {$media->name} and will be replaced",
-    //                  "success" => true,
-    //                  "file_name" => $media->name,
-    //                  "file_id" => $media->id,
-    //                  'files' => $newFiles
-    //              ]);
-    //          }
-    //      }
-    //  }
-
-    //  if ($request->hasFile('files')) {
-    //      foreach ($newFiles as $index => $file) {
-    //          $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //          $extension = $file->getClientOriginalExtension();
-    //          $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
-
-    //          $program->addMedia($file)
-    //              ->usingName("{$originalName}.{$extension}")
-    //              ->withCustomProperties([
-    //                  'keterangan' => $caption,
-    //                  'user_id' => auth()->user()->id,
-    //                  'original_name' => $originalName,
-    //                  'extension' => $extension,
-    //                  'updated_by' => auth()->user()->id
-    //              ])
-    //              ->toMediaCollection('file_pendukung_program');
-    //      }
-    //  }
-    // }
 
     public function update(UpdateProgramRequest $request, Program $program)
     {
@@ -393,7 +349,6 @@ class ProgramController extends Controller
                 'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
             ];
         }
-
         return response()->json([
             'initialPreview' => $preview_pendukung,
             'initialPreviewConfig' => $config_pendukung,
@@ -410,27 +365,80 @@ class ProgramController extends Controller
     }
 
     //method digunakan untuk menampilkan data setelah select2 pada program dipilih, baik pada program create/edit
+    // public function searchPendonor(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $pendonor = MPendonor::findOrFail($request->id);
+    //         $programId = $request->query('program_id');
+    //         // Fetch all pendonor related to the specific program_id
+    //         $programPendonor = Program::with(['pendonor' => function ($query) use ($request) {
+    //             $query->where('mpendonor.id', $request->id);
+    //         }])
+    //             ->where('id', $programId)
+    //             ->first();
+    //         if (!$programPendonor) {
+    //             return response()->json(['error' => 'Program not found'], 404); // Handle missing program case
+    //         }
+    //         $pendonorData = [];
+    //         foreach ($programPendonor->pendonor as $p) {
+    //             $pendonorData[] = [
+    //                 'id'           => $p->id,
+    //                 'program_id'   => $p->pivot->program_id,
+    //                 'nama'         => $p->nama,
+    //                 'email'        => $p->email,
+    //                 'phone'        => $p->phone,
+    //                 'nilaidonasi'  => $p->pivot->nilaidonasi
+    //             ];
+    //         }
+    //         return response()->json($pendonorData);
+    //     }
+    // }
+
     public function searchPendonor(Request $request)
     {
         if ($request->ajax()) {
+            // Fetch the donor from MPendonor
             $pendonor = MPendonor::findOrFail($request->id);
-            $programPendonor = Program::with(['pendonor' => function ($query) use ($request) {
-                $query->where('mpendonor.id', $request->id);
-            }])->whereHas('pendonor', function ($query) use ($request) {
-                $query->where('mpendonor.id', $request->id);
-            })->first();
+            $programId = $request->query('program_id');
 
-            $nilaidonasi = $programPendonor ? $programPendonor->pendonor->first()->pivot->nilaidonasi : 0;
+            // Fetch the donor data with the pivot nilaidonasi value for the given program_id
+            $programPendonor = Program::with(['pendonor' => function ($query) use ($request, $programId) {
+                $query->where('mpendonor.id', $request->id)
+                    ->where('trprogrampendonor.program_id', $programId); // check if exists in pivot table
+            }])->where('id', $programId)->first();
 
-            return response()->json([
-                'id' => $pendonor->id,
-                'nama' => $pendonor->nama,
-                'email' => $pendonor->email,
-                'phone' => $pendonor->phone,
-                'nilaidonasi' => $nilaidonasi, // Include nilaidonasi if available
-            ]);
+            // Check if the donor exists in the pivot table for this program
+            if ($programPendonor && $programPendonor->pendonor->isNotEmpty()) {
+                // Donor exists in the program, retrieve pivot `nilaidonasi`
+                $pendonorData = [];
+                foreach ($programPendonor->pendonor as $p) {
+                    $pendonorData[] = [
+                        'id'           => $p->id,
+                        'program_id'   => $p->pivot->program_id,
+                        'nama'         => $p->nama,
+                        'email'        => $p->email,
+                        'phone'        => $p->phone,
+                        'nilaidonasi'  => $p->pivot->nilaidonasi ?? 0 // return the actual value or 0
+                    ];
+                }
+            } else {
+                // Donor doesn't exist in the program_pendonor pivot table, return default `nilaidonasi` as 0
+                $pendonorData = [
+                    [
+                        'id'           => $pendonor->id,
+                        'program_id'   => $programId,
+                        'nama'         => $pendonor->nama,
+                        'email'        => $pendonor->email,
+                        'phone'        => $pendonor->phone,
+                        'nilaidonasi'  => 0 // Return 0 since no record exists in pivot
+                    ]
+                ];
+            }
+
+            return response()->json($pendonorData);
         }
     }
+
 
     function getPendonorDataEdit(Request $request)
     {
@@ -441,6 +449,7 @@ class ProgramController extends Controller
         $pendonorData = $program->pendonor->map(function ($pendonor) {
             return [
                 'id'           => $pendonor->id,
+                'program_id'   => $pendonor->pivot->program_id,
                 'nama'         => $pendonor->nama,
                 'email'        => $pendonor->email,
                 'phone'        => $pendonor->phone,
