@@ -365,35 +365,6 @@ class ProgramController extends Controller
     }
 
     //method digunakan untuk menampilkan data setelah select2 pada program dipilih, baik pada program create/edit
-    // public function searchPendonor(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $pendonor = MPendonor::findOrFail($request->id);
-    //         $programId = $request->query('program_id');
-    //         // Fetch all pendonor related to the specific program_id
-    //         $programPendonor = Program::with(['pendonor' => function ($query) use ($request) {
-    //             $query->where('mpendonor.id', $request->id);
-    //         }])
-    //             ->where('id', $programId)
-    //             ->first();
-    //         if (!$programPendonor) {
-    //             return response()->json(['error' => 'Program not found'], 404); // Handle missing program case
-    //         }
-    //         $pendonorData = [];
-    //         foreach ($programPendonor->pendonor as $p) {
-    //             $pendonorData[] = [
-    //                 'id'           => $p->id,
-    //                 'program_id'   => $p->pivot->program_id,
-    //                 'nama'         => $p->nama,
-    //                 'email'        => $p->email,
-    //                 'phone'        => $p->phone,
-    //                 'nilaidonasi'  => $p->pivot->nilaidonasi
-    //             ];
-    //         }
-    //         return response()->json($pendonorData);
-    //     }
-    // }
-
     public function searchPendonor(Request $request)
     {
         if ($request->ajax()) {
