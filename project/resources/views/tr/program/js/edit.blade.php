@@ -1,5 +1,11 @@
 <script>
-    // DELETE EXISTING MEDIA FILE FROM CURRENT PROGRAM
+    new AutoNumeric('#totalnilai', {
+        digitGroupSeparator: '.',
+        decimalCharacter: ',',
+        currencySymbol: 'Rp ',
+        modifyValueOnWheel: false
+    });
+
     $(document).on('click', '.kv-file-remove', function() {
         let mediaID = $(this).data('key');
         let url = '{{ route('program.media.destroy', ':id') }}'.replace(':id', mediaID);
@@ -275,13 +281,6 @@
 
     // BUTTON SUBMIT UPDATE PROGRAM
     $(document).ready(function() {
-        new AutoNumeric('#totalnilai', {
-            digitGroupSeparator: '.',
-            decimalCharacter: ',',
-            currencySymbol: 'Rp ',
-            modifyValueOnWheel: false
-        });
-
         $('#editProgram').on('submit', function(e) {
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
@@ -301,15 +300,34 @@
             });
 
             // Unmask all AutoNumeric fields before submitting
+            var nilaidonasiValues = [];
             $('input.currency').each(function() {
                 var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
                 if (autoNumericElement !== null) {
                     var unmaskedValue = autoNumericElement.getNumericString();
                     formData.append($(this).attr('name'), unmaskedValue);
+                    nilaidonasiValues.push(unmaskedValue);
                 } else {
                     console.error('AutoNumeric not initialized for:', this);
                 }
             });
+
+            // Log arrays for debugging
+            var pendonorIds = formData.getAll('pendonor_id[]');
+            console.log('pendonor_id[]:', pendonorIds);
+            console.log('nilaidonasi[]:', nilaidonasiValues);
+
+            // Check for length mismatch
+            if (pendonorIds.length !== nilaidonasiValues.length) {
+                console.error('Mismatch between pendonor_id and nilaidonasi arrays');
+                $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Mismatch Error',
+                    text: 'Mismatch between pendonor_id and nilaidonasi arrays.'
+                });
+                return; // Prevent form submission
+            }
 
             $.ajax({
                 url: $(this).attr('action'),
@@ -352,54 +370,57 @@
                 },
                 error: function(xhr, status, error) {
                     $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response.errors) {
-                            errorMessage +=
-                            '<br><br><ul style="text-align:left!important">';
-                            $.each(response.errors, function(field, messages) {
-                                messages.forEach(message => {
-                                    errorMessage +=
-                                        `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).removeClass(
-                                        'is-valid').addClass(
-                                        'is-invalid');
-                                    $(`#${field}-error`).text(message);
-                                    $(`#${field}`).removeClass('invalid')
-                                        .addClass('is-invalid');
-                                });
-                            });
-                            errorMessage += '</ul>';
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                html: errorMessage,
-                            });
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
-
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
+                        title: `Error: ${xhr.status}`,
+                        text: xhr.statusText
                     });
-                },
-                complete: function() {
-                    setTimeout(() => {
-                        $(this).find('button[type="submit"]').removeAttr(
-                        'disabled');
-                    }, 500);
+                }
+            });
+        });
+
+        $('#donor').change(function() {
+            var selected = $(this).val();
+            console.log('Selected values:', selected);
+
+            // Clear existing appended data
+            $('#pendonor-container').empty();
+
+            selected.forEach(function(pendonor_id) {
+                if ($('#pendonor-container').find(`#pendonor-${pendonor_id}`).length === 0) {
+                    var data_pendonor = '{{ route('api.search.pendonor', ':id') }}'.replace(
+                        ':id', pendonor_id);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: data_pendonor,
+                        dataType: 'json',
+                        success: function(data) {
+                            console.log('Fetched data:', data);
+
+                            if (data && data.id) {
+                                let containerId = `pendonor-container-${data.id}`;
+                                var nilaidonasiElement = `#nilaidonasi-${data.id}`;
+
+                            } else {
+                                console.error('Invalid data format', data);
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error('AJAX error:', xhr);
+                        }
+                    });
                 }
             });
         });
     });
 
-    // $(document).ready(function() {
 
+
+
+
+    // ///////////////////////////////////////////////////////////////
+    // $(document).ready(function() {
     //     new AutoNumeric('#totalnilai', {
     //         digitGroupSeparator: '.',
     //         decimalCharacter: ',',
@@ -410,30 +431,45 @@
     //     $('#editProgram').on('submit', function(e) {
     //         e.preventDefault();
     //         $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-
     //         var formData = new FormData(this);
-    //         // var unmaskedValue = $('#totalnilai').maskMoney('unmasked')[0];
-    //         // formData.set('totalnilai', unmaskedValue);
-    //         // $('input.currency').each(function() {
-    //         //     var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-    //         //     formData.set($(this).attr('name'), unmaskedValue);
-    //         // });
 
     //         formData.append('_method', 'PUT');
+
+    //         // Collect fields to remove masked values
     //         var fieldsToRemove = [];
     //         $('input.currency').each(function() {
     //             fieldsToRemove.push($(this).attr('name'));
     //         });
+
     //         // Remove original masked `nilaidonasi` values from FormData
     //         fieldsToRemove.forEach(function(field) {
     //             formData.delete(field);
     //         });
-    //         // Unmask all AutoNumeric fields and append unmasked values
+
+    //         // Unmask all AutoNumeric fields before submitting
+    //         var nilaidonasiValues = [];
     //         $('input.currency').each(function() {
-    //             var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-    //             formData.append($(this).attr('name'), unmaskedValue);
+    //             var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+    //             if (autoNumericElement !== null) {
+    //                 var unmaskedValue = autoNumericElement.getNumericString();
+    //                 formData.append($(this).attr('name'), unmaskedValue);
+    //                 nilaidonasiValues.push(unmaskedValue);
+    //             } else {
+    //                 console.error('AutoNumeric not initialized for:', this);
+    //             }
     //         });
 
+    //         // Log arrays for debugging
+    //         var pendonorIds = formData.getAll('pendonor_id[]');
+    //         console.log('pendonor_id[]:', pendonorIds);
+    //         console.log('nilaidonasi[]:', nilaidonasiValues);
+
+    //         // Check for length mismatch
+    //         if (pendonorIds.length !== nilaidonasiValues.length) {
+    //             console.error('Mismatch between pendonor_id and nilaidonasi arrays');
+    //             $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+    //             return; // Prevent form submission
+    //         }
 
     //         $.ajax({
     //             url: $(this).attr('action'),
@@ -456,28 +492,28 @@
     //                 setTimeout(() => {
     //                     if (response.success === true) {
     //                         Swal.fire({
-    //                             title: "{{ __('global.success') }}",
+    //                             title: "Sukses",
     //                             text: response.message,
     //                             icon: "success",
     //                             timer: 1500,
     //                             timerProgressBar: true,
     //                         });
-    //                         $(this).trigger('reset');
-    //                         $('#editProgram')[0].reset();
+
     //                         $('#editProgram').trigger('reset');
     //                         $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
     //                             '').trigger('change');
     //                         $(".btn-tool").trigger('click');
     //                         $('#editProgram').find('button[type="submit"]')
     //                             .removeAttr('disabled');
+
+    //                         window.location.reload();
     //                     }
-    //                     window.location.reload();
     //                 }, 500);
     //             },
     //             error: function(xhr, status, error) {
-    //                 $('#editProgram').find('button[type="submit"]').removeAttr(
-    //                     'disabled');
+    //                 $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
     //                 let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+
     //                 try {
     //                     const response = xhr.responseJSON;
     //                     if (response.errors) {
@@ -494,17 +530,18 @@
     //                                 $(`#${field}`).removeClass('invalid')
     //                                     .addClass('is-invalid');
     //                             });
-    //                             Swal.fire({
-    //                                 icon: 'error',
-    //                                 title: 'Error!',
-    //                                 html: errorMessage,
-    //                             });
     //                         });
     //                         errorMessage += '</ul>';
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Error!',
+    //                             html: errorMessage,
+    //                         });
     //                     }
     //                 } catch (e) {
     //                     console.error('Error parsing response:', e);
     //                 }
+
     //                 Swal.fire({
     //                     icon: 'error',
     //                     title: 'Error!',
@@ -518,7 +555,263 @@
     //                 }, 500);
     //             }
     //         });
-
     //     });
+    // });
+
+
+
+    ///////////////////////////////////////////////////////
+
+    // $(document).ready(function() {
+    //     $('#editProgram').on('submit', function(e) {
+    //         e.preventDefault();
+    //         $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+    //         var formData = new FormData(this);
+
+    //         formData.append('_method', 'PUT');
+
+    //         // Collect fields to remove masked values
+    //         var fieldsToRemove = [];
+    //         $('input.currency').each(function() {
+    //             fieldsToRemove.push($(this).attr('name'));
+    //         });
+
+    //         // Remove original masked `nilaidonasi` values from FormData
+    //         fieldsToRemove.forEach(function(field) {
+    //             formData.delete(field);
+    //         });
+
+    //         // Unmask all AutoNumeric fields before submitting
+    //         var nilaidonasiValues = [];
+    //         $('input.currency').each(function() {
+    //             var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+    //             if (autoNumericElement !== null) {
+    //                 var unmaskedValue = autoNumericElement.getNumericString();
+    //                 formData.append($(this).attr('name'), unmaskedValue);
+    //                 nilaidonasiValues.push(unmaskedValue);
+    //             } else {
+    //                 console.error('AutoNumeric not initialized for:', this);
+    //             }
+    //         });
+
+    //         // Log arrays for debugging
+    //         var pendonorIds = formData.getAll('pendonor_id[]');
+    //         console.log('pendonor_id[]:', pendonorIds);
+    //         console.log('nilaidonasi[]:', nilaidonasiValues);
+
+    //         // Check for length mismatch
+    //         if (pendonorIds.length !== nilaidonasiValues.length) {
+    //             console.error('Mismatch between pendonor_id and nilaidonasi arrays');
+    //             $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+    //             return; // Prevent form submission
+    //         }
+
+    //         $.ajax({
+    //             url: $(this).attr('action'),
+    //             type: 'post',
+    //             data: formData,
+    //             contentType: false,
+    //             processData: false,
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //             },
+    //             beforeSend: function() {
+    //                 Toast.fire({
+    //                     icon: "info",
+    //                     title: "Uploading...",
+    //                     timer: 2000,
+    //                     timerProgressBar: true,
+    //                 });
+    //             },
+    //             success: function(response) {
+    //                 setTimeout(() => {
+    //                     if (response.success === true) {
+    //                         Swal.fire({
+    //                             title: "Sukses",
+    //                             text: response.message,
+    //                             icon: "success",
+    //                             timer: 1500,
+    //                             timerProgressBar: true,
+    //                         });
+
+    //                         $('#editProgram').trigger('reset');
+    //                         $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
+    //                             '').trigger('change');
+    //                         $(".btn-tool").trigger('click');
+    //                         $('#editProgram').find('button[type="submit"]')
+    //                             .removeAttr('disabled');
+
+    //                         window.location.reload();
+    //                     }
+    //                 }, 500);
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+    //                 let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+
+    //                 try {
+    //                     const response = xhr.responseJSON;
+    //                     if (response.errors) {
+    //                         errorMessage +=
+    //                             '<br><br><ul style="text-align:left!important">';
+    //                         $.each(response.errors, function(field, messages) {
+    //                             messages.forEach(message => {
+    //                                 errorMessage +=
+    //                                     `<li>${field}: ${message}</li>`;
+    //                                 $(`#${field}-error`).removeClass(
+    //                                     'is-valid').addClass(
+    //                                     'is-invalid');
+    //                                 $(`#${field}-error`).text(message);
+    //                                 $(`#${field}`).removeClass('invalid')
+    //                                     .addClass('is-invalid');
+    //                             });
+    //                         });
+    //                         errorMessage += '</ul>';
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Error!',
+    //                             html: errorMessage,
+    //                         });
+    //                     }
+    //                 } catch (e) {
+    //                     console.error('Error parsing response:', e);
+    //                 }
+
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error!',
+    //                     html: errorMessage,
+    //                 });
+    //             },
+    //             complete: function() {
+    //                 setTimeout(() => {
+    //                     $(this).find('button[type="submit"]').removeAttr(
+    //                         'disabled');
+    //                 }, 500);
+    //             }
+    //         });
+    //     });
+    //     // $('#editProgram').on('submit', function(e) {
+    //     //     e.preventDefault();
+    //     //     var formData = new FormData(this);
+    //     //     formData.append('_method', 'PUT');
+    //     //     $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+
+    //     //     // Collect fields to remove masked values
+    //     //     var fieldsToRemove = [];
+    //     //     $('input.currency').each(function() {
+    //     //         fieldsToRemove.push($(this).attr('name'));
+    //     //     });
+    //     //     // Remove original masked `nilaidonasi` values from FormData
+    //     //     fieldsToRemove.forEach(function(field) {
+    //     //         formData.delete(field);
+    //     //     });
+    //     //     // Unmask all AutoNumeric fields before submitting
+    //     //     var nilaidonasiValues = [];
+
+    //     //     $('input.currency').each(function() {
+    //     //         var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+    //     //         if (autoNumericElement !== null) {
+    //     //             var unmaskedValue = autoNumericElement.getNumericString();
+    //     //             formData.append($(this).attr('name'), unmaskedValue);
+    //     //             nilaidonasiValues.push(unmaskedValue);
+    //     //         } else {
+    //     //             console.error('AutoNumeric not initialized for:', this);
+    //     //         }
+    //     //     });
+
+    //     //     // Log arrays for debugging
+    //     //     var pendonorIds = formData.getAll('pendonor_id[]');
+    //     //     console.log('pendonor_id[]:', pendonorIds);
+    //     //     console.log('nilaidonasi[]:', nilaidonasiValues);
+
+    //     //     // Check for length mismatch
+    //     //     if (pendonorIds.length !== nilaidonasiValues.length) {
+    //     //         console.error('Mismatch between pendonor_id and nilaidonasi arrays');
+    //     //         $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+    //     //         return; // Prevent form submission
+    //     //     }
+
+    //     //     $.ajax({
+    //     //         url: $(this).attr('action'),
+    //     //         type: 'post',
+    //     //         data: formData,
+    //     //         contentType: false,
+    //     //         processData: false,
+    //     //         headers: {
+    //     //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //     //         },
+    //     //         beforeSend: function() {
+    //     //             Toast.fire({
+    //     //                 icon: "info",
+    //     //                 title: "Uploading...",
+    //     //                 timer: 2000,
+    //     //                 timerProgressBar: true,
+    //     //             });
+    //     //         },
+    //     //         success: function(response) {
+    //     //             setTimeout(() => {
+    //     //                 if (response.success === true) {
+    //     //                     Swal.fire({
+    //     //                         title: "Sukses",
+    //     //                         text: response.message,
+    //     //                         icon: "success",
+    //     //                         timer: 1500,
+    //     //                         timerProgressBar: true,
+    //     //                     });
+    //     //                     // $('#editProgram').trigger('reset');
+    //     //                     // $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+    //     //                     // $(".btn-tool").trigger('click');
+    //     //                     $('#editProgram').find('button[type="submit"]')
+    //     //                         .removeAttr('disabled');
+    //     //                     window.location.reload();
+    //     //                 }
+    //     //             }, 500);
+    //     //         },
+    //     //         error: function(xhr, status, error) {
+    //     //             $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+    //     //             let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+    //     //             try {
+    //     //                 const response = xhr.responseJSON;
+    //     //                 if (response.errors) {
+    //     //                     errorMessage +=
+    //     //                         '<br><br><ul style="text-align:left!important">';
+    //     //                     $.each(response.errors, function(field, messages) {
+    //     //                         messages.forEach(message => {
+    //     //                             errorMessage +=
+    //     //                                 `<li>${field}: ${message}</li>`;
+    //     //                             $(`#${field}-error`).removeClass(
+    //     //                                 'is-valid').addClass(
+    //     //                                 'is-invalid');
+    //     //                             $(`#${field}-error`).text(message);
+    //     //                             $(`#${field}`).removeClass('invalid')
+    //     //                                 .addClass('is-invalid');
+    //     //                         });
+    //     //                     });
+    //     //                     errorMessage += '</ul>';
+    //     //                     Swal.fire({
+    //     //                         icon: 'error',
+    //     //                         title: 'Error!',
+    //     //                         html: errorMessage,
+    //     //                     });
+    //     //                 }
+    //     //             } catch (e) {
+    //     //                 console.error('Error parsing response:', e);
+    //     //             }
+
+    //     //             Swal.fire({
+    //     //                 icon: 'error',
+    //     //                 title: 'Error!',
+    //     //                 html: errorMessage,
+    //     //             });
+    //     //         },
+    //     //         complete: function() {
+    //     //             setTimeout(() => {
+    //     //                 $(this).find('button[type="submit"]').removeAttr(
+    //     //                     'disabled');
+    //     //             }, 500);
+    //     //         }
+    //     //     });
+    //     // });
     // });
 </script>

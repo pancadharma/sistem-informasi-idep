@@ -420,8 +420,6 @@ class ProgramController extends Controller
     {
         if ($request->ajax()) {
             $pendonor = MPendonor::findOrFail($request->id);
-
-            // Fetch any program-related donation data if it exists
             $programPendonor = Program::with(['pendonor' => function ($query) use ($request) {
                 $query->where('mpendonor.id', $request->id);
             }])->whereHas('pendonor', function ($query) use ($request) {

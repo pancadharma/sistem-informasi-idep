@@ -58,13 +58,11 @@
 
             $('#donor').change(function() {
                 var selected = $(this).val();
-                console.log('Selected values:', selected);
-
+                $('#pendonor-container').empty();
                 selected.forEach(function(pendonor_id) {
                     if ($('#pendonor-container').find(`#pendonor-${pendonor_id}`).length === 0) {
                         var data_pendonor = '{{ route('api.search.pendonor', ':id') }}'.replace(
                             ':id', pendonor_id);
-
                         $.ajax({
                             type: 'GET',
                             url: data_pendonor,
@@ -76,43 +74,43 @@
                                     let containerId = `pendonor-container-${data.id}`;
                                     $('#pendonor-container').append(
                                         `<div class="row" id="${containerId}">
-                                <div class="col-lg-3 form-group">
-                                    <div class="input-group">
-                                        <label for="pendonor_id" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
-                                        <input type="hidden" name="pendonor_id[]" value="${data.id}" id="pendonor-${data.id}">
-                                        <input type="text" id="nama-${data.id}" name="nama" class="form-control" value="${data.nama || ''}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 form-group">
-                                    <div class="input-group">
-                                        <label for="email-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.email') }}</label>
-                                        <input type="text" id="email-${data.id}" name="email" class="form-control" value="${data.email || ''}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-2 form-group">
-                                    <div class="input-group">
-                                        <label for="phone-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.ph') }}</label>
-                                        <input type="text" id="phone-${data.id}" name="phone" class="form-control" value="${data.phone || ''}" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 form-group">
-                                    <div class="input-group">
-                                        <label for="nilaidonasi" class="input-group small mb-0">{{ __('cruds.program.donor.val') }}</label>
-                                        <input type="text" id="nilaidonasi-${data.id}" name="nilaidonasi[]" class="form-control currency" value="${data.nilaidonasi || 0}">
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi btn-flat" data-target="${containerId}"><i class="bi bi-trash"></i></button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>`
+                                            <div class="col-lg-3 form-group">
+                                                <div class="input-group">
+                                                    <label for="nama-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
+                                                    <input type="hidden" name="pendonor_id[]" value="${data.id}" id="pendonor-${data.id}">
+                                                    <input type="text" id="nama-${data.id}" name="nama" class="form-control" value="${data.nama || ''}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                <div class="input-group">
+                                                    <label for="email-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.email') }}</label>
+                                                    <input type="text" id="email-${data.id}" name="email" class="form-control" value="${data.email || ''}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 form-group">
+                                                <div class="input-group">
+                                                    <label for="phone-${data.id}" class="input-group small mb-0">{{ __('cruds.program.donor.ph') }}</label>
+                                                    <input type="text" id="phone-${data.id}" name="phone" class="form-control" value="${data.phone || ''}" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 form-group">
+                                                <div class="input-group">
+                                                    <label for="nilaidonasi" class="input-group small mb-0">{{ __('cruds.program.donor.val') }}</label>
+                                                    <input type="text" id="nilaidonasi-${data.id}" name="nilaidonasi[]" class="form-control currency" value="${data.nilaidonasi || 0}">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi btn-flat" data-target="${containerId}"><i class="bi bi-trash"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>`
                                     );
 
                                     var nilaidonasiElement = `#nilaidonasi-${data.id}`;
                                     if (!AutoNumeric.getAutoNumericElement(
                                             nilaidonasiElement)) {
-                                        console.log(
-                                            `Initializing AutoNumeric for ${nilaidonasiElement} with value: ${data.nilaidonasi}`
-                                        );
+                                        console.log(`
+                                        Initializing AutoNumeric for ${nilaidonasiElement}
+                                        with value: ${data.nilaidonasi}`);
                                         new AutoNumeric(nilaidonasiElement, {
                                             digitGroupSeparator: '.',
                                             decimalCharacter: ',',
@@ -121,8 +119,8 @@
                                         });
 
                                         AutoNumeric.getAutoNumericElement(
-                                            nilaidonasiElement).set(data
-                                            .nilaidonasi);
+                                            nilaidonasiElement
+                                        ).set(data.nilaidonasi);
                                     }
                                 } else {
                                     console.error('Invalid data format', data);
@@ -135,9 +133,6 @@
                     }
                 });
             });
-
-
-
             $(document).on('click', '.remove-pendonor', function() {
                 let targetId = $(this).data('target');
                 $('#' + targetId).remove();
