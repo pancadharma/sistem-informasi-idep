@@ -68,7 +68,6 @@ class ProgramController extends Controller
     public function store(StoreProgramRequest $request, Program $program)
     {
         DB::beginTransaction();
-
         try {
             // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
             $data = $request->validated();
@@ -114,19 +113,25 @@ class ProgramController extends Controller
 
             // save report schedule 
             // Ambil input array
-            $tanggalArray = $request->input('tanggallaporan');
-            $keteranganArray = $request->input('keteranganlaporan');
-            // Iterasi setiap input tanggal dan keterangan
+            $tanggalArray = $request->input('tanggallaporan', []);
+            $keteranganArray = $request->input('keteranganlaporan', []);
+
+            $tanggalketerangan = [];
             foreach ($tanggalArray as $index => $tanggal) {
-                // Simpan data ke tabel trprogramreportschedule dengan foreign key program_id
-                $program->trProgramReportSchedule()->create([
-                    'tanggal'    => $tanggal,
-                    'keterangan' => $keteranganArray[$index] ?? null,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                if (isset($keteranganArray[$index])){
+                    $tanggalketerangan[] = [
+                        'tanggal'       => $tanggal,
+                        'keterangan'    => $keteranganArray[$index]
+                    ];
+                }else {
+                    throw new Exception("Missing value for $keteranganArray at index $index");
+                }
+            }
+            foreach($tanggalketerangan as $newtglket){
+                $program->trProgramReportSchedule()->attach($newtglket['tanggal'], ['keterangan' => $newtglket['keterangan']]);
             }
 
+            //save pendonor & donation value
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 
