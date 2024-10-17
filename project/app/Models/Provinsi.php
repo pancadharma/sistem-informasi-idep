@@ -63,4 +63,9 @@ class Provinsi extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+    // digunakan untuk relasi many to many dengan model program
+    public function program()
+    {
+        return $this->belongsToMany(Program::class, 'trprogramlokasi', 'provinsi_id', 'program_id');
+    }
 }
