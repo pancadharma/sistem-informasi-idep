@@ -128,7 +128,10 @@ class ProgramController extends Controller
                 }
             }
             foreach($tanggalketerangan as $newtglket){
-                $program->trProgramReportSchedule()->attach($newtglket['tanggal'], ['keterangan' => $newtglket['keterangan']]);
+                $program->jadwalreport()->create([
+                    'tanggal' => $newtglket['tanggal'],
+                    'keterangan' => $newtglket['keterangan']
+                ]);
             }
 
             //save pendonor & donation value

@@ -239,10 +239,10 @@
             });
 
             // Log the FormData entries for debugging
-            console.log("FormData entries after unmasking:");
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
+            // console.log("FormData entries after unmasking:");
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
 
             $.ajax({
                 url: "{{ route('program.store') }}",

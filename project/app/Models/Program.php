@@ -78,7 +78,7 @@ class Program extends Model implements HasMedia
         return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id');
     }
 
-    public function trProgramReportSchedule()
+    public function jadwalreport()
     {
         return $this->hasMany(Program_Report_Schedule::class, 'program_id');
     }
