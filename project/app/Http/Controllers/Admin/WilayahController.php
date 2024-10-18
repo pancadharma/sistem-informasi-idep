@@ -13,64 +13,78 @@ use App\Http\Controllers\Controller;
 class WilayahController extends Controller
 {
 
-    function getProvinsi(){
+    function getProvinsi()
+    {
         // $provinsi = Provinsi::pluck('nama', 'id')->prepend(trans('global.selectProv'), '');
         $provinsi = Provinsi::get(['id', 'kode', 'nama'])
-        ->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'kode' => $item->kode,
-                'text' => "{$item->kode} - {$item->nama}",
-            ];
-        });
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
         return response()->json($provinsi);
     }
-    function getKabupaten(Request $request){
+    function getKabupaten(Request $request)
+    {
         $kabupaten = Kabupaten::where('provinsi_id', $request->id)
-        ->get(['id', 'kode', 'nama'])
-        ->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'kode' => $item->kode,
-                'text' => "{$item->kode} - {$item->nama}",
-            ];
-        });
+            ->get(['id', 'kode', 'nama'])
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
         return response()->json($kabupaten);
     }
-    function getKecamatan(Request $request){
+    function getKecamatan(Request $request)
+    {
         $kecamatan = Kecamatan::where('kabupaten_id', $request->id)
-        ->get(['id', 'kode', 'nama'])
-        ->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'kode' => $item->kode,
-                'text' => "{$item->kode} - {$item->nama}",
-            ];
-        });
+            ->get(['id', 'kode', 'nama'])
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
         return response()->json($kecamatan);
     }
-    function getDesa(Request $request){
+    function getDesa(Request $request)
+    {
         $desa = Kelurahan::where('kecamatan_id', $request->id)
-        ->get(['id', 'kode', 'nama'])
-        ->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'kode' => $item->kode,
-                'text' => "{$item->kode} - {$item->nama}",
-            ];
-        });
+            ->get(['id', 'kode', 'nama'])
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
         return response()->json($desa);
     }
-    function getDusun(Request $request){
+    function getDusun(Request $request)
+    {
         $dusun = Dusun::where('desa_id', $request->id)
-        ->get(['id', 'kode', 'nama'])
-        ->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'kode' => $item->kode,
-                'text' => "{$item->kode} - {$item->nama}",
-            ];
-        });
+            ->get(['id', 'kode', 'nama'])
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
         return response()->json($dusun);
+    }
+
+
+    public function getProgramLokasi(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $provinsi = Provinsi::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($provinsi);
     }
 }

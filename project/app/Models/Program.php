@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -20,6 +21,8 @@ class Program extends Model implements HasMedia
     protected $dates = [
         'created_at',
         'updated_at',
+        'tanggalmulai',
+        'tanggalselesai'
     ];
 
     protected $fillable = [
@@ -42,17 +45,14 @@ class Program extends Model implements HasMedia
         'updated_at',
     ];
 
-    protected $date = [
-        'created_at',
-        'updated_at',
-    ];
 
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
     public function targetReinstra()
@@ -66,6 +66,17 @@ class Program extends Model implements HasMedia
     public function kaitanSDG()
     {
         return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
+    }
+    // Program Lokasi Relation
+    public function lokasi()
+    {
+        return $this->belongsToMany(Provinsi::class, 'trprogramlokasi', 'program_id', 'provinsi_id');
+    }
+
+    public function pendonor()
+    {
+        return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id')
+            ->withPivot('nilaidonasi');
     }
 
     public function getImageAttribute()
@@ -90,5 +101,32 @@ class Program extends Model implements HasMedia
     public function getFilePendukungAttribute()
     {
         return $this->getMedia('file_pendukung_program');
+    }
+
+    public const STATUS_SELECT = [
+        'draft'    => 'Draft',
+        'running'  => 'Running',
+        'submit'   => 'Submit',
+        'complete' => 'Complete',
+    ];
+
+    public function getTglMulaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglMulaiAttribute($value)
+    {
+        $this->attributes['tanggalmulai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getTglSelesaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglSelesaiAttribute($value)
+    {
+        $this->attributes['tanggalselesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 }

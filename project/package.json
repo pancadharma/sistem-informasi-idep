@@ -16,6 +16,7 @@
     "dependencies": {
         "bootstrap-fileinput": "^5.5.4",
         "bootstrap-icons": "^1.11.3",
+        "datetimepicker": "^0.1.39",
         "tabulator-tables": "^6.2.1"
     }
 }
