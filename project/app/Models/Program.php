@@ -79,6 +79,11 @@ class Program extends Model implements HasMedia
             ->withPivot('nilaidonasi');
     }
 
+    public function jadwalreport()
+    {
+        return $this->hasMany(Program_Report_Schedule::class, 'program_id');
+    }
+
     public function getImageAttribute()
     {
         $file = $this->getMedia('image')->last();

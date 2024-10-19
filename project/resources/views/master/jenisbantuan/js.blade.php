@@ -216,8 +216,8 @@ $(document).ready(function() {
                         $('#editjenisbantuanForm').trigger('reset');
                         $('#jenisbantuan').DataTable().ajax.reload();
                     } else if(response.status === "error" || response.status === "warning"){
-                        console.log(response);
-                        console.log(response.status);
+                        // console.log(response);
+                        // console.log(response.status);
                         Swal.fire({
                             title: 'Unable to Update Data !',
                             html: response.message,

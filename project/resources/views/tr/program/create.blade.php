@@ -337,4 +337,6 @@
 @include('tr.program.js.create')
 @include('tr.program.js.detail-create.donor')
 @include('tr.program.js.detail-create.lokasi')
+@include('tr.program.js.detail-create.reportschedule')
+
 @endpush
