@@ -86,7 +86,7 @@ class Program extends Model implements HasMedia
 
     public function getImageAttribute()
     {
-        $file = $this->getMedia('image')->last();
+        $file = $this->getMedia('file_pendukung_program')->last();
         if ($file) {
             $file->url       = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');
@@ -99,8 +99,8 @@ class Program extends Model implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->fit(Fit::Crop, 50, 50);
-        $this->addMediaConversion('preview')->fit(Fit::Crop, 120, 120);
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     }
 
     public function getFilePendukungAttribute()
