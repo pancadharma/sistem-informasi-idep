@@ -418,4 +418,5 @@
 @include('tr.program.js.edit')
 @include('tr.program.js.detail-edit.donor')
 @include('tr.program.js.detail-edit.lokasi')
+@include('tr.program.js.detail-edit.staff')
 @endpush
