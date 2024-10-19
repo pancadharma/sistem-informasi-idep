@@ -42,6 +42,12 @@ return [
             'url' => '/uploads/program',
             'visibility' => 'public',
         ],
+        'userprofile' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/userprofile'),
+            'url' => '/uploads/userprofile',
+            'visibility' => 'public',
+        ],
 
         'public' => [
             'driver' => 'local',

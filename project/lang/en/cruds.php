@@ -211,6 +211,18 @@ return [
             'taken'           => 'has been taken.',
             'email_unique'    => 'Email has already been taken.',
             'password'        => 'Password must be at least 8 characters.',
+            'username_admin'  => 'Only administrator that allowed to change username',
+        ],
+        'profile'             => [
+            'profile'         => 'Profile',
+            'label'           => 'User Profile',
+            'update'          => 'Update Profile',
+            'nama'            => 'Name',
+            'bio'             => 'Bio',
+            'password'        => 'Password',
+            'change_password' => 'Change Password',
+            'repeat_password' => 'Repeat Password',
+            'images'          => 'Change Images',
         ],
     ],
     'auditLog' => [

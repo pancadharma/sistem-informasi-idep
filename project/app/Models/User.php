@@ -122,7 +122,7 @@ class User extends Authenticatable implements HasMedia
         $this
             ->addMediaCollection('userprofile')
             ->singleFile()
-            ->acceptsMimeTypes(['image/jpeg'])
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif'])
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
                 $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
@@ -132,10 +132,12 @@ class User extends Authenticatable implements HasMedia
     public function adminlte_image()
     {
         $media = $this->getFirstMedia('userprofile');
-        if ($media) {
-            return $media->getUrl('thumb');
-        }
-        return '/vendor/adminlte/dist/img/idep.png';
+        // if ($media) {
+        //     return $media->getUrl('thumb');
+        // }
+        // return '/vendor/adminlte/dist/img/idep.png';
+        return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/idep.png';
+
     }
 
     public function adminlte_desc()
@@ -143,7 +145,7 @@ class User extends Authenticatable implements HasMedia
         if ($this->description) {
             return $this->description;
         }
-        return 'IDEP FOUNDATION USERS - UPDATE YOUR PROFILE';
+        return " Update in Profile Bio ";
     }
 
 

@@ -208,6 +208,19 @@ return [
             'taken'           => 'telah diambil.',
             'email_unique'    => 'Email sudah diambil.',
             'password'        => 'Kata sandi harus terdiri dari setidaknya 8 karakter.',
+            'username_admin'  => 'Hanya Administrator yang bisa memperbaharui username',
+        ],
+        'profile'             => [
+            'profile'         => 'Profile',
+            'label'           => 'Profile User',
+            'update'          => 'Perbaharui Profile',
+            'nama'            => 'Nama',
+            'bio'             => 'Bio',
+            'password'        => 'Password',
+            'change_password' => 'Ganti Password',
+            'repeat_password' => 'Ulangi Password',
+            'images'          => 'Ganti Photo',
+
         ],
     ],
     'auditLog' => [

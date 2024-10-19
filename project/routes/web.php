@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\TrProgramController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\UserProfileController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -77,8 +78,16 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UsersController::class);
 
     // Route to handle both username and id as the profile identifier
-    Route::get('profile/{identifier}', [UsersController::class, 'showProfile'])->name('profile.show');
-    Route::get('users/profile', [UsersController::class, 'userProfile'])->name('user.profile');
+    Route::get('profile/{identifier}', [UserProfileController::class, 'showProfile'])->name('profile.show');
+    Route::get('profile', function () {
+        if (Auth::check()) {
+            $identifier = Auth::user()->username ?? Auth::user()->id;
+            return redirect()->route('profile.show', ['identifier' => $identifier])->with('status', session('status'));
+        }
+        return redirect()->route('home');
+    })->name('user.profile');
+    Route::resource('profiles', UserProfileController::class, ['except' => ['create', 'edit', 'store', 'destroy']]);
+
 
     //Logs
     Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);

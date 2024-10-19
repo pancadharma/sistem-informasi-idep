@@ -111,7 +111,7 @@ class ProgramController extends Controller
             // save program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
 
-            // save report schedule 
+            // save report schedule
             // Ambil input array
             $tanggalArray = $request->input('tanggallaporan', []);
             $keteranganArray = $request->input('keteranganlaporan', []);
