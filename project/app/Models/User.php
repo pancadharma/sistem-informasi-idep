@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Carbon\Carbon;
 use DateTimeInterface;
 use App\Traits\Auditable;
@@ -15,15 +15,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Image\Enums\Fit;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
+    use Auditable, HasRoles, HasApiTokens, Notifiable, SoftDeletes, InteractsWithMedia;
 
-    use Auditable, HasRoles, HasApiTokens, Notifiable, SoftDeletes;
     protected $table = 'users';
 
     protected $dates = [
@@ -70,8 +70,8 @@ class User extends Authenticatable
 
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->fit(Fit::Crop, 50, 50);
-        $this->addMediaConversion('preview')->fit(Fit::Crop, 120, 120);
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     }
 
     public function getEmailVerifiedAtAttribute($value)
@@ -107,7 +107,7 @@ class User extends Authenticatable
 
     public function getImageAttribute()
     {
-        // $file = $this->getMedia('image')->last();
+        // $file = $this->getMedia('userprofile')->last();
         // if ($file) {
         //     $file->url       = $file->getUrl();
         //     $file->thumbnail = $file->getUrl('thumb');
@@ -117,18 +117,40 @@ class User extends Authenticatable
         // return $file;
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('userprofile')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg'])
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
+                $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
+            });
+    }
+
     public function adminlte_image()
     {
+        $media = $this->getFirstMedia('userprofile');
+        if ($media) {
+            return $media->getUrl('thumb');
+        }
         return '/vendor/adminlte/dist/img/idep.png';
     }
 
     public function adminlte_desc()
     {
-        return 'Default Description of User Need to Replace';
+        if ($this->description) {
+            return $this->description;
+        }
+        return 'IDEP FOUNDATION USERS - UPDATE YOUR PROFILE';
     }
+
 
     public function adminlte_profile_url()
     {
-        return 'profile/username';
+        $identifier = $this->username ?? $this->id; // Get username or id
+        return route('profile.show', ['identifier' => $identifier]); // Generate route
     }
+
 }

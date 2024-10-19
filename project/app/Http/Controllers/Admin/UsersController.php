@@ -366,4 +366,15 @@ class UsersController extends Controller
         }
         return response()->json("true");
     }
+
+    public function showProfile($identifier)
+    {
+        $user = User::where('username', $identifier)->first();
+        if (!$user) {
+            $user = User::findOrFail($identifier);
+        }
+
+        return view('profile.show', compact('user'));
+    }
+
 }

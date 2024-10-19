@@ -76,6 +76,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('users-api', [UsersController::class, 'api'])->name('users.api');
     Route::resource('users', UsersController::class);
 
+    // Route to handle both username and id as the profile identifier
+    Route::get('profile/{identifier}', [UsersController::class, 'showProfile'])->name('profile.show');
+    Route::get('users/profile', [UsersController::class, 'userProfile'])->name('user.profile');
+
     //Logs
     Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
