@@ -84,7 +84,7 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="password">
-                        <form method="POST" action="" class="form-horizontal" id="updatePassword">
+                        <form method="POST" class="form-horizontal" id="updatePassword">
                             @csrf
                             @method('PUT')
                             <div class="form-group row">
@@ -101,7 +101,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="offset-sm-2 col-sm-10">
-                                    <button class="btn btn-primary btn-block" type="submit"><i class="bi bi-lock"></i> {{ __('cruds.user.profile.change_password') }}</button>
+                                    <button id="updatePasswordBtn" class="btn btn-primary btn-block" type="submit"><i class="bi bi-lock"></i> {{ __('cruds.user.profile.change_password') }}</button>
                                 </div>
                             </div>
                         </form>
