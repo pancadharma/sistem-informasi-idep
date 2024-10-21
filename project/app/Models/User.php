@@ -139,6 +139,12 @@ class User extends Authenticatable implements HasMedia
         return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/idep.png';
 
     }
+    public function full_profile()
+    {
+        $media = $this->getFirstMedia('userprofile');
+        return $media ? $media->getUrl() : '/vendor/adminlte/dist/img/idep.png';
+
+    }
 
     public function adminlte_desc()
     {

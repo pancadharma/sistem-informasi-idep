@@ -14,11 +14,12 @@
 
     $('#updateProfile').on('submit', function(e) {
         e.preventDefault();
-        $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+
         var formData = new FormData(this);
         formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
         formData.append('_method', 'PUT');
-
+        // $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+        $('#updateProfileBtn').attr('disabled', 'disabled');
         $.ajax({
             url: "{{ route('profiles.update', ':id') }}".replace(':id', userID),
             method: 'POST',
@@ -29,15 +30,17 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function() {
+                // $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+                // $('#updateProfileBtn').attr('disabled', 'disabled');
                 Toast.fire({
                     icon: "info",
                     title: "Processing...",
-                    timer: 2000,
+                    timer: 1000,
                     timerProgressBar: true,
                 });
             },
             success: function(data) {
-                $('#updateProfileBtn').removeAttr('disabled');
+                // $('#updateProfileBtn').removeAttr('disabled');
                 setTimeout(() => {
                     if (data.success === true) {
                         Toast.fire({
@@ -59,7 +62,7 @@
                             confirmButtonText: 'OK'
                         });
                     }
-                }, 500);
+                }, 1000);
 
             },
             error: function(xhr, jqXHR, textStatus, errorThrown) {
@@ -76,7 +79,9 @@
                 });
             },
             complete: function() {
-                $('#updateProfileBtn').removeAttr('disabled');
+                setTimeout(function() {
+                    $('#updateProfileBtn').removeAttr('disabled');
+                }, 2000)
             }
         });
     });
@@ -86,12 +91,11 @@
         e.preventDefault();
         $('#updatePasswordBtn').attr('disabled', 'disabled');
         if (!$(this).valid()) {
+            $('#updatePasswordBtn').removeAttr('disabled');
             return;
         }
         let url = "{{ route('update.password') }}";
         let formData = $(this).serialize();
-
-        alert(formData);
         $.ajax({
             url: url,
             method: 'PUT',
@@ -105,7 +109,7 @@
                 });
             },
             success: function(data) {
-                $('#updatePasswordBtn').removeAttr('disabled');
+                // $('#updatePasswordBtn').removeAttr('disabled');
                 setTimeout(() => {
                     if (data.success === true) {
                         Toast.fire({
@@ -125,7 +129,7 @@
                             confirmButtonText: 'OK'
                         });
                     }
-                }, 500);
+                }, 1000);
             },
             error: function(xhr, jqXHR, textStatus, errorThrown) {
                 $('#updatePasswordBtn').removeAttr('disabled');
@@ -141,7 +145,9 @@
                 });
             },
             complete: function() {
-                $('#updatePasswordBtn').removeAttr('disabled');
+                setTimeout(function() {
+                    $('#updatePasswordBtn').removeAttr('disabled');
+                }, 2000)
             }
         });
     });
