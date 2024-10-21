@@ -24,6 +24,12 @@ class UserProfileController extends Controller
     }
     public function show($identifier)
     {
+        $user = auth()->user();
+        // if (auth()->check() && auth()->user()->id ?? auth()->user()->username == $identifier)
+        if ($user->id != $identifier && $user->username != $identifier) {
+            // Redirect to their own profile if attempting to access someone else's data
+            return redirect()->route('profile.show', ['username' => $user->username]);
+        }
         $user = User::where('username', $identifier)->first();
         if (!$user) {
             $user = User::findOrFail($identifier);
@@ -40,12 +46,28 @@ class UserProfileController extends Controller
             $user->nama = $request->input('nama');
             $user->email = $request->input('email');
             $user->description = $request->input('description');
+            // if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
+            //     $filename = str_replace(' ', '_', $user->username) . '.' . $request->file('profile_picture')->getClientOriginalExtension();
+            //     $user->clearMediaCollection('userprofile');
+            //     $user->addMediaFromRequest('profile_picture')
+            //         ->usingFileName($filename)
+            //         ->toMediaCollection('userprofile', 'userprofile');
+            // }
+
+            // if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
+            //     $filename = str_replace(' ', '_', $user->username) . '.' . $request->file('profile_picture')->getClientOriginalExtension();
+            //     $user->clearMediaCollection($user->username);
+            //     $user->addMedia($request->file('profile_picture'))
+            //         ->usingFileName($filename)
+            //         ->toMediaCollection($user->username, 'userprofile');
+            // }
+
             if ($request->hasFile('profile_picture') && $request->file('profile_picture')->isValid()) {
                 $filename = str_replace(' ', '_', $user->username) . '.' . $request->file('profile_picture')->getClientOriginalExtension();
-                $user->clearMediaCollection('userprofile');
+                $user->clearMediaCollection($user->username);
                 $user->addMediaFromRequest('profile_picture')
-                    ->usingFileName($filename)
-                    ->toMediaCollection('userprofile', 'userprofile');
+                ->usingFileName($filename)
+                ->toMediaCollection($user->username, 'userprofile');
             }
             $user->save();
 
