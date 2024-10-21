@@ -1,9 +1,10 @@
 <script>
-    var userID = {{ $user-> id }};
+    var userID = {{ $user->id }};
+
     function formatErrorMessages(errors) {
         let message = '<ul>';
         for (const field in errors) {
-            errors[field].forEach(function (error) {
+            errors[field].forEach(function(error) {
                 message += `<li>${error}</li>`;
             });
         }
@@ -19,13 +20,13 @@
         formData.append('_method', 'PUT');
 
         $.ajax({
-            url: "{{ route('profiles.update', ':id' ) }}".replace(':id', userID),
+            url: "{{ route('profiles.update', ':id') }}".replace(':id', userID),
             method: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             headers: {
-                'X-CSRF-TOKEN':  $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function() {
                 Toast.fire({
@@ -46,9 +47,10 @@
                             timer: 1500,
                             timerProgressBar: true,
                         });
-                        $('.profile-user-img').attr('src', data.user.adminlte_image + '?t=' + new Date().getTime());
+                        $('.profile-user-img').attr('src', data.user.adminlte_image +
+                            '?t=' + new Date().getTime());
                         $('#profile_picture').val('');
-                    }else {
+                    } else {
                         var errorMessage = formatErrorMessages(data.errors);
                         Swal.fire({
                             icon: 'error',
@@ -73,13 +75,13 @@
                     confirmButtonText: 'Okay'
                 });
             },
-            complete: function () {
+            complete: function() {
                 $('#updateProfileBtn').removeAttr('disabled');
             }
         });
     });
 
-    $('#updatePassword').on('submit',function (e) {
+    $('#updatePassword').on('submit', function(e) {
 
         e.preventDefault();
         $('#updatePasswordBtn').attr('disabled', 'disabled');
@@ -94,7 +96,7 @@
             url: url,
             method: 'PUT',
             data: formData,
-            beforeSend: function () {
+            beforeSend: function() {
                 Toast.fire({
                     icon: "info",
                     title: "Processing...",
@@ -114,7 +116,7 @@
                             timerProgressBar: true,
                         });
                         $('#updatePassword').trigger('reset')
-                    }else {
+                    } else {
                         var errorMessage = formatErrorMessages(data.errors);
                         Swal.fire({
                             icon: 'error',
@@ -138,7 +140,7 @@
                     confirmButtonText: 'OK'
                 });
             },
-            complete: function () {
+            complete: function() {
                 $('#updatePasswordBtn').removeAttr('disabled');
             }
         });

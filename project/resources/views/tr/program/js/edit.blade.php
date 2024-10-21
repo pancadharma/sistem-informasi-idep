@@ -1,4 +1,14 @@
 <script>
+    function formatErrorMessages(errors) {
+        let message = '<ul>';
+        for (const field in errors) {
+            errors[field].forEach(function(error) {
+                message += `<li>${error}</li>`;
+            });
+        }
+        message += '</ul>';
+        return message;
+    }
     new AutoNumeric('#totalnilai', {
         digitGroupSeparator: '.',
         decimalCharacter: ',',
@@ -53,7 +63,7 @@
             allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
-            maxFileSize: 10000,
+            maxFileSize: 4096,
             maxFilePreviewSize: 2048,
             overwriteInitial: true,
             append: false,
@@ -104,10 +114,12 @@
             fileIndex++;
             var uniqueId = 'file-' + fileIndex;
             fileCaptions[uniqueId] = file.name;
-            $('#captions-container').append(
-                `<div class="form-group" id="caption-group-${uniqueId}"><label for="caption-${uniqueId}">Caption for ${file.name}</label>
-                        <input type="text" class="form-control" name="captions[]" id="caption-${uniqueId}">
-                    </div>`);
+            // $('#captions-container').append(
+            //     `<div class="form-group" id="caption-group-${uniqueId}">
+            //         <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+            //         <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
+            //     </div>`
+            // );
             // $(`#${previewId}`).attr('data-unique-id', uniqueId);
         }).on('fileremoved', function(event, id) {
             var uniqueId = $(`#${id}`).attr('data-unique-id');
@@ -360,7 +372,6 @@
                                 timer: 1500,
                                 timerProgressBar: true,
                             });
-
                             $('#editProgram').trigger('reset');
                             $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
                                 '').trigger('change');
@@ -372,14 +383,21 @@
                         }
                     }, 500);
                 },
-                error: function(xhr, status, error) {
-                    $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+                error: function(xhr, jqXHR, textStatus, errorThrown) {
+                    $(this).find('button[type="submit"]').removeAttr('disabled');
+                    var errorMessage = 'An unexpected error occurred.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON
+                            .message; // Get the message from the response
+                    }
                     Swal.fire({
                         icon: 'error',
-                        title: `Error: ${xhr.status}`,
-                        text: xhr.statusText
+                        title: 'Error!',
+                        text: errorMessage,
+                        confirmButtonText: 'Okay'
                     });
-                }
+                },
+
             });
         });
     });
