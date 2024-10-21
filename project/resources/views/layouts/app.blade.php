@@ -48,11 +48,29 @@
 @push('js')
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
-<script src="https://cdn.lrkt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+<!-- Script to LOG User Activity (Advance Mode) -->
+<!-- <script src="https://cdn.lrkt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
 <script>
 window.LogRocket && window.LogRocket.init('lcft8s/idep');
-</script>
+LogRocket.identify('{{ Auth::user()->id }}', {
+    name: '{{ Auth::user()->nama ?? "-" }}',
+    email: '{{ Auth::user()->username ?? "-" }}',
+    email: '{{ Auth::user()->email ?? "-" }}',
+    // Add your own custom user variables here, ie:
+    jabatan: '{{ Auth::user()->jabatan->nama ?? "-" }}'
+});
+</script> -->
 <script>
+function ErrorMessagesFormat(errors) {
+    let message = '<ul>';
+    for (const field in errors) {
+        errors[field].forEach(function(error) {
+            message += `<li>${error}</li>`;
+        });
+    }
+    message += '</ul>';
+    return message;
+}
 $(document).ready(function() {
     window._token = $('meta[name="csrf-token"]').attr('content')
 
