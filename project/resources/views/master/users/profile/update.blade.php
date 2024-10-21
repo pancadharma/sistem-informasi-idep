@@ -14,7 +14,7 @@
                         alt="{{ $user->nama ?? '' }} profile picture">
                 </div> -->
                 <div class="text-center">
-                    <a href="{{ $user->full_profile() }}?t={{ time() }}" data-lightbox="profile"
+                    <a href="{{ $user->full_profile() }}?t={{ time() }}" data-lightbox="profile" target="_blank"
                         data-title="{{ $user->nama ?? '' }} Profile Picture">
                         <img id="profilePic" class="profile-pic img-fluid img-circle"
                             src="{{ $user->adminlte_image() }}?t={{ time() }}"
@@ -149,7 +149,7 @@
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 <!-- Lightbox2 CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet"> -->
 
 
 <style>
@@ -170,7 +170,7 @@
 
 @push('js')
 <!-- Lightbox2 JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script> -->
 
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)

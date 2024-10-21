@@ -50,8 +50,11 @@
                             timer: 1500,
                             timerProgressBar: true,
                         });
-                        $('.profile-user-img').attr('src', data.user.adminlte_image +
+                        $('.profile-user-img, .profile-pic, .img-circle').attr('src', data
+                            .user
+                            .adminlte_image +
                             '?t=' + new Date().getTime());
+                        $('.user-desc').text(data.user.description);
                         $('#profile_picture').val('');
                     } else {
                         var errorMessage = formatErrorMessages(data.errors);

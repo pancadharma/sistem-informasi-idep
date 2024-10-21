@@ -62,7 +62,7 @@ class UsersController extends Controller
                 'message' => 'Database error: ' . $e->getMessage(),
                 'status'    => Response::HTTP_UNPROCESSABLE_ENTITY,
             ], 500);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()

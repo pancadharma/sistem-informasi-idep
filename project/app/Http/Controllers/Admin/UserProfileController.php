@@ -56,6 +56,9 @@ class UserProfileController extends Controller
                 'message'   => 'Profile updated successfully',
                 'data'      => $user,
                 'user'      => [
+                    'id' => $user->id,
+                    'name' => $user->nama,
+                    'description' => $user->description,
                     'adminlte_image' => $user->adminlte_image(),
                 ]
 
