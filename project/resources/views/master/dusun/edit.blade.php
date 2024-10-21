@@ -1,4 +1,4 @@
-<x-adminlte-modal id="editDesaModal" title=" {{ trans('global.update') .' '.trans('cruds.desa.title')}}" size="lg" theme="info" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
+<x-adminlte-modal id="editDesaModal" title=" {{ trans('global.update') .' '.trans('cruds.dusun.title')}}" size="lg" theme="success" icon="fas fa-pencil-alt" v-centered static-backdrop scrollable>
     <div style="height:40%;">
         <div class="card-body">
             <form id="EditDusunForm" action="#" @submit.prevent="handleSubmit" method="PUT" class="resettable-form" data-toggle="validator" autocomplete="off" novalidate>
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             
-                <button class="btn btn-info float-right btn-update-dusun" data-toggle="tooltip" data-placement="top" type="submit" title="{{ trans('global.update') }}"><i class="fas fa-save"></i> {{ trans('global.update') }}</button>
+                <button class="btn btn-success float-right btn-update-dusun" data-toggle="tooltip" data-placement="top" type="submit" title="{{ trans('global.update') }}"><i class="fas fa-save"></i> {{ trans('global.update') }}</button>
             </form>
         </div>
     </div>

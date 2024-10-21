@@ -18,7 +18,6 @@ class StoreProgramRequest extends FormRequest
         }
         // Check if the user has the 'role_edit' permission
         return Gate::allows('program_create');
-
     }
 
     /**
@@ -31,27 +30,38 @@ class StoreProgramRequest extends FormRequest
         return [
             'nama'                                  => ['string', 'max:200'],
             'user_id'                               => ['exists:users,id'],
-            'kode'                                  => ['string', 'max:50'],
-            'tanggalmulai'                          => ['date_format:Y-m-d'],
-            'tanggalselesai'                        => ['date_format:Y-m-d', 'after_or_equal:tanggalmulai'],
-            'totalnilai'                            => ['numeric'],
-            'ekspektasipenerimamanfaat'             => ['integer'],
-            'ekspektasipenerimamanfaatwoman'        => ['integer'],
-            'ekspektasipenerimamanfaatman'          => ['integer'],
-            'ekspektasipenerimamanfaatgirl'         => ['integer'],
-            'ekspektasipenerimamanfaatboy'          => ['integer'],
-            'ekspektasipenerimamanfaattidaklangsung'=> ['string', 'max:100'],
-            'deskripsiprojek'                       => ['string', 'max:500'],
-            'analisamasalah'                        => ['string', 'max:500'],
+            'kode'                                  => ['nullable', 'string', 'max:50'],
+            'tanggalmulai'                          => ['nullable', 'date_format:Y-m-d'],
+            'tanggalselesai'                        => ['nullable', 'date_format:Y-m-d', 'after_or_equal:tanggalmulai'],
+            'totalnilai'                            => ['nullable', 'numeric'],
+            'ekspektasipenerimamanfaat'             => ['nullable', 'integer'],
+            'ekspektasipenerimamanfaatwoman'        => ['nullable', 'integer'],
+            'ekspektasipenerimamanfaatman'          => ['nullable', 'integer'],
+            'ekspektasipenerimamanfaatgirl'         => ['nullable', 'integer'],
+            'ekspektasipenerimamanfaatboy'          => ['nullable', 'integer'],
+            'ekspektasipenerimamanfaattidaklangsung' => ['nullable', 'integer'],
+            'deskripsiprojek'                       => ['nullable', 'string', 'max:500'],
+            'analisamasalah'                        => ['nullable', 'string', 'max:500'],
             'targetreinstra'                        => ['array'],
-            'targetreinstra.*'                      => ['integer'],
+            'targetreinstra.*'                      => ['nullable', 'integer', 'exists:mtargetreinstra,id'],
             'kelompokmarjinal'                      => ['array'],
-            'kelompokmarjinal.*'                    => ['integer'],
+            'kelompokmarjinal.*'                    => ['nullable', 'integer', 'exists:mkelompokmarjinal,id'],
             'kaitansdg'                             => ['array'],
-            'kaitansdg.*'                           => ['exists:mkaitansdg,id'],
+            'kaitansdg.*'                           => ['nullable', 'exists:mkaitansdg,id'],
             'file_pendukung'                        => ['array'],
-            'file_pendukung.*'                      => ['file', 'mimes:jpg,png,pdf,docx', 'max:2048'],
+            'file_pendukung.*'                      => ['nullable', 'file', 'mimes:jpg,png,pdf,docx', 'max:4096'],
             'status'                                => ['string', 'max:50'],
+            'keterangan.*'                          => ['nullable', 'string', 'max:255'],
+            'pendonor_id'                           => ['array'],
+            'pendonor_id.*'                         => ['nullable', 'integer', 'exists:mpendonor,id'],
+            'nilaidonasi'                           => ['array'],
+            'nilaidonasi.*'                         => ['nullable', 'numeric'],
+            'lokasi'                                => ['array'],
+            'lokasi.*'                              => ['nullable', 'integer', 'exists:provinsi,id'],
+            'tanggallaporan'                        => ['array'],
+            'tanggallaporan.*'                      => ['nullable', 'date_format:Y-m-d'],
+            'keteranganlaporan'                     => ['array'],
+            'keteranganlaporan.*'                   => ['nullable', 'string', 'max:255'],
         ];
     }
 }

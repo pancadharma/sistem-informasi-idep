@@ -105,7 +105,7 @@
 <script>
 
 // Data Table
-$(document).ready(function() {
+    $(document).ready(function() {
         $('#program-list').DataTable({
             responsive: true,
             // scrollX: true,
@@ -220,5 +220,29 @@ $(document).ready(function() {
         //         }
         //     });
         // });
+
+    $('#program-list tbody').on('click','.edit-program-btn, .view-program-btn', function(e){
+        e.preventDefault();
+        var action = $(this).data('action');
+        var programID = $(this).data('program-id');
+        var url_edit = '{{ route('program.edit', ':id') }}'.replace(':id', programID);
+        var url_view = '{{ route('program.show', ':id') }}'.replace(':id', programID);
+
+        if(action === "edit"){
+            // alert(url_edit)
+            console.log(url_edit)
+
+            setTimeout(function() {
+                window.location.href = url_edit;
+            }, 100);
+        }
+
+        if(action === "view"){
+            // alert("view page : " + url_view);
+            console.log(url_view)
+        }
+
+    });
+
     });
 </script>

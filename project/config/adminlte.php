@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'title' => 'IDEP Foundation',
     'title_prefix' => '- ',
@@ -118,11 +117,13 @@ return [
         //     'class' => 'img-circle elevation-2',
         //     // 'active' => ['home', 'content', 'content*', 'regex:@^content/[0-9]+$@']
         // ],
+
         [
-            'text' => 'User Profile',
-            'url' => 'user/profile',
-            'icon' => 'fas fa-fw fa-user',
-            'icon_color' => 'primary',
+            'text'          => 'User Profile',
+            // 'route'          => ['profile.show', ['identifier' => '']],
+            'route'          => 'user.profile',
+            'icon'          => 'fas fa-fw fa-user',
+            'icon_color'    => 'primary',
         ],
         [
             'type' => 'navbar-search',
