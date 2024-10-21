@@ -50,11 +50,10 @@
                             timer: 1500,
                             timerProgressBar: true,
                         });
-                        $('.profile-user-img, .profile-pic, .img-circle').attr('src', data
-                            .user
-                            .adminlte_image +
-                            '?t=' + new Date().getTime());
+                        $('.profile-user-img, .profile-pic, .img-circle, .img-url').attr('src', data.user.adminlte_image +'?t=' + new Date().getTime());
+                        $('.img-url').attr('href', data.user.full_profile +'?t=' + new Date().getTime());
                         $('.user-desc').text(data.user.description);
+                        $('.profile-username').text(data.user.nama);
                         $('#profile_picture').val('');
                     } else {
                         var errorMessage = formatErrorMessages(data.errors);

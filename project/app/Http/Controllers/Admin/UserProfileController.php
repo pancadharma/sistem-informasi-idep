@@ -57,9 +57,10 @@ class UserProfileController extends Controller
                 'data'      => $user,
                 'user'      => [
                     'id' => $user->id,
-                    'name' => $user->nama,
+                    'nama' => $user->nama,
                     'description' => $user->description,
                     'adminlte_image' => $user->adminlte_image(),
+                    'full_profile' => $user->full_profile(),
                 ]
 
             ], 200);
