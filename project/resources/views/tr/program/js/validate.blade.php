@@ -1,12 +1,9 @@
+<script src="https://old.formvalidation.io/bundles/40aab700698a291c5ce712a44ec8bc34.js"></script>
 {{-- <script src="https://old.formvalidation.io/bundles/40aab700698a291c5ce712a44ec8bc34.js"></script> --}}
 
 @push('css')
-    {{-- https://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.2-dev/css/formValidation.min.css --}}
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.2-dev/css/formValidation.min.css"
-        rel="stylesheet" />
+    <link href="https://old.formvalidation.io/vendor/formvalidation/css/formValidation.min.css" rel="stylesheet" />
 @endpush
-<script src="https://cdnjs.cloudflare.com/ajax/libs/formvalidation/0.6.2-dev/js/formValidation.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/formvalidation/1.9.0/js/plugins/Tachyons.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#createProgram')
@@ -24,35 +21,42 @@
                     nama: {
                         validators: {
                             notEmpty: {
-                                message: 'The full name is required'
+                                message: 'Program Name is required'
                             }
                         }
                     },
                     kode: {
                         validators: {
                             notEmpty: {
-                                message: 'The company name is required'
+                                message: 'Program Code is required'
                             }
                         }
                     },
                     tanggalmulai: {
                         validators: {
                             notEmpty: {
-                                message: 'The address is required'
+                                message: 'Start date is required'
                             }
                         }
                     },
                     tanggalselesai: {
                         validators: {
                             notEmpty: {
-                                message: 'The address is required'
+                                message: 'Finish date is required'
                             }
                         }
                     },
-                    city: {
+                    totalnilai: {
                         validators: {
                             notEmpty: {
-                                message: 'The city is required'
+                                message: 'Total nilai program is required'
+                            }
+                        }
+                    },
+                    donor: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Total nilai program is required'
                             }
                         }
                     }
@@ -75,7 +79,7 @@
                         .find('.tab-pane')
                         .each(function(index, tab) {
                             var tabId = $(tab).attr('id'),
-                                $li = $('a[href="#' + tabId + '"][data-toggle="tab"]').parent();
+                                $li = $('a[href="#' + tabId + '"][data-toggle="pill"]').parent();
 
                             if (tabId === invalidTabId) {
                                 // activate the tab pane

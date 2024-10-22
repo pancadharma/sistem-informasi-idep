@@ -4,7 +4,7 @@
         <div class="form-group">
             <label for="deskripsi" class="control-label small mb-0">{{ __('cruds.program.outcome.desc') }}</label>
             <textarea type="textarea" id="deskripsi" name="deskripsi" class="form-control"
-                placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="500"></textarea>
+                placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000"></textarea>
         </div>
     </div>
     <div class="col-lg-3">
@@ -12,7 +12,7 @@
             <label for="indikator" class="control-label small mb-0">{{ __('cruds.program.outcome.indicator') }}</label>
             <textarea id="indikator" name="indikator" cols="30"
                 class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
-                placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="500" rows="1"></textarea>
+                placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="1000" rows="1"></textarea>
         </div>
     </div>
     <div class="col-lg-4">
@@ -20,7 +20,7 @@
             <label for="target" class="control-label small mb-0">{{ __('cruds.program.outcome.target') }}</label>
             <textarea id="target" name="target" cols="30"
                 class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
-                placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="500" rows="1"></textarea>
+                placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
         </div>
     </div>
 </div>
