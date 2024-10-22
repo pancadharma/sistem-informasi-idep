@@ -15,7 +15,7 @@
         </div>
     </div> --}}
     <form id="createProgram" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data" novalidate>
         @csrf
         @method('POST')
 
@@ -339,5 +339,5 @@
 @include('tr.program.js.detail-create.lokasi')
 @include('tr.program.js.detail-create.staff')
 @include('tr.program.js.detail-create.reportschedule')
-
+@include('tr.program.js.validate')
 @endpush
