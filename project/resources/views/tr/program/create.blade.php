@@ -339,5 +339,6 @@
 @include('tr.program.js.detail-create.lokasi')
 @include('tr.program.js.detail-create.staff')
 @include('tr.program.js.detail-create.reportschedule')
+@include('tr.program.js.detail-create.outcome')
 {{-- @include('tr.program.js.validate') --}}
 @endpush

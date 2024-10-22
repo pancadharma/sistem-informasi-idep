@@ -1,9 +1,7 @@
-<script src="https://old.formvalidation.io/bundles/40aab700698a291c5ce712a44ec8bc34.js"></script>
-{{-- <script src="https://old.formvalidation.io/bundles/40aab700698a291c5ce712a44ec8bc34.js"></script> --}}
-
 @push('css')
-    <link href="https://old.formvalidation.io/vendor/formvalidation/css/formValidation.min.css" rel="stylesheet" />
+    <link href="{{ asset('/vendor/formvalidation/validation.css') }}" rel="stylesheet" />
 @endpush
+<script src="{{ asset('/vendor/formvalidation/validation.js') }}"></script>
 <script>
     $(document).ready(function() {
         $('#createProgram')
