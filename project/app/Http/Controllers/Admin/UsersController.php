@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Database\QueryException;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\MassDestroyUserRequest;
@@ -61,7 +62,7 @@ class UsersController extends Controller
                 'message' => 'Database error: ' . $e->getMessage(),
                 'status'    => Response::HTTP_UNPROCESSABLE_ENTITY,
             ], 500);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -365,5 +366,15 @@ class UsersController extends Controller
             return response()->json(__('cruds.user.fields.email').' '.$request->email.' '.__('cruds.user.validation.taken'));
         }
         return response()->json("true");
+    }
+
+    public function password(UpdatePasswordRequest $request)
+    {
+        auth()->user()->update($request->validated());
+        return response()->json([
+            'success'   => true,
+            'status'    => 'success',
+            'message'   => __('global.change_password_success'),
+        ], 201);
     }
 }

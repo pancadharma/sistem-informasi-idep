@@ -24,3 +24,6 @@ project/yarn-error.log
 project/public/uploads/program
 project/public/uploads/program/*
 project/storage/media-library/*
+project/public/uploads/*
+project/public/uploads
+.editorconfig

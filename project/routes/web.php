@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\TrProgramController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\UserProfileController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -33,7 +34,7 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
-    return view('auth.login', ['title'=> $title]);
+    return view('auth.login', ['title' => $title]);
 });
 
 Route::get('/login', function () {
@@ -50,7 +51,7 @@ Route::get('/home', function () {
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
-// Route::group(['middleware' => ['auth']], function () {
+    // Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Permissions
@@ -59,8 +60,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
-    Route::get('roles-permission', [RolesController::class,'getPermission'])->name('roles.permission');
-    Route::get('roles-api', [RolesController::class,'getRole'])->name('roles.api');
+    Route::get('roles-permission', [RolesController::class, 'getPermission'])->name('roles.permission');
+    Route::get('roles-api', [RolesController::class, 'getRole'])->name('roles.api');
     Route::resource('roles', RolesController::class);
 
 
@@ -68,13 +69,25 @@ Route::middleware(['auth'])->group(function () {
     // Users
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
-    Route::post('users/ckmedia', [UsersController::class,'storeCKEditorImages'])->name('users.storeCKEditorImages');
-    // Route::get('users-data', [UsersController::class,'getUsers'])->name('api.users');
-    Route::get('users-show/{users}', [UsersController::class,'showModal'])->name('users.showmodal');
-    Route::get('username-check', [UsersController::class,'checkUsername'])->name('check.username');
-    Route::get('email-check', [UsersController::class,'checkEmail'])->name('check.email');
-    Route::get('users-api', [UsersController::class,'api'])->name('users.api');
+    Route::post('users/ckmedia', [UsersController::class, 'storeCKEditorImages'])->name('users.storeCKEditorImages');
+    Route::put('users/password', [UsersController::class, 'password'])->name('update.password');
+    Route::get('users-show/{users}', [UsersController::class, 'showModal'])->name('users.showmodal');
+    Route::get('username-check', [UsersController::class, 'checkUsername'])->name('check.username');
+    Route::get('email-check', [UsersController::class, 'checkEmail'])->name('check.email');
+    Route::get('users-api', [UsersController::class, 'api'])->name('users.api');
     Route::resource('users', UsersController::class);
+
+    // Route to handle both username and id as the profile identifier
+    Route::get('profile/{identifier}', [UserProfileController::class, 'showProfile'])->name('profile.show');
+    Route::get('profile', function () {
+        if (Auth::check()) {
+            $identifier = Auth::user()->username ?? Auth::user()->id;
+            return redirect()->route('profile.show', ['identifier' => $identifier])->with('status', session('status'));
+        }
+        return redirect()->route('home');
+    })->name('user.profile');
+    Route::resource('profiles', UserProfileController::class, ['except' => ['create', 'edit', 'store', 'destroy']]);
+
 
     //Logs
     Route::resource('audit-logs', AuditLogsController::class, ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
@@ -123,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
-    
+
     //Master Kategori Pendonor
     Route::resource('kategoripendonor', KategoripendonorController::class);
     Route::get('datakategoripendonor', [KategoripendonorController::class, 'datakategoripendonor'])->name('data.kategoripendonor');
@@ -170,16 +183,31 @@ Route::middleware(['auth'])->group(function () {
 
     //Route::resource('program', TrProgramController::class);
     // get data for select 2 form
+
+    Route::get('program-test', [TrProgramController::class, 'testOutcome'])->name('trprogram.test.outcome');
+    Route::post('program-test-outcome', [TrProgramController::class, 'testSubmitOutcome'])->name('trprogram.outcome.submit');
+
     Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
     Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
     Route::post('program/media', [TrProgramController::class, 'filePendukung'])->name('program.storeMedia');
+    Route::post('program/documents', [TrProgramController::class, 'uploadDoc'])->name('program.docs');
+    Route::get('program/doc', [TrProgramController::class, 'doc'])->name('program.test.doc');
+    Route::get('program/editdoc/{id}', [TrProgramController::class, 'docEdit'])->name('program.test.edit'); //program/editdoc/10
+    Route::get('trprogram/{id}/media', [TrProgramController::class, 'getMedia'])->name('trprogram.getMedia');
+    Route::put('trprogram/update/doc/{program}', [TrProgramController::class, 'updateDoc'])->name('trprogram.update.doc');
+    Route::delete('trprogram/media/{media}', [TrProgramController::class, 'deleteDoc'])->name('trprogram.delete.doc');
 
     //Route Program by Siva
     //Program
-    Route::resource('program', ProgramController::class);
     Route::get('data/program', [ProgramController::class, 'getData'])->name('data.program');
+    Route::get('program/api/pendonor/{id}/search', [ProgramController::class, 'searchPendonor'])->name('api.search.pendonor'); //for create data
+    Route::get('program/api/pendonor/{id}/data', [ProgramController::class, 'getPendonorDataEdit'])->name('api.pendonor.data'); // fill form for selected pendonor in edit program
+    Route::get('program/api/donor', [ProgramController::class, 'getProgramDonor'])->name('api.program.donor'); // get all pendonor data
+    Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff'); // can be used to get data staff for program
+    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
+    Route::resource('program', ProgramController::class);
 
+    Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
     Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
-
 });
