@@ -12,23 +12,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('trprogramoutcome', function (Blueprint $table) {
-            $table->renameColumn('deskrispsi', 'deskripsi');
+            if (Schema::hasColumn('trprogramoutcome', 'deskrispsi')) {
+                $table->dropColumn('deskrispsi'); // Drop the old column
+                $table->longText('deskripsi')->nullable(); // Add the new column
+            }
         });
+
         Schema::table('trprogramoutcomeoutput', function (Blueprint $table) {
-            $table->renameColumn('deskrispsi', 'deskripsi');
+            if (Schema::hasColumn('trprogramoutcomeoutput', 'deskrispsi')) {
+                $table->dropColumn('deskrispsi'); // Drop the old column
+                $table->longText('deskripsi')->nullable(); // Add the new column
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('trprogramoutcome', function (Blueprint $table) {
-            $table->renameColumn('deskripsi', 'deskrispsi');
+            if (Schema::hasColumn('trprogramoutcome', 'deskripsi')) {
+                $table->dropColumn('deskripsi'); // Drop the new column
+                $table->longText('deskrispsi')->nullable(); // Add back the old column
+            }
         });
+
         Schema::table('trprogramoutcomeoutput', function (Blueprint $table) {
-            $table->renameColumn('deskripsi', 'deskrispsi');
+            if (Schema::hasColumn('trprogramoutcomeoutput', 'deskripsi')) {
+                $table->dropColumn('deskripsi'); // Drop the new column
+                $table->longText('deskrispsi')->nullable(); // Add back the old column
+            }
         });
     }
 };
