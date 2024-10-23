@@ -28,3 +28,4 @@ project/public/uploads/*
 project/public/uploads
 .editorconfig
 /node_modules
+.prettierrc
