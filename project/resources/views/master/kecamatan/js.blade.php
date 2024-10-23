@@ -13,10 +13,19 @@
                     url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsi_id),
                     method: 'GET',
                     dataType: 'json',
+                    beforeSend: function(){
+                        Toast.fire({
+                            icon: "info",
+                            title: "Loading Data {{ __('cruds.kabupaten.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
+                    },
                     success: function(hasil) {
                         $("#kabupaten_id").empty();
                         $('#kabupaten_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
                         if(hasil){
+
                             $.each(hasil, function(index, item) {
                                 $("#kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
                             });
@@ -28,7 +37,7 @@
                 });
             }
             $('#kabupaten_id').select2({
-                placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+                placeholder: "{{ __('global.pleaseSelect') }} {{ __('cruds.kabupaten.title')}}",
             });
         });
 
@@ -37,11 +46,20 @@
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
             if(kode_kab !== undefined ){
-                $('#kode').val(kode_kab+'.');
-                $('#kode').prop("title", "add two more of kode kecamatan");
+                Toast.fire({
+                    icon: "info",
+                    title: "Loading {{ __('cruds.kecamatan.title') }}",
+                    // position: "bottom-end",
+                    timer: 500,
+                });
+                setTimeout(() => {
+                    $('#kode').val(kode_kab+'.');
+                    $('#kode').prop("title", "add two more of kode kecamatan");
+                    $('#kode').focus();
+                }, 500);
             }else{
                 $('#kode').val('');
-                $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}");
+                $('#kode').prop("placeholder", "{{ __('global.pleaseSelect') }} {{ __('cruds.kabupaten.title')}}");
             }
         });
 
@@ -152,7 +170,7 @@
                         },
                         {
                             extend: 'colvis',
-                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-warning',titleAttr: "Select Visible Column",
                             exportOptions: {
                                 columns: [0, 1, 2]
@@ -210,6 +228,12 @@
                 dataType: 'JSON',
                 beforeSend: function() {
                     $('.btn-add-kecamatan').prop('disabled', true);
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
                 },
                 complete: function() {
                     $('.btn-add-kecamatan').prop('disabled', false);
@@ -330,6 +354,14 @@
                 url: url_update,
                 type: 'PUT',
                 data: formData,
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
                     if (response.success === true ) {
                         Swal.fire({
@@ -389,11 +421,24 @@
             let kecamatan_id = $(this).data('kecamatan-id');
             let action = $(this).data('action');
             let url_update = '{{ route('kecamatan.update', ':id') }}'.replace(':id', kecamatan_id);
+
             $.ajax({
                 url: '{{ route('kecamatan.edit', ':id_kec') }}'.replace(':id_kec', kecamatan_id),
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(hasil){
+
+                    let kabID = hasil.kecamatan.kabupaten.id;
+                    let provID = hasil.kecamatan.kabupaten.provinsi_id;
+
                     $("#editKecamatanForm").trigger('reset');
                     $("#editKecamatanForm").attr("action", url_update);
                     $('#id').val(hasil.kecamatan.id);
@@ -401,24 +446,37 @@
                     $('#editkode').val(hasil.kecamatan.kode);
                     $('#editaktif').prop('checked', hasil.kecamatan.aktif == 1);
                     $('#edit-aktif').val(hasil.kecamatan.aktif);
+
                     $('#edit_provinsi_id').empty();
+                    // $.each(hasil.provinsi, function(key, value) {
+                    //     $('#edit_provinsi_id').append('<option value="'+ value.id +'">'+value.kode+' - '+ value.nama +'</option>');
+                    // });
+                    // $('#edit_provinsi_id').val(hasil.kecamatan.kabupaten.provinsi_id).trigger('change');
+
                     $.each(hasil.provinsi, function(key, value) {
-                        $('#edit_provinsi_id').append('<option value="'+ value.id +'">'+value.kode+' - '+ value.nama +'</option>');
+                        let selected = (value.id === provID) ? 'selected' : '';
+                        $('#edit_provinsi_id').append('<option value="' + value.id + '" ' + selected + '>' + value.kode +' - ' + value.nama + '</option>');
                     });
-                    $('#edit_provinsi_id').val(hasil.kecamatan.kabupaten.provinsi_id).trigger('change');
-                    let data = hasil.kabupaten.map(function(item) {
-                        return {
-                            id: item.id,
-                            text: item.kode+' - '+ item.nama,
-                        };
+
+                    $('#edit_kabupaten_id').empty();
+
+                    $.each(hasil.kabupaten, function(key, value) {
+                        let selected = (value.id === kabID) ? 'selected' : '';
+                        $('#edit_kabupaten_id').append('<option value="' + value.id + '" ' + selected + ' data-id="' + value.kode + '">' + value.kode + ' - ' + value.nama +'</option>');
                     });
-                    $('#edit_kabupaten_id').select2({
-                        dropdownParent: $('#editKecamatanForm'),
-                        data: data,
-                        placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
-                    });
-                    $('#edit_kabupaten_id').val(hasil.kecamatan.kabupaten.id).trigger('change');
-                    loadKab(hasil.kecamatan.kabupaten.provinsi_id, hasil.kecamatan.kabupaten.id);
+
+                    // let data = hasil.kabupaten.map(function(item) {
+                    //     return {
+                    //         id: item.id,
+                    //         text: item.kode+' - '+ item.nama,
+                    //     };
+                    // });
+                    // $('#edit_kabupaten_id').select2({
+                    //     dropdownParent: $('#editKecamatanForm'),
+                    //     data: data,
+                    //     placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}",
+                    // });
+                    // $('#edit_kabupaten_id').val(hasil.kecamatan.kabupaten.id).trigger('change');
                     $('#editKecamatanModal').modal('show'); // Show the modal
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -440,78 +498,185 @@
             });
         });
 
-        $('#edit_provinsi_id').on('change',function(){
-            var provinsiID = $(this).val();
-            var kab_load = $("#edit_kabupaten_id").find('option:selected');
-            var kab_load2 = $("#edit_kabupaten_id").data('id');
-            var KabKode = kab_load.data('id');
+        // $('#edit_provinsi_id').on('change',function(){
+        //     var provinsiID = $(this).val();
+        //     var kab_load = $("#edit_kabupaten_id").find('option:selected');
+        //     var kab_load2 = $("#edit_kabupaten_id").data('id');
+        //     var KabKode = kab_load.data('id');
 
-            if(KabKode !== undefined && $("#edit_kabupaten_id").prop('selectedIndex') > 0){
-                loadKab(provinsiID);
-                $('#editkode').html('');
-                $('#editkode').empty();
-                $('#editkode').val(provinsiID+'.');
-            }else{
-                // console.log('Expected Kode is ', kab_load2);
-                return
-            }
-        });
+        //     if(KabKode !== undefined && $("#edit_kabupaten_id").prop('selectedIndex') > 0){
+        //         Toast.fire({
+        //             icon: "info",
+        //             title: "Loading {{ __('cruds.kabupaten.title') }}",
+        //             // position: "bottom-end",
+        //             timer: 500,
+        //         });
+        //         setTimeout(() => {
+        //             loadKab(provinsiID);
+        //             $('#editkode').html('');
+        //             $('#editkode').empty();
+        //             $('#editkode').val(provinsiID+'.');
+        //         }, 500);
+        //     }else{
+        //         // console.log('Expected Kode is ', kab_load2);
+        //         return
+        //     }
+        // });
 
-        $('#edit_kabupaten_id').on('change', function() {
-            changeKabKode();
-        });
+        // $('#edit_kabupaten_id').on('change', function() {
+        //     Toast.fire({
+        //         icon: "info",
+        //         title: "Loading {{ __('cruds.kecamatan.kode') }}",
+        //         // position: "bottom-end",
+        //         timer: 500,
+        //     });
+        //     setTimeout(() => {
+        //         changeKabKode();
+        //     }, 500);
+        // });
 
-        function changeKabKode() {
-            var kabupatenElem = $("#edit_kabupaten_id");
-            var selectedOption = $("#edit_kabupaten_id").find('option:selected');
-            var KabKode = selectedOption.data('id');
-            let KabValue = kabupatenElem.val();
 
-            if(kabupatenElem.length && kabupatenElem.prop('selectedIndex') > 0 && KabKode !== undefined){
-                $('#editkode').html('');
-                $('#editkode').empty();
-                $('#editkode').val(KabKode+'.');
-                console.log(KabKode);
-            }
-            return;
-        }
-
-        function loadKab(provinsiID, selectedKabupatenId){
-            if(provinsiID){
+        //trigger provinsi when it changes
+        $('#edit_provinsi_id').change(function() {
+            var provinsi_id = $(this).val();
+            if (provinsi_id) {
                 $.ajax({
                     type: 'GET',
-                    url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsiID),
+                    url: '{{ route('kab.data', ':id') }}'.replace(':id', provinsi_id),
                     method: 'GET',
                     dataType: 'json',
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Loading {{ __('cruds.kabupaten.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
+                    },
                     success: function(hasil) {
                         $("#edit_kabupaten_id").empty();
-                        $('#edit_kabupaten_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
-                        if(hasil){
+                        $('#edit_kabupaten_id').html(
+                            `<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}</option>`
+                        );
+                        if (hasil) {
                             $.each(hasil, function(index, item) {
-                                $("#edit_kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                                $("#edit_kabupaten_id").append('<option value="' + item.id + '" data-id="' + item.kode + '">' +item.text + '</option>');
                             });
-                            $('#edit_kabupaten_id').val(selectedKabupatenId).trigger('change.select2');
-                        }
-                        else{
+                        } else {
                             $("#edit_kabupaten_id").empty();
                         }
                     },
-                    error:function(xhr){
+                    error: function(xhr, jqXHR, textStatus, errorThrown) {
+                        var errorMessage = 'An unexpected error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON
+                                .message; // Get the message from the response
+                        }
                         Swal.fire({
-                            title: "Something Wrong !",
-                            text: xhr.message,
-                            icon: "error",
-                            timer: 4000,
-                            timerProgressBar: true,
-                            didOpen: ()=>{
-                                Swal.showLoading();
-                            }
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                            confirmButtonText: 'Okay'
                         });
-                        console.log("failed to load kabupaten data");
-                    }
+                    },
                 });
             }
-        }
+            $('#edit_kabupaten_id').select2({
+                placeholder: "{{ __('global.pleaseSelect') }} {{ __('cruds.kabupaten.title') }}",
+            });
+        });
+        //autofill desa_kode with kabupatan_kode
+        $('#edit_provinsi_id_xxx, #edit_kabupaten_id').change(function() {
+            var selected = $(this).find('option:selected');
+            var kode_kab = selected.data('id');
+            var kab_id = selected.val();
+
+            // var kabupatenElem = $("#edit_kabupaten_id");
+            // var selectedOption = $("#edit_kabupaten_id").find('option:selected');
+            // var KabKode = selectedOption.data('id');
+            // let KabValue = kabupatenElem.val();
+
+            // if(kabupatenElem.length && kabupatenElem.prop('selectedIndex') > 0 && KabKode !== undefined){
+            //     $('#editkode').html('');
+            //     $('#editkode').empty();
+            //     $('#editkode').val(kode_kab+'.');
+            //     console.log(KabKode);
+            // }
+            if (kab_id) {
+                Toast.fire({
+                    icon: "info",
+                    title: "Loading {{ __('cruds.kecamatan.title') }}",
+                    // position: "bottom-end",
+                    timer: 500,
+                });
+                setTimeout(() => {
+                    $('#editkode').val(kode_kab + '.');
+                    $('#editkode').prop("title", "please input 4 digit additional village code");
+                    $('#editkode').focus();
+                }, 500);
+            }
+            if (kode_kab !== undefined) {
+                $('#editkode').val(kode_kab + '.');
+                $('#editkode').prop("title", "please input 4 digit additional village code");
+                $('#editkode').focus();
+            } else {
+                $('#editkode').val('');
+                $('#editkode').prop("placeholder","{{ __('global.pleaseSelect') }} {{ __('cruds.kecamatan.title') }}");
+                $('#editkode').focus();
+            }
+        });
+
+        // function changeKabKode() {
+        //     var kabupatenElem = $("#edit_kabupaten_id");
+        //     var selectedOption = $("#edit_kabupaten_id").find('option:selected');
+        //     var KabKode = selectedOption.data('id');
+        //     let KabValue = kabupatenElem.val();
+
+        //     if(kabupatenElem.length && kabupatenElem.prop('selectedIndex') > 0 && KabKode !== undefined){
+        //         $('#editkode').html('');
+        //         $('#editkode').empty();
+        //         $('#editkode').val(KabKode+'.');
+        //         console.log(KabKode);
+        //     }
+        //     return;
+        // }
+
+        // function loadKab(provinsiID, selectedKabupatenId){
+        //     if(provinsiID){
+        //         $.ajax({
+        //             type: 'GET',
+        //             url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsiID),
+        //             method: 'GET',
+        //             dataType: 'json',
+        //             success: function(hasil) {
+        //                 $("#edit_kabupaten_id").empty();
+        //                 $('#edit_kabupaten_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
+        //                 if(hasil){
+        //                     $.each(hasil, function(index, item) {
+        //                         $("#edit_kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+        //                     });
+        //                     $('#edit_kabupaten_id').val(selectedKabupatenId).trigger('change');
+        //                 }
+        //                 else{
+        //                     $("#edit_kabupaten_id").empty();
+        //                 }
+        //             },
+        //             error:function(xhr){
+        //                 Swal.fire({
+        //                     title: "Something Wrong !",
+        //                     text: xhr.message,
+        //                     icon: "error",
+        //                     timer: 4000,
+        //                     timerProgressBar: true,
+        //                     didOpen: ()=>{
+        //                         Swal.showLoading();
+        //                     }
+        //                 });
+        //                 console.log("failed to load kabupaten data");
+        //             }
+        //         });
+        //     }
+        // }
     });
     //validation
     $(document).ready(function() {
@@ -564,6 +729,14 @@
                 kecamatanId), // Route with ID placeholder
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading Data...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
                     let data = response || [];
                     if (action === 'view') {

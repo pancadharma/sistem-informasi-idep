@@ -27,6 +27,6 @@ class MatchProvinsiId implements Rule
 
     public function message()
     {
-        return 'The :attribute must start with the first two digits of the Provinsi Kode.';
+        return trans('request.validation.kode_unik');
     }
 }
