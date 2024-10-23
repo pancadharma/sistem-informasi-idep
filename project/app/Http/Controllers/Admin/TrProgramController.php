@@ -356,8 +356,6 @@ class TrProgramController extends Controller
                 'target' => $request->input("target.$index"),
             ]);
         }
-
-        // return response()->json(['program_id' => $program->id, 'message' => 'Program and outcomes saved successfully!']);
         return response()->json([
             'message' => 'Outcome successfully submitted',
             'data' => $request->all(),
