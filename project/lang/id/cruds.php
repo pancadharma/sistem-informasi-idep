@@ -290,6 +290,7 @@ return [
         'pic' => 'PIC',
     ],
     'kelompokmarjinal' => [
+        'title_singular' => 'Kelompok Marjinal',
         'list' => 'List Kelompok Marjinal',
         'kelompokmarjinal' => 'Kelompok Marjinal',
         'title' => 'Kelompok Marjinal',
