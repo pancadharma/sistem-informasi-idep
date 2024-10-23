@@ -263,6 +263,14 @@ entity "trprogramoutcomeoutput" as trprogramoutcomeoutput {
     target : varchar(500)
 }
 
+entity "trprogramoutcomeoutputactivity" as trprogramoutcomeoutputactivity {
+    *id : int <<auto>>
+    --
+    id_programoutcomeoutput : int <<fk>>
+    deskrispsi : varchar(500)
+    indikator : varchar(500)
+    target : varchar(500)
+}
 
 entity "trprogramlokasi" as trprogramlokasi {
     *id : int <<auto>>
@@ -291,7 +299,7 @@ entity "trprogramdokumen" as trprogramdokumen {
 entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
     --
-    id_program : int <<fk>>
+    id_programoutcomeoutputactivity : int <<fk>>
     kode: varchar (50)
     nama : varchar (500)
     tanggalmulai : datetime
@@ -316,13 +324,6 @@ entity "trkegiatan" as trkegiatan {
     submit : bit
     created_at : datetime
     update_at : datetime
-}
-
-entity "trkegiatanoutput" as trkegiatanoutput {
-    *id : int <<auto>>
-    --
-    id_kegiatan: int <<fk>>
-    id_programoutcomeoutput : <<fk>>
 }
 
 entity "trkegiatanpeserta" as trkegiatanpeserta {
@@ -472,7 +473,6 @@ trprogramkaitansdg }o--|| trprogram
 trprogramkaitansdg }o--|| mkaitansdg
 trprogramkelompokmarjinal }o--|| trprogram
 trprogramkelompokmarjinal }o--|| mkelompokmarjinal
-trkegiatanoutput }o--|| trprogramoutcomeoutput
 mpendonor }o--|| mpendonorkategori
 trevaluasi }o--|| muser
 trkegiatanpesertamarjinal }o--|| mkelompokmarjinal
@@ -484,5 +484,8 @@ trkegiatanpenulis }o--|| trkegiatan
 trkegiatanpenulis }o--|| muser
 trkegiatan }o--|| mjenisbantuan
 trkegiatan }o--|| mkategorilokasikegiatan
+trprogramoutcomeoutput }o--|| trprogramoutcome
+trprogramoutcomeoutputactivity }o--|| trprogramoutcomeoutput
+trkegiatan }o--|| trprogramoutcomeoutputactivity
 trlog }o--|| muser
 @enduml
