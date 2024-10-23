@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProgramRequest;
+use App\Models\Program_Outcome;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -325,6 +326,42 @@ class TrProgramController extends Controller
         return response()->json([
             'initialPreview' => $preview_pendukung,
             'initialPreviewConfig' => $config_pendukung,
+        ]);
+    }
+
+    // purpose to test outcome create
+    public function testOutcome()
+    {
+        $program = Program::orderByDesc('id')->first();
+
+        if (!$program) {
+            // Handle the case where no program exists
+            return response()->json(['message' => 'No program found'], 404);
+        }
+
+        $program_id = $program->id + 99999; //purpose to test
+        return view('test.outcome', ['program_id' => $program_id]);
+    }
+    // purpose to test outcome create
+    public function testSubmitOutcome(Request $request)
+    {
+        // $program = Program::create($request->only(['program_name']));
+        $id = $request->input('program_id');
+        // Store the outcomes
+        foreach ($request->input('deskripsi') as $index => $deskripsi) {
+            Program_Outcome::create([
+                'program_id' => 8, //purspose test since it depends to program_id
+                'deskripsi' => $deskripsi,
+                'indikator' => $request->input("indikator.$index"),
+                'target' => $request->input("target.$index"),
+            ]);
+        }
+
+        // return response()->json(['program_id' => $program->id, 'message' => 'Program and outcomes saved successfully!']);
+        return response()->json([
+            'message' => 'Outcome successfully submitted',
+            'data' => $request->all(),
+            'program_id' => $request->input('program_id'),
         ]);
     }
 }

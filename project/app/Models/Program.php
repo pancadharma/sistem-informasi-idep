@@ -78,6 +78,10 @@ class Program extends Model implements HasMedia
         return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id')
             ->withPivot('nilaidonasi');
     }
+    public function outcome()
+    {
+        return $this->hasMany(Program_Outcome::class, 'program_id');
+    }
 
     public function jadwalreport()
     {

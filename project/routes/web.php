@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class, 'storeCKEditorImages'])->name('users.storeCKEditorImages');
-    Route::put('users/password', [UsersController::class,'password'])->name('update.password');
+    Route::put('users/password', [UsersController::class, 'password'])->name('update.password');
     Route::get('users-show/{users}', [UsersController::class, 'showModal'])->name('users.showmodal');
     Route::get('username-check', [UsersController::class, 'checkUsername'])->name('check.username');
     Route::get('email-check', [UsersController::class, 'checkEmail'])->name('check.email');
@@ -183,6 +183,10 @@ Route::middleware(['auth'])->group(function () {
 
     //Route::resource('program', TrProgramController::class);
     // get data for select 2 form
+
+    Route::get('program-test', [TrProgramController::class, 'testOutcome'])->name('trprogram.test.outcome');
+    Route::post('program-test-outcome', [TrProgramController::class, 'testSubmitOutcome'])->name('trprogram.outcome.submit');
+
     Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
     Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');

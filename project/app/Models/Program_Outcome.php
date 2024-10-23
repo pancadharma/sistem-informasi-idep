@@ -16,7 +16,7 @@ class Program_Outcome extends Model
 
     protected $fillable = [
         'program_id',
-        'deskrispsi',
+        'deskripsi',
         'indikator',
         'target',
         'created_at',
