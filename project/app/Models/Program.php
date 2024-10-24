@@ -107,10 +107,10 @@ class Program extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     }
 
-    public function getFilePendukungAttribute()
-    {
-        return $this->getMedia('file_pendukung_program');
-    }
+    // public function getFilePendukungAttribute()
+    // {
+    //     return $this->getMedia('file_pendukung_program');
+    // }
 
     public const STATUS_SELECT = [
         'draft'    => 'Draft',

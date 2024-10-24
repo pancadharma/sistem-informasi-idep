@@ -94,7 +94,8 @@ class ProgramController extends Controller
                         ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
                         ->usingName("{$programName}_{$originalName}_{$fileCount}")
                         ->usingFileName($fileName)
-                        ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        // ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
 
                     $fileCount++;
                 }
@@ -194,48 +195,110 @@ class ProgramController extends Controller
         }
     }
 
+    // public function edit(Program $program)
+    // {
+    //     if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+
+    //         $targetReinstra = TargetReinstra::pluck('nama', 'id');
+    //         $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
+    //         $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
+    //         $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor');
+
+    //         $file_pendukung = Program::find($program->id);
+    //         $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
+    //         $initialPreview = [];
+    //         $initialPreviewConfig = [];
+
+    //         foreach ($mediaFiles as $media) {
+    //             if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
+    //                 $initialPreview[] = $media->getUrl();
+    //             } elseif ($media->mime_type == 'application/pdf') {
+    //                 $initialPreview[] = $media->getUrl();
+    //             } elseif ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+    //                 $initialPreview[] = $media->getUrl();
+    //             } else {
+    //                 $initialPreview[] =
+    //                     $media->getUrl();;
+    //             }
+
+    //             $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
+    //             $initialPreviewConfig[] = [
+    //                 'caption' => "<span class='text-red strong'>{$caption}</span>",
+    //                 'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+    //                 'key' => $media->id ?? '',
+    //                 'size' => $media->size ?? '',
+    //                 'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
+    //                 'downloadUrl' => $media->getUrl() ?? '',
+    //                 'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+
+    //             ];
+    //         }
+
+    //         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+    //     }
+    //     abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
+    // }
+
     public function edit(Program $program)
     {
-        if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
-
-            $targetReinstra = TargetReinstra::pluck('nama', 'id');
-            $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
-            $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor');
-
-            $file_pendukung = Program::find($program->id);
-            $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
-            $initialPreview = [];
-            $initialPreviewConfig = [];
-
-            foreach ($mediaFiles as $media) {
-                if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-                    $initialPreview[] = $media->getUrl();
-                } elseif ($media->mime_type == 'application/pdf') {
-                    $initialPreview[] = $media->getUrl();
-                } elseif ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-                    $initialPreview[] = $media->getUrl();
-                } else {
-                    $initialPreview[] =
-                        $media->getUrl();;
-                }
-
-                $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-                $initialPreviewConfig[] = [
-                    'caption' => "<span class='text-red strong'>{$caption}</span>",
-                    'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
-                    'key' => $media->id ?? '',
-                    'size' => $media->size ?? '',
-                    'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
-                    'downloadUrl' => $media->getUrl() ?? '',
-                    'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
-
-                ];
-            }
-
-            return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+        if (auth()->user()->id !== 1 && !auth()->user()->can('program_edit')) {
+            abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
         }
-        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
+
+        $targetReinstra = TargetReinstra::pluck('nama', 'id');
+        $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
+        $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
+
+        // Eager load related models
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor']);
+
+        // Dynamically fetch media files based on program ID
+        $mediaFiles = $program->getMedia('program_' . $program->id);
+
+        // Prepare preview data for all media files
+        $initialPreview = [];
+        $initialPreviewConfig = [];
+
+        foreach ($mediaFiles as $media) {
+            $initialPreview[] = $media->getUrl();
+
+            $caption = $media->getCustomProperty('keterangan') ?: $media->name;
+            $mimeType = $media->mime_type;
+
+            $initialPreviewConfig[] = [
+                'caption' => "<span class='text-red strong'>{$caption}</span>",
+                'description' => $caption,
+                'key' => $media->id,
+                'size' => $media->size,
+                'type' => $this->getMediaType($mimeType),
+                'downloadUrl' => $media->getUrl(),
+                'filename' => $caption,
+            ];
+        }
+
+        return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+    }
+
+    // Helper method to categorize media types
+    private function getMediaType($mimeType)
+    {
+        if (str_starts_with($mimeType, 'image/')) {
+            return 'image';
+        }
+
+        if ($mimeType === 'application/pdf') {
+            return 'pdf';
+        }
+
+        if (in_array($mimeType, [
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])) {
+            return 'office';
+        }
+
+        return 'other';
     }
 
     public function update(UpdateProgramRequest $request, Program $program)
@@ -278,7 +341,8 @@ class ProgramController extends Controller
                             'extension' => $extension,
                             'updated_by' => auth()->user()->id
                         ])
-                        ->toMediaCollection('file_pendukung_program');
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
+                        // ->toMediaCollection('file_pendukung_program', 'program_uploads');
                 }
             }
             // update program lokasi
