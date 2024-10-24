@@ -66,21 +66,21 @@
     <div class="row hehe d-none" id="outcomeTemplate">
         <div class="col-lg-4 form-group">
             <div class="input-group">
-                <label for="deskripsi" class="input-group small mb-0">{{ __('cruds.program.outcome.desc') }}</label>
+                {{-- <label for="deskripsi" class="input-group small mb-0">{{ __('cruds.program.outcome.desc') }}</label> --}}
                 <textarea type="textarea" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}"
                     placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000"></textarea>
             </div>
         </div>
         <div class="col-lg-4 form-group">
             <div class="input-group">
-                <label for="indikator" class="input-group small mb-0">{{ __('cruds.program.outcome.indicator') }}</label>
+                {{-- <label for="indikator" class="input-group small mb-0">{{ __('cruds.program.outcome.indicator') }}</label> --}}
                 <textarea name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}"
                     placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="1000" rows="1"></textarea>
             </div>
         </div>
         <div class="col-lg-4 form-group">
             <div class="input-group">
-                <label for="target" class="input-group small mb-0">{{ __('cruds.program.outcome.target') }}</label>
+                {{-- <label for="target" class="input-group small mb-0">{{ __('cruds.program.outcome.target') }}</label> --}}
                 <textarea name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
                     placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
                 <span class="input-group-append">
