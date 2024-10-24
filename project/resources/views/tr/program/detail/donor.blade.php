@@ -7,7 +7,7 @@
             </strong>
         </label>
         <div class="select2-orange">
-            <select class="form-control select2" name="donor[]" id="donor" multiple required></select>
+            <select class="form-control select2" name="donor[]" id="donor" multiple></select>
         </div>
     </div>
 </div>

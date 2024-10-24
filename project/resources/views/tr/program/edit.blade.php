@@ -37,20 +37,16 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
-                                    <input type="text" id="nama_program" name="nama"
-                                        class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}"
-                                        value="{{ old('nama', $program->nama) }}">
+                                    <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
+                                    <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode_program" name="kode"
-                                        class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}"
-                                        value="{{ old('kode', $program->kode) }}">
+                                    <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                    <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}"
+                                        required>
                                 </div>
                                 @if ($errors->has('kode'))
                                     <span class="text-danger">{{ $errors->first('kode') }}</span>
@@ -58,11 +54,9 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalmulai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                    <input type="date" id="tanggalmulai" name="tanggalmulai"
-                                        class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}">
+                                    <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                    <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}"
+                                        value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}" required>
 
 
                                     @if ($errors->has('tanggalmulai'))
@@ -72,15 +66,9 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalselesai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    {{-- <input type="date" id="tanggalselesai" name="tanggalselesai"
-                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalselesai', $program->tanggalselesai) }}"> --}}
-
-                                    <input type="date" id="tanggalselesai" name="tanggalselesai"
-                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}">
+                                    <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' :  }}"
+                                        value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}" required>
 
                                     @if ($errors->has('tanggalselesai'))
                                         <span class="text-danger">{{ $errors->first('tanggalselesai') }}</span>
@@ -89,12 +77,9 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="totalnilai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="text" id="totalnilai" name="totalnilai"
-                                        class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}"
-                                        minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}"
-                                        step="0.001">
+                                    <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}" minlength="0"
+                                        value="{{ old('totalnilai', $program->totalnilai) }}" step="0.001" required>
 
                                     @if ($errors->has('totalnilai'))
                                         <span class="text-danger">{{ $errors->first('totalnilai') }}</span>
@@ -108,13 +93,10 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaat"
-                                        class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
-                                    <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000"
-                                        name="ekspektasipenerimamanfaat"
+                                    <label for="ekspektasipenerimamanfaat" class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
+                                    <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000" name="ekspektasipenerimamanfaat"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}"
-                                        placeholder="{{ __('cruds.program.expektasi') }}"
+                                        value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}" placeholder="{{ __('cruds.program.expektasi') }}"
                                         oninput="this.value = Math.max(0, this.value)">
 
                                     @if ($errors->has('ekspektasipenerimamanfaat'))
@@ -124,74 +106,58 @@
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="pria"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
-                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
-                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaatman') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaatman', $program->ekspektasipenerimamanfaatman) }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                    <label for="pria" class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                    <input type="number" id="pria" name="ekspektasipenerimamanfaatman" class="form-control {{ $errors->has('ekspektasipenerimamanfaatman') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaatman', $program->ekspektasipenerimamanfaatman) }}" oninput="this.value = Math.max(0, this.value)">
 
                                     @if ($errors->has('ekspektasipenerimamanfaatman'))
-                                        <span
-                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatman') }}</span>
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatman') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="wanita"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                    <label for="wanita" class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
                                     <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatwoman') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaatwoman', $program->ekspektasipenerimamanfaatwoman) }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        value="{{ old('ekspektasipenerimamanfaatwoman', $program->ekspektasipenerimamanfaatwoman) }}" oninput="this.value = Math.max(0, this.value)">
 
                                     @if ($errors->has('ekspektasipenerimamanfaatwoman'))
-                                        <span
-                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatwoman') }}</span>
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatwoman') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="laki"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                    <label for="laki" class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
                                     <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatboy') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaatboy', $program->ekspektasipenerimamanfaatboy) }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        value="{{ old('ekspektasipenerimamanfaatboy', $program->ekspektasipenerimamanfaatboy) }}" oninput="this.value = Math.max(0, this.value)">
 
                                     @if ($errors->has('ekspektasipenerimamanfaatboy'))
-                                        <span
-                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatboy') }}</span>
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatboy') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="perempuan"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                    <label for="perempuan" class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
                                     <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaatgirl') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaatgirl', $program->ekspektasipenerimamanfaatgirl) }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        value="{{ old('ekspektasipenerimamanfaatgirl', $program->ekspektasipenerimamanfaatgirl) }}" oninput="this.value = Math.max(0, this.value)">
                                     @if ($errors->has('ekspektasipenerimamanfaatgirl'))
-                                        <span
-                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatgirl') }}</span>
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatgirl') }}</span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="total"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                    <label for="total" class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
                                     <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaattidaklangsung') ? 'is-invalid' : '' }}"
-                                        value="{{ old('ekspektasipenerimamanfaattidaklangsung', $program->ekspektasipenerimamanfaattidaklangsung) }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        value="{{ old('ekspektasipenerimamanfaattidaklangsung', $program->ekspektasipenerimamanfaattidaklangsung) }}" oninput="this.value = Math.max(0, this.value)">
                                     @if ($errors->has('ekspektasipenerimamanfaattidaklangsung'))
-                                        <span
-                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaattidaklangsung') }}</span>
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaattidaklangsung') }}</span>
                                     @endif
                                 </div>
                             </div>
@@ -208,9 +174,8 @@
                                         </strong>
                                     </label>
                                     <div class="select2-purple">
-                                        <select
-                                            class="form-control select2 {{ $errors->has('kelompokmarjinal') ? 'is-invalid' : '' }}"
-                                            name="kelompokmarjinal[]" id="kelompokmarjinal" multiple="multiple">
+                                        <select class="form-control select2 {{ $errors->has('kelompokmarjinal') ? 'is-invalid' : '' }}" name="kelompokmarjinal[]" id="kelompokmarjinal"
+                                            multiple="multiple">
                                         </select>
                                     </div>
                                     @if ($errors->has('kelompokmarjinal'))
@@ -231,9 +196,8 @@
                                         </strong>
                                     </label>
                                     <div class="select2-orange">
-                                        <select
-                                            class="form-control select2-hidden-accessible {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}"
-                                            name="targetreinstra[]" id="targetreinstra" multiple="multiple" required>
+                                        <select class="form-control select2-hidden-accessible {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}" name="targetreinstra[]" id="targetreinstra"
+                                            multiple="multiple">
                                         </select>
                                     </div>
                                     @if ($errors->has('targetreinstra'))
@@ -254,9 +218,7 @@
                                         </strong>
                                     </label>
                                     <div class="select2-cyan">
-                                        <select
-                                            class="form-control select2 {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}"
-                                            name="kaitansdg[]" id="kaitansdg" multiple="multiple" required>
+                                        <select class="form-control select2 {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}" name="kaitansdg[]" id="kaitansdg" multiple="multiple">
                                         </select>
                                     </div>
                                     @if ($errors->has('kaitansdg'))
@@ -276,8 +238,7 @@
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
                                     </label>
-                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
+                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control" placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
 
                                     @if ($errors->has('deskripsi'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
@@ -292,8 +253,7 @@
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
                                     </label>
-                                    <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="500">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
+                                    <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control" placeholder="{{ __('cruds.program.analisis') }}" maxlength="500">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
                                     @if ($errors->has('analisamasalah'))
                                         <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
                                     @endif
@@ -315,8 +275,7 @@
                                     <div class="small">{{ __('cruds.program.edit_file') }}</div>
                                 </label>
                                 <div class="form-group file-loading">
-                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
-                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
+                                    <input id="file_pendukung" name="file_pendukung[]" type="file" class="form-control" multiple data-show-upload="false" data-show-caption="true">
                                 </div>
                                 <div id="captions-container"></div>
                             </div>
@@ -333,14 +292,11 @@
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <select
-                                            class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
-                                            name="status" id="status">
+                                        <select class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}" name="status" id="status">
                                             <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>
                                                 {{ trans('global.pleaseSelect') }}</option>
                                             @foreach (App\Models\Program::STATUS_SELECT as $key => $label)
-                                                <option value="{{ $key }}"
-                                                    {{ old('status', $program->status) === (string) $key ? 'selected' : '' }}>
+                                                <option value="{{ $key }}" {{ old('status', $program->status) === (string) $key ? 'selected' : '' }}>
                                                     {{ $label }}</option>
                                             @endforeach
                                         </select>
@@ -355,11 +311,8 @@
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <input type="text" class="form-control"
-                                            value="{{ old('nama', $program->users->nama) }}" id="user_id"
-                                            name="user_id" readonly>
-                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
-                                            name="user_id">
+                                        <input type="text" class="form-control" value="{{ old('nama', $program->users->nama) }}" id="user_id" name="user_id" readonly>
+                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}" name="user_id">
                                     </div>
                                 </div>
                             </div>
