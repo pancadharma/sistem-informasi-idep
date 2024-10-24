@@ -9,6 +9,7 @@
                 url: url_program_pendonor,
                 method: 'get',
                 dataType: 'json',
+                delay: 500,
                 success: function(data) {
                     setTimeout(() => {
                         var edit_program_pendonor = data.map(function(item) {

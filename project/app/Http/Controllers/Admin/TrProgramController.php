@@ -274,6 +274,32 @@ class TrProgramController extends Controller
                         ->toMediaCollection('file_pendukung_program');
                 }
             }
+
+            //save code here for dev
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+
+            // Check for mismatched lengths
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+
+            // Prepare donations and validate values in one go
+            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+                if (empty($donation_value)) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id");
+                }
+                return [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $donation_value,
+                ];
+            }, $newPendonor, $nilaiD);
+
+            // Attach donations to the program
+            foreach ($newDonasi as $donation) {
+                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            }
+            //end save code for dev
             return response()->json(['success' => 'Files uploaded successfully', 'program' => $program, 'files' => $newFiles]);
         } catch (Exception $e) {
             return response()->json([
@@ -348,18 +374,21 @@ class TrProgramController extends Controller
         // $program = Program::create($request->only(['program_name']));
         $id = $request->input('program_id');
         // Store the outcomes
-        foreach ($request->input('deskripsi') as $index => $deskripsi) {
-            Program_Outcome::create([
-                'program_id' => 8, //purspose test since it depends to program_id
-                'deskripsi' => $deskripsi,
-                'indikator' => $request->input("indikator.$index"),
-                'target' => $request->input("target.$index"),
-            ]);
+        foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+            if (!is_null($deskripsi) && $deskripsi !== '') {
+                Program_Outcome::create([
+                    'program_id' => 19,
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+            }
         }
         return response()->json([
             'message' => 'Outcome successfully submitted',
             'data' => $request->all(),
             'program_id' => $request->input('program_id'),
         ]);
+
     }
 }

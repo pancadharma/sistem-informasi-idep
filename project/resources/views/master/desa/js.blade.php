@@ -1,17 +1,34 @@
 <script>
     $(document).ready(function() {
+        function formatErrorMessages(errors) {
+            let message = '<ul>';
+            for (const field in errors) {
+                errors[field].forEach(function(error) {
+                    message += `<li>${error}</li>`;
+                });
+            }
+            message += '</ul>';
+            return message;
+        }
         //load data desa into datatables
         $('#desa_list').DataTable({
-            responsive: true, processing: true, serverSide: true, deferRender: true, stateSave: true,
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            deferRender: true,
+            stateSave: true,
             // ajax: "{{ route('data.desa') }}",
             ajax: {
                 url: "{{ route('data.desa') }}",
                 method: "GET",
                 dataType: "json",
             },
-            columns: [
-                {
-                    data: 'DT_RowIndex', orderable: false, searchable: false, className: "text-center align-middle", width: "5%",
+            columns: [{
+                    data: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false,
+                    className: "text-center align-middle",
+                    width: "5%",
                 },
                 {
                     data: "kode",
@@ -42,11 +59,14 @@
                     searchable: false,
                     render: function(data, type, row) {
                         if (data === 1) {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="' + row.id +
-                                '" class="icheck-primary" alt="☑️" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' + row.id + '"></label></div>';
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' +
+                                row.id + '" data-aktif-id="' + row.id +
+                                '" class="icheck-primary" alt="☑️" title="{{ __('cruds.status.aktif') }}" type="checkbox" checked><label for="aktif_' +
+                                row.id + '"></label></div>';
                         } else {
-                            return '<div class="icheck-primary d-inline"><input id="aktif_' + row.id + '" data-aktif-id="' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox"><label for="aktif_' +
+                            return '<div class="icheck-primary d-inline"><input id="aktif_' +
+                                row.id + '" data-aktif-id="' + row.id +
+                                '" class="icheck-primary" title="{{ __('cruds.status.tidak_aktif') }}" type="checkbox"><label for="aktif_' +
                                 row.id + '"></label></div>';
                         }
                     }
@@ -60,71 +80,86 @@
             ],
             layout: {
                 topStart: {
-                    buttons: [
-                        {
-                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                    buttons: [{
+                            extend: 'print',
+                            text: `<i class="fas fa-print"></i>`,
+                            titleAttr: "Print Table Data",
                             exportOptions: {
                                 stripHTML: false,
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 4) {
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ?
+                                                '\u2611' : '\u2610';
                                         }
                                         return data;
 
                                     }
                                 },
-                                columns: [0, 1,2,3,4] // Ensure these indices match your visible columns
+                                columns: [0, 1, 2, 3,
+                                    4
+                                ] // Ensure these indices match your visible columns
                             }
                         },
                         {
-                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            extend: 'excelHtml5',
+                            text: `<i class="far fa-file-excel"></i>`,
+                            titleAttr: "Export to EXCEL",
+                            className: "btn-success",
                             exportOptions: {
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 4) {
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ?
+                                                '\u2611' : '\u2610';
                                         }
                                         return data;
 
                                     }
                                 },
-                                columns: [0, 1,2,3,4]
+                                columns: [0, 1, 2, 3, 4]
                             }
                         },
                         {
-                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            extend: 'pdfHtml5',
+                            text: `<i class="far fa-file-pdf"></i>`,
+                            titleAttr: "Export to PDF",
+                            className: "btn-danger",
                             exportOptions: {
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 4) {
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ?
+                                                '\u2611' : '\u2610';
                                         }
                                         return data;
 
                                     }
                                 },
-                                columns: [0, 1,2,3,4]
+                                columns: [0, 1, 2, 3, 4]
                             }
                         },
                         {
-                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            extend: 'copy',
+                            text: `<i class="fas fa-copy"></i>`,
+                            titleAttr: "Copy",
                             exportOptions: {
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 4) {
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+                                            return $(data).find('input').is(':checked') ?
+                                                '\u2611' : '\u2610';
                                         }
                                         return data;
 
                                     }
                                 },
-                                columns: [0, 1,2,3,4]
+                                columns: [0, 1, 2, 3, 4]
                             }
                         },
                         {
                             extend: 'colvis',
-                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-warning',
                             titleAttr: "Select Visible Column",
                             exportOptions: {
@@ -144,79 +179,139 @@
         });
 
         //trigger provinsi when it changes
-        $('#provinsi_id').change(function(){
+        $('#provinsi_id').change(function() {
             var provinsi_id = $(this).val();
-            if(provinsi_id){
+            if (provinsi_id) {
                 $.ajax({
                     type: 'GET',
-                    url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsi_id),
+                    url: '{{ route('kab.data', ':id') }}'.replace(':id', provinsi_id),
                     method: 'GET',
                     dataType: 'json',
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Loading {{ __('cruds.kabupaten.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
+                    },
                     success: function(hasil) {
                         $("#kabupaten_id").empty();
-                        $('#kabupaten_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
-                        if(hasil){
+                        $('#kabupaten_id').html(
+                            `<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}</option>`
+                        );
+                        if (hasil) {
                             $.each(hasil, function(index, item) {
-                                $("#kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                                $("#kabupaten_id").append('<option value="' + item
+                                    .id + '" data-id="' + item.kode + '">' +
+                                    item.text + '</option>');
                             });
-                        }
-                        else{
+                        } else {
                             $("#kabupaten_id").empty();
                         }
-                    }
+                    },
+                    error: function(xhr, jqXHR, textStatus, errorThrown) {
+                        $('#updateProfileBtn').removeAttr('disabled');
+                        var errorMessage = 'An unexpected error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON
+                                .message; // Get the message from the response
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    },
                 });
             }
             $('#kabupaten_id').select2({
-                placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+                placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}",
             });
         });
         //autofill desa_kode with kabupatan_kode
-        $('#provinsi_id, #kabupaten_id').change(function(){
+        $('#provinsi_id, #kabupaten_id').change(function() {
             var selected = $(this).find('option:selected');
             var kode_kab = selected.data('id');
-            var kab_id   = selected.val();
+            var kab_id = selected.val();
 
-            if(kab_id){
+            if (kab_id) {
                 $.ajax({
                     type: 'GET',
-                    url:  '{{ route('kec.data', ':id') }}'.replace(':id', kab_id),
+                    url: '{{ route('kec.data', ':id') }}'.replace(':id', kab_id),
                     method: 'GET',
                     dataType: 'json',
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Loading {{ __('cruds.kecamatan.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
+                    },
                     success: function(hasil) {
                         $("#kecamatan_id").empty();
-                        $('#kecamatan_id').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
-                        if(hasil){
+                        $('#kecamatan_id').html(
+                            `<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title') }}</option>`
+                        );
+                        if (hasil) {
                             $.each(hasil, function(index, item) {
-                                $("#kecamatan_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                                $("#kecamatan_id").append('<option value="' + item
+                                    .id + '" data-id="' + item.kode + '">' +
+                                    item.text + '</option>');
                             });
-                        }
-                        else{
+                        } else {
                             $("#kabupaten_id").empty();
                             $("#kecamatan_id").empty();
                         }
-                    }
+                    },
+                    error: function(xhr, jqXHR, textStatus, errorThrown) {
+                        $('#updateProfileBtn').removeAttr('disabled');
+                        var errorMessage = 'An unexpected error occurred.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON
+                                .message; // Get the message from the response
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    },
                 });
             }
-            if(kode_kab !== undefined ){
-                $('#kode').val(kode_kab+'.');
+            if (kode_kab !== undefined) {
+                $('#kode').val(kode_kab + '.');
                 $('#kode').prop("title", "please input 4 digit additional village code");
-            }else{
+            } else {
                 $('#kode').val('');
-                $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}");
+                $('#kode').prop("placeholder",
+                    "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title') }}");
             }
         });
 
-        $('#kecamatan_id').change(function(){
+        $('#kecamatan_id').change(function() {
             var selected = $(this).find('option:selected');
             var kode_kec = selected.data('id');
-            console.log('koded kec: ',kode_kec);
+            console.log('koded kec: ', kode_kec);
 
-            if(kode_kec !== undefined || kode_kec != ''){
-                $('#kode').val(kode_kec+'.');
-                $('#kode').prop("title", "add two more of kode kecamatan");
-            }else{
+            if (kode_kec !== undefined || kode_kec != '') {
+                Toast.fire({
+                    icon: "info",
+                    title: "Loading {{ __('cruds.kecamatan.title') }}",
+                    // position: "bottom-end",
+                    timer: 500,
+                });
+                setTimeout(() => {
+                    $('#kode').val(kode_kec + '.');
+                    $('#kode').prop("title", "add two more of kode kecamatan");
+                }, 800);
+            } else {
                 $('#kode').val('');
-                $('#kode').prop("placeholder", "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}");
+                $('#kode').prop("placeholder",
+                    "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title') }}");
             }
         });
 
@@ -226,9 +321,11 @@
             const regex = /^\d{2}\.\d{2}\.\d{2}\.\d{4}$/;
             return regex.test(value);
         }
+
         function validateNama(value) {
             return value.length >= 3;
         }
+
         function checkValidity() {
             let fields = ['#provinsi_id', '#kabupaten_id', '#kecamatan_id', '#nama', '#kode'];
             let isValid = true;
@@ -238,10 +335,12 @@
 
                 if ($field.hasClass('select2-hidden-accessible')) {
                     if (!value) {
-                        $field.next('.select2-container').addClass('is-invalid').removeClass('is-valid');
+                        $field.next('.select2-container').addClass('is-invalid').removeClass(
+                            'is-valid');
                         isValid = false;
                     } else {
-                        $field.next('.select2-container').addClass('is-valid').removeClass('is-invalid');
+                        $field.next('.select2-container').addClass('is-valid').removeClass(
+                            'is-invalid');
                     }
                 } else {
                     if (!value || value.trim() === '') {
@@ -265,7 +364,8 @@
                         }
                         const namaInput = document.getElementById('nama');
                         if (!validateNama(namaInput.value)) {
-                            document.getElementById('nama_error').textContent = 'Required. Min data is 3 characters.';
+                            document.getElementById('nama_error').textContent =
+                                'Required. Min data is 3 characters.';
                             namaInput.classList.add('is-invalid');
                             isValid = false;
                         } else {
@@ -283,7 +383,7 @@
         });
 
         // SUBMIT DESA DATA
-        $('#submit_desa').on('submit',function(e){
+        $('#submit_desa').on('submit', function(e) {
             e.preventDefault();
             let kecamatan_kode = $('#kecamatan_id').children('option:selected').data('id');
             let formData = $(this).serialize();
@@ -296,32 +396,32 @@
                     formIsValid = false;
                 }
             });
-            if(formIsValid){
+            if (formIsValid) {
                 $.ajax({
                     url: '{{ route('desa.store') }}',
                     method: 'POST',
                     data: formData,
                     dataType: 'json',
-                    beforeSend: function(){
+                    beforeSend: function() {
                         Toast.fire({
                             icon: "info",
                             title: "Processing...",
                             timer: 3000,
                             timerProgressBar: true,
-                            didOpen: ()=>{
+                            didOpen: () => {
                                 Swal.showLoading();
                             }
                         });
                     },
-                    success: function(response){
-                        if(response.success === true){
+                    success: function(response) {
+                        if (response.success === true) {
                             Swal.fire({
                                 title: "Success",
                                 text: response.message,
                                 icon: "success",
                                 timer: 3000,
                                 timerProgressBar: true,
-                                didOpen: ()=>{
+                                didOpen: () => {
                                     Swal.showLoading();
                                 },
                             });
@@ -335,7 +435,7 @@
                             resetForm();
                         }
                         $("#provinsi_id").select2({
-                            placeholder: "{{ trans('global.pleaseSelect') .' '. trans('cruds.provinsi.title')}}",
+                            placeholder: "{{ trans('global.pleaseSelect') . ' ' . trans('cruds.provinsi.title') }}",
                         });
                     },
                     error: function(xhr, status, error) {
@@ -343,12 +443,18 @@
                         try {
                             const response = xhr.responseJSON;
                             if (response.errors) {
-                                errorMessage += '<br><br><ul style="text-align:left!important">';
+                                errorMessage +=
+                                    '<br><br><ul style="text-align:left!important">';
                                 $.each(response.errors, function(field, messages) {
                                     messages.forEach(message => {
-                                        errorMessage += `<li>${field}: ${message}</li>`;
-                                        $(`#${field}-error`).text(message).removeClass('is-valid').addClass('is-invalid');
-                                        $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                        errorMessage +=
+                                            `<li>${field}: ${message}</li>`;
+                                        $(`#${field}-error`).text(message)
+                                            .removeClass('is-valid')
+                                            .addClass('is-invalid');
+                                        $(`#${field}`).removeClass(
+                                            'invalid').addClass(
+                                            'is-invalid');
                                     });
                                 });
                                 errorMessage += '</ul>';
@@ -366,16 +472,16 @@
             }
         });
         //View Kelurahan / Desa
-        $('#desa_list tbody').on('click', '.view-desa-btn', function(e){
+        $('#desa_list tbody').on('click', '.view-desa-btn', function(e) {
             e.preventDefault();
             let desaId = $(this).data('desa-id');
             let action = $(this).data('action');
-            let url = '{{ route('desa.show', ':id') }}'.replace(':id',desaId);
+            let url = '{{ route('desa.show', ':id') }}'.replace(':id', desaId);
             $.ajax({
                 url: url,
                 method: 'GET',
                 dataType: 'JSON',
-                beforeSend: function(){
+                beforeSend: function() {
                     Toast.fire({
                         icon: "info",
                         title: "Processing...",
@@ -383,7 +489,7 @@
                         timerProgressBar: true,
                     });
                 },
-                success: function(response){
+                success: function(response) {
                     let data = response || [];
                     if (action === 'view') {
                         $("#show-kode").text(data.kode);
@@ -391,10 +497,12 @@
                         $("#show-kecamatan").text(data.kecamatan.nama);
                         if (data.aktif === 1) {
                             $('#show-aktif').val(data.aktif);
-                            $("#show-aktif").prop("checked",true); // Set checked to true if value is 1
+                            $("#show-aktif").prop("checked",
+                                true); // Set checked to true if value is 1
                         } else {
                             $('#show-aktif').val(0);
-                            $("#show-aktif").prop("checked",false); // Set checked to false if value is not 1
+                            $("#show-aktif").prop("checked",
+                                false); // Set checked to false if value is not 1
                         }
                         $('#showDesaModal').modal('show');
                     } else {
@@ -405,7 +513,7 @@
                         });
                     }
                 },
-                error: function(xhr, status, errors){
+                error: function(xhr, status, errors) {
                     var response = JSON.parse(xhr.responseText);
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
                     try {
@@ -415,7 +523,8 @@
                         }
                         if (response.errors) {
                             const errors = response.errors;
-                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            errorMessage +=
+                                '<br><br><ul style="text-align:left!important">';
                             for (const field in errors) {
                                 if (errors.hasOwnProperty(field)) {
                                     errors[field].forEach(err => {
@@ -437,25 +546,25 @@
             });
         });
         //edit desa modal show
-        $('#desa_list tbody').on('click', '.edit-desa-btn', function(e){
+        $('#desa_list tbody').on('click', '.edit-desa-btn', function(e) {
             e.preventDefault();
             let desaId = $(this).data('desa-id');
             let action = $(this).data('action');
-            let url = '{{ route('desa.edit', ':id') }}'.replace(':id',desaId);
+            let url = '{{ route('desa.edit', ':id') }}'.replace(':id', desaId);
             let url_update = '{{ route('desa.update', ':id') }}'.replace(':id', desaId);
             $.ajax({
                 url: url,
                 method: 'GET',
                 dataType: 'JSON',
-                beforeSend: function(){
+                beforeSend: function() {
                     Toast.fire({
                         icon: "info",
-                        title: "Processing...",
+                        title: "Loading...",
                         timerProgressBar: true,
                         timer: 500,
                     })
                 },
-                success: function(hasil){
+                success: function(hasil) {
                     if (action === 'edit') {
                         let provID = hasil.desa.kecamatan.kabupaten.provinsi_id;
                         let kabID = hasil.desa.kecamatan.kabupaten.id;
@@ -470,21 +579,22 @@
                         $('#edit-aktif').val(hasil.desa.aktif);
 
                         $('#edit_provinsi_id').empty();
-                            $.each(hasil.provinsi, function(key, value) {
-                                let selected = (value.id === provID) ? 'selected' : '';
-                                $('#edit_provinsi_id').append('<option value="'+ value.id +'" '+ selected +'>'+value.kode+' - '+ value.nama +'</option>');
-                            });
+                        $.each(hasil.provinsi, function(key, value) {
+                            let selected = (value.id === provID) ? 'selected' : '';
+                            $('#edit_provinsi_id').append('<option value="' + value.id + '" ' + selected + '>' + value.kode +' - ' + value.nama + '</option>');
+                        });
                         $('#edit_kabupaten_id').empty();
-                            $.each(hasil.kabupaten, function(key, value) {
-                                let selected = (value.id === kabID) ? 'selected' : '';
-                                $('#edit_kabupaten_id').append('<option value="'+ value.id +'" '+ selected +' data-id="'+value.kode+'">'+value.kode+' - '+ value.nama +'</option>');
-                            });
+
+                        $.each(hasil.kabupaten, function(key, value) {
+                            let selected = (value.id === kabID) ? 'selected' : '';
+                            $('#edit_kabupaten_id').append('<option value="' + value.id + '" ' + selected + ' data-id="' + value.kode + '">' + value.kode + ' - ' + value.nama +'</option>');
+                        });
                         // edit_kecamatan_id
                         $('#edit_kecamatan_id').empty();
-                            $.each(hasil.kecamatan, function(key, value) {
-                                let selected = (value.id === kecID) ? 'selected' : '';
-                                $('#edit_kecamatan_id').append('<option value="'+ value.id +'" '+ selected +' data-id="'+value.kode+'">'+value.kode+' - '+ value.nama +'</option>');
-                            });
+                        $.each(hasil.kecamatan, function(key, value) {
+                            let selected = (value.id === kecID) ? 'selected' : '';
+                            $('#edit_kecamatan_id').append('<option value="' + value.id + '" ' + selected + ' data-id="' + value.kode + '">' + value.kode + ' - ' + value.nama + '</option>');
+                        });
                         $('#editDesaModal').modal('show');
                     } else {
                         Swal.fire({
@@ -494,7 +604,7 @@
                         });
                     }
                 },
-                error: function(xhr, status, errors){
+                error: function(xhr, status, errors) {
                     var response = JSON.parse(xhr.responseText);
                     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
                     try {
@@ -504,7 +614,8 @@
                         }
                         if (response.errors) {
                             const errors = response.errors;
-                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            errorMessage +=
+                                '<br><br><ul style="text-align:left!important">';
                             for (const field in errors) {
                                 if (errors.hasOwnProperty(field)) {
                                     errors[field].forEach(err => {
@@ -546,18 +657,27 @@
             $(this).val(input);
         });
 
-        $(function () {
+        $(function() {
             $.validator.setDefaults({
-                submitHandler: function () {
+                submitHandler: function() {
                     let kecamatan_kode = $('#edit_kecamatan_id').children('option:selected').data('id');
                     update_desa(kecamatan_kode);
                 }
             });
             const validator = $('#editDesaForm').validate({
                 rules: {
-                    nama: {required: true, minlength: 3,},
-                    kode: {required: true, minlength: 13, maxlength:13},
-                    kecamatan_id: {required: true},
+                    nama: {
+                        required: true,
+                        minlength: 3,
+                    },
+                    kode: {
+                        required: true,
+                        minlength: 13,
+                        maxlength: 13
+                    },
+                    kecamatan_id: {
+                        required: true
+                    },
                 },
                 messages: {
                     nama: {
@@ -571,21 +691,22 @@
                     kecamatan_id: "{{ trans('cruds.desa.validation.kec') }}"
                 },
                 errorElement: 'span',
-                errorPlacement: function (error, element) {
+                errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.form-group').append(error);
                 },
-                highlight: function (element, errorClass, validClass) {
+                highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid').removeClass('is-valid');
                 },
-                unhighlight: function (element, errorClass, validClass) {
+                unhighlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-valid').removeClass('is-invalid');
                 }
             });
 
-            $('#editnama, #editkode, #edit_kecamatan_id').on('blur change', function () {
+            $('#editnama, #editkode, #edit_kecamatan_id').on('blur change', function() {
                 validator.element($(this)); // Validate the field that triggered the change event
             });
+
             function capitalizeWords(str) {
                 return str.replace(/\b\w/g, function(char) {
                     return char.toUpperCase();
@@ -607,88 +728,88 @@
             // });
         });
 
-        function update_desa(kecamatan_kode){
+        function update_desa(kecamatan_kode) {
             $('#editaktif').change(function() {
                 $('#edit-aktif').val(this.checked ? 1 : 0);
             });
             let formData = $('#editDesaForm').serialize();
-                formData += '&kecamatan_kode=' + kecamatan_kode;
+            formData += '&kecamatan_kode=' + kecamatan_kode;
             let url = $('#editDesaForm').attr('action');
             let idDesa = $('#id').val();
             let nama = $('#editnama').val();
             let url_update = '{{ route('desa.update', ':kec') }}'.replace(':kec', idDesa);
-                $.ajax({
-                    url: url,
-                    type: 'PUT',
-                    dataType:'JSON',
-                    data: formData,
-                    beforeSend: function(){
-                        Toast.fire({
-                            icon: "info",
-                            title: "Updating...",
-                            timerProgressBar: true,
-                            timer: 500,
-                        });
-                    },
-                    success: function(response){
-                        if (response.success === true ) {
-                            Swal.fire({
-                                title: response.data.nama,
-                                text: response.message,
-                                icon: 'success',
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: ()=>{
-                                    Swal.showLoading();
-                                }
-                            });
-                            $('#editDesaModal').modal('hide');
-                            resetForm();
-                            $('#desa_list').DataTable().ajax.reload();
-                        } else {
-                            Toast.fire({
-                                icon: "error",
-                                title: "Failed to Update",
-                                position: 'top-end',
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: ()=>{
-                                    Swal.showLoading();
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr, status, errors){
-                        var response = JSON.parse(xhr.responseText);
-                        let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                        try {
-                            const response = JSON.parse(xhr.responseText);
-                            if (response.message) {
-                                errorMessage = response.message;
-                            }
-                            if (response.errors) {
-                                const errors = response.errors;
-                                errorMessage += '<br><br><ul style="text-align:left!important">';
-                                for (const field in errors) {
-                                    if (errors.hasOwnProperty(field)) {
-                                        errors[field].forEach(err => {
-                                            errorMessage += `<li>${field}: ${err}</li>`;
-                                        });
-                                    }
-                                }
-                                errorMessage += '</ul>';
-                            }
-                        } catch (e) {
-                            console.error('Error parsing response:', e);
-                        }
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                dataType: 'JSON',
+                data: formData,
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Updating...",
+                        timerProgressBar: true,
+                        timer: 500,
+                    });
+                },
+                success: function(response) {
+                    if (response.success === true) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: errorMessage,
+                            title: response.data.nama,
+                            text: response.message,
+                            icon: 'success',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        $('#editDesaModal').modal('hide');
+                        resetForm();
+                        $('#desa_list').DataTable().ajax.reload();
+                    } else {
+                        Toast.fire({
+                            icon: "error",
+                            title: "Failed to Update",
+                            position: 'top-end',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
                         });
                     }
-                });
-                return true;
+                },
+                error: function(xhr, status, errors) {
+                    var response = JSON.parse(xhr.responseText);
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            errorMessage = response.message;
+                        }
+                        if (response.errors) {
+                            const errors = response.errors;
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            for (const field in errors) {
+                                if (errors.hasOwnProperty(field)) {
+                                    errors[field].forEach(err => {
+                                        errorMessage += `<li>${field}: ${err}</li>`;
+                                    });
+                                }
+                            }
+                            errorMessage += '</ul>';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
+            });
+            return true;
         }
 
         function resetForm() {
@@ -700,31 +821,31 @@
         }
 
         $('#provinsi_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title') }}",
             allowClear: true,
             delay: 250,
         });
         $('#edit_provinsi_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title') }}",
             delay: 250,
             allowClear: true,
             dropdownParent: $('#editDesaModal')
         });
         $('#kabupaten_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}",
             allowClear: true,
             delay: 250,
         });
         $('#edit_kabupaten_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}",
             delay: 250,
         });
         $('#kecamatan_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title') }}",
             delay: 250,
         });
         $('#edit_kecamatan_id').select2({
-            placeholder: "{{ trans('global.pleaseSelect') .' '. trans('cruds.kecamatan.title')}}",
+            placeholder: "{{ trans('global.pleaseSelect') . ' ' . trans('cruds.kecamatan.title') }}",
             delay: 250,
             dropdownParent: $('#editDesaModal')
         });
@@ -737,64 +858,87 @@
             $('#aktif').val(this.checked ? 1 : 0);
         });
 
-        $('#edit_provinsi_id').on('change',function(){
+        $('#edit_provinsi_id').on('change', function() {
             var provinsiID = $(this).val();
             var kab_load = $("#edit_kabupaten_id").find('option:selected');
             var KabKode = kab_load.data('id');
-            loadKab(provinsiID);
-            if(KabKode !== undefined && $("#edit_kabupaten_id").prop('selectedIndex') > 0){
+            setTimeout(() => {
+                Toast.fire({
+                    icon: "info",
+                    title: "Loading {{ __('cruds.dusun.form.kode') }}",
+                    // position: "bottom-end",
+                    timer: 500,
+                });
+                loadKab(provinsiID);
+            }, 500);
+            if (KabKode !== undefined && $("#edit_kabupaten_id").prop('selectedIndex') > 0) {
                 $('#editkode').html('');
                 $('#editkode').empty();
-                $('#editkode').val(provinsiID+'.');
-            }else{
+                $('#editkode').val(provinsiID + '.');
+            } else {
                 // $('#editkode').val(KabKode+'.');
                 $('#editkode').html('');
             }
         });
 
-        $('#edit_kabupaten_id').on('change', function(){
+        $('#edit_kabupaten_id').on('change', function() {
             let KabupatenID = $(this).val();
             var kab_load = $("#edit_kabupaten_id").find('option:selected');
             var KabKode = kab_load.data('id');
-            loadKec(KabupatenID);
+            setTimeout(() => {
+                loadKec(KabupatenID);
+            }, 500);
 
         });
 
-        $('#edit_kecamatan_id').on('change', function(){
+        $('#edit_kecamatan_id').on('change', function() {
+            Toast.fire({
+                icon: "info",
+                title: "Loading {{ __('cruds.desa.form.kode') }}",
+                // position: "bottom-end",
+                timer: 500,
+            });
             let kec_load = $("#edit_kecamatan_id").find('option:selected');
             let KecKode = kec_load.data('id');
-            $('#editkode').val(KecKode+'.');
+            setTimeout(() => {
+                $('#editkode').val(KecKode + '.');
+                $('#editkode').focus();
+            }, 500);
         });
 
-        function loadKab(provinsiID, selectedKabupatenId){
-            if(provinsiID){
+        function loadKab(provinsiID, selectedKabupatenId) {
+            if (provinsiID) {
                 $.ajax({
                     type: 'GET',
-                    url:  '{{ route('kab.data', ':id') }}'.replace(':id', provinsiID),
+                    url: '{{ route('kab.data', ':id') }}'.replace(':id', provinsiID),
                     method: 'GET',
                     dataType: 'json',
                     success: function(hasil) {
                         $("#edit_kabupaten_id").empty();
                         $("#edit_kecamatan_id").empty();
-                        $('#edit_kabupaten_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
-                        if(hasil){
+                        $('#edit_kabupaten_id').html(
+                            `<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title') }}</option>`
+                        );
+                        if (hasil) {
                             $.each(hasil, function(index, item) {
-                                $("#edit_kabupaten_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
+                                $("#edit_kabupaten_id").append('<option value="' + item.id +
+                                    '" data-id="' + item.kode + '">' + item.text +
+                                    '</option>');
                             });
-                            $('#edit_kabupaten_id').val(selectedKabupatenId).trigger('change.select2');
-                        }
-                        else{
+                            $('#edit_kabupaten_id').val(selectedKabupatenId).trigger(
+                                'change.select2');
+                        } else {
                             $("#edit_kabupaten_id").empty();
                         }
                     },
-                    error:function(xhr){
+                    error: function(xhr) {
                         Swal.fire({
                             title: "Something Wrong !",
                             text: xhr.message,
                             icon: "error",
                             timer: 4000,
                             timerProgressBar: true,
-                            didOpen: ()=>{
+                            didOpen: () => {
                                 Swal.showLoading();
                             }
                         });
@@ -804,24 +948,41 @@
             }
         }
 
-        function loadKec(KabupatenID){
-            if(KabupatenID){
+        function loadKec(KabupatenID) {
+            if (KabupatenID) {
                 $.ajax({
                     url: '{{ route('kec.data', ':id') }}'.replace(':id', KabupatenID),
                     method: 'GET',
                     dataType: 'JSON',
-                    success: function(hasil){
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Loading {{ __('cruds.kecamatan.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
+                    },
+                    success: function(hasil) {
                         $("#edit_kecamatan_id").empty();
-                        $('#edit_kecamatan_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
-                        if(hasil){
-                            $.each(hasil, function(index, item) {
-                                $("#edit_kecamatan_id").append('<option value="' + item.id + '" data-id="'+item.kode+'">' + item.text + '</option>');
-                            });
-                            $('#edit_kecamatan_id').val("").trigger('change.select2');
-                        }
-                        else{
+                        $('#edit_kecamatan_id').html(`<option value="">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title') }}</option>`);
+                        if (hasil) {
+                            setTimeout(() => {
+                                $.each(hasil, function(index, item) {
+                                    $("#edit_kecamatan_id").append('<option value="' + item.id + '" data-id="' + item.kode + '">' + item.text +'</option>');
+                                });
+                                $('#edit_kecamatan_id').val("").trigger('change.select2');
+                            }, 500);
+                        } else {
                             $("#edit_kecamatan_id").empty();
                         }
+                    },
+                    error: function() {
+                        Toast.fire({
+                            icon: "error",
+                            title: "Loading {{ __('cruds.desa.title') }}",
+                            // position: "bottom-end",
+                            timer: 500,
+                        });
                     }
                 });
             }

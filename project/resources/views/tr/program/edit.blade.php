@@ -37,20 +37,14 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
-                                    <input type="text" id="nama_program" name="nama"
-                                        class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}"
-                                        value="{{ old('nama', $program->nama) }}">
+                                    <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
+                                    <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode_program" name="kode"
-                                        class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}"
-                                        value="{{ old('kode', $program->kode) }}">
+                                    <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                    <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required>
                                 </div>
                                 @if ($errors->has('kode'))
                                     <span class="text-danger">{{ $errors->first('kode') }}</span>
@@ -58,11 +52,8 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalmulai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                    <input type="date" id="tanggalmulai" name="tanggalmulai"
-                                        class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}">
+                                    <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                    <input type="date" id="tanggalmulai" name="tanggalmulai"class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}" value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}" required>
 
 
                                     @if ($errors->has('tanggalmulai'))
@@ -72,15 +63,8 @@
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalselesai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    {{-- <input type="date" id="tanggalselesai" name="tanggalselesai"
-                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalselesai', $program->tanggalselesai) }}"> --}}
-
-                                    <input type="date" id="tanggalselesai" name="tanggalselesai"
-                                        class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}"
-                                        value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}">
+                                    <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}" value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}" required>
 
                                     @if ($errors->has('tanggalselesai'))
                                         <span class="text-danger">{{ $errors->first('tanggalselesai') }}</span>
@@ -89,12 +73,8 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="totalnilai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="text" id="totalnilai" name="totalnilai"
-                                        class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}"
-                                        minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}"
-                                        step="0.001">
+                                    <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}" minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}" step="0.001" required>
 
                                     @if ($errors->has('totalnilai'))
                                         <span class="text-danger">{{ $errors->first('totalnilai') }}</span>
@@ -233,7 +213,7 @@
                                     <div class="select2-orange">
                                         <select
                                             class="form-control select2-hidden-accessible {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}"
-                                            name="targetreinstra[]" id="targetreinstra" multiple="multiple" required>
+                                            name="targetreinstra[]" id="targetreinstra" multiple="multiple">
                                         </select>
                                     </div>
                                     @if ($errors->has('targetreinstra'))
@@ -256,7 +236,7 @@
                                     <div class="select2-cyan">
                                         <select
                                             class="form-control select2 {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}"
-                                            name="kaitansdg[]" id="kaitansdg" multiple="multiple" required>
+                                            name="kaitansdg[]" id="kaitansdg" multiple="multiple">
                                         </select>
                                     </div>
                                     @if ($errors->has('kaitansdg'))
@@ -419,4 +399,7 @@
 @include('tr.program.js.detail-edit.donor')
 @include('tr.program.js.detail-edit.lokasi')
 @include('tr.program.js.detail-edit.staff')
+
+
+@include('tr.program.js.detail-edit.outcome')
 @endpush

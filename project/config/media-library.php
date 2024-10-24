@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Program;
 use App\Models\User;
 use App\Services\MediaLibrary\CustomPathGenerator;
 use App\Services\MediaLibrary\ProfilePathGenerator;
+use App\Services\MediaLibrary\ProgramPathGenerator;
 
 return [
 
@@ -91,6 +93,7 @@ return [
      */
     'custom_path_generators' => [
         User::class => ProfilePathGenerator::class,
+        Program::class => ProgramPathGenerator::class,
         // or
         // 'model_morph_alias' => PathGenerator::class
     ],

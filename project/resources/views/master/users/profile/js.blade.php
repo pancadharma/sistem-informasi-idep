@@ -50,7 +50,7 @@
                             timer: 1500,
                             timerProgressBar: true,
                         });
-                        $('.profile-user-img, .profile-pic, .img-url').attr('src', data.user.adminlte_image +'?t=' + new Date().getTime());
+                        $('.profile-user-img, .profile-pic, .img-url, .elevation-2').attr('src', data.user.adminlte_image +'?t=' + new Date().getTime());
                         $('.img-url').attr('href', data.user.full_profile +'?t=' + new Date().getTime());
                         $('.user-desc').text(data.user.description);
                         $('.profile-username').text(data.user.nama);

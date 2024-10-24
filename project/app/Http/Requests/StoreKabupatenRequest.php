@@ -31,16 +31,28 @@ class StoreKabupatenRequest extends FormRequest
     // public function messages(): array
     // {
     //     return [
-    //         'aktif.required'       => 'The aktif field is required.',
-    //         'aktif.boolean'        => 'The aktif field must be true or false.',
     //         'kode.required'        => 'The kode field is required.',
-    //         'kode.string'          => 'The kode field must be a string.',
-    //         'kode.max'             => 'The kode field may not be greater than 5 characters.',
+    //         'kode.string'          => 'The kode field can be a string/integer combine.',
+    //         'kode.max'             => 'The kode field may not be greater than 15 characters.',
     //         'nama.required'        => 'The nama field is required.',
     //         'nama.string'          => 'The nama field must be a string.',
     //         'nama.max'             => 'The nama field may not be greater than 200 characters.',
-    //         'provinsi_id.required' => 'The provinsi_id field is required.',
-    //         'provinsi_id.integer'  => 'The provinsi_id field must be an integer.',
+    //         'provinsi_id.required' => 'Silahkan Pilih Provinsi.',
+    //         'provinsi_id.integer'  => 'The Province field must be selected.',
     //     ];
     // }
+
+    public function messages()
+    {
+        return [
+            'kode.required' => trans('request.validation.kode_required'),
+            'kode.string' => trans('request.validation.kode_string'),
+            'kode.max' => trans('request.validation.kode_max'),
+            'nama.required' => trans('request.validation.nama_required'),
+            'nama.string' => trans('request.validation.nama_string'),
+            'nama.max' => trans('request.validation.nama_max'),
+            'provinsi_id.required' => trans('request.validation.provinsi_id_required'),
+            'provinsi_id.integer' => trans('request.validation.provinsi_id_integer'),
+        ];
+    }
 }
