@@ -18,6 +18,7 @@ use App\Http\Requests\UpdateProgramRequest;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
+use App\Models\Program_Outcome;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -59,8 +60,8 @@ class ProgramController extends Controller
     {
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_create')) {
-            // $targetreinstra = TargetReinstra::pluck('id', 'nama');
-            return view('tr.program.create');
+            $program = new Program();
+            return view('tr.program.create', compact('program'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
@@ -136,35 +137,67 @@ class ProgramController extends Controller
             }
 
             //save pendonor & donation value
+            // $newPendonor = $request->input('pendonor_id', []);
+            // $nilaiD = $request->input('nilaidonasi', []);
+            // if (count($newPendonor) !== count($nilaiD)) {
+            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            // }
+            // $newDonasi = [];
+            // foreach ($newPendonor as $index => $pendonor_id) {
+            //     if (isset($nilaiD[$index])) {
+            //         $newDonasi[] = [
+            //             'pendonor_id' => $pendonor_id,
+            //             'nilaidonasi' => $nilaiD[$index]
+            //         ];
+            //     } else {
+            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            //     }
+            // }
+            // foreach ($newDonasi as $donation) {
+            //     $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            // }
+
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 
             if (count($newPendonor) !== count($nilaiD)) {
                 throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
             }
-
-            $newDonasi = [];
-            foreach ($newPendonor as $index => $pendonor_id) {
-                if (isset($nilaiD[$index])) {
-                    $newDonasi[] = [
-                        'pendonor_id' => $pendonor_id,
-                        'nilaidonasi' => $nilaiD[$index]
-                    ];
-                } else {
-                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+                if (empty($donation_value)) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id");
                 }
-            }
-
+                return [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $donation_value,
+                ];
+            }, $newPendonor, $nilaiD);
             foreach ($newDonasi as $donation) {
                 $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
             }
 
+            // create program outcome
+
+            foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+                if (!is_null($deskripsi) && $deskripsi !== '') {
+                    Program_Outcome::create([
+                        'program_id' => $program->id, // Use the dynamically created program ID
+                        'deskripsi' => $deskripsi,
+                        'indikator' => $request->input("indikator.$index"),
+                        'target' => $request->input("target.$index"),
+                    ]);
+                }
+            }
+            //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
                 'success' => true,
                 'data' => $program,
                 "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
             ], Response::HTTP_CREATED);
+
+            //ERROR CATCH
+
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -195,50 +228,6 @@ class ProgramController extends Controller
         }
     }
 
-    // public function edit(Program $program)
-    // {
-    //     if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
-
-    //         $targetReinstra = TargetReinstra::pluck('nama', 'id');
-    //         $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
-    //         $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-    //         $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor');
-
-    //         $file_pendukung = Program::find($program->id);
-    //         $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
-    //         $initialPreview = [];
-    //         $initialPreviewConfig = [];
-
-    //         foreach ($mediaFiles as $media) {
-    //             if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-    //                 $initialPreview[] = $media->getUrl();
-    //             } elseif ($media->mime_type == 'application/pdf') {
-    //                 $initialPreview[] = $media->getUrl();
-    //             } elseif ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-    //                 $initialPreview[] = $media->getUrl();
-    //             } else {
-    //                 $initialPreview[] =
-    //                     $media->getUrl();;
-    //             }
-
-    //             $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-    //             $initialPreviewConfig[] = [
-    //                 'caption' => "<span class='text-red strong'>{$caption}</span>",
-    //                 'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
-    //                 'key' => $media->id ?? '',
-    //                 'size' => $media->size ?? '',
-    //                 'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
-    //                 'downloadUrl' => $media->getUrl() ?? '',
-    //                 'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
-
-    //             ];
-    //         }
-
-    //         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
-    //     }
-    //     abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
-    // }
-
     public function edit(Program $program)
     {
         if (auth()->user()->id !== 1 && !auth()->user()->can('program_edit')) {
@@ -250,7 +239,7 @@ class ProgramController extends Controller
         $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
 
         // Eager load related models
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -306,7 +295,7 @@ class ProgramController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->validated();
-            $program->update($request->all());
+            $program->update($data);
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
@@ -349,29 +338,17 @@ class ProgramController extends Controller
             $program->lokasi()->sync($request->input('lokasi', []));
 
             // update program donatur
-            $newPendonor = $request->input('pendonor_id', []);
-            $nilaiD = $request->input('nilaidonasi', []);
-
-            if (count($newPendonor) !== count($nilaiD)) {
-                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            }
-
-            $newDonasi = [];
-            foreach ($newPendonor as $index => $pendonor_id) {
-                if (isset($nilaiD[$index])) {
-                    $newDonasi[$pendonor_id] = ['nilaidonasi' => $nilaiD[$index]]; // Use associative array for sync
-                } else {
-                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-                }
-            }
-            $program->pendonor()->sync($newDonasi); // Use sync to update or add new records
+            $this->updateProgramDonatur($program, $request);
+            $this->updateProgramOutcomes($program, $request);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'data' => $program,
                 "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.updated'),
             ], Response::HTTP_CREATED);
+
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -409,36 +386,45 @@ class ProgramController extends Controller
     // Get Files with collection of file_pendukung_program using JSON
     public function getProgramFilesPendukung($id)
     {
-        $program = Program::find($id);
+        $program = Program::findOrFail($id); // Use findOrFail to handle not found
         $mediaFiles = $program->getMedia('file_pendukung_program');
-        $preview_pendukung = [];
-        $config_pendukung = [];
+
+        $previewPendukung = [];
+        $configPendukung = [];
+        $imageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $officeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+        ];
 
         foreach ($mediaFiles as $media) {
-            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-                $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/pdf') {
-                $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint') {
-                $preview_pendukung[] = $media->getUrl();
+            // Add media URL to preview
+            $previewPendukung[] = $media->getUrl();
+            $caption = $media->getCustomProperty('keterangan') ?: $media->name;
+            if (in_array($media->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($media->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($media->mime_type, $officeTypes)) {
+                $type = 'office';
             } else {
-                $preview_pendukung[] = $media->getUrl();
+                $type = 'unknown'; // Default type for other mime types
             }
-
-            $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-            $config_pendukung[] = [
+            $configPendukung[] = [
                 'caption' => "<span class='text-red strong'>{$caption}</span>",
-                'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                'description' => $media->getCustomProperty('keterangan') ?: $media->file_name,
                 'key' => $media->id ?? '',
                 'size' => $media->size,
-                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
-                'downloadUrl' => $media->getUrl() ?? '',
-                'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+                'type' => $type,
+                'downloadUrl' => $media->getUrl() ?: '',
+                'filename' => $caption,
             ];
         }
+
         return response()->json([
-            'initialPreview' => $preview_pendukung,
-            'initialPreviewConfig' => $config_pendukung,
+            'initialPreview' => $previewPendukung,
+            'initialPreviewConfig' => $configPendukung,
         ]);
     }
 
@@ -535,4 +521,71 @@ class ProgramController extends Controller
         $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
         return response()->json($targetreinstra);
     }
+
+    protected function updateProgramOutcomes($program, Request $request)
+    {
+        $existingOutcomes = $program->outcome()->get();
+        $existingOutcomeIds = $existingOutcomes->pluck('id')->toArray();
+        $newOutcomeIds = [];
+
+        foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+            $outcomeId = $request->input("outcome_id.$index"); // Use indexed input for existing outcomes
+
+            if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
+                // Update existing outcome
+                $outcome = Program_Outcome::find($outcomeId);
+                $outcome->update([
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+                $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
+            } elseif (!empty($deskripsi)) {
+                // Create new outcome if no ID is provided
+                $outcome = Program_Outcome::create([
+                    'program_id' => $program->id,
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+                $newOutcomeIds[] = $outcome->id; // Store new outcome ID
+            }
+        }
+
+        // Remove outcomes that are not in the new input
+        foreach ($existingOutcomes as $existingOutcome) {
+            if (!in_array($existingOutcome->id, $newOutcomeIds)) {
+                $existingOutcome->delete();
+            }
+        }
+    }
+
+    public function updateProgramDonatur($program, Request $request)
+    {
+        try {
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+            $newDonasi = [];
+            foreach ($newPendonor as $index => $pendonor_id) {
+                if (!isset($nilaiD[$index])) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+                }
+                $newDonasi[$pendonor_id] = ['nilaidonasi' => $nilaiD[$index]];
+            }
+            $program->pendonor()->sync($newDonasi);
+            return response()->json(['success' => true, 'message' => 'Program donor updated successfully.']);
+        } catch (Exception $e) {
+            \Log::error('Error updating program donor: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the program donor. Please try again.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
 }
