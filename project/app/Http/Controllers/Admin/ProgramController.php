@@ -20,6 +20,7 @@ use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
 use App\Models\User;
 use App\Models\Peran;
+use App\Models\Partner;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -471,6 +472,15 @@ class ProgramController extends Controller
         $page = $request->input('page', 1);
         $peran = Peran::where('nama', 'like', "%{$search}%")->get();
         return response()->json($peran);
+    }
+
+    public function getProgramPartner(Request $request)
+    {
+        // Used to Search partner in DATABASE for select2 selection
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $partner = Partner::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($partner);
     }
 
     // not used yet

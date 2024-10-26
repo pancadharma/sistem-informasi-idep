@@ -1,5 +1,5 @@
 {{-- delete the form tag --}}
-<div class="col-md-12" id="outcomeContainer">
+<div class="col-md-12" id="staffContainer">
       <div class="row">  
         <div class="col-md-6">
             <div class="form-group">
@@ -19,7 +19,7 @@
             <div class="form-group">
                 <label for="lokasi" class="small control-label">
                     <strong>
-                        {{ __('cruds.program.peran.label') }}
+                        {{ __('cruds.program.staff.peran') }}
                     </strong>
                 </label>
                 <div class="select2-orange">
