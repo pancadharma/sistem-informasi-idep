@@ -19,6 +19,7 @@ use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
 use App\Models\User;
+use App\Models\Peran;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -456,11 +457,20 @@ class ProgramController extends Controller
 
     public function getProgramStaff(Request $request)
     {
-        // Used to Search staff in DATABASEfor select2 selection
+        // Used to Search staff in DATABASE for select2 selection
         $search = $request->input('search');
         $page = $request->input('page', 1);
         $staff = User::where('nama', 'like', "%{$search}%")->get();
         return response()->json($staff);
+    }
+
+    public function getProgramPeran(Request $request)
+    {
+        // Used to Search Peran in DATABASE for select2 selection
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $peran = Peran::where('nama', 'like', "%{$search}%")->get();
+        return response()->json($peran);
     }
 
     // not used yet

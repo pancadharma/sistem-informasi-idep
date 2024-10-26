@@ -205,6 +205,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/api/pendonor/{id}/data', [ProgramController::class, 'getPendonorDataEdit'])->name('api.pendonor.data'); // fill form for selected pendonor in edit program
     Route::get('program/api/donor', [ProgramController::class, 'getProgramDonor'])->name('api.program.donor'); // get all pendonor data
     Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff'); // can be used to get data staff for program
+    Route::get('program/api/peran', [ProgramController::class, 'getProgramPeran'])->name('api.program.peran'); // can be used to get data peran for program
     Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
     Route::resource('program', ProgramController::class);
 
