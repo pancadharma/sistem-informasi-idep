@@ -37,6 +37,17 @@ class ProgramController extends Controller
         // return view('tr.program.index', compact('programs')); // Assuming a view exists at resources/views/trprogram/index.blade.php
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
     }
+    public function details(Program $program)
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) { //if user is admin or can edit details program
+
+            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
+            return view('tr.program.details', compact('program'));
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+    }
+
+
 
     public function getData()
     {
