@@ -384,7 +384,6 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: errorMessage, // Use 'html' instead of 'text'
                         html: errorMessage,
                         confirmButtonText: 'Okay'
                     });

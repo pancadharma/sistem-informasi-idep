@@ -39,25 +39,12 @@ class ProgramController extends Controller
         // return view('tr.program.index', compact('programs')); // Assuming a view exists at resources/views/trprogram/index.blade.php
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
     }
-    // public function details(Program $program)
-    // {
-    //     if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) { //if user is admin or can edit details program
-    //         $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-    //         $outcomes = Program_Outcome::where(['program_id' => $program->id])->get();
-    //         // return $program;
-    //         return $outcomes;
-    //         return view('tr.program.details', compact('program', 'outcomes'));
-    //     }
-    //     abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
-    // }
 
     public function details(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
             $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
             $outcomes = Program_Outcome::where('program_id', $program->id)->get();
-            // return $outcomes;
-            // dd($outcomes);
             return view('tr.program.details', compact('program', 'outcomes'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
@@ -644,4 +631,24 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
+    // return Outcome data in details program outcome
+    public function apiOutcome(Program_Outcome $outcome)
+    {
+        $outcome->load('program');
+        if ($outcome) {
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $outcome
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Data Outcome not found'
+            ], 404);
+        }
+    }
+
 }

@@ -4536,33 +4536,33 @@ h6 a {
 }
 
 h1 {
-    font-size: 4.2rem;
+    /* font-size: 4.2rem;
     line-height: 110%;
-    margin: 2.8rem 0 1.68rem 0
+    margin: 2.8rem 0 1.68rem 0 */
 }
 
 h2 {
-    font-size: 3.56rem;
+    /* font-size: 3.56rem;
     line-height: 110%;
-    margin: 2.3733333333rem 0 1.424rem 0
+    margin: 2.3733333333rem 0 1.424rem 0 */
 }
 
 h3 {
-    font-size: 2.92rem;
+    /* font-size: 2.92rem;
     line-height: 110%;
-    margin: 1.9466666667rem 0 1.168rem 0
+    margin: 1.9466666667rem 0 1.168rem 0 */
 }
 
 h4 {
-    font-size: 2.28rem;
+    /* font-size: 2.28rem;
     line-height: 110%;
-    margin: 1.52rem 0 .912rem 0
+    margin: 1.52rem 0 .912rem 0 */
 }
 
 h5 {
-    font-size: 1.64rem;
+    /* font-size: 1.64rem;
     line-height: 110%;
-    margin: 1.0933333333rem 0 .656rem 0
+    margin: 1.0933333333rem 0 .656rem 0 */
 }
 
 h6 {
@@ -4767,8 +4767,8 @@ small {
 }
 
 .card .card-title {
-    font-size: 24px;
-    font-weight: 300
+    /* font-size: 24px;
+                        font-weight: 300 */
 }
 
 .card .card-title.activator {

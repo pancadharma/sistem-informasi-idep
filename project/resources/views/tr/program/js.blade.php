@@ -114,7 +114,7 @@
             processing: true,
             serverSide: true,
             columns: [
-                {data: 'DT_RowIndex', width: "5%", name: 'No.', className: "text-center"},
+                {data: 'DT_RowIndex', width: "5%", name: 'No.', className: "text-center", orderable: false, searchable: true},
                 {data: "kode", orderable: true, searchable: true},
                 {data: "nama", orderable: true, searchable: true},
                 {data: "tanggalmulai", orderable: true, searchable: true},

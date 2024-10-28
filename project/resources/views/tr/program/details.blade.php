@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
-{{-- @section('subtitle', __('global.details') . ' ' . __('cruds.program.title_singular')) --}}
 @section('subtitle', __('global.details') . ' ' . __('cruds.program.title_singular'). ' '. $program->nama ?? '')
 @section('content_header_title', __('cruds.program.outcome.list_program').' '. $program->nama ?? '')
 @section('sub_breadcumb', __('cruds.program.title_singular'))
 
 @section('content_body')
 <div class="row">
-    <div class="col-md-3">
-        <div class="card">
+    <div class="col-lg-3">
+        <div class="card card-danger card-outline">
             <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.outcome.list_program') }}</h3>
+                <h3 class="card-title">{{ __('cruds.program.title_singular') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                </div>
             </div>
             <div class="card-body">
                 <form action="" class="col s12">
@@ -30,7 +32,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
                 <div class="card-tools">
@@ -41,8 +43,7 @@
                 <ul class="nav nav-pills flex-column">
                     @forelse  ($outcomes as $index => $outcome)
                         <li class="nav-item">
-                            <button type="button" class="nav-link btn btn btn-block text-left" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                                {{-- <i class="far fa-circle text-danger"></i> --}}
+                            <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
                                 {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
                             </button>
                         </li>
@@ -55,18 +56,47 @@
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <div class="card card-danger collapsed-card">
+    <div class="col-lg-9">
+        <div class="card card-primary card-outline">
             <div class="card-header">
-                <h6>{{ __('global.details') . ' ' . __('cruds.program.title_singular') }}</h6>
+                <h3 class="card-title">{{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span></h3>
+            </div>
+            {{-- showing outcome details after clicking --}}
+            <div class="card-body hide" id="detail_outcome">
+                <div class="row">
+                    <div class="input-field col">
+                        <input id="deskripsi" name="deskripsi" type="text" class="tooltipped" readonly placeholder="{{ __('cruds.program.outcome.desc') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.desc') }}">
+                        <label for="deskripsi">{{ __('cruds.program.outcome.desc') }}</label>
+                    </div>
+                    <div class="input-field col">
+                        <input id="indikator" name="indikator" type="text" class="tooltipped" readonly placeholder="{{ __('cruds.program.outcome.indicator') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.indicator') }}">
+                        <label for="indikator">{{ __('cruds.program.outcome.indicator') }}</label>
+                    </div>
+                    <div class="input-field col">
+                        <input id="target" name="target" type="text" class="tooltipped" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
+                        <label for="target">{{ __('cruds.program.outcome.target') }}</label>
+                    </div>
+                    <div class="input-field col-auto">
+                        <button data-target="modalAddOutput" class="btn btn-block modal-trigger float-right btn-success"> <i class="bi bi-database-fill-add"></i> Add Output</button>
+                        <label for="target"> &nbsp; </label>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card-body">
-            @foreach ($program->outcome as $out)
-                <div class="row">
-                    {{ $out }}
-                </div>
-            @endforeach
+        <div class="card card-outline card-primary hide" id="list_output">
+            <div class="card-header">
+                <h3 class="card-title">{{ __('cruds.program.output.list') }}</h3>
+            </div>
+            <div class="card-body">
+                <table id="outcome_output_list" class="table table-bordered table-striped cell-border ajaxTable datatable-program" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>{{ __('Output') }}</th>
+                            <th>{{ __('Action') }}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -91,5 +121,94 @@
 
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
+
+
+<script>
+$(document).ready(function() {
+    $('.nav').on('click', '.btn-list-outcome', function(e) {
+        e.preventDefault(); // Prevent default button behavior
+        var outcomeId = $(this).data('outcome-id');
+        var outcomeIndex = $(this).data('index');
+        var outcomeApi = "{{ route('api.program.outcome', ':id') }}".replace(':id', outcomeId);
+
+        // Fetch outcome data using the outcome ID
+        $.ajax({
+            url: outcomeApi,
+            method: 'GET',
+            success: function(response) {
+                setTimeout(() => {
+                    if (response.success) {
+                        $('#detail_outcome, #list_output').removeClass('hide');
+                        $('#outcome-title').text(outcomeIndex);
+                        $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
+                        $('#indikator').val(response.data.indikator ?? '').trigger('input');
+                        $('#target').val(response.data.target ?? '').trigger('input');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                        });
+                    }
+                },500);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                const errorMessage = getErrorMessage(xhr);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: errorMessage,
+                    confirmButtonText: 'Okay'
+                });
+            },
+        });
+    });
+
+
+
+
+
+
+    function handleErrors(response) {
+        let errorMessage = response.message;
+        if (response.status === 400) {
+            try {
+                const errors = response.errors;
+                errorMessage = formatErrorMessages(errors);
+            } catch (error) {
+                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+            }
+        }
+        Swal.fire({
+            title: "Error!",
+            html: errorMessage,
+            icon: "error"
+        });
+    }
+
+    function formatErrorMessages(errors) {
+        let message = '<br><ul style="text-align:left!important">';
+        for (const field in errors) {
+            errors[field].forEach(function(error) {
+                message += `<li>${error}</li>`;
+            });
+        }
+        message += '</ul>';
+        return message;
+    }
+
+    function getErrorMessage(xhr) {
+        let message;
+        try {
+            const response = JSON.parse(xhr.responseText);
+            message = formatErrorMessages(response.errors) || 'An unexpected error occurred. Please try again later.';
+        } catch (e) {
+            message = 'An unexpected error occurred. Please try again later.';
+        }
+        return message;
+    }
+});
+
+</script>
 
 @endpush
