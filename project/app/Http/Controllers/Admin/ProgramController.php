@@ -57,9 +57,22 @@ class ProgramController extends Controller
         $data = DataTables::of($programs)
             ->addIndexColumn()
             ->addColumn('action', function ($program) {
-                return '<div class="button-container"><button type="button" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline">' . trans('global.edit') . '</span></button>
-                        <button type="button" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline">' . trans('global.view') . '</span></button></div>';
+                $editButton = '';
+                $viewButton = '';
+                $detailsButton = '';
+
+                if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+                    $editButton = '<button type="button" title="' . __('global.edit') . ' Program ' . $program->nama . '" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline"></span></button>';
+                }
+                if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit') || auth()->user()->can('program_edit')) {
+                    $detailsButton = '<button type="button" title="' . __('global.details') . ' Program ' . $program->nama . '" class="btn btn-sm btn-warning details-program-btn" data-action="details" data-program-id="' . $program->id . '"><i class="bi bi-arrow-up-right-square-fill"></i><span class="d-none d-sm-inline"></span></button>';
+                }
+                if (auth()->user()->id == 1 || auth()->user()->can('program_view') || auth()->user()->can('program_access')) {
+                    $viewButton = '<button type="button" title="' . __('global.view') . ' Program ' . $program->nama . '" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
+                }
+                return "<div class='button-container'>$editButton $viewButton $detailsButton</div>";
             })
+            ->rawColumns(['action'])
             ->make(true);
         return $data;
     }
@@ -133,16 +146,16 @@ class ProgramController extends Controller
 
             $tanggalketerangan = [];
             foreach ($tanggalArray as $index => $tanggal) {
-                if (isset($keteranganArray[$index])){
+                if (isset($keteranganArray[$index])) {
                     $tanggalketerangan[] = [
                         'tanggal'       => $tanggal,
                         'keterangan'    => $keteranganArray[$index]
                     ];
-                }else {
+                } else {
                     throw new Exception("Missing value for $keteranganArray at index $index");
                 }
             }
-            foreach($tanggalketerangan as $newtglket){
+            foreach ($tanggalketerangan as $newtglket) {
                 $program->jadwalreport()->create([
                     'tanggal' => $newtglket['tanggal'],
                     'keterangan' => $newtglket['keterangan']
@@ -344,7 +357,7 @@ class ProgramController extends Controller
                             'updated_by' => auth()->user()->id
                         ])
                         ->toMediaCollection('program_' . $program->id, 'program_uploads');
-                        // ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                    // ->toMediaCollection('file_pendukung_program', 'program_uploads');
                 }
             }
             // update program lokasi
@@ -361,7 +374,6 @@ class ProgramController extends Controller
                 'data' => $program,
                 "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.updated'),
             ], Response::HTTP_CREATED);
-
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -617,6 +629,4 @@ class ProgramController extends Controller
             ], 500);
         }
     }
-
-
 }
