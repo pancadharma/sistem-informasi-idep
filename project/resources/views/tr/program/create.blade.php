@@ -309,5 +309,6 @@
 @include('tr.program.js.detail-create.staff')
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-create.outcome')
+@include('tr.program.js.detail-create.partner')
 {{-- @include('tr.program.js.validate') --}}
 @endpush

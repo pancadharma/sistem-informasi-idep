@@ -35,7 +35,7 @@
         });
 
         var data_peran = "{{ route('api.program.peran') }}";
-        var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.peran.label') }}";
+        var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.staff.peran') }}";
 
         $('#peran').select2({
             placeholder: placeholder,
