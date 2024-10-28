@@ -447,6 +447,9 @@ return [
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',
+            'list'          => 'Daftar Outcome',
+            'list_program'  => 'Daftar Outcome Program',
+            'out_program'   => 'Outcome Program',
         ],
         'partner'           => [
             'label'         => 'Mitra',

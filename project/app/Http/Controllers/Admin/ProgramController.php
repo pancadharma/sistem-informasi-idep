@@ -39,15 +39,30 @@ class ProgramController extends Controller
         // return view('tr.program.index', compact('programs')); // Assuming a view exists at resources/views/trprogram/index.blade.php
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
     }
+    // public function details(Program $program)
+    // {
+    //     if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) { //if user is admin or can edit details program
+    //         $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
+    //         $outcomes = Program_Outcome::where(['program_id' => $program->id])->get();
+    //         // return $program;
+    //         return $outcomes;
+    //         return view('tr.program.details', compact('program', 'outcomes'));
+    //     }
+    //     abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+    // }
+
     public function details(Program $program)
     {
-        if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) { //if user is admin or can edit details program
-
+        if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
             $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-            return view('tr.program.details', compact('program'));
+            $outcomes = Program_Outcome::where('program_id', $program->id)->get();
+            // return $outcomes;
+            // dd($outcomes);
+            return view('tr.program.details', compact('program', 'outcomes'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
+
 
 
 
@@ -62,13 +77,13 @@ class ProgramController extends Controller
                 $detailsButton = '';
 
                 if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
-                    $editButton = '<button type="button" title="' . __('global.edit') . ' Program ' . $program->nama . '" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline"></span></button>';
+                    $editButton = '<button type="button" title="' . __('global.edit') . ' Program ' . $program->nama . '" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-pencil-square"></i><span class="d-none d-sm-inline"></span></button>';
                 }
                 if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit') || auth()->user()->can('program_edit')) {
-                    $detailsButton = '<button type="button" title="' . __('global.details') . ' Program ' . $program->nama . '" class="btn btn-sm btn-warning details-program-btn" data-action="details" data-program-id="' . $program->id . '"><i class="bi bi-arrow-up-right-square-fill"></i><span class="d-none d-sm-inline"></span></button>';
+                    $detailsButton = '<button type="button" title="' . __('global.details') . ' Program ' . $program->nama . '" class="btn btn-sm btn-danger details-program-btn" data-action="details" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-list-ul"></i><span class="d-none d-sm-inline"></span></button>';
                 }
                 if (auth()->user()->id == 1 || auth()->user()->can('program_view') || auth()->user()->can('program_access')) {
-                    $viewButton = '<button type="button" title="' . __('global.view') . ' Program ' . $program->nama . '" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
+                    $viewButton = '<button type="button" title="' . __('global.view') . ' Program ' . $program->nama . '" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
                 }
                 return "<div class='button-container'>$editButton $viewButton $detailsButton</div>";
             })
