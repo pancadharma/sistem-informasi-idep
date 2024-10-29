@@ -9,16 +9,7 @@
             <label for="indikator" class="input-group small mb-0">{{ __('cruds.program.outcome.indicator') }}</label>
         </div>
         <div class="col-lg-4 form-group">
-            <div class="input-group">
-                <label for="target" class="input-group small mb-0">{{ __('cruds.program.outcome.target') }}</label>
-                <textarea id="target" name="target[]" cols="30"
-                    class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}"
-                    placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
-                <span class="input-group-append">
-                    <button type="button" class="ml-2 btn btn-success form-control addOutcome btn-flat"
-                        data-target="outcome-container_1"><i class="bi bi-plus-lg"></i></button>
-                </span>
-            </div>
+            <label for="target" class="input-group small mb-0">{{ __('cruds.program.outcome.target') }}</label>
         </div>
     </div>
 
