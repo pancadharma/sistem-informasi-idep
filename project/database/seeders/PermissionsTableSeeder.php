@@ -84,6 +84,17 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 66, 'nama' => 'program_create'],
                 ['id' => 67, 'nama' => 'program_edit'],
                 ['id' => 68, 'nama' => 'program_delete'],
+                ['id' => 68, 'nama' => 'program_details_access'],
+                ['id' => 68, 'nama' => 'program_details_edit'],
+                ['id' => 69, 'nama' => 'program_outcome_access'],
+                ['id' => 70, 'nama' => 'program_outcome_create'],
+                ['id' => 71, 'nama' => 'program_outcome_edit'],
+                ['id' => 72, 'nama' => 'program_outcome_delete'],
+                ['id' => 73, 'nama' => 'program_outcome_details_access'],
+                ['id' => 73, 'nama' => 'program_outcome_details_edit'],
+                ['id' => 74, 'nama' => 'program_outcome_details_delete'],
+                ['id' => 75, 'nama' => 'program_outcome_details_show'],
+                ['id' => 76, 'nama' => 'program_outcome_details_create'],
             ];
             foreach ($permissions as $data) {
                 Permission::updateOrCreate(['id' => $data['id']], $data);

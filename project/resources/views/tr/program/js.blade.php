@@ -106,6 +106,7 @@
 
 // Data Table
     $(document).ready(function() {
+
         $('#program-list').DataTable({
             responsive: true,
             // scrollX: true,
@@ -113,7 +114,7 @@
             processing: true,
             serverSide: true,
             columns: [
-                {data: 'DT_RowIndex', width: "5%", name: 'No.', className: "text-center"},
+                {data: 'DT_RowIndex', width: "5%", name: 'No.', className: "text-center", orderable: false, searchable: true},
                 {data: "kode", orderable: true, searchable: true},
                 {data: "nama", orderable: true, searchable: true},
                 {data: "tanggalmulai", orderable: true, searchable: true},
@@ -150,7 +151,7 @@
                 topStart: {
                     buttons: [
                         {
-                            text: '<i class="fas fa-print"></i> <span class="d-none d-md-inline">Print</span>',
+                            text: '<i class="fas fa-print"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-secondary',
                             extend: 'print',
                             exportOptions: {
@@ -158,7 +159,7 @@
                             }
                         },
                         {
-                            text: '<i class="fas fa-file-excel"></i> <span class="d-none d-md-inline">Excel</span>',
+                            text: '<i class="fas fa-file-excel"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-success',
                             extend: 'excel',
                             exportOptions: {
@@ -166,7 +167,7 @@
                             }
                         },
                         {
-                            text: '<i class="fas fa-file-pdf"></i> <span class="d-none d-md-inline">PDF</span>',
+                            text: '<i class="fas fa-file-pdf"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-danger',
                             extend: 'pdf',
                             exportOptions: {
@@ -175,7 +176,7 @@
                         },
                         {
                             extend: 'copy',
-                            text: '<i class="fas fa-copy"></i> <span class="d-none d-md-inline">Copy</span>',
+                            text: '<i class="fas fa-copy"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-info',
                             exportOptions: {
                                 columns: [0, 1, 2]
@@ -183,7 +184,7 @@
                         },
                         {
                             extend: 'colvis',
-                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-warning',
                             exportOptions: {
                                 columns: [0, 1, 2]
@@ -221,28 +222,35 @@
         //     });
         // });
 
-    $('#program-list tbody').on('click','.edit-program-btn, .view-program-btn', function(e){
-        e.preventDefault();
-        var action = $(this).data('action');
-        var programID = $(this).data('program-id');
-        var url_edit = '{{ route('program.edit', ':id') }}'.replace(':id', programID);
-        var url_view = '{{ route('program.show', ':id') }}'.replace(':id', programID);
+        $('#program-list tbody').on('click','.edit-program-btn, .view-program-btn, .details-program-btn', function(e){
+            e.preventDefault();
+            var action = $(this).data('action');
+            var programID = $(this).data('program-id');
+            var url_edit = '{{ route('program.edit', ':id') }}'.replace(':id', programID);
+            var url_view = '{{ route('program.show', ':id') }}'.replace(':id', programID);
+            var url_details = '{{ route('program.details', ':id') }}'.replace(':id', programID);
 
-        if(action === "edit"){
-            // alert(url_edit)
-            console.log(url_edit)
+            if(action === "edit"){
+                // alert(url_edit)
+                console.log(url_edit)
 
-            setTimeout(function() {
-                window.location.href = url_edit;
-            }, 100);
-        }
+                setTimeout(function() {
+                    window.location.href = url_edit;
+                }, 100);
+            }
+            if(action === "details"){
+                setTimeout(function() {
+                    window.location.href = url_details;
+                }, 100);
+            }
 
-        if(action === "view"){
-            // alert("view page : " + url_view);
-            console.log(url_view)
-        }
+            if(action === "view"){
+                // alert("view page : " + url_view);
+                console.log(url_view)
+            }
+
+        });
 
     });
 
-    });
 </script>
