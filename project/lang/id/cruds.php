@@ -472,6 +472,7 @@ return [
         ],
         'objective'         => [
             'label'         => 'Objective',
+            'desc'          => 'Description'
         ],
         'goals'             => [
             'label'         => 'Sasaran',
