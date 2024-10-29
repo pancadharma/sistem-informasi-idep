@@ -210,6 +210,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi');
     Route::get('program/{program}/details', [ProgramController::class, 'details'])->name('program.details');
     Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
+    Route::get('program/api/output/{outcome}', [ProgramController::class, 'apiOutput'])->name('api.program.output');
     Route::resource('program', ProgramController::class);
 
     Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');

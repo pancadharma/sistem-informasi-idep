@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
+use App\Models\Program;
+use App\Models\Program_Outcome_Output;
+use App\Traits\Auditable;
 use GedeAdi\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Program_Outcome extends Model
 {
@@ -35,6 +37,10 @@ class Program_Outcome extends Model
 
     public function program()
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id');
+    }
+    public function output()
+    {
+        return $this->hasMany(Program_Outcome_Output::class, 'programoutcome_id');
     }
 }

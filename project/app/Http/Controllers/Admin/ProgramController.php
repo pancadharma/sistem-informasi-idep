@@ -22,6 +22,7 @@ use App\Models\Program_Outcome;
 use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
+use App\Models\Program_Outcome_Output;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -641,6 +642,25 @@ class ProgramController extends Controller
                 'success' => true,
                 'status' => 'success',
                 'data' => $outcome
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Data Outcome not found'
+            ], 404);
+        }
+    }
+
+    public function apiOutput(Program_Outcome_Output $output, $outcome)
+    {
+        $output = Program_Outcome_Output::where('programoutcome_id', $outcome)->get();
+        if ($output) {
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $output
+                // 'outcome' => $data->program_outcome(),
             ]);
         } else {
             return response()->json([
