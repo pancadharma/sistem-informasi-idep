@@ -25,7 +25,7 @@
                     placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
                 <span class="input-group-append">
                     <button type="button" class="ml-2 btn btn-success form-control addOutcome btn-flat"
-                        data-target="outcome-container_1"><i class="bi bi-plus"></i></button>
+                        data-target="outcome-container_1"><i class="bi bi-plus-lg"></i></button>
                 </span>
             </div>
         </div>
