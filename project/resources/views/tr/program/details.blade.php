@@ -124,51 +124,6 @@
 
 
 <script>
-$(document).ready(function() {
-    $('.nav').on('click', '.btn-list-outcome', function(e) {
-        e.preventDefault(); // Prevent default button behavior
-        var outcomeId = $(this).data('outcome-id');
-        var outcomeIndex = $(this).data('index');
-        var outcomeApi = "{{ route('api.program.outcome', ':id') }}".replace(':id', outcomeId);
-
-        // Fetch outcome data using the outcome ID
-        $.ajax({
-            url: outcomeApi,
-            method: 'GET',
-            success: function(response) {
-                setTimeout(() => {
-                    if (response.success) {
-                        $('#detail_outcome, #list_output').removeClass('hide');
-                        $('#outcome-title').text(outcomeIndex);
-                        $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
-                        $('#indikator').val(response.data.indikator ?? '').trigger('input');
-                        $('#target').val(response.data.target ?? '').trigger('input');
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: response.message,
-                        });
-                    }
-                },500);
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                const errorMessage = getErrorMessage(xhr);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    html: errorMessage,
-                    confirmButtonText: 'Okay'
-                });
-            },
-        });
-    });
-
-
-
-
-
-
     function handleErrors(response) {
         let errorMessage = response.message;
         if (response.status === 400) {
@@ -207,7 +162,54 @@ $(document).ready(function() {
         }
         return message;
     }
-});
+
+    $(document).ready(function() {
+        $('.nav').on('click', '.btn-list-outcome', function(e) {
+            e.preventDefault(); // Prevent default button behavior
+            var outcomeId = $(this).data('outcome-id');
+            var outcomeIndex = $(this).data('index');
+            var outcomeApi = "{{ route('api.program.outcome', ':id') }}".replace(':id', outcomeId);
+
+            // Fetch outcome data using the outcome ID
+            $.ajax({
+                url: outcomeApi,
+                method: 'GET',
+                success: function(response) {
+                    setTimeout(() => {
+                        if (response.success) {
+                            $('#detail_outcome, #list_output').removeClass('hide');
+                            $('#outcome-title').text(outcomeIndex);
+                            $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
+                            $('#indikator').val(response.data.indikator ?? '').trigger('input');
+                            $('#target').val(response.data.target ?? '').trigger('input');
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message,
+                            });
+                        }
+                    },500);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    const errorMessage = getErrorMessage(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                        confirmButtonText: 'Okay'
+                    });
+                },
+            });
+        });
+
+
+
+
+
+
+
+    });
 
 </script>
 
