@@ -450,6 +450,18 @@ return [
             'desc'          => 'Description',
             'indicator'     => 'Indicator',
             'target'        => 'Target',
+            'list'          => 'List Outcome',
+            'list_program'  => 'List Outcome Program',
+            'out_program'   => 'Program Outcome',
+        ],
+        'output'            => [
+            'label'         => 'Output',
+            'desc'          => 'Description',
+            'indicator'     => 'Indicator',
+            'target'        => 'Target',
+            'list'          => 'List Output Outcome',
+            'list_program'  => 'List Program Output',
+            'out_program'   => 'Program Outcome Output',
         ],
         'partner'           => [
             'label'         => 'Partner',

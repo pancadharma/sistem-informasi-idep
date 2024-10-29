@@ -1,4 +1,5 @@
 <script>
+
     //Ajax Request data using server side data table to reduce large data load --}}
     $(document).ready(function() {
         $('#kabupaten').DataTable({
@@ -114,7 +115,7 @@
                         },
                         {
                             extend: 'colvis',
-                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline">Column visibility</span>',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-warning',
                             exportOptions: {
                                 columns: [0, 1, 2, 3, 4, 5]
@@ -149,6 +150,13 @@
                 method: 'PUT',
                 dataType: 'JSON',
                 data: formData,
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
                     if (response.status === 'success') {
                         Swal.fire({
@@ -228,11 +236,16 @@
                 kabupatenId), // Route with ID placeholder
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading Data...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
-
                     let data = response || [];
-
-
                     if (action === 'view') {
                         $("#show-kode").text(data.kode);
                         $("#show-nama").text(data.nama);
@@ -284,6 +297,13 @@
                 url: '{{ route('kabupaten.edit', ':id') }}'.replace(':id', kabupatenId),
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading Data...",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
                     $("#editKabupatenForm").trigger('reset');
                     $("#editKabupatenForm").attr("action", newActionUrl);
@@ -322,7 +342,7 @@
                     $('#provinsi_id').select2({
                         dropdownParent: $('#editKabupatenModal'),
                         data : data,
-                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.provinsi.title')}}",
+                        placeholder: "{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title')}}",
                     });
                     $('#provinsi_id').val(response[0].provinsi.id).trigger('change');
 
@@ -350,7 +370,7 @@
     //call add kabupaten modal form
     $(document).ready(function() {
         $('#type').select2({
-            placeholder: "{{ trans('global.select_type') }} {{ trans('cruds.kabupaten.title') }} / {{ trans('cruds.kabupaten.kota') }}"
+            placeholder: "{{ trans('global.select_type') }} {{ __('cruds.kabupaten.title') }} / {{ __('cruds.kabupaten.kota') }}"
         });
         $('.add-kabupaten').on('click', function(e){
             e.preventDefault();
@@ -358,6 +378,13 @@
                 url:  '{{ route('kabupaten.create') }}',
                 method: 'GET',
                 dataType: 'json',
+                beforesend: function(){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading Data...",
+                        timer: 500,
+                    });
+                },
                 success: function(response){
                     let data = response.map(function(item) {
                         return {
@@ -374,7 +401,7 @@
                     $(document).on('select2:open', function() {
                         setTimeout(function() {
                             document.querySelector('.select2-search__field').focus();
-                        }, 100);
+                        }, 500);
                     });
                 },error: function(jqXHR, textStatus, errorThrown) {
                     const errorData = JSON.parse(jqXHR.responseText);
@@ -398,10 +425,18 @@
 
         $('#provinsi_add').on('change', function() {
             let val_prov_id = $('#provinsi_add').val();
-            $('#kode').val(val_prov_id+'.');
+            Toast.fire({
+                icon: "info",
+                title: "Loading {{ __('cruds.kabupaten.kode') }}",
+                // position: "bottom-end",
+                timer: 500,
+            });
+            setTimeout(() => {
+                $('#kode').val(val_prov_id+'.');
+                $('#kode').focus();
+            }, 500);
         });
 
-    // submit form
         $('.btn-add-kabupaten').on('click', function(e, form) {
             e.preventDefault();
             var formDataKab = $('#kabupatenForm').serialize();
@@ -410,6 +445,13 @@
                 url: '{{ route('kabupaten.store') }}', // Get form action URL
                 data: formDataKab,
                 dataType: 'json',
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 500,
+                    });
+                },
                 success: function(response) {
                     if (response.success === true) {
                         Swal.fire({
@@ -418,7 +460,7 @@
                             icon: "success",
                             timer: 4000,
                             timerProgressBar: true,
-                            didOpen: ()=>{
+                            didOpen: () => {
                                 Swal.showLoading();
                             },
                         });
@@ -429,54 +471,62 @@
                         $('#kabupatenForm')[0].reset();
                         $('#kabupaten').DataTable().ajax.reload();
                     } else {
-                        var errorMessage = response.message;
-                        if (response.status === 400) {
-                            try {
-                                const errors = JSON.parse(response.responseText).errors;
-                                errorMessage = Object.values(errors).flat().map(error => `<p>* ${error}</p>`).join('');
-                            } catch (error) {
-                                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
-                            }
-                        }
-                        Swal.fire({
-                            title: "Error!",
-                            html: errorMessage,
-                            icon: "error"
-                        });
-                        $('#addKabupaten').modal('hide');
+                        handleErrors(response);
                     }
                 },
-                error: function(xhr, status, error) {
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.message) {
-                        errorMessage = response.message;
-                        }
-
-                        if (response.errors) {
-                        const errors = response.errors;
-                        errorMessage += '<br><br><ul style="text-align:left!important">';
-                        for (const field in errors) {
-                            if (errors.hasOwnProperty(field)) {
-                            errors[field].forEach(err => {
-                                errorMessage += `<li>${field}: ${err}</li>`;
-                            });
-                            }
-                        }
-                        errorMessage += '</ul>';
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
+                error: function(xhr, textStatus, errorThrown) {
+                    const errorMessage = getErrorMessage(xhr);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: errorMessage, // Use 'html' instead of 'text'
+                        html: errorMessage,
+                        confirmButtonText: 'Okay'
                     });
-                }
+                },
             });
-
         });
+
+        function handleErrors(response) {
+            let errorMessage = response.message;
+            if (response.status === 400) {
+                try {
+                    const errors = response.errors;
+                    errorMessage = formatErrorMessages(errors);
+                } catch (error) {
+                    errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+                }
+            }
+            Swal.fire({
+                title: "Error!",
+                html: errorMessage,
+                icon: "error"
+            });
+            $('#addKabupaten').modal('hide');
+        }
+
+        function formatErrorMessages(errors) {
+            let message = '<br><ul style="text-align:left!important">';
+            for (const field in errors) {
+                errors[field].forEach(function(error) {
+                    message += `<li>${error}</li>`;
+                });
+            }
+            message += '</ul>';
+            return message;
+        }
+
+        function getErrorMessage(xhr) {
+            let message;
+            try {
+                const response = JSON.parse(xhr.responseText);
+                message = formatErrorMessages(response.errors) || 'An unexpected error occurred. Please try again later.';
+            } catch (e) {
+                message = 'An unexpected error occurred. Please try again later.';
+            }
+            return message;
+        }
+
+
+
     });
 </script>

@@ -18,6 +18,7 @@ use App\Http\Requests\UpdateProgramRequest;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
+use App\Models\Program_Outcome;
 use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
@@ -39,15 +40,41 @@ class ProgramController extends Controller
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
     }
 
+    public function details(Program $program)
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
+            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
+            $outcomes = Program_Outcome::where('program_id', $program->id)->get();
+            return view('tr.program.details', compact('program', 'outcomes'));
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+    }
+
+
+
+
     public function getData()
     {
         $programs = Program::all();
         $data = DataTables::of($programs)
             ->addIndexColumn()
             ->addColumn('action', function ($program) {
-                return '<div class="button-container"><button type="button" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline">' . trans('global.edit') . '</span></button>
-                        <button type="button" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline">' . trans('global.view') . '</span></button></div>';
+                $editButton = '';
+                $viewButton = '';
+                $detailsButton = '';
+
+                if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
+                    $editButton = '<button type="button" title="' . __('global.edit') . ' Program ' . $program->nama . '" class="btn btn-sm btn-info edit-program-btn" data-action="edit" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-pencil-square"></i><span class="d-none d-sm-inline"></span></button>';
+                }
+                if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit') || auth()->user()->can('program_edit')) {
+                    $detailsButton = '<button type="button" title="' . __('global.details') . ' Program ' . $program->nama . '" class="btn btn-sm btn-danger details-program-btn" data-action="details" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-list-ul"></i><span class="d-none d-sm-inline"></span></button>';
+                }
+                if (auth()->user()->id == 1 || auth()->user()->can('program_view') || auth()->user()->can('program_access')) {
+                    $viewButton = '<button type="button" title="' . __('global.view') . ' Program ' . $program->nama . '" class="btn btn-sm btn-primary view-program-btn" data-action="view" data-program-id="' . $program->id . '" data-toggle="tooltip" data-placement="top"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
+                }
+                return "<div class='button-container'>$editButton $viewButton $detailsButton</div>";
             })
+            ->rawColumns(['action'])
             ->make(true);
         return $data;
     }
@@ -61,8 +88,8 @@ class ProgramController extends Controller
     {
 
         if (auth()->user()->id == 1 || auth()->user()->can('program_create')) {
-            // $targetreinstra = TargetReinstra::pluck('id', 'nama');
-            return view('tr.program.create');
+            $program = new Program();
+            return view('tr.program.create', compact('program'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
@@ -96,7 +123,8 @@ class ProgramController extends Controller
                         ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
                         ->usingName("{$programName}_{$originalName}_{$fileCount}")
                         ->usingFileName($fileName)
-                        ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        // ->toMediaCollection('file_pendukung_program', 'program_uploads');
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
 
                     $fileCount++;
                 }
@@ -120,16 +148,16 @@ class ProgramController extends Controller
 
             $tanggalketerangan = [];
             foreach ($tanggalArray as $index => $tanggal) {
-                if (isset($keteranganArray[$index])){
+                if (isset($keteranganArray[$index])) {
                     $tanggalketerangan[] = [
                         'tanggal'       => $tanggal,
                         'keterangan'    => $keteranganArray[$index]
                     ];
-                }else {
+                } else {
                     throw new Exception("Missing value for $keteranganArray at index $index");
                 }
             }
-            foreach($tanggalketerangan as $newtglket){
+            foreach ($tanggalketerangan as $newtglket) {
                 $program->jadwalreport()->create([
                     'tanggal' => $newtglket['tanggal'],
                     'keterangan' => $newtglket['keterangan']
@@ -137,35 +165,67 @@ class ProgramController extends Controller
             }
 
             //save pendonor & donation value
+            // $newPendonor = $request->input('pendonor_id', []);
+            // $nilaiD = $request->input('nilaidonasi', []);
+            // if (count($newPendonor) !== count($nilaiD)) {
+            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            // }
+            // $newDonasi = [];
+            // foreach ($newPendonor as $index => $pendonor_id) {
+            //     if (isset($nilaiD[$index])) {
+            //         $newDonasi[] = [
+            //             'pendonor_id' => $pendonor_id,
+            //             'nilaidonasi' => $nilaiD[$index]
+            //         ];
+            //     } else {
+            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            //     }
+            // }
+            // foreach ($newDonasi as $donation) {
+            //     $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            // }
+
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 
             if (count($newPendonor) !== count($nilaiD)) {
                 throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
             }
-
-            $newDonasi = [];
-            foreach ($newPendonor as $index => $pendonor_id) {
-                if (isset($nilaiD[$index])) {
-                    $newDonasi[] = [
-                        'pendonor_id' => $pendonor_id,
-                        'nilaidonasi' => $nilaiD[$index]
-                    ];
-                } else {
-                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+                if (empty($donation_value)) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id");
                 }
-            }
-
+                return [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $donation_value,
+                ];
+            }, $newPendonor, $nilaiD);
             foreach ($newDonasi as $donation) {
                 $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
             }
 
+            // create program outcome
+
+            foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+                if (!is_null($deskripsi) && $deskripsi !== '') {
+                    Program_Outcome::create([
+                        'program_id' => $program->id, // Use the dynamically created program ID
+                        'deskripsi' => $deskripsi,
+                        'indikator' => $request->input("indikator.$index"),
+                        'target' => $request->input("target.$index"),
+                    ]);
+                }
+            }
+            //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
                 'success' => true,
                 'data' => $program,
                 "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
             ], Response::HTTP_CREATED);
+
+            //ERROR CATCH
+
         } catch (ValidationException $e) {
             DB::rollBack();
             return response()->json([
@@ -198,46 +258,64 @@ class ProgramController extends Controller
 
     public function edit(Program $program)
     {
-        if (auth()->user()->id == 1 || auth()->user()->can('program_edit')) {
-
-            $targetReinstra = TargetReinstra::pluck('nama', 'id');
-            $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
-            $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
-            $program->load('targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor');
-
-            $file_pendukung = Program::find($program->id);
-            $mediaFiles = $file_pendukung->getMedia('file_pendukung_program');
-            $initialPreview = [];
-            $initialPreviewConfig = [];
-
-            foreach ($mediaFiles as $media) {
-                if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-                    $initialPreview[] = $media->getUrl();
-                } elseif ($media->mime_type == 'application/pdf') {
-                    $initialPreview[] = $media->getUrl();
-                } elseif ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-                    $initialPreview[] = $media->getUrl();
-                } else {
-                    $initialPreview[] =
-                        $media->getUrl();;
-                }
-
-                $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-                $initialPreviewConfig[] = [
-                    'caption' => "<span class='text-red strong'>{$caption}</span>",
-                    'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
-                    'key' => $media->id ?? '',
-                    'size' => $media->size ?? '',
-                    'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
-                    'downloadUrl' => $media->getUrl() ?? '',
-                    'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
-
-                ];
-            }
-
-            return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+        if (auth()->user()->id !== 1 && !auth()->user()->can('program_edit')) {
+            abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
         }
-        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and edit a program');
+
+        $targetReinstra = TargetReinstra::pluck('nama', 'id');
+        $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
+        $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
+
+        // Eager load related models
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
+
+        // Dynamically fetch media files based on program ID
+        $mediaFiles = $program->getMedia('program_' . $program->id);
+
+        // Prepare preview data for all media files
+        $initialPreview = [];
+        $initialPreviewConfig = [];
+
+        foreach ($mediaFiles as $media) {
+            $initialPreview[] = $media->getUrl();
+
+            $caption = $media->getCustomProperty('keterangan') ?: $media->name;
+            $mimeType = $media->mime_type;
+
+            $initialPreviewConfig[] = [
+                'caption' => "<span class='text-red strong'>{$caption}</span>",
+                'description' => $caption,
+                'key' => $media->id,
+                'size' => $media->size,
+                'type' => $this->getMediaType($mimeType),
+                'downloadUrl' => $media->getUrl(),
+                'filename' => $caption,
+            ];
+        }
+
+        return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
+    }
+
+    // Helper method to categorize media types
+    private function getMediaType($mimeType)
+    {
+        if (str_starts_with($mimeType, 'image/')) {
+            return 'image';
+        }
+
+        if ($mimeType === 'application/pdf') {
+            return 'pdf';
+        }
+
+        if (in_array($mimeType, [
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        ])) {
+            return 'office';
+        }
+
+        return 'other';
     }
 
     public function update(UpdateProgramRequest $request, Program $program)
@@ -245,7 +323,7 @@ class ProgramController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->validated();
-            $program->update($request->all());
+            $program->update($data);
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
@@ -280,31 +358,19 @@ class ProgramController extends Controller
                             'extension' => $extension,
                             'updated_by' => auth()->user()->id
                         ])
-                        ->toMediaCollection('file_pendukung_program');
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
+                    // ->toMediaCollection('file_pendukung_program', 'program_uploads');
                 }
             }
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
 
             // update program donatur
-            $newPendonor = $request->input('pendonor_id', []);
-            $nilaiD = $request->input('nilaidonasi', []);
-
-            if (count($newPendonor) !== count($nilaiD)) {
-                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            }
-
-            $newDonasi = [];
-            foreach ($newPendonor as $index => $pendonor_id) {
-                if (isset($nilaiD[$index])) {
-                    $newDonasi[$pendonor_id] = ['nilaidonasi' => $nilaiD[$index]]; // Use associative array for sync
-                } else {
-                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-                }
-            }
-            $program->pendonor()->sync($newDonasi); // Use sync to update or add new records
+            $this->updateProgramDonatur($program, $request);
+            $this->updateProgramOutcomes($program, $request);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'data' => $program,
@@ -347,36 +413,45 @@ class ProgramController extends Controller
     // Get Files with collection of file_pendukung_program using JSON
     public function getProgramFilesPendukung($id)
     {
-        $program = Program::find($id);
+        $program = Program::findOrFail($id); // Use findOrFail to handle not found
         $mediaFiles = $program->getMedia('file_pendukung_program');
-        $preview_pendukung = [];
-        $config_pendukung = [];
+
+        $previewPendukung = [];
+        $configPendukung = [];
+        $imageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $officeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+        ];
 
         foreach ($mediaFiles as $media) {
-            if (in_array($media->mime_type, ['image/jpeg', 'image/png', 'image/gif', 'image/*'])) {
-                $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/pdf') {
-                $preview_pendukung[] = $media->getUrl();
-            } elseif ($media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' || $media->mime_type == 'application/vnd.ms-powerpoint') {
-                $preview_pendukung[] = $media->getUrl();
+            // Add media URL to preview
+            $previewPendukung[] = $media->getUrl();
+            $caption = $media->getCustomProperty('keterangan') ?: $media->name;
+            if (in_array($media->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($media->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($media->mime_type, $officeTypes)) {
+                $type = 'office';
             } else {
-                $preview_pendukung[] = $media->getUrl();
+                $type = 'unknown'; // Default type for other mime types
             }
-
-            $caption = $media->getCustomProperty('keterangan') != '' ? $media->getCustomProperty('keterangan') : $media->name;
-            $config_pendukung[] = [
+            $configPendukung[] = [
                 'caption' => "<span class='text-red strong'>{$caption}</span>",
-                'description' => $media->getCustomProperty('keterangan') ?? $media->file_name,
+                'description' => $media->getCustomProperty('keterangan') ?: $media->file_name,
                 'key' => $media->id ?? '',
                 'size' => $media->size,
-                'type' => $media->mime_type == 'application/pdf' ? 'pdf' : ($media->mime_type == 'application/vnd.ms-powerpoint' || $media->mime_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? 'office' : 'image'),
-                'downloadUrl' => $media->getUrl() ?? '',
-                'filename' => $media->getCustomProperty('keterangan') ?? $media->name,
+                'type' => $type,
+                'downloadUrl' => $media->getUrl() ?: '',
+                'filename' => $caption,
             ];
         }
+
         return response()->json([
-            'initialPreview' => $preview_pendukung,
-            'initialPreviewConfig' => $config_pendukung,
+            'initialPreview' => $previewPendukung,
+            'initialPreviewConfig' => $configPendukung,
         ]);
     }
 
@@ -491,4 +566,89 @@ class ProgramController extends Controller
         $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
         return response()->json($targetreinstra);
     }
+
+    protected function updateProgramOutcomes($program, Request $request)
+    {
+        $existingOutcomes = $program->outcome()->get();
+        $existingOutcomeIds = $existingOutcomes->pluck('id')->toArray();
+        $newOutcomeIds = [];
+
+        foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+            $outcomeId = $request->input("outcome_id.$index"); // Use indexed input for existing outcomes
+
+            if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
+                // Update existing outcome
+                $outcome = Program_Outcome::find($outcomeId);
+                $outcome->update([
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+                $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
+            } elseif (!empty($deskripsi)) {
+                // Create new outcome if no ID is provided
+                $outcome = Program_Outcome::create([
+                    'program_id' => $program->id,
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+                $newOutcomeIds[] = $outcome->id; // Store new outcome ID
+            }
+        }
+
+        // Remove outcomes that are not in the new input
+        foreach ($existingOutcomes as $existingOutcome) {
+            if (!in_array($existingOutcome->id, $newOutcomeIds)) {
+                $existingOutcome->delete();
+            }
+        }
+    }
+
+    public function updateProgramDonatur($program, Request $request)
+    {
+        try {
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+            $newDonasi = [];
+            foreach ($newPendonor as $index => $pendonor_id) {
+                if (!isset($nilaiD[$index])) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+                }
+                $newDonasi[$pendonor_id] = ['nilaidonasi' => $nilaiD[$index]];
+            }
+            $program->pendonor()->sync($newDonasi);
+            return response()->json(['success' => true, 'message' => 'Program donor updated successfully.']);
+        } catch (Exception $e) {
+            \Log::error('Error updating program donor: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the program donor. Please try again.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // return Outcome data in details program outcome
+    public function apiOutcome(Program_Outcome $outcome)
+    {
+        $outcome->load('program');
+        if ($outcome) {
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $outcome
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Data Outcome not found'
+            ], 404);
+        }
+    }
+
 }

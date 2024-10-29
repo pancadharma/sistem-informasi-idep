@@ -373,32 +373,63 @@
                                 timerProgressBar: true,
                             });
                             $('#editProgram').trigger('reset');
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
-                                '').trigger('change');
-                            $(".btn-tool").trigger('click');
-                            $('#editProgram').find('button[type="submit"]')
-                                .removeAttr('disabled');
-
+                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                            $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
                             window.location.reload();
                         }
                     }, 500);
                 },
-                error: function(xhr, jqXHR, textStatus, errorThrown) {
-                    $(this).find('button[type="submit"]').removeAttr('disabled');
-                    var errorMessage = 'An unexpected error occurred.';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON
-                            .message; // Get the message from the response
-                    }
+                error: function(xhr, textStatus, errorThrown) {
+                    const errorMessage = getErrorMessage(xhr);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: errorMessage,
+                        html: errorMessage,
                         confirmButtonText: 'Okay'
                     });
                 },
 
             });
         });
+
+        function handleErrors(response) {
+            let errorMessage = response.message;
+            if (response.status === 400) {
+                try {
+                    const errors = response.errors;
+                    errorMessage = formatErrorMessages(errors);
+                } catch (error) {
+                    errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+                }
+            }
+            Swal.fire({
+                title: "Error!",
+                html: errorMessage,
+                icon: "error"
+            });
+        }
+
+        function formatErrorMessages(errors) {
+            let message = '<br><ul style="text-align:left!important">';
+            for (const field in errors) {
+                errors[field].forEach(function(error) {
+                    message += `<li>${error}</li>`;
+                });
+            }
+            message += '</ul>';
+            return message;
+        }
+
+        function getErrorMessage(xhr) {
+            let message;
+            try {
+                const response = JSON.parse(xhr.responseText);
+                message = formatErrorMessages(response.errors) || 'An unexpected error occurred. Please try again later.';
+            } catch (e) {
+                message = 'An unexpected error occurred. Please try again later.';
+            }
+            return message;
+        }
+
     });
 </script>

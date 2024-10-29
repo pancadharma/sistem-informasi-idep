@@ -159,10 +159,10 @@ $(document).ready(function() {
                             columns: [0, 1, 2, 3,4,5]
                         }
                     },
-                    {extend: 'colvis', text: `<i class="fas fa-eye"></i><span class="d-none d-md-inline">Column visibility</span>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                    {extend: 'colvis', text: `<i class="fas fa-eye"></i><span class="d-none d-md-inline"></span>`, titleAttr: "Select Visible Column", className: "btn-warning"},
                 ],
             },
-        },      
+        },
         order: [
             [2, 'asc'] // Ensure this matches the index of the `dusun` column
         ],
@@ -560,6 +560,14 @@ $(document).ready(function() {
                 url:  '{{ route('api.kab', ':id') }}'.replace(':id', provinsi_id),
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function (){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading {{ __('cruds.kabupaten.title')}}...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(hasil) {
                     $("#kabupaten_id, #kabupaten").empty();
                     $('#kabupaten_id, #kabupaten').html(`<option value="000" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.kabupaten.title')}}</option>`);
@@ -594,6 +602,14 @@ $(document).ready(function() {
                 url:  '{{ route('api.kec', ':id') }}'.replace(':id', kab_id),
                 method: 'GET',
                 dataType: 'json',
+                beforeSend: function (){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading {{ __('cruds.kecamatan.title') }}...",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
                 success: function(hasil) {
                     $("#kecamatan_id, #kecamatan").empty();
                     $('#kecamatan_id, #kecamatan').html(`<option value="0">{{ trans('global.pleaseSelect') }} {{ trans('cruds.kecamatan.title')}}</option>`);
@@ -624,31 +640,102 @@ $(document).ready(function() {
         var selectedKab = $('#kabupaten_id').val();
         var selectedKec = $(this).val();
         $('#desa_id, #desa').html(`<option value="000">{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}</option>`);
-        console.log(selectedKec);
+        // console.log(selectedKec);
         if (selectedKec) {
-            $.getJSON('{{ route('api.desa', '') }}/' + selectedKec, function(hasil){
-                $('#desa_id, #desa').empty();
-                $('#desa_id, #desa').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
-                $.each(hasil, function(index, desa) {
-                    $("#desa_id, #desa").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
-                });
-                $('#kode, #kode_dusun').val('');
-            }).fail(function() {
-                Toast.fire({
-                    icon: "error",
-                    title: "Failed to fetch data",
-                    timer: 1500,
-                    timerProgressBar: true,
-                });
+            $.ajax({
+                type: 'GET',
+                url:  '{{ route('api.desa', ':id') }}'.replace(':id', selectedKec),
+                method: 'GET',
+                dataType: 'json',
+                beforeSend: function (){
+                    Toast.fire({
+                        icon: "info",
+                        title: "Loading {{ __('cruds.desa.title') }}",
+                        // position: "bottom-end",
+                        timer: 500,
+                    });
+                },
+                success: function(hasil) {
+                    $('#desa_id, #desa').empty();
+                    $('#desa_id, #desa').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
+                    $.each(hasil, function(index, desa) {
+                        $("#desa_id, #desa").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
+                    });
+                    $('#kode, #kode_dusun').val('');
+                },
+                error: function(xhr, status, error) {
+                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response.errors) {
+                            errorMessage += '<br><br><ul style="text-align:left!important">';
+                            $.each(response.errors, function(field, messages) {
+                                messages.forEach(message => {
+                                    errorMessage += `<li>${field}: ${message}</li>`;
+                                    $(`#${field}-error`).removeClass('is-valid').addClass('is-invalid');
+                                    $(`#${field}-error`).text(message);
+                                    $(`#${field}`).removeClass('invalid').addClass('is-invalid');
+                                });
+                            });
+                            errorMessage += '</ul>';
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: errorMessage,
+                            });
+                        }
+
+                        if (response.message) {
+                            errorMessage = response.message;
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: errorMessage,
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                    });
+                }
             });
+
+            // $.getJSON('{{ route('api.desa', '') }}/' + selectedKec, function(hasil){
+            //     $('#desa_id, #desa').empty();
+            //     $('#desa_id, #desa').append(new Option(`{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title')}}`, 0));
+            //     $.each(hasil, function(index, desa) {
+            //         $("#desa_id, #desa").append('<option value="' + desa.id + '" data-id="'+desa.kode+'">' + desa.text + '</option>');
+            //     });
+            //     $('#kode, #kode_dusun').val('');
+            // }).fail(function() {
+            //     Toast.fire({
+            //         icon: "error",
+            //         title: "Failed to fetch data",
+            //         position: 'bottom-end',
+            //         timer: 1500,
+            //         timerProgressBar: true,
+            //     });
+            // });
         }
     });
     // select desa then fill kode dusun
     $('#desa_id, #desa').on('change', function(){
         var kodeDusun   = $(this).find('option:selected').data('id');
-
         if(kodeDusun !== undefined){
-            $('#kode, #kode_dusun').val(kodeDusun+'.');
+            Toast.fire({
+                icon: "info",
+                title: "Loading {{ __('cruds.dusun.form.kode') }}",
+                // position: "bottom-end",
+                timer: 500,
+            });
+            setTimeout(() => {
+                $('#kode, #kode_dusun').val(kodeDusun+'.');
+                $('#kode, #kode_dusun').focus();
+            }, 1000);
         }
     });
 

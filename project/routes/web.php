@@ -207,7 +207,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff'); // can be used to get data staff for program
     Route::get('program/api/partner', [ProgramController::class, 'getProgramPartner'])->name('api.program.partner'); // can be used to get data partner for program
     Route::get('program/api/peran', [ProgramController::class, 'getProgramPeran'])->name('api.program.peran'); // can be used to get data peran for program
-    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
+    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi');
+    Route::get('program/{program}/details', [ProgramController::class, 'details'])->name('program.details');
+    Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
     Route::resource('program', ProgramController::class);
 
     Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');

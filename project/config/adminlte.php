@@ -120,50 +120,49 @@ return [
 
         [
             'text'          => 'User Profile',
-            // 'route'          => ['profile.show', ['identifier' => '']],
-            'route'          => 'user.profile',
+            'route'         => 'user.profile',
             'icon'          => 'fas fa-fw fa-user',
             'icon_color'    => 'primary',
         ],
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => false,
+            'type'          => 'navbar-search',
+            'text'          => 'search',
+            'topnav_right'  => false,
         ],
         [
-            'type' => 'darkmode-widget',
-            'icon' => 'fas fa-moon',
-            'icon_enabled' => 'fas fa-moon',
+            'type'          => 'darkmode-widget',
+            'icon'          => 'fas fa-moon',
+            'icon_enabled'  => 'fas fa-moon',
             'icon_disabled' => 'far fa-moon',
             'color_enabled' => 'primary',
             'color_disabled' => 'info',
-            'topnav_right' => true,
+            'topnav_right'  => true,
         ],
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => false,
+            'type'          => 'fullscreen-widget',
+            'topnav_right'  => false,
         ],
 
         // Sidebar items:
+        // [
+        //     'type' => 'sidebar-menu-search',
+        //     'text' => 'search',
+        // ],
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text'          => 'Dashboard',
+            'url'           => 'home',
+            'icon'          => 'fas fa-tachometer-alt',
+            'active'        => ['home', 'dashboard', 'home*', 'regex:@^home/[0-9]+$@']
         ],
         [
-            'text' => 'Dashboard',
-            'url' => 'home',
-            'icon' => 'fas fa-tachometer-alt',
-            'active' => ['home', 'dashboard', 'home*', 'regex:@^home/[0-9]+$@']
+            'header'        => 'Master Data',
+            'classes'       => 'text-bold text-uppercase nav-header-pad-as-first',
         ],
         [
-            'header' => 'Master Data',
-            'classes' => 'text-bold text-uppercase nav-header-pad-as-first',
-        ],
-        [
-            'text'        => 'Setup',
-            'icon'        => 'fas fa-cog',
-            'label_color' => 'success',
-            'classes'     => 'text-bold text-uppercase nav-header-pad-as-first',
+            'text'          => 'Setup',
+            'icon'          => 'fas fa-cog',
+            'label_color'   => 'success',
+            'classes'       => 'text-bold text-uppercase nav-header-pad-as-first',
         ],
         [
             'text' => 'Regional',
@@ -172,10 +171,10 @@ return [
             'submenu'   =>  [
                 [
                     'text'      => 'provinsi',
-                    'active'    => ['provinsi', 'regex:@^provinsi/[0-9]+$@', 'country', 'provinsi*','country*'],
+                    'active'    => ['provinsi', 'regex:@^provinsi/[0-9]+$@', 'country', 'provinsi*', 'country*'],
                     'route'     => 'provinsi.index',
                     'icon'      => 'fas fa-paste',
-                    'can'       => ['provinsi_access','provinsi_edit', 'provinsi_show', 'provinsi_create'],
+                    'can'       => ['provinsi_access', 'provinsi_edit', 'provinsi_show', 'provinsi_create'],
                 ],
                 [
                     'text'      => 'kabupaten',
@@ -183,14 +182,14 @@ return [
                     'route'     => 'kabupaten.index',
                     'icon'      => 'fas fa-table',
                     // 'classes'   => 'text-danger text-uppercase',
-                    'can'       => ['kabupaten_access','kabupaten_edit', 'kabupaten_show', 'kabupaten_create'],
+                    'can'       => ['kabupaten_access', 'kabupaten_edit', 'kabupaten_show', 'kabupaten_create'],
                 ],
                 [
                     'text'      => 'kecamatan',
-                    'active'    => ['kecamatan', 'kecamatan*','regex:@^kecamatan/[0-9]+$@'],
+                    'active'    => ['kecamatan', 'kecamatan*', 'regex:@^kecamatan/[0-9]+$@'],
                     'route'     => 'kecamatan.index',
                     'icon'      => 'far fa-plus-square',
-                    'can'       => ['kecamatan_access','kecamatan_edit', 'kecamatan_show', 'kecamatan_create'],
+                    'can'       => ['kecamatan_access', 'kecamatan_edit', 'kecamatan_show', 'kecamatan_create'],
                     // 'classes'   => 'text-danger text-uppercase',
                 ],
                 [
@@ -198,7 +197,7 @@ return [
                     'active'    => ['desa', 'regex:@^desa/[0-9]+$@', 'desa*'],
                     'route'     => 'desa.index',
                     'icon'      => 'fas fa-map',
-                    'can'       => ['desa_access','desa_edit', 'desa_show', 'desa_create'],
+                    'can'       => ['desa_access', 'desa_edit', 'desa_show', 'desa_create'],
                     // 'classes' => 'text-danger text-uppercase',
                     // 'route' => '',
                 ],
@@ -207,7 +206,7 @@ return [
                     'active'    => ['dusun', 'regex:@^dusun/[0-9]+$@', 'dusun*'],
                     'icon'      => 'fas fa-table',
                     'route'     => 'dusun.index',
-                    'can'       => ['dusun_access','dusun_edit', 'dusun_show', 'dusun_create'],
+                    'can'       => ['dusun_access', 'dusun_edit', 'dusun_show', 'dusun_create'],
                     // 'url'       => '#',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
                 ],
@@ -220,7 +219,7 @@ return [
             'submenu' => [
                 [
                     'text'      => 'role',
-                    'can'       => ['role_create','role_show'],
+                    'can'       => ['role_create', 'role_show'],
                     'icon'      => 'far fa-check-circle',
                     'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
                     'route'     => 'roles.index',
@@ -237,7 +236,7 @@ return [
                 [
                     'text'      => 'user',
                     'url'       => 'users',
-                    'can'       => ['user_access','user_edit', 'user_show', 'user_create'],
+                    'can'       => ['user_access', 'user_edit', 'user_show', 'user_create'],
                     // 'can'       => ['user_access'],
                     'route'     => 'users.index',
                     'icon'      => 'fas fa-chalkboard-teacher',
@@ -280,12 +279,12 @@ return [
                     'text'      => 'partner',
                     'route'     => 'partner.index',
                     'icon'      => 'fas fa-handshake',
-                    'can'       => ['partner_access','partner_edit', 'partner_show', 'partner_create'],
+                    'can'       => ['partner_access', 'partner_edit', 'partner_show', 'partner_create'],
                     'active'    => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
                 ],
                 [
                     'text' => 'jenis_bantuan',
-                     //'can'       => ['jenis_bantuanr_access','jenis_bantuan_edit', 'jenis_bantuan_show', 'jenis_bantuan_create'],
+                    //'can'       => ['jenis_bantuanr_access','jenis_bantuan_edit', 'jenis_bantuan_show', 'jenis_bantuan_create'],
                     'route' => 'jenisbantuan.index',
                     'icon' => 'fas fa-hands-helping',
                     'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
@@ -295,7 +294,7 @@ return [
                     'route'     => 'satuan.index',
                     'icon'      => 'fas fa-sort-numeric-down',
                     'active'    => ['satuan', 'satuan*', 'regex:@^satuan/[0-9]+$@'],
-                    'can'       => ['satuan_access','satuan_edit', 'satuan_show', 'satuan_create'],
+                    'can'       => ['satuan_access', 'satuan_edit', 'satuan_show', 'satuan_create'],
                 ],
                 [
                     'text' => 'sdg',
