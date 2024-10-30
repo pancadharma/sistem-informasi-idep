@@ -95,18 +95,17 @@
                 <h3 class="card-title">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
             </div>
             <div class="card-body">
-                <table id="outcome_output_list" class="table table-bordered table-striped cell-border ajaxTable striped" style="width:100%">
+                <table id="outcome_output_list" class="highlight responsive-table striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th width="90%">{{ __('Output Name') }}</th>
-                            <th width="10%">{{ __('Action') }}</th>
+                            <th width="30%">{{ __('Output Description') }}</th>
+                            <th width="30%">{{ __('Output Indicator') }}</th>
+                            <th width="30%">{{ __('Output Target') }}</th>
+                            <th width="10%" class="text-center">{{ __('Action') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr id="row-output">
-                            <td><span id="output-title"></span></td>
-                            <td><span id="output-action"></span></td>
-                        </tr>
+                    <tbody id="row-output">
+
                     </tbody>
                 </table>
             </div>
@@ -207,26 +206,89 @@
                             var $outputId = $this.data('output-id');
                             var $outputIndex = $this.data('index');
                             var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
+                            // $.ajax({
+                            //     url: $outputApi,
+                            //     method: 'GET',
+                            //     beforeSend: function() {
+                            //         Toast.fire({
+                            //             icon: 'info',
+                            //             title: 'Loading...',
+                            //             timer: 300
+                            //         });
+
+                            //     },
+                            //     success: function(response) {
+                            //         setTimeout(() => {
+                            //             if (response.success) {
+                            //                 $('#row-output').after.empty();
+                            //                 response.data.map(function(output) {
+                            //                     $('#row-output').after(`
+                            //                         <tr id="row-output-${output.id}">
+                            //                             <td>${output.deskripsi ?? ''}</td>
+                            //                             <td>${output.indikator ?? ''}</td>
+                            //                             <td>${output.target ?? ''}</td>
+                            //                             <td><button data-target="EditOutput" class="btn btn-block modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}"><i class="bi bi-database-fill-add"></i> Edit</button></td>
+                            //                         </tr>
+                            //                     `);
+                            //                 });
+                            //                 $('#output-title').text($outputIndex);
+                            //                 $('#output-action').text('Add Output');
+                            //             } else {
+                            //                 Swal.fire({
+                            //                     icon: 'error',
+                            //                     title: 'Error!',
+                            //                     text: response.message,
+                            //                 });
+                            //             }
+                            //         }, 100);
+                            //     },
+                            //     error: function(xhr, textStatus, errorThrown) {
+                            //         const errorMessage = getErrorMessage(xhr);
+                            //         Swal.fire({
+                            //             icon: 'error',
+                            //             title: 'Error!',
+                            //             html: errorMessage,
+                            //             confirmButtonText: 'Okay'
+                            //         });
+                            //     },
+                            // });
                             $.ajax({
                                 url: $outputApi,
                                 method: 'GET',
                                 beforeSend: function() {
                                     Toast.fire({
                                         icon: 'info',
-                                        title: 'Loading...'
+                                        title: 'Loading...',
+                                        timer: 300
                                     });
                                 },
                                 success: function(response) {
                                     setTimeout(() => {
                                         if (response.success) {
-                                            response.data.map(function(output) {
-                                                $('#row-output').after(`
-                                                    <tr id="row-output-${output.id}">
-                                                        <td>${output.deskripsi}</td>
-                                                        <td><button data-target="modalAddOutput" class="btn btn-block modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}"><i class="bi bi-database-fill-add"></i> Add Output</button></td>
+                                            $('#row-output').empty();
+                                            // if (response.data.length === 0) {
+                                            if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+                                                $('#row-output').append(`
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">No data available</td>
                                                     </tr>
                                                 `);
-                                            });
+                                            } else {
+                                                response.data.forEach(function(output) {
+                                                    $('#row-output').append(`
+                                                        <tr id="row-output-${output.id}">
+                                                            <td>${output.deskripsi ?? ''}</td>
+                                                            <td>${output.indikator ?? ''}</td>
+                                                            <td>${output.target ?? ''}</td>
+                                                            <td>
+                                                                <button data-target="EditOutput" class="btn btn-block modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
+                                                                    <i class="bi bi-database-fill-add"></i> Edit
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    `);
+                                                });
+                                            }
                                             $('#output-title').text($outputIndex);
                                             $('#output-action').text('Add Output');
                                         } else {
