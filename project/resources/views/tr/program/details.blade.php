@@ -6,32 +6,7 @@
 
 @section('content_body')
 <div class="row">
-    <div class="col-lg-3">
-        <div class="card card-danger card-outline">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.title_singular') }}</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="card-body">
-                <form action="" class="col s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="goal" type="text" class="validate">
-                            <label for="goal">{{ __('cruds.program.goals.label') }}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <input id="objective" type="text" class="validate">
-                            <label for="objective">{{ __('cruds.program.objective.label') }}</label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
+    <div class="col-md-3">
         <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
@@ -42,29 +17,49 @@
             <div class="card-body p-0">
                 <ul class="nav nav-pills flex-column">
                     @forelse ($outcomes as $index => $outcome)
-                    <li class="nav-item">
-                        <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                            {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
+                                {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
+                            </button>
+                        </li>
                     @empty
-                    <div class="nav flex-column nav-tabs h-100">
-                        <button type="button" class="btn btn-block"></i>No Outcome</button>
-                    </div>
+                        <div class="nav flex-column nav-tabs h-100">
+                            <button type="button" class="btn btn-block"></i>No Outcome</button>
+                        </div>
                     @endforelse
                 </ul>
             </div>
         </div>
+        <div class="card card-danger card-outline">
+            <div class="card-header">
+                <h3 class="card-title">{{ __('cruds.program.title_singular') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
+                            class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body pd-0">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="goal" type="text" class="validate" readonly autofocus value="{{ old('goal', $program->objektif->target ?? '') }}">
+                        <label for="goal">{{ __('cruds.program.goals.label') }}</label>
+                    </div>
+                </div>
+                <div class="row">
+                <div class="input-field col s12">
+                        <input id="objektif" type="text" class="validate" readonly value="{{ old('objective', $program->objektif->deskripsi ?? '') }}">
+                        <label for="objektif">{{ __('cruds.program.objective.label') }}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-lg-9">
-        <div class="card card-primary card-outline">
+    <div class="col-md-9">
+        <div class="card card-primary card-outline hide" id="outcomeData">
             <div class="card-header">
                 <div class="row">
                     <div class="col">
                         <h3 class="card-title pt-2">{{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span></h3>
-                    </div>
-                    <div class="col">
-                        <button data-target="modalAddOutput" class="btn modal-trigger float-right btn-success"><i class="bi bi-database-fill-add"></i> Add Output</button>
                     </div>
                 </div>
             </div>
@@ -83,36 +78,102 @@
                         <input id="target" name="target" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
                         <label for="target">{{ __('cruds.program.outcome.target') }}</label>
                     </div>
-                    {{-- <div class="input-field col-auto">
-                        <button data-target="modalAddOutput" class="btn btn-block modal-trigger float-right btn-success"> <i class="bi bi-database-fill-add"></i> Add Output</button>
-                        <label for="target"> &nbsp; </label>
-                    </div> --}}
                 </div>
             </div>
         </div>
+        {{-- hidden detail output --}}
         <div class="card card-outline card-primary hide" id="list_output">
             <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
+                <div class="row">
+                    <div class="col">
+                        <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
+                    </div>
+                    <div class="col">
+                        <button type="button" data-target="modalAddOutput" class="btn modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus-lg"></i>
+                            {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
-                <table id="outcome_output_list" class="table table-bordered table-striped cell-border ajaxTable striped" style="width:100%">
-                    <thead>
+                <table id="outcome_output_list" class="highlight striped" style="width:100%">
+                    <thead class="">
                         <tr>
-                            <th width="90%">{{ __('Output Name') }}</th>
-                            <th width="10%">{{ __('Action') }}</th>
+                            <th width="30%">{{ __('Output Description') }}</th>
+                            <th width="30%">{{ __('Output Indicator') }}</th>
+                            <th width="30%">{{ __('Output Target') }}</th>
+                            <th width="10%" class="text-center">{{ __('Action') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr id="row-output">
-                            <td><span id="output-title"></span></td>
-                            <td><span id="output-action"></span></td>
-                        </tr>
+                    <tbody id="row-output">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+
+{{-- UNUSED CODE HERE --}}
+{{-- <div class="row">
+    <div class="col-lg-3">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <ul class="nav nav-pills flex-column">
+                    @forelse ($outcomes as $index => $outcome)
+                        <li class="nav-item">
+                            <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
+                                {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
+                            </button>
+                        </li>
+                    @empty
+                        <div class="nav flex-column nav-tabs h-100">
+                            <button type="button" class="btn btn-block"></i>No Outcome</button>
+                        </div>
+                    @endforelse
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-9">
+        <div class="card card-outline card-primary hide" id="list_output">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
+                    </div>
+                    <div class="col">
+                        <button type="button" data-target="modalAddOutput" class="btn modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus-lg"></i>
+                            {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="outcome_output_list" class="highlight striped" style="width:100%">
+                    <thead class="">
+                        <tr>
+                            <th width="30%">{{ __('Output Description') }}</th>
+                            <th width="30%">{{ __('Output Indicator') }}</th>
+                            <th width="30%">{{ __('Output Target') }}</th>
+                            <th width="10%" class="text-center">{{ __('Action') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="row-output">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div> --}}
 
 
 
@@ -189,44 +250,66 @@
                 url: outcomeApi,
                 method: 'GET',
                 beforeSend: function() {
-                    $('#detail_outcome, #list_output').addClass('hide');
+                    $('#detail_outcome, #list_output, #outcomeData' ).addClass('hide');
                     $('#loading').removeClass('hide');
                 },
                 success: function(response) {
                     setTimeout(() => {
                         if (response.success) {
-                            $('#detail_outcome, #list_output').removeClass('hide');
+                            $('#detail_outcome, #list_output, #outcomeData').removeClass('hide');
+
                             $('#outcome-title').text(outcomeIndex);
                             $('#outcome-number').text(outcomeIndex);
+
                             $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
                             $('#indikator').val(response.data.indikator ?? '').trigger('input');
                             $('#target').val(response.data.target ?? '').trigger('input');
-
+                            $('#goal').focus().trigger('input');
+                            $('#objektif').trigger('input');
 
                             var $this = $(this); // Cache the current element
                             var $outputId = $this.data('output-id');
                             var $outputIndex = $this.data('index');
                             var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
+
                             $.ajax({
                                 url: $outputApi,
                                 method: 'GET',
                                 beforeSend: function() {
                                     Toast.fire({
                                         icon: 'info',
-                                        title: 'Loading...'
+                                        title: 'Loading...',
+                                        timer: 300
                                     });
                                 },
                                 success: function(response) {
                                     setTimeout(() => {
                                         if (response.success) {
-                                            response.data.map(function(output) {
-                                                $('#row-output').after(`
-                                                    <tr id="row-output-${output.id}">
-                                                        <td>${output.deskripsi}</td>
-                                                        <td><button data-target="modalAddOutput" class="btn btn-block modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}"><i class="bi bi-database-fill-add"></i> Add Output</button></td>
+                                            $('#row-output').empty();
+                                            // if (response.data.length === 0) {
+                                            if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+                                                $('#row-output').append(`
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">No data available</td>
                                                     </tr>
                                                 `);
-                                            });
+                                            } else {
+                                                response.data.forEach(function(output) {
+                                                    $('#row-output').append(`
+                                                        <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
+                                                            <td>${output.deskripsi ?? ''}</td>
+                                                            <td>${output.indikator ?? ''}</td>
+                                                            <td>${output.target ?? ''}</td>
+                                                            <td><div class="button-container">
+                                                                    <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
+                                                                    <i class="bi bi-pencil-square"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    `);
+                                                });
+                                            }
                                             $('#output-title').text($outputIndex);
                                             $('#output-action').text('Add Output');
                                         } else {
@@ -248,8 +331,6 @@
                                     });
                                 },
                             });
-
-
                         } else {
                             Swal.fire({
                                 icon: 'error',

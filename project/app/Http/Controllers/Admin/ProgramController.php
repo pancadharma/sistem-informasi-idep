@@ -23,6 +23,7 @@ use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
 use App\Models\Program_Outcome_Output;
+use App\Models\ProgramObjektif;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -44,9 +45,10 @@ class ProgramController extends Controller
     public function details(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
-            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
+            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif']);
             $outcomes = Program_Outcome::where('program_id', $program->id)->get();
-            return view('tr.program.details', compact('program', 'outcomes'));
+            $objektif = ProgramObjektif::where('program_id', $program->id)->get();
+            return view('tr.program.details', compact('program', 'outcomes', 'objektif'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
@@ -652,15 +654,34 @@ class ProgramController extends Controller
         }
     }
 
+    public function apiObjektif(ProgramObjektif $objektif)
+    {
+        $output = ProgramObjektif::where('program_id', $objektif)->get();
+        $objektif->load('program');
+        if ($objektif) {
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $objektif,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Data Objective not found',
+            ], 404);
+        }
+    }
+
     public function apiOutput(Program_Outcome_Output $output, $outcome)
     {
         $output = Program_Outcome_Output::where('programoutcome_id', $outcome)->get();
+        $output->load('program_outcome');
         if ($output) {
             return response()->json([
                 'success' => true,
                 'status' => 'success',
-                'data' => $output
-                // 'outcome' => $data->program_outcome(),
+                'data' => $output,
             ]);
         } else {
             return response()->json([
@@ -670,5 +691,4 @@ class ProgramController extends Controller
             ], 404);
         }
     }
-
 }

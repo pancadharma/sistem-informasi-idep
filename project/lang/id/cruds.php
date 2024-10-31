@@ -476,7 +476,7 @@ return [
             'desc'          => 'Description'
         ],
         'goals'             => [
-            'label'         => 'Sasaran',
+            'label'         => 'Goals',
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',
