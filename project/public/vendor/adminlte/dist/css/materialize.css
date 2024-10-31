@@ -2799,7 +2799,7 @@ table.striped tr {
 }
 
 table.striped>tbody>tr:nth-child(odd) {
-    background-color: rgba(242, 242, 242, 0.5)
+    background-color: rgb(113 172 205 / 29%);
 }
 
 table.striped>tbody>tr>td {

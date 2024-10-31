@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Auditable;
 use DateTimeInterface;
+use App\Models\Program_Outcome;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ class Program_Outcome_Output extends Model
 
     protected $fillable = [
         'programoutcome_id',
-        'deskrispsi',
+        'deskripsi',
         'indikator',
         'target',
         'created_at',
@@ -35,7 +36,7 @@ class Program_Outcome_Output extends Model
 
     public function program_outcome()
     {
-        return $this->belongsTo(Program_Outcome::class);
+        return $this->belongsTo(Program_Outcome::class, 'programoutcome_id', 'id');
     }
 
 }
