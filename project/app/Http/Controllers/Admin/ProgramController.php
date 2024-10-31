@@ -23,6 +23,7 @@ use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
 use App\Models\Program_Outcome_Output;
+use App\Models\ProgramGoal;
 use App\Models\ProgramObjektif;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -45,10 +46,11 @@ class ProgramController extends Controller
     public function details(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
-            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif']);
+            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal']);
             $outcomes = Program_Outcome::where('program_id', $program->id)->get();
             $objektif = ProgramObjektif::where('program_id', $program->id)->get();
-            return view('tr.program.details', compact('program', 'outcomes', 'objektif'));
+            $goal = ProgramGoal::where('program_id', $program->id)->get();
+            return view('tr.program.details', compact('program', 'outcomes', 'objektif', 'goal'));
         }
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
