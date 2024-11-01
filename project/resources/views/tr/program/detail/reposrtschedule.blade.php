@@ -9,7 +9,7 @@
         <table class="table table-bordered" id="editreportschedule">   
             <button type="button" name="addedit" id="addedit" class="btn btn-success">+</button>
           
-    </div> 
+    
     <div class="row">
         <div class="col-lg-3 form-group">
             <div class="input-group">
@@ -41,6 +41,7 @@
     </div>
     @endforeach
 </table> 
+</div> 
 @endif
 
 
