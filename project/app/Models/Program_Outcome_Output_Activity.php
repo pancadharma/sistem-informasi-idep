@@ -4,16 +4,18 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ProgramObjektif extends Model
+class Program_Outcome_Output_Activity extends Model
 {
-    use HasFactory, Auditable;
-    protected $table = 'trprogramobjektif';
+    use HasFactory, Auditable, HasRoles;
+
+    protected $table = 'trprogramoutcomeoutputactivity';
 
     protected $fillable = [
-        'program_id',
+        'programoutcomeoutput_id',
         'deskripsi',
         'indikator',
         'target',
@@ -31,9 +33,8 @@ class ProgramObjektif extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    // Define the relationship to the 'Program' model (assuming the related table is 'programs')
-    public function program()
+    public function program_outcome_output()
     {
-        return $this->belongsTo(Program::class, 'program_id');
+        return $this->belongsTo(Program_Outcome_Output::class, 'programoutcomeoutput_id', 'id');
     }
 }

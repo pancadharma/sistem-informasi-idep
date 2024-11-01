@@ -2812,7 +2812,7 @@ table.highlight>tbody>tr {
 }
 
 table.highlight>tbody>tr:hover {
-    background-color: rgba(242, 242, 242, 0.5)
+    background-color: rgb(0 123 255 / 36%)
 }
 
 table.centered thead tr th,

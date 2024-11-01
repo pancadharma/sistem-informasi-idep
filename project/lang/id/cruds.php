@@ -472,11 +472,13 @@ return [
             'selesai'       => 'Tanggal Selesai',
         ],
         'objective'         => [
-            'label'         => 'Objective',
+            'label'         => 'Objektif',
+            'target'        => 'Target',
+            'indicator'     => 'Indikator',
             'desc'          => 'Description'
         ],
         'goals'             => [
-            'label'         => 'Sasaran',
+            'label'         => 'Goals',
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',

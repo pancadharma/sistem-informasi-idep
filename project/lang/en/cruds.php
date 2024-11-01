@@ -476,6 +476,8 @@ return [
         ],
         'objective'         => [
             'label'         => 'Objective',
+            'target'        => 'Target',
+            'indicator'     => 'Indicator',
             'desc'          => 'Description'
         ],
         'goals'             => [

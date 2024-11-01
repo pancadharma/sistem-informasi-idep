@@ -83,6 +83,15 @@ class Program extends Model implements HasMedia
         return $this->hasMany(Program_Outcome::class, 'program_id');
     }
 
+    public function objektif()
+    {
+        return $this->hasOne(ProgramObjektif::class, 'program_id');
+    }
+    public function goal()
+    {
+        return $this->hasOne(ProgramGoal::class, 'program_id');
+    }
+
     public function jadwalreport()
     {
         return $this->hasMany(Program_Report_Schedule::class, 'program_id');
