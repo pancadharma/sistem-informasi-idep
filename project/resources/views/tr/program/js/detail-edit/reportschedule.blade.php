@@ -1,12 +1,10 @@
-
 @push('js')
-
 <script>  
     $(document).ready(function(){  
-    var i=1;  
-    $('#add').click(function(){  
+    let i = {{ $program->jadwalreport->count() }}
+    $('#addedit').click(function(){  
         i++;  
-        $('#reportschedule').append(
+        $('#editreportschedule').append(
     
     
         `<div class="row" id=${i}>
@@ -18,7 +16,7 @@
             </div>
             
             
-            <div class="col form-group">
+            <div class="col-lg-3 form-group">
                 <div class="input-group">
                     <label for="detail" class="input-group small mb-2 mt-2">Keterangan</label>
                     <textarea name="keteranganlaporan[]" class="form-control" placeholder="keterangan" rows="1"></textarea>
@@ -38,6 +36,5 @@
         $('#row'+button_id+'').remove();  
     }); 
     });  
-    </script>
-    
+</script>
 @endpush

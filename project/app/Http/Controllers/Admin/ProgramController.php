@@ -23,6 +23,7 @@ use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
 use App\Models\Program_Outcome_Output;
+use App\Models\Program_Report_Schedule;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -370,7 +371,8 @@ class ProgramController extends Controller
             // update program donatur
             $this->updateProgramDonatur($program, $request);
             $this->updateProgramOutcomes($program, $request);
-
+            $this->updateJadwalReport($program, $request);
+            
             DB::commit();
 
             return response()->json([
@@ -567,6 +569,42 @@ class ProgramController extends Controller
         $page = $request->input('page', 1);
         $targetreinstra = TargetReinstra::where('nama', 'like', "%{$search}%")->get();
         return response()->json($targetreinstra);
+    }
+
+    protected function updateJadwalReport($program, Request $request)
+    {
+        $existingJadwal = $program->jadwalreport()->get();
+        $existingJadwalReportId = $existingJadwal->pluck('id')->toArray();
+        $newJadwalId = [];
+
+        foreach ($request->input('tanggallaporan', []) as $index => $tanggallaporan) {
+            $JadwalReportId = $request->input("jadwalreport_id.$index"); // Use indexed input for existing report schedule
+
+            if (!empty($JadwalReportId) && in_array($JadwalReportId, $existingJadwalReportId)) {
+                // Update existing report schedule
+                $jadwalreport = Program_Report_Schedule::find($JadwalReportId);
+                $jadwalreport->update([
+                    'tanggal' => $tanggallaporan,
+                    'keterangan' => $request->input("keteranganlaporan.$index"),
+                ]);
+                $newJadwalId[] = $jadwalreport->id; // Store updated repport schedule ID
+            } elseif (!empty($tanggallaporan)) {
+                // Create new report schedule if no ID is provided
+                $jadwalreport = Program_Report_Schedule::create([
+                    'program_id' => $program->id,
+                    'tanggal' => $tanggallaporan,
+                    'keterangan' => $request->input("keteranganlaporan.$index"),
+                ]);
+                $newJadwalId[] = $jadwalreport->id; // Store new outcome ID
+            }
+        }
+
+        // Remove report schedule that are not in the new input
+        foreach ($existingJadwal as $existingJadwals) {
+            if (!in_array($existingJadwals->id, $newJadwalId)) {
+                $existingJadwals->delete();
+            }
+        }
     }
 
     protected function updateProgramOutcomes($program, Request $request)
