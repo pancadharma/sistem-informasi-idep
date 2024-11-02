@@ -693,4 +693,13 @@ class ProgramController extends Controller
             ], 404);
         }
     }
+
+    public function detailsModal()
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_create')) {
+            $program = Program::with(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal'])->where('id', auth()->user()->id)->first();
+            return view('tr.program.detail.outcome-detail', compact('program'));
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+    }
 }

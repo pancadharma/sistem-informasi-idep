@@ -181,7 +181,7 @@
                         <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
                     </div>
                     <div class="col">
-                        <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
+                        <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right btn-success" id="addOutputBtn" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
                             {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
                         </button>
                     </div>
@@ -205,68 +205,6 @@
         </div>
     </div>
 </div>
-
-{{-- UNUSED CODE HERE --}}
-{{-- <div class="row">
-    <div class="col-lg-3">
-        <div class="card card-primary card-outline">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
-<div class="card-tools">
-    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-</div>
-</div>
-<div class="card-body p-0">
-    <ul class="nav nav-pills flex-column">
-        @forelse ($outcomes as $index => $outcome)
-        <li class="nav-item">
-            <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
-            </button>
-        </li>
-        @empty
-        <div class="nav flex-column nav-tabs h-100">
-            <button type="button" class="btn btn-block"></i>No Outcome</button>
-        </div>
-        @endforelse
-    </ul>
-</div>
-</div>
-</div>
-<div class="col-9">
-    <div class="card card-outline card-primary hide" id="list_output">
-        <div class="card-header">
-            <div class="row">
-                <div class="col">
-                    <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
-                </div>
-                <div class="col">
-                    <button type="button" data-target="modalAddOutput" class="btn modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus-lg"></i>
-                        {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <table id="outcome_output_list" class="highlight striped" style="width:100%">
-                <thead class="">
-                    <tr>
-                        <th width="30%">{{ __('Output Description') }}</th>
-                        <th width="30%">{{ __('Output Indicator') }}</th>
-                        <th width="30%">{{ __('Output Target') }}</th>
-                        <th width="10%" class="text-center">{{ __('Action') }}</th>
-                    </tr>
-                </thead>
-                <tbody id="row-output">
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-</div> --}}
-
 
 
 @stop
@@ -329,6 +267,29 @@
     }
 
     $(document).ready(function() {
+
+        $('#addOutputBtn').click(function() {
+        // Load modal content
+        $.ajax({
+            url: "{{ route('program.details.modal') }}",
+            success: function(data) {
+                // Remove existing modal if it exists
+                $('#modalAddOutput').remove();
+
+                // Append modal content to body
+                $('body').append(data);
+
+                // Ensure the modal is initialized
+                $('#modalAddOutput').modal();
+
+                // Show the modal
+                $('#modalAddOutput').modal('show');
+            },
+            error: function() {
+                console.log("Error loading modal content.");
+            }
+        });
+    });
 
         $('.nav').on('click', '.btn-list-outcome', function(e) {
             e.preventDefault(); // Prevent default button behavior
@@ -444,6 +405,8 @@
             });
         });
     });
+
+
 </script>
 
 @endpush
