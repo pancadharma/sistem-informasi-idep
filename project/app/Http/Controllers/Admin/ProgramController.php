@@ -52,7 +52,12 @@ class ProgramController extends Controller
             $goal = ProgramGoal::where('program_id', $program->id)->get();
             return view('tr.program.details', compact('program', 'outcomes', 'objektif', 'goal'));
         }
-        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+        return response()->json([
+            'success' => false,
+            'status' => 'error',
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program',
+        ], 403);
+        // abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
 
 

@@ -491,5 +491,17 @@ return [
             'list'          => 'List of Marginalized Group',
             'select'        => 'Select Marginalized Group',
         ],
-    ]
+    ],
+    'activity'              => [
+        'label'             => 'Activity',
+        'deskripsi'         => 'Activity Description',
+        'target'            => 'Activity Target',
+        'indicator'         => 'Activity Indicator',
+        'list'              => 'List Activity',
+        'add'               => 'Add Activity',
+        'edit'              => 'Edit Activity',
+        'delete'            => 'Delete Activity',
+        'select'            => 'Select Activity',
+        'no_selected'       => 'No Activity Selected',
+    ],
 ];

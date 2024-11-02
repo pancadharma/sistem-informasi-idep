@@ -1,0 +1,86 @@
+<script>
+    function handleErrors(response) {
+        let errorMessage = response.message;
+        if (response.status === 400) {
+            try {
+                const errors = response.errors;
+                errorMessage = formatErrorMessages(errors);
+            } catch (error) {
+                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+            }
+        }
+        Swal.fire({
+            title: "Error!",
+            html: errorMessage,
+            icon: "error"
+        });
+    }
+
+    function formatErrorMessages(errors) {
+        let message = '<br><ul style="text-align:left!important">';
+        for (const field in errors) {
+            errors[field].forEach(function (error) {
+                message += `<li>${error}</li>`;
+            });
+        }
+        message += '</ul>';
+        return message;
+    }
+
+    function getErrorMessage(xhr) {
+        let message;
+        try {
+            const response = JSON.parse(xhr.responseText);
+            message = response.message || 'An unexpected error occurred. Please try again later.';
+        } catch (e) {
+            message = 'An unexpected error occurred. Please try again later.';
+        }
+        return message;
+    }
+
+</script>
+
+
+<!-- USAGE -->
+ON error response we will show the error message
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "{{ route('api.program.details', ':id') }}".replace(':id', 1),
+            method: 'GET',
+            beforeSend: function () {
+                $('#detail_outcome, #list_output, #outcomeData').addClass('hide');
+                $('#loading').removeClass('hide');
+            },
+            success: function (response) {
+                setTimeout(() => {
+                    if (response.success) {
+                        $('#detail_outcome, #list_output, #outcomeData').removeClass('hide');
+                        $('#detail_outcome').html(response.data.deskripsi);
+                        $('#indikator').val(response.data.indikator);
+                        $('#target').val(response.data.target);
+                        $('#goal').focus().trigger('input');
+                        $('#objektif').trigger('input');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                        });
+                    }
+                }, 100);
+            },
+
+            // here is the implemntation of error handling
+            error: function (xhr, textStatus, errorThrown) {
+                const errorMessage = getErrorMessage(xhr);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: errorMessage,
+                    confirmButtonText: 'Okay'
+                });
+            },
+        });
+    });        
+</script>
