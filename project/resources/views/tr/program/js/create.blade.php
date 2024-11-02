@@ -1,4 +1,42 @@
 <script>
+    function handleErrors(response) {
+        let errorMessage = response.message;
+        if (response.status === 400) {
+            try {
+                const errors = response.errors;
+                errorMessage = formatErrorMessages(errors);
+            } catch (error) {
+                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
+            }
+        }
+        Swal.fire({
+            title: "Error!",
+            html: errorMessage,
+            icon: "error"
+        });
+    }
+
+    function formatErrorMessages(errors) {
+        let message = '<br><ul style="text-align:left!important">';
+        for (const field in errors) {
+            errors[field].forEach(function(error) {
+                message += `<li>${error}</li>`;
+            });
+        }
+        message += '</ul>';
+        return message;
+    }
+
+    function getErrorMessage(xhr) {
+        let message;
+        try {
+            const response = JSON.parse(xhr.responseText);
+            message = response.message || 'An unexpected error occurred. Please try again later.';
+        } catch (e) {
+            message = 'An unexpected error occurred. Please try again later.';
+        }
+        return message;
+    }
     //SCRIPT FOR CREATE PROGRAM FORM
     // $('#totalnilai').maskMoney({
     //     prefix: 'Rp. ',
@@ -118,7 +156,7 @@
         var data_sdg = "{{ route('program.api.sdg') }}";
 
         $('#kelompokmarjinal').select2({
-            placeholder: '{{ __('cruds.program.marjinal.select') }}',
+            placeholder: "{{ __('cruds.program.marjinal.select ') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -148,7 +186,7 @@
         });
         // SELECT2 For Target Reinstra
         $('#targetreinstra').select2({
-            placeholder: '{{ __('cruds.program.select_reinstra') }}',
+            placeholder: "{{ __('cruds.program.select_reinstra ') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -180,7 +218,7 @@
         //KAITAN SDG SELECT2
 
         $('#kaitansdg').select2({
-            placeholder: '{{ __('cruds.program.select_sdg') }}',
+            placeholder: "{{ __('cruds.program.select_sdg ') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -268,43 +306,52 @@
                         }
                     }, 500);
                 },
-                error: function(xhr, status, error) {
-                    $('#createProgram').find('button[type="submit"]').removeAttr(
-                        'disabled');
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response.errors) {
-                            errorMessage +=
-                                '<br><br><ul style="text-align:left!important">';
-                            $.each(response.errors, function(field, messages) {
-                                messages.forEach(message => {
-                                    errorMessage +=
-                                        `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).removeClass(
-                                        'is-valid').addClass(
-                                        'is-invalid');
-                                    $(`#${field}-error`).text(message);
-                                    $(`#${field}`).removeClass('invalid')
-                                        .addClass('is-invalid');
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    html: errorMessage,
-                                });
-                            });
-                            errorMessage += '</ul>';
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
+                error: function(xhr, textStatus, errorThrown) {
+                    const errorMessage = getErrorMessage(xhr);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
                         html: errorMessage,
+                        confirmButtonText: 'Okay'
                     });
                 },
+                // error: function(xhr, status, error) {
+                //     $('#createProgram').find('button[type="submit"]').removeAttr(
+                //         'disabled');
+                //     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
+                //     try {
+                //         const response = xhr.responseJSON;
+                //         if (response.errors) {
+                //             errorMessage +=
+                //                 '<br><br><ul style="text-align:left!important">';
+                //             $.each(response.errors, function(field, messages) {
+                //                 messages.forEach(message => {
+                //                     errorMessage +=
+                //                         `<li>${field}: ${message}</li>`;
+                //                     $(`#${field}-error`).removeClass(
+                //                         'is-valid').addClass(
+                //                         'is-invalid');
+                //                     $(`#${field}-error`).text(message);
+                //                     $(`#${field}`).removeClass('invalid')
+                //                         .addClass('is-invalid');
+                //                 });
+                //                 Swal.fire({
+                //                     icon: 'error',
+                //                     title: 'Error!',
+                //                     html: errorMessage,
+                //                 });
+                //             });
+                //             errorMessage += '</ul>';
+                //         }
+                //     } catch (e) {
+                //         console.error('Error parsing response:', e);
+                //     }
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Error!',
+                //         html: errorMessage,
+                //     });
+                // },
                 complete: function() {
                     setTimeout(() => {
                         $(this).find('button[type="submit"]').removeAttr(
