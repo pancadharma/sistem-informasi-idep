@@ -37,6 +37,32 @@
         }
         return message;
     }
+
+    function addInvalidClassToFields(errors) {
+        for (const field in errors) {
+            if (errors.hasOwnProperty(field)) {
+                errors[field].forEach(function(error) {
+                    const inputField = $(`[name="${field}"]`);
+                    if (inputField.length) {
+                        inputField.addClass('is-invalid');
+                        // Optionally, you can add error messages below the input fields
+                        if (inputField.next('.invalid-feedback').length === 0) {
+                            inputField.after(`<div class="invalid-feedback">${error}</div>`);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Attach an event listener to remove the invalid class and message on input change
+        $('input, textarea, select').on('input change', function() {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        });
+    }
+
+
+
     //SCRIPT FOR CREATE PROGRAM FORM
     // $('#totalnilai').maskMoney({
     //     prefix: 'Rp. ',
@@ -309,6 +335,10 @@
                 error: function(xhr, textStatus, errorThrown) {
                     $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
                     const errorMessage = getErrorMessage(xhr);
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.errors) {
+                        addInvalidClassToFields(response.errors);
+                    }
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
