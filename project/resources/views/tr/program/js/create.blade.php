@@ -156,7 +156,7 @@
         var data_sdg = "{{ route('program.api.sdg') }}";
 
         $('#kelompokmarjinal').select2({
-            placeholder: "{{ __('cruds.program.marjinal.select ') }}",
+            placeholder: "{{ __('cruds.program.marjinal.select') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -186,7 +186,7 @@
         });
         // SELECT2 For Target Reinstra
         $('#targetreinstra').select2({
-            placeholder: "{{ __('cruds.program.select_reinstra ') }}",
+            placeholder: "{{ __('cruds.program.select_reinstra') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -218,7 +218,7 @@
         //KAITAN SDG SELECT2
 
         $('#kaitansdg').select2({
-            placeholder: "{{ __('cruds.program.select_sdg ') }}",
+            placeholder: "{{ __('cruds.program.select_sdg') }}",
             width: '100%',
             allowClear: true,
             closeOnSelect: false,
@@ -307,6 +307,7 @@
                     }, 500);
                 },
                 error: function(xhr, textStatus, errorThrown) {
+                    $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
                     const errorMessage = getErrorMessage(xhr);
                     Swal.fire({
                         icon: 'error',
