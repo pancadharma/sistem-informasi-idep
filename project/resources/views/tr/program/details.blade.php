@@ -104,7 +104,7 @@
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
     </div>
     <div class="col-md-9">
         <div class="card card-primary card-outline hide" id="outcomeData">
@@ -209,13 +209,12 @@
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 
 <script>
-
-  $(function () {
-    //Add text editor
-    // $('#deskripsi_output').summernote();
-    // $('#indikator_output').summernote();
-    // $('#target_output').summernote();
-  })
+    $(function() {
+        //Add text editor
+        // $('#deskripsi_output').summernote();
+        // $('#indikator_output').summernote();
+        // $('#target_output').summernote();
+    })
 
     function handleErrors(response) {
         let errorMessage = response.message;
@@ -412,24 +411,100 @@
 
 
 
+        // $('#addActvityOutcome').click(function() {
+        //     let activityIndex = $('#row-activity').find('tr').length;
+        //     $('#no-activity').addClass('hide').empty();
+
+        //     $('#row-activity').append(`
+        //         <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group button-container">
+        //                     <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
+        //                         <i class="bi bi-trash"></i>
+        //                     </button>
+        //                 </div>
+        //             </td>
+        //         </tr>
+        //     `);
+        // });
+
         $('#addActvityOutcome').click(function() {
+            let activityIndex = $('#row-activity tr.data-activity').length + 1;
+            $('#no-activity').addClass('hide').empty();
 
-            let activityIndex = $('#row-activity').find('tr').length;
-
+            $(function() {
+                //Add text editor
+                $('#row-activity-' + activityIndex).find('textarea').summernote({
+                    height: 100,
+                    width: '100%',
+                    toolbar: [
+                        ['style', ['bold', 'italic']],
+                        ['color', ['color']],
+                        ['paragraph', ['paragraph']],
+                        ['view', ['fullscreen', 'codeview']],
+                    ],
+                    inheritPlaceholder: true,
+                });
+                // $('#indikator_output').summernote();
+                // $('#target_output').summernote();
+            })
             $('#row-activity').append(`
-                <tr id="row-activity-${activityIndex}" class="data-activity">
-                    <td colspan="4" class="text-center">
-                        <div class="input-group">
-                            <textarea type="textarea" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000"></textarea>
-                            <input type="hidden" name="kegiatan[]"> <!-- Leave empty for new outcomes -->
-                        </div>
-                    </td>
-                </tr>
-            `);
-
-
-
+            <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="deskripsi[]" class="form-control" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="indikator[]" class="form-control" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="target[]" class="form-control" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="input-group button-container">
+                        <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`);
         });
+
+        $('tbody#row-activity').on('click', '.remove-activity', function(e) {
+            e.preventDefault();
+            var activityId = $(this).closest('tr').data('activity-id');
+            $('#row-activity-' + activityId).remove();
+            // Update row indices
+            updateRowIndices();
+        });
+
+        function updateRowIndices() {
+            $('#row-activity tr.data-activity').each(function(index) {
+                $(this).attr('id', 'row-activity-' + (index + 1));
+                $(this).data('activity-id', (index + 1));
+            });
+        }
+
 
 
 

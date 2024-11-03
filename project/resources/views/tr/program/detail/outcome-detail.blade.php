@@ -1,4 +1,4 @@
-<x-adminlte-modal id="modalAddOutput" title="{{ __('global.add'). ' ' . __('cruds.program.output.label') }}" size="xl" theme="info" icon="fas fa-folder-open" static-backdrop scrollable >
+<x-adminlte-modal id="modalAddOutput" title="{{ __('global.add'). ' ' . __('cruds.program.output.label') }}" size="xl" theme="info" icon="fas fa-folder-open" static-backdrop scrollable>
     <div style="height:40%;">
 
         <div class="modal-body">
@@ -41,11 +41,11 @@
                             <div class="card-body p-0">
                                 <table id="outcome_output_list" class="highlight striped table" style="width:100%">
                                     <thead class="bg-light">
-                                        <tr>
-                                            <th width="30%" class="pl-2">{{ __('cruds.activity.deskripsi') }}</th>
-                                            <th width="30%">{{ __('cruds.activity.indicator') }}</th>
-                                            <th width="30%">{{ __('cruds.activity.target') }}</th>
-                                            <th width="10%" class="text-center pr-2">{{ __('global.action') }}</th>
+                                        <tr id="header-activity">
+                                            <th width="30%" class="text-center">{{ __('cruds.activity.deskripsi') }}</th>
+                                            <th width="30%" class="text-center">{{ __('cruds.activity.indicator') }}</th>
+                                            <th width="30%" class="text-center">{{ __('cruds.activity.target') }}</th>
+                                            <th width="10%" class="text-center">{{ __('global.action') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody id="row-activity">
@@ -65,7 +65,7 @@
                         {{-- <button type="submit" class="btn btn-primary waves-effect waves-red btn-block">
                             <i class="bi bi-floppy"></i>
                             {{ __('global.save') }}
-                            </button> --}}
+                        </button> --}}
                     </div>
                 </div>
             </form>
