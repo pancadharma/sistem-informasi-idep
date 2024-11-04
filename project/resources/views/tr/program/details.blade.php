@@ -110,7 +110,7 @@
         <div class="card card-primary card-outline hide" id="outcomeData">
             <div class="card-header">
                 <div class="row">
-                    <div class="col">
+                    <div class="col"><i class="bi bi-list-task"></i>
                         <h3 class="card-title pt-2">{{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span></h3>
                     </div>
                 </div>
@@ -209,13 +209,6 @@
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 
 <script>
-    $(function() {
-        //Add text editor
-        // $('#deskripsi_output').summernote();
-        // $('#indikator_output').summernote();
-        // $('#target_output').summernote();
-    })
-
     function handleErrors(response) {
         let errorMessage = response.message;
         if (response.status === 400) {
@@ -255,40 +248,8 @@
         return message;
     }
 
-
+    // load data outcome when
     $(document).ready(function() {
-
-        // $('#addOutputBtn').click(function() {
-        //     // Load modal content
-        //     $.ajax({
-        //         url: "{{ route('program.details.modal') }}",
-        //         success: function(data) {
-        //             // Remove existing modal if it exists
-
-        //             console.log(data)
-        //             $('#modalAddOutput').remove();
-
-        //             // Append modal content to body
-        //             $('body').append(data);
-
-        //             // Ensure the modal is initialized
-        //             $('#modalAddOutput').modal();
-
-        //             // Show the modal
-        //             $('#modalAddOutput').modal('show');
-        //         },
-        //         error: function(jqXHR, textStatus, errorThrown) {
-        //             const errorMessage = getErrorMessage(jqXHR);
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Error!',
-        //                 html: errorMessage,
-        //                 confirmButtonText: 'Okay'
-        //             });
-        //         },
-        //     });
-        // });
-
         $('#addOutputBtn').click(function() {
             $('#modalAddOutput').modal('show');
         });
@@ -408,107 +369,111 @@
                 },
             });
         });
+    });
 
-
-
-        // $('#addActvityOutcome').click(function() {
-        //     let activityIndex = $('#row-activity').find('tr').length;
-        //     $('#no-activity').addClass('hide').empty();
-
-        //     $('#row-activity').append(`
-        //         <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
-        //             <td class="text-center">
-        //                 <div class="input-group">
-        //                     <textarea type="textarea" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
-        //                 </div>
-        //             </td>
-        //             <td class="text-center">
-        //                 <div class="input-group">
-        //                     <textarea type="textarea" name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
-        //                 </div>
-        //             </td>
-        //             <td class="text-center">
-        //                 <div class="input-group">
-        //                     <textarea type="textarea" name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
-        //                 </div>
-        //             </td>
-        //             <td class="text-center">
-        //                 <div class="input-group button-container">
-        //                     <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
-        //                         <i class="bi bi-trash"></i>
-        //                     </button>
-        //                 </div>
-        //             </td>
-        //         </tr>
-        //     `);
-        // });
-
+    // add data activity on modal add output
+    $(document).ready(function() {
         $('#addActvityOutcome').click(function() {
-            let activityIndex = $('#row-activity tr.data-activity').length + 1;
-            $('#no-activity').addClass('hide').empty();
+            console.log('Button clicked'); // Debug log
+            let activityIndex = $('#activity_output_list tbody.data-activity').length + 1;
+            console.log('Current tbody count:', activityIndex); // Debug log
 
-            $(function() {
-                //Add text editor
-                $('#row-activity-' + activityIndex).find('textarea').summernote({
-                    height: 100,
-                    width: '100%',
-                    toolbar: [
-                        ['style', ['bold', 'italic']],
-                        ['color', ['color']],
-                        ['paragraph', ['paragraph']],
-                        ['view', ['fullscreen', 'codeview']],
-                    ],
-                    inheritPlaceholder: true,
-                });
-                // $('#indikator_output').summernote();
-                // $('#target_output').summernote();
-            })
-            $('#row-activity').append(`
-            <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
-                <td class="text-left">
-                    <div class="input-group" width="100%">
-                        <textarea type="textarea" name="deskripsi[]" class="form-control" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
-                    </div>
-                </td>
-                <td class="text-left">
-                    <div class="input-group" width="100%">
-                        <textarea type="textarea" name="indikator[]" class="form-control" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
-                    </div>
-                </td>
-                <td class="text-left">
-                    <div class="input-group" width="100%">
-                        <textarea type="textarea" name="target[]" class="form-control" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
-                    </div>
-                </td>
-                <td class="text-center">
-                    <div class="input-group button-container">
-                        <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
-                            <i class="bi bi-trash"></i>
+            $('#tbody-no-activity').addClass('hide').empty();
+
+            let newActivityTbody = `
+                <tbody id="has-activity-${activityIndex}" data-body-id="${activityIndex}" class="data-activity">
+                <tr data-activity-id="${activityIndex}">
+                    <th width="10%">Deskripsi Kegiatan</th>
+                    <td width="90%">
+                    <textarea type="textarea" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="10%">Indikator Kegiatan</th>
+                    <td width="90%">
+                    <textarea type="textarea" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="10%">Target Kegiatan</th>
+                    <td width="90%">
+                    <textarea type="textarea" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th>&nbsp;</th>
+                    <td class="align-middle float-right">
+                    <div style="text-align: center">
+                        <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="Hapus">
+                        <i class="bi bi-trash"></i>
                         </button>
                     </div>
-                </td>
-            </tr>`);
+                    </td>
+                </tr>
+                </tbody>`;
+
+            $('#activity_output_list').append(newActivityTbody);
+            console.log('Appended new tbody:', newActivityTbody); // Debug log
+
+            // Initialize Summernote for the new textareas
+            // $(`#has-activity-${activityIndex} textarea`).each(function() {
+            //     if (!$(this).data('initialized')) {
+            //         $(this).summernote({
+            //             height: 100,
+            //             width: '100%',
+            //             toolbar: [
+            //                 ['style', ['bold', 'italic']],
+            //                 ['color', ['color']],
+            //                 ['paragraph', ['paragraph']],
+            //                 ['view', ['fullscreen', 'codeview']],
+            //             ],
+            //             inheritPlaceholder: true,
+            //         });
+            //         $(this).data('initialized', true); // Mark this textarea as initialized
+            //     }
+            // });
         });
 
-        $('tbody#row-activity').on('click', '.remove-activity', function(e) {
+        // Event delegation to handle removing activity rows
+        $('#activity_output_list').on('click', '.remove-activity', function(e) {
             e.preventDefault();
-            var activityId = $(this).closest('tr').data('activity-id');
-            $('#row-activity-' + activityId).remove();
-            // Update row indices
-            updateRowIndices();
+            var activityId = $(this).closest('tbody').data('body-id');
+            console.log('Removing tbody with id:', activityId); // Debug log
+            $(`#has-activity-${activityId}`).remove();
+
+            // Check if there are no more activity rows and show the no-activity message
+            if ($('#activity_output_list tbody.data-activity').length === 0) {
+                $('#tbody-no-activity').removeClass('hide').html(`
+                    <tr>
+                    <td colspan="4" class="text-center" id="no-activity">
+                        {{ __('cruds.activity.no_selected') }}
+                    </td>
+                    </tr>
+                `);
+            }
         });
 
-        function updateRowIndices() {
-            $('#row-activity tr.data-activity').each(function(index) {
-                $(this).attr('id', 'row-activity-' + (index + 1));
-                $(this).data('activity-id', (index + 1));
-            });
-        }
-
-
-
-
+        // Reset modal content when closed
+        $('#modalAddOutput').on('hidden.bs.modal', function() {
+            $(this).find('form')[0].reset();
+            $('#tbody-no-activity').removeClass('hide').html(`
+                <tr>
+                <td colspan="4" class="text-center" id="no-activity">
+                    {{ __('cruds.activity.no_selected') }}
+                </td>
+                </tr>
+            `);
+            $('#activity_output_list').find('tbody.data-activity').remove();
+        });
     });
+
+
+
+
+
+
+
+
 </script>
 
 @endpush

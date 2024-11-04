@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="card-body p-0">
-                                <table id="outcome_output_list" class="highlight striped table" style="width:100%">
+                                {{-- <table id="outcome_output_list" class="highlight striped table" style="width:100%">
                                     <thead class="bg-light">
                                         <tr id="header-activity">
                                             <th width="30%" class="text-center">{{ __('cruds.activity.deskripsi') }}</th>
@@ -53,8 +53,20 @@
                                             <td colspan="4" class="text-center" id="no-activity">
                                                 {{ __('cruds.activity.no_selected') }}
                                             </td>
+                                        </tr>
                                     </tbody>
-                                </table>
+                                </table> --}}
+                                <table class="table" id="activity_output_list" width="100%">
+                                    <tbody id="tbody-no-activity">
+                                      <tr>
+                                        <td colspan="4" class="text-center" id="no-activity">
+                                          {{ __('cruds.activity.no_selected') }}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                    <!-- New tbody elements will be appended here -->
+                                  </table>
+
                             </div>
                         </div>
                     </div>
