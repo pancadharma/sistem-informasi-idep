@@ -110,8 +110,10 @@
         <div class="card card-primary card-outline hide" id="outcomeData">
             <div class="card-header">
                 <div class="row">
-                    <div class="col"><i class="bi bi-list-task"></i>
-                        <h3 class="card-title pt-2">{{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span></h3>
+                    <div class="col pl-2">
+                        <h3 class="card-title pt-2">
+                            {{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span>
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -154,10 +156,10 @@
         </div>
         {{-- hidden detail output --}}
         <div class="card card-outline card-primary hide" id="list_output">
-            <div class="card-header pr-0 pl-1">
+            <div class="card-header pr-0 pl-3">
                 <div class="row">
                     <div class="col">
-                        <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
+                        <h3 class="card-title pt-2"><i class="fas fa-list-ul"></i> {{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
                     </div>
                     <div class="col">
                         <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right waves-effect waves-teal btn-success" id="addOutputBtn" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
@@ -166,11 +168,11 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body pr-1 pl-1 pt-0">
+            <div class="card-body pr-0 pl-0 pt-0">
                 <table id="outcome_output_list" class="highlight striped" style="width:100%">
                     <thead class="">
                         <tr>
-                            <th width="30%">{{ __('Output Description') }}</th>
+                            <th class="pl-3" width="30%">{{ __('Output Description') }}</th>
                             <th width="30%">{{ __('Output Indicator') }}</th>
                             <th width="30%">{{ __('Output Target') }}</th>
                             <th width="10%" class="text-center">{{ __('Action') }}</th>
@@ -284,6 +286,7 @@
                             $('#target').html(response.data.target ?? '');
                             $('#goal').focus().trigger('input');
                             $('#objektif').trigger('input');
+                            $('#programoutcome_id').val(response.data.id);
 
                             var $this = $(this); // Cache the current element
                             var $outputId = $this.data('output-id');
@@ -315,7 +318,7 @@
                                                 response.data.forEach(function(output) {
                                                     $('#row-output').append(`
                                                         <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                                                            <td>${output.deskripsi ?? ''}</td>
+                                                            <td class="pl-3">${output.deskripsi ?? ''}</td>
                                                             <td>${output.indikator ?? ''}</td>
                                                             <td>${output.target ?? ''}</td>
                                                             <td><div class="button-container">
@@ -385,19 +388,19 @@
                 <tr data-activity-id="${activityIndex}">
                     <th width="10%">Deskripsi Kegiatan</th>
                     <td width="90%">
-                    <textarea type="textarea" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
+                    <textarea type="textarea" id="deskripsi_${activityIndex}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th width="10%">Indikator Kegiatan</th>
                     <td width="90%">
-                    <textarea type="textarea" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
+                    <textarea type="textarea" id=indikator_"${activityIndex}" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th width="10%">Target Kegiatan</th>
                     <td width="90%">
-                    <textarea type="textarea" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
+                    <textarea type="textarea" id=target_"${activityIndex}" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -417,23 +420,23 @@
 
             // Initialize Summernote for the new textareas
 
-            $(`#has-activity-${activityIndex} textarea`).each(function() {
-                if (!$(this).data('initialized')) {
-                    $(this).summernote({
-                        height: 100,
-                        width: '100%',
-                        toolbar: [
-                            ['font', ['bold', 'italic', 'underline', 'clear']],
-                            ['color', ['color']],
-                            ['table', ['table']],
-                            ['paragraph', ['paragraph']],
-                            ['view', ['fullscreen', 'codeview']],
-                        ],
-                        inheritPlaceholder: true,
-                    });
-                    $(this).data('initialized', true); // Mark this textarea as initialized
-                }
-            });
+            // $(`#has-activity-${activityIndex} textarea`).each(function() {
+            //     if (!$(this).data('initialized')) {
+            //         $(this).summernote({
+            //             height: 100,
+            //             width: '100%',
+            //             toolbar: [
+            //                 ['font', ['bold', 'italic', 'underline', 'clear']],
+            //                 ['color', ['color']],
+            //                 ['table', ['table']],
+            //                 ['paragraph', ['paragraph']],
+            //                 ['view', ['fullscreen', 'codeview']],
+            //             ],
+            //             inheritPlaceholder: true,
+            //         });
+            //         $(this).data('initialized', true); // Mark this textarea as initialized
+            //     }
+            // });
         });
 
         // Event delegation to handle removing activity rows
