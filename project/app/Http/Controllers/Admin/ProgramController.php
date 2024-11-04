@@ -53,7 +53,12 @@ class ProgramController extends Controller
             $goal = ProgramGoal::where('program_id', $program->id)->get();
             return view('tr.program.details', compact('program', 'outcomes', 'objektif', 'goal'));
         }
-        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+        return response()->json([
+            'success' => false,
+            'status' => 'error',
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program',
+        ], 403);
+        // abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
 
 
@@ -731,5 +736,14 @@ class ProgramController extends Controller
                 'message' => 'Data Outcome not found'
             ], 404);
         }
+    }
+
+    public function detailsModal()
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_create')) {
+            $program = Program::with(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal'])->where('id', auth()->user()->id)->first();
+            return view('tr.program.detail.outcome-detail', compact('program'));
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
 }

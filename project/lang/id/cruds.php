@@ -475,7 +475,7 @@ return [
             'label'         => 'Objektif',
             'target'        => 'Target',
             'indicator'     => 'Indikator',
-            'desc'          => 'Description'
+            'desc'          => 'Deskripsi'
         ],
         'goals'             => [
             'label'         => 'Goals',
@@ -488,5 +488,17 @@ return [
             'list'          => 'List Kelompok Marjinal',
             'select'        => 'Pilih Kelompok Marjinal',
         ],
+    ],
+    'activity'              => [
+        'label'             => 'Kegiatan',
+        'deskripsi'         => 'Deskripsi Kegiatan',
+        'target'            => 'Target Kegiatan',
+        'indicator'         => 'Indikator Kegiatan',
+        'list'              => 'Daftar Kegiatan',
+        'add'               => 'Tambah Kegiatan',
+        'edit'              => 'Edit Kegiatan',
+        'delete'            => 'Hapus Kegiatan',
+        'select'            => 'Pilih Kegiatan',
+        'no_selected'       => 'Tidak ada kegiatan yang dipilih',
     ],
 ];

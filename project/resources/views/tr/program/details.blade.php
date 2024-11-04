@@ -18,7 +18,7 @@
                 <ul class="nav nav-pills flex-column">
                     @forelse ($outcomes as $index => $outcome)
                     <li class="nav-item">
-                        <button type="button" class="nav-link btn text-left btn-block btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
+                        <button type="button" class="nav-link btn text-left btn-block btn-list-outcome waves-effect waves-teal" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
                             {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
                             <!-- <i class="far fa-envelope float-right align-middle mt-2"></i> -->
                             <i class="bi bi-box-arrow-in-right text-danger float-right align-middle mt-2" title="{{ __('global.details') }} {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}"></i>
@@ -104,46 +104,6 @@
                     </div>
                 </div>
             </div>
-            {{-- <div class="card-body pd-0"> --}}
-                {{-- <div class="callout callout-danger">
-                    <h5>{{ __('cruds.program.objective.label') }}</h5>
-                </div>
-                <div class="text-wrap">
-                    <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                    <p class="text-break">
-                        {{ old('goal', $program->objektif->deskripsi ?? '') }}
-                    </p>
-                </div>
-                <div class="text-wrap">
-                    <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                    <p class="text-break">
-                        {{ old('goal', $program->objektif->indikator ?? '') }}
-                    </p>
-                </div>
-                <div class="text-wrap">
-                    <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                    <p class="text-break">
-                        {{ old('goal', $program->objektif->target ?? '') }}
-                    </p>
-                </div> --}}
-
-                {{-- ALTERNATIVE --}}
-
-                {{--
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input id="goal" type="text" class="validate" readonly autofocus value="{{ old('goal', $program->objektif->target ?? '') }}">
-                        <label for="goal">{{ __('cruds.program.goals.label') }}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <input id="objektif" type="text" class="validate" readonly value="{{ old('objective', $program->objektif->deskripsi ?? '') }}">
-                        <label for="objektif">{{ __('cruds.program.objective.label') }}</label>
-                    </div>
-                </div>
-                --}}
-            {{-- </div> --}}
         </div>
     </div>
     <div class="col-md-9">
@@ -158,17 +118,36 @@
             {{-- showing outcome details after clicking --}}
             <div class="card-body hide" id="detail_outcome">
                 <div class="row">
-                    <div class="input-field col">
-                        <input id="deskripsi" name="deskripsi" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.desc') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.desc') }}">
-                        <label for="deskripsi">{{ __('cruds.program.outcome.desc') }}</label>
+                    <div class="input-field col-lg-4">
+                        {{-- <input id="deskripsi" name="deskripsi" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.desc') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.desc') }}"> --}}
+                        {{-- <label for="deskripsi">{{ __('cruds.program.outcome.desc') }}</label> --}}
+                        <div class="text-wrap">
+                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.desc') }}</div>
+                            <p class="text-break">
+                                <span id="deskripsi" name="deskripsi"></span>
+                            </p>
+                        </div>
+
                     </div>
-                    <div class="input-field col">
-                        <input id="indikator" name="indikator" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.indicator') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.indicator') }}">
-                        <label for="indikator">{{ __('cruds.program.outcome.indicator') }}</label>
+                    <div class="input-field col-lg-4">
+                        {{-- <input id="indikator" name="indikator" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.indicator') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.indicator') }}">
+                        <label for="indikator">{{ __('cruds.program.outcome.indicator') }}</label> --}}
+                        <div class="text-wrap">
+                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.indicator') }}</div>
+                            <p class="text-break">
+                                <span id="indikator" name="indikator"></span>
+                            </p>
+                        </div>
                     </div>
-                    <div class="input-field col">
-                        <input id="target" name="target" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
-                        <label for="target">{{ __('cruds.program.outcome.target') }}</label>
+                    <div class="input-field col-lg-4">
+                        {{-- <input id="target" name="target" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
+                        <label for="target">{{ __('cruds.program.outcome.target') }}</label> --}}
+                        <div class="text-wrap">
+                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.target') }}</div>
+                            <p class="text-break">
+                                <span id="target" name="target"></span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,7 +160,7 @@
                         <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
                     </div>
                     <div class="col">
-                        <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
+                        <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right waves-effect waves-teal btn-success" id="addOutputBtn" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
                             {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
                         </button>
                     </div>
@@ -206,69 +185,8 @@
     </div>
 </div>
 
-{{-- UNUSED CODE HERE --}}
-{{-- <div class="row">
-    <div class="col-lg-3">
-        <div class="card card-primary card-outline">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
-<div class="card-tools">
-    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-</div>
-</div>
-<div class="card-body p-0">
-    <ul class="nav nav-pills flex-column">
-        @forelse ($outcomes as $index => $outcome)
-        <li class="nav-item">
-            <button type="button" class="nav-link btn btn-block text-left btn-list-outcome" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
-            </button>
-        </li>
-        @empty
-        <div class="nav flex-column nav-tabs h-100">
-            <button type="button" class="btn btn-block"></i>No Outcome</button>
-        </div>
-        @endforelse
-    </ul>
-</div>
-</div>
-</div>
-<div class="col-9">
-    <div class="card card-outline card-primary hide" id="list_output">
-        <div class="card-header">
-            <div class="row">
-                <div class="col">
-                    <h3 class="card-title pt-2">{{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
-                </div>
-                <div class="col">
-                    <button type="button" data-target="modalAddOutput" class="btn modal-trigger float-right btn-success" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus-lg"></i>
-                        {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <table id="outcome_output_list" class="highlight striped" style="width:100%">
-                <thead class="">
-                    <tr>
-                        <th width="30%">{{ __('Output Description') }}</th>
-                        <th width="30%">{{ __('Output Indicator') }}</th>
-                        <th width="30%">{{ __('Output Target') }}</th>
-                        <th width="10%" class="text-center">{{ __('Action') }}</th>
-                    </tr>
-                </thead>
-                <tbody id="row-output">
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-</div> --}}
-
-
-
+@include('tr.program.detail.outcome-detail')
+{{-- @include('master.users.show-modal') --}}
 @stop
 
 @push('css')
@@ -278,17 +196,26 @@
 @endpush
 
 @push('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> --}}
+<script src="{{ asset('vendor/adminlte/dist/js/materialize.js') }}"></script>
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+@section('plugins.Summernote', true)
 
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 
 <script>
+    $(function() {
+        //Add text editor
+        // $('#deskripsi_output').summernote();
+        // $('#indikator_output').summernote();
+        // $('#target_output').summernote();
+    })
+
     function handleErrors(response) {
         let errorMessage = response.message;
         if (response.status === 400) {
@@ -321,14 +248,50 @@
         let message;
         try {
             const response = JSON.parse(xhr.responseText);
-            message = formatErrorMessages(response.errors) || 'An unexpected error occurred. Please try again later.';
+            message = response.message || 'An unexpected error occurred. Please try again later.';
         } catch (e) {
             message = 'An unexpected error occurred. Please try again later.';
         }
         return message;
     }
 
+
     $(document).ready(function() {
+
+        // $('#addOutputBtn').click(function() {
+        //     // Load modal content
+        //     $.ajax({
+        //         url: "{{ route('program.details.modal') }}",
+        //         success: function(data) {
+        //             // Remove existing modal if it exists
+
+        //             console.log(data)
+        //             $('#modalAddOutput').remove();
+
+        //             // Append modal content to body
+        //             $('body').append(data);
+
+        //             // Ensure the modal is initialized
+        //             $('#modalAddOutput').modal();
+
+        //             // Show the modal
+        //             $('#modalAddOutput').modal('show');
+        //         },
+        //         error: function(jqXHR, textStatus, errorThrown) {
+        //             const errorMessage = getErrorMessage(jqXHR);
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Error!',
+        //                 html: errorMessage,
+        //                 confirmButtonText: 'Okay'
+        //             });
+        //         },
+        //     });
+        // });
+
+        $('#addOutputBtn').click(function() {
+            $('#modalAddOutput').modal('show');
+        });
 
         $('.nav').on('click', '.btn-list-outcome', function(e) {
             e.preventDefault(); // Prevent default button behavior
@@ -349,13 +312,15 @@
                     setTimeout(() => {
                         if (response.success) {
                             $('#detail_outcome, #list_output, #outcomeData').removeClass('hide');
-
                             $('#outcome-title').text(outcomeIndex);
                             $('#outcome-number').text(outcomeIndex);
 
-                            $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
-                            $('#indikator').val(response.data.indikator ?? '').trigger('input');
-                            $('#target').val(response.data.target ?? '').trigger('input');
+                            // $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
+                            $('#deskripsi').html(response.data.deskripsi ?? '')
+                            // $('#indikator').val(response.data.indikator ?? '').trigger('input');
+                            $('#indikator').html(response.data.indikator ?? '');
+                            // $('#target').val(response.data.target ?? '').trigger('input');
+                            $('#target').html(response.data.target ?? '');
                             $('#goal').focus().trigger('input');
                             $('#objektif').trigger('input');
 
@@ -430,7 +395,7 @@
                                 text: response.message,
                             });
                         }
-                    }, 100);
+                    }, 300);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     const errorMessage = getErrorMessage(xhr);
@@ -443,6 +408,106 @@
                 },
             });
         });
+
+
+
+        // $('#addActvityOutcome').click(function() {
+        //     let activityIndex = $('#row-activity').find('tr').length;
+        //     $('#no-activity').addClass('hide').empty();
+
+        //     $('#row-activity').append(`
+        //         <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group">
+        //                     <textarea type="textarea" name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
+        //                 </div>
+        //             </td>
+        //             <td class="text-center">
+        //                 <div class="input-group button-container">
+        //                     <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
+        //                         <i class="bi bi-trash"></i>
+        //                     </button>
+        //                 </div>
+        //             </td>
+        //         </tr>
+        //     `);
+        // });
+
+        $('#addActvityOutcome').click(function() {
+            let activityIndex = $('#row-activity tr.data-activity').length + 1;
+            $('#no-activity').addClass('hide').empty();
+
+            $(function() {
+                //Add text editor
+                $('#row-activity-' + activityIndex).find('textarea').summernote({
+                    height: 100,
+                    width: '100%',
+                    toolbar: [
+                        ['style', ['bold', 'italic']],
+                        ['color', ['color']],
+                        ['paragraph', ['paragraph']],
+                        ['view', ['fullscreen', 'codeview']],
+                    ],
+                    inheritPlaceholder: true,
+                });
+                // $('#indikator_output').summernote();
+                // $('#target_output').summernote();
+            })
+            $('#row-activity').append(`
+            <tr id="row-activity-${activityIndex}" class="data-activity" data-activity-id="${activityIndex}">
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="deskripsi[]" class="form-control" placeholder="{{ __('cruds.activity.deskripsi') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="indikator[]" class="form-control" placeholder="{{ __('cruds.activity.indicator') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-left">
+                    <div class="input-group" width="100%">
+                        <textarea type="textarea" name="target[]" class="form-control" placeholder="{{ __('cruds.activity.target') }}" rows="1" maxlength="1000"></textarea>
+                    </div>
+                </td>
+                <td class="text-center">
+                    <div class="input-group button-container">
+                        <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="{{ __('global.delete') }}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`);
+        });
+
+        $('tbody#row-activity').on('click', '.remove-activity', function(e) {
+            e.preventDefault();
+            var activityId = $(this).closest('tr').data('activity-id');
+            $('#row-activity-' + activityId).remove();
+            // Update row indices
+            updateRowIndices();
+        });
+
+        function updateRowIndices() {
+            $('#row-activity tr.data-activity').each(function(index) {
+                $(this).attr('id', 'row-activity-' + (index + 1));
+                $(this).data('activity-id', (index + 1));
+            });
+        }
+
+
+
+
     });
 </script>
 

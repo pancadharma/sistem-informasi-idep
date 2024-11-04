@@ -209,6 +209,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/api/peran', [ProgramController::class, 'getProgramPeran'])->name('api.program.peran'); // can be used to get data peran for program
     Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi');
     Route::get('program/{program}/details', [ProgramController::class, 'details'])->name('program.details');
+
+    Route::get('program/details/modal', [ProgramController::class, 'detailsModal'])->name('program.details.modal');
+
     Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
     Route::get('program/api/output/{outcome}', [ProgramController::class, 'apiOutput'])->name('api.program.output');
     Route::get('program/api/objektif/{objektif}', [ProgramController::class, 'apiObjektif'])->name('api.program.objektif');

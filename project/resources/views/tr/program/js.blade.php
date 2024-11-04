@@ -1,5 +1,5 @@
 <script>
-    (function ($) {
+    (function($) {
         var Defaults = $.fn.select2.amd.require('select2/defaults');
 
         $.extend(Defaults.defaults, {
@@ -10,7 +10,7 @@
 
         var _positionDropdown = AttachBody.prototype._positionDropdown;
 
-        AttachBody.prototype._positionDropdown = function () {
+        AttachBody.prototype._positionDropdown = function() {
 
             var $window = $(window);
 
@@ -103,37 +103,104 @@
 </script>
 
 <script>
-
-// Data Table
+    // Data Table
     $(document).ready(function() {
 
         $('#program-list').DataTable({
             responsive: true,
             // scrollX: true,
-            ajax: "{{ route('data.program') }}",  // Update the route for kaitan_sdg data
+            ajax: "{{ route('data.program') }}", // Update the route for kaitan_sdg data
             processing: true,
             serverSide: true,
-            columns: [
-                {data: 'DT_RowIndex', width: "5%", name: 'No.', className: "text-center", orderable: false, searchable: true},
-                {data: "kode", orderable: true, searchable: true},
-                {data: "nama", orderable: true, searchable: true},
-                {data: "tanggalmulai", orderable: true, searchable: true},
-                {data: "tanggalselesai", orderable: true, searchable: true},
-                {data: "totalnilai", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaat", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaatwoman", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaatman", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaatgirl", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaatboy", orderable: true, searchable: true, visible: false},
-                {data: "ekspektasipenerimamanfaattidaklangsung", orderable: true, searchable: true, visible: false},
-                {data: "deskripsiprojek", orderable: true, searchable: true, visible: false},
-                {data: "analisamasalah", orderable: true, searchable: true, visible: false},
+            columns: [{
+                    data: 'DT_RowIndex',
+                    width: "5%",
+                    name: 'No.',
+                    className: "text-center",
+                    orderable: false,
+                    searchable: true
+                },
+                {
+                    data: "kode",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "tanggalmulai",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "tanggalselesai",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "totalnilai",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaat",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaatwoman",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaatman",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaatgirl",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaatboy",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "ekspektasipenerimamanfaattidaklangsung",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "deskripsiprojek",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
+                {
+                    data: "analisamasalah",
+                    orderable: true,
+                    searchable: true,
+                    visible: false
+                },
                 {
                     data: "status",
                     orderable: true,
-                    searchable: true, width: "10%",
+                    searchable: true,
+                    width: "10%",
                     className: "text-center",
-                    render: function (data, type, row) {
+                    render: function(data, type, row) {
                         if (data === 'draft') {
                             return '<span class="badge badge-secondary">Draft</span>';
                         } else if (data === 'pending') {
@@ -141,21 +208,24 @@
                         } else if (data === 'submit') {
                             return '<span class="badge badge-success">Submit</span>';
                         }
-                        return data;  // Return data if none of the conditions are met
+                        return data; // Return data if none of the conditions are met
                     }
                 },
 
-                { data: "action", className: "text-center", orderable: false }
+                {
+                    data: "action",
+                    className: "text-center",
+                    orderable: false
+                }
             ],
             layout: {
                 topStart: {
-                    buttons: [
-                        {
+                    buttons: [{
                             text: '<i class="fas fa-print"></i> <span class="d-none d-md-inline"></span>',
                             className: 'btn btn-secondary',
                             extend: 'print',
                             exportOptions: {
-                                columns: [0, 1, 2,3,14] // Ensure these indices match your visible columns
+                                columns: [0, 1, 2, 3, 14] // Ensure these indices match your visible columns
                             }
                         },
                         {
@@ -196,7 +266,9 @@
                     pageLength: 10,
                 }
             },
-            order: [[0, 'asc']],
+            order: [
+                [0, 'asc']
+            ],
             lengthMenu: [10, 25, 50, 100, 500],
         });
 
@@ -222,15 +294,15 @@
         //     });
         // });
 
-        $('#program-list tbody').on('click','.edit-program-btn, .view-program-btn, .details-program-btn', function(e){
+        $('#program-list tbody').on('click', '.edit-program-btn, .view-program-btn, .details-program-btn', function(e) {
             e.preventDefault();
             var action = $(this).data('action');
             var programID = $(this).data('program-id');
-            var url_edit = '{{ route('program.edit', ':id') }}'.replace(':id', programID);
-            var url_view = '{{ route('program.show', ':id') }}'.replace(':id', programID);
-            var url_details = '{{ route('program.details', ':id') }}'.replace(':id', programID);
+            var url_edit = "{{ route('program.edit', ':id') }}".replace(':id', programID);
+            var url_view = "{{ route('program.show', ':id') }}".replace(':id', programID);
+            var url_details = "{{ route('program.details', ':id') }}".replace(':id', programID);
 
-            if(action === "edit"){
+            if (action === "edit") {
                 // alert(url_edit)
                 console.log(url_edit)
 
@@ -238,13 +310,13 @@
                     window.location.href = url_edit;
                 }, 100);
             }
-            if(action === "details"){
+            if (action === "details") {
                 setTimeout(function() {
                     window.location.href = url_details;
                 }, 100);
             }
 
-            if(action === "view"){
+            if (action === "view") {
                 // alert("view page : " + url_view);
                 console.log(url_view)
             }
@@ -252,5 +324,4 @@
         });
 
     });
-
 </script>
