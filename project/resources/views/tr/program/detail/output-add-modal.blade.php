@@ -1,7 +1,9 @@
 <x-adminlte-modal id="modalAddOutput" title="{{ __('global.add'). ' ' . __('cruds.program.output.label') }}" size="xl" theme="info" icon="fas fa-folder-open" static-backdrop scrollable>
     <div style="height:60%;">
         <div class="modal-body">
-            <form id="formAddOutput">
+            <form id="formAddOutput" method="POST">
+                @csrf
+                @method('POST')
                 <input type="hidden" name="programoutcome_id" id="programoutcome_id">
                  <div class="row">
                     <div class="input-field col-lg-12">
