@@ -417,22 +417,22 @@
 
             // Initialize Summernote for the new textareas
 
-            $(`#has-activity-${activityIndex} textarea`).each(function() {
-                if (!$(this).data('initialized')) {
-                    $(this).summernote({
-                        height: 100,
-                        width: '100%',
-                        toolbar: [
-                            ['style', ['bold', 'italic']],
-                            ['color', ['color']],
-                            ['paragraph', ['paragraph']],
-                            ['view', ['fullscreen', 'codeview']],
-                        ],
-                        inheritPlaceholder: true,
-                    });
-                    $(this).data('initialized', true); // Mark this textarea as initialized
-                }
-            });
+            // $(`#has-activity-${activityIndex} textarea`).each(function() {
+            //     if (!$(this).data('initialized')) {
+            //         $(this).summernote({
+            //             height: 100,
+            //             width: '100%',
+            //             toolbar: [
+            //                 ['style', ['bold', 'italic']],
+            //                 ['color', ['color']],
+            //                 ['paragraph', ['paragraph']],
+            //                 ['view', ['fullscreen', 'codeview']],
+            //             ],
+            //             inheritPlaceholder: true,
+            //         });
+            //         $(this).data('initialized', true); // Mark this textarea as initialized
+            //     }
+            // });
         });
 
         // Event delegation to handle removing activity rows
