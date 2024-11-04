@@ -250,6 +250,66 @@
         return message;
     }
 
+    function fetchOutputs(outputApi) {
+        $.ajax({
+            url: outputApi,
+            method: 'GET',
+            beforeSend: function() {
+                Toast.fire({
+                    icon: 'info',
+                    title: 'Loading...',
+                    timer: 300
+                });
+            },
+            success: function(response) {
+                setTimeout(() => {
+                    if (response.success) {
+                        $('#row-output').empty();
+                        if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+                            $('#row-output').append(`
+                            <tr>
+                                <td colspan="4" class="text-center">No data available</td>
+                            </tr>
+                        `);
+                        } else {
+                            response.data.forEach(function(output) {
+                                $('#row-output').append(`
+                                <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
+                                    <td class="pl-3">${output.deskripsi ?? ''}</td>
+                                    <td>${output.indikator ?? ''}</td>
+                                    <td>${output.target ?? ''}</td>
+                                    <td><div class="button-container">
+                                            <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${output.id}">
+                                            <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                        });
+                    }
+                }, 100);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                const errorMessage = getErrorMessage(xhr);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: errorMessage,
+                    confirmButtonText: 'Okay'
+                });
+            }
+        });
+    }
+
+
     // load data outcome when
     $(document).ready(function() {
         $('#addOutputBtn').click(function() {
@@ -293,65 +353,67 @@
                             var $outputIndex = $this.data('index');
                             var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
 
-                            $.ajax({
-                                url: $outputApi,
-                                method: 'GET',
-                                beforeSend: function() {
-                                    Toast.fire({
-                                        icon: 'info',
-                                        title: 'Loading...',
-                                        timer: 300
-                                    });
-                                },
-                                success: function(response) {
-                                    setTimeout(() => {
-                                        if (response.success) {
-                                            $('#row-output').empty();
-                                            // if (response.data.length === 0) {
-                                            if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
-                                                $('#row-output').append(`
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">No data available</td>
-                                                    </tr>
-                                                `);
-                                            } else {
-                                                response.data.forEach(function(output) {
-                                                    $('#row-output').append(`
-                                                        <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                                                            <td class="pl-3">${output.deskripsi ?? ''}</td>
-                                                            <td>${output.indikator ?? ''}</td>
-                                                            <td>${output.target ?? ''}</td>
-                                                            <td><div class="button-container">
-                                                                    <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
-                                                                    <i class="bi bi-pencil-square"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    `);
-                                                });
-                                            }
-                                            $('#output-title').text($outputIndex);
-                                            $('#output-action').text('Add Output');
-                                        } else {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error!',
-                                                text: response.message,
-                                            });
-                                        }
-                                    }, 100);
-                                },
-                                error: function(xhr, textStatus, errorThrown) {
-                                    const errorMessage = getErrorMessage(xhr);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        html: errorMessage,
-                                        confirmButtonText: 'Okay'
-                                    });
-                                },
-                            });
+                            fetchOutputs(outputApi);
+
+                            // $.ajax({
+                            //     url: $outputApi,
+                            //     method: 'GET',
+                            //     beforeSend: function() {
+                            //         Toast.fire({
+                            //             icon: 'info',
+                            //             title: 'Loading...',
+                            //             timer: 300
+                            //         });
+                            //     },
+                            //     success: function(response) {
+                            //         setTimeout(() => {
+                            //             if (response.success) {
+                            //                 $('#row-output').empty();
+                            //                 // if (response.data.length === 0) {
+                            //                 if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+                            //                     $('#row-output').append(`
+                            //                         <tr>
+                            //                             <td colspan="4" class="text-center">No data available</td>
+                            //                         </tr>
+                            //                     `);
+                            //                 } else {
+                            //                     response.data.forEach(function(output) {
+                            //                         $('#row-output').append(`
+                            //                             <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
+                            //                                 <td class="pl-3">${output.deskripsi ?? ''}</td>
+                            //                                 <td>${output.indikator ?? ''}</td>
+                            //                                 <td>${output.target ?? ''}</td>
+                            //                                 <td><div class="button-container">
+                            //                                         <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
+                            //                                         <i class="bi bi-pencil-square"></i>
+                            //                                         </button>
+                            //                                     </div>
+                            //                                 </td>
+                            //                             </tr>
+                            //                         `);
+                            //                     });
+                            //                 }
+                            //                 $('#output-title').text($outputIndex);
+                            //                 $('#output-action').text('Add Output');
+                            //             } else {
+                            //                 Swal.fire({
+                            //                     icon: 'error',
+                            //                     title: 'Error!',
+                            //                     text: response.message,
+                            //                 });
+                            //             }
+                            //         }, 100);
+                            //     },
+                            //     error: function(xhr, textStatus, errorThrown) {
+                            //         const errorMessage = getErrorMessage(xhr);
+                            //         Swal.fire({
+                            //             icon: 'error',
+                            //             title: 'Error!',
+                            //             html: errorMessage,
+                            //             confirmButtonText: 'Okay'
+                            //         });
+                            //     },
+                            // });
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -377,46 +439,41 @@
     // add data activity on modal add output
     $(document).ready(function() {
         $('#addActvityOutcome').click(function() {
-            console.log('Button clicked'); // Debug log
             let activityIndex = $('#activity_output_list tbody.data-activity').length + 1;
-            console.log('Current tbody count:', activityIndex); // Debug log
-
             $('#tbody-no-activity').addClass('hide').empty();
 
             let newActivityTbody = `
                 <tbody id="has-activity-${activityIndex}" data-body-id="${activityIndex}" class="data-activity">
-                <tr data-activity-id="${activityIndex}">
-                    <th width="10%">Deskripsi Kegiatan</th>
-                    <td width="90%">
-                    <textarea type="textarea" id="deskripsi_${activityIndex}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="10%">Indikator Kegiatan</th>
-                    <td width="90%">
-                    <textarea type="textarea" id=indikator_"${activityIndex}" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="10%">Target Kegiatan</th>
-                    <td width="90%">
-                    <textarea type="textarea" id=target_"${activityIndex}" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th>&nbsp;</th>
-                    <td class="align-middle float-right">
-                    <div style="text-align: center">
-                        <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="Hapus">
-                        <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                    </td>
+                    <tr data-activity-id="${activityIndex}">
+                        <th width="10%">Deskripsi Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id="deskripsi_${activityIndex}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">Indikator Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id=indikator_"${activityIndex}" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">Target Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id=target_"${activityIndex}" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td class="align-middle float-right">
+                        <div style="text-align: center">
+                            <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="Hapus">
+                            <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        </td>
                 </tr>
                 </tbody>`;
-
             $('#activity_output_list').append(newActivityTbody);
-            console.log('Appended new tbody:', newActivityTbody); // Debug log
 
             // Initialize Summernote for the new textareas
 
@@ -443,7 +500,6 @@
         $('#activity_output_list').on('click', '.remove-activity', function(e) {
             e.preventDefault();
             var activityId = $(this).closest('tbody').data('body-id');
-            console.log('Removing tbody with id:', activityId); // Debug log
             $(`#has-activity-${activityId}`).remove();
 
             // Check if there are no more activity rows and show the no-activity message
@@ -472,13 +528,79 @@
         });
     });
 
+    let url_simpan_output_activity = "{{ route('program.details.output.activity.store') }}";
+    let output_outcome_id = "{{ $program->id }}";
 
+    $(document).ready(function() {
+        $('#formAddOutput').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            $('#formAddOutput').find('button[type="submit"]').attr('disabled'); //disable submit button to prevent multiple submission
 
+            let outcome_id = $('#programoutcome_id').val();
+            let outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcome_id);
 
+            // Collect the main form data
+            let formData = {
+                _token: $('input[name="_token"]').val(),
+                _method: 'POST',
+                programoutcome_id: $('#programoutcome_id').val(),
+                deskripsi: $('#deskripsi_output').val(),
+                indikator: $('#indikator_output').val(),
+                target: $('#target_output').val(),
+                activities: []
+            };
 
+            // Collect output activity data
+            $('#activity_output_list tbody.data-activity').each(function() {
+                let activity = {
+                    deskripsi: $(this).find('textarea[name="deskripsi[]"]').val(),
+                    indikator: $(this).find('textarea[name="indikator[]"]').val(),
+                    target: $(this).find('textarea[name="target[]"]').val()
+                };
+                formData.activities.push(activity);
+            });
+            // Send the data via AJAX
+            $.ajax({
+                type: 'POST',
+                url: url_simpan_output_activity, // Replace with your server endpoint
+                data: JSON.stringify(formData),
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Loading...',
+                        timer: 300
+                    });
+                },
+                success: function(response) {
 
-
-
+                    $('#formAddOutput')[0].reset();
+                    $('#tbody-no-activity').removeClass('hide').html(`
+                        <tr>
+                        <td colspan="4" class="text-center" id="no-activity">
+                            {{ __('cruds.activity.no_selected') }}
+                        </td>
+                        </tr>
+                    `);
+                    $('#activity_output_list').find('tbody.data-activity').remove();
+                    $('#modalAddOutput').modal('hide');
+                    fetchOutputs(outputApi);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    $('#formAddOutput').find('button[type="submit"]').removeAttr('disabled'); //enable submit button
+                    const errorMessage = getErrorMessage(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                        timer: 300,
+                        confirmButtonText: 'Okay'
+                    });
+                },
+            });
+        });
+    });
 </script>
 
 @endpush
