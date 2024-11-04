@@ -290,6 +290,7 @@ return [
         'pic' => 'PIC',
     ],
     'kelompokmarjinal' => [
+        'title_singular' => 'Kelompok Marjinal',
         'list' => 'List Kelompok Marjinal',
         'kelompokmarjinal' => 'Kelompok Marjinal',
         'title' => 'Kelompok Marjinal',
@@ -442,10 +443,23 @@ return [
             'sel_peran'     => 'Pilih Peran',
         ],
         'outcome'           => [
-            'label'         => 'Hasil Akhir',
+            'label'         => 'Outcome',
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',
+            'list'          => 'Daftar Outcome',
+            'list_program'  => 'Daftar Outcome Program',
+            'out_program'   => 'Program Outcome',
+            'of_outcome'    => 'dari Outcome',
+        ],
+        'output'            => [
+            'label'         => 'Output',
+            'desc'          => 'Deskripsi',
+            'indicator'     => 'Indikator',
+            'target'        => 'Target',
+            'list'          => 'Daftar Output',
+            'list_program'  => 'Daftar Program Output',
+            'out_program'   => 'Program Outcome Output',
         ],
         'partner'           => [
             'label'         => 'Mitra',
@@ -458,10 +472,13 @@ return [
             'selesai'       => 'Tanggal Selesai',
         ],
         'objective'         => [
-            'label'         => 'Objective',
+            'label'         => 'Objektif',
+            'target'        => 'Target',
+            'indicator'     => 'Indikator',
+            'desc'          => 'Deskripsi'
         ],
         'goals'             => [
-            'label'         => 'Sasaran',
+            'label'         => 'Goals',
             'desc'          => 'Deskripsi',
             'indicator'     => 'Indikator',
             'target'        => 'Target',
@@ -471,5 +488,17 @@ return [
             'list'          => 'List Kelompok Marjinal',
             'select'        => 'Pilih Kelompok Marjinal',
         ],
+    ],
+    'activity'              => [
+        'label'             => 'Kegiatan',
+        'deskripsi'         => 'Deskripsi Kegiatan',
+        'target'            => 'Target Kegiatan',
+        'indicator'         => 'Indikator Kegiatan',
+        'list'              => 'Daftar Kegiatan',
+        'add'               => 'Tambah Kegiatan',
+        'edit'              => 'Edit Kegiatan',
+        'delete'            => 'Hapus Kegiatan',
+        'select'            => 'Pilih Kegiatan',
+        'no_selected'       => 'Tidak ada kegiatan yang dipilih',
     ],
 ];

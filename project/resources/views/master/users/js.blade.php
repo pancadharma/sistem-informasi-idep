@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $('.select2').select2({
             placeholder: "{{ trans('global.pleaseSelect')}}",
             allowClear: true,
@@ -12,12 +12,17 @@
         // LOAD DATA USERS with ROLES into DATATABLES
         $('#users_list').DataTable({
             ajax: {
-                    "url": "{{ route('users.api') }}",
-                    "type": "GET",
-                    "dataType": "JSON",
+                "url": "{{ route('users.api') }}",
+                "type": "GET",
+                "dataType": "JSON",
             },
-            responsive: true,lengthChange: false,
-            processing: true,autoWidth: false,serverSide: true,deferRender: true, stateSave: true,
+            responsive: true,
+            lengthChange: false,
+            processing: true,
+            autoWidth: false,
+            serverSide: true,
+            deferRender: true,
+            stateSave: true,
             rowCallback: function(row, data, index) {
                 if (index % 2 === 0) {
                     $(row).addClass('even');
@@ -25,25 +30,67 @@
                     $(row).addClass('odd');
                 }
             },
-            columns: [
-                {data: 'DT_RowIndex', className: "text-center align-middle", orderable: false, searchable: false, width: "5%"},
-                {data: "nama", className: "text-left align-middle", width: "15%"},
-                {data: "username",width: "10%",className: "text-left align-middle"},
-                {data: "email",width: "10%",className: "text-left align-middle"},
-                {data: "jabatans", name: "jabatans.nama", width: "15%",className: "text-left align-middle"},
-                {data: "roles", name: "roles.nama", width: "10%", className: "text-left align-middle", searchable: true, orderable: false,}, //added name:"roles.name" to get eager relation of users to roles
-                {data: "status",width: "10%", className: "text-center", orderable: false, searchable: false,}, //change column aktif into status by adding ->addColumn in Controller that send DataTables
-                {data: "action", width: "10%", orderable: false, searchable: false}
+            columns: [{
+                    data: 'DT_RowIndex',
+                    className: "text-center align-middle",
+                    orderable: false,
+                    searchable: false,
+                    width: "5%"
+                },
+                {
+                    data: "nama",
+                    className: "text-left align-middle",
+                    width: "15%"
+                },
+                {
+                    data: "username",
+                    width: "10%",
+                    className: "text-left align-middle"
+                },
+                {
+                    data: "email",
+                    width: "10%",
+                    className: "text-left align-middle"
+                },
+                {
+                    data: "jabatans",
+                    name: "jabatans.nama",
+                    width: "15%",
+                    className: "text-left align-middle"
+                },
+                {
+                    data: "roles",
+                    name: "roles.nama",
+                    width: "10%",
+                    className: "text-left align-middle",
+                    searchable: true,
+                    orderable: false,
+                }, //added name:"roles.name" to get eager relation of users to roles
+                {
+                    data: "status",
+                    width: "10%",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false,
+                }, //change column aktif into status by adding ->addColumn in Controller that send DataTables
+                {
+                    data: "action",
+                    width: "10%",
+                    orderable: false,
+                    searchable: false
+                }
             ],
             layout: {
                 topStart: {
-                    buttons: [
-                        {
-                            extend: 'print', text: `<i class="fas fa-print"></i>`, titleAttr: "Print Table Data",
+                    buttons: [{
+                            extend: 'print',
+                            text: `<i class="fas fa-print"></i>`,
+                            titleAttr: "Print Table Data",
                             exportOptions: {
-                                columns: [0,1,2,3,4,5], stripHTML: false,
+                                columns: [0, 1, 2, 3, 4, 5],
+                                stripHTML: false,
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 5) { //select column 2 for column aktif/status to exported still has html re4der
                                             return $(data).find('input').is(':checked') ? `\u2611` : '\u2610';
                                             // return data;
@@ -54,11 +101,15 @@
                             }
                         },
                         {
-                            extend: 'excelHtml5', text: `<i class="far fa-file-excel"></i>`, titleAttr: "Export to EXCEL", className: "btn-success",
+                            extend: 'excelHtml5',
+                            text: `<i class="far fa-file-excel"></i>`,
+                            titleAttr: "Export to EXCEL",
+                            className: "btn-success",
                             exportOptions: {
-                                columns: [0,1,2,3,4,5], stripHTML: true,
+                                columns: [0, 1, 2, 3, 4, 5],
+                                stripHTML: true,
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 5) {
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
@@ -68,13 +119,17 @@
                             }
                         },
                         {
-                            extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
+                            extend: 'pdfHtml5',
+                            text: `<i class="far fa-file-pdf"></i>`,
+                            titleAttr: "Export to PDF",
+                            className: "btn-danger",
                             orientation: 'portrait',
                             pageSize: 'A4',
                             exportOptions: {
-                                columns: [0,1,2,3,4,5], stripHTML: false,
+                                columns: [0, 1, 2, 3, 4, 5],
+                                stripHTML: false,
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 5) {
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
@@ -84,11 +139,14 @@
                             }
                         },
                         {
-                            extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
+                            extend: 'copy',
+                            text: `<i class="fas fa-copy"></i>`,
+                            titleAttr: "Copy",
                             exportOptions: {
-                                columns: [0,1,2,3,4,5], stripHTML: false,
+                                columns: [0, 1, 2, 3, 4, 5],
+                                stripHTML: false,
                                 format: {
-                                    body: function (data, row, column, node) {
+                                    body: function(data, row, column, node) {
                                         if (column === 5) {
                                             return $(data).find('input').is(':checked') ? '✅' : '❌';
                                         }
@@ -97,35 +155,47 @@
                                 }
                             }
                         },
-                        {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},
+                        {
+                            extend: 'colvis',
+                            text: `<i class="fas fa-eye"></i>`,
+                            titleAttr: "Select Visible Column",
+                            className: "btn-warning"
+                        },
                     ],
                 },
-                bottomStart: {pageLength: 10}
+                bottomStart: {
+                    pageLength: 10
+                }
             },
             order: [
                 [1, 'asc'] // Ensure this matches the index of the `users` column
             ],
-            lengthMenu: [5, 10 ,25, 50, 100, 200],
+            lengthMenu: [5, 10, 25, 50, 100, 200],
         });
 
 
         //CALL VIEW & EDIT MODAL USERS
-        $('#users_list tbody').on('click', '.edit-user-btn, .view-user-btn', function (e){
+        $('#users_list tbody').on('click', '.edit-user-btn, .view-user-btn', function(e) {
             e.preventDefault();
-            let action    = $(this).data('action');
-            let id_users  = $(this).data('user-id');
-            let url_show  = '{{ route('users.showmodal', ':id') }}'.replace(':id',id_users);
-            let url_edit  = '{{ route('users.edit', ':id') }}'.replace(':id',id_users);
-            let url_update  = '{{ route('users.update', ':id') }}'.replace(':id',id_users);
+            let action = $(this).data('action');
+            let id_users = $(this).data('user-id');
+            let url_show = "{{ route('users.showmodal', ':id') }}".replace(':id', id_users);
+            let url_edit = "{{ route('users.edit ', ': id ') }}".replace(': id ', id_users);
+            let url_update = "{{ route('users.update ', ': id ') }}".replace(':id', id_users);
             resetFormEdit();
             // if button view clicked
-            if(action === "view"){
+            if (action === "view") {
                 $.ajax({
                     url: url_show,
                     method: 'GET',
                     dataType: 'json',
-                    beforeSend: function(){
-                        Toast.fire({icon: "info",title: "Processing...",timer: 300,timerProgressBar: true,});
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Processing...",
+                            timer: 300,
+                            timerProgressBar: true,
+                        });
                     },
                     success: function(data) {
                         $('#view_nama').text(data.nama);
@@ -138,25 +208,30 @@
                         });
                         if (data.aktif === 1) {
                             $('#aktif_show').val(data.aktif);
-                            $("#aktif_show").prop("checked",true);
+                            $("#aktif_show").prop("checked", true);
                         } else {
                             $('#aktif_show').val(0);
-                            $("#aktif_show").prop("checked",false);
+                            $("#aktif_show").prop("checked", false);
                         }
-                        $('#status').text(data.aktif === 1? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
+                        $('#status').text(data.aktif === 1 ? "{{ __('cruds.status.aktif') }}" : "{{ __('cruds.status.tidak_aktif') }}");
                         $('#showUsersModal .modal-title').text(data.nama);
                         $('#showUsersModal').modal('show');
                     }
                 });
             }
             // if button edit clicked
-            if(action === "edit"){
+            if (action === "edit") {
                 $.ajax({
                     url: url_edit,
                     method: 'GET',
                     dataType: 'JSON',
-                    beforeSend: function(){
-                        Toast.fire({icon: "info", title: "Processing...",timer: 500, timerProgressBar: true,});
+                    beforeSend: function() {
+                        Toast.fire({
+                            icon: "info",
+                            title: "Processing...",
+                            timer: 500,
+                            timerProgressBar: true,
+                        });
                     },
                     success: function(data) {
                         setTimeout(() => {
@@ -169,7 +244,7 @@
                                 $('#edit_username').prop('readonly', false); // Enable editing
                                 $('#edit_username').prop('disabled', false); // Enable the field
                             } else {
-                                $('#edit_username').prop('readonly', true);  // Disable editing
+                                $('#edit_username').prop('readonly', true); // Disable editing
                                 $('#edit_username').prop('disabled', false); // Keep the field enabled, but readonly
                             }
 
@@ -184,7 +259,7 @@
                             $('#edit_jabatan').val(data.jabatans.id).trigger('change');
                             $('#edit_aktif').prop('checked', data.aktif == 1);
                             $('#status').text(data.aktif == 1 ? 'Active' : 'Not Active');
-                            $('#EditUsersModal .modal-title').text("Edit Data " +data.nama);
+                            $('#EditUsersModal .modal-title').text("Edit Data " + data.nama);
                             $('#EditUsersModal').modal('show');
                         }, 400);
                     },
@@ -233,7 +308,7 @@
         });
 
         //ADD USER FORM
-        $('#AddUserForm').on('submit', function(e){
+        $('#AddUserForm').on('submit', function(e) {
             e.preventDefault();
             if (!$(this).valid()) {
                 return;
@@ -245,18 +320,23 @@
                 method: 'POST',
                 data: formData,
                 dataType: 'json',
-                beforeSend: function(){
-                    Toast.fire({icon: "info", title: "Processing...",timer: 300, timerProgressBar: true,});
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 300,
+                        timerProgressBar: true,
+                    });
                 },
                 success: function(response) {
-                    if(response.success){
+                    if (response.success) {
                         Swal.fire({
                             title: "Success",
                             text: response.message,
                             icon: "success",
                             timer: 1500,
                             timerProgressBar: true,
-                            didOpen: ()=>{
+                            didOpen: () => {
                                 Swal.showLoading();
                             },
                         });
@@ -267,8 +347,11 @@
                         $('#users_list').DataTable().ajax.reload();
                         $('#AddUserModal').modal('hide');
                         $('#roles').val(null).trigger('change');
-                    }else{
-                        Toast.fire({icon: "error", title: response.message});
+                    } else {
+                        Toast.fire({
+                            icon: "error",
+                            title: response.message
+                        });
                     }
                 },
                 error: function(xhr, status, error) {
@@ -300,7 +383,7 @@
         });
 
         //UPDATE USER BUTTON CLICKED with ID BUTTON OF #UpdateUserData
-        $('#UpdateUserData').on('click', function(e){
+        $('#UpdateUserData').on('click', function(e) {
             e.preventDefault();
             if (!$(this).valid()) {
                 return;
@@ -314,12 +397,17 @@
                 method: 'PUT',
                 data: formData,
                 dataType: 'json',
-                beforeSend: function(){
-                    Toast.fire({icon: "info", title: "Processing...", timer: 500, timerProgressBar: true});
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Processing...",
+                        timer: 500,
+                        timerProgressBar: true
+                    });
                 },
                 success: function(response) {
                     setTimeout(() => {
-                        if(response.success === true){
+                        if (response.success === true) {
                             Swal.fire({
                                 title: "{{ __('global.success') }}",
                                 text: response.message,
@@ -374,12 +462,18 @@
         });
 
         //VALIDATE FORM
-        $(function(){
+        $(function() {
             const AddUserValidator = $("#AddUserForm").validate({
                 rules: {
-                    nama: { required: true, maxlength: 100, minlength: 5},
+                    nama: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 5
+                    },
                     username: {
-                        required: true, maxlength: 50, minlength: 5 ,
+                        required: true,
+                        maxlength: 50,
+                        minlength: 5,
                         remote: {
                             url: "{{ route('check.username') }}", // Laravel route
                             type: "get",
@@ -394,7 +488,9 @@
                         }
                     },
                     email: {
-                        required: true, email: true, maxlength: 100,
+                        required: true,
+                        email: true,
+                        maxlength: 100,
                         remote: {
                             url: "{{ route('check.email') }}", // Laravel route
                             type: "get",
@@ -405,15 +501,23 @@
                                     return $('#email').val();
                                 }
                             },
-                            delay: 3000 ,
+                            delay: 3000,
                         }
                     },
-                    password: { required: true, maxlength: 100 },
-                    jabatan: { required: true },
+                    password: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    jabatan: {
+                        required: true
+                    },
                     'roles[]': {
                         required: true,
-                        },
-                    password_confirmation: {required: true, equalTo: "#password"},
+                    },
+                    password_confirmation: {
+                        required: true,
+                        equalTo: "#password"
+                    },
                 },
                 messages: {
                     nama: {
@@ -449,14 +553,14 @@
                     }
                 },
                 errorElement: 'span',
-                errorPlacement: function (error, element) {
+                errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.form-group').append(error);
                 },
-                highlight: function (element, errorClass, validClass) {
+                highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid').removeClass('is-valid');
                 },
-                unhighlight: function (element, errorClass, validClass) {
+                unhighlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-valid').removeClass('is-invalid');
                 },
                 showErrors: function(errorMap, errorList) {
@@ -480,9 +584,15 @@
 
             const EditUserValidator = $("#EditUserForm").validate({
                 rules: {
-                    nama: { required: true, maxlength: 100, minlength: 5},
+                    nama: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 5
+                    },
                     username: {
-                        required: true, maxlength: 50, minlength: 5 ,
+                        required: true,
+                        maxlength: 50,
+                        minlength: 5,
                         remote: {
                             url: "{{ route('check.username') }}", // Laravel route
                             type: "get",
@@ -500,7 +610,9 @@
                         }
                     },
                     email: {
-                        required: true, email: true, maxlength: 100,
+                        required: true,
+                        email: true,
+                        maxlength: 100,
                         remote: {
                             url: "{{ route('check.email') }}", // Laravel route
                             type: "get",
@@ -514,14 +626,20 @@
                                     return $('#id_user').val();
                                 }
                             },
-                            delay: 3000 ,
+                            delay: 3000,
                         }
                     },
-                    password: { required: false, maxlength: 100 },
+                    password: {
+                        required: false,
+                        maxlength: 100
+                    },
                     'roles[]': {
                         required: true,
-                        },
-                    password_confirmation: {required: false, equalTo: "#edit_password"},
+                    },
+                    password_confirmation: {
+                        required: false,
+                        equalTo: "#edit_password"
+                    },
                 },
                 messages: {
                     nama: {
@@ -557,14 +675,14 @@
                     }
                 },
                 errorElement: 'span',
-                errorPlacement: function (error, element) {
+                errorPlacement: function(error, element) {
                     error.addClass('invalid-feedback');
                     element.closest('.form-group').append(error);
                 },
-                highlight: function (element, errorClass, validClass) {
+                highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid').removeClass('is-valid');
                 },
-                unhighlight: function (element, errorClass, validClass) {
+                unhighlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-valid').removeClass('is-invalid');
                 },
                 showErrors: function(errorMap, errorList) {

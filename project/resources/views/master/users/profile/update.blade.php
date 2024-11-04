@@ -14,7 +14,7 @@
                         alt="{{ $user->nama ?? '' }} profile picture">
                 </div> -->
                 <div class="text-center">
-                    <a href="{{ $user->full_profile() }}?t={{ time() }}" data-lightbox="profile" target="_blank"
+                    <a class="img-url" href="{{ $user->full_profile() }}?t={{ time() }}" data-lightbox="profile" target="_blank"
                         data-title="{{ $user->nama ?? '' }} Profile Picture">
                         <img id="profilePic" class="profile-pic img-fluid img-circle"
                             src="{{ $user->adminlte_image() }}?t={{ time() }}"

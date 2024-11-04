@@ -1,0 +1,70 @@
+<div class="accordion" id="programObjectiveGoals">
+    <div class="card">
+        <div class="card-header" id="cardObjective">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                    data-target="#objectiveData" aria-expanded="true" aria-controls="objectiveData">
+                    <h5>{{ __('cruds.program.objective.label') }}</h5>
+                </button>
+            </h2>
+        </div>
+
+        <div id="objectiveData" class="collapse show" aria-labelledby="cardObjective"
+            data-parent="#programObjectiveGoals">
+            <div class="card-body">
+
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->objektif->deskripsi ?? '') }}
+                    </p>
+                </div>
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->objektif->indikator ?? '') }}
+                    </p>
+                </div>
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->objektif->target ?? '') }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="cardGoals">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+                    data-target="#goalsData" aria-expanded="false" aria-controls="goalsData">
+                    <h5>{{ __('cruds.program.goals.label') }}</h5>
+                </button>
+            </h2>
+        </div>
+        <div id="goalsData" class="collapse" aria-labelledby="cardGoals" data-parent="#programObjectiveGoals">
+            <div class="card-body">
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->goals->deskripsi ?? '') }}
+                    </p>
+                </div>
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->goals->indikator ?? '') }}
+                    </p>
+                </div>
+                <div class="text-wrap">
+                    <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
+                    <p class="text-break">
+                        {{ old('goal', $program->goals->target ?? '') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

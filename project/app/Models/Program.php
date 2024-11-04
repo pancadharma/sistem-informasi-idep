@@ -78,6 +78,19 @@ class Program extends Model implements HasMedia
         return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id')
             ->withPivot('nilaidonasi');
     }
+    public function outcome()
+    {
+        return $this->hasMany(Program_Outcome::class, 'program_id');
+    }
+
+    public function objektif()
+    {
+        return $this->hasOne(ProgramObjektif::class, 'program_id');
+    }
+    public function goal()
+    {
+        return $this->hasOne(ProgramGoal::class, 'program_id');
+    }
 
     public function jadwalreport()
     {
@@ -101,11 +114,6 @@ class Program extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
         $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
-    }
-
-    public function getFilePendukungAttribute()
-    {
-        return $this->getMedia('file_pendukung_program');
     }
 
     public const STATUS_SELECT = [

@@ -33,5 +33,38 @@
                 }
             }
         });
+
+        var data_peran = "{{ route('api.program.peran') }}";
+        var placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.program.staff.peran') }}";
+
+        $('#peran').select2({
+            placeholder: placeholder,
+            width: '100%',
+            allowClear: true,
+            closeOnSelect: false,
+            dropdownPosition: 'below',
+            ajax: {
+                url: data_peran,
+                method: 'GET',
+                delay: 1000,
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama // Mapping 'nama' to 'text'
+                            };
+                        })
+                    };
+                },
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                    return query;
+                }
+            }
+        });
     </script>
 @endpush

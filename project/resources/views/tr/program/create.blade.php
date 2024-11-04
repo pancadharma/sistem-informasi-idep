@@ -14,8 +14,7 @@
             </div>
         </div>
     </div> --}}
-    <form id="createProgram" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"
-        enctype="multipart/form-data">
+    <form id="createProgram" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
 
@@ -37,38 +36,32 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama"
-                                        class="control-label small mb-0">{{ __('cruds.program.nama') }}</label>
-                                    <input type="text" id="nama" name="nama" class="form-control">
+                                    <label for="nama" class="control-label small mb-0">{{ __('cruds.program.nama') }}</label>
+                                    <input type="text" id="nama" name="nama" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode" name="kode" class="form-control">
+                                    <label for="kode" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                    <input type="text" id="kode" name="kode" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalmulai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                    <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
+                                    <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                    <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalselesai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
+                                    <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="totalnilai"
-                                        class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency"
-                                        minlength="0" step=".01",>
+                                    <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency" minlength="0" step=".01" required>
                                 </div>
                             </div>
                         </div>
@@ -78,55 +71,39 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaat"
-                                        class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
-                                    <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat"
-                                        class="form-control" placeholder="{{ __('cruds.program.expektasi') }}"
+                                    <label for="ekspektasipenerimamanfaat" class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
+                                    <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat" class="form-control" placeholder="{{ __('cruds.program.expektasi') }}"
                                         oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaatman"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
-                                    <input type="number" id="ekspektasipenerimamanfaatman"
-                                        name="ekspektasipenerimamanfaatman" class="form-control"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                    <label for="ekspektasipenerimamanfaatman" class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                    <input type="number" id="ekspektasipenerimamanfaatman" name="ekspektasipenerimamanfaatman" class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaatwoman"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
-                                    <input type="number" id="ekspektasipenerimamanfaatwoman"
-                                        name="ekspektasipenerimamanfaatwoman" class="form-control"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                    <label for="ekspektasipenerimamanfaatwoman" class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                    <input type="number" id="ekspektasipenerimamanfaatwoman" name="ekspektasipenerimamanfaatwoman" class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaatboy"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
-                                    <input type="number" id="ekspektasipenerimamanfaatboy"
-                                        name="ekspektasipenerimamanfaatboy" class="form-control"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                    <label for="ekspektasipenerimamanfaatboy" class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                    <input type="number" id="ekspektasipenerimamanfaatboy" name="ekspektasipenerimamanfaatboy" class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaatgirl"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
-                                    <input type="number" id="ekspektasipenerimamanfaatgirl"
-                                        name="ekspektasipenerimamanfaatgirl" class="form-control"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                    <label for="ekspektasipenerimamanfaatgirl" class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                    <input type="number" id="ekspektasipenerimamanfaatgirl" name="ekspektasipenerimamanfaatgirl" class="form-control" oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="ekspektasipenerimamanfaattidaklangsung"
-                                        class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
-                                    <input type="number" id="ekspektasipenerimamanfaattidaklangsung"
-                                        name="ekspektasipenerimamanfaattidaklangsung" class="form-control"
+                                    <label for="ekspektasipenerimamanfaattidaklangsung" class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                    <input type="number" id="ekspektasipenerimamanfaattidaklangsung" name="ekspektasipenerimamanfaattidaklangsung" class="form-control"
                                         oninput="this.value = Math.max(0, this.value)">
                                 </div>
                             </div>
@@ -143,8 +120,7 @@
                                         </strong>
                                     </label>
                                     <div class="select2-purple">
-                                        <select class="form-control select2" name="kelompokmarjinal[]"
-                                            id="kelompokmarjinal" multiple="multiple">
+                                        <select class="form-control select2" name="kelompokmarjinal[]" id="kelompokmarjinal" multiple="multiple">
                                         </select>
                                     </div>
                                 </div>
@@ -162,8 +138,7 @@
                                         </strong>
                                     </label>
                                     <div class="select2-orange">
-                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
-                                            id="targetreinstra" multiple="multiple">
+                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]" id="targetreinstra" multiple="multiple">
                                         </select>
                                     </div>
                                 </div>
@@ -181,8 +156,7 @@
                                         </strong>
                                     </label>
                                     <div class="select2-cyan">
-                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
-                                            multiple="multiple">
+                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg" multiple="multiple">
                                         </select>
                                     </div>
                                 </div>
@@ -200,8 +174,7 @@
                                             {{ __('cruds.program.deskripsi') }}
                                         </strong>
                                     </label>
-                                    <textarea id="deskripsiprojek" name="deskripsiprojek" cols="30" rows="5"
-                                        class="form-control {{ $errors->has('deskripsiprojek') ? 'is-invalid' : '' }}"
+                                    <textarea id="deskripsiprojek" name="deskripsiprojek" cols="30" rows="5" class="form-control {{ $errors->has('deskripsiprojek') ? 'is-invalid' : '' }}"
                                         placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
                                     @if ($errors->has('deskripsiprojek'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
@@ -216,8 +189,7 @@
                                             {{ __('cruds.program.analisis') }}
                                         </strong>
                                     </label>
-                                    <textarea id="analisamasalah" name="analisamasalah" cols="30" rows="5"
-                                        class="form-control {{ $errors->has('analisamasalah') ? 'is-invalid' : '' }}"
+                                    <textarea id="analisamasalah" name="analisamasalah" cols="30" rows="5" class="form-control {{ $errors->has('analisamasalah') ? 'is-invalid' : '' }}"
                                         placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
 
                                     @if ($errors->has('deskripsiprojek'))
@@ -240,8 +212,7 @@
                                     </span>
                                 </label>
                                 <div class="form-group file-loading">
-                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
-                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
+                                    <input id="file_pendukung" name="file_pendukung[]" type="file" class="form-control" multiple data-show-upload="false" data-show-caption="true">
                                 </div>
                                 <div id="captions-container"></div>
                             </div>
@@ -277,10 +248,8 @@
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
-                                            id="user_id" name="user_id" readonly>
-                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
-                                            name="user_id">
+                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}" id="user_id" name="user_id" readonly>
+                                        <input type="hidden" class="form-control" value="{{ auth()->user()->id }}" name="user_id">
                                     </div>
                                 </div>
                             </div>
@@ -339,5 +308,7 @@
 @include('tr.program.js.detail-create.lokasi')
 @include('tr.program.js.detail-create.staff')
 @include('tr.program.js.detail-create.reportschedule')
-
+@include('tr.program.js.detail-create.outcome')
+@include('tr.program.js.detail-create.partner')
+{{-- @include('tr.program.js.validate') --}}
 @endpush

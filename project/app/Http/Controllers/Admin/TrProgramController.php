@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\StoreProgramRequest;
+use App\Models\Program_Outcome;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -273,6 +274,32 @@ class TrProgramController extends Controller
                         ->toMediaCollection('file_pendukung_program');
                 }
             }
+
+            //save code here for dev
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+
+            // Check for mismatched lengths
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+
+            // Prepare donations and validate values in one go
+            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+                if (empty($donation_value)) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id");
+                }
+                return [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $donation_value,
+                ];
+            }, $newPendonor, $nilaiD);
+
+            // Attach donations to the program
+            foreach ($newDonasi as $donation) {
+                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            }
+            //end save code for dev
             return response()->json(['success' => 'Files uploaded successfully', 'program' => $program, 'files' => $newFiles]);
         } catch (Exception $e) {
             return response()->json([
@@ -326,5 +353,42 @@ class TrProgramController extends Controller
             'initialPreview' => $preview_pendukung,
             'initialPreviewConfig' => $config_pendukung,
         ]);
+    }
+
+    // purpose to test outcome create
+    public function testOutcome()
+    {
+        $program = Program::orderByDesc('id')->first();
+
+        if (!$program) {
+            // Handle the case where no program exists
+            return response()->json(['message' => 'No program found'], 404);
+        }
+
+        $program_id = $program->id + 99999; //purpose to test
+        return view('test.outcome', ['program_id' => $program_id]);
+    }
+    // purpose to test outcome create
+    public function testSubmitOutcome(Request $request)
+    {
+        // $program = Program::create($request->only(['program_name']));
+        $id = $request->input('program_id');
+        // Store the outcomes
+        foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+            if (!is_null($deskripsi) && $deskripsi !== '') {
+                Program_Outcome::create([
+                    'program_id' => 19,
+                    'deskripsi' => $deskripsi,
+                    'indikator' => $request->input("indikator.$index"),
+                    'target' => $request->input("target.$index"),
+                ]);
+            }
+        }
+        return response()->json([
+            'message' => 'Outcome successfully submitted',
+            'data' => $request->all(),
+            'program_id' => $request->input('program_id'),
+        ]);
+
     }
 }

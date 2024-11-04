@@ -1,0 +1,27 @@
+INSERT INTO `idep-lte`.`trprogramoutcomeoutput` (`programoutcome_id`, `deskripsi`, `indikator`, `target`) 
+VALUES 
+('12', 'Improving Educational Outcomes', 'Increase in student graduation rate', '85% graduation rate by 2025'),
+('12', 'Enhancing Healthcare Services', 'Reduction in patient wait times', 'Reduce average wait time to 15 minutes'),
+('12', 'Boosting Agricultural Productivity', 'Increase in crop yield', 'Achieve a 20% increase in crop yield by 2026'),
+('12', 'Promoting Renewable Energy', 'Increase in solar panel installations', 'Install 1,000 solar panels by 2025'),
+('12', 'Enhancing Water Conservation', 'Reduction in water usage', 'Reduce water usage by 10% by 2024'),
+('12', 'Improving Urban Infrastructure', 'Reduction in traffic congestion', 'Decrease average commute time by 20%'),
+('12', 'Expanding Digital Access', 'Increase in internet connectivity', 'Provide internet access to 95% of households by 2025'),
+('12', 'Supporting Small Businesses', 'Increase in business grants', 'Provide 50 business grants annually'),
+('12', 'Improving Public Health', 'Increase in vaccination rates', 'Achieve 95% vaccination coverage by 2026'),
+('12', 'Enhancing Public Safety', 'Reduction in crime rates', 'Reduce crime rates by 15% by 2025');
+
+
+
+
+INSERT INTO `idep-lte`.`trprogramobjektif` (`program_id`, `deskripsi`, `indikator`, `target`) VALUES
+('1', 'Peningkatan Kualitas Pendidikan', 'Peningkatan Tingkat Kelulusan Siswa', 'Meningkatkan tingkat kelulusan siswa menjadi 85% pada tahun 2025'),
+('2', 'Peningkatan Pelayanan Kesehatan', 'Pengurangan Waktu Tunggu Pasien', 'Mengurangi waktu tunggu rata-rata menjadi 15 menit'),
+('3', 'Peningkatan Produktivitas Pertanian', 'Peningkatan Hasil Panen', 'Mencapai peningkatan hasil panen sebesar 20% pada tahun 2026'),
+('4', 'Promosi Energi Terbarukan', 'Peningkatan Instalasi Panel Surya', 'Memasang 1.000 panel surya pada tahun 2025'),
+('5', 'Peningkatan Konservasi Air', 'Pengurangan Penggunaan Air', 'Mengurangi penggunaan air sebesar 10% pada tahun 2024'),
+('6', 'Peningkatan Infrastruktur Perkotaan', 'Pengurangan Kemacetan Lalu Lintas', 'Mengurangi waktu tempuh rata-rata sebesar 20%'),
+('7', 'Pengembangan Akses Digital', 'Peningkatan Konektivitas Internet', 'Memberikan akses internet kepada 95% rumah tangga pada tahun 2025'),
+('8', 'Mendukung Usaha Kecil', 'Peningkatan Hibah Usaha', 'Memberikan 50 hibah usaha setiap tahun'),
+('9', 'Peningkatan Kesehatan Masyarakat', 'Peningkatan Tingkat Imunisasi', 'Mencapai cakupan imunisasi 95% pada tahun 2026'),
+('10', 'Peningkatan Keamanan Publik', 'Pengurangan Tingkat Kejahatan', 'Mengurangi tingkat kejahatan sebesar 15% pada tahun 2025');

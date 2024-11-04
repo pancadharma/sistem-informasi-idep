@@ -450,6 +450,19 @@ return [
             'desc'          => 'Description',
             'indicator'     => 'Indicator',
             'target'        => 'Target',
+            'list'          => 'List Outcome',
+            'list_program'  => 'List Outcome Program',
+            'out_program'   => 'Program Outcome',
+            'of_outcome'    => 'Of Outcome',
+        ],
+        'output'            => [
+            'label'         => 'Output',
+            'desc'          => 'Description',
+            'indicator'     => 'Indicator',
+            'target'        => 'Target',
+            'list'          => 'List Output',
+            'list_program'  => 'List Program Output',
+            'out_program'   => 'Program Outcome Output',
         ],
         'partner'           => [
             'label'         => 'Partner',
@@ -463,6 +476,9 @@ return [
         ],
         'objective'         => [
             'label'         => 'Objective',
+            'target'        => 'Target',
+            'indicator'     => 'Indicator',
+            'desc'          => 'Description'
         ],
         'goals'             => [
             'label'         => 'Goals',
@@ -475,5 +491,17 @@ return [
             'list'          => 'List of Marginalized Group',
             'select'        => 'Select Marginalized Group',
         ],
-    ]
+    ],
+    'activity'              => [
+        'label'             => 'Activity',
+        'deskripsi'         => 'Activity Description',
+        'target'            => 'Activity Target',
+        'indicator'         => 'Activity Indicator',
+        'list'              => 'List Activity',
+        'add'               => 'Add Activity',
+        'edit'              => 'Edit Activity',
+        'delete'            => 'Delete Activity',
+        'select'            => 'Select Activity',
+        'no_selected'       => 'No Activity Selected',
+    ],
 ];

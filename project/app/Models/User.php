@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Image\Enums\Fit;
 
 class User extends Authenticatable implements HasMedia
@@ -120,28 +121,27 @@ class User extends Authenticatable implements HasMedia
     public function registerMediaCollections(): void
     {
         $this
-            ->addMediaCollection('userprofile')
+            ->addMediaCollection($this->username ?? Auth::user()->username)
+            // ->useDisk('userprofile')
             ->singleFile()
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif'])
-            ->registerMediaConversions(function (Media $media) {
-                $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
-                $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
-            });
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
+            // ->registerMediaConversions(function (Media $media) {
+            //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
+            //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
+            // });
     }
 
     public function adminlte_image()
     {
-        $media = $this->getFirstMedia('userprofile');
-        // if ($media) {
-        //     return $media->getUrl('thumb');
-        // }
-        // return '/vendor/adminlte/dist/img/idep.png';
+        $user_name = $this->username ?? Auth::user()->username;
+        $media = $this->getFirstMedia($user_name);
         return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/idep.png';
 
     }
     public function full_profile()
     {
-        $media = $this->getFirstMedia('userprofile');
+        $user_name = $this->username ?? Auth::user()->username;
+        $media = $this->getFirstMedia($user_name);
         return $media ? $media->getUrl() : '/vendor/adminlte/dist/img/idep.png';
 
     }

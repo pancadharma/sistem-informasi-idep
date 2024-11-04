@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('users/destroy', [UsersController::class, 'massDestroy'])->name('users.massDestroy');
     Route::post('users/media', [UsersController::class, 'storeMedia'])->name('users.storeMedia');
     Route::post('users/ckmedia', [UsersController::class, 'storeCKEditorImages'])->name('users.storeCKEditorImages');
-    Route::put('users/password', [UsersController::class,'password'])->name('update.password');
+    Route::put('users/password', [UsersController::class, 'password'])->name('update.password');
     Route::get('users-show/{users}', [UsersController::class, 'showModal'])->name('users.showmodal');
     Route::get('username-check', [UsersController::class, 'checkUsername'])->name('check.username');
     Route::get('email-check', [UsersController::class, 'checkEmail'])->name('check.email');
@@ -183,6 +183,10 @@ Route::middleware(['auth'])->group(function () {
 
     //Route::resource('program', TrProgramController::class);
     // get data for select 2 form
+
+    Route::get('program-test', [TrProgramController::class, 'testOutcome'])->name('trprogram.test.outcome');
+    Route::post('program-test-outcome', [TrProgramController::class, 'testSubmitOutcome'])->name('trprogram.outcome.submit');
+
     Route::get('program-reinstra', [TrProgramController::class, 'TargetReinstra'])->name('program.api.reinstra');
     Route::get('program-marjinal', [TrProgramController::class, 'KelompokMarjinal'])->name('program.api.marjinal');
     Route::get('program-sdg', [TrProgramController::class, 'KaitanSDG'])->name('program.api.sdg');
@@ -201,7 +205,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('program/api/pendonor/{id}/data', [ProgramController::class, 'getPendonorDataEdit'])->name('api.pendonor.data'); // fill form for selected pendonor in edit program
     Route::get('program/api/donor', [ProgramController::class, 'getProgramDonor'])->name('api.program.donor'); // get all pendonor data
     Route::get('program/api/staff', [ProgramController::class, 'getProgramStaff'])->name('api.program.staff'); // can be used to get data staff for program
-    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi'); //temporary , use wirawan card ?
+    Route::get('program/api/partner', [ProgramController::class, 'getProgramPartner'])->name('api.program.partner'); // can be used to get data partner for program
+    Route::get('program/api/peran', [ProgramController::class, 'getProgramPeran'])->name('api.program.peran'); // can be used to get data peran for program
+    Route::get('program/api/lokasi', [WilayahController::class, 'getProgramLokasi'])->name('api.program.lokasi');
+    Route::get('program/{program}/details', [ProgramController::class, 'details'])->name('program.details');
+
+    Route::post('program/details/output-activity', [ProgramController::class, 'outputActivityStore'])->name('program.details.output.activity.store'); //save Output Activity
+
+    Route::get('program/details/modal', [ProgramController::class, 'detailsModal'])->name('program.details.modal');
+
+    Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
+    Route::get('program/api/output/{outcome}', [ProgramController::class, 'apiOutput'])->name('api.program.output');
+    Route::get('program/api/objektif/{objektif}', [ProgramController::class, 'apiObjektif'])->name('api.program.objektif');
     Route::resource('program', ProgramController::class);
 
     Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
