@@ -23,6 +23,8 @@ use App\Models\User;
 use App\Models\Peran;
 use App\Models\Partner;
 use App\Models\Program_Outcome_Output;
+use App\Models\Program_Outcome_Output_Activity;
+use App\Models\ProgramGoal;
 use App\Models\ProgramObjektif;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -45,12 +47,18 @@ class ProgramController extends Controller
     public function details(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
-            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif']);
+            $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal']);
             $outcomes = Program_Outcome::where('program_id', $program->id)->get();
             $objektif = ProgramObjektif::where('program_id', $program->id)->get();
-            return view('tr.program.details', compact('program', 'outcomes', 'objektif'));
+            $goal = ProgramGoal::where('program_id', $program->id)->get();
+            return view('tr.program.details', compact('program', 'outcomes', 'objektif', 'goal'));
         }
-        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+        return response()->json([
+            'success' => false,
+            'status' => 'error',
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program',
+        ], 403);
+        // abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
     }
 
 
@@ -690,5 +698,73 @@ class ProgramController extends Controller
                 'message' => 'Data Outcome not found'
             ], 404);
         }
+    }
+
+    public function detailsModal()
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_create')) {
+            $program = Program::with(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal'])->where('id', auth()->user()->id)->first();
+            return view('tr.program.detail.outcome-detail', compact('program'));
+        }
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program');
+    }
+
+    public function outputActivityStore(Request $request)
+    {
+
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_create')) {
+            $validated = $request->validate([
+                'programoutcome_id' => 'required|exists:trprogramoutcome,id',
+                'deskripsi' => 'required|string|max:1000',
+                'indikator' => 'required|string|max:1000',
+                'target' => 'required|string|max:1000',
+                'activities' => 'nullable|array',
+                'activities.*.deskripsi' => 'nullable|string|max:1000',
+                'activities.*.indikator' => 'nullable|string|max:1000',
+                'activities.*.target' => 'nullable|string|max:1000',
+            ]);
+
+            DB::beginTransaction();
+            try {
+                // // Create the outcome output
+                $outcomeOutput = Program_Outcome_Output::create([
+                    'programoutcome_id' => $validated['programoutcome_id'],
+                    'deskripsi' => $validated['deskripsi'],
+                    'indikator' => $validated['indikator'],
+                    'target' => $validated['target'],
+                ]);
+
+                //// Add the activities
+                foreach ($validated['activities'] as $activity) {
+                    Program_Outcome_Output_Activity::create([
+                        'programoutcomeoutput_id' => $outcomeOutput->id,
+                        'deskripsi' => $activity['deskripsi'],
+                        'indikator' => $activity['indikator'],
+                        'target' => $activity['target'],
+                    ]);
+                }
+                DB::commit();
+                return response()->json([
+                    'message' => 'Program Outcome Output and Activities created successfully!',
+                    'data' => $outcomeOutput->load('activities')
+                ], 201);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(['message' => 'Failed to create Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(), 'data'  => $request,], 422);
+            } catch (ModelNotFoundException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Resource not found.', 'data' => $request,], 404);
+            } catch (HttpException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => $e->getMessage(), 'data' => $request,], $e->getStatusCode());
+            } catch (QueryException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'An error occurred.', 'data' => $request, 'error' => $e->getMessage(),], Response::HTTP_SERVICE_UNAVAILABLE);
+            }
+        }
+        return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);
     }
 }
