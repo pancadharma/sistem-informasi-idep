@@ -39,4 +39,9 @@ class Program_Outcome_Output extends Model
         return $this->belongsTo(Program_Outcome::class, 'programoutcome_id', 'id');
     }
 
+    public function activities()
+    {
+        return $this->hasMany(Program_Outcome_Output_Activity::class, 'programoutcomeoutput_id');
+    }
+
 }
