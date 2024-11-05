@@ -34,7 +34,7 @@ return [
     'kelompok_rentan'   => 'Kelompok Marjinal',
     'pendonor'          => 'Pendonor',
     'kategoripendonor'  => 'Kategori Pendonor',
-    'partner'           => 'Partner',
+    'partner'           => 'Mitra',
     'jenis_bantuan'     => 'Jenis Bantuan',
     'sdg'               => 'Kaitan SDG',
     'idep'              => 'Kaitan IDEP',

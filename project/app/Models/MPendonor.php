@@ -12,7 +12,7 @@ class MPendonor extends Model
 {
     use Auditable, HasFactory;
     protected $table = 'mpendonor';
-    
+
     protected $fillable = [
         'mpendonorkategori_id',
         'nama',
@@ -38,6 +38,9 @@ class MPendonor extends Model
     {
         return $this->belongsTo(Kategori_Pendonor::class, 'mpendonorkategori_id');
     }
-    
 
+    public function program()
+    {
+        return $this->belongsToMany(Program::class, 'trprogrampendonor', 'pendonor_id', 'program_id')->withPivot('nilaidonasi');;
+    }
 }

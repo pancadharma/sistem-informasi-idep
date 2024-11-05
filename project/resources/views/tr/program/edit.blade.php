@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.edit') . ' ' . __('cruds.program.title_singular'))
-@section('content_header_title', __('global.edit') . ' ' . __('cruds.program.title_singular'))
+@section('subtitle', __('global.update') . ' ' . __('cruds.program.title_singular'))
+@section('content_header_title', __('global.update') . ' ' . __('cruds.program.title_singular'))
 @section('sub_breadcumb', __('cruds.program.title'))
 
 @section('content_body')
@@ -9,13 +9,11 @@
         <div class="col-md-12">
             <div class="card card-info collapsed-card">
                 <div class="card-header">
-                    <h6>{{ __('global.edit') . ' ' . __('cruds.program.title_singular') }}</h6>
+                    <h6>{{ __('global.update') . ' ' . __('cruds.program.title_singular') }}</h6>
                 </div>
             </div>
         </div>
     </div>
-    {{-- <form id="editProgram" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"
-        enctype="multipart/form-data"> --}}
     <form method="POST" id="editProgram" action="{{ route('program.update', [$program->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
@@ -34,361 +32,335 @@
                             </button>
                         </div>
                     </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Informasi Dasar --}}
+                    <div class="card-body pb-0">
                         <div class="row">
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="nama_program" class="small">{{ __('cruds.program.form.nama') }}</label>
-                                    <input type="text" id="nama_program" name="nama" class="form-control">
+                                    <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
+                                    <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="kode_program" class="small">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode_program" name="kode" class="form-control">
+                                    <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                    <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required>
+                                </div>
+                                @if ($errors->has('kode'))
+                                    <span class="text-danger">{{ $errors->first('kode') }}</span>
+                                @endif
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
+                                    <input type="date" id="tanggalmulai" name="tanggalmulai"class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}" value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}" required>
+
+
+                                    @if ($errors->has('tanggalmulai'))
+                                        <span class="text-danger">{{ $errors->first('tanggalmulai') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
-                                    <label for="tanggalmulai"
-                                        class="small">{{ __('cruds.program.form.tgl_selesai') }}</label>
-                                    <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="tanggalselesai"
-                                        class="small">{{ __('cruds.program.form.tgl_mulai') }}</label>
-                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control">
+                                    <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
+                                    <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}" value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}" required>
+
+                                    @if ($errors->has('tanggalselesai'))
+                                        <span class="text-danger">{{ $errors->first('tanggalselesai') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
-                                    <label for="totalnilai"
-                                        class="small">{{ __('cruds.program.form.total_nilai') }}</label>
-                                    <input type="number" id="totalnilai" name="totalnilai" class="form-control"
-                                        maxlength="15" minlength="0" step=".01",>
+                                    <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
+                                    <input type="text" id="totalnilai" name="totalnilai" class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}" minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}" step="0.001" required>
+
+                                    @if ($errors->has('totalnilai'))
+                                        <span class="text-danger">{{ $errors->first('totalnilai') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        {{-- Ekspektasi Penerima Manfaat --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.expektasi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Ekspektasi Penerima Manfaat --}}
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaat"
-                                        class="small">{{ __('cruds.program.expektasi') }}</label>
+                                        class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
                                     <input type="number" id="ekspektasipenerimamanfaat" maxlength="1000000"
-                                        name="ekspektasipenerimamanfaat" class="form-control"
+                                        name="ekspektasipenerimamanfaat"
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}"
                                         placeholder="{{ __('cruds.program.expektasi') }}"
                                         oninput="this.value = Math.max(0, this.value)">
+
+                                    @if ($errors->has('ekspektasipenerimamanfaat'))
+                                        <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaat') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="pria"
-                                        class="small"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.pria') }}</strong></label>
                                     <input type="number" id="pria" name="ekspektasipenerimamanfaatman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaatman') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaatman', $program->ekspektasipenerimamanfaatman) }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+
+                                    @if ($errors->has('ekspektasipenerimamanfaatman'))
+                                        <span
+                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatman') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="wanita"
-                                        class="small"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.wanita') }}</strong></label>
                                     <input type="number" id="wanita" name="ekspektasipenerimamanfaatwoman"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaatwoman') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaatwoman', $program->ekspektasipenerimamanfaatwoman) }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+
+                                    @if ($errors->has('ekspektasipenerimamanfaatwoman'))
+                                        <span
+                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatwoman') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="laki"
-                                        class="small"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.laki') }}</strong></label>
                                     <input type="number" id="laki" name="ekspektasipenerimamanfaatboy"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaatboy') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaatboy', $program->ekspektasipenerimamanfaatboy) }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+
+                                    @if ($errors->has('ekspektasipenerimamanfaatboy'))
+                                        <span
+                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatboy') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="perempuan"
-                                        class="small"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.form.perempuan') }}</strong></label>
                                     <input type="number" id="perempuan" name="ekspektasipenerimamanfaatgirl"
-                                        class="form-control" required oninput="this.value = Math.max(0, this.value)">
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaatgirl') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaatgirl', $program->ekspektasipenerimamanfaatgirl) }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+                                    @if ($errors->has('ekspektasipenerimamanfaatgirl'))
+                                        <span
+                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaatgirl') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="total"
-                                        class="small"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
+                                        class="control-label small mb-0"><strong>{{ __('cruds.program.ex_indirect') }}</strong></label>
                                     <input type="number" id="total" name="ekspektasipenerimamanfaattidaklangsung"
-                                        class="form-control" oninput="this.value = Math.max(0, this.value)">
+                                        class="form-control {{ $errors->has('ekspektasipenerimamanfaattidaklangsung') ? 'is-invalid' : '' }}"
+                                        value="{{ old('ekspektasipenerimamanfaattidaklangsung', $program->ekspektasipenerimamanfaattidaklangsung) }}"
+                                        oninput="this.value = Math.max(0, this.value)">
+                                    @if ($errors->has('ekspektasipenerimamanfaattidaklangsung'))
+                                        <span
+                                            class="text-danger">{{ $errors->first('ekspektasipenerimamanfaattidaklangsung') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        {{-- Kelompok Marjinal --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.marjinal.label') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Kelompok Marjinal --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kelompokmarjinal" class="small control-label">
+                                    <label for="kelompokmarjinal" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.marjinal.list') }}
                                         </strong>
                                     </label>
                                     <div class="select2-purple">
-                                        <select class="form-control select2" name="kelompokmarjinal[]"
-                                            id="kelompokmarjinal" multiple="multiple" required>
+                                        <select
+                                            class="form-control select2 {{ $errors->has('kelompokmarjinal') ? 'is-invalid' : '' }}"
+                                            name="kelompokmarjinal[]" id="kelompokmarjinal" multiple="multiple">
                                         </select>
                                     </div>
+                                    @if ($errors->has('kelompokmarjinal'))
+                                        <span class="text-danger">{{ $errors->first('kelompokmarjinal') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        {{-- Target Reinstra --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.reinstra') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Target Reinstra --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="targetreinstra" class="small control-label">
+                                    <label for="targetreinstra" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_reinstra') }}
                                         </strong>
                                     </label>
                                     <div class="select2-orange">
-                                        <select class="form-control select2-hidden-accessible" name="targetreinstra[]"
-                                            id="targetreinstra" multiple="multiple" required>
+                                        <select
+                                            class="form-control select2-hidden-accessible {{ $errors->has('targetreinstra') ? 'is-invalid' : '' }}"
+                                            name="targetreinstra[]" id="targetreinstra" multiple="multiple">
                                         </select>
                                     </div>
+                                    @if ($errors->has('targetreinstra'))
+                                        <span class="text-danger">{{ $errors->first('targetreinstra') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        {{-- Kaitan SDG --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.sdg') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
+                    {{-- Kaitan SDG --}}
                     <div class="card-body table-responsive pt-0">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="kaitansdg" class="small control-label">
+                                    <label for="kaitansdg" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.program.list_sdg') }}
                                         </strong>
                                     </label>
-                                    <div class="select2-orange">
-                                        <select class="form-control select2" name="kaitansdg[]" id="kaitansdg"
-                                            multiple="multiple" required>
+                                    <div class="select2-cyan">
+                                        <select
+                                            class="form-control select2 {{ $errors->has('kaitansdg') ? 'is-invalid' : '' }}"
+                                            name="kaitansdg[]" id="kaitansdg" multiple="multiple">
                                         </select>
                                     </div>
+                                    @if ($errors->has('kaitansdg'))
+                                        <span class="text-danger">{{ $errors->first('kaitansdg') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            {{-- Deskripsi Program --}}
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.deskripsi') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- Analisis Program --}}
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.analisis') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <textarea id="analisis" name="analisis" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}" required maxlength="500"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{-- File Uploads --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.program.files') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group file-loading">
-                                    <label for="status" class="small control-label">
-                                        <strong>{{ __('cruds.program.upload') }}</strong>
-                                    </label>
-                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
-                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{-- Status --}}
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <strong>
-                            {{ __('cruds.status.title') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive pt-0">
+                    {{-- Deskripsi Program --}}
+                    <div class="card-body pb-0 pt-0">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="status" class="small control-label">
+                                    <label for="users" class="control-label small mb-0">
+                                        <strong>
+                                            {{ __('cruds.program.deskripsi') }}
+                                        </strong>
+                                    </label>
+                                    <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
+                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
+
+                                    @if ($errors->has('deskripsi'))
+                                        <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            {{-- Analisis Program --}}
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="users" class="control-label small mb-0">
+                                        <strong>
+                                            {{ __('cruds.program.analisis') }}
+                                        </strong>
+                                    </label>
+                                    <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
+                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="500">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
+                                    @if ($errors->has('analisamasalah'))
+                                        <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- File Uploads --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="file_pendukung" class="control-label small mb-0">
+                                    <strong>
+                                        {{ __('cruds.program.upload') }}
+                                    </strong>
+                                    <span class="text-red">
+                                        ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
+                                    </span>
+                                    <div class="small">{{ __('cruds.program.edit_file') }}</div>
+                                </label>
+                                <div class="form-group file-loading">
+                                    <input id="file_pendukung" name="file_pendukung[]" type="file"
+                                        class="form-control" multiple data-show-upload="false" data-show-caption="true">
+                                </div>
+                                <div id="captions-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Status --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="status" class="control-label small mb-0">
                                         <strong>
                                             {{ __('cruds.status.title') }}
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <select class="form-control select2" name="status" id="status" required>
-                                            <optgroup label="Status Progran">
-                                                <option value="draft">Draft</option>
-                                                <option value="running">Running</option>
-                                                <option value="submit">Submit</option>
-                                                <option value="completed">Completed</option>
-                                            </optgroup>
+                                        <select
+                                            class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
+                                            name="status" id="status">
+                                            <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>
+                                                {{ trans('global.pleaseSelect') }}</option>
+                                            @foreach (App\Models\Program::STATUS_SELECT as $key => $label)
+                                                <option value="{{ $key }}"
+                                                    {{ old('status', $program->status) === (string) $key ? 'selected' : '' }}>
+                                                    {{ $label }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="users" class="small control-label">
+                                    <label for="users" class="control-label small mb-0">
                                         <strong>
-                                            User Program
+                                            Program Created / Updated by
                                         </strong>
                                     </label>
                                     <div class="select2-green">
-                                        <input type="text" class="form-control" value="{{ auth()->user()->nama }}"
-                                            id="user_id" name="user_id" readonly>
+                                        <input type="text" class="form-control"
+                                            value="{{ old('nama', $program->users->nama) }}" id="user_id"
+                                            name="user_id" readonly>
                                         <input type="hidden" class="form-control" value="{{ auth()->user()->id }}"
                                             name="user_id">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- Submit Button --}}
+                    </div>
+                    {{-- Call Detail Program Blade for Create Here --}}
+                    <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-12">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-info  btn-block float-right">
+                                <div class="form-group mt-2">
+                                    @include('tr.program.detail.edit')
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- Submit Update Button --}}
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mt-2">
+                                    <button type="submit" class="btn btn-info btn-block float-right">
                                         {{ __('global.update') . ' ' . __('cruds.program.title_singular') }}
                                     </button>
                                 </div>
@@ -413,235 +385,21 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
+<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
-<script>
-    //SCRIPT FOR CREATE PROGRAM FORM
-    $(document).ready(function() {
-        $('#status').select2();
-        var url_update = $('#editProgram').attr('action');
 
-        $(document).ready(function() {
-            $("#file_pendukung").fileinput({
-                theme: 'fa',
-                showRemove: true,
-                previewZoomButtonTitles: true,
-                dropZoneEnabled: false,
-                removeIcon: '<i class="bi bi-trash"></i>',
-                showDrag: true,
-                dragIcon: '<i class="bi-arrows-move"></i>',
-                showZoom: true,
-                showUpload: false,
-                showRotate: true,
-                showCaption: true,
-                uploadUrl: url_update,
-                uploadAsync: false,
-                maxFileSize: 4096,
-                allowedFileExtensions: ["jpg", "png", "gif", "pdf", "jpeg", "bmp", "doc",
-                    "docx"
-                ],
-                append: true,
-                initialPreview: @json($initialPreview),
-                initialPreviewAsData: true,
-                initialPreviewConfig: @json($initialPreviewConfig),
+{{-- call every js for edit and it's tab detail --}}
+@include('tr.program.js.edit')
+@include('tr.program.js.detail-edit.donor')
+@include('tr.program.js.detail-edit.lokasi')
+@include('tr.program.js.detail-edit.staff')
 
-                overwriteInitial: false,
-            });
 
-            $('#file_pendukung').on('change', function(event) {
-                const files = event.target.files;
-                const dataTransfer = new DataTransfer();
-                for (let i = 0; i < this.files.length; i++) {
-                    dataTransfer.items.add(this.files[i]);
-                }
-                for (let file of files) {
-                    dataTransfer.items.add(file);
-                }
-                this.files = dataTransfer.files;
-            });
-        });
-
-        var data_reinstra = "{{ route('program.api.reinstra') }}";
-        var data_kelompokmarjinal = "{{ route('program.api.marjinal') }}";
-        var data_sdg = "{{ route('program.api.sdg') }}";
-
-        $('#kelompokmarjinal').select2({
-            placeholder: '{{ __('cruds.program.marjinal.select') }}',
-            width: '100%',
-            allowClear: true,
-            closeOnSelect: false,
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_kelompokmarjinal,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-        // SELECT2 For Target Reinstra
-        $('#targetreinstra').select2({
-            placeholder: '{{ __('cruds.program.select_reinstra') }}',
-            width: '100%',
-            allowClear: true,
-            closeOnSelect: false,
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_reinstra,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-
-        //KAITAN SDG SELECT2
-
-        $('#kaitansdg').select2({
-            placeholder: '{{ __('cruds.program.select_sdg') }}',
-            width: '100%',
-            allowClear: true,
-            closeOnSelect: false,
-            dropdownPosition: 'below',
-            ajax: {
-                url: data_sdg,
-                method: 'GET',
-                delay: 1000,
-                processResults: function(data) {
-                    return {
-                        results: data.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Mapping 'nama' to 'text'
-                            };
-                        })
-                    };
-                },
-                data: function(params) {
-                    var query = {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                    return query;
-                }
-            }
-        });
-
-        $('#editProgram').on('submit', function(e) {
-            e.preventDefault();
-            $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-            var formData = new FormData(this);
-            // let url = $(this).attr('action');
-
-            $.ajax({
-                url: url_update,
-                method: 'PUT',
-                data: formData,
-                processData: false,
-                contentType: false,
-                // dataType: 'json',
-                success: function(response) {
-                    setTimeout(() => {
-                        if (response.success === true) {
-                            Swal.fire({
-                                title: "{{ __('global.success') }}",
-                                text: response.message,
-                                icon: "success",
-                                timer: 1500,
-                                timerProgressBar: true,
-                            });
-                            $(this).trigger('reset');
-                            $('#editProgram')[0].reset();
-                            $('#editProgram').trigger('reset');
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
-                                '').trigger('change');
-                            $(".btn-tool").trigger('click');
-                            $('#editProgram').find('button[type="submit"]')
-                                .removeAttr('disabled');
-                        }
-                    }, 500);
-                },
-                error: function(xhr, status, error) {
-                    $('#editProgram').find('button[type="submit"]').removeAttr(
-                        'disabled');
-                    let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response.errors) {
-                            errorMessage +=
-                                '<br><br><ul style="text-align:left!important">';
-                            $.each(response.errors, function(field, messages) {
-                                messages.forEach(message => {
-                                    errorMessage +=
-                                        `<li>${field}: ${message}</li>`;
-                                    $(`#${field}-error`).removeClass(
-                                        'is-valid').addClass(
-                                        'is-invalid');
-                                    $(`#${field}-error`).text(message);
-                                    $(`#${field}`).removeClass('invalid')
-                                        .addClass('is-invalid');
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    html: errorMessage,
-                                });
-                            });
-                            errorMessage += '</ul>';
-                        }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                    });
-                },
-                complete: function() {
-                    setTimeout(() => {
-                        $(this).find('button[type="submit"]').removeAttr(
-                            'disabled');
-                    }, 500);
-                }
-            });
-
-        });
-
-    });
-</script>
+@include('tr.program.js.detail-edit.outcome')
 @endpush

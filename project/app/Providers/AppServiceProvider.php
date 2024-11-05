@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerViewComposers($view);
         // $this->loadTranslations();
     }
-    
+
     public function lte(Factory $view): void{
         $view->composer('layouts.page', AdminLteComposer::class);
     }
@@ -44,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
         $view->composer('layouts.page', AdminLteComposer::class);
     }
 
- 
+
 //     protected $pkgPrefix = 'idep';
 //     private function loadTranslations():void
 //     {

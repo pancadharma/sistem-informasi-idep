@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Auditable;
+use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Program_Report_Schedule extends Model
 {

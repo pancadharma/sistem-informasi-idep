@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProgramObjektif extends Model
 {
+    use HasFactory, Auditable;
     protected $table = 'trprogramobjektif';
 
     protected $fillable = [
@@ -16,12 +17,23 @@ class ProgramObjektif extends Model
         'deskripsi',
         'indikator',
         'target',
+        'created_at',
+        'updated_at',
     ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
     // Define the relationship to the 'Program' model (assuming the related table is 'programs')
     public function program()
     {
         return $this->belongsTo(Program::class, 'program_id');
     }
-    
 }
