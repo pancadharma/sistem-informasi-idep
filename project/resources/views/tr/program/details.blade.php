@@ -574,7 +574,6 @@
                     });
                 },
                 success: function(response) {
-
                     $('#formAddOutput')[0].reset();
                     $('#tbody-no-activity').removeClass('hide').html(`
                         <tr>
@@ -585,7 +584,15 @@
                     `);
                     $('#activity_output_list').find('tbody.data-activity').remove();
                     $('#modalAddOutput').modal('hide');
-                    fetchOutputs(outputApi);
+                    setTimeout(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Output has been added!',
+                            confirmButtonText: 'Okay'
+                        });
+                        fetchOutputs(outputApi);
+                    }, 300);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     $('#formAddOutput').find('button[type="submit"]').removeAttr('disabled'); //enable submit button
@@ -594,7 +601,6 @@
                         icon: 'error',
                         title: 'Error!',
                         html: errorMessage,
-                        timer: 300,
                         confirmButtonText: 'Okay'
                     });
                 },
