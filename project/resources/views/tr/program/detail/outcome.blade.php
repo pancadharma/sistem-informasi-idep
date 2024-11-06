@@ -18,17 +18,17 @@
         <div class="row">
             <div class="col-lg-4 form-group">
                 <div class="input-group">
-                    <textarea id="deskripsi_0" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000"></textarea>
+                    <textarea id="deskripsi" name="deskripsi[]" class="form-control {{ $errors->has('deskripsi') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000"></textarea>
                 </div>
             </div>
             <div class="col-lg-4 form-group">
                 <div class="input-group">
-                    <textarea id="indikator_0" name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="1000" rows="1"></textarea>
+                    <textarea id="indikator" name="indikator[]" class="form-control {{ $errors->has('indikator') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.indicator') }}" maxlength="1000" rows="1"></textarea>
                 </div>
             </div>
             <div class="col-lg-4 form-group">
                 <div class="input-group">
-                    <textarea id="target_0" name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
+                    <textarea id="target" name="target[]" class="form-control {{ $errors->has('target') ? 'is-invalid' : '' }}" placeholder="{{ __('cruds.program.outcome.target') }}" maxlength="1000" rows="1"></textarea>
                     <span class="input-group-append">
                         <button type="button" class="ml-2 btn btn-success form-control addOutcome btn-flat" data-target="outcome-container_1"><i class="bi bi-plus"></i></button>
                     </span>

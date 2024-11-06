@@ -176,27 +176,6 @@ class ProgramController extends Controller
                 ]);
             }
 
-            //save pendonor & donation value
-            // $newPendonor = $request->input('pendonor_id', []);
-            // $nilaiD = $request->input('nilaidonasi', []);
-            // if (count($newPendonor) !== count($nilaiD)) {
-            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            // }
-            // $newDonasi = [];
-            // foreach ($newPendonor as $index => $pendonor_id) {
-            //     if (isset($nilaiD[$index])) {
-            //         $newDonasi[] = [
-            //             'pendonor_id' => $pendonor_id,
-            //             'nilaidonasi' => $nilaiD[$index]
-            //         ];
-            //     } else {
-            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-            //     }
-            // }
-            // foreach ($newDonasi as $donation) {
-            //     $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-            // }
-
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
 
@@ -217,17 +196,17 @@ class ProgramController extends Controller
             }
 
             // create program outcome
-
-            foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
-                if (!is_null($deskripsi) && $deskripsi !== '') {
-                    Program_Outcome::create([
-                        'program_id' => $program->id, // Use the dynamically created program ID
-                        'deskripsi' => $deskripsi,
-                        'indikator' => $request->input("indikator.$index"),
-                        'target' => $request->input("target.$index"),
-                    ]);
-                }
-            }
+            $this->storeOutcome($request, $program);
+            // foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+            //     if (!is_null($deskripsi) && $deskripsi !== '') {
+            //         Program_Outcome::create([
+            //             'program_id' => $program->id, // Use the dynamically created program ID
+            //             'deskripsi' => $deskripsi,
+            //             'indikator' => $request->input("indikator.$index"),
+            //             'target' => $request->input("target.$index"),
+            //         ]);
+            //     }
+            // }
             //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
@@ -264,6 +243,7 @@ class ProgramController extends Controller
                 'success' => false,
                 'message' => 'An error occurred.',
                 'error'   => $e->getMessage(),
+                'request_data' => $request->all(),
             ], 500);
         }
     }
@@ -382,7 +362,7 @@ class ProgramController extends Controller
             $this->updateProgramDonatur($program, $request);
             $this->updateProgramOutcomes($program, $request);
             $this->updateJadwalReport($program, $request);
-            
+
             DB::commit();
 
             return response()->json([
@@ -681,6 +661,181 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
+    public function storeDonor($program, Request $request){
+        //save pendonor & donation value
+        $newPendonor = $request->input('pendonor_id', []);
+        $nilaiD = $request->input('nilaidonasi', []);
+        if (count($newPendonor) !== count($nilaiD)) {
+            throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+        }
+        $newDonasi = [];
+        foreach ($newPendonor as $index => $pendonor_id) {
+            if (isset($nilaiD[$index])) {
+                $newDonasi[] = [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $nilaiD[$index]
+                ];
+            } else {
+                throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            }
+        }
+        foreach ($newDonasi as $donation) {
+            $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+        }
+    }
+
+    // public function storeOutcome(Request $request, Program $program){
+
+    //     $validated = $request->validate([
+    //         'target_goals'  => 'nullable|string|max:1000',
+    //         'deskripsi'     => 'nullable|array',
+    //         'indikator'     => 'nullable|array',
+    //         'target'        => 'nullable|array',
+    //         'deskripsi.*'   => 'nullable|string|max:1000',
+    //         'indikator.*'   => 'nullable|string|max:1000',
+    //         'target.*'      => 'nullable|string|max:1000',
+    //     ]);
+    //     DB::transaction(function () use ($program, $validated) {
+    //         $outcomes_data = [];
+    //         foreach ($validated['deskripsi'] as $index => $deskripsi) {
+    //             $outcomes_data[] = [
+    //                 'program_id' => $program->id,
+    //                 'deskripsi' => $deskripsi ?? '',
+    //                 'indikator' => $validated['indikator'][$index] ?? '',
+    //                 'target' => $validated['target'][$index] ?? '',
+    //             ];
+    //         }
+
+    //         if (!empty($outcomes_data)) {
+    //             Program_Outcome::insert($outcomes_data);
+    //         }
+    //     });
+
+    //     // $deskripsis   = $request->input('deskripsi', []);
+    //     // $indikators   = $request->input('indikator', []);
+    //     // $targets      = $request->input('target', []);
+    //     // $programID    = $program->id;
+
+    //     // $outcomes_data = [];
+    //     // foreach ($deskripsis as $index => $deskripsi) {
+    //     //     // if(isset($indikators[$index]) && isset($targets[$index])){
+    //     //     if(!is_null($deskripsi) && $deskripsi !== '' || isset($indikators[$index]) && isset($targets[$index])){
+    //     //         $outcomes_data[] = [
+    //     //             'program_id' => $programID,
+    //     //             'deskripsi' => $deskripsi,
+    //     //             'indikator' => $indikators[$index] ?? '',
+    //     //             'target' => $targets[$index] ?? '',
+    //     //         ];
+    //     //     }
+    //     //     elseif(isset($indikators[$index]) && !isset($targets[$index])){
+    //     //         throw new Exception("Missing value for $indikators at index $index");
+    //     //     }
+    //     // }
+    //     // foreach ($outcomes_data as $data) {
+    //     //     Program_Outcome::create([
+    //     //         'program_id'    => $data['program_id'],
+    //     //         'deskripsi'     => $data['deskripsi'],
+    //     //         'indikator'     => $data['indikator'],
+    //     //         'target'        => $data['target'],
+    //     //     ]);
+    //     // }
+    // }
+    // public function storeOutcome(Request $request, Program $program)
+    // {
+    //     // Retrieve the inputs, ensuring default to an empty array if not present
+    //     $deskripsis = $request->input('deskripsi', []);
+    //     $indikators = $request->input('indikator', []);
+    //     $targets = $request->input('target', []);
+    //     $programID = $program->id;
+
+    //     $outcomes_data = [];
+
+    //     foreach ($deskripsis as $index => $deskripsi) {
+    //         // Skip if all fields for this outcome are empty
+    //         if (empty($deskripsi) && empty($indikators[$index]) && empty($targets[$index])) {
+    //             continue;
+    //         }
+
+    //         $outcomes_data[] = [
+    //             'program_id' => $programID,
+    //             'deskripsi'  => $deskripsi ?? null,
+    //             'indikator'  => $indikators[$index] ?? null,
+    //             'target'     => $targets[$index] ?? null,
+    //         ];
+    //     }
+
+    //     // Batch insert the outcomes if there's any valid data
+    //     if (!empty($outcomes_data)) {
+    //         foreach ($outcomes_data as $data) {
+    //             Program_Outcome::create($data);
+    //         }
+    //     }
+
+    //     return response()->json(['success' => true, 'message' => 'Outcomes stored successfully.']);
+    // }
+
+
+
+    public function storeOutcome(Request $request, Program $program)
+    {
+        // Log the request data for debugging
+        \Log::info('StoreOutcome request data:', $request->all());
+
+        $deskripsis = $request->input('deskripsi', []);
+        $indikators = $request->input('indikator', []);
+        $targets = $request->input('target', []);
+        $programID = $program->id;
+
+        $outcomes_data = [];
+
+        foreach ($deskripsis as $index => $deskripsi) {
+            // Check if all fields for this outcome are empty
+            if (empty($deskripsi) && empty($indikators[$index]) && empty($targets[$index])) {
+                continue;  // Skip if this outcome is empty
+            }
+
+            // Log each outcome entry for debugging
+            \Log::info("Processing Outcome Entry #$index", [
+                'deskripsi' => $deskripsi,
+                'indikator' => $indikators[$index] ?? null,
+                'target'    => $targets[$index] ?? null,
+            ]);
+
+            // Add outcome data to array
+            $outcomes_data[] = [
+                'program_id' => $programID,
+                'deskripsi'  => $deskripsi ?? null,
+                'indikator'  => $indikators[$index] ?? null,
+                'target'     => $targets[$index] ?? null,
+            ];
+        }
+
+        // Log final outcomes data before insertion
+        \Log::info('Final Outcomes Data:', $outcomes_data);
+
+        if (!empty($outcomes_data)) {
+            foreach ($outcomes_data as $data) {
+                try {
+                    Program_Outcome::create($data);
+                } catch (\Exception $e) {
+                    \Log::error('Error storing Program Outcome:', [
+                        'data' => $data,
+                        'error' => $e->getMessage(),
+                    ]);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'An error occurred while saving outcomes.',
+                        'error'   => $e->getMessage(),
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Outcomes stored successfully.']);
+    }
+
+
 
     // return Outcome data in details program outcome
     public function apiOutcome(Program_Outcome $outcome)

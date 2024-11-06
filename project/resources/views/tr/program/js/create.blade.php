@@ -274,24 +274,100 @@
         });
 
         // CREATE PROGRAM AND SAVE SOME DETAILS
+        // $('#createProgram').on('submit', function(e) {
+        //     e.preventDefault();
+        //     $(this).find('button[type="submit"]').attr('disabled', 'disabled');
+        //     var formData = new FormData(this);
+
+        //     var fieldsToRemove = [];
+        //     $('input.currency').each(function() {
+        //         fieldsToRemove.push($(this).attr('name'));
+        //     });
+        //     // Remove original masked `nilaidonasi` values from FormData
+        //     fieldsToRemove.forEach(function(field) {
+        //         formData.delete(field);
+        //     });
+        //     // Unmask all AutoNumeric fields and append unmasked values
+        //     $('input.currency').each(function() {
+        //         var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+        //         formData.append($(this).attr('name'), unmaskedValue);
+        //     });
+
+        //     $.ajax({
+        //         url: "{{ route('program.store') }}",
+        //         method: 'POST',
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         beforeSend: function() {
+        //             Toast.fire({
+        //                 icon: "info",
+        //                 title: "Processing...",
+        //                 timer: 3000,
+        //                 timerProgressBar: true,
+        //             });
+        //         },
+        //         success: function(response) {
+        //             setTimeout(() => {
+        //                 if (response.success === true) {
+        //                     Swal.fire({
+        //                         title: "{{ __('global.success') }}",
+        //                         text: response.message,
+        //                         icon: "success",
+        //                         timer: 500,
+        //                         timerProgressBar: true,
+        //                     });
+        //                     $(this).trigger('reset');
+        //                     $('#createProgram')[0].reset();
+        //                     $('#createProgram').trigger('reset');
+        //                     $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+        //                     // $(".btn-tool").trigger('click');
+        //                     $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
+        //                     setTimeout(function() {
+        //                         window.location.href ="{{ route('program.index') }}"; //redirect into index program
+        //                     }, 500);
+        //                 }
+        //             }, 500);
+        //         },
+        //         error: function(xhr, textStatus, errorThrown) {
+        //             $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
+        //             const errorMessage = getErrorMessage(xhr);
+        //             const response = JSON.parse(xhr.responseText);
+        //             if (response.errors) {
+        //                 addInvalidClassToFields(response.errors);
+        //             }
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Error!',
+        //                 html: errorMessage,
+        //                 confirmButtonText: 'Okay'
+        //             });
+        //         },
+        //         complete: function() {
+        //             setTimeout(() => {
+        //                 $(this).find('button[type="submit"]').removeAttr(
+        //                     'disabled');
+        //             }, 500);
+        //         }
+        //     });
+
+        // });
+
         $('#createProgram').on('submit', function(e) {
             e.preventDefault();
-            $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-            var formData = new FormData(this);
+            $('#outcomeTemplate').find('textarea, input').attr('disabled', true);
+            const $form = $(this);
+            $form.find('button[type="submit"]').attr('disabled', true);
+            let formData = new FormData(this);
 
-            var fieldsToRemove = [];
+            // Remove original masked values from FormData
             $('input.currency').each(function() {
-                fieldsToRemove.push($(this).attr('name'));
-            });
-            // Remove original masked `nilaidonasi` values from FormData
-            fieldsToRemove.forEach(function(field) {
-                formData.delete(field);
-            });
-            // Unmask all AutoNumeric fields and append unmasked values
-            $('input.currency').each(function() {
-                var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
+                formData.delete($(this).attr('name'));
+                const unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
                 formData.append($(this).attr('name'), unmaskedValue);
             });
+            $('#outcomeTemplate').find('textarea, input').removeAttr('disabled');
+            console.log(formData);
 
             $.ajax({
                 url: "{{ route('program.store') }}",
@@ -308,33 +384,23 @@
                     });
                 },
                 success: function(response) {
-                    setTimeout(() => {
-                        if (response.success === true) {
-                            Swal.fire({
-                                title: "{{ __('global.success') }}",
-                                text: response.message,
-                                icon: "success",
-                                timer: 500,
-                                timerProgressBar: true,
-                            });
-                            $(this).trigger('reset');
-                            $('#createProgram')[0].reset();
-                            $('#createProgram').trigger('reset');
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val(
-                                '').trigger('change');
-                            $(".btn-tool").trigger('click');
-                            $('#createProgram').find('button[type="submit"]')
-                                .removeAttr('disabled');
-                            setTimeout(function() {
-                                window.location.href =
-                                    "{{ route('program.index') }}"; //redirect into index program
-                            }, 1000);
-                        }
-                    }, 500);
+                    if (response.success) {
+                        Swal.fire({
+                            title: "{{ __('global.success') }}",
+                            text: response.message,
+                            icon: "success",
+                            timer: 500,
+                            timerProgressBar: true,
+                        }).then(() => {
+                            $form[0].reset();
+                            $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
+                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                            window.location.href = "{{ route('program.index') }}";
+                        });
+                    }
                 },
-                error: function(xhr, textStatus, errorThrown) {
-                    $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
-                    const errorMessage = getErrorMessage(xhr);
+                error: function(xhr) {
+                    $form.find('button[type="submit"]').removeAttr('disabled');
                     const response = JSON.parse(xhr.responseText);
                     if (response.errors) {
                         addInvalidClassToFields(response.errors);
@@ -342,56 +408,18 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: errorMessage,
+                        html: getErrorMessage(xhr),
                         confirmButtonText: 'Okay'
                     });
                 },
-                // error: function(xhr, status, error) {
-                //     $('#createProgram').find('button[type="submit"]').removeAttr(
-                //         'disabled');
-                //     let errorMessage = `Error: ${xhr.status} - ${xhr.statusText}`;
-                //     try {
-                //         const response = xhr.responseJSON;
-                //         if (response.errors) {
-                //             errorMessage +=
-                //                 '<br><br><ul style="text-align:left!important">';
-                //             $.each(response.errors, function(field, messages) {
-                //                 messages.forEach(message => {
-                //                     errorMessage +=
-                //                         `<li>${field}: ${message}</li>`;
-                //                     $(`#${field}-error`).removeClass(
-                //                         'is-valid').addClass(
-                //                         'is-invalid');
-                //                     $(`#${field}-error`).text(message);
-                //                     $(`#${field}`).removeClass('invalid')
-                //                         .addClass('is-invalid');
-                //                 });
-                //                 Swal.fire({
-                //                     icon: 'error',
-                //                     title: 'Error!',
-                //                     html: errorMessage,
-                //                 });
-                //             });
-                //             errorMessage += '</ul>';
-                //         }
-                //     } catch (e) {
-                //         console.error('Error parsing response:', e);
-                //     }
-                //     Swal.fire({
-                //         icon: 'error',
-                //         title: 'Error!',
-                //         html: errorMessage,
-                //     });
-                // },
                 complete: function() {
                     setTimeout(() => {
-                        $(this).find('button[type="submit"]').removeAttr(
-                            'disabled');
+                        $form.find('button[type="submit"]').removeAttr('disabled');
                     }, 500);
                 }
             });
-
         });
+
 
     });
 </script>
