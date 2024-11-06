@@ -176,6 +176,13 @@ class ProgramController extends Controller
 
             // create program outcome
             $this->storeOutcome($request, $program);
+            $this->storeGoal($request, $program);
+            $this->storeObjective($request, $program);
+
+
+
+
+
             //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
@@ -229,7 +236,7 @@ class ProgramController extends Controller
 
         // Eager load related models
         //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -294,12 +301,12 @@ class ProgramController extends Controller
             $newFileNames = array_map(function ($file) {
                 return $file->getClientOriginalName();
             }, $newFiles);
-            \Log::info($newFileNames);
+            // \Log::info($newFileNames);
 
             if (is_countable($program->media) && count($program->media) > 0) {
                 foreach ($program->media as $media) {
                     if (in_array($media->name, $newFileNames)) {
-                        \Log::info('Deleting Media: ' . $media->name);
+                        // \Log::info('Deleting Media: ' . $media->name);
                         $media->delete();
                     }
                 }
@@ -331,6 +338,8 @@ class ProgramController extends Controller
             $this->updateProgramDonatur($program, $request);
             $this->updateProgramOutcomes($program, $request);
             $this->updateJadwalReport($program, $request);
+            $this->storeObjective($request, $program);
+            $this->storeGoal($request, $program);
 
             DB::commit();
 
@@ -566,6 +575,44 @@ class ProgramController extends Controller
         }
     }
 
+    // protected function updateProgramOutcomes($program, Request $request)
+    // {
+    //     $existingOutcomes = $program->outcome()->get();
+    //     $existingOutcomeIds = $existingOutcomes->pluck('id')->toArray();
+    //     $newOutcomeIds = [];
+
+    //     foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
+    //         $outcomeId = $request->input("outcome_id.$index"); // Use indexed input for existing outcomes
+
+    //         if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
+    //             // Update existing outcome
+    //             $outcome = Program_Outcome::find($outcomeId);
+    //             $outcome->update([
+    //                 'deskripsi' => $deskripsi,
+    //                 'indikator' => $request->input("indikator.$index"),
+    //                 'target' => $request->input("target.$index"),
+    //             ]);
+    //             $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
+    //         } elseif (!empty($deskripsi)) {
+    //             // Create new outcome if no ID is provided
+    //             $outcome = Program_Outcome::create([
+    //                 'program_id' => $program->id,
+    //                 'deskripsi' => $deskripsi,
+    //                 'indikator' => $request->input("indikator.$index"),
+    //                 'target' => $request->input("target.$index"),
+    //             ]);
+    //             $newOutcomeIds[] = $outcome->id; // Store new outcome ID
+    //         }
+    //     }
+
+    //     // Remove outcomes that are not in the new input
+    //     foreach ($existingOutcomes as $existingOutcome) {
+    //         if (!in_array($existingOutcome->id, $newOutcomeIds)) {
+    //             $existingOutcome->delete();
+    //         }
+    //     }
+    // }
+
     protected function updateProgramOutcomes($program, Request $request)
     {
         $existingOutcomes = $program->outcome()->get();
@@ -574,25 +621,30 @@ class ProgramController extends Controller
 
         foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
             $outcomeId = $request->input("outcome_id.$index"); // Use indexed input for existing outcomes
+            $indikator = $request->input("indikator.$index");
+            $target = $request->input("target.$index");
 
-            if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
-                // Update existing outcome
-                $outcome = Program_Outcome::find($outcomeId);
-                $outcome->update([
-                    'deskripsi' => $deskripsi,
-                    'indikator' => $request->input("indikator.$index"),
-                    'target' => $request->input("target.$index"),
-                ]);
-                $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
-            } elseif (!empty($deskripsi)) {
-                // Create new outcome if no ID is provided
-                $outcome = Program_Outcome::create([
-                    'program_id' => $program->id,
-                    'deskripsi' => $deskripsi,
-                    'indikator' => $request->input("indikator.$index"),
-                    'target' => $request->input("target.$index"),
-                ]);
-                $newOutcomeIds[] = $outcome->id; // Store new outcome ID
+            // Check if any field is provided, even if deskripsi is empty
+            if (!empty($deskripsi) || !empty($indikator) || !empty($target)) {
+                if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
+                    // Update existing outcome
+                    $outcome = Program_Outcome::find($outcomeId);
+                    $outcome->update([
+                        'deskripsi' => $deskripsi,
+                        'indikator' => $indikator,
+                        'target' => $target,
+                    ]);
+                    $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
+                } else {
+                    // Create new outcome if no ID is provided or if the ID does not exist
+                    $outcome = Program_Outcome::create([
+                        'program_id' => $program->id,
+                        'deskripsi' => $deskripsi,
+                        'indikator' => $indikator,
+                        'target' => $target,
+                    ]);
+                    $newOutcomeIds[] = $outcome->id; // Store new outcome ID
+                }
             }
         }
 
@@ -603,6 +655,7 @@ class ProgramController extends Controller
             }
         }
     }
+
 
     public function updateProgramDonatur($program, Request $request)
     {
@@ -631,7 +684,8 @@ class ProgramController extends Controller
         }
     }
 
-    public function storeDonor($program, Request $request){
+    public function storeDonor($program, Request $request)
+    {
         //save pendonor & donation value
         $newPendonor = $request->input('pendonor_id', []);
         $nilaiD = $request->input('nilaidonasi', []);
@@ -702,7 +756,8 @@ class ProgramController extends Controller
     }
 
     // method untuk menyimpan jadwalreport pada create program dan memastikan bahwa jika ada data null maka input diskip
-    function storeReportSchedule(StoreProgramRequest $request, Program $program) {
+    function storeReportSchedule(StoreProgramRequest $request, Program $program)
+    {
         $tanggalArray = $request->input('tanggallaporan', []);
         $keteranganArray = $request->input('keteranganlaporan', []);
 
@@ -729,7 +784,82 @@ class ProgramController extends Controller
         }
     }
 
+    // method to save objective
+    public function storeObjective(Request $request, Program $program)
+    {
+        $validated = $request->validate([
+            // 'program_id'         => 'required|exists:trprogram,id',
+            'objektif_deskripsi' => 'nullable|string|max:1000',
+            'objektif_indikator' => 'nullable|string|max:1000',
+            'objektif_target'    => 'nullable|string|max:1000',
+        ]);
 
+        if (!empty($validated['objektif_deskripsi']) || !empty($validated['objektif_indikator']) || !empty($validated['objektif_target'])) {
+            // $program->objektif()->create([
+            //     'program_id'    => $validated['program_id'],
+            //     'deskripsi'     => $validated['objektif_deskripsi'],
+            //     'indikator'     => $validated['objektif_indikator'],
+            //     'target'        => $validated['objektif_target'],
+            // ]);
+
+            $program->objektif()->updateOrCreate(
+                ['program_id' => $validated['program_id'] ?? $program->id], // condition to find existing record
+                [
+                    'deskripsi'     => $validated['objektif_deskripsi'],
+                    'indikator'     => $validated['objektif_indikator'],
+                    'target'        => $validated['objektif_target'],
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Objective created successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'At least one objective field must be provided!'
+            ], 201);
+        }
+    }
+    public function storeGoal(Request $request, Program $program)
+    {
+        $validated = $request->validate([
+            // 'program_id'      => 'required|exists:trprogram,id',
+            'goals_deskripsi' => 'nullable|string|max:1000',
+            'goals_indikator' => 'nullable|string|max:1000',
+            'goals_target'    => 'nullable|string|max:1000',
+        ]);
+
+        if (!empty($validated['goals_deskripsi']) || !empty($validated['goals_indikator']) || !empty($validated['goals_target'])) {
+            // $program->goal()->create([
+            //     'program_id' => $validated['program_id'],
+            //     'deskripsi'  => $validated['goals_deskripsi'],
+            //     'indikator'  => $validated['goals_indikator'],
+            //     'target'     => $validated['goals_target'],
+            // ]);
+
+            $program->goal()->updateOrCreate(
+                ['program_id' => $validated['program_id'] ?? $program->id], // condition to find existing record
+                [
+                    'deskripsi'  => $validated['goals_deskripsi'],
+                    'indikator'  => $validated['goals_indikator'],
+                    'target'     => $validated['goals_target'],
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message'   =>  __('global.create_success'),
+                'status'    => Response::HTTP_CREATED,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'At least one goal field must be provided!'
+            ], 201);
+        }
+    }
 
     // return Outcome data in details program outcome
     public function apiOutcome(Program_Outcome $outcome)

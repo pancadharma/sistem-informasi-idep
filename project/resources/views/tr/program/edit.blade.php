@@ -17,7 +17,8 @@
     <form method="POST" id="editProgram" action="{{ route('program.update', [$program->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <input type="hidden" name="id">
+        <input type="hidden" name="id" value="{{ $program->id }}">
+        <input type="hidden" name="program_id" value="{{ $program->id }}">
         {{-- Informasi Dasar --}}
         <div class="row">
             <div class="col-12">

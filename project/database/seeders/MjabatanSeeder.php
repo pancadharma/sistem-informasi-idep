@@ -1,9 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MjabatanSeeder extends Seeder
@@ -13,11 +12,18 @@ class MjabatanSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('mjabatan')->insert([
+        $positions = [
             ['nama' => 'Manager', 'aktif' => 1],
             ['nama' => 'Supervisor', 'aktif' => 1],
             ['nama' => 'Staff', 'aktif' => 1],
             ['nama' => 'Intern', 'aktif' => 0],
-        ]);
+        ];
+
+        foreach ($positions as $position) {
+            DB::table('mjabatan')->updateOrInsert(
+                ['nama' => $position['nama']], // condition to find existing record
+                $position // data to update or insert
+            );
+        }
     }
 }
