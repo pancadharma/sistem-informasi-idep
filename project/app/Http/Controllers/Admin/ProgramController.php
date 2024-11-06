@@ -152,29 +152,8 @@ class ProgramController extends Controller
 
             // save program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
-
             // save report schedule
-            // Ambil input array
-            $tanggalArray = $request->input('tanggallaporan', []);
-            $keteranganArray = $request->input('keteranganlaporan', []);
-
-            $tanggalketerangan = [];
-            foreach ($tanggalArray as $index => $tanggal) {
-                if (isset($keteranganArray[$index])) {
-                    $tanggalketerangan[] = [
-                        'tanggal'       => $tanggal,
-                        'keterangan'    => $keteranganArray[$index]
-                    ];
-                } else {
-                    throw new Exception("Missing value for $keteranganArray at index $index");
-                }
-            }
-            foreach ($tanggalketerangan as $newtglket) {
-                $program->jadwalreport()->create([
-                    'tanggal' => $newtglket['tanggal'],
-                    'keterangan' => $newtglket['keterangan']
-                ]);
-            }
+            $this->storeReportSchedule($request, $program);
 
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
@@ -197,16 +176,6 @@ class ProgramController extends Controller
 
             // create program outcome
             $this->storeOutcome($request, $program);
-            // foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
-            //     if (!is_null($deskripsi) && $deskripsi !== '') {
-            //         Program_Outcome::create([
-            //             'program_id' => $program->id, // Use the dynamically created program ID
-            //             'deskripsi' => $deskripsi,
-            //             'indikator' => $request->input("indikator.$index"),
-            //             'target' => $request->input("target.$index"),
-            //         ]);
-            //     }
-            // }
             //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
@@ -392,9 +361,9 @@ class ProgramController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
-                'success' => false,
-                'message' => 'An error occurred.',
-                'error'   => $e->getMessage(),
+                'success'   => false,
+                'error'     => 'An error occurred.',
+                'message'   => $e->getMessage(),
             ], 500);
         }
     }
@@ -685,103 +654,9 @@ class ProgramController extends Controller
         }
     }
 
-    // public function storeOutcome(Request $request, Program $program){
-
-    //     $validated = $request->validate([
-    //         'target_goals'  => 'nullable|string|max:1000',
-    //         'deskripsi'     => 'nullable|array',
-    //         'indikator'     => 'nullable|array',
-    //         'target'        => 'nullable|array',
-    //         'deskripsi.*'   => 'nullable|string|max:1000',
-    //         'indikator.*'   => 'nullable|string|max:1000',
-    //         'target.*'      => 'nullable|string|max:1000',
-    //     ]);
-    //     DB::transaction(function () use ($program, $validated) {
-    //         $outcomes_data = [];
-    //         foreach ($validated['deskripsi'] as $index => $deskripsi) {
-    //             $outcomes_data[] = [
-    //                 'program_id' => $program->id,
-    //                 'deskripsi' => $deskripsi ?? '',
-    //                 'indikator' => $validated['indikator'][$index] ?? '',
-    //                 'target' => $validated['target'][$index] ?? '',
-    //             ];
-    //         }
-
-    //         if (!empty($outcomes_data)) {
-    //             Program_Outcome::insert($outcomes_data);
-    //         }
-    //     });
-
-    //     // $deskripsis   = $request->input('deskripsi', []);
-    //     // $indikators   = $request->input('indikator', []);
-    //     // $targets      = $request->input('target', []);
-    //     // $programID    = $program->id;
-
-    //     // $outcomes_data = [];
-    //     // foreach ($deskripsis as $index => $deskripsi) {
-    //     //     // if(isset($indikators[$index]) && isset($targets[$index])){
-    //     //     if(!is_null($deskripsi) && $deskripsi !== '' || isset($indikators[$index]) && isset($targets[$index])){
-    //     //         $outcomes_data[] = [
-    //     //             'program_id' => $programID,
-    //     //             'deskripsi' => $deskripsi,
-    //     //             'indikator' => $indikators[$index] ?? '',
-    //     //             'target' => $targets[$index] ?? '',
-    //     //         ];
-    //     //     }
-    //     //     elseif(isset($indikators[$index]) && !isset($targets[$index])){
-    //     //         throw new Exception("Missing value for $indikators at index $index");
-    //     //     }
-    //     // }
-    //     // foreach ($outcomes_data as $data) {
-    //     //     Program_Outcome::create([
-    //     //         'program_id'    => $data['program_id'],
-    //     //         'deskripsi'     => $data['deskripsi'],
-    //     //         'indikator'     => $data['indikator'],
-    //     //         'target'        => $data['target'],
-    //     //     ]);
-    //     // }
-    // }
-    // public function storeOutcome(Request $request, Program $program)
-    // {
-    //     // Retrieve the inputs, ensuring default to an empty array if not present
-    //     $deskripsis = $request->input('deskripsi', []);
-    //     $indikators = $request->input('indikator', []);
-    //     $targets = $request->input('target', []);
-    //     $programID = $program->id;
-
-    //     $outcomes_data = [];
-
-    //     foreach ($deskripsis as $index => $deskripsi) {
-    //         // Skip if all fields for this outcome are empty
-    //         if (empty($deskripsi) && empty($indikators[$index]) && empty($targets[$index])) {
-    //             continue;
-    //         }
-
-    //         $outcomes_data[] = [
-    //             'program_id' => $programID,
-    //             'deskripsi'  => $deskripsi ?? null,
-    //             'indikator'  => $indikators[$index] ?? null,
-    //             'target'     => $targets[$index] ?? null,
-    //         ];
-    //     }
-
-    //     // Batch insert the outcomes if there's any valid data
-    //     if (!empty($outcomes_data)) {
-    //         foreach ($outcomes_data as $data) {
-    //             Program_Outcome::create($data);
-    //         }
-    //     }
-
-    //     return response()->json(['success' => true, 'message' => 'Outcomes stored successfully.']);
-    // }
-
-
-
+    // method untuk menambah outcome pada create program
     public function storeOutcome(Request $request, Program $program)
     {
-        // Log the request data for debugging
-        \Log::info('StoreOutcome request data:', $request->all());
-
         $deskripsis = $request->input('deskripsi', []);
         $indikators = $request->input('indikator', []);
         $targets = $request->input('target', []);
@@ -796,13 +671,11 @@ class ProgramController extends Controller
             }
 
             // Log each outcome entry for debugging
-            \Log::info("Processing Outcome Entry #$index", [
-                'deskripsi' => $deskripsi,
-                'indikator' => $indikators[$index] ?? null,
-                'target'    => $targets[$index] ?? null,
-            ]);
-
-            // Add outcome data to array
+            // \Log::info("Processing Outcome Entry #$index", [
+            //     'deskripsi' => $deskripsi,
+            //     'indikator' => $indikators[$index] ?? null,
+            //     'target'    => $targets[$index] ?? null,
+            // ]);
             $outcomes_data[] = [
                 'program_id' => $programID,
                 'deskripsi'  => $deskripsi ?? null,
@@ -811,18 +684,11 @@ class ProgramController extends Controller
             ];
         }
 
-        // Log final outcomes data before insertion
-        \Log::info('Final Outcomes Data:', $outcomes_data);
-
         if (!empty($outcomes_data)) {
             foreach ($outcomes_data as $data) {
                 try {
                     Program_Outcome::create($data);
                 } catch (\Exception $e) {
-                    \Log::error('Error storing Program Outcome:', [
-                        'data' => $data,
-                        'error' => $e->getMessage(),
-                    ]);
                     return response()->json([
                         'success' => false,
                         'message' => 'An error occurred while saving outcomes.',
@@ -833,6 +699,34 @@ class ProgramController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Outcomes stored successfully.']);
+    }
+
+    // method untuk menyimpan jadwalreport pada create program dan memastikan bahwa jika ada data null maka input diskip
+    function storeReportSchedule(StoreProgramRequest $request, Program $program) {
+        $tanggalArray = $request->input('tanggallaporan', []);
+        $keteranganArray = $request->input('keteranganlaporan', []);
+
+        $tanggalketerangan = [];
+        // Only process if both arrays have values
+        if (!empty($tanggalArray) && !empty(array_filter($tanggalArray))) {
+            foreach ($tanggalArray as $index => $tanggal) {
+                // Check if both tanggal and corresponding keterangan are provided
+                if ($tanggal && isset($keteranganArray[$index])) {
+                    $tanggalketerangan[] = [
+                        'tanggal' => $tanggal,
+                        'keterangan' => $keteranganArray[$index]
+                    ];
+                }
+            }
+
+            // Store each valid entry in jadwalreport
+            foreach ($tanggalketerangan as $newtglket) {
+                $program->jadwalreport()->create([
+                    'tanggal' => $newtglket['tanggal'],
+                    'keterangan' => $newtglket['keterangan']
+                ]);
+            }
+        }
     }
 
 
