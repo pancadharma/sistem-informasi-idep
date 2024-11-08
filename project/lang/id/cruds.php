@@ -451,6 +451,7 @@ return [
             'list_program'  => 'Daftar Outcome Program',
             'out_program'   => 'Program Outcome',
             'of_outcome'    => 'dari Outcome',
+            'no_outcome'    => 'Program ini tidak memiliki Outcome, :icon edit untuk menambah Outcome',
         ],
         'output'            => [
             'label'         => 'Output',
