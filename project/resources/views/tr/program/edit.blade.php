@@ -400,6 +400,6 @@
 @include('tr.program.js.detail-edit.lokasi')
 @include('tr.program.js.detail-edit.staff')
 
-
+@include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
 @endpush

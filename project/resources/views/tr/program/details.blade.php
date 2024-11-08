@@ -20,13 +20,17 @@
                     <li class="nav-item">
                         <button type="button" class="nav-link btn text-left btn-block btn-list-outcome waves-effect waves-teal" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
                             {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
-                            <!-- <i class="far fa-envelope float-right align-middle mt-2"></i> -->
                             <i class="bi bi-box-arrow-in-right text-danger float-right align-middle mt-2" title="{{ __('global.details') }} {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}"></i>
                         </button>
                     </li>
                     @empty
                     <div class="nav flex-column nav-tabs h-100">
-                        <button type="button" class="btn btn-block"></i>No Outcome</button>
+                        <span class="card-body">
+                            {!! __('cruds.program.outcome.no_outcome', ['icon' => '<i class="bi bi-pencil-square"></i>']) !!}
+                        </span>
+                        <button type="button" class="btn text-right btn-sm waves-effect waves-teal" onclick="navigateToEditPage('{{ route('program.edit', $program->id) }}', 'outcome')">
+                            <i class="bi bi-pencil-square float-right align-middle p-2"></i>
+                        </button>
                     </div>
                     @endforelse
                 </ul>
@@ -35,10 +39,6 @@
         <div class="card card-info">
             <div class="card-header">
                 <h3 class="card-title">{{ __('cruds.program.title_singular') }}</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                            class="fas fa-minus"></i></button>
-                </div>
             </div>
             {{-- show objective and goals --}}
             <div class="accordion" id="programObjectiveGoals">
@@ -608,5 +608,9 @@
         });
     });
 </script>
-
+<script>
+    function navigateToEditPage(url, tab) {
+        window.location.href = `${url}?tab=${tab}`;
+    }
+</script>
 @endpush

@@ -152,50 +152,8 @@ class ProgramController extends Controller
 
             // save program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
-
             // save report schedule
-            // Ambil input array
-            $tanggalArray = $request->input('tanggallaporan', []);
-            $keteranganArray = $request->input('keteranganlaporan', []);
-
-            $tanggalketerangan = [];
-            foreach ($tanggalArray as $index => $tanggal) {
-                if (isset($keteranganArray[$index])) {
-                    $tanggalketerangan[] = [
-                        'tanggal'       => $tanggal,
-                        'keterangan'    => $keteranganArray[$index]
-                    ];
-                } else {
-                    throw new Exception("Missing value for $keteranganArray at index $index");
-                }
-            }
-            foreach ($tanggalketerangan as $newtglket) {
-                $program->jadwalreport()->create([
-                    'tanggal' => $newtglket['tanggal'],
-                    'keterangan' => $newtglket['keterangan']
-                ]);
-            }
-
-            //save pendonor & donation value
-            // $newPendonor = $request->input('pendonor_id', []);
-            // $nilaiD = $request->input('nilaidonasi', []);
-            // if (count($newPendonor) !== count($nilaiD)) {
-            //     throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            // }
-            // $newDonasi = [];
-            // foreach ($newPendonor as $index => $pendonor_id) {
-            //     if (isset($nilaiD[$index])) {
-            //         $newDonasi[] = [
-            //             'pendonor_id' => $pendonor_id,
-            //             'nilaidonasi' => $nilaiD[$index]
-            //         ];
-            //     } else {
-            //         throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
-            //     }
-            // }
-            // foreach ($newDonasi as $donation) {
-            //     $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-            // }
+            $this->storeReportSchedule($request, $program);
 
             $newPendonor = $request->input('pendonor_id', []);
             $nilaiD = $request->input('nilaidonasi', []);
@@ -217,17 +175,7 @@ class ProgramController extends Controller
             }
 
             // create program outcome
-
-            foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
-                if (!is_null($deskripsi) && $deskripsi !== '') {
-                    Program_Outcome::create([
-                        'program_id' => $program->id, // Use the dynamically created program ID
-                        'deskripsi' => $deskripsi,
-                        'indikator' => $request->input("indikator.$index"),
-                        'target' => $request->input("target.$index"),
-                    ]);
-                }
-            }
+            $this->storeOutcome($request, $program);
             //COMMIT THE QUERY IF NO ERROR
             DB::commit();
             return response()->json([
@@ -264,6 +212,7 @@ class ProgramController extends Controller
                 'success' => false,
                 'message' => 'An error occurred.',
                 'error'   => $e->getMessage(),
+                'request_data' => $request->all(),
             ], 500);
         }
     }
@@ -382,7 +331,7 @@ class ProgramController extends Controller
             $this->updateProgramDonatur($program, $request);
             $this->updateProgramOutcomes($program, $request);
             $this->updateJadwalReport($program, $request);
-            
+
             DB::commit();
 
             return response()->json([
@@ -412,9 +361,9 @@ class ProgramController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
-                'success' => false,
-                'message' => 'An error occurred.',
-                'error'   => $e->getMessage(),
+                'success'   => false,
+                'error'     => 'An error occurred.',
+                'message'   => $e->getMessage(),
             ], 500);
         }
     }
@@ -681,6 +630,106 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
+    public function storeDonor($program, Request $request){
+        //save pendonor & donation value
+        $newPendonor = $request->input('pendonor_id', []);
+        $nilaiD = $request->input('nilaidonasi', []);
+        if (count($newPendonor) !== count($nilaiD)) {
+            throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+        }
+        $newDonasi = [];
+        foreach ($newPendonor as $index => $pendonor_id) {
+            if (isset($nilaiD[$index])) {
+                $newDonasi[] = [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $nilaiD[$index]
+                ];
+            } else {
+                throw new Exception("Missing donation value for donor ID $pendonor_id at index $index");
+            }
+        }
+        foreach ($newDonasi as $donation) {
+            $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+        }
+    }
+
+    // method untuk menambah outcome pada create program
+    public function storeOutcome(Request $request, Program $program)
+    {
+        $deskripsis = $request->input('deskripsi', []);
+        $indikators = $request->input('indikator', []);
+        $targets = $request->input('target', []);
+        $programID = $program->id;
+
+        $outcomes_data = [];
+
+        foreach ($deskripsis as $index => $deskripsi) {
+            // Check if all fields for this outcome are empty
+            if (empty($deskripsi) && empty($indikators[$index]) && empty($targets[$index])) {
+                continue;  // Skip if this outcome is empty
+            }
+
+            // Log each outcome entry for debugging
+            // \Log::info("Processing Outcome Entry #$index", [
+            //     'deskripsi' => $deskripsi,
+            //     'indikator' => $indikators[$index] ?? null,
+            //     'target'    => $targets[$index] ?? null,
+            // ]);
+            $outcomes_data[] = [
+                'program_id' => $programID,
+                'deskripsi'  => $deskripsi ?? null,
+                'indikator'  => $indikators[$index] ?? null,
+                'target'     => $targets[$index] ?? null,
+            ];
+        }
+
+        if (!empty($outcomes_data)) {
+            foreach ($outcomes_data as $data) {
+                try {
+                    Program_Outcome::create($data);
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'An error occurred while saving outcomes.',
+                        'error'   => $e->getMessage(),
+                    ]);
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Outcomes stored successfully.']);
+    }
+
+    // method untuk menyimpan jadwalreport pada create program dan memastikan bahwa jika ada data null maka input diskip
+    function storeReportSchedule(StoreProgramRequest $request, Program $program) {
+        $tanggalArray = $request->input('tanggallaporan', []);
+        $keteranganArray = $request->input('keteranganlaporan', []);
+
+        $tanggalketerangan = [];
+        // Only process if both arrays have values
+        if (!empty($tanggalArray) && !empty(array_filter($tanggalArray))) {
+            foreach ($tanggalArray as $index => $tanggal) {
+                // Check if both tanggal and corresponding keterangan are provided
+                if ($tanggal && isset($keteranganArray[$index])) {
+                    $tanggalketerangan[] = [
+                        'tanggal' => $tanggal,
+                        'keterangan' => $keteranganArray[$index]
+                    ];
+                }
+            }
+
+            // Store each valid entry in jadwalreport
+            foreach ($tanggalketerangan as $newtglket) {
+                $program->jadwalreport()->create([
+                    'tanggal' => $newtglket['tanggal'],
+                    'keterangan' => $newtglket['keterangan']
+                ]);
+            }
+        }
+    }
+
+
 
     // return Outcome data in details program outcome
     public function apiOutcome(Program_Outcome $outcome)
