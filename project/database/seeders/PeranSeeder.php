@@ -1,9 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PeranSeeder extends Seeder
@@ -13,10 +12,17 @@ class PeranSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('mperan')->insert([
+        $roles = [
             ['nama' => 'Project Manager', 'aktif' => 1],
             ['nama' => 'Penanggung Jawab Project', 'aktif' => 1],
             ['nama' => 'Staff', 'aktif' => 0],
-        ]);
+        ];
+
+        foreach ($roles as $role) {
+            DB::table('mperan')->updateOrInsert(
+                ['nama' => $role['nama']], // condition to find existing record
+                $role // data to update or insert
+            );
+        }
     }
 }

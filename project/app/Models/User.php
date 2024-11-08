@@ -23,7 +23,7 @@ use Spatie\Image\Enums\Fit;
 
 class User extends Authenticatable implements HasMedia
 {
-    use Auditable, HasRoles, HasApiTokens, Notifiable, SoftDeletes, InteractsWithMedia;
+    use Auditable, HasRoles, HasApiTokens, Notifiable, SoftDeletes, InteractsWithMedia, HasFactory;
 
     protected $table = 'users';
 
