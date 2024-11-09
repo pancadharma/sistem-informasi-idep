@@ -3,10 +3,7 @@
         <div class="col-lg-4 form-group">
             <div class="input-group">
                 <label for="goals_deskripsi" class="input-group small mb-0">{{ __('cruds.program.objective.desc') }}</label>
-                <textarea type="textarea" id="goals_deskripsi" name="goals_deskripsi"
-                    class="form-control {{ $errors->has('goals_deskripsi') ? 'is-invalid' : '' }}"
-                    placeholder=" {{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000">{{ old('goals_deskripsi', $program->goal->deskripsi ?? '') }}
-                </textarea>
+                <textarea type="textarea" id="goals_deskripsi" name="goals_deskripsi" class="form-control {{ $errors->has('goals_deskripsi') ? 'is-invalid' : '' }}" placeholder=" {{ __('cruds.program.outcome.desc') }}" rows="1" maxlength="1000">{{ old('goals_deskripsi', $program->goal->deskripsi ?? '') }}</textarea>
             </div>
         </div>
         <div class="col-lg-4 form-group">
