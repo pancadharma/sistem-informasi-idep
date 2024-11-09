@@ -485,6 +485,7 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => '/vendor/jquery-validation/additional-methods.min.js',
+                    'defer' => true,
                 ],
             ],
         ],
@@ -496,7 +497,7 @@ return [
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
                     'location' => '/vendor/select2/js/select2.min.js',
-                    // 'location' => '/vendor/select2/js/select2.min.js',
+                    'async' => true,
                 ],
                 [
                     'type' => 'css',
@@ -531,6 +532,7 @@ return [
                     'asset' => true,
                     // 'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js',
                     'location' => '/vendor/sweetalert2/latest.js',
+                    'async' => true,
                 ],
             ],
         ],
@@ -638,6 +640,7 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/toastr/toastr.min.js',
+                    'defer' => true,
                 ],
                 [
                     'type' => 'css',
