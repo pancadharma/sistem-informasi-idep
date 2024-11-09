@@ -985,4 +985,24 @@ class ProgramController extends Controller
         }
         return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);
     }
+
+    public function dataOutputActivity(Request $request, $output)
+    {
+        $program = Program::with(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'objektif', 'goal'])->where('id', $output)->first();
+        $output = Program_Outcome_Output::where('id', $output)->get();
+        $output->load('activities');
+        if ($output) {
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $output,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => 'Data Output not found'
+            ], 404);
+        }
+    }
 }

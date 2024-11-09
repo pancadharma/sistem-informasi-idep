@@ -279,7 +279,7 @@
                                     <td>${output.indikator ?? ''}</td>
                                     <td>${output.target ?? ''}</td>
                                     <td><div class="button-container">
-                                            <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success btnEditOutcomeOutput" data-action="edit" data-output-id="${output.id}" data-index="${output.id}">
+                                            <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success btnEditOutcomeOutput" data-action="edit" data-output-id="${output.id}" data-index="${output.id}" data-outcome-id="${output.programoutcome_id}">
                                             <i class="bi bi-pencil-square"></i>
                                             </button>
                                         </div>
@@ -314,9 +314,6 @@
     $(document).ready(function() {
         $('#addOutputBtn').click(function() {
             $('#modalAddOutput').modal('show');
-        });
-        $('#outcome_output_list, tbody').on('click', '.btnEditOutcomeOutput', function(e) {
-            $('#modalEditOutput').modal('show');
         });
 
         $('.nav').on('click', '.btn-list-outcome', function(e) {
@@ -441,9 +438,9 @@
 
     // // add data activity on modal add output
     // $(document).ready(function() {
-        $('#addActvityOutcome, #addActvityOutcomeOnEditModal').click(function() {
-            let activityIndex = $('#activity_output_list, #edit_activity_output_list tbody.data-activity').length + 1;
-            $('#tbody-no-activity, #edit_tbody-no-activity').addClass('hide').empty();
+        $('#addActvityOutcome').click(function() {
+            let activityIndex = $('#activity_output_list, tbody.data-activity').length + 1;
+            $('#tbody-no-activity').addClass('hide').empty();
 
             let newActivityTbody = `
                 <tbody id="has-activity-${activityIndex}" data-body-id="${activityIndex}" class="data-activity">
@@ -476,7 +473,7 @@
                         </td>
                 </tr>
                 </tbody>`;
-            $('#activity_output_list, #edit_activity_output_list').append(newActivityTbody);
+            $('#activity_output_list').append(newActivityTbody);
 
             // Initialize Summernote for the new textareas
 
@@ -516,35 +513,19 @@
                 `);
             }
         });
-        // Event delegation to handle removing activity rows
-        $('#edit_activity_output_list').on('click', '.remove-activity', function(e) {
-            e.preventDefault();
-            var EditActivityId = $(this).closest('tbody').data('body-id');
-            $(`#has-activity-${EditActivityId}`).remove();
 
-            // Check if there are no more activity rows and show the no-activity message
-            if ($('#edit_activity_output_list tbody.data-activity').length === 0) {
-                $('#edit_tbody-no-activity').removeClass('hide').html(`
-                    <tr>
-                    <td colspan="4" class="text-center" id="edit-no-activity">
-                        {{ __('cruds.activity.no_selected') }}
-                    </td>
-                    </tr>
-                `);
-            }
-        });
 
         // Reset modal content when closed
-        $('#modalAddOutput, #modalEditOutput').on('hidden.bs.modal', function() {
+        $('#modalAddOutput').on('hidden.bs.modal', function() {
             $(this).find('form')[0].reset();
-            $('#tbody-no-activity, #edit_tbody-no-activity').removeClass('hide').html(`
+            $('#tbody-no-activity').removeClass('hide').html(`
                 <tr>
                 <td colspan="4" class="text-center" id="no-activity">
                     {{ __('cruds.activity.no_selected') }}
                 </td>
                 </tr>
             `);
-            $('#activity_output_list, #edit_activity_output_list').find('tbody.data-activity').remove();
+            $('#activity_output_list').find('tbody.data-activity').remove();
         });
     // });
 
@@ -626,8 +607,10 @@
                 },
             });
         });
+
     });
 </script>
+@stack('edit-output')
 <script>
     function navigateToEditPage(url, tab) {
         window.location.href = `${url}?tab=${tab}`;

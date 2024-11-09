@@ -1,4 +1,4 @@
-<x-adminlte-modal id="modalAddOutput" title="{{ __('global.add'). ' ' . __('cruds.program.output.label') }}" size="xl" theme="info" icon="fas fa-folder-open" static-backdrop scrollable>
+<x-adminlte-modal id="modalAddOutput" title="{{ __('global.add'). ' ' . __('cruds.program.output.label') }}" size="xl" theme="primary" icon="fas fa-folder-open" static-backdrop scrollable>
     <div style="height:60%;">
         <div class="modal-body">
             <form id="formAddOutput" method="POST">
@@ -31,7 +31,7 @@
                                 <div class="col">
                                     <h3 class="card-title pt-2">
                                         <i class="bi bi-activity"></i>
-                                        {{ __('cruds.activity.add') }}
+                                        {{ __('cruds.activity.list') }}
                                     </h3>
                                 </div>
                                 <div class="col">
@@ -45,7 +45,7 @@
                                     <tbody id="tbody-no-activity">
                                       <tr>
                                         <td colspan="4" class="text-center" id="no-activity">
-                                          {{ __('cruds.activity.no_selected') }}
+                                            {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                                         </td>
                                       </tr>
                                     </tbody>
@@ -65,6 +65,6 @@
         </div>
     </div>
     <x-slot name="footerSlot">
-
+        <x-adminlte-button theme="danger" label="{{ __('global.close') }}" data-dismiss="modal"/>
     </x-slot>
 </x-adminlte-modal>
