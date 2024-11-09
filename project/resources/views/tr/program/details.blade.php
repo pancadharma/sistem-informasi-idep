@@ -447,7 +447,7 @@
                 $('#tbody-no-activity').removeClass('hide').html(`
                     <tr>
                     <td colspan="4" class="text-center" id="no-activity">
-                        {{ __('cruds.activity.no_selected') }}
+                       {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                     </td>
                     </tr>
                 `);
@@ -461,7 +461,7 @@
             $('#tbody-no-activity').removeClass('hide').html(`
                 <tr>
                 <td colspan="4" class="text-center" id="no-activity">
-                    {{ __('cruds.activity.no_selected') }}
+                    {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                 </td>
                 </tr>
             `);
@@ -519,7 +519,7 @@
                     $('#tbody-no-activity').removeClass('hide').html(`
                         <tr>
                         <td colspan="4" class="text-center" id="no-activity">
-                            {{ __('cruds.activity.no_selected') }}
+                            {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                         </td>
                         </tr>
                     `);

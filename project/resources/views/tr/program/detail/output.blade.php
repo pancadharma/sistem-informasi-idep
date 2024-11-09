@@ -97,6 +97,18 @@
                         $('#edit_target_output').val(data.target ?? '').focus().trigger('input');
 
                         $('#edit_activity_output_list').empty();
+                        // let activityIndex = $('#edit_activity_output_list tbody.data-activity-edit').length + 1;
+                        // $('#edit_tbody-no-activity').addClass('hide').empty();
+
+                        if ($('#edit_activity_output_list tbody.edit-has-activity').length === 0) {
+                            $('#edit_tbody-no-activity').removeClass('hide').html(`
+                                <tr>
+                                <td colspan="4" class="text-center" id="edit-no-activity">
+                                    {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
+                                </td>
+                                </tr>
+                            `);
+                        }
                         if (!data.activities || data.activities.length === 0 || data.activities.every(activity => !activity.deskripsi && !activity.indikator && !activity.target)) {
                             $('#edit_activity_output_list').append(`
                                 <tr>
@@ -172,13 +184,14 @@
 
             // Check if there are no more activity rows and show the no-activity message
             if ($('#edit_activity_output_list tbody.edit-has-activity').length === 0) {
-                $('#edit_tbody-no-activity').removeClass('hide').html(`
-                    <tr>
-                    <td colspan="4" class="text-center" id="edit-no-activity">
-                        {{ __('cruds.activity.no_selected') }}
-                    </td>
-                    </tr>
-                `);
+                $('#edit-no-activity').removeClass('hide')
+                // .html(`
+                //     <tr>
+                //     <td colspan="4" class="text-center" id="edit-no-activity">
+                //         {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
+                //     </td>
+                //     </tr>
+                // `);
             }
         });
 
@@ -202,7 +215,7 @@
             $('#edit_tbody-no-activity').removeClass('hide').html(`
                 <tr>
                 <td colspan="4" class="text-center" id="edit-no-activity">
-                    {{ __('cruds.activity.no_selected') }}
+                    {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                 </td>
                 </tr>
             `);
@@ -211,7 +224,9 @@
 
         $('#addActvityOutcomeOnEditModal').click(function() {
             let activityIndex = $('#edit_activity_output_list tbody.data-activity-edit').length + 1;
-            $('#edit_tbody-no-activity').addClass('hide').empty();
+            // $('#edit_tbody-no-activity').addClass('hide').empty();
+            $('#edit-no-activity').addClass('hide');
+
 
             let newActivityTbody = `
                 <tbody id="edit-has-activity-${activityIndex}" data-edit-body-id="${activityIndex}" class="data-activity-edit">
