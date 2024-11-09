@@ -354,66 +354,6 @@
                             var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
 
                             fetchOutputs(outputApi);
-
-                            // $.ajax({
-                            //     url: $outputApi,
-                            //     method: 'GET',
-                            //     beforeSend: function() {
-                            //         Toast.fire({
-                            //             icon: 'info',
-                            //             title: 'Loading...',
-                            //             timer: 300
-                            //         });
-                            //     },
-                            //     success: function(response) {
-                            //         setTimeout(() => {
-                            //             if (response.success) {
-                            //                 $('#row-output').empty();
-                            //                 // if (response.data.length === 0) {
-                            //                 if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
-                            //                     $('#row-output').append(`
-                            //                         <tr>
-                            //                             <td colspan="4" class="text-center">No data available</td>
-                            //                         </tr>
-                            //                     `);
-                            //                 } else {
-                            //                     response.data.forEach(function(output) {
-                            //                         $('#row-output').append(`
-                            //                             <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                            //                                 <td class="pl-3">${output.deskripsi ?? ''}</td>
-                            //                                 <td>${output.indikator ?? ''}</td>
-                            //                                 <td>${output.target ?? ''}</td>
-                            //                                 <td><div class="button-container">
-                            //                                         <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
-                            //                                         <i class="bi bi-pencil-square"></i>
-                            //                                         </button>
-                            //                                     </div>
-                            //                                 </td>
-                            //                             </tr>
-                            //                         `);
-                            //                     });
-                            //                 }
-                            //                 $('#output-title').text($outputIndex);
-                            //                 $('#output-action').text('Add Output');
-                            //             } else {
-                            //                 Swal.fire({
-                            //                     icon: 'error',
-                            //                     title: 'Error!',
-                            //                     text: response.message,
-                            //                 });
-                            //             }
-                            //         }, 100);
-                            //     },
-                            //     error: function(xhr, textStatus, errorThrown) {
-                            //         const errorMessage = getErrorMessage(xhr);
-                            //         Swal.fire({
-                            //             icon: 'error',
-                            //             title: 'Error!',
-                            //             html: errorMessage,
-                            //             confirmButtonText: 'Okay'
-                            //         });
-                            //     },
-                            // });
                         } else {
                             Swal.fire({
                                 icon: 'error',
