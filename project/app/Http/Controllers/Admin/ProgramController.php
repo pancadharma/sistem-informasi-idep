@@ -575,44 +575,6 @@ class ProgramController extends Controller
         }
     }
 
-    // protected function updateProgramOutcomes($program, Request $request)
-    // {
-    //     $existingOutcomes = $program->outcome()->get();
-    //     $existingOutcomeIds = $existingOutcomes->pluck('id')->toArray();
-    //     $newOutcomeIds = [];
-
-    //     foreach ($request->input('deskripsi', []) as $index => $deskripsi) {
-    //         $outcomeId = $request->input("outcome_id.$index"); // Use indexed input for existing outcomes
-
-    //         if (!empty($outcomeId) && in_array($outcomeId, $existingOutcomeIds)) {
-    //             // Update existing outcome
-    //             $outcome = Program_Outcome::find($outcomeId);
-    //             $outcome->update([
-    //                 'deskripsi' => $deskripsi,
-    //                 'indikator' => $request->input("indikator.$index"),
-    //                 'target' => $request->input("target.$index"),
-    //             ]);
-    //             $newOutcomeIds[] = $outcome->id; // Store updated outcome ID
-    //         } elseif (!empty($deskripsi)) {
-    //             // Create new outcome if no ID is provided
-    //             $outcome = Program_Outcome::create([
-    //                 'program_id' => $program->id,
-    //                 'deskripsi' => $deskripsi,
-    //                 'indikator' => $request->input("indikator.$index"),
-    //                 'target' => $request->input("target.$index"),
-    //             ]);
-    //             $newOutcomeIds[] = $outcome->id; // Store new outcome ID
-    //         }
-    //     }
-
-    //     // Remove outcomes that are not in the new input
-    //     foreach ($existingOutcomes as $existingOutcome) {
-    //         if (!in_array($existingOutcome->id, $newOutcomeIds)) {
-    //             $existingOutcome->delete();
-    //         }
-    //     }
-    // }
-
     protected function updateProgramOutcomes($program, Request $request)
     {
         $existingOutcomes = $program->outcome()->get();
@@ -981,6 +943,77 @@ class ProgramController extends Controller
             } catch (QueryException $e) {
                 DB::rollBack();
                 return response()->json(['success' => false, 'message' => 'An error occurred.', 'data' => $request, 'error' => $e->getMessage(),], Response::HTTP_SERVICE_UNAVAILABLE);
+            }
+        }
+        return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);
+    }
+
+    // update output and activities from modal in details program outcome of activity
+    public function outputActivityUpdate(Request $request)
+    {
+        \Log::info('Raw Request Content: ' . json_encode($request->all()));
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_edit')) {
+            $validated = $request->validate([
+                'programoutcome_id'         => 'required|exists:trprogramoutcome,id',
+                'program_id'                => 'required|exists:trprogram,id',
+                'output_id'                 => 'required|exists:trprogramoutcomeoutput,id',
+                'activities'                => 'nullable|array',
+                'activities.*.deskripsi'    => 'nullable|string|max:1000',
+                'activities.*.indikator'    => 'nullable|string|max:1000',
+                'activities.*.target'       => 'nullable|string|max:1000',
+            ]);
+
+            DB::beginTransaction();
+            try {
+
+                $outcomeOutput = Program_Outcome_Output::find($validated['output_id']);
+                $existActivityIDs = $outcomeOutput->activities()->pluck('id')->toArray();
+                $newActivityIDs = [];
+                $outcomeOutput->update([
+                    'deskripsi' => $request->input('deskripsi'),
+                    'indikator' => $request->input('indikator'),
+                    'target' => $request->input('target'),
+                ]);
+
+                foreach ($request->input('activities') as $activity) {
+                    if (isset($activity['id']) && in_array($activity['id'], $existActivityIDs)) {
+                        // Update existing activity
+                        $newActivityIDs[] = $activity['id'];
+                        $outcomeOutput->activities()->updateOrCreate(
+                            ['id' => $activity['id']], // Identifying existing record
+                            [
+                                'deskripsi' => $activity['deskripsi'],
+                                'indikator' => $activity['indikator'],
+                                'target' => $activity['target'],
+                                // Include other fields as necessary
+                            ]
+                        );
+                    } else {
+                        // Create new activity
+                        $newActivity = $outcomeOutput->activities()->create(
+                            [
+                                'deskripsi' => $activity['deskripsi'],
+                                'indikator' => $activity['indikator'],
+                                'target' => $activity['target'],
+                                // Include other fields as necessary
+                            ]
+                        );
+                        $newActivityIDs[] = $newActivity->id; // Store new activity ID
+                    }
+                }
+
+                // Delete activities that are not in the new set of IDs
+                $activitiesToDelete = array_diff($existActivityIDs, $newActivityIDs);
+                $outcomeOutput->activities()->whereIn('id', $activitiesToDelete)->delete();
+                DB::commit();
+                return response()->json([
+                    'message' => 'Program Outcome Output and Activities updated successfully!',
+                    'data' => $outcomeOutput,
+                    'success' => true
+                ], 201);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(['message' => 'Failed to update Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
             }
         }
         return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);

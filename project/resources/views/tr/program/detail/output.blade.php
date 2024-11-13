@@ -119,9 +119,11 @@
                             `);
                         } else {
                             data.activities.forEach(function(activity, index) {
+                                const activityId = activity ? activity.id : null;
                                 $('#edit_activity_output_list').append(`
                                     <tbody id="edit-has-activity-${index}" data-edit-body-id="${index}" class="data-activity-edit">
                                         <tr data-activity-id="${index}">
+                                            <input type="hidden" name="activity_id[]" value="${activityId}">
                                             <th width="10%">Deskripsi Kegiatan</th>
                                             <td width="90%">
                                                 <textarea type="textarea" id="edit_deskripsi_${index}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="3" maxlength="1000">${activity.deskripsi ?? ''}</textarea>
@@ -282,6 +284,97 @@
             // });
         });
 
+        $('#formEditOutput').on('submit', function(e) {
+            e.preventDefault();
+            $('#formEditOutput').find('button[type="submit"]').attr('disabled', true); // Disable submit button to prevent multiple submissions
+
+            let outputId = $('#edit_output_id').val();
+            let updateURL = "{{ route('program.details.output.activity.update', ':id') }}".replace(':id', outputId);
+            let programoutcome_id = $('#edit_programoutcome_id').val();
+            let outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', programoutcome_id);
+
+
+            // Collect the main form data
+            let formData = {
+                _token: $('input[name="_token"]').val(),
+                _method: 'POST',
+                programoutcome_id: programoutcome_id,
+                program_id: $('#edit_program_id').val(),
+                output_id: $('#edit_output_id').val(),
+                deskripsi: $('#edit_deskripsi_output').val(),
+                indikator: $('#edit_indikator_output').val(),
+                target: $('#edit_target_output').val(),
+                activities: []
+            };
+
+            $('#edit_activity_output_list tbody.data-activity-edit').each(function() {
+                let activity = {
+                    id: $(this).find('input[name="activity_id[]"]').val(),
+                    deskripsi: $(this).find('textarea[name="deskripsi[]"]').val(),
+                    indikator: $(this).find('textarea[name="indikator[]"]').val(),
+                    target: $(this).find('textarea[name="target[]"]').val()
+                };
+                formData.activities.push(activity);
+            });
+
+            let _token = $('input[name=_token]').val(); // Get CSRF token
+
+            $.ajax({
+                url: updateURL,
+                method: 'PATCH',
+                data: JSON.stringify(formData),
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', _token); // Add CSRF token to header
+                    Toast.fire({
+                        icon: 'info',
+                        title: 'Loading...',
+                        timer: 300
+                    });
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        if (response.success) {
+                            $('#formEditOutput')[0].reset();
+                            $('#modalEditOutput').modal('hide');
+
+                            $('#edit_tbody-no-activity').removeClass('hide').html(`
+                                <tr>
+                                <td colspan="4" class="text-center" id="no-activity">
+                                    {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-success"></i>']) !!}
+                                </td>
+                                </tr>
+                            `);
+                            $('#edit_activity_output_list').find('tbody.data-activity-edit').remove();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'Output and Activities updated successfully!',
+                            });
+                            fetchOutputs(outputApi);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message,
+                            });
+                        }
+                        $('#formEditOutput').find('button[type="submit"]').removeAttr('disabled'); // Enable submit button
+                    }, 250);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    const errorMessage = getErrorMessage(xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: errorMessage,
+                        confirmButtonText: 'Okay'
+                    });
+                    $('#formEditOutput').find('button[type="submit"]').removeAttr('disabled'); // Enable submit button
+                },
+            });
+        });
 
     });
 </script>

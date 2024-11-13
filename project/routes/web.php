@@ -212,6 +212,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('program/details/{output}/activity', [ProgramController::class, 'dataOutputActivity'])->name('api.program.output.activity'); //save Output Activity   Route::
     Route::post('program/details/output-activity', [ProgramController::class, 'outputActivityStore'])->name('program.details.output.activity.store'); //save Output Activity
+    Route::PATCH('program/details/output-activity/update', [ProgramController::class, 'outputActivityUpdate'])->name('program.details.output.activity.update'); //Update Output & Activity
 
     Route::get('program/details/modal', [ProgramController::class, 'detailsModal'])->name('program.details.modal');
 
