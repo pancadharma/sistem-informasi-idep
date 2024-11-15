@@ -67,9 +67,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trkegiatan');
-    }
-
         Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('trkegiatan');
         Schema::enableForeignKeyConstraints();
