@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up(): void
+    public function up(): void
     {
         Schema::create('trkegiatan', function (Blueprint $table) {
             $table->id();
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->dateTime('tanggalmulai');
             $table->dateTime('tanggalselesai')->nullable();
             $table->foreignId('dusun_id')->constrained('dusun')->onDelete('cascade');
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
+            $table->double('long')->nullable();
+            $table->double('lat')->nullable();
             $table->foreignId('kategorilokasikegiatan_id')->constrained('mkategorilokasikegiatan')->onDelete('cascade');
             $table->string('tempat', 500)->nullable();
             $table->longText('deskripsi')->nullable();
@@ -50,5 +50,4 @@ return new class extends Migration
         Schema::dropIfExists('trkegiatan');
         Schema::enableForeignKeyConstraints();
     }
-
 };
