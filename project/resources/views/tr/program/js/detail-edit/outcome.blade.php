@@ -19,4 +19,23 @@
             $(this).closest(".row").remove();
         });
     });
+
+    $(document).ready(function() {
+        // Check for the 'tab' query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        // If 'tab' parameter is present, activate the corresponding tab and scroll to it
+        if (tab) {
+            $(`#custom-tabs-four-${tab}-tab`).tab('show').on('shown.bs.tab', function() {
+                $('html, body').animate({
+                    scrollTop: $(`#custom-tabs-four-${tab}`).offset().top
+                }, 1000); // Adjust the scrolling speed as needed
+
+                $('#deskripsi_outcome').focus();
+            });
+        }
+    });
+
+
 </script>

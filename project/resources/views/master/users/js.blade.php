@@ -180,8 +180,8 @@
             let action = $(this).data('action');
             let id_users = $(this).data('user-id');
             let url_show = "{{ route('users.showmodal', ':id') }}".replace(':id', id_users);
-            let url_edit = "{{ route('users.edit ', ': id ') }}".replace(': id ', id_users);
-            let url_update = "{{ route('users.update ', ': id ') }}".replace(':id', id_users);
+            let url_edit = "{{ route('users.edit', ':id') }}".replace(':id', id_users);
+            let url_update = "{{ route('users.update', ':id ') }}".replace(':id', id_users);
             resetFormEdit();
             // if button view clicked
             if (action === "view") {

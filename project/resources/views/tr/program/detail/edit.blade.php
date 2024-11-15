@@ -68,7 +68,7 @@
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-report" role="tabpanel"
                     aria-labelledby="custom-tabs-four-report-tab">
-                    ZZZZZ
+                    @include('tr.program.detail.reposrtschedule')
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-objective" role="tabpanel"
                     aria-labelledby="custom-tabs-four-objective-tab">
