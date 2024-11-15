@@ -504,5 +504,6 @@ return [
         'delete'            => 'Delete Activity',
         'select'            => 'Select Activity',
         'no_selected'       => 'No Activity Selected',
+        'no_activity'       => 'This Output does not have any Activity, click icon :icon to add activity',
     ],
 ];

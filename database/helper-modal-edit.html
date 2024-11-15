@@ -1,0 +1,323 @@
+<script>
+    $.ajax({
+        url: $outputApi,
+        method: 'GET',
+        beforeSend: function () {
+            Toast.fire({
+                icon: 'info',
+                title: 'Loading...',
+                timer: 300
+            });
+        },
+        success: function (response) {
+            setTimeout(() => {
+                if (response.success) {
+                    $('#row-output').empty();
+                    // if (response.data.length === 0) {
+                    if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+                        $('#row-output').append(`
+                <tr>
+                    <td colspan="4" class="text-center">No data available</td>
+                </tr>
+            `);
+                    } else {
+                        response.data.forEach(function (output) {
+                            $('#row-output').append(`
+                    <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
+                        <td class="pl-3">${output.deskripsi ?? ''}</td>
+                        <td>${output.indikator ?? ''}</td>
+                        <td>${output.target ?? ''}</td>
+                        <td><div class="button-container">
+                                <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
+                                <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+                        });
+                    }
+                    $('#output-title').text($outputIndex);
+                    $('#output-action').text('Add Output');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: response.message,
+                    });
+                }
+            }, 100);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            const errorMessage = getErrorMessage(xhr);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: errorMessage,
+                confirmButtonText: 'Okay'
+            });
+        },
+    });
+    // function fetchActivityOutput(api){
+    //     $.ajax({
+    //         url: api,
+    //         method: 'GET',
+    //         beforeSend: function() {
+    //             Toast.fire({
+    //                 icon: 'info',
+    //                 title: 'Loading...',
+    //                 timer: 300
+    //             });
+    //         },
+    //         success: function(response) {
+    //             setTimeout(() => {
+    //                 if (response.success) {
+    //                     $('#edit_deskripsi_output').val(response.data.deskripsi ?? '').trigger('input');
+    //                     $('#edit_indikator_output').val(response.data.indikator ?? '').trigger('input');
+    //                     $('#edit_target_output').val(response.data.target ?? '').trigger('input');
+
+    //                     $('#edit_activity_output_list').empty();
+    //                     if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
+    //                         $('#edit_activity_output_list').append(`
+    //                         <tr>
+    //                             <td colspan="4" class="text-center" id="edit-no-activity">
+    //                                 {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
+    //                             </td>
+    //                         </tr>
+    //                     `);
+    //                     } else {
+    //                         response.data.forEach(function(activity) {
+    //                             $('#edit_activity_output_list').append(`
+    //                             <tr id="row-activity-${activity.id}" data-id="${activity.id}" class="data-activity">
+    //                                 <td class="pl-3">${activity.deskripsi ?? ''}</td>
+    //                                 <td>${activity.indikator ?? ''}</td>
+    //                                 <td>${activity.target ?? ''}</td>
+    //                                 <td><div class="button-container">
+    //                                         <button data-target="EditActivity" class="btn btn-sm modal-trigger float-right btn-success btnEditActivityOutput" data-action="edit" data-activity-id="${activity.id}" data-index="${activity.id}" data-outcome-id="${activity.programoutcome_id}">
+    //                                         <i class="bi bi-pencil-square"></i>
+    //                                         </button>
+    //                                     </div>
+    //                                 </td>
+    //                             </tr>
+    //                         `);
+    //                         });
+    //                     }
+    //                 } else {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Error!',
+    //                         text: response.message,
+    //                     });
+    //                 }
+    //             }, 250);
+    //         },
+    //         error: function(xhr, textStatus, errorThrown) {
+    //             const errorMessage = getErrorMessage(xhr);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Error!',
+    //                 html: errorMessage,
+    //                 confirmButtonText: 'Okay'
+    //             });
+    //         },
+    //     });
+    // }
+
+    //byclaude
+    // function fetchActivityOutput(api, activityIndex) {
+    //     $.ajax({
+    //         url: api,
+    //         method: 'GET',
+    //         beforeSend: function() {
+    //             Toast.fire({
+    //                 icon: 'info',
+    //                 title: 'Loading...',
+    //                 timer: 300
+    //             });
+    //         },
+    //         success: function(response) {
+    //             setTimeout(() => {
+    //                 if (response.success) {
+    //                     if (!response.data || (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target))) {
+    //                         // Handle empty data case if needed
+    //                         return;
+    //                     }
+
+    //                     // Assuming response.data contains the activity information
+    //                     const activity = response.data.activities;
+
+    //                     const tableContent = `
+    //                         <tbody id="edit-has-activity-${activityIndex}" data-edit-body-id="${activityIndex}" class="data-activity-edit">
+    //                             <tr data-activity-id="${activityIndex}">
+    //                                 <th width="10%">Deskripsi Kegiatan</th>
+    //                                 <td width="90%">
+    //                                     <textarea type="textarea" id="edit_deskripsi_${activityIndex}"
+    //                                         name="deskripsi[]" class="form-control"
+    //                                         placeholder="Deskripsi Kegiatan" rows="3"
+    //                                         maxlength="1000">${activity.deskripsi || ''}</textarea>
+    //                                 </td>
+    //                             </tr>
+    //                             <tr>
+    //                                 <th width="10%">Indikator Kegiatan</th>
+    //                                 <td width="90%">
+    //                                     <textarea type="textarea" id="edit_indikator_${activityIndex}"
+    //                                         name="indikator[]" class="form-control"
+    //                                         placeholder="Indikator Kegiatan" rows="3"
+    //                                         maxlength="1000">${activity.indikator || ''}</textarea>
+    //                                 </td>
+    //                             </tr>
+    //                             <tr>
+    //                                 <th width="10%">Target Kegiatan</th>
+    //                                 <td width="90%">
+    //                                     <textarea type="textarea" id="edit_target_${activityIndex}"
+    //                                         name="target[]" class="form-control"
+    //                                         placeholder="Target Kegiatan" rows="3"
+    //                                         maxlength="1000">${activity.target || ''}</textarea>
+    //                                 </td>
+    //                             </tr>
+    //                             <tr>
+    //                                 <th>&nbsp;</th>
+    //                                 <td class="align-middle float-right">
+    //                                     <div style="text-align: center">
+    //                                         <button type="button" class="btn btn-sm btn-danger waves-effect waves-red edit-remove-activity" title="Hapus">
+    //                                             <i class="bi bi-trash"></i>
+    //                                         </button>
+    //                                     </div>
+    //                                 </td>
+    //                             </tr>
+    //                         </tbody>`;
+
+    //                     // Append the table content to your table
+    //                     // Replace 'your-table-id' with the actual ID of your table
+    //                     $('#edit_activity_output_list').html(tableContent);
+
+    //                 } else {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Error!',
+    //                         text: response.message,
+    //                     });
+    //                 }
+    //             }, 250);
+    //         },
+    //         error: function(xhr, textStatus, errorThrown) {
+    //             const errorMessage = getErrorMessage(xhr);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Error!',
+    //                 html: errorMessage,
+    //                 confirmButtonText: 'Okay'
+    //             });
+    //         },
+    //     });
+    // }
+
+    // function fetchActivityOutput(api) {
+    //     $.ajax({
+    //         url: api,
+    //         method: 'GET',
+    //         beforeSend: function() {
+    //             Toast.fire({
+    //                 icon: 'info',
+    //                 title: 'Loading...',
+    //                 timer: 300
+    //             });
+    //         },
+    //         success: function(response) {
+    //             setTimeout(() => {
+    //                 if (response.success) {
+    //                     // Set the output data first
+    //                     if (response.data && response.data.length > 0) {
+    //                         const output = response.data[0]; // Get the first output
+    //                         $('#edit_programoutcome_id').val(output.programoutcome_id);
+    //                         $('#edit_output_id').val(output.id);
+    //                         $('#edit_deskripsi_output').val(output.deskripsi || '').trigger('input');
+    //                         $('#edit_indikator_output').val(output.indikator || '').trigger('input');
+    //                         $('#edit_target_output').val(output.target || '').trigger('input');
+
+    //                         // Clear existing activities
+    //                         $('#edit_activity_output_list').empty();
+
+    //                         // Check if there are activities
+    //                         if (output.activities && output.activities.length > 0) {
+    //                             // Hide no-activity message
+    //                             $('#edit_tbody-no-activity').hide();
+
+    //                             // Add activities
+    //                             output.activities.forEach((activity) => {
+    //                                 const activityHtml = `
+    //                                     <tbody id="edit-has-activity-${activity.id}" data-edit-body-id="${activity.id}" class="data-activity-edit">
+    //                                         <tr data-activity-id="${activity.id}">
+    //                                             <th width="10%">Deskripsi Kegiatan</th>
+    //                                             <td width="90%">
+    //                                                 <textarea type="textarea" id="edit_deskripsi_${activity.id}"
+    //                                                     name="activities[${activity.id}][deskripsi]" class="form-control materialize-textarea"
+    //                                                     placeholder="Deskripsi Kegiatan" rows="3"
+    //                                                     data-length="1000">${activity.deskripsi || ''}</textarea>
+    //                                             </td>
+    //                                         </tr>
+    //                                         <tr>
+    //                                             <th width="10%">Indikator Kegiatan</th>
+    //                                             <td width="90%">
+    //                                                 <textarea type="textarea" id="edit_indikator_${activity.id}"
+    //                                                     name="activities[${activity.id}][indikator]" class="form-control materialize-textarea"
+    //                                                     placeholder="Indikator Kegiatan" rows="3"
+    //                                                     data-length="1000">${activity.indikator || ''}</textarea>
+    //                                             </td>
+    //                                         </tr>
+    //                                         <tr>
+    //                                             <th width="10%">Target Kegiatan</th>
+    //                                             <td width="90%">
+    //                                                 <textarea type="textarea" id="edit_target_${activity.id}"
+    //                                                     name="activities[${activity.id}][target]" class="form-control materialize-textarea"
+    //                                                     placeholder="Target Kegiatan" rows="3"
+    //                                                     data-length="1000">${activity.target || ''}</textarea>
+    //                                             </td>
+    //                                         </tr>
+    //                                         <tr>
+    //                                             <th>&nbsp;</th>
+    //                                             <td class="align-middle float-right">
+    //                                                 <div style="text-align: center">
+    //                                                     <button type="button"
+    //                                                         class="btn btn-sm btn-danger waves-effect waves-red edit-remove-activity"
+    //                                                         title="Hapus"
+    //                                                         data-activity-id="${activity.id}"
+    //                                                         data-output-id="${output.id}">
+    //                                                         <i class="bi bi-trash"></i>
+    //                                                     </button>
+    //                                                 </div>
+    //                                             </td>
+    //                                         </tr>
+    //                                     </tbody>`;
+
+    //                                 $('#edit_activity_output_list').append(activityHtml);
+    //                             });
+
+    //                             // Reinitialize materialize textarea if needed
+    //                             $('.materialize-textarea').trigger('autoresize');
+    //                         } else {
+    //                             // Show no-activity message
+    //                             $('#edit_tbody-no-activity').show();
+    //                         }
+    //                     }
+    //                 } else {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Error!',
+    //                         text: response.message,
+    //                     });
+    //                 }
+    //             }, 250);
+    //         },
+    //         error: function(xhr, textStatus, errorThrown) {
+    //             const errorMessage = getErrorMessage(xhr);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Error!',
+    //                 html: errorMessage,
+    //                 confirmButtonText: 'Okay'
+    //             });
+    //         },
+    //     });
+    // }
+</script>

@@ -188,7 +188,7 @@
 </div>
 
 @include('tr.program.detail.output-add-modal')
-{{-- @include('master.users.show-modal') --}}
+@include('tr.program.detail.output') {{-- show edit output --}}
 @stop
 
 @push('css')
@@ -198,7 +198,7 @@
 @endpush
 
 @push('js')
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> --}}
+
 <script src="{{ asset('vendor/adminlte/dist/js/materialize.js') }}"></script>
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
@@ -279,7 +279,7 @@
                                     <td>${output.indikator ?? ''}</td>
                                     <td>${output.target ?? ''}</td>
                                     <td><div class="button-container">
-                                            <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${output.id}">
+                                            <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success btnEditOutcomeOutput" data-action="edit" data-output-id="${output.id}" data-index="${output.id}" data-outcome-id="${output.programoutcome_id}">
                                             <i class="bi bi-pencil-square"></i>
                                             </button>
                                         </div>
@@ -354,66 +354,6 @@
                             var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
 
                             fetchOutputs(outputApi);
-
-                            // $.ajax({
-                            //     url: $outputApi,
-                            //     method: 'GET',
-                            //     beforeSend: function() {
-                            //         Toast.fire({
-                            //             icon: 'info',
-                            //             title: 'Loading...',
-                            //             timer: 300
-                            //         });
-                            //     },
-                            //     success: function(response) {
-                            //         setTimeout(() => {
-                            //             if (response.success) {
-                            //                 $('#row-output').empty();
-                            //                 // if (response.data.length === 0) {
-                            //                 if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
-                            //                     $('#row-output').append(`
-                            //                         <tr>
-                            //                             <td colspan="4" class="text-center">No data available</td>
-                            //                         </tr>
-                            //                     `);
-                            //                 } else {
-                            //                     response.data.forEach(function(output) {
-                            //                         $('#row-output').append(`
-                            //                             <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                            //                                 <td class="pl-3">${output.deskripsi ?? ''}</td>
-                            //                                 <td>${output.indikator ?? ''}</td>
-                            //                                 <td>${output.target ?? ''}</td>
-                            //                                 <td><div class="button-container">
-                            //                                         <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
-                            //                                         <i class="bi bi-pencil-square"></i>
-                            //                                         </button>
-                            //                                     </div>
-                            //                                 </td>
-                            //                             </tr>
-                            //                         `);
-                            //                     });
-                            //                 }
-                            //                 $('#output-title').text($outputIndex);
-                            //                 $('#output-action').text('Add Output');
-                            //             } else {
-                            //                 Swal.fire({
-                            //                     icon: 'error',
-                            //                     title: 'Error!',
-                            //                     text: response.message,
-                            //                 });
-                            //             }
-                            //         }, 100);
-                            //     },
-                            //     error: function(xhr, textStatus, errorThrown) {
-                            //         const errorMessage = getErrorMessage(xhr);
-                            //         Swal.fire({
-                            //             icon: 'error',
-                            //             title: 'Error!',
-                            //             html: errorMessage,
-                            //             confirmButtonText: 'Okay'
-                            //         });
-                            //     },
-                            // });
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -434,12 +374,12 @@
                 },
             });
         });
-    });
+    // });
 
-    // add data activity on modal add output
-    $(document).ready(function() {
+    // // add data activity on modal add output
+    // $(document).ready(function() {
         $('#addActvityOutcome').click(function() {
-            let activityIndex = $('#activity_output_list tbody.data-activity').length + 1;
+            let activityIndex = $('#activity_output_list, tbody.data-activity').length + 1;
             $('#tbody-no-activity').addClass('hide').empty();
 
             let newActivityTbody = `
@@ -507,12 +447,13 @@
                 $('#tbody-no-activity').removeClass('hide').html(`
                     <tr>
                     <td colspan="4" class="text-center" id="no-activity">
-                        {{ __('cruds.activity.no_selected') }}
+                       {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                     </td>
                     </tr>
                 `);
             }
         });
+
 
         // Reset modal content when closed
         $('#modalAddOutput').on('hidden.bs.modal', function() {
@@ -520,18 +461,18 @@
             $('#tbody-no-activity').removeClass('hide').html(`
                 <tr>
                 <td colspan="4" class="text-center" id="no-activity">
-                    {{ __('cruds.activity.no_selected') }}
+                    {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                 </td>
                 </tr>
             `);
             $('#activity_output_list').find('tbody.data-activity').remove();
         });
-    });
+    // });
 
     let url_simpan_output_activity = "{{ route('program.details.output.activity.store') }}";
     let output_outcome_id = "{{ $program->id }}";
 
-    $(document).ready(function() {
+    // $(document).ready(function() {
         $('#formAddOutput').submit(function(event) {
             event.preventDefault(); // Prevent the default form submission
             $('#formAddOutput').find('button[type="submit"]').attr('disabled'); //disable submit button to prevent multiple submission
@@ -578,7 +519,7 @@
                     $('#tbody-no-activity').removeClass('hide').html(`
                         <tr>
                         <td colspan="4" class="text-center" id="no-activity">
-                            {{ __('cruds.activity.no_selected') }}
+                            {!! __('cruds.activity.no_activity', ['icon' => '<i class="bi bi-plus text-danger"></i>']) !!}
                         </td>
                         </tr>
                     `);
@@ -606,8 +547,10 @@
                 },
             });
         });
+
     });
 </script>
+@stack('edit-output')
 <script>
     function navigateToEditPage(url, tab) {
         window.location.href = `${url}?tab=${tab}`;

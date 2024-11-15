@@ -102,7 +102,7 @@
     })(window.jQuery);
 </script>
 
-<script>
+<script type="text/javascript" defer>
     // Data Table
     $(document).ready(function() {
 
