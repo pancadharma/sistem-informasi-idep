@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('kode', 50);
             $table->string('nama', 500);
             $table->dateTime('tanggalmulai');
+
             $table->dateTime('tanggalselesai');
             $table->foreignId('dusun_id')->constrained('dusun')->onDelete('cascade');
             $table->decimal('long', 9, 6);
@@ -36,9 +37,30 @@ return new class extends Migration
             $table->string('rekomendasi', 500)->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('status', 50);
+
+            $table->dateTime('tanggalselesai')->nullable();
+            $table->foreignId('dusun_id')->constrained('dusun')->onDelete('cascade');
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
+            $table->foreignId('kategorilokasikegiatan_id')->constrained('mkategorilokasikegiatan')->onDelete('cascade');
+            $table->string('tempat', 500)->nullable();
+            $table->longText('deskripsi')->nullable();
+            $table->longText('tujuan')->nullable();
+            $table->longText('yangterlibat')->nullable();
+            $table->string('pelatih', 500)->nullable();
+            $table->longText('informasilain')->nullable();
+            $table->string('luaslahan', 50)->nullable();
+            $table->foreignId('jenisbantuan_id')->nullable()->constrained('mjenisbantuan')->onDelete('cascade');
+            $table->foreignId('satuan_id')->nullable()->constrained('msatuan')->onDelete('cascade');
+            $table->longText('tindaklanjut')->nullable();
+            $table->longText('tantangan')->nullable();
+            $table->longText('rekomendasi')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('status', 50)->default('draft')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -46,5 +68,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('trkegiatan');
+    }
+
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('trkegiatan');
+        Schema::enableForeignKeyConstraints();
     }
 };
