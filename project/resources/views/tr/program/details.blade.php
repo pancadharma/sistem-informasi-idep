@@ -528,8 +528,9 @@
                     setTimeout(() => {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Success!',
-                            text: 'Output has been added!',
+                            title: "{{ __('global.success') }}",
+                            text: response.message,
+                            timer: 1000,
                             confirmButtonText: 'Okay'
                         });
                         fetchOutputs(outputApi);
@@ -550,6 +551,7 @@
 
     });
 </script>
+{{-- resources\views\tr\program\detail\output.blade.php --}}
 @stack('edit-output')
 <script>
     function navigateToEditPage(url, tab) {

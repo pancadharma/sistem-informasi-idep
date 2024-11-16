@@ -452,6 +452,11 @@ return [
             'out_program'   => 'Program Outcome',
             'of_outcome'    => 'dari Outcome',
             'no_outcome'    => 'Program ini tidak memiliki Outcome, :icon edit untuk menambah Outcome',
+            'stored'        => 'Program Outcome dan Aktivitas berhasil dibuat!',
+            'updated'       => 'Program Outcome dan Aktivitas berhasil diupdate!',
+            'failed'        => 'Gagal membuat Program Outcome Output dan Aktivitas!',
+            'failed_update' => 'Gagal memperbarui Program Outcome Output dan Aktivitas!',
+
         ],
         'output'            => [
             'label'         => 'Output',

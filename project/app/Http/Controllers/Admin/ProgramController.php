@@ -925,12 +925,13 @@ class ProgramController extends Controller
                 }
                 DB::commit();
                 return response()->json([
-                    'message' => 'Program Outcome Output and Activities created successfully!',
+                    'message' => '__(cruds.program.outcome.stored)',
+                    'success' => true,
                     'data' => $outcomeOutput->load('activities')
                 ], 201);
             } catch (Exception $e) {
                 DB::rollBack();
-                return response()->json(['message' => 'Failed to create Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => '__(cruds.program.outcome.failed)', 'error' => $e->getMessage()], 500);
             } catch (ValidationException $e) {
                 DB::rollBack();
                 return response()->json(['success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(), 'data'  => $request,], 422);
@@ -951,7 +952,7 @@ class ProgramController extends Controller
     // update output and activities from modal in details program outcome of activity
     public function outputActivityUpdate(Request $request)
     {
-        \Log::info('Raw Request Content: ' . json_encode($request->all()));
+        // \Log::info('Raw Request Content: ' . json_encode($request->all()));
         if (auth()->user()->id == 1 || auth()->user()->can('program_output_edit')) {
             $validated = $request->validate([
                 'programoutcome_id'         => 'required|exists:trprogramoutcome,id',
@@ -1007,13 +1008,25 @@ class ProgramController extends Controller
                 $outcomeOutput->activities()->whereIn('id', $activitiesToDelete)->delete();
                 DB::commit();
                 return response()->json([
-                    'message' => 'Program Outcome Output and Activities updated successfully!',
-                    'data' => $outcomeOutput,
-                    'success' => true
+                    'message'   => '__(cruds.program.outcome.updated)',
+                    'data'      => $outcomeOutput,
+                    'success'   => true
                 ], 201);
             } catch (Exception $e) {
                 DB::rollBack();
-                return response()->json(['message' => 'Failed to update Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => '__(cruds.program.outcome.failed_update)', 'error' => $e->getMessage()], 500);
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(), 'data'  => $request,], 422);
+            } catch (ModelNotFoundException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Resource not found.', 'data' => $request,], 404);
+            } catch (HttpException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => $e->getMessage(), 'data' => $request,], $e->getStatusCode());
+            } catch (QueryException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'An error occurred.', 'data' => $request, 'error' => $e->getMessage(),], Response::HTTP_SERVICE_UNAVAILABLE);
             }
         }
         return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);

@@ -455,6 +455,10 @@ return [
             'out_program'   => 'Program Outcome',
             'of_outcome'    => 'Of Outcome',
             'no_outcome'    => 'This Program does not have any Outcome, :icon edit add outcome',
+            'stored'        => 'Program Outcome Output and Activities created successfully!',
+            'updated'       => 'Program Outcome Output and Activities updated successfully!',
+            'failed'        => 'Failed to create Program Outcome Output and Activities!',
+            'failed_update' => 'Failed to update Program Outcome Output and Activities!',
         ],
         'output'            => [
             'label'         => 'Output',
