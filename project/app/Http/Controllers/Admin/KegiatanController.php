@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
+use Yajra\DataTables\DataTables;
 
 class KegiatanController extends Controller
 {
@@ -42,7 +44,7 @@ class KegiatanController extends Controller
                 ->make(true);
             return $data;
         }
-        // return view('tr.kegiatan.index');
+//         return view('tr.kegiatan.index');
     }
 
     public function create()
