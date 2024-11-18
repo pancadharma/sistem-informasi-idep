@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class KegiatanController extends Controller
 {
@@ -26,13 +27,13 @@ class KegiatanController extends Controller
                     $viewButton = '';
                     $detailsButton = '';
 
-                    if (auth()->user()->id == 1 || auth()->user()->can('kegiatan_edit')) {
+                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
                         $editButton = '<button type="button" title="' . __('global.edit') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-info edit-kegiatan-btn" data-action="edit" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-pencil-square"></i><span class="d-none d-sm-inline"></span></button>';
                     }
-                    if (auth()->user()->id == 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
                         $detailsButton = '<button type="button" title="' . __('global.details') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-danger details-kegiatan-btn" data-action="details" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-list-ul"></i><span class="d-none d-sm-inline"></span></button>';
                     }
-                    if (auth()->user()->id == 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
                         $viewButton = '<button type="button" title="' . __('global.view') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-primary view-kegiatan-btn" data-action="view" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
                     }
                     return "<div class='button-container'>$editButton $viewButton $detailsButton</div>";
@@ -47,7 +48,7 @@ class KegiatanController extends Controller
     public function create()
     {
 
-        if (auth()->user()->id == 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
+        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
 
             return view('tr.kegiatan.create');
         }
@@ -80,6 +81,6 @@ class KegiatanController extends Controller
 
     public function destroy($id)
     {
-        return view('tr.kegiatan.destroy');
+        return false;
     }
 }
