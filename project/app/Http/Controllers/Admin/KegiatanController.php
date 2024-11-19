@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 
 class KegiatanController extends Controller
 {
@@ -18,40 +19,42 @@ class KegiatanController extends Controller
     }
     public function list_kegiatan(Request $request)
     {
-        // abort_if(Gate::denies('kegiatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        if ($request->ajax()) {
-            $kegiatan = Kegiatan::all();
-            $data = DataTables::of($kegiatan)
-                ->addIndexColumn()
-                ->addColumn('action', function ($kegiatan) {
-                    $editButton = '';
-                    $viewButton = '';
-                    $detailsButton = '';
-
-                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-                        $editButton = '<button type="button" title="' . __('global.edit') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-info edit-kegiatan-btn" data-action="edit" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-pencil-square"></i><span class="d-none d-sm-inline"></span></button>';
-                    }
-                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-                        $detailsButton = '<button type="button" title="' . __('global.details') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-danger details-kegiatan-btn" data-action="details" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="bi bi-list-ul"></i><span class="d-none d-sm-inline"></span></button>';
-                    }
-                    if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-                        $viewButton = '<button type="button" title="' . __('global.view') . ' Kegiatan ' . $kegiatan->nama . '" class="btn btn-sm btn-primary view-kegiatan-btn" data-action="view" data-kegiatan-id="' . $kegiatan->id . '" data-toggle="tooltip" data-placement="top"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline"></span></button>';
-                    }
-                    return "<div class='button-container'>$editButton $viewButton $detailsButton</div>";
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-            return $data;
+        if (!$request->ajax() && !$request->isJson()) {
+            return "Not an Ajax Request & JSON REQUEST";
         }
-//         return view('tr.kegiatan.index');
+        $kegiatan = Kegiatan::all();
+        $data = DataTables::of($kegiatan)
+            ->addIndexColumn()
+            ->addColumn('action', function ($kegiatan) {
+                $buttons = [];
+
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+        return $data;
+    }
+    private function generateButton($action, $class, $icon, $title, $kegiatanId)
+    {
+        return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
+                data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
+                    <i class="bi bi-' . $icon . '"></i>
+                    <span class="d-none d-sm-inline"></span>
+                </button>';
     }
 
     public function create()
     {
-
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-
             return view('tr.kegiatan.create');
         }
         return response()->json([

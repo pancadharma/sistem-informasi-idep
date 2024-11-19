@@ -34,9 +34,6 @@
                         <th>{{ __('cruds.kegiatan.tanggalmulai') }}</th>
                         <th>{{ __('cruds.kegiatan.tanggalselesai') }}</th>
                         <th>{{ __('cruds.kegiatan.tempat') }}</th>
-    {{--                    <th>{{ __('cruds.kegiatan.kategori_lokasi') }}</th>--}}
-    {{--                    <th>{{ __('cruds.kegiatan.luaslahan') }}</th>--}}
-    {{--                    <th>{{ __('cruds.kegiatan.jenisbantuan') }}</th>--}}
                         <th>{{ __('cruds.kegiatan.status') }}</th>
                         <th>{{ __('global.actions') }}</th>
                     </tr>

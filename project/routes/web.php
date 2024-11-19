@@ -228,5 +228,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Untuk Kegiatan
     Route::resource('kegiatan', KegiatanController::class);
+    Route::get('kegiatan/api/list', [KegiatanController::class, 'list_kegiatan'])->name('api.kegiatan.list');
 
 });
