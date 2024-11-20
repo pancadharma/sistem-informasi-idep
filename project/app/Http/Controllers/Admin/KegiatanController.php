@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
+
 
 class KegiatanController extends Controller
 {
@@ -17,14 +19,74 @@ class KegiatanController extends Controller
         abort_if(Gate::denies('kegiatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('tr.kegiatan.index');
     }
+    // public function list_kegiatan(Request $request)
+    // {
+    //     if (!$request->ajax() && !$request->isJson()) {
+    //         return "Not an Ajax Request & JSON REQUEST";
+    //     }
+
+    //     $kegiatan = Kegiatan::with(['dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan'])
+    //         ->select('trkegiatan.*')
+    //         ->get()
+    //         ->map(function ($item) {
+    //             $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y'); // Format the date as needed
+    //             return $item;
+    //         });
+    //     $data = DataTables::of($kegiatan)
+    //         ->addIndexColumn()
+    //         ->addColumn('program_name', function ($kegiatan) {
+    //             return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+    //         })
+    //         ->addColumn('action', function ($kegiatan) {
+    //             $buttons = [];
+
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('cruds.kegiatan.edit') . '&nbsp;' . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('cruds.kegiatan.show') . '&nbsp;' . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('cruds.kegiatan.details') . '&nbsp;' . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+    //         })
+    //         ->rawColumns(['action'])
+    //         ->make(true);
+
+    //     return $data;
+    // }
+
     public function list_kegiatan(Request $request)
     {
         if (!$request->ajax() && !$request->isJson()) {
             return "Not an Ajax Request & JSON REQUEST";
         }
-        $kegiatan = Kegiatan::all();
+
+        $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y'); // Customize the format as needed
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y'); // Customize the format as needed
+                $item->duration_in_days = $item->getDurationInDays();
+
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $program->getTotalBeneficiaries();
+                $item->duration_in_days = $program->getDurationInDays();
+
+                return $item;
+            });
+
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
+            ->addColumn('program_name', function ($kegiatan) {
+                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+            })
+            ->addColumn('duration_in_days', function ($kegiatan) {
+                return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
+            })
             ->addColumn('action', function ($kegiatan) {
                 $buttons = [];
 
@@ -41,8 +103,11 @@ class KegiatanController extends Controller
             })
             ->rawColumns(['action'])
             ->make(true);
+
         return $data;
     }
+
+
     private function generateButton($action, $class, $icon, $title, $kegiatanId)
     {
         return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"

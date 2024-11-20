@@ -142,4 +142,19 @@ class Program extends Model implements HasMedia
     {
         $this->attributes['tanggalselesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
+
+    public function getTotalBeneficiaries()
+    {
+        return $this->ekspektasipenerimamanfaatwoman +
+            $this->ekspektasipenerimamanfaatman +
+            $this->ekspektasipenerimamanfaatgirl +
+            $this->ekspektasipenerimamanfaatboy +
+            $this->ekspektasipenerimamanfaattidaklangsung;
+    }
+
+    public function getDurationInDays()
+    {
+        return Carbon::parse($this->tanggalmulai)
+            ->diffInDays(Carbon::parse($this->tanggalselesai));
+    }
 }

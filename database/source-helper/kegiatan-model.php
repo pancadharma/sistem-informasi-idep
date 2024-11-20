@@ -7,7 +7,6 @@ use App\Traits\Auditable;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Carbon\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -59,6 +58,7 @@ class Kegiatan extends Model implements HasMedia
     {
         return $date->format('Y-m-d H:i:s');
     }
+
     public function getTglMulaiAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
@@ -91,15 +91,9 @@ class Kegiatan extends Model implements HasMedia
         return $file;
     }
 
-    public function getDurationInDays()
-    {
-        return Carbon::parse($this->tanggalmulai)
-            ->diffInDays(Carbon::parse($this->tanggalselesai));
-    }
-
     public function registerMediaConversions(Media $media = null): void
     {
-        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
         $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     }
 
@@ -130,12 +124,18 @@ class Kegiatan extends Model implements HasMedia
 
     public function activity()
     {
-        // programoutcomeoutputactivity_id
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    // public function program()
-    // {
-    //     return $this->belongsTo(Program::class);
-    // }
+    public function program()
+    {
+        return $this->belongsTo(Program::class); 
+    }
+
+    // Calculate Duration in Days for Kegiatan
+    public function getDurationInDays()
+    {
+        return Carbon::parse($this->tanggalmulai)
+            ->diffInDays(Carbon::parse($this->tanggalselesai));
+    }
 }

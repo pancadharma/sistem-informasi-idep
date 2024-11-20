@@ -91,10 +91,21 @@ class ProgramController extends Controller
         return $data;
     }
 
+    // public function show(Program $program)
+    // {
+    //     return response()->json($program);
+    // }
+
     public function show(Program $program)
     {
-        return response()->json($program);
+        // $program = Program::findOrFail($id);
+
+        $totalBeneficiaries = $program->getTotalBeneficiaries();
+        $durationInDays = $program->getDurationInDays();
+
+        return view('tr.program.show', compact('program', 'totalBeneficiaries', 'durationInDays'));
     }
+
 
     public function create()
     {
