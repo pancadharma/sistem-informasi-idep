@@ -24,13 +24,13 @@
                         </div>
                     </div>
                     {{-- Informasi Dasar --}}
-                    <div class="card-body pb-0">
+                    {{-- <div class="card-body pb-0">
                         <div class="row">
 
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- Call Detail Activity for Create Here --}}
-                    <div class="card-body pt-0">
+                    <div class="card-body p-0">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     {{-- Submit Button --}}
-                    <div class="card-body pt-0">
+                    <div class="card-body p-0">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
