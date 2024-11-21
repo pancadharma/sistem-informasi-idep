@@ -2,27 +2,27 @@
 
 use Carbon\Carbon;
 
-public function list_kegiatan(Request $request)
+function list_kegiatan(Request $request)
 {
     if (!$request->ajax() && !$request->isJson()) {
         return "Not an Ajax Request & JSON REQUEST";
     }
 
     $kegiatan = Kegiatan::with([
-            'dusun',
-            'users',
-            'kategori_lokasi',
-            'activity.program_outcome_output.program_outcome.program',
-            'satuan',
-            'jenis_bantuan'
-        ])
+        'dusun',
+        'users',
+        'kategori_lokasi',
+        'activity.program_outcome_output.program_outcome.program',
+        'satuan',
+        'jenis_bantuan'
+    ])
         ->select('trkegiatan.*')
         ->get()
         ->map(function ($item) {
             // Format the dates using Carbon
             $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y'); // Customize the format as needed
             $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y'); // Customize the format as needed
-            
+
             // Add duration in days
             $item->duration_in_days = $item->getDurationInDays();
 
@@ -56,4 +56,3 @@ public function list_kegiatan(Request $request)
 
     return $data;
 }
-?>
