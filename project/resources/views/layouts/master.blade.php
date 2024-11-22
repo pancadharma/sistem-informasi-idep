@@ -15,6 +15,14 @@
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap-icons/font/bootstrap-icons.min.css') }}" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
+    <style>
+        .self-center {
+            align-self: center;
+        }
+        .col-sm-6.col-md-6.col-lg-6.order-1.order-md-2.self-center {
+            align-self: end;
+        }
+    </style>
 
     @if(config('adminlte.google_fonts.allowed', true))@endif
     @else<link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">@endif

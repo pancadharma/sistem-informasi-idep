@@ -1,5 +1,5 @@
 <div class="col-12 col-sm-12">
-    <div class="card card-primary card-outline card-outline-tabs">
+    <div class="card card-primary card-tabs">
         <div class="card-header border-bottom-0 p-0">
             <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
                 <li class="nav-item">

@@ -2,7 +2,7 @@
 
 @section('subtitle', __('cruds.kegiatan.add'))
 {{--@section('content_header_title', __('cruds.kegiatan.add'))--}}
-@section('content_header_title') {!!  '&nbsp;'  !!} @endsection
+@section('content_header_title')<strong> <i class="fas fa-edit"></i>{{ __('cruds.kegiatan.add') }}</strong> @endsection
 @section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
 @section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
 
