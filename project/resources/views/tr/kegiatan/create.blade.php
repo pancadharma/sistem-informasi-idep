@@ -3,18 +3,21 @@
 @section('subtitle', __('cruds.kegiatan.add'))
 {{--@section('content_header_title', __('cruds.kegiatan.add'))--}}
 @section('content_header_title') {!!  '&nbsp;'  !!} @endsection
-@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span>@endsection
+@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
 
 @section('content_body')
     <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
 
-        <div class="row">
+        @include('tr.kegiatan.tabs')
+
+        {{-- <div class="row"> --}}
             <div class="col-sm-12">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <strong>
+                        <strong><i class="fas fa-edit"></i>
                             {{ __('cruds.kegiatan.add') }}
                         </strong>
                         <div class="card-tools">
@@ -30,17 +33,17 @@
                         </div>
                     </div> --}}
                     {{-- Call Detail Activity for Create Here --}}
-                    <div class="card-body p-0">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
-                                     @include('tr.kegiatan.tabs')
+                                     {{-- @include('tr.kegiatan.tabs') --}}
                                 </div>
                             </div>
                         </div>
                     </div>
                     {{-- Submit Button --}}
-                    <div class="card-body p-0">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
@@ -54,7 +57,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        {{-- </div> --}}
     </form>
 @stop
 

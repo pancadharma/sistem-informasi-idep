@@ -48,35 +48,44 @@
             <div class="tab-content" id="details-kegiatan-tabContent">
                 <div class="tab-pane fade show active" id="basic-tabs" role="tabpanel"
                      aria-labelledby="basic-tabs">
-{{--                    @include('tr.program.detail.lokasi')--}}
+                     q
+                   {{-- @include('tr.program.detail.lokasi') --}}
+
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel"
                      aria-labelledby="custom-tabs-four-profile-tab">
-{{--                    @include('tr.program.detail.donor')--}}
+                   2
+                     {{-- @include('tr.program.detail.donor') --}}
                 </div>
                 <div class="tab-pane fade" id="hasil-tab" role="tabpanel"
                      aria-labelledby="hasil-tab">
-{{--                    @include('tr.program.detail.staff')--}}
+                   3
+                     {{-- @include('tr.program.detail.staff') --}}
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-outcome" role="tabpanel"
                      aria-labelledby="custom-tabs-four-outcome-tab">
-{{--                    @include('tr.program.detail.outcome')--}}
+                   4
+                     {{-- @include('tr.program.detail.outcome') --}}
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-partner" role="tabpanel"
                      aria-labelledby="custom-tabs-four-partner-tab">
-{{--                    @include('tr.program.detail.partner')--}}
+                   5
+                     {{-- @include('tr.program.detail.partner') --}}
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-report" role="tabpanel"
                      aria-labelledby="custom-tabs-four-report-tab">
-{{--                    @include('tr.program.detail.reposrtschedule')--}}
+                   6
+                     {{-- @include('tr.program.detail.reposrtschedule') --}}
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-objective" role="tabpanel"
                      aria-labelledby="custom-tabs-four-objective-tab">
-{{--                    @include('tr.program.detail.objective')--}}
+                   7
+                     {{-- @include('tr.program.detail.objective') --}}
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-four-goals" role="tabpanel"
                      aria-labelledby="custom-tabs-four-goals-tab">
-{{--                    @include('tr.program.detail.goals')--}}
+                   8
+                     {{-- @include('tr.program.detail.goals') --}}
                 </div>
 
             </div>
