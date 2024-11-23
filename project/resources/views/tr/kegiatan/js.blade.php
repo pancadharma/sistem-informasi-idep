@@ -25,7 +25,7 @@
                 {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center'},
             ],
             order: [0, 'asc'],
-            lengthMenu: [10,25,50,100, 'all'],
+            lengthMenu: [10,25,50,100],
 
         });
     });

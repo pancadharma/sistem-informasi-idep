@@ -26,9 +26,8 @@ class AlwaysSeedDev extends Seeder
             KategoriPendonorSeeder::class,
             JenisBantuanSeeder::class,
             KelompokMarjinalSeeder::class,
-            FactoryTargetReinstraSeeder::class,
-            FakerKategoriLokasiKegiatan::class,
-
+            // FactoryTargetReinstraSeeder::class,
+            // FakerKategoriLokasiKegiatan::class,
             // CountryTableSeeder::class,
             // ProvinsiSeeder::class,
             // KabupatenSeeder::class,
