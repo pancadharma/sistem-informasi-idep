@@ -11,7 +11,7 @@
         @csrf
         @method('POST')
 
-        @include('tr.kegiatan.tabs')
+        {{-- @include('tr.kegiatan.tabs') --}}
 
         {{-- <div class="row"> --}}
             <div class="col-sm-12">
@@ -37,7 +37,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
-                                     {{-- @include('tr.kegiatan.tabs') --}}
+                                     @include('tr.kegiatan.tabs')
                                 </div>
                             </div>
                         </div>

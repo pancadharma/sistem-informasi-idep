@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use DB;
+use App\Models\Partner;
 use Illuminate\Database\Seeder;
-
 
 class AlwaysSeedDev extends Seeder
 {
@@ -26,6 +27,7 @@ class AlwaysSeedDev extends Seeder
             JenisBantuanSeeder::class,
             KelompokMarjinalSeeder::class,
             FactoryTargetReinstraSeeder::class,
+            FakerKategoriLokasiKegiatan::class,
 
             // CountryTableSeeder::class,
             // ProvinsiSeeder::class,
