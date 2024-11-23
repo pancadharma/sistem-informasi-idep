@@ -8,23 +8,20 @@ function list_kegiatan(Request $request)
         return "Not an Ajax Request & JSON REQUEST";
     }
 
-    $kegiatan = Kegiatan::with([
-        'dusun',
-        'users',
-        'kategori_lokasi',
-        'activity.program_outcome_output.program_outcome.program',
-        'satuan',
-        'jenis_bantuan'
-    ])
+    $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
         ->select('trkegiatan.*')
         ->get()
         ->map(function ($item) {
-            // Format the dates using Carbon
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y'); // Customize the format as needed
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y'); // Customize the format as needed
-
-            // Add duration in days
+            // Calculate duration before formatting
             $item->duration_in_days = $item->getDurationInDays();
+
+        // Format dates after calculating duration
+        $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+        $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+
+        // Add calculated values
+        $program = $item->activity->program_outcome_output->program_outcome->program;
+        $item->total_beneficiaries = $program->getTotalBeneficiaries();
 
             return $item;
         });
@@ -35,7 +32,7 @@ function list_kegiatan(Request $request)
             return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
         })
         ->addColumn('duration_in_days', function ($kegiatan) {
-            return $kegiatan->duration_in_days ?? 'N/A';
+        return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days') ?? 'N/A';
         })
         ->addColumn('action', function ($kegiatan) {
             $buttons = [];
