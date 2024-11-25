@@ -563,7 +563,7 @@ return [
         'basic'                                  => [
             'nama'                               => 'Activity Name',
             'kode'                               => 'Activity Code',
-            'desa'                               => 'Village',
+            'desa'                               => 'Village/District',
             'lokasi'                             => 'Activity Location',
             'tanggalmulai'                       => 'Start Date',
             'tanggalselesai'                     => 'End Date',

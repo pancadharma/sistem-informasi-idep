@@ -561,7 +561,7 @@ return [
         'basic'                     => [
             'nama'                  => 'Nama Kegiatan',
             'kode'                  => 'Kode Kegiatan',
-            'desa'                  => 'Desa',
+            'desa'                  => 'Desa/Kelurahan',
             'lokasi'                => 'Lokasi Kegiatan',
             'tanggalmulai'          => 'Tanggal Mulai',
             'tanggalselesai'        => 'Tanggal Selesai',

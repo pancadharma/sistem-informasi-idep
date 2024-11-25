@@ -11,10 +11,12 @@
         @csrf
         @method('POST')
 
-        {{-- @include('tr.kegiatan.tabs') --}}
+        <div class="row">
+            @include('tr.kegiatan.tabs')
+        </div>
 
         {{-- <div class="row"> --}}
-            <div class="col-sm-12">
+            {{-- <div class="col-sm-12">
                 <div class="card card-primary">
                     <div class="card-header">
                         <strong><i class="fas fa-edit"></i>
@@ -26,13 +28,6 @@
                             </button>
                         </div>
                     </div>
-                    {{-- Informasi Dasar --}}
-                    {{-- <div class="card-body pb-0">
-                        <div class="row">
-
-                        </div>
-                    </div> --}}
-                    {{-- Call Detail Activity for Create Here --}}
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
@@ -42,7 +37,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- Submit Button --}}
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
@@ -56,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         {{-- </div> --}}
     </form>
 @stop
@@ -80,6 +74,10 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
+
+
+
+@stack('basic_tab_js')
 
 @include('tr.kegiatan.js.create')
 {{-- @include('tr.kegiatan.js.detail-create.donor')

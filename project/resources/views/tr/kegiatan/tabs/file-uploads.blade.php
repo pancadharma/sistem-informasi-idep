@@ -7,8 +7,8 @@
                     {{ __('cruds.program.upload') }}
                 </strong>
                 <span class="text-red">
-                                        ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
-                                    </span>
+                    ( {{ __('allowed file: .jpg .png .pdf .docx | max: 4MB') }} )
+                </span>
             </label>
             <div class="form-group file-loading">
                 <input id="file_pendukung" name="file_pendukung[]" type="file" class="form-control" multiple data-show-upload="false" data-show-caption="true">
