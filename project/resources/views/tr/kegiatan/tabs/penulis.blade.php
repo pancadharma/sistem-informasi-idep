@@ -1,6 +1,8 @@
 <!-- Penulis Laporan Kegiatan-->
 <div class="form-group row tambah_penulis col">
-    <button type="button" class="btn btn-success float-right">{{ __('global.add') .' '. __('cruds.kegiatan.penulis.label') }}</button>
+    <button type="button" class="btn btn-success float-right" title="{{ __('global.add') .' '. __('cruds.kegiatan.penulis.label') }}">
+        <i class="bi bi-folder-plus"></i> {{ __('global.add') .' '. __('cruds.kegiatan.penulis.label') }}
+    </button>
 </div>
 <div class="form-group row list_penulis">
     <div class="col-sm col-md col-lg self-center">

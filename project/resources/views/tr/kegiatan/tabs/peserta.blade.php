@@ -34,23 +34,47 @@
 
 <!-- Penulis Laporan Kegiatan-->
 <div class="form-group row tambah_peserta" id="tambah_peserta">
-    <button type="button" class="btn btn-success float-right">{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}</button>
+    <div class="col-12 pl-0">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
+            <i class="bi bi-person-plus"></i>
+            {{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}
+        </button>
+    </div>
 </div>
 <div class="form-group row list_peserta">
-    <table id="list_peserta_kegiatan" class="table table-bordered responsive datatable-kegiatan"
-    style="width:100%">
-        <thead>
-            <tr>
-                <th>{{ __('cruds.kegiatan.peserta.identitas') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.nama') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.jenis_kelamin') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.tanggal_lahir') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.disabilitas') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.hamil') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.status_kawin') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.no_kk') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.jenis_peserta') }}</th>
-                <th>{{ __('cruds.kegiatan.peserta.nama_kk') }}</th>
-            </tr>
-    </table>
+    <div class="card card-outline card-info table-responsive">
+        <table id="list_peserta_kegiatan" class="table table-bordered table-striped table-hover ajaxTable datatable-kegiatan"
+        style="width:100%">
+            <thead>
+                <tr>
+                    <th>{{ __('cruds.kegiatan.peserta.identitas') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.nama') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.jenis_kelamin') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.tanggal_lahir') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.disabilitas') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.hamil') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.status_kawin') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.no_kk') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.jenis_peserta') }}</th>
+                    <th>{{ __('cruds.kegiatan.peserta.nama_kk') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
+@include('tr.kegiatan.tabs.peserta-modal')

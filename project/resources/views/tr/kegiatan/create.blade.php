@@ -12,7 +12,7 @@
         @method('POST')
 
         <div class="row">
-            @include('tr.kegiatan.details.create')
+            {{-- @include('tr.kegiatan.details.create') --}}
         </div>
         <div class="row">
             @include('tr.kegiatan.tabs')
