@@ -512,6 +512,7 @@ return [
     'kegiatan'                      => [
         'helper'                    => '',
         'info'                      => 'Informasi Kegiatan',
+        'program'                   => 'Program',
         'label'                     => 'Kegiatan',
         'nama'                      => 'Nama Kegiatan',
         'kode'                      => 'Kode Kegiatan',
@@ -548,6 +549,8 @@ return [
         'edit'                      => 'Edit Kegiatan',
         'delete'                    => 'Hapus Kegiatan',
         'select'                    => 'Pilih Kegiatan',
+        'bentuk_kegiatan'           => 'Bentuk Kegiatan',
+        'kategori_lokasi_kegiatan'  => 'Kategori Lokasi Kegiatan',
         'no_selected'               => 'Tidak Ada Kegiatan yang Dipilih',
         'no_activity'               => 'Output ini tidak memiliki Kegiatan, klik ikon :icon untuk menambah aktivitas',
         'tabs'                      => [

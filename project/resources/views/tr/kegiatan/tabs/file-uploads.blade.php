@@ -117,6 +117,5 @@
         });
 
     });
-
 </script>
 @endpush

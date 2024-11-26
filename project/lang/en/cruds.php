@@ -513,6 +513,7 @@ return [
 
     'kegiatan'                                   => [
         'helper'                                 => '',
+        'program'                                => 'Program',
         'info'                                   => 'Activity Information',
         'label'                                  => 'Activity',
         'nama'                                   => 'Activity Name',
@@ -550,6 +551,8 @@ return [
         'details'                                => 'Details Activity',
         'show'                                   => 'Show Activity',
         'select'                                 => 'Select Activity',
+        'bentuk_kegiatan'                        => 'Per Activity',
+        'kategori_lokasi_kegiatan'               => 'Location Category',
         'no_selected'                            => 'No Activity Selected',
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
         'tabs'                                   => [
