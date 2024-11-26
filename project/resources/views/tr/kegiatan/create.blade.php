@@ -12,6 +12,9 @@
         @method('POST')
 
         <div class="row">
+
+        </div>
+        <div class="row">
             @include('tr.kegiatan.tabs')
         </div>
 
@@ -79,7 +82,7 @@
 
 @stack('basic_tab_js')
 
-@include('tr.kegiatan.js.create')
+{{-- @include('tr.kegiatan.js.create') --}}
 {{-- @include('tr.kegiatan.js.detail-create.donor')
 @include('tr.kegiatan.js.detail-create.lokasi')
 @include('tr.kegiatan.js.detail-create.staff')
