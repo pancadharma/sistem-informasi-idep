@@ -1,5 +1,5 @@
 /*!
- * 
+ *
  * Super simple WYSIWYG editor v0.8.20
  * https://summernote.org
  *
@@ -466,10 +466,10 @@
 }
 .note-editor.note-frame .note-statusbar,
 .note-editor.note-airframe .note-statusbar {
-    background-color: #8080801d;
+    background-color: #007bff1f;
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    border-top: 1px solid #00000032;
+    border-top: 1px solid #00000000;
 }
 .note-editor.note-frame .note-statusbar .note-resizebar,
 .note-editor.note-airframe .note-statusbar .note-resizebar {
@@ -810,7 +810,7 @@ html .note-fullscreen-body, body .note-fullscreen-body {
 }
 
 .note-toolbar {
-    background: #8080801d;
+    background: #00000000;
 }
 
 .note-btn-group .note-btn {

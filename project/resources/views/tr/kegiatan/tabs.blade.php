@@ -6,7 +6,7 @@
                     <i class="bi bi-arrows-collapse"></i>
                 </button>
                 <li class="nav-item">
-                    <a class="nav-link active" id="basic-tab" data-toggle="pill" href="#tab-basic" role="tab" aria-controls="tab-basic" aria-selected="true">
+                    <a class="nav-link {{-- active --}}" id="basic-tab" data-toggle="pill" href="#tab-basic" role="tab" aria-controls="tab-basic" aria-selected="true">
                         {{ __('cruds.kegiatan.tabs.basic') }}
                     </a>
                 </li>
@@ -21,8 +21,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
-                        {{ __('cruds.kegiatan.tabs.peserta') }}
+                    <a class="nav-link active" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
+                        {{ __('cruds.kegiatan.peserta.tab') }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -39,23 +39,23 @@
         </div>
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
-                <div class="tab-pane fade show active" id="tab-basic" role="tabpanel" aria-labelledby="basic-tab">
+                <div class="tab-pane fade {{-- show active --}}" id="tab-basic" role="tabpanel" aria-labelledby="basic-tab">
                     @include('tr.kegiatan.tabs.basic')
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                   2 {{-- @include('tr.program.detail.donor') --}}
+                    @include('tr.kegiatan.tabs.description')
                 </div>
                 <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
-                   3 {{-- @include('tr.program.detail.staff') --}}
+                    @include('tr.kegiatan.tabs.hasil')
                 </div>
-                <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
-                   4 {{-- @include('tr.program.detail.outcome') --}}
+                <div class="tab-pane fade show active" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
+                    @include('tr.kegiatan.tabs.peserta')
                 </div>
                 <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                   5 {{-- @include('tr.program.detail.partner') --}}
+                    @include('tr.kegiatan.tabs.file-uploads')
                 </div>
                 <div class="tab-pane fade" id="tab-penulis" role="tabpanel" aria-labelledby="tab-penulis">
-                   6 {{-- @include('tr.program.detail.reposrtschedule') --}}
+                    @include('tr.kegiatan.tabs.penulis')
                 </div>
             </div>
         </div>
