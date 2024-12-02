@@ -13,20 +13,6 @@
             </div>
             <div class="modal-body">
                 <form id="pesertaForm" class="row">
-                    {{-- <div class="form-group">
-                        <label for="identitas">{{ __('cruds.kegiatan.peserta.identitas') }}</label>
-                        <input type="text"
-                            class="form-control"
-                            id="identitas"
-                            name="identitas"
-                            pattern="[0-9]+"
-                            maxlength="16"
-                            placeholder="{{ __('cruds.kegiatan.peserta.placeholder_no_identitas') }}"
-                            required
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
-                        >
-                        <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_identitas') }}</small>
-                    </div> --}}
                     <!-- identitas -->
                     <div class="form-group row">
                        <label for="identitas" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.identitas') }}</label>
@@ -61,12 +47,21 @@
                            <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_kk') }}</small>
                        </div>
                    </div>
+                   <!-- nama kepala keluarga -->
+                    <div class="form-group row">
+                        <label for="nama_kk" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.nama_kk') }}</label>
+                        <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                            <input type="text" class="form-control" id="nama_kk" name="nama_kk">
+                        </div>
+                    </div>
+                    <!-- nama peserta / penerima manfaat-->
                     <div class="form-group row">
                         <label for="nama" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.nama') }}</label>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                             <input type="text" class="form-control" id="nama" name="nama" required>
                         </div>
                     </div>
+                    <!-- jenis kelamin -->
                     <div class="form-group row">
                         <label for="jenis_kelamin" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.jenis_kelamin') }}</label>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
@@ -76,6 +71,7 @@
                             </select>
                         </div>
                     </div>
+                    <!-- tanggal lahir -->
                     <div class="form-group row">
                         <label for="tanggal_lahir" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.tanggal_lahir') }}</label>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
@@ -100,6 +96,7 @@
                             </select>
                         </div>
                     </div>
+                    <!-- status kawin -->
                     <div class="form-group row">
                         <label for="status_kawin" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.status_kawin') }}</label>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
@@ -112,16 +109,14 @@
                             </select>
                         </div>
                     </div>
+                    <!-- jenis peserta (should be a select dropdown ?) -->
                     <div class="form-group row">
                         <label for="jenis_peserta" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.jenis_peserta') }}</label>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                             <input type="text" class="form-control" id="jenis_peserta" name="jenis_peserta">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="nama_kk" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.peserta.nama_kk') }}</label>
-                        <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                            <input type="text" class="form-control" id="nama_kk" name="nama_kk">
+                            <!--
+                                please suggest a better input for field jenis peserta ( participant type)
+                             -->
                         </div>
                     </div>
                 </form>
