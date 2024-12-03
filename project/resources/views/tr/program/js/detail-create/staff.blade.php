@@ -1,4 +1,4 @@
-@push('js')
+{{-- @push('js')
     <script>
         // var data_staff = "{{ route('api.prov') }}";
         var data_staff = "{{ route('api.program.staff') }}";
@@ -67,4 +67,4 @@
             }
         });
     </script>
-@endpush
+@endpush --}}
