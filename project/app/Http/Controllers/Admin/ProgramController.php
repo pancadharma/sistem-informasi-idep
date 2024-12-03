@@ -353,6 +353,9 @@ class ProgramController extends Controller
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
 
+            // Update staff and peran
+            $this->updateProgramStaff($program, $request);
+
             // update program donatur
             $this->updateProgramDonatur($program, $request);
             $this->updateProgramOutcomes($program, $request);
@@ -664,6 +667,41 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
+    public function updateProgramStaff($program, Request $request)
+    {
+        try {
+            $staffIds = $request->input('staff_id', []);
+            $peranIds = $request->input('peran_id', []);
+
+            // Ensure that staff and peran arrays are of the same length
+            if (count($staffIds) !== count($peranIds)) {
+                throw new Exception('Mismatched staff_id and peran_id arrays length');
+            }
+
+            // Prepare staff-peran relationship data
+            $staffPeran = [];
+            foreach ($staffIds as $index => $staffId) {
+                if (!isset($peranIds[$index])) {
+                    throw new Exception("Missing peran value for staff ID $staffId at index $index");
+                }
+                $staffPeran[$staffId] = ['peran_id' => $peranIds[$index]];
+            }
+
+            // Sync staff and peran relationships
+            $program->staff()->sync($staffPeran);
+
+            return response()->json(['success' => true, 'message' => 'Program staff updated successfully.']);
+        } catch (Exception $e) {
+            \Log::error('Error updating program staff: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the program staff. Please try again.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function storeDonor($program, Request $request)
     {

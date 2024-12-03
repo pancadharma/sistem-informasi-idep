@@ -422,6 +422,15 @@
                 console.log(`${pair[0]}: ${pair[1]}`);
             }
 
+            // Collect staff and peran data
+            $('.staff-row').each(function () {
+                const staffId = $(this).find('.staff-select').val(); // Get selected staff ID
+                const peranId = $(this).find('.peran-select').val(); // Get selected peran ID
+                if (staffId && peranId) {
+                    formData.append('staff_peran[' + staffId + ']', peranId); // Append as key-value pairs
+                }
+            });
+
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -443,7 +452,7 @@
                     setTimeout(() => {
                         if (response.success === true) {
                             Swal.fire({
-                                title: "Sukses",
+                                title: "Success",
                                 text: response.message,
                                 icon: "success",
                                 timer: 1500,
