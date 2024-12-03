@@ -437,8 +437,8 @@ return [
             'val'           => 'Nilai Donasi',
         ],
         'staff'             => [
-            'label'         => 'Staf',
-            'select'        => 'Pilih Staf',
+            'label'         => 'Staff',
+            'select'        => 'Pilih Staff',
             'peran'         => 'Peran',
             'sel_peran'     => 'Pilih Peran',
         ],
