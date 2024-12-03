@@ -128,6 +128,11 @@ class ProgramController extends Controller
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
+            // Sync staff and peran
+            $this->storeStaffPeran($program, $request);
+            // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
+
+
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
             if ($request->hasFile('file_pendukung')) {
@@ -668,39 +673,38 @@ class ProgramController extends Controller
         }
     }
 
-    public function updateProgramStaff($program, Request $request)
+    public function updateProgramStaff(Program $program, Request $request)
     {
         try {
-            $staffIds = $request->input('staff_id', []);
-            $peranIds = $request->input('peran_id', []);
+            // Collect staff and peran data
+            $staff = $request->input('staff', []);
+            $peran = $request->input('peran', []);
 
-            // Ensure that staff and peran arrays are of the same length
-            if (count($staffIds) !== count($peranIds)) {
-                throw new Exception('Mismatched staff_id and peran_id arrays length');
+            // Ensure both staff and peran have the same count (if required)
+            if (count($staff) !== count($peran)) {
+                throw new Exception('Staff and Peran count mismatch.');
             }
 
-            // Prepare staff-peran relationship data
-            $staffPeran = [];
-            foreach ($staffIds as $index => $staffId) {
-                if (!isset($peranIds[$index])) {
-                    throw new Exception("Missing peran value for staff ID $staffId at index $index");
-                }
-                $staffPeran[$staffId] = ['peran_id' => $peranIds[$index]];
+            $staffPeranData = [];
+            foreach ($staff as $index => $staffId) {
+                $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
             }
 
-            // Sync staff and peran relationships
-            $program->staff()->sync($staffPeran);
+            // Assuming you have a 'staff' relationship on the Program model
+            $program->staff()->sync($staffPeranData);
 
             return response()->json(['success' => true, 'message' => 'Program staff updated successfully.']);
         } catch (Exception $e) {
             \Log::error('Error updating program staff: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while updating the program staff. Please try again.',
+                'message' => 'An error occurred while updating the program staff.',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
+
+
 
 
     public function storeDonor($program, Request $request)
@@ -1107,5 +1111,35 @@ class ProgramController extends Controller
                 'message' => 'Data Output not found'
             ], 404);
         }
+    }
+
+
+
+    /**
+     * Handle the staff and peran syncing for the program.
+     *
+     * @param Program $program
+     * @param Request $request
+     * @return void
+     * @throws Exception
+     */
+    public function storeStaffPeran(Program $program, Request $request)
+    {
+        $staff = $request->input('staff', []);
+        $peran = $request->input('peran', []);
+
+        // Check if staff and peran arrays are equal
+        if (count($staff) !== count($peran)) {
+            throw new Exception('Staff and Peran count mismatch.');
+        }
+
+        // Prepare the data for syncing
+        $staffPeranData = [];
+        foreach ($staff as $index => $staffId) {
+            $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
+        }
+
+        // Sync the staff with the peran data
+        $program->staff()->sync($staffPeranData);
     }
 }

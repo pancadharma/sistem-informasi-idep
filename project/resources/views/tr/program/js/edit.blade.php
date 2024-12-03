@@ -373,6 +373,26 @@
             e.preventDefault();
             $(this).find('button[type="submit"]').attr('disabled', 'disabled');
             var formData = new FormData(this);
+
+            // Log the values of staff[] and peran[] to verify they are included
+            var staffValues = $('select[name="staff[]"]').map(function() {
+                return $(this).val();
+            }).get();
+            var peranValues = $('select[name="peran[]"]').map(function() {
+                return $(this).val();
+            }).get();
+
+            console.log('Staff Values:', staffValues);
+            console.log('Peran Values:', peranValues);
+
+            $.each(staffValues, function(index, value) {
+                formData.append('staff[]', value);
+            });
+
+            $.each(peranValues, function(index, value) {
+                formData.append('peran[]', value);
+            });
+
             formData.append('_method', 'PUT');
 
             // Collect fields to remove masked values
@@ -423,13 +443,25 @@
             }
 
             // Collect staff and peran data
-            $('.staff-row').each(function () {
-                const staffId = $(this).find('.staff-select').val(); // Get selected staff ID
-                const peranId = $(this).find('.peran-select').val(); // Get selected peran ID
-                if (staffId && peranId) {
-                    formData.append('staff_peran[' + staffId + ']', peranId); // Append as key-value pairs
-                }
-            });
+            // $('.staff-row').each(function () {
+            //     const staffId = $(this).find('.staff-select').val(); // Get selected staff ID
+            //     const peranId = $(this).find('.peran-select').val(); // Get selected peran ID
+            //     if (staffId && peranId) {
+            //         formData.append('staff_peran[' + staffId + ']', peranId); // Append as key-value pairs
+            //     }
+            // });
+
+            // let staffPeran = [];
+            // $('input[name="staff[]"]').each(function(index) {
+            //     let staffId = $(this).val();
+            //     let peranId = $('input[name="peran[]"]').eq(index).val();
+            //     staffPeran.push({ staff_id: staffId, peran_id: peranId });
+            // });
+
+            // console.log('hasil log staff dan peran', staffPeran);
+
+            // formData.append('staff_peran', JSON.stringify(staffPeran));
+
 
             $.ajax({
                 url: $(this).attr('action'),

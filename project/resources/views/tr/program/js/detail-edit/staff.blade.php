@@ -129,6 +129,10 @@ $(document).ready(function () {
     $('#staffContainer').on('click', '.remove-staff-row', function () {
         $(this).closest('.staff-row').remove();
     });
+    // Remove Staff Row
+    $('#staffContainerEdit').on('click', '.remove-staff-row', function () {
+        $(this).closest('.staff-row').remove();
+    });
 });
 </script>
 @endpush
