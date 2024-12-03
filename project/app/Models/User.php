@@ -110,7 +110,14 @@ class User extends Authenticatable implements HasMedia
         return $this->belongsTo(Program_User::class, 'user_id');
     }
 
-    public function staff()
+    public function peran()
+    {
+        return $this->belongsToMany(Peran::class, 'trprogramuser', 'user_id', 'peran_id')
+            ->withPivot('program_id');
+    }
+
+
+    public function program()
     {
         return $this->belongsToMany(Program::class, 'trprogramuser', 'user_id', 'program_id');
     }

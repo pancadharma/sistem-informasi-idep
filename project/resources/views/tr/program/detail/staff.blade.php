@@ -6,18 +6,17 @@
         <div class="col-lg-5">
             <label for="staff" class="input-group small mb-0">{{ __('cruds.program.staff.label') }}</label>
         </div>
-        <div class="col-lg-5 form-group">
+        <div class="col-lg-5">
             <label for="peran" class="input-group small mb-0">{{ __('cruds.program.staff.peran') }}</label>
         </div>
-        <div class="col-lg-2 form-group">
+        <div class="col-lg-2">
             <label for="tambah" class="input-group small mb-0"></label>
         </div>
     </div>
 </div>
-<!-- Render existing staff and peran rows -->
 <div class="col-md-12" id="staffContainerEdit">
     @foreach ($program->staff as $staff)
-    <div class="row staff-row mt-3">
+    <div class="row staff-row">
         <div class="col-lg-5 form-group">
             <div class="select2-orange">
                 <select class="form-control select2 staff-select" name="staff[]" data-selected="{{ $staff->id }}">
@@ -28,7 +27,9 @@
         <div class="col-lg-5 form-group">
             <div class="select2-orange">
                 <select class="form-control select2 peran-select" name="peran[]" data-selected="{{ $staff->pivot->peran_id }}">
-                    <option value="{{ $staff->pivot->peran_id }}" selected>{{ $staff->pivot->peran->nama }}</option>
+                    <option value="{{ $staff->pivot->peran_id }}" selected>
+                        {{ $staff->peran->find($staff->pivot->peran_id)->nama ?? 'Unknown Role' }}
+                    </option>
                 </select>
             </div>
         </div>

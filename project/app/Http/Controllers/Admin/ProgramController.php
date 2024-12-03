@@ -247,7 +247,7 @@ class ProgramController extends Controller
 
         // Eager load related models
         //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -272,6 +272,14 @@ class ProgramController extends Controller
                 'filename' => $caption,
             ];
         }
+
+        foreach ($program->staff as $staff) {
+            // $staff->load('peran'); // Not necessary for pivot data
+            $staffdata = $staff->pivot->peran_id;
+            // dd($staffdata); // This will stop execution and dump the value of $staffdata
+        }
+
+        // return $program->staff;
 
         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }

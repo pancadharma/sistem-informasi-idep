@@ -85,11 +85,13 @@ class Program extends Model implements HasMedia
 
     public function staff()
     {
-        return $this->belongsToMany(User::class, 'trprogramuser', 'program_id', 'user_id');
+        return $this->belongsToMany(User::class, 'trprogramuser', 'program_id', 'user_id')
+            ->withPivot('peran_id');
     }
+
     public function peran()
     {
-        return $this->belongsToMany(User::class, 'trprogramuser', 'program_id', 'peran_id');
+        return $this->belongsToMany(Peran::class, 'trprogramuser', 'program_id', 'peran_id');
     }
 
 
