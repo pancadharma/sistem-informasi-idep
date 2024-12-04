@@ -366,6 +366,15 @@
                 const unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
                 formData.append($(this).attr('name'), unmaskedValue);
             });
+
+            // Collect selected staff and peran data from the dynamically added rows
+            $('.staff-select').each(function() {
+                formData.append('staff[]', $(this).val());
+            });
+            $('.peran-select').each(function() {
+                formData.append('peran[]', $(this).val());
+            });
+
             $('#outcomeTemplate').find('textarea, input').removeAttr('disabled');
             console.log(formData);
 

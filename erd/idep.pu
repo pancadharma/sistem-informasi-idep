@@ -300,30 +300,37 @@ entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
     --
     id_programoutcomeoutputactivity : int <<fk>>
+    id_bentukkegiatan: int <<fk>>
+    id_kategorilokasikegiatan : int <<fk>>
+    id_jenisinstitusi : int <<fk>> null
+    id_user : int <<fk>>
+    id_jenisbantuan : int <<fk>> null
+    id_satuan : int <<fk>> null
+    id_dusun : int <<fk>>
     kode: varchar (50)
     nama : varchar (500)
     tanggalmulai : datetime
     tanggalselesai : datetime
-    id_dusun : int <<fk>>
     long : decimal (9,6)
     lat : decimal (9,6)
-    id_kategorilokasikegiatan : int <<fk>>
-    tempat : varchar (200)
+    tempat : varchar (200) 
     deskripsi : varchar (500) null
     tujuan : varchar (500) null
     yangterlibat : varchar (500) null
     pelatih: varchar (500) null
     informasilain : varchar (500) null
     luaslahan : varchar (50) null
-    id_jenisbantuan : int <<fk>> null
-    id_satuan : int <<fk>> null
     tindaklanjut : varchar (500) null
     tantangan : varchar (500) null
     rekomendasi : varchar (500) null
-    id_user : int <<fk>>
-    submit : bit
+    status : varchar (50)
     created_at : datetime
     update_at : datetime
+    jumlahpenerimamanfaat : int
+    jumlahpenerimamanfaatwoman : int
+    jumlahpenerimamanfaatman : int
+    jumlahpenerimamanfaatgirl : int
+    jumlahpenerimamanfaatboy : int 
 }
 
 entity "trkegiatanpeserta" as trkegiatanpeserta {

@@ -27,7 +27,7 @@
                 style="width:100%">
                 <thead>
                     <tr>
-                        <th class="text-center align-middle" style="width: 5%;">No.</th>
+                        {{-- <th class="text-center align-middle" style="width: 5%;">No.</th>
                         <th>{{ __('cruds.program.nama') }}</th>
                         <th>{{ __('cruds.kegiatan.nama') }}</th>
                         <th>{{ __('cruds.desa.form.nama') }}</th>
@@ -35,7 +35,7 @@
                         <th>{{ __('cruds.kegiatan.tanggalselesai') }}</th>
                         <th>{{ __('cruds.kegiatan.tempat') }}</th>
                         <th>{{ __('cruds.kegiatan.status') }}</th>
-                        <th>{{ __('global.actions') }}</th>
+                        <th>{{ __('global.actions') }}</th> --}}
                     </tr>
                 </thead>
             </table>

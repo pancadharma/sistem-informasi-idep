@@ -513,6 +513,7 @@ return [
 
     'kegiatan'                                   => [
         'helper'                                 => '',
+        'program'                                => 'Program',
         'info'                                   => 'Activity Information',
         'label'                                  => 'Activity',
         'nama'                                   => 'Activity Name',
@@ -550,6 +551,8 @@ return [
         'details'                                => 'Details Activity',
         'show'                                   => 'Show Activity',
         'select'                                 => 'Select Activity',
+        'bentuk_kegiatan'                        => 'Per Activity',
+        'kategori_lokasi_kegiatan'               => 'Location Category',
         'no_selected'                            => 'No Activity Selected',
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
         'tabs'                                   => [
@@ -563,7 +566,7 @@ return [
         'basic'                                  => [
             'nama'                               => 'Activity Name',
             'kode'                               => 'Activity Code',
-            'desa'                               => 'Village',
+            'desa'                               => 'Village/District',
             'lokasi'                             => 'Activity Location',
             'tanggalmulai'                       => 'Start Date',
             'tanggalselesai'                     => 'End Date',
@@ -575,6 +578,7 @@ return [
             'involved'                           => 'Who Involved',
             'yang_terlibat'                      => 'Involved People',
             'pelatih_asal'                       => 'Who is the Coach and From',
+            'asal_pelatihan'                     => 'Enter the origin of the coach',
             'kegiatan'                           => 'What is done in the activity',
             'informasi_lain'                     => 'Other Related Information',
             'luas_lahan'                         => 'How Much Land Intervened (Ha)',
@@ -590,12 +594,34 @@ return [
         ],
         'peserta'                                => [
             'label'                              => 'Beneficiaries',
+            'peserta'                            => 'Beneficiaries',
             'nama'                               => 'Beneficiaries Name',
             'pria'                               => 'Men',
             'wanita'                             => 'Women',
             'laki'                               => 'Boys',
             'perempuan'                          => 'Daughters',
             'total'                              => 'Total Beneficiary',
+            'identitas'                          => 'ID Number',
+            'jenis_kelamin'                      => 'Gender',
+            'select_jenis_kelamin'               => 'Select Gender',
+            'tanggal_lahir'                      => 'Birthday',
+            'disabilitas'                        => 'Disability',
+            'hamil'                              => 'Pregnant',
+            'status_kawin'                       => 'Marriage Status',
+            'pilih_status_kawin'                 => 'Select Marriage Status',
+            'no_kk'                              => 'KK Number',
+            'jenis_peserta'                      => 'Type of Beneficiary',
+            'nama_kk'                            => 'Head of Family',
+            'helper_no_identitas'                => 'Only numbers and dots are allowed, maximum 16 characters',
+            'helper_no_kk'                       => 'Only numbers and dots are allowed, maximum 16 characters',
+            'belum_menikah'                      => 'Not Married',
+            'menikah'                            => 'Married',
+            'cerai'                              => 'Divorced',
+            'cerai_mati'                         => 'Widowed',
+            'placeholder_no_identitas'           => 'Please Input 16 digit NIK',
+            'placeholder_no_kk'                  => 'Please Input 16 digit No. KK',
+
+
         ],
         'file'                                   => [
             'label'                              => 'Files',
