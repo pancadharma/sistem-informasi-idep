@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\TrProgramController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\UserProfileController;
+use App\Http\Controllers\Admin\KegiatanController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -223,4 +224,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
     Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaDestroy'])->name('program.media.destroy');
+
+
+    // Route Untuk Kegiatan
+    Route::resource('kegiatan', KegiatanController::class);
+    Route::get('kegiatan/api/list', [KegiatanController::class, 'list_kegiatan'])->name('api.kegiatan.list');
+
 });

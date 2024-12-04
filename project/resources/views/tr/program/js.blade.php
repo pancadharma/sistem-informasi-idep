@@ -319,6 +319,10 @@
             if (action === "view") {
                 // alert("view page : " + url_view);
                 console.log(url_view)
+                setTimeout(function() {
+                    window.location.href = url_view;
+                }, 100);
+
             }
 
         });

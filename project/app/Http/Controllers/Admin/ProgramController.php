@@ -91,10 +91,21 @@ class ProgramController extends Controller
         return $data;
     }
 
+    // public function show(Program $program)
+    // {
+    //     return response()->json($program);
+    // }
+
     public function show(Program $program)
     {
-        return response()->json($program);
+        // $program = Program::findOrFail($id);
+
+        $totalBeneficiaries = $program->getTotalBeneficiaries();
+        $durationInDays = $program->getDurationInDays();
+
+        return view('tr.program.show', compact('program', 'totalBeneficiaries', 'durationInDays'));
     }
+
 
     public function create()
     {
@@ -116,6 +127,11 @@ class ProgramController extends Controller
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+
+            // Sync staff and peran
+            $this->storeStaffPeran($program, $request);
+            // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
+
 
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
@@ -236,7 +252,7 @@ class ProgramController extends Controller
 
         // Eager load related models
         //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -261,6 +277,14 @@ class ProgramController extends Controller
                 'filename' => $caption,
             ];
         }
+
+        foreach ($program->staff as $staff) {
+            // $staff->load('peran'); // Not necessary for pivot data
+            $staffdata = $staff->pivot->peran_id;
+            // dd($staffdata); // This will stop execution and dump the value of $staffdata
+        }
+
+        // return $program->staff;
 
         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }
@@ -333,6 +357,9 @@ class ProgramController extends Controller
             }
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
+
+            // Update staff and peran
+            $this->updateProgramStaff($program, $request);
 
             // update program donatur
             $this->updateProgramDonatur($program, $request);
@@ -646,6 +673,40 @@ class ProgramController extends Controller
         }
     }
 
+    public function updateProgramStaff(Program $program, Request $request)
+    {
+        try {
+            // Collect staff and peran data
+            $staff = $request->input('staff', []);
+            $peran = $request->input('peran', []);
+
+            // Ensure both staff and peran have the same count (if required)
+            if (count($staff) !== count($peran)) {
+                throw new Exception('Staff and Peran count mismatch.');
+            }
+
+            $staffPeranData = [];
+            foreach ($staff as $index => $staffId) {
+                $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
+            }
+
+            // Assuming you have a 'staff' relationship on the Program model
+            $program->staff()->sync($staffPeranData);
+
+            return response()->json(['success' => true, 'message' => 'Program staff updated successfully.']);
+        } catch (Exception $e) {
+            \Log::error('Error updating program staff: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the program staff.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
     public function storeDonor($program, Request $request)
     {
         //save pendonor & donation value
@@ -925,12 +986,13 @@ class ProgramController extends Controller
                 }
                 DB::commit();
                 return response()->json([
-                    'message' => 'Program Outcome Output and Activities created successfully!',
+                    'message' => '__(cruds.program.outcome.stored)',
+                    'success' => true,
                     'data' => $outcomeOutput->load('activities')
                 ], 201);
             } catch (Exception $e) {
                 DB::rollBack();
-                return response()->json(['message' => 'Failed to create Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => '__(cruds.program.outcome.failed)', 'error' => $e->getMessage()], 500);
             } catch (ValidationException $e) {
                 DB::rollBack();
                 return response()->json(['success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(), 'data'  => $request,], 422);
@@ -951,7 +1013,7 @@ class ProgramController extends Controller
     // update output and activities from modal in details program outcome of activity
     public function outputActivityUpdate(Request $request)
     {
-        \Log::info('Raw Request Content: ' . json_encode($request->all()));
+        // \Log::info('Raw Request Content: ' . json_encode($request->all()));
         if (auth()->user()->id == 1 || auth()->user()->can('program_output_edit')) {
             $validated = $request->validate([
                 'programoutcome_id'         => 'required|exists:trprogramoutcome,id',
@@ -1007,13 +1069,25 @@ class ProgramController extends Controller
                 $outcomeOutput->activities()->whereIn('id', $activitiesToDelete)->delete();
                 DB::commit();
                 return response()->json([
-                    'message' => 'Program Outcome Output and Activities updated successfully!',
-                    'data' => $outcomeOutput,
-                    'success' => true
+                    'message'   => '__(cruds.program.outcome.updated)',
+                    'data'      => $outcomeOutput,
+                    'success'   => true
                 ], 201);
             } catch (Exception $e) {
                 DB::rollBack();
-                return response()->json(['message' => 'Failed to update Program Outcome Output and Activities!', 'error' => $e->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => '__(cruds.program.outcome.failed_update)', 'error' => $e->getMessage()], 500);
+            } catch (ValidationException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Validation failed.', 'errors' => $e->errors(), 'data'  => $request,], 422);
+            } catch (ModelNotFoundException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'Resource not found.', 'data' => $request,], 404);
+            } catch (HttpException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => $e->getMessage(), 'data' => $request,], $e->getStatusCode());
+            } catch (QueryException $e) {
+                DB::rollBack();
+                return response()->json(['success' => false, 'message' => 'An error occurred.', 'data' => $request, 'error' => $e->getMessage(),], Response::HTTP_SERVICE_UNAVAILABLE);
             }
         }
         return response()->json(['message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this program'], 403);
@@ -1037,5 +1111,35 @@ class ProgramController extends Controller
                 'message' => 'Data Output not found'
             ], 404);
         }
+    }
+
+
+
+    /**
+     * Handle the staff and peran syncing for the program.
+     *
+     * @param Program $program
+     * @param Request $request
+     * @return void
+     * @throws Exception
+     */
+    public function storeStaffPeran(Program $program, Request $request)
+    {
+        $staff = $request->input('staff', []);
+        $peran = $request->input('peran', []);
+
+        // Check if staff and peran arrays are equal
+        if (count($staff) !== count($peran)) {
+            throw new Exception('Staff and Peran count mismatch.');
+        }
+
+        // Prepare the data for syncing
+        $staffPeranData = [];
+        foreach ($staff as $index => $staffId) {
+            $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
+        }
+
+        // Sync the staff with the peran data
+        $program->staff()->sync($staffPeranData);
     }
 }

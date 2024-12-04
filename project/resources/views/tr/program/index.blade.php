@@ -1,16 +1,25 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.program.list') . ' ' . __('cruds.program.title'))
-@section('content_header_title', __('cruds.program.list') . ' ' . __('cruds.program.title'))
+@section('subtitle', __('cruds.program.list'))
+{{-- @section('content_header_title', __('cruds.program.list') . ' ' . __('cruds.program.title')) --}}
+@section('content_header_title')
+    @can('program_create')
+        <a class="btn-success btn" href="{{ route('program.create') }}" title="{{ __('global.create') .' '.__('cruds.program.title') }}">
+            {{ __('global.create') .' '.__('cruds.program.title') }}
+        </a>
+    @endcan
+@endsection
+@section('sub_breadcumb', __('cruds.program.list'))
 
 @section('content_body')
 
 <div class="card card-outline card-primary">
     @can('program_create')
     <div class="card-header">
-        <a class="pb-0 col-6" href="{{ route('program.create') }}">
+        <h3 class="card-title">{{__('cruds.program.list')}}</h3>
+        {{-- <a class="pb-0 col-6" href="{{ route('program.create') }}">
             {{ trans('global.create') }} {{ trans('cruds.program.title') }}
-        </a>
+        </a> --}}
         <div class="card-tools">
             <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('program.create') }}`"
                 title="{{ __('global.create') . ' ' . __('cruds.program.title') }}">

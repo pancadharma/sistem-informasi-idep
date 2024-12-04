@@ -83,6 +83,18 @@ class Program extends Model implements HasMedia
         return $this->hasMany(Program_Outcome::class, 'program_id');
     }
 
+    public function staff()
+    {
+        return $this->belongsToMany(User::class, 'trprogramuser', 'program_id', 'user_id')
+            ->withPivot('peran_id');
+    }
+
+    public function peran()
+    {
+        return $this->belongsToMany(Peran::class, 'trprogramuser', 'program_id', 'peran_id');
+    }
+
+
     public function objektif()
     {
         return $this->hasOne(ProgramObjektif::class, 'program_id');
@@ -141,5 +153,20 @@ class Program extends Model implements HasMedia
     public function setTglSelesaiAttribute($value)
     {
         $this->attributes['tanggalselesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getTotalBeneficiaries()
+    {
+        return $this->ekspektasipenerimamanfaatwoman +
+            $this->ekspektasipenerimamanfaatman +
+            $this->ekspektasipenerimamanfaatgirl +
+            $this->ekspektasipenerimamanfaatboy +
+            $this->ekspektasipenerimamanfaattidaklangsung;
+    }
+
+    public function getDurationInDays()
+    {
+        return Carbon::parse($this->tanggalmulai)
+            ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
 }

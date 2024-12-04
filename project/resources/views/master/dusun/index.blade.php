@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.dusun.list'))
-@section('content_header_title', __('cruds.dusun.title'))
+@section('content_header_title', __('cruds.dusun.list'))
 @section('sub_breadcumb', __('cruds.dusun.title'))
 
 @section('content_body')
     @include('master.dusun.create')
-    <div class="container-fluid content-header">
+    {{-- <div class="container-fluid content-header">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="text-muted">{{ trans('cruds.dusun.list')}}</h1>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">

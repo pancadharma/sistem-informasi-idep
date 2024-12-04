@@ -8,9 +8,15 @@ use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Kegiatan extends Model
+use Carbon\Carbon;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
+class Kegiatan extends Model implements HasMedia
 {
-    use HasFactory, Auditable, HasRoles;
+    use Auditable, HasFactory, InteractsWithMedia, HasRoles;
 
     protected $table = 'trkegiatan';
 
@@ -53,11 +59,89 @@ class Kegiatan extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+    public function getTglMulaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglMulaiAttribute($value)
+    {
+        $this->attributes['tanggalmulai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getTglSelesaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setTglSelesaiAttribute($value)
+    {
+        $this->attributes['tanggalselesai'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getImageAttribute()
+    {
+        $file = $this->getMedia('file_pendukung_kegiatan')->last();
+        if ($file) {
+            $file->url       = $file->getUrl();
+            $file->thumbnail = $file->getUrl('thumb');
+            $file->preview   = $file->getUrl('preview');
+        }
+
+        return $file;
+    }
+
+    // public function getDurationInDays()
+    // {
+    //     return Carbon::parse($this->tanggalmulai)
+    //         ->diffInDays(Carbon::parse($this->tanggalselesai));
+    // }
+
+    public function getDurationInDays()
+    {
+        return Carbon::parse($this->tanggalmulai)
+            ->diffInDays(Carbon::parse($this->tanggalselesai));
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
+    }
 
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    
+    public function dusun()
+    {
+        return $this->belongsTo(Dusun::class, 'dusun_id');
+    }
+
+    public function kategori_lokasi()
+    {
+        return $this->belongsTo(Kategori_Lokasi_Kegiatan::class, 'kategorilokasikegiatan_id');
+    }
+
+    public function jenis_bantuan()
+    {
+        return $this->belongsTo(Jenis_Bantuan::class, 'jenisbantuan_id');
+    }
+
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class, 'satuan_id');
+    }
+
+    public function activity()
+    {
+        // programoutcomeoutputactivity_id
+        return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
+    }
+
+    // public function program()
+    // {
+    //     return $this->belongsTo(Program::class);
+    // }
 }
