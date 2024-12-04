@@ -363,7 +363,7 @@ return [
     ],
 
     'program'                                       => [
-        'list'                                      => 'Daftar',
+        'list'                                      => 'Daftar Program',
         'title_singular'                            => 'Program',
         'title'                                     => 'Program',
         'nama'                                      => 'Nama Program',
