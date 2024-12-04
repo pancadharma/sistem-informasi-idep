@@ -65,6 +65,7 @@
 
 @push('next-button')
     <button type="button" id="next-button" class="btn btn-primary float-right">Next</button>
+
     <button type="button" id="reset-data" class="btn btn-warning float-right">Reset</button>
 @endpush
 
