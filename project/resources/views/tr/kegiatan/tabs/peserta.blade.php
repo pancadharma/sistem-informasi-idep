@@ -74,13 +74,46 @@
     $(document).ready(function() {
         // Load existing participants from localStorage on page load
         loadParticipantsFromStorage();
+        // Restore form data on page load
         loadFormDataFromStorage();
 
+
         // Save form data to localStorage whenever an input changes
-        $('#createKegiatan input, #createKegiatan select, #createKegiatan date, #pesertaForm input, #pesertaForm select').on('change', function() {
+        // $('#createKegiatan input, #createKegiatan select, #createKegiatan date, #pesertaForm input, #pesertaForm select').on('change', function() {
+        //     saveFormDataToStorage();
+        // });
+
+        $('#createKegiatan, #pesertaForm').on('change', 'input, select, textarea', function () {
             saveFormDataToStorage();
         });
 
+        // Specifically handle Select2 events
+        $(document).on('select2:select select2:unselect', '.select2', function () {
+            saveFormDataToStorage();
+        });
+
+        // Specifically handle Summernote changes
+        $(document).on('summernote.change', '.summernote', function () {
+            saveFormDataToStorage();
+        });
+
+        // Attach change event listeners to input, select, date, select2, and summernote fields
+        $('#createKegiatan').on('change', 'input, select, textarea, .select2, .summernote', function () {
+            saveFormDataToStorage();
+        });
+
+        // Additionally, capture changes from select2 and summernote
+        $('.select2').on('select2:select select2:unselect', function() {
+            saveFormDataToStorage();
+        });
+        $('.summernote').on('summernote.change', function() {
+            saveFormDataToStorage();
+        });
+
+
+
+        //Save data to local storage for peserta in modal into table
+        //use temporary table to store data in local storage for pesertaa
         $('#saveModalData').click(function() {
             // Collect form values (existing code remains the same)
             var identitas = $('#identitas').val() || '';
@@ -348,7 +381,94 @@
             return `${day} ${month} ${year}`;
         }
 
-        // Function to save ALL form data to localStorage
+        //end JS for peserta in modal
+        //end JS for peserta in modal
+
+        // // Function to save form data to localStorage dynamically
+        // function saveFormDataToStorage() {
+        //     let formData = {};
+
+        //     // Select all relevant inputs within #createKegiatan and #pesertaForm
+        //     $('#createKegiatan, #pesertaForm').find('input, select, textarea').each(function() {
+        //         let $field = $(this);
+        //         let id = $field.attr('id') || $field.attr('name'); // Use 'id' or fallback to 'name'
+
+        //         if (id) {
+        //             // Handle different input types
+        //             if ($field.is(':checkbox')) {
+        //                 formData[id] = $field.is(':checked');
+        //             } else if ($field.is(':radio')) {
+        //                 if ($field.is(':checked')) {
+        //                     formData[id] = $field.val();
+        //                 }
+        //             } else if ($field.hasClass('select2')) {
+        //                 formData[id] = $field.select2('val'); // For Select2, retrieve selected values
+        //             } else if ($field.hasClass('summernote')) {
+        //                 formData[id] = $field.summernote('code'); // For Summernote, retrieve HTML content
+        //             } else {
+        //                 formData[id] = $field.val();
+        //             }
+        //         }
+        //     });
+
+        //     // Include Summernote content
+        //     $('.form-group textarea').each(function () {
+        //         const id = $(this).attr('id');
+        //         formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
+        //     });
+
+        //     // Save formData to localStorage
+        //     localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
+        // }
+
+
+        // // Function to load form data from localStorage dynamically
+        // function loadFormDataFromStorage() {
+        //     let savedData = localStorage.getItem('kegiatanFormData');
+        //     if (savedData) {
+        //         let formData = JSON.parse(savedData);
+
+        //         $.each(formData, function (key, value) {
+        //             let $field = $('#' + key);
+
+        //             if ($field.length === 0) {
+        //                 // If no element with 'id', try with 'name'
+        //                 $field = $('[name="' + key + '"]');
+        //             }
+
+        //             if ($field.length > 0) {
+        //                 if ($field.is(':checkbox')) {
+        //                     $field.prop('checked', value);
+        //                 } else if ($field.is(':radio')) {
+        //                     $field.each(function () {
+        //                         if ($(this).val() === value) {
+        //                             $(this).prop('checked', true);
+        //                         }
+        //                     });
+        //                 } else if ($field.hasClass('select2')) {
+        //                     $field.val(value).trigger('change'); // For Select2, set value and trigger change
+        //                 } else if ($field.hasClass('summernote')) {
+        //                     $field.summernote('code', value); // For Summernote, set HTML content
+        //                 } else {
+        //                     $field.val(value);
+        //                 }
+        //             }
+        //         });
+        //     }
+        //     // Restore Summernote content
+        //     $('.form-group textarea').each(function () {
+        //         const id = $(this).attr('id');
+        //         if (formData[id]) {
+        //             $(this).summernote('code', formData[id]);
+        //         }
+        //     });
+        // }
+
+        // // end dinamically save and load local data JS
+        // // end dinamically save and load local data JS
+
+
+        //// Function to save ALL form data to localStorage
         function saveFormDataToStorage() {
             var formData = {
                 // Basic Kegiatan Form Fields
@@ -362,23 +482,29 @@
                 tanggalselesai: $('#tanggalselesai').val(),
                 nama_mitra: $('#nama_mitra').val(),
 
-                //// Peserta Form Fields (from modal)
-                // identitas: $('#identitas').val(),
-                // no_kk: $('#no_kk').val(),
-                // nama: $('#nama').val(),
-                // jenis_kelamin: $('#jenis_kelamin').val(),
-                // tanggal_lahir: $('#tanggal_lahir').val(),
-                // disabilitas: $('#disabilitas').val(),
-                // hamil: $('#hamil').val(),
-                // status_kawin: $('#status_kawin').val(),
-                // jenis_peserta: $('#jenis_peserta').val(),
-                // nama_kk: $('#nama_kk').val()
+                // Additional Fields
+                deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
+                tujuan_kegiatan: $('#tujuan_kegiatan').val(),
+                yang_terlibat: $('#yang_terlibat').val(),
+                pelatih_asal: $('#pelatih_asal').val(),
+                kegiatan: $('#kegiatan').val(),
+                informasi_lain: $('#informasi_lain').val(),
+                luas_lahan: $('#luas_lahan').val(),
+                barang: $('#barang').val(),
+                satuan: $('#satuan').val(),
+                others: $('#others').val(),
             };
+
+            // Include Summernote content
+            $('.summernote textarea').each(function () {
+                const id = $(this).attr('id');
+                formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
+            });
 
             localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
         }
 
-        // Function to load form data from localStorage
+        //// Function to load form data from localStorage
         function loadFormDataFromStorage() {
             var savedFormData = localStorage.getItem('kegiatanFormData');
             if (savedFormData) {
@@ -395,19 +521,28 @@
                 $('#tanggalselesai').val(formData.tanggalselesai || '');
                 $('#nama_mitra').val(formData.nama_mitra || '');
 
-                // // Populate Peserta form fields (modal)
-                // $('#identitas').val(formData.identitas || '');
-                // $('#no_kk').val(formData.no_kk || '');
-                // $('#nama').val(formData.nama || '');
-                // $('#jenis_kelamin').val(formData.jenis_kelamin || 'pria');
-                // $('#tanggal_lahir').val(formData.tanggal_lahir || '');
-                // $('#disabilitas').val(formData.disabilitas || '0');
-                // $('#hamil').val(formData.hamil || '0');
-                // $('#status_kawin').val(formData.status_kawin || 'belum_menikah');
-                // $('#jenis_peserta').val(formData.jenis_peserta || '');
-                // $('#nama_kk').val(formData.nama_kk || '');
+                // Populate Additional Fields
+                $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan);
+                $('#tujuan_kegiatan').val(formData.tujuan_kegiatan);
+                $('#yang_terlibat').val(formData.yang_terlibat);
+                $('#pelatih_asal').val(formData.pelatih_asal);
+                $('#kegiatan').val(formData.kegiatan);
+                $('#informasi_lain').val(formData.informasi_lain);
+                $('#luas_lahan').val(formData.luas_lahan);
+                $('#barang').val(formData.barang);
+                $('#satuan').val(formData.satuan);
+                $('#others').val(formData.others);
             }
+            // Restore Summernote content
+            $('.form-group textarea').each(function () {
+                const id = $(this).attr('id');
+                if (formData[id]) {
+                    $(this).summernote('code', formData[id]);
+                }
+            });
         }
+
+
 
         function clearStoredFormData() {
             localStorage.removeItem('pesertaFormData');
