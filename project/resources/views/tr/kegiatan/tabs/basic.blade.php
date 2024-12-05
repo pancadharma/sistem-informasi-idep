@@ -20,9 +20,13 @@
     <!-- dusun-->
     <label for="nama_desa" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
     <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
-        {{-- <input type="text" class="form-control" id="nama_desa" placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}" name="dusun_id"> --}}
-        <select name="nama_desa" id="nama_desa" class="form-control">
-            <option value="">{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}</option>
+        <select name="nama_desa" id="nama_desa" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
+            {{-- <option value="">{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}</option>
+            <option value="1">Desa 1</option>
+            <option value="2">Desa 2</option>
+            <select id="nama_desa" class="select2" data-api-url="api.kegiatan.desa"></select>
+
+            <option value="3">Desa 3</option> --}}
         </select>
     </div>
     <!-- lokasi-->
@@ -59,18 +63,21 @@
 <div class="form-group row">
     <label for="nama_mitra" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
     <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-        <input type="text" class="form-control" id="nama_mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="nama_mitra">
+        <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="nama_mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="nama_mitra">
+        </select>
     </div>
 </div>
 
 @push('next-button')
+<div class="button" id="task_flyout">
+    <button type="button" id="clearStorageButton" class="btn btn-warning float-left">Reset</button>
     <button type="button" id="next-button" class="btn btn-primary float-right">Next</button>
-
-    <button type="button" id="reset-data" class="btn btn-warning float-right">Reset</button>
+</div>
 @endpush
 
 @push('basic_tab_js')
 <script>
+    // Next button
     document.getElementById('next-button').addEventListener('click', function(e) {
         e.preventDefault();
         var tabs = document.querySelectorAll('#details-kegiatan-tab .nav-link');

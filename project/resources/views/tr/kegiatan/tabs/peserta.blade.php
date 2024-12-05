@@ -11,7 +11,7 @@
     <div class="table-responsive">
         <table id="list_peserta_kegiatan" class="table table-sm table-borderless table-hover mb-0 datatable-kegiatan" style="width:100%">
             <thead style="background-color: #149387 !important">
-                <tr class="align-middle text-center undefined">
+                <tr class="align-middle text-center">
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 rounded-start-3 border-secondary">{{ __('No.') }}</th>
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.identitas') }}</th>
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.nama') }}</th>
@@ -348,6 +348,51 @@
         }
 
         //// Function to save ALL form data to localStorage
+        // function saveFormDataToStorage() {
+        //     var formData = {
+        //         // Basic Kegiatan Form Fields
+        //         kode_kegiatan: $('#kode_kegiatan').val(),
+        //         nama_kegiatan: $('#nama_kegiatan').val(),
+        //         nama_desa: $('#nama_desa').val(), // Capture selected value of select2 field
+        //         lokasi: $('#lokasi').val(),
+        //         lat: $('#lat').val(),
+        //         longitude: $('#longitude').val(),
+        //         tanggalmulai: $('#tanggalmulai').val(),
+        //         tanggalselesai: $('#tanggalselesai').val(),
+        //         nama_mitra: $('#nama_mitra').val(),
+
+        //         // Additional Fields
+        //         deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
+        //         tujuan_kegiatan: $('#tujuan_kegiatan').val(),
+        //         yang_terlibat: $('#yang_terlibat').val(),
+        //         pelatih_asal: $('#pelatih_asal').val(),
+        //         kegiatan: $('#kegiatan').val(),
+        //         informasi_lain: $('#informasi_lain').val(),
+        //         luas_lahan: $('#luas_lahan').val(),
+        //         barang: $('#barang').val(),
+        //         satuan: $('#satuan').val(),
+        //         others: $('#others').val(),
+        //     };
+
+        //     // Include Summernote content
+        //     $('.summernote').each(function () {
+        //         const id = $(this).attr('id');
+        //         formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
+        //     });
+
+        //     // Store select2 values in localStorage
+        //     $('.select2').each(function () {
+        //         const $select = $(this);
+        //         const selectId = $select.attr('id');
+        //         const selectedValue = $select.val(); // Get selected value(s) of select2
+
+        //         formData[selectId] = selectedValue; // Store it in the formData
+        //     });
+
+        //     // Save the form data to localStorage
+        //     localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
+        // }
+
         function saveFormDataToStorage() {
             var formData = {
                 // Basic Kegiatan Form Fields
@@ -380,104 +425,276 @@
                 formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
             });
 
+            // Include select2 selected values
+            $('.select2').each(function () {
+                const id = $(this).attr('id');
+                formData[id] = $(this).val(); // Store the selected value(s)
+            });
+
+            // Save form data to localStorage
             localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
         }
 
 
-        //// Function to load form data from localStorage
+        // function loadFormDataFromStorage() {
+        //     var savedFormData = localStorage.getItem('kegiatanFormData');
+        //     if (savedFormData) {
+        //         var formData = JSON.parse(savedFormData);
+
+        //         // Populate Kegiatan form fields
+        //         $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+        //         $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+        //         $('#nama_desa').val(formData.nama_desa || '');
+        //         $('#lokasi').val(formData.lokasi || '');
+        //         $('#lat').val(formData.lat || '');
+        //         $('#longitude').val(formData.longitude || '');
+        //         $('#tanggalmulai').val(formData.tanggalmulai || '');
+        //         $('#tanggalselesai').val(formData.tanggalselesai || '');
+        //         $('#nama_mitra').val(formData.nama_mitra || '');
+
+        //         // Populate Additional Fields
+        //         $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
+        //         $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
+        //         $('#yang_terlibat').val(formData.yang_terlibat || '');
+        //         $('#pelatih_asal').val(formData.pelatih_asal || '');
+        //         $('#kegiatan').val(formData.kegiatan || '');
+        //         $('#informasi_lain').val(formData.informasi_lain || '');
+        //         $('#luas_lahan').val(formData.luas_lahan || '');
+        //         $('#barang').val(formData.barang || '');
+        //         $('#satuan').val(formData.satuan || '');
+        //         $('#others').val(formData.others || '');
+
+        //         // Restore Summernote content
+        //         $('.summernote').each(function () {
+        //             const id = $(this).attr('id');
+        //             if (formData[id]) {
+        //                 $(this).summernote('code', formData[id]);
+        //             }
+        //         });
+
+        //         $('#nama_desa').select2({
+        //             dropdownPosition: 'below',
+        //             data: formData.nama_desa,
+        //             allowClear: true,
+        //             ajax: {
+        //                 url: {{ route('api.kegiatan.desa') }},
+        //                 method: 'GET',
+        //                 delay: 1000,
+        //                 processResults: function (data) {
+        //                     return {
+        //                         results: data.map(function (item) {
+        //                             return {
+        //                                 id: item.id,
+        //                                 text: item.nama // Mapping 'nama' to 'text'
+        //                             };
+        //                         })
+        //                     };
+        //                 },
+        //                 data: function (params) {
+        //                     var query = {
+        //                         search: params.term,
+        //                         page: params.page || 1
+        //                     };
+        //                     return query;
+        //                 }
+        //             }
+
+        //         })
+        //     }
+        // }
+
+        // Function to load form data from localStorage
+        // function loadFormDataFromStorage() {
+        //     var savedFormData = localStorage.getItem('kegiatanFormData');
+        //     if (savedFormData) {
+        //         var formData = JSON.parse(savedFormData);
+
+        //         // Populate Kegiatan form fields
+        //         $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+        //         $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+        //         $('#nama_desa').val(formData.nama_desa || '');
+        //         $('#lokasi').val(formData.lokasi || '');
+        //         $('#lat').val(formData.lat || '');
+        //         $('#longitude').val(formData.longitude || '');
+        //         $('#tanggalmulai').val(formData.tanggalmulai || '');
+        //         $('#tanggalselesai').val(formData.tanggalselesai || '');
+        //         $('#nama_mitra').val(formData.nama_mitra || '');
+
+        //         // Populate Additional Fields
+        //         $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
+        //         $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
+        //         $('#yang_terlibat').val(formData.yang_terlibat || '');
+        //         $('#pelatih_asal').val(formData.pelatih_asal || '');
+        //         $('#kegiatan').val(formData.kegiatan || '');
+        //         $('#informasi_lain').val(formData.informasi_lain || '');
+        //         $('#luas_lahan').val(formData.luas_lahan || '');
+        //         $('#barang').val(formData.barang || '');
+        //         $('#satuan').val(formData.satuan || '');
+        //         $('#others').val(formData.others || '');
+
+        //         // Restore Summernote content
+        //         $('.summernote').each(function () {
+        //             const id = $(this).attr('id');
+        //             if (formData[id]) {
+        //                 $(this).summernote('code', formData[id]);
+        //             }
+        //         });
+
+        //         // Dynamically handle all select2 fields with a data attribute for API endpoints
+        //         $('.select2').each(function () {
+        //             const $select = $(this);
+        //             const apiUrl = $select.data('api-url'); // Fetch API URL from data attribute
+        //             const savedValue = formData[$select.attr('id')]; // Get saved value using the field's ID
+
+        //             if (apiUrl) {
+        //                 // Initialize select2 for the field
+        //                 $select.select2({
+        //                     ajax: {
+        //                         url: apiUrl,
+        //                         dataType: 'json',
+        //                         delay: 250, // Wait before triggering the search
+        //                         data: function (params) {
+        //                             return {
+        //                                 search: params.term, // Send search term
+        //                                 page: params.page || 1 // Handle pagination
+        //                             };
+        //                         },
+        //                         processResults: function (data, params) {
+        //                             params.page = params.page || 1;
+        //                             return {
+        //                                 results: data.data.map(item => ({
+        //                                     id: item.id,
+        //                                     text: item.nama // Adjust according to your API response structure
+        //                                 })),
+        //                                 pagination: {
+        //                                     more: data.current_page < data.last_page
+        //                                 }
+        //                             };
+        //                         },
+        //                         cache: true
+        //                     },
+        //                     closeOnSelect: true,
+        //                     dropdownPosition: 'below',
+        //                     placeholder: 'Please select an option',
+        //                     allowClear: true
+        //                 });
+
+        //                 // Set the saved value(s) if available
+        //                 if (savedValue) {
+        //                     $select.val(savedValue).trigger('change');
+        //                 } else {
+        //                     // Trigger change event to make sure select2 is populated even if there's no saved value
+        //                     $select.trigger('change');
+        //                 }
+        //             }
+        //         });
+        //     }
+        // }
+
+
         function loadFormDataFromStorage() {
-            var savedFormData = localStorage.getItem('kegiatanFormData');
-            if (savedFormData) {
-                var formData = JSON.parse(savedFormData);
+    var savedFormData = localStorage.getItem('kegiatanFormData');
+    if (savedFormData) {
+        var formData = JSON.parse(savedFormData);
 
-                // Populate Kegiatan form fields
-                $('#kode_kegiatan').val(formData.kode_kegiatan || '');
-                $('#nama_kegiatan').val(formData.nama_kegiatan || '');
-                $('#nama_desa').val(formData.nama_desa || '');
-                $('#lokasi').val(formData.lokasi || '');
-                $('#lat').val(formData.lat || '');
-                $('#longitude').val(formData.longitude || '');
-                $('#tanggalmulai').val(formData.tanggalmulai || '');
-                $('#tanggalselesai').val(formData.tanggalselesai || '');
-                $('#nama_mitra').val(formData.nama_mitra || '');
+        // Populate other form fields
+        $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+        $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+        $('#nama_desa').val(formData.nama_desa || '');  // Ensure this field is populated
+        $('#lokasi').val(formData.lokasi || '');
+        $('#lat').val(formData.lat || '');
+        $('#longitude').val(formData.longitude || '');
+        $('#tanggalmulai').val(formData.tanggalmulai || '');
+        $('#tanggalselesai').val(formData.tanggalselesai || '');
+        $('#nama_mitra').val(formData.nama_mitra || '');
 
-                // Populate Additional Fields
-                $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
-                $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
-                $('#yang_terlibat').val(formData.yang_terlibat || '');
-                $('#pelatih_asal').val(formData.pelatih_asal || '');
-                $('#kegiatan').val(formData.kegiatan || '');
-                $('#informasi_lain').val(formData.informasi_lain || '');
-                $('#luas_lahan').val(formData.luas_lahan || '');
-                $('#barang').val(formData.barang || '');
-                $('#satuan').val(formData.satuan || '');
-                $('#others').val(formData.others || '');
-
-                // Restore Summernote content
-                $('.summermnote').each(function () {
-                    const id = $(this).attr('id');
-                    if (formData[id]) {
-                        $(this).summernote('code', formData[id]);
-                    }
-                });
-
-                // Dynamically handle all select2 fields with a data attribute for API endpoints
-                $('.select2').each(function () {
-                    const $select = $(this);
-                    const apiUrl = $select.data('api-url'); // Fetch API URL from data attribute
-                    const savedValue = formData[$select.attr('id')]; // Get saved value using the field's ID
-
-                    if (apiUrl) {
-                        $select.select2({
-                            ajax: {
-                                url: apiUrl,
-                                dataType: 'json',
-                                delay: 250, // Wait before triggering the search
-                                data: function (params) {
-                                    return {
-                                        search: params.term, // Send the search term
-                                        page: params.page || 1 // Handle pagination
-                                    };
-                                },
-                                processResults: function (data, params) {
-                                    // Adjust pagination if needed
-                                    params.page = params.page || 1;
-                                    return {
-                                        results: data.data.map(item => ({
-                                            id: item.id,
-                                            text: item.nama // Adjust according to your API response structure
-                                        })),
-                                        pagination: {
-                                            more: data.current_page < data.last_page
-                                        }
-                                    };
-                                },
-                                cache: true
-                            },
-                            closeOnSelect: true,
-                            dropdownPosition: 'below',
-                            placeholder: 'Please select an option',
-                            allowClear: true
-                        });
-
-                        // Set the saved value(s) if available
-                        if (savedValue) {
-                            const validIds = data.data.map(option => option.id);
-                            const selectedValues = Array.isArray(savedValue)
-                                ? savedValue.filter(val => validIds.includes(val))
-                                : validIds.includes(savedValue) ? savedValue : null;
-
-                            $select.val(selectedValues).trigger('change');
-                        }
-                    }
-                });
-
+        // Populate Summernote content
+        $('.summernote').each(function () {
+            const id = $(this).attr('id');
+            if (formData[id]) {
+                $(this).summernote('code', formData[id]);
             }
+        });
+
+        // Initialize select2 for nama_desa field (if not already initialized)
+        $('#nama_desa').select2({
+            ajax: {
+                url: $('#nama_desa').data('api-url'),
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(item => ({
+                            id: item.id,
+                            text: item.nama
+                        })),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            closeOnSelect: true,
+            dropdownPosition: 'below',
+            placeholder: 'Please select an option',
+            allowClear: true
+        });
+
+        // Set the saved value(s) for nama_desa if available
+        var savedDesaId = formData.nama_desa;  // This should be the ID stored in localStorage
+        if (savedDesaId) {
+            // Set the value for select2 and trigger change
+            $('#nama_desa').val(savedDesaId).trigger('change');
         }
+
+        // Initialize select2 for other fields (like nama_mitra) if necessary
+        $('#nama_mitra').select2({
+            ajax: {
+                url: $('#nama_mitra').data('api-url'),
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(item => ({
+                            id: item.id,
+                            text: item.nama
+                        })),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            closeOnSelect: true,
+            dropdownPosition: 'below',
+            placeholder: 'Please select an option',
+            allowClear: true
+        });
+    }
+}
+
+
 
         function clearStoredFormData() {
             localStorage.removeItem('pesertaFormData');
             localStorage.removeItem('participantsData');
+            localStorage.removeItem('kegiatanFormData');
 
             // Reset the form and clear Summernote content
             $('#createKegiatan')[0].reset();
@@ -494,6 +711,76 @@
             clearStoredFormData();
         });
     });
+
+
+    $(document).ready(function () {
+        // Initialize select2 for 'nama_desa' field
+        $('#nama_desa').select2({
+            ajax: {
+                url: $('#nama_desa').data('api-url'),
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(item => ({
+                            id: item.id,
+                            text: item.nama
+                        })),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            closeOnSelect: true,
+            dropdownPosition: 'below',
+            placeholder: 'Please select an option',
+            allowClear: true
+        });
+
+        // Initialize select2 for 'nama_mitra' field (input field, treated as select2)
+        $('#nama_mitra').select2({
+            ajax: {
+                url: $('#nama_mitra').data('api-url'),
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(item => ({
+                            id: item.id,
+                            text: item.nama
+                        })),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            closeOnSelect: true,
+            dropdownPosition: 'below',
+            placeholder: 'Please select an option',
+            allowClear: true
+        });
+    });
+
+
+
 
 </script>
 

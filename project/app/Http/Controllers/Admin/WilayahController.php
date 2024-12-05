@@ -9,6 +9,7 @@ use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Partner;
 
 class WilayahController extends Controller
 {
@@ -101,10 +102,30 @@ class WilayahController extends Controller
         $page = $request->input('page', 1);
 
         // Query Dusun model with pagination
-        $dusun = Dusun::where('nama', 'like', "%{$search}%")
+        $desa = Kelurahan::where('nama', 'like', "%{$search}%")
             ->paginate(10, ['*'], 'page', $page);
 
         // Return paginated response
-        return response()->json($dusun);
+        return response()->json($desa);
+    }
+
+    public function getKegiatanMitra(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+        ]);
+
+        // Retrieve search and page inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+
+        // Query Dusun model with pagination
+        $partner = Partner::where('nama', 'like', "%{$search}%")
+            ->paginate(50, ['*'], 'page', $page);
+
+        // Return paginated response
+        return response()->json($partner);
     }
 }
