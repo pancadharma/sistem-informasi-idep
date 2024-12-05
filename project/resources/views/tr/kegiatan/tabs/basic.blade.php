@@ -20,12 +20,27 @@
     <!-- dusun-->
     <label for="nama_desa" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
     <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
-        <input type="text" class="form-control" id="nama_desa" placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}" name="dusun_id">
+        {{-- <input type="text" class="form-control" id="nama_desa" placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}" name="dusun_id"> --}}
+        <select name="nama_desa" id="nama_desa" class="form-control">
+            <option value="">{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}</option>
+        </select>
     </div>
     <!-- lokasi-->
     <label for="lokasi" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.lokasi') }}</label>
     <div class="col-sm col-md col-lg-4 order-4 order-md-4 self-center">
-        <input type="text" class="form-control" id="lokasi" placeholder="" name="desa">
+        <input type="text" class="form-control" id="lokasi" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}" name="lokasi">
+    </div>
+</div>
+<div class="form-group row">
+    <!-- latitude-->
+    <label for="lat" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.lat') }}</label>
+    <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
+        <input type="text" class="form-control" id="lat" placeholder="{{ __('cruds.kegiatan.lat') }}" name="lat">
+    </div>
+    <!-- longitude-->
+    <label for="longitude" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.long') }}</label>
+    <div class="col-sm col-md col-lg-4 order-4 order-md-4 self-center">
+        <input type="text" class="form-control" id="longitude" placeholder="{{ __('cruds.kegiatan.long') }}" name="longitude">
     </div>
 </div>
 <div class="form-group row">
@@ -50,6 +65,8 @@
 
 @push('next-button')
     <button type="button" id="next-button" class="btn btn-primary float-right">Next</button>
+
+    <button type="button" id="reset-data" class="btn btn-warning float-right">Reset</button>
 @endpush
 
 @push('basic_tab_js')

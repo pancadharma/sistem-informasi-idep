@@ -128,6 +128,11 @@ class ProgramController extends Controller
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
+            // Sync staff and peran
+            $this->storeStaffPeran($program, $request);
+            // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
+
+
 
             // Unggah dan simpan berkas menggunakan Spatie Media Library
             if ($request->hasFile('file_pendukung')) {
@@ -247,7 +252,7 @@ class ProgramController extends Controller
 
         // Eager load related models
         //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -272,6 +277,14 @@ class ProgramController extends Controller
                 'filename' => $caption,
             ];
         }
+
+        foreach ($program->staff as $staff) {
+            // $staff->load('peran'); // Not necessary for pivot data
+            $staffdata = $staff->pivot->peran_id;
+            // dd($staffdata); // This will stop execution and dump the value of $staffdata
+        }
+
+        // return $program->staff;
 
         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }
@@ -344,6 +357,9 @@ class ProgramController extends Controller
             }
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
+
+            // Update staff and peran
+            $this->updateProgramStaff($program, $request);
 
             // update program donatur
             $this->updateProgramDonatur($program, $request);
@@ -656,6 +672,40 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
+    public function updateProgramStaff(Program $program, Request $request)
+    {
+        try {
+            // Collect staff and peran data
+            $staff = $request->input('staff', []);
+            $peran = $request->input('peran', []);
+
+            // Ensure both staff and peran have the same count (if required)
+            if (count($staff) !== count($peran)) {
+                throw new Exception('Staff and Peran count mismatch.');
+            }
+
+            $staffPeranData = [];
+            foreach ($staff as $index => $staffId) {
+                $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
+            }
+
+            // Assuming you have a 'staff' relationship on the Program model
+            $program->staff()->sync($staffPeranData);
+
+            return response()->json(['success' => true, 'message' => 'Program staff updated successfully.']);
+        } catch (Exception $e) {
+            \Log::error('Error updating program staff: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the program staff.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
 
     public function storeDonor($program, Request $request)
     {
@@ -1061,5 +1111,35 @@ class ProgramController extends Controller
                 'message' => 'Data Output not found'
             ], 404);
         }
+    }
+
+
+
+    /**
+     * Handle the staff and peran syncing for the program.
+     *
+     * @param Program $program
+     * @param Request $request
+     * @return void
+     * @throws Exception
+     */
+    public function storeStaffPeran(Program $program, Request $request)
+    {
+        $staff = $request->input('staff', []);
+        $peran = $request->input('peran', []);
+
+        // Check if staff and peran arrays are equal
+        if (count($staff) !== count($peran)) {
+            throw new Exception('Staff and Peran count mismatch.');
+        }
+
+        // Prepare the data for syncing
+        $staffPeranData = [];
+        foreach ($staff as $index => $staffId) {
+            $staffPeranData[$staffId] = ['peran_id' => $peran[$index]];
+        }
+
+        // Sync the staff with the peran data
+        $program->staff()->sync($staffPeranData);
     }
 }

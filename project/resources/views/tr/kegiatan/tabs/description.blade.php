@@ -2,14 +2,14 @@
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center">
         <label for="deskripsi_kegiatan" class="input-group">{{ __('cruds.kegiatan.description.label') }}</label>
-        <textarea name="deskripsi_kegiatan" id="deskripsi_kegiatan" placeholder=" {{ __('cruds.kegiatan.description.label') }}" class="form-control" rows="2"></textarea>
+        <textarea name="deskripsi_kegiatan" id="deskripsi_kegiatan" placeholder=" {{ __('cruds.kegiatan.description.label') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 <!-- tujuan kegiatan -->
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center">
         <label for="tujuan_kegiatan" class="mb-0 input-group">{{ __('cruds.kegiatan.description.tujuan') }}</label>
-        <textarea name="tujuan_kegiatan" id="tujuan_kegiatan" placeholder=" {{ __('cruds.kegiatan.description.tujuan') }}" class="form-control" rows="2"></textarea>
+        <textarea name="tujuan_kegiatan" id="tujuan_kegiatan" placeholder=" {{ __('cruds.kegiatan.description.tujuan') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 <!-- siapa yang_terlibat kegiatan -->
@@ -17,7 +17,7 @@
     <div class="col-sm col-md col-lg self-center">
         <label for="yang_terlibat" class="mb-0 input-group">{{ __('cruds.kegiatan.description.involved') }}</label>
 
-        <textarea name="yang_terlibat" id="yang_terlibat" placeholder=" {{ __('cruds.kegiatan.description.involved') }}" class="form-control" rows="1"></textarea>
+        <textarea name="yang_terlibat" id="yang_terlibat" placeholder=" {{ __('cruds.kegiatan.description.involved') }}" class="form-control summernote" rows="1"></textarea>
     </div>
 </div>
 <!-- siapa pelatihnya dan darimana -->
@@ -25,14 +25,14 @@
     <div class="col-sm col-md col-lg self-center">
         <label for="pelatih_asal" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.pelatih_asal') }}</label>
 
-        <textarea name="pelatih_asal" id="pelatih_asal" placeholder=" {{ __('cruds.kegiatan.description.asal_pelatihan') }}" class="form-control" rows="1"></textarea>
+        <textarea name="pelatih_asal" id="pelatih_asal" placeholder=" {{ __('cruds.kegiatan.description.asal_pelatihan') }}" class="form-control summermnote" rows="1"></textarea>
     </div>
 </div>
 <!-- Apa Saja yang Dilakukan Dalam Kegiatan Tersebut -->
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center">
         <label for="kegiatan" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.kegiatan') }}</label>
-        <textarea name="kegiatan" id="kegiatan" placeholder=" {{ __('cruds.kegiatan.description.kegiatan') }}" class="form-control" rows="2"></textarea>
+        <textarea name="kegiatan" id="kegiatan" placeholder=" {{ __('cruds.kegiatan.description.kegiatan') }}" class="form-control summermnote" rows="2"></textarea>
     </div>
 </div>
 <!-- Informasi Lain yang Terkait -->
@@ -42,7 +42,7 @@
             {{ __('cruds.kegiatan.description.informasi_lain') }}
         </label>
 
-        <textarea name="informasi_lain" id="informasi_lain" placeholder=" {{ __('cruds.kegiatan.description.informasi_lain') }}" class="form-control" rows="2"></textarea>
+        <textarea name="informasi_lain" id="informasi_lain" placeholder=" {{ __('cruds.kegiatan.description.informasi_lain') }}" class="form-control summermnote" rows="2"></textarea>
     </div>
 </div>
 
@@ -70,13 +70,11 @@
         </div>
     </div>
 </div>
-<!--
-    others
--->
+<!--others-->
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center input-group">
         <label for="barang" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.others') }}</label>
-        <textarea name="others" id="others" placeholder=" {{ __('cruds.kegiatan.description.others') }}" class="form-control editable-textarea" rows="2"></textarea>
+        <textarea name="others" id="others" placeholder=" {{ __('cruds.kegiatan.description.others') }}" class="form-control summermnote" rows="2"></textarea>
     </div>
 </div>
 
@@ -107,7 +105,7 @@
 @section('plugins.Summernote', true)
 
 <script defer>
-    $(`.form-group textarea`).each(function() {
+    $(`.summernote textarea`).each(function() {
         if (!$(this).data('initialized')) {
             $(this).summernote({
                 height: 100,

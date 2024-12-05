@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.kegiatan.list'))
-{{--@section('content_header_title', __('cruds.kegiatan.info'))--}}
 @section('content_header_title')
     @can('kegiatan_access')
         <a class="btn-success btn" href="{{ route('kegiatan.create') }}" title="{{ __('cruds.kegiatan.add') }}">
