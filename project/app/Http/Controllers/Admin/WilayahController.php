@@ -87,4 +87,24 @@ class WilayahController extends Controller
         $provinsi = Provinsi::where('nama', 'like', "%{$search}%")->get();
         return response()->json($provinsi);
     }
+
+    public function getKegiatanDesa(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+        ]);
+
+        // Retrieve search and page inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+
+        // Query Dusun model with pagination
+        $dusun = Dusun::where('nama', 'like', "%{$search}%")
+            ->paginate(10, ['*'], 'page', $page);
+
+        // Return paginated response
+        return response()->json($dusun);
+    }
 }
