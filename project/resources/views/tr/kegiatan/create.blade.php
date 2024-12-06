@@ -83,10 +83,5 @@
 
 @include('tr.kegiatan.js.create')
 @stack('basic_tab_js')
-{{-- @include('tr.kegiatan.js.detail-create.donor')
-@include('tr.kegiatan.js.detail-create.lokasi')
-@include('tr.kegiatan.js.detail-create.staff')
-@include('tr.kegiatan.js.detail-create.reportschedule')
-@include('tr.kegiatan.js.detail-create.outcome')
-@include('tr.kegiatan.js.detail-create.partner') --}}
+
 @endpush

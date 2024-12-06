@@ -21,12 +21,6 @@
     <label for="nama_desa" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
     <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
         <select name="nama_desa" id="nama_desa" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
-            {{-- <option value="">{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}</option>
-            <option value="1">Desa 1</option>
-            <option value="2">Desa 2</option>
-            <select id="nama_desa" class="select2" data-api-url="api.kegiatan.desa"></select>
-
-            <option value="3">Desa 3</option> --}}
         </select>
     </div>
     <!-- lokasi-->
@@ -76,6 +70,7 @@
 @endpush
 
 @push('basic_tab_js')
+<!-- javascript to push javascript to stack('basic_tab_js') -->
 <script>
     // Next button
     document.getElementById('next-button').addEventListener('click', function(e) {

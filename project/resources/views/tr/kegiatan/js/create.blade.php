@@ -1,4 +1,4 @@
-{{-- javascript to create kegiatan --}}
+<!-- javascript to create kegiatan first -->
 <script>
     function handleErrors(response) {
         let errorMessage = response.message;

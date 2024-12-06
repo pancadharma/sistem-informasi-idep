@@ -10,6 +10,7 @@ use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
+use App\Models\User;
 
 class WilayahController extends Controller
 {
@@ -89,23 +90,63 @@ class WilayahController extends Controller
         return response()->json($provinsi);
     }
 
+    // public function getKegiatanDesa(Request $request)
+    // {
+    //     if ($request->has('id')) {
+    //         $desa = Kelurahan::find($request->id);
+    //         if ($desa) {
+    //             return response()->json([
+    //                 'id' => $desa->id,
+    //                 'text' => $desa->nama,
+    //             ]);
+    //         }
+    //     }
+    //     $query = $request->input('q');
+    //     $desa =  Kelurahan::where('nama', 'LIKE', "%{$query}%")->paginate(20); // Adjust the number of results per page
+    //     $data = $desa->map(function ($item) {
+    //         return [
+    //             'id' => $item->id,
+    //             'text' => $item->nama,
+    //         ];
+    //     });
+    //     return response()->json($data);
+    // }
+
+    function loadKegiatanDesa(Request $request)
+    {
+        $dusun = Kelurahan::where('id', $request->id)
+            ->get(['id', 'kode', 'nama'])
+            ->map(function ($item) {
+                return [
+                    'id'   => $item->id,
+                    // 'kode' => $item->kode,
+                    'text' => "{$item->kode} - {$item->nama}",
+                ];
+            });
+        return response()->json($dusun);
+    }
+
     public function getKegiatanDesa(Request $request)
     {
         // Validate request inputs
         $request->validate([
             'search' => 'nullable|string|max:255',
             'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|integer', // Add id validation
         ]);
 
-        // Retrieve search and page inputs
+        // Retrieve search, page, and id inputs
         $search = $request->input('search', '');
         $page = $request->input('page', 1);
+        $id = $request->input('id', null);
 
-        // Query Dusun model with pagination
-        $desa = Kelurahan::where('nama', 'like', "%{$search}%")
-            ->paginate(10, ['*'], 'page', $page);
-
-        // Return paginated response
+        // Build query to include both name search and id check
+        $desa = Kelurahan::when($id, function ($query, $id) {
+            return $query->where('id', $id);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+        $desa = $desa->paginate(20, ['*'], 'page', $page);
         return response()->json($desa);
     }
 
@@ -115,17 +156,81 @@ class WilayahController extends Controller
         $request->validate([
             'search' => 'nullable|string|max:255',
             'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|integer', // Add id validation
         ]);
 
-        // Retrieve search and page inputs
+        // Retrieve search, page, and id inputs
         $search = $request->input('search', '');
         $page = $request->input('page', 1);
+        $id = $request->input('id', null);
 
-        // Query Dusun model with pagination
-        $partner = Partner::where('nama', 'like', "%{$search}%")
-            ->paginate(50, ['*'], 'page', $page);
-
-        // Return paginated response
-        return response()->json($partner);
+        // Build query to include both name search and id check
+        $mitra = Partner::when($id, function ($query, $id) {
+            return $query->where('id', $id);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+        $mitra = $mitra->paginate(20, ['*'], 'page', $page);
+        return response()->json($mitra);
     }
+
+
+
+    public function getKegiatanPenulis(Request $request)
+    {
+        $query = $request->input('q');
+        $User = User::where('nama', 'LIKE', "%{$query}%")->paginate(20); // Adjust the number of results per page
+        $results = $User->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->nama
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => [
+                'more' => $User->hasMorePages()
+            ]
+        ]);
+    }
+    public function getKegiatanJabatan(Request $request)
+    {
+        $query = $request->input('q');
+        $Jabatan = Jabatan::where('nama', 'LIKE', "%{$query}%")->paginate(20); // Adjust the number of results per page
+        $results = $Jabatan->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->nama
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => [
+                'more' => $Jabatan->hasMorePages()
+            ]
+        ]);
+    }
+
+
+    // public function getKegiatanMitra(Request $request)
+    // {
+    //     // Validate request inputs
+    //     $request->validate([
+    //         'search' => 'nullable|string|max:255',
+    //         'page' => 'nullable|integer|min:1',
+    //     ]);
+
+    //     // Retrieve search and page inputs
+    //     $search = $request->input('search', '');
+    //     $page = $request->input('page', 1);
+
+    //     // Query Dusun model with pagination
+    //     $partner = Partner::where('nama', 'like', "%{$search}%")
+    //         ->paginate(50, ['*'], 'page', $page);
+
+    //     // Return paginated response
+    //     return response()->json($partner);
+    // }
 }

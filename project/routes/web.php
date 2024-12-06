@@ -139,7 +139,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/mitra', [WilayahController::class, 'getKegiatanMitra'])->name('api.kegiatan.mitra');
     Route::get('kegiatan/api/penulis', [WilayahController::class, 'getKegiatanPenulis'])->name('api.kegiatan.penulis');
     Route::get('kegiatan/api/jabatan', [WilayahController::class, 'getKegiatanJabatan'])->name('api.kegiatan.jabatan');
-
+    Route::get('kegiatan/api/load-desa/{id}', [WilayahController::class, 'loadKegiatanDesa'])->name('api.kegiatan.load-desa');
 
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
