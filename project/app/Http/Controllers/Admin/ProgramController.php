@@ -165,7 +165,9 @@ class ProgramController extends Controller
                     \Log::info('No files found in the request.');
                 }
             }
-
+            
+            // save program partner
+            $program->partner()->sync($request->input('partner', []));
             // save program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
             // save report schedule
@@ -252,7 +254,7 @@ class ProgramController extends Controller
 
         // Eager load related models
         //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
-        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran']);
+        $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran', 'partner']);
 
         // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
@@ -357,6 +359,9 @@ class ProgramController extends Controller
             }
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
+
+            // update program partner
+            $program->partner()->sync($request->input('partner', []));
 
             // Update staff and peran
             $this->updateProgramStaff($program, $request);
