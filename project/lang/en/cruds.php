@@ -564,6 +564,10 @@ return [
             'penulis'                            => 'Author of the Activity',
         ],
         'basic'                                  => [
+            'program_select'                     => 'Select Program',
+            'program_select_kode'                => 'Select Program Code',
+            'program_kode'                       => 'Program Code',
+            'program_nama'                       => 'Program Name',
             'nama'                               => 'Activity Name',
             'kode'                               => 'Activity Code',
             'desa'                               => 'Village/District',

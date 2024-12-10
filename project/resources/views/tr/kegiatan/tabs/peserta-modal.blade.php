@@ -27,7 +27,7 @@
                                required
                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
                            >
-                           <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_identitas') }}</small>
+                           {{-- <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_identitas') }}</small> --}}
                        </div>
                    </div>
                    <!-- identitas -->
@@ -44,7 +44,7 @@
                                required
                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 16)"
                            >
-                           <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_kk') }}</small>
+                           {{-- <small class="form-text text-muted">{{ __('cruds.kegiatan.peserta.helper_no_kk') }}</small> --}}
                        </div>
                    </div>
                    <!-- nama kepala keluarga -->

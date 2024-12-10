@@ -40,6 +40,8 @@
     // Function to save form data to localStorage
     function saveFormDataToStorage() {
         var formData = {
+            program_id: $('#program_id').val(),
+            program_kode: $('#program_kode').val(),
             kode_kegiatan: $('#kode_kegiatan').val(),
             nama_kegiatan: $('#nama_kegiatan').val(),
             nama_desa: $('#nama_desa').val(),
@@ -116,6 +118,9 @@
             var formData = JSON.parse(storedData);
 
             // Populate basic form fields
+            $('#program_id').val(formData.program_id);
+            $('#program_kode').val(formData.program_kode);
+            //
             $('#kode_kegiatan').val(formData.kode_kegiatan);
             $('#nama_kegiatan').val(formData.nama_kegiatan);
             $('#nama_desa').val(formData.nama_desa);

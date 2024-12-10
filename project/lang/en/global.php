@@ -266,6 +266,7 @@ return [
     'sample_answer'                  => 'Sample answer',
     'sample_category'                => 'Sample category',
     'sample_question'                => 'Sample question',
+    'select'                         => 'Select',
     'select_all'                     => 'Select all',
     'select_type'                    => 'Select Type',
     'select_crud_placeholder'        => 'Please select one of your CRUDs',
