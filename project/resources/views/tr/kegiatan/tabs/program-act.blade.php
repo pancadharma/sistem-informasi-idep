@@ -1,4 +1,4 @@
-<!-- Modal -->
+<!-- Modal Daftar Kegiatan Based on Selected Program-->
 <div class="modal fade" id="ModalDaftarProgramActivity" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgramActivity" theme="info">
     <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">
@@ -16,30 +16,26 @@
                     <table class="table table-bordered table-striped" id="list_program_out_activity">
                         <thead>
                             <tr>
+                                {{--
                                 <th>{{ __('cruds.kegiatan.kode') }}</th>
                                 <th>{{ __('cruds.kegiatan.nama') }}</th>
+
+                                --}}
+                                <!--should be changed based on what data is showing kode & nama kegiatan commented above-->
+                                <th>{{ __('cruds.activity.deskripsi') }}</th>
+                                <th>{{ __('cruds.activity.indicator') }}</th>
+                                <th>{{ __('cruds.activity.target') }}</th>
                                 <th>{{ __('global.action') }}</th>
                             </tr>
                         </thead>
                         <tbody id="data-program-kegiatan">
-                            {{-- <tr data-program-id="{{ $program->id }}" data-program-kode="{{ $program->kode }}" data-program-nama="{{ $program->nama }}" class="align-middle select-program">
-                                <td>{{ $program->kode }}</td>
-                                <td>{{ $program->nama }}</td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-sm btn-info" data-action="select" data-toggle="tooltip" data-placement="top" title="{{ __('global.select') }}">
-                                        <i class="bi bi-plus-lg"></i>
-                                        <span class="d-none d-sm-inline"></span>
-                                        <span class="d-sm-none">{{ __('global.select') }}</span>
-                                    </button>
-                                </td>
-                            </tr> --}}
+                            {{-- autofill by js based on selected program --}}
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.close') }}</button>
-                {{-- <button type="button" class="btn btn-primary" id="saveModalData">{{ __('global.save') }}</button> --}}
             </div>
         </div>
     </div>

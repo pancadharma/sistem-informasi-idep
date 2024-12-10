@@ -107,63 +107,6 @@
 
 <!-- JS for Modal Program -->
 <script>
-    // $(document).ready(function() {
-    //     var programId = null;
-
-    //     $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
-    //         e.preventDefault();
-    //         var programId = $(this).closest('tr').data('program-id');
-    //         var programKode = $(this).closest('tr').data('program-kode');
-    //         var programName = $(this).closest('tr').data('program-nama');
-
-    //         $('#program_id').val(programId).trigger('change');
-    //         // $('#kode_program').val(programKode).trigger('change').prop('disabled', true);
-    //         $('#nama_program').val(programName).trigger('change').prop('disabled', true);
-
-    //         setTimeout(function() {
-    //             $('#kode_kegiatan').focus();
-    //         }, 100);
-
-    //         saveFormDataToStorage();
-    //         $('#ModalDaftarProgram').modal('hide');
-    //     });
-
-
-
-
-    //     $('#kode_program').click(function() {
-    //         if (programId) {
-    //             let url_kode_program  = '{{ route('api.program.kegiatan', ':id') }}'.replace(':id',programId);
-    //             $.ajax({
-    //                 url: url_kode_program,
-    //                 method: 'GET',
-    //                 datatype: 'JSON',
-    //                 beforeSend: function(){
-    //                     Toast.fire({icon: "info",title: "Processing...",timer: 300,timerProgressBar: true,});
-    //                 },
-    //                 success: function(data) {
-    //                     console.log(data);
-    //                 },
-    //                 error: function(jqXHR, textStatus, errorThrown) {
-    //                     console.error('Error fetching data:', textStatus, errorThrown);
-    //                 }
-    //             });
-    //         } else {
-    //             console.warn('Program ID is not set. Please select a program first.');
-    //         }
-    //     });
-
-
-
-
-
-    // });
-</script>
-
-
-{{-- tester --}}
-<script>
-
 $(document).ready(function() {
     // Variable to hold the selected program ID
     let programId = null;
@@ -200,6 +143,7 @@ $(document).ready(function() {
         }
         fetchProgramActivities(programId);
     });
+
 
     // Function to fetch activities based on programId
     function fetchProgramActivities(programId) {
@@ -257,19 +201,16 @@ $(document).ready(function() {
     function populateModalWithActivities(data) {
         const tbody = $('#list_program_out_activity tbody'); // Ensure tbody selector points to the correct table
         tbody.empty(); // Clear existing rows
-
-        console.log(data); // Inspect the data
-
         // Iterate over the activity data
         data.forEach(activity => {
             const row = `
-                <tr>
+                <tr data-id="${activity.id}" data-deskripsi="${activity.deskripsi}" data-indikator="${activity.indikator}" data-target="${activity.target}">
                     <td>${activity.deskripsi}</td>
                     <td>${activity.indikator}</td>
                     <td>${activity.target}</td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-info select-activity" data-id="${activity.id}">
-                            <i class="bi bi-plus-lg"></i> Select
+                            <i class="bi bi-plus-lg"></i>
                         </button>
                     </td>
                 </tr>
@@ -280,6 +221,25 @@ $(document).ready(function() {
         // Show the modal
         $('#ModalDaftarProgramActivity').modal('show');
     }
+
+    // Event listener for selecting an activity from the modal
+    $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
+        e.preventDefault();
+        let activityId = $(this).data('id');
+        let activityDeskripsi = $(this).data('deskripsi');
+        let activityIndikator = $(this).data('indikator');
+        let activityTarget = $(this).data('target');
+
+        var activity_Id = $(this).closest('tr').data('id');
+        var activity_Desk = $(this).closest('tr').data('deskripsi');
+        var activity_Ind = $(this).closest('tr').data('indikator');
+        var activity_Tar = $(this).closest('tr').data('target');
+        console.log(`Selected Activity ID: ${activity_Id}, Deskripsi: ${activity_Desk}`, `Indikator: ${activity_Ind}`, `Target: ${activity_Tar}`);
+
+        // Perform actions with the selected activity data
+        // console.log(`Selected Activity ID: ${activityId}, Deskripsi: ${activityDeskripsi}`, `Indikator: ${activityIndikator}`, `Target: ${activityTarget}`);
+        $('#ModalDaftarProgramActivity').modal('hide');
+    });
 
 });
 
