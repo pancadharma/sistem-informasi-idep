@@ -15,11 +15,12 @@
     </div>
 </div>
 <div class="form-group row">
-     <!-- kode -->
+     <!-- kode kegiatan-->
     <label for="kode_kegiatan" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.kode') }}</label>
     <div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
         <input type="hidden" class="form-control" id="id_programoutcomeoutputactivity" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="id_programoutcomeoutputactivity">
-        <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan">
+        <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
+        data-toggle="modal" data-target="#ModalDaftarProgramActivity">
     </div>
 </div>
 
@@ -79,6 +80,7 @@
 </div>
 
 @include('tr.kegiatan.tabs.program')
+@include('tr.kegiatan.tabs.program-act')
 
 @push('next-button')
 <div class="button" id="task_flyout">
@@ -105,25 +107,181 @@
 
 <!-- JS for Modal Program -->
 <script>
-    $(document).ready(function() {
-        $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
-            e.preventDefault();
-            var programId = $(this).closest('tr').data('program-id');
-            var programKode = $(this).closest('tr').data('program-kode');
-            var programName = $(this).closest('tr').data('program-nama');
+    // $(document).ready(function() {
+    //     var programId = null;
 
-            $('#program_id').val(programId).trigger('change');
-            $('#kode_program').val(programKode).trigger('change').prop('disabled', true);
-            $('#nama_program').val(programName).trigger('change').prop('disabled', true);
+    //     $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
+    //         e.preventDefault();
+    //         var programId = $(this).closest('tr').data('program-id');
+    //         var programKode = $(this).closest('tr').data('program-kode');
+    //         var programName = $(this).closest('tr').data('program-nama');
 
-            setTimeout(function() {
-                $('#kode_kegiatan').focus();
-            }, 100);
+    //         $('#program_id').val(programId).trigger('change');
+    //         // $('#kode_program').val(programKode).trigger('change').prop('disabled', true);
+    //         $('#nama_program').val(programName).trigger('change').prop('disabled', true);
 
-            saveFormDataToStorage();
-            $('#ModalDaftarProgram').modal('hide');
-        });
+    //         setTimeout(function() {
+    //             $('#kode_kegiatan').focus();
+    //         }, 100);
+
+    //         saveFormDataToStorage();
+    //         $('#ModalDaftarProgram').modal('hide');
+    //     });
+
+
+
+
+    //     $('#kode_program').click(function() {
+    //         if (programId) {
+    //             let url_kode_program  = '{{ route('api.program.kegiatan', ':id') }}'.replace(':id',programId);
+    //             $.ajax({
+    //                 url: url_kode_program,
+    //                 method: 'GET',
+    //                 datatype: 'JSON',
+    //                 beforeSend: function(){
+    //                     Toast.fire({icon: "info",title: "Processing...",timer: 300,timerProgressBar: true,});
+    //                 },
+    //                 success: function(data) {
+    //                     console.log(data);
+    //                 },
+    //                 error: function(jqXHR, textStatus, errorThrown) {
+    //                     console.error('Error fetching data:', textStatus, errorThrown);
+    //                 }
+    //             });
+    //         } else {
+    //             console.warn('Program ID is not set. Please select a program first.');
+    //         }
+    //     });
+
+
+
+
+
+    // });
+</script>
+
+
+{{-- tester --}}
+<script>
+
+$(document).ready(function() {
+    // Variable to hold the selected program ID
+    let programId = null;
+
+    // Event handler when a program is selected in the modal
+    $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
+        e.preventDefault();
+
+        // Fetch the selected program details
+        programId = $(this).data('program-id');
+        const programKode = $(this).data('program-kode');
+        const programNama = $(this).data('program-nama');
+
+        // Update the hidden input and display fields
+        $('#program_id').val(programId).trigger('change');
+        $('#kode_program').val(programKode).prop('disabled', true);
+        $('#nama_program').val(programNama).prop('disabled', true);
+
+        // Close the program selection modal
+        $('#ModalDaftarProgram').modal('hide');
     });
+
+    // Handle opening the activities modal
+    $('#kode_kegiatan').click(function(e) {
+        if (!programId) {
+            e.preventDefault(); // Prevent modal from opening
+            Toast.fire({
+                icon: "warning",
+                title: "Please select a program first.",
+                timer: 2000,
+                timerProgressBar: true,
+            });
+            return;
+        }
+        fetchProgramActivities(programId);
+    });
+
+    // Function to fetch activities based on programId
+    function fetchProgramActivities(programId) {
+        const url = '{{ route('api.program.kegiatan', ':id') }}'.replace(':id', programId);
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            dataType: 'JSON',
+            beforeSend: function() {
+                Toast.fire({
+                    icon: "info",
+                    title: "Fetching activities...",
+                    timer: 1000,
+                    timerProgressBar: true,
+                });
+            },
+            success: function(data) {
+                setTimeout(() => {
+                    populateModalWithActivities(data);
+                }, 1000);
+            },
+            error: function() {
+                Toast.fire({
+                    icon: "error",
+                    title: "Failed to fetch activities.",
+                });
+            }
+        });
+    }
+
+    // Populate the activities modal with fetched data
+    // function populateModalWithActivities(data) {
+    //     const tbody = $('#list_program_out_activity');
+    //     tbody.empty();
+
+    //     console.log(data);
+
+    //     data.forEach(activity => {
+    //         const row = `
+    //             <tr>
+    //                 <td>${activity.kode}</td>
+    //                 <td>${activity.nama}</td>
+    //                 <td class="text-center">
+    //                     <button type="button" class="btn btn-sm btn-info select-activity" data-id="${activity.id}">
+    //                         <i class="bi bi-plus-lg"></i> Select
+    //                     </button>
+    //                 </td>
+    //             </tr>
+    //         `;
+    //         tbody.append(row);
+    //     });
+    //     $('#ModalDaftarProgramActivity').modal('show');
+    // }
+    function populateModalWithActivities(data) {
+        const tbody = $('#list_program_out_activity tbody'); // Ensure tbody selector points to the correct table
+        tbody.empty(); // Clear existing rows
+
+        console.log(data); // Inspect the data
+
+        // Iterate over the activity data
+        data.forEach(activity => {
+            const row = `
+                <tr>
+                    <td>${activity.deskripsi}</td>
+                    <td>${activity.indikator}</td>
+                    <td>${activity.target}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-info select-activity" data-id="${activity.id}">
+                            <i class="bi bi-plus-lg"></i> Select
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row); // Append the row to the table body
+        });
+
+        // Show the modal
+        $('#ModalDaftarProgramActivity').modal('show');
+    }
+
+});
 
 </script>
 @endpush

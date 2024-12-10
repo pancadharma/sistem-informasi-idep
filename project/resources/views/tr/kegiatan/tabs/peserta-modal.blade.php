@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="ModalTambahPeserta" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ModalTambahPesertaTitle" aria-hidden="true" theme="success">
+<div class="modal fade" id="ModalTambahPeserta" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="ModalTambahPesertaTitle" theme="success">
     <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">

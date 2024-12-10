@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
+use App\Models\Program;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Program;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Gate;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Program_Outcome_Output;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\Program_Outcome_Output_Activity;
 
 
 class KegiatanController extends Controller
@@ -118,5 +121,46 @@ class KegiatanController extends Controller
     public function destroy($id)
     {
         return false;
+    }
+
+
+    // public function getActivityProgram($programId)
+    // {
+    //     // Fetch activities using relationships
+    //     $activities = Program::with('outcome.output.activities')
+    //         ->where('id', $programId)
+    //         ->get()
+    //         ->pluck('outcome.*.output.*.activities')
+    //         ->flatten();
+
+    //     return response()->json($activities);
+    // }
+
+    public function getActivityProgram($programId)
+    {
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $programId)->first();
+
+        // $program = Program::find($programId);
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found'], 404);
+        }
+
+        $activities = [];
+        if ($program) {
+            foreach ($program->outcome as $out) {
+                foreach ($out->output as $come_output) {
+                    foreach ($come_output->activities as $activity) {
+                        $activities[] = $activity;
+                    }
+                }
+            }
+        }
+
+        return response()->json($activities);
     }
 }
