@@ -141,7 +141,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/jabatan', [WilayahController::class, 'getKegiatanJabatan'])->name('api.kegiatan.jabatan');
     Route::get('kegiatan/api/load-desa/{id}', [WilayahController::class, 'loadKegiatanDesa'])->name('api.kegiatan.load-desa');
     //kegiatan api - program
-    Route::get('kegiatan/api/program/{id}/kegiatan', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
+    Route::get('kegiatan/api/program/{id}/out/activity', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
 
 
 

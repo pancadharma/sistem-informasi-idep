@@ -26,7 +26,8 @@
                 style="width:100%">
                 <thead>
                     <tr>
-                        {{-- <th class="text-center align-middle" style="width: 5%;">No.</th>
+                        <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
+                        {{--
                         <th>{{ __('cruds.program.nama') }}</th>
                         <th>{{ __('cruds.kegiatan.nama') }}</th>
                         <th>{{ __('cruds.desa.form.nama') }}</th>
