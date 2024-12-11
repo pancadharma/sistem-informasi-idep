@@ -562,6 +562,10 @@ return [
             'penulis'               => 'Penulis',
         ],
         'basic'                     => [
+            'program_select'        => 'Pilih Program',
+            'program_select_kode'   => 'Pilih Kode Program',
+            'program_kode'          => 'Kode Program',
+            'program_nama'          => 'Nama Program',
             'nama'                  => 'Nama Kegiatan',
             'kode'                  => 'Kode Kegiatan',
             'desa'                  => 'Desa/Kelurahan',
