@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Program_Outcome_Output;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
-
+use App\Models\Satuan;
 
 class KegiatanController extends Controller
 {
@@ -162,5 +162,30 @@ class KegiatanController extends Controller
         }
 
         return response()->json($activities);
+    }
+
+
+    public function getSatuan(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|integer', // Add id validation
+        ]);
+
+        // Retrieve search, page, and id inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $id = $request->input('id', null);
+
+        // Build query to include both name search and id check
+        $satuan = Satuan::when($id, function ($query, $id) {
+            return $query->where('id', $id);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+        $satuan = $satuan->paginate(20, ['*'], 'page', $page);
+        return response()->json($satuan);
     }
 }
