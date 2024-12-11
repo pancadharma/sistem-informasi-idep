@@ -1,7 +1,7 @@
 {{-- Basic Information --}}
 <div class="form-group row">
-    <label for="pilih_program" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
-    <div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
+    <label for="pilih_program" class="col-sm-12 col-md-12 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-2 order-md-2 self-center">
         <!-- kode program -->
         <input type="hidden" name="program_id" id="program_id">
         <!-- kode program -->
@@ -9,64 +9,63 @@
         data-toggle="modal" data-target="#ModalDaftarProgram">
     </div>
     <!-- nama program-->
-    <label for="nama_program" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.program_nama') }}</label>
-    <div class="col-sm col-md col-lg-4 order-4 order-md-4 self-center">
+    <label for="nama_program" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.program_nama') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-6 order-4 order-md-4 self-center">
         <input type="text" class="form-control" id="nama_program" placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
     </div>
 </div>
 <div class="form-group row">
      <!-- kode kegiatan-->
-    <label for="kode_kegiatan" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.kode') }}</label>
-    <div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
+    <label for="kode_kegiatan" class="col-sm-12 col-md-12 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.kode') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-2 order-md-2 self-center">
         <input type="hidden" class="form-control" id="id_programoutcomeoutputactivity" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="id_programoutcomeoutputactivity">
         <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
         data-toggle="modal" data-target="#ModalDaftarProgramActivity">
     </div>
-</div>
-
-<div class="form-group row">
     <!-- nama kegiatan-->
-    <label for="nama_kegiatan" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.nama') }}</label>
-    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+    <label for="nama_kegiatan" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.nama') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-6 order-4 order-md-4 self-center">
         <input type="text" class="form-control" id="nama_kegiatan" placeholder=" {{ __('cruds.kegiatan.basic.nama') }}" name="nama" required>
     </div>
 </div>
 
 
 <div class="form-group row">
-    <!-- dusun-->
-    <label for="nama_desa" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
-    <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
+    <!-- dusun
+        <label for="nama_desa" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
+    -->
+    <label for="nama_desa" class="col-sm-12 col-md-12 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.desa') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-2 order-md-2 self-center">
         <select name="nama_desa" id="nama_desa" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
         </select>
     </div>
     <!-- lokasi-->
-    <label for="lokasi" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.lokasi') }}</label>
-    <div class="col-sm col-md col-lg-4 order-4 order-md-4 self-center">
+    <label for="lokasi" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.lokasi') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-6 order-4 order-md-4 self-center">
         <input type="text" class="form-control" id="lokasi" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}" name="lokasi">
     </div>
 </div>
 <div class="form-group row">
     <!-- latitude-->
-    <label for="lat" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.lat') }}</label>
-    <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
+    <label for="lat" class="col-sm-12 col-md-12 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.lat') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-2 order-md-2 self-center">
         <input type="text" class="form-control" id="lat" placeholder="{{ __('cruds.kegiatan.lat') }}" name="lat">
     </div>
     <!-- longitude-->
-    <label for="longitude" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.long') }}</label>
-    <div class="col-sm col-md col-lg-4 order-4 order-md-4 self-center">
+    <label for="longitude" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.long') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-4 order-md-4 self-center">
         <input type="text" class="form-control" id="longitude" placeholder="{{ __('cruds.kegiatan.long') }}" name="longitude">
     </div>
 </div>
 <div class="form-group row">
     <!-- tgl mulai-->
-    <label for="tanggalmulai" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</label>
-    <div class="col-sm-3 col-md-3 col-lg-4 order-2 order-md-2 self-center">
+    <label for="tanggalmulai" class="col-sm-12 col-md-12 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-2 order-md-2 self-center">
         <input type="date" class="form-control" id="tanggalmulai" placeholder="" name="tanggalmulai">
     </div>
     <!-- tgl selesai-->
-    <label for="tanggalselesai" class="col-sm-3 col-md-3 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</label>
-    <div class="col-sm-3 col-md-3 col-lg-4 order-4 order-md-4 self-center">
+    <label for="tanggalselesai" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</label>
+    <div class="col-sm-12 col-md-12 col-lg-2 order-4 order-md-4 self-center">
         <input type="date" class="form-control" id="tanggalselesai" placeholder="" name="tanggalselesai">
     </div>
 </div>
@@ -122,7 +121,7 @@ $(document).ready(function() {
 
         // Update the hidden input and display fields
         $('#program_id').val(programId).trigger('change');
-        $('#kode_program').val(programKode).prop('disabled', true);
+        $('#kode_program').val(programKode);
         $('#nama_program').val(programNama).prop('disabled', true);
 
         // Close the program selection modal
@@ -133,15 +132,26 @@ $(document).ready(function() {
     $('#kode_kegiatan').click(function(e) {
         if (!programId) {
             e.preventDefault(); // Prevent modal from opening
-            Toast.fire({
-                icon: "warning",
-                title: "Please select a program first.",
-                timer: 2000,
+            // Toast.fire({
+            //     icon: "warning",
+            //     title: "Please select a program first.",
+            //     timer: 2000,
+            //     timerProgressBar: true,
+            // });
+
+            Swal.fire({
+                title: 'Oops...',
+                text: 'Please select a program first.',
+                icon: 'error',
                 timerProgressBar: true,
+                timer:1000,
             });
-            return;
+            $('#ModalDaftarProgram').modal('show');
+            return false;
         }
-        fetchProgramActivities(programId);
+        else{
+            fetchProgramActivities(programId);
+        }
     });
 
 
@@ -164,7 +174,7 @@ $(document).ready(function() {
             success: function(data) {
                 setTimeout(() => {
                     populateModalWithActivities(data);
-                }, 1000);
+                }, 500);
             },
             error: function() {
                 Toast.fire({
@@ -174,30 +184,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    // Populate the activities modal with fetched data
-    // function populateModalWithActivities(data) {
-    //     const tbody = $('#list_program_out_activity');
-    //     tbody.empty();
-
-    //     console.log(data);
-
-    //     data.forEach(activity => {
-    //         const row = `
-    //             <tr>
-    //                 <td>${activity.kode}</td>
-    //                 <td>${activity.nama}</td>
-    //                 <td class="text-center">
-    //                     <button type="button" class="btn btn-sm btn-info select-activity" data-id="${activity.id}">
-    //                         <i class="bi bi-plus-lg"></i> Select
-    //                     </button>
-    //                 </td>
-    //             </tr>
-    //         `;
-    //         tbody.append(row);
-    //     });
-    //     $('#ModalDaftarProgramActivity').modal('show');
-    // }
     function populateModalWithActivities(data) {
         const tbody = $('#list_program_out_activity tbody'); // Ensure tbody selector points to the correct table
         tbody.empty(); // Clear existing rows
@@ -236,8 +222,8 @@ $(document).ready(function() {
         var activity_Tar = $(this).closest('tr').data('target');
         console.log(`Selected Activity ID: ${activity_Id}, Deskripsi: ${activity_Desk}`, `Indikator: ${activity_Ind}`, `Target: ${activity_Tar}`);
 
-        // Perform actions with the selected activity data
-        // console.log(`Selected Activity ID: ${activityId}, Deskripsi: ${activityDeskripsi}`, `Indikator: ${activityIndikator}`, `Target: ${activityTarget}`);
+
+        $('#kode_program').prop('disabled', true);
         $('#ModalDaftarProgramActivity').modal('hide');
     });
 
