@@ -155,7 +155,7 @@
                 }
                 const value = formData[id] || '';
                 $(this).summernote('code', value); // Set the content
-                console.log(`Setting content for ${id}: ${value}`);
+                // console.log(`Setting content for ${id}: ${value}`);
             });
 
 

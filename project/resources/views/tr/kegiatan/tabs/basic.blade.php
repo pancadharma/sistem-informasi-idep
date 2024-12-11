@@ -132,15 +132,26 @@ $(document).ready(function() {
     $('#kode_kegiatan').click(function(e) {
         if (!programId) {
             e.preventDefault(); // Prevent modal from opening
-            Toast.fire({
-                icon: "warning",
-                title: "Please select a program first.",
-                timer: 2000,
+            // Toast.fire({
+            //     icon: "warning",
+            //     title: "Please select a program first.",
+            //     timer: 2000,
+            //     timerProgressBar: true,
+            // });
+
+            Swal.fire({
+                title: 'Oops...',
+                text: 'Please select a program first.',
+                icon: 'error',
                 timerProgressBar: true,
+                timer:1000,
             });
-            return;
+            $('#ModalDaftarProgram').modal('show');
+            return false;
         }
-        fetchProgramActivities(programId);
+        else{
+            fetchProgramActivities(programId);
+        }
     });
 
 
@@ -163,7 +174,7 @@ $(document).ready(function() {
             success: function(data) {
                 setTimeout(() => {
                     populateModalWithActivities(data);
-                }, 1000);
+                }, 500);
             },
             error: function() {
                 Toast.fire({
