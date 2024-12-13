@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
+use App\Models\Program;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Gate;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Gate;
+use App\Models\Program_Outcome_Output;
+use Symfony\Component\HttpFoundation\Response;
+use App\Models\Program_Outcome_Output_Activity;
+use App\Models\Satuan;
 
 class KegiatanController extends Controller
 {
@@ -29,16 +33,16 @@ class KegiatanController extends Controller
             ->select('trkegiatan.*')
             ->get()
             ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $program->getTotalBeneficiaries();
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $program->getTotalBeneficiaries();
 
                 return $item;
             });
@@ -84,7 +88,8 @@ class KegiatanController extends Controller
     public function create()
     {
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-            return view('tr.kegiatan.create');
+            $program = Program::all();
+            return view('tr.kegiatan.create', compact('program'));
         }
         return response()->json([
             'success' => false,
@@ -116,5 +121,71 @@ class KegiatanController extends Controller
     public function destroy($id)
     {
         return false;
+    }
+
+
+    // public function getActivityProgram($programId)
+    // {
+    //     // Fetch activities using relationships
+    //     $activities = Program::with('outcome.output.activities')
+    //         ->where('id', $programId)
+    //         ->get()
+    //         ->pluck('outcome.*.output.*.activities')
+    //         ->flatten();
+
+    //     return response()->json($activities);
+    // }
+
+    public function getActivityProgram($programId)
+    {
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $programId)->first();
+
+        // $program = Program::find($programId);
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found'], 404);
+        }
+
+        $activities = [];
+        if ($program) {
+            foreach ($program->outcome as $out) {
+                foreach ($out->output as $come_output) {
+                    foreach ($come_output->activities as $activity) {
+                        $activities[] = $activity;
+                    }
+                }
+            }
+        }
+
+        return response()->json($activities);
+    }
+
+
+    public function getSatuan(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|integer', // Add id validation
+        ]);
+
+        // Retrieve search, page, and id inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $id = $request->input('id', null);
+
+        // Build query to include both name search and id check
+        $satuan = Satuan::when($id, function ($query, $id) {
+            return $query->where('id', $id);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+        $satuan = $satuan->paginate(20, ['*'], 'page', $page);
+        return response()->json($satuan);
     }
 }

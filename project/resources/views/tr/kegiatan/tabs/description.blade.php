@@ -17,7 +17,7 @@
     <div class="col-sm col-md col-lg self-center">
         <label for="yang_terlibat" class="mb-0 input-group">{{ __('cruds.kegiatan.description.involved') }}</label>
 
-        <textarea name="yang_terlibat" id="yang_terlibat" placeholder=" {{ __('cruds.kegiatan.description.involved') }}" class="form-control summernote" rows="1"></textarea>
+        <textarea name="yang_terlibat" id="yang_terlibat" placeholder=" {{ __('cruds.kegiatan.description.involved') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 <!-- siapa pelatihnya dan darimana -->
@@ -25,14 +25,14 @@
     <div class="col-sm col-md col-lg self-center">
         <label for="pelatih_asal" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.pelatih_asal') }}</label>
 
-        <textarea name="pelatih_asal" id="pelatih_asal" placeholder=" {{ __('cruds.kegiatan.description.asal_pelatihan') }}" class="form-control summermnote" rows="1"></textarea>
+        <textarea name="pelatih_asal" id="pelatih_asal" placeholder=" {{ __('cruds.kegiatan.description.asal_pelatihan') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 <!-- Apa Saja yang Dilakukan Dalam Kegiatan Tersebut -->
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center">
         <label for="kegiatan" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.kegiatan') }}</label>
-        <textarea name="kegiatan" id="kegiatan" placeholder=" {{ __('cruds.kegiatan.description.kegiatan') }}" class="form-control summermnote" rows="2"></textarea>
+        <textarea name="kegiatan" id="kegiatan" placeholder=" {{ __('cruds.kegiatan.description.kegiatan') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 <!-- Informasi Lain yang Terkait -->
@@ -42,7 +42,7 @@
             {{ __('cruds.kegiatan.description.informasi_lain') }}
         </label>
 
-        <textarea name="informasi_lain" id="informasi_lain" placeholder=" {{ __('cruds.kegiatan.description.informasi_lain') }}" class="form-control summermnote" rows="2"></textarea>
+        <textarea name="informasi_lain" id="informasi_lain" placeholder=" {{ __('cruds.kegiatan.description.informasi_lain') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 
@@ -66,7 +66,8 @@
     <div class="col-sm-12 col-md-12 col-lg-2 col-form-label">
         <div class="input-group">
             <label for="satuan" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.satuan') }}</label>
-            <input type="text" class="form-control" id="satuan" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.description.satuan') }}" name="satuan">
+            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.satuan') }}" id="satuan" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.description.satuan') }}" name="satuan">
+            </select>
         </div>
     </div>
 </div>
@@ -74,7 +75,7 @@
 <div class="form-group row">
     <div class="col-sm col-md col-lg self-center input-group">
         <label for="barang" class="mb-0 self-center input-group">{{ __('cruds.kegiatan.description.others') }}</label>
-        <textarea name="others" id="others" placeholder=" {{ __('cruds.kegiatan.description.others') }}" class="form-control summermnote" rows="2"></textarea>
+        <textarea name="others" id="others" placeholder=" {{ __('cruds.kegiatan.description.others') }}" class="form-control summernote" rows="2"></textarea>
     </div>
 </div>
 
@@ -83,6 +84,7 @@
 
 @push('css')
 <style>
+    .fixed {position:fixed; bottom:0; left:0; z-index:2;width: 100% !important;}
     .content-header h1 {
         font-size: 1.1rem!important;
         margin: 0;
@@ -104,22 +106,58 @@
 @push('basic_tab_js')
 @section('plugins.Summernote', true)
 
-<script defer>
-    $(`.summernote textarea`).each(function() {
-        if (!$(this).data('initialized')) {
-            $(this).summernote({
-                height: 100,
-                width: '100%',
-                toolbar: [
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['paragraph', ['paragraph']],
-                    ['view', ['fullscreen', 'codeview']],
-                ],
-                inheritPlaceholder: true,
-            });
-            $(this).data('initialized', true); // Mark this textarea as initialized
-        }
+<script>
+    // Initialize Summernote editors
+    // for all textarea with class .summermnote
+    $(document).ready(function() {
+        $('.summernote').each(function() {
+            if (!$(this).data('initialized')) {
+                $(this).summernote({
+                    height: 120,
+                    width: '100%',
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['paragraph', ['paragraph']],
+                        ['view', ['fullscreen', 'codeview']],
+                    ],
+                    inheritPlaceholder: true,
+                });
+                $(this).data('initialized', true); // Mark this textarea as initialized
+            }
+        });
+
+        // loadFormDataFromStorage();
+
+        // $('#satuan').on('click', function (e) {
+        //     e.preventDefault();
+        //     var url = "{{ route('api.kegiatan.satuan') }}";
+        //     $.ajax({
+        //          url: url,
+        //         method: 'GET',
+        //         dataType: 'JSON',
+        //         beforeSend: function() {
+        //             Toast.fire({
+        //                 icon: "info",
+        //                 title: "Fetching activities...",
+        //                 timer: 1000,
+        //                 timerProgressBar: true,
+        //             });
+        //         },
+        //         success: function(data) {
+        //             setTimeout(() => {
+        //                 populateModalWithActivities(data);
+        //             }, 1000);
+        //         },
+        //         error: function() {
+        //             Toast.fire({
+        //                 icon: "error",
+        //                 title: "Failed to fetch activities.",
+        //             });
+        //         }
+        //     });
+        // });
+
     });
 </script>
 @endpush

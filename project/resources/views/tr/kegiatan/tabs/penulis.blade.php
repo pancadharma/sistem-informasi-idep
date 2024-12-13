@@ -10,7 +10,7 @@
         <input type="text" class="form-control" id="penulis" placeholder=" {{ __('global.pleaseSelect') .' '. __('cruds.kegiatan.penulis.label') }}" name="penulis[]">
     </div>
     <div class="col-sm col-md col-lg self-center">
-        <label for="jabatan" class="input-group">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+        <label for="jabatan" class="input-group ">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
         <input type="text" class="form-control" id="jabatan" placeholder=" {{ __('global.pleaseSelect') .' '. __('cruds.kegiatan.penulis.jabatan') }}" name="jabatan[]">
     </div>
 </div>

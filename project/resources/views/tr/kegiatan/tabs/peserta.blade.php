@@ -1,38 +1,4 @@
-{{--
-<!---->
-<!-- Dewasa -->
-<div class="form-group row">
-    <label for="pria" class="col-sm-2 col-md-2 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.peserta.pria') }}</label>
-<div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
-    <input type="text" class="form-control" id="pria" placeholder="0" name="pria">
-</div>
-<label for="wanita" class="col-sm-2 col-md-2 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-right text-lg-right self-center">{{ __('cruds.kegiatan.peserta.wanita') }}</label>
-<div class="col-sm-4 col-md-4 col-lg-4 order-4 order-md-4 self-center">
-    <input type="text" class="form-control" id="wanita" placeholder="0" name="wanita">
-</div>
-</div>
-<!-- Anak-anak -->
-<div class="form-group row">
-    <label for="laki" class="col-sm-2 col-md-2 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.peserta.laki') }}</label>
-    <div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
-        <input type="text" class="form-control" id="laki" placeholder="0" name="laki">
-    </div>
-    <label for="perempuan" class="col-sm-2 col-md-2 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-right text-lg-right self-center">{{ __('cruds.kegiatan.peserta.perempuan') }}</label>
-    <div class="col-sm-4 col-md-4 col-lg-4 order-4 order-md-4 self-center">
-        <input type="text" class="form-control" id="perempuan" placeholder="0" name="perempuan">
-    </div>
-</div>
-<!-- Anak-anak -->
-<div class="form-group row">
-    <label for="total" class="col-sm-2 col-md-2 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('cruds.kegiatan.peserta.total') }}</label>
-    <div class="col-sm-4 col-md-4 col-lg-4 order-2 order-md-2 self-center">
-        <input type="text" class="form-control" id="total" placeholder="0" name="total">
-    </div>
-</div>
---}}
-
-
-<!-- Penulis Laporan Kegiatan-->
+<!-- Peserta Kegiatan-->
 <div class="form-group row tambah_peserta" id="tambah_peserta">
     <div class="col-12 pl-0 pr-0">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
@@ -45,7 +11,7 @@
     <div class="table-responsive">
         <table id="list_peserta_kegiatan" class="table table-sm table-borderless table-hover mb-0 datatable-kegiatan" style="width:100%">
             <thead style="background-color: #149387 !important">
-                <tr class="align-middle text-center undefined">
+                <tr class="align-middle text-center">
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 rounded-start-3 border-secondary">{{ __('No.') }}</th>
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.identitas') }}</th>
                     <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.nama') }}</th>
@@ -70,20 +36,169 @@
 
 @push('basic_tab_js')
 
-<script defer>
+<script>
+    // Function to save form data to localStorage
+    function saveFormDataToStorage() {
+        var formData = {
+            program_id: $('#program_id').val(),
+            program_kode: $('#program_kode').val(),
+            kode_kegiatan: $('#kode_kegiatan').val(),
+            nama_kegiatan: $('#nama_kegiatan').val(),
+            nama_desa: $('#nama_desa').val(),
+            lokasi: $('#lokasi').val(),
+            lat: $('#lat').val(),
+            longitude: $('#longitude').val(),
+            tanggalmulai: $('#tanggalmulai').val(),
+            tanggalselesai: $('#tanggalselesai').val(),
+            nama_mitra: $('#nama_mitra').val(),
+
+
+            deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
+            tujuan_kegiatan: $('#tujuan_kegiatan').val(),
+            yang_terlibat: $('#yang_terlibat').val(),
+            pelatih_asal: $('#pelatih_asal').val(),
+            kegiatan: $('#kegiatan').val(),
+            informasi_lain: $('#informasi_lain').val(),
+            luas_lahan: $('#luas_lahan').val(),
+            barang: $('#barang').val(),
+            satuan: $('#satuan').val(),
+            others: $('#others').val(),
+
+        };
+
+        // Include Summernote content
+        $('.summernote').each(function () {
+            const id = $(this).attr('id');
+            formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
+        });
+
+        // Include select2 selected values
+        $('.select2').each(function () {
+            const id = $(this).attr('id');
+            formData[id] = $(this).val(); // Store the selected value(s)
+        });
+
+        // Save form data to localStorage
+        localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
+    }
+    function initializeSelect2WithDynamicUrl(fieldId) {
+        var apiUrl = $('#' + fieldId).data('api-url');
+        var placeholder = $('#' + fieldId).attr('placeholder');
+        $('#' + fieldId).select2({
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                delay: 300, // Debounce time
+                data: function (params) {
+                    return {
+                        search: params.term || '', // Search term, empty for initial load
+                        page: params.page || 1 // Page number
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(item => ({
+                            id: item.id,
+                            text: item.nama
+                        })),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0, // Minimum input length to trigger search
+            placeholder: placeholder,
+            allowClear: true // Allow clearing the selection
+        });
+    }
+
+    function loadFormDataFromStorage() {
+        var storedData = localStorage.getItem('kegiatanFormData');
+        if (storedData) {
+            var formData = JSON.parse(storedData);
+
+            // Populate basic form fields
+            $('#program_id').val(formData.program_id || '');
+            $('#program_kode').val(formData.program_kode || '');
+            //
+            $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+            $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+            $('#nama_desa').val(formData.nama_desa || '');
+            $('#lokasi').val(formData.lokasi || '');
+            $('#lat').val(formData.lat || '');
+            $('#longitude').val(formData.longitude || '');
+            $('#tanggalmulai').val(formData.tanggalmulai || '');
+            $('#tanggalselesai').val(formData.tanggalselesai || '');
+            $('#nama_mitra').val(formData.nama_mitra || '');
+            $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
+            // $('#deskripsi_kegiatan').summernote('code', formData.deskripsi_kegiatan || '');
+
+            $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
+            $('#yang_terlibat').val(formData.yang_terlibat || '');
+            $('#pelatih_asal').val(formData.pelatih_asal || '');
+            $('#kegiatan').val(formData.kegiatan || '');
+            $('#informasi_lain').val(formData.informasi_lain || '');
+            $('#luas_lahan').val(formData.luas_lahan || '');
+            $('#barang').val(formData.barang || '');
+            $('#satuan').val(formData.satuan || '');
+            $('#others').val(formData.others || '');
+
+            // Populate Summernote fields
+            $('.summernote').each(function () {
+                const id = $(this).attr('id');
+                if (!id) {
+                    console.error('Found Summernote element with undefined id:', this);
+                    return; // Skip this element
+                }
+                const value = formData[id] || '';
+                $(this).summernote('code', value); // Set the content
+                // console.log(`Setting content for ${id}: ${value}`);
+            });
+
+
+
+            // Populate and initialize select2 fields with fetched data from API
+            $('.select2').each(function () {
+                var fieldId = $(this).attr('id');
+                var value = formData[fieldId];
+                if (value) {
+                    var select2Field = $(this);
+                    var apiUrl = $(this).data('api-url');
+                    $.ajax({
+                        url: apiUrl,
+                        method: 'GET',
+                        data: { id: value },
+                        success: function (data) {
+                            var item = data.data.find(item => item.id == value);
+                            if (item) {
+                                var newOption = new Option(item.nama, item.id, false, true);
+                                select2Field.append(newOption).trigger('change');
+                            }
+                        },
+                        error: function (error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+                }
+                initializeSelect2WithDynamicUrl(fieldId);
+            });
+        } else {
+            // Initialize select2 fields even if there's no data in localStorage
+            $('.select2').each(function () {
+                var fieldId = $(this).attr('id');
+                initializeSelect2WithDynamicUrl(fieldId);
+            });
+        }
+    }
+
     $(document).ready(function() {
-        // Load existing participants from localStorage on page load
         loadParticipantsFromStorage();
-        // Restore form data on page load
         loadFormDataFromStorage();
 
-
-        // Save form data to localStorage whenever an input changes
-        // $('#createKegiatan input, #createKegiatan select, #createKegiatan date, #pesertaForm input, #pesertaForm select').on('change', function() {
-        //     saveFormDataToStorage();
-        // });
-
-        $('#createKegiatan, #pesertaForm').on('change', 'input, select, textarea', function () {
+        $('#createKegiatan').on('change', 'input, select, textarea', function () {
             saveFormDataToStorage();
         });
 
@@ -100,6 +215,7 @@
         // Attach change event listeners to input, select, date, select2, and summernote fields
         $('#createKegiatan').on('change', 'input, select, textarea, .select2, .summernote', function () {
             saveFormDataToStorage();
+            // this works
         });
 
         // Additionally, capture changes from select2 and summernote
@@ -110,10 +226,6 @@
             saveFormDataToStorage();
         });
 
-
-
-        //Save data to local storage for peserta in modal into table
-        //use temporary table to store data in local storage for pesertaa
         $('#saveModalData').click(function() {
             // Collect form values (existing code remains the same)
             var identitas = $('#identitas').val() || '';
@@ -380,191 +492,28 @@
 
             return `${day} ${month} ${year}`;
         }
-
-        //end JS for peserta in modal
-        //end JS for peserta in modal
-
-        // // Function to save form data to localStorage dynamically
-        // function saveFormDataToStorage() {
-        //     let formData = {};
-
-        //     // Select all relevant inputs within #createKegiatan and #pesertaForm
-        //     $('#createKegiatan, #pesertaForm').find('input, select, textarea').each(function() {
-        //         let $field = $(this);
-        //         let id = $field.attr('id') || $field.attr('name'); // Use 'id' or fallback to 'name'
-
-        //         if (id) {
-        //             // Handle different input types
-        //             if ($field.is(':checkbox')) {
-        //                 formData[id] = $field.is(':checked');
-        //             } else if ($field.is(':radio')) {
-        //                 if ($field.is(':checked')) {
-        //                     formData[id] = $field.val();
-        //                 }
-        //             } else if ($field.hasClass('select2')) {
-        //                 formData[id] = $field.select2('val'); // For Select2, retrieve selected values
-        //             } else if ($field.hasClass('summernote')) {
-        //                 formData[id] = $field.summernote('code'); // For Summernote, retrieve HTML content
-        //             } else {
-        //                 formData[id] = $field.val();
-        //             }
-        //         }
-        //     });
-
-        //     // Include Summernote content
-        //     $('.form-group textarea').each(function () {
-        //         const id = $(this).attr('id');
-        //         formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
-        //     });
-
-        //     // Save formData to localStorage
-        //     localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
-        // }
-
-
-        // // Function to load form data from localStorage dynamically
-        // function loadFormDataFromStorage() {
-        //     let savedData = localStorage.getItem('kegiatanFormData');
-        //     if (savedData) {
-        //         let formData = JSON.parse(savedData);
-
-        //         $.each(formData, function (key, value) {
-        //             let $field = $('#' + key);
-
-        //             if ($field.length === 0) {
-        //                 // If no element with 'id', try with 'name'
-        //                 $field = $('[name="' + key + '"]');
-        //             }
-
-        //             if ($field.length > 0) {
-        //                 if ($field.is(':checkbox')) {
-        //                     $field.prop('checked', value);
-        //                 } else if ($field.is(':radio')) {
-        //                     $field.each(function () {
-        //                         if ($(this).val() === value) {
-        //                             $(this).prop('checked', true);
-        //                         }
-        //                     });
-        //                 } else if ($field.hasClass('select2')) {
-        //                     $field.val(value).trigger('change'); // For Select2, set value and trigger change
-        //                 } else if ($field.hasClass('summernote')) {
-        //                     $field.summernote('code', value); // For Summernote, set HTML content
-        //                 } else {
-        //                     $field.val(value);
-        //                 }
-        //             }
-        //         });
-        //     }
-        //     // Restore Summernote content
-        //     $('.form-group textarea').each(function () {
-        //         const id = $(this).attr('id');
-        //         if (formData[id]) {
-        //             $(this).summernote('code', formData[id]);
-        //         }
-        //     });
-        // }
-
-        // // end dinamically save and load local data JS
-        // // end dinamically save and load local data JS
-
-
-        //// Function to save ALL form data to localStorage
-        function saveFormDataToStorage() {
-            var formData = {
-                // Basic Kegiatan Form Fields
-                kode_kegiatan: $('#kode_kegiatan').val(),
-                nama_kegiatan: $('#nama_kegiatan').val(),
-                nama_desa: $('#nama_desa').val(),
-                lokasi: $('#lokasi').val(),
-                lat: $('#lat').val(),
-                longitude: $('#longitude').val(),
-                tanggalmulai: $('#tanggalmulai').val(),
-                tanggalselesai: $('#tanggalselesai').val(),
-                nama_mitra: $('#nama_mitra').val(),
-
-                // Additional Fields
-                deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
-                tujuan_kegiatan: $('#tujuan_kegiatan').val(),
-                yang_terlibat: $('#yang_terlibat').val(),
-                pelatih_asal: $('#pelatih_asal').val(),
-                kegiatan: $('#kegiatan').val(),
-                informasi_lain: $('#informasi_lain').val(),
-                luas_lahan: $('#luas_lahan').val(),
-                barang: $('#barang').val(),
-                satuan: $('#satuan').val(),
-                others: $('#others').val(),
-            };
-
-            // Include Summernote content
-            $('.summernote textarea').each(function () {
-                const id = $(this).attr('id');
-                formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
-            });
-
-            localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
-        }
-
-        //// Function to load form data from localStorage
-        function loadFormDataFromStorage() {
-            var savedFormData = localStorage.getItem('kegiatanFormData');
-            if (savedFormData) {
-                var formData = JSON.parse(savedFormData);
-
-                // Populate Kegiatan form fields
-                $('#kode_kegiatan').val(formData.kode_kegiatan || '');
-                $('#nama_kegiatan').val(formData.nama_kegiatan || '');
-                $('#nama_desa').val(formData.nama_desa || '');
-                $('#lokasi').val(formData.lokasi || '');
-                $('#lat').val(formData.lat || '');
-                $('#longitude').val(formData.longitude || '');
-                $('#tanggalmulai').val(formData.tanggalmulai || '');
-                $('#tanggalselesai').val(formData.tanggalselesai || '');
-                $('#nama_mitra').val(formData.nama_mitra || '');
-
-                // Populate Additional Fields
-                $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan);
-                $('#tujuan_kegiatan').val(formData.tujuan_kegiatan);
-                $('#yang_terlibat').val(formData.yang_terlibat);
-                $('#pelatih_asal').val(formData.pelatih_asal);
-                $('#kegiatan').val(formData.kegiatan);
-                $('#informasi_lain').val(formData.informasi_lain);
-                $('#luas_lahan').val(formData.luas_lahan);
-                $('#barang').val(formData.barang);
-                $('#satuan').val(formData.satuan);
-                $('#others').val(formData.others);
-            }
-            // Restore Summernote content
-            $('.form-group textarea').each(function () {
-                const id = $(this).attr('id');
-                if (formData[id]) {
-                    $(this).summernote('code', formData[id]);
-                }
-            });
-        }
-
-
-
         function clearStoredFormData() {
             localStorage.removeItem('pesertaFormData');
             localStorage.removeItem('participantsData');
+            localStorage.removeItem('kegiatanFormData');
 
+            // Reset the form and clear Summernote content
             $('#createKegiatan')[0].reset();
-            $('#pesertaForm')[0].reset();
             $('#tableBody').empty();
+
+            // Clear Summernote content
+            $('.summermnote').each(function() {
+                $(this).summernote('reset');
+            });
         }
 
         // Optional: Add a clear button or method to reset stored data
         $('#clearStorageButton').on('click', function() {
             clearStoredFormData();
+            $('.select2').val(null).trigger('change');
+            $('.summernote').summernote('reset');
+
         });
-
-        // Modify existing save function to clear form data after saving
-        // $('#saveModalData').click(function() {
-        //     // Existing save logic remains the same
-
-        //     // Clear stored form data after successful save
-        //     localStorage.removeItem('pesertaFormData');
-        // });
     });
 
 </script>
