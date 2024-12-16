@@ -37,7 +37,7 @@
                             <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="kode" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                        <input type="text" id="kode" name="kode" class="form-control" required>
+                                        <input type="text" id="kode" name="kode" class="form-control" required oninput="this.value = this.value.toUpperCase();">
                                     </div>
                             </div>
                             <div class="col-lg-9">
