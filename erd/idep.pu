@@ -267,6 +267,8 @@ entity "trprogramoutcomeoutputactivity" as trprogramoutcomeoutputactivity {
     *id : int <<auto>>
     --
     id_programoutcomeoutput : int <<fk>>
+    kode: varchar (50)
+    nama : varchar (500)
     deskrispsi : varchar(500)
     indikator : varchar(500)
     target : varchar(500)
@@ -300,30 +302,35 @@ entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
     --
     id_programoutcomeoutputactivity : int <<fk>>
-    kode: varchar (50)
-    nama : varchar (500)
+    id_bentukkegiatan: int <<fk>>
+    id_kategorilokasikegiatan : int <<fk>>
+    id_jenisinstitusi : int <<fk>> null
+    id_user : int <<fk>>
+    id_jenisbantuan : int <<fk>> null
+    id_satuan : int <<fk>> null
+    id_dusun : int <<fk>>
     tanggalmulai : datetime
     tanggalselesai : datetime
-    id_dusun : int <<fk>>
     long : decimal (9,6)
     lat : decimal (9,6)
-    id_kategorilokasikegiatan : int <<fk>>
-    tempat : varchar (200)
+    tempat : varchar (200) 
     deskripsi : varchar (500) null
     tujuan : varchar (500) null
     yangterlibat : varchar (500) null
     pelatih: varchar (500) null
     informasilain : varchar (500) null
     luaslahan : varchar (50) null
-    id_jenisbantuan : int <<fk>> null
-    id_satuan : int <<fk>> null
     tindaklanjut : varchar (500) null
     tantangan : varchar (500) null
     rekomendasi : varchar (500) null
-    id_user : int <<fk>>
-    submit : bit
+    status : varchar (50)
     created_at : datetime
     update_at : datetime
+    jumlahpenerimamanfaat : int
+    jumlahpenerimamanfaatwoman : int
+    jumlahpenerimamanfaatman : int
+    jumlahpenerimamanfaatgirl : int
+    jumlahpenerimamanfaatboy : int 
 }
 
 entity "trkegiatanpeserta" as trkegiatanpeserta {
@@ -366,62 +373,97 @@ entity "trkegiatanpenulis" as trkegiatanpenulis {
     id_peran : int <<fk>>
 }
 
-entity "trevaluasi" as trevaluasi {
+entity "trmealspenerimamanfaat" as trprogrampenerimamanfaat {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
-    nama : varchar (500)
-    tanggalmulai : datetime
-    tanggalselesai : datetime
-    id_dusun : int <<fk>>
-    tempat : varchar (200)
-    long : decimal (9,6)
-    lat : decimal (9,6)
-    id_partner : int <<fk>>
-    masyarakatterlibataktif : varchar (50)
-    managementprogramlancar : varchar (50)
-    managementprogramlancar_ket : varchar (500)
-    kapasitasstaffmumpuni : varchar (50)
-    kapasitasstaffmumpuni_ket : varchar (500)
-    sumberdayamemadai : varchar (50)
-    sumberdayamemadai_ket : varchar (500)
-    selarasdenganpemerintah : varchar (50)
-    pelibatankelompokkomunitas : varchar (50)
-    peningkatankapasitasdandampak_masyarakat : varchar (500)
-    peningkatankapasitasdandampak_staff : varchar (500)
-    memenuhikebutuhanpenyandangcacat : varchar (50)
-    memenuhikebutuhanpenyandangcacat_ket : varchar (500)
-    tujuanprogramtercapai : varchar (50)
-    tujuanprogramtercapai_ket : varchar (500)
-    targetpenerimamanfaattercapai : varchar (50)
-    sesuaidenganrencanakerja : varchar (50)
-    adminterlibat : varchar (50)
-    dukunganmanagement_positif : varchar (500)
-    dukunganmanagement_negatif : varchar (500)
-    keuangan_positif : varchar (500)
-    keuangan_negatif : varchar (500)
-    waktu_positif : varchar (500)
-    waktu_negatif : varchar (500)
-    sdm_positif : varchar (500)
-    sdm_negatif : varchar (500)
-    mediapendukung_positif : varchar (500)
-    mediapendukung_negatif : varchar (500)
-    memilikirencanatindaklanjut : varchar (50)
-    dukunganpihaklain : varchar (50)
-    dukunganpihaklain_ket : varchar (500)
     id_user : int <<fk>>
-    status : varchar(50)
-    created_at : datetime
-    update_at : datetime
+    nama : varchar (200)
+    gender : varchar (50)
+    disabilitas : varchar (50)
+    id_kelompokmarjinal : int <<fk>> null
+    rt : varchar(200)
+    id_dusun: int <<fk>>
+    notelp : varchar (20)
+    id_jeniskelompok : int <<fk>>
+    umur : int
 }
 
-entity "trevaluasidokumen" as trevaluasidokumen {
+entity "trmealspenerimamanfaatactivity" as trmealspenerimamanfaatactivity {
     *id : int <<auto>>
     --
-    id_evaluasi : int <<fk>>
-    filepath : varchar (200)
+    id_mealspenerimamanfaat : int <<fk>>
+    id_programoutcomeoutputactivity : int <<fk>>
+    checked : bit
+}
+
+entity "mjeniskelompok" as mjeniskelompok {
+    *id : int <<auto>>
+    --
     nama : varchar (200)
-    keterangan : varchar (200)
+}
+
+entity "trmealskomponenmodel" as trmealskomponenmodel {
+    *id : int <<auto>>
+    --
+     id_program : int <<fk>>
+     id_komponenmodel : int <<fk>>
+     id_targetreinstra: int <<fk>>
+}
+
+entity "trmealskomponenmodellokasi" as trmealskomponenmodellokasi {
+    *id : int <<auto>>
+    --
+     id_mealskomponenmodel : int <<fk>>
+     id_dusun : int <<fk>>
+     id_satuan: int <<fk>>
+     jumlah: int <<fk>>
+}
+
+entity "mkomponenmodel" as mkomponenmodel {
+    *id : int <<auto>>
+    --
+    nama : varchar (200)
+}
+
+entity "trmealsfrm" as trmealsfrm {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    tanggalregistrasi : datetime
+    umur : int
+    jeniskelamin : varchar (50)
+    statuskomplain : varchar (50)
+    notelp : varchar (20)
+    alamat : varchar (500)
+    hide : bit
+    id_userpenerima : int <<fk>>
+    id_jabatanpenerima : int <<fk>>
+    notelppenerima : varchar (20)
+    channels : varchar (100)
+    channelslainnya : varchar (100)
+    kategorikomplain : varchar (100)
+    deskripsikomplain : varchar (500)
+    tanggalselesai : datetime
+    id_userhandler : int <<fk>>
+    id_jabatanhandler : int <<fk>>
+    notelphandler : varchar (20)
+    deskripsi : varchar (500)
+}
+
+entity "trmealsqb" as trmealsfrm {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    tipeactivity : varchar (100)
+    id_programoutcomeoutputactivity : int <<fk>>
+    id_desa : int <<fk>>
+    tanggalimplementasi : datetime
+    id_userhandler : int <<fk>>
+    id_usercompiler : int <<fk>>
+    score : decimal
+    catatanevaluasi : varchar (500)
+    area : varchar (500)
 }
 
 entity "trlog" as trlog {
