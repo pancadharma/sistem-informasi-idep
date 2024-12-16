@@ -35,30 +35,34 @@
                     <div class="card-body pb-0">
                         <div class="row">
                             <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="nama" class="control-label small mb-0">{{ __('cruds.program.nama') }}</label>
-                                    <input type="text" id="nama" name="nama" class="form-control" required>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="kode" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                        <input type="text" id="kode" name="kode" class="form-control" required>
+                                    </div>
                             </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="kode" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode" name="kode" class="form-control" required>
-                                </div>
+                            <div class="col-lg-9">
+                                    <div class="form-group">
+                                        <label for="nama" class="control-label small mb-0">{{ __('cruds.program.nama') }}</label>
+                                        <input type="text" id="nama" name="nama" class="form-control" required>
+                                    </div>
                             </div>
-                            <div class="col-lg-2">
+                        </div>
+                    </div>
+                    <div class="card-body pb-0 pt-0">
+                        <div class="row">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
                                     <input type="date" id="tanggalmulai" name="tanggalmulai" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
                                     <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
                                     <input type="text" id="totalnilai" name="totalnilai" class="form-control currency" minlength="0" step=".01" required>
@@ -312,3 +316,4 @@
 @include('tr.program.js.detail-create.partner')
 {{-- @include('tr.program.js.validate') --}}
 @endpush
+        

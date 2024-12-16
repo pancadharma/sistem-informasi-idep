@@ -36,22 +36,26 @@
                     {{-- Informasi Dasar --}}
                     <div class="card-body pb-0">
                         <div class="row">
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
+                                        <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                    <div class="form-group">
+                                        <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
+                                        <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required>
+                                    </div>
+                                    @if ($errors->has('kode'))
+                                        <span class="text-danger">{{ $errors->first('kode') }}</span>
+                                    @endif
+                                </div>
+                        </div>
+                    </div>
+                    <div class="card-body pb-0 pt-0">
+                        <div class="row">
                             <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
-                                    <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
-                                    <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required>
-                                </div>
-                                @if ($errors->has('kode'))
-                                    <span class="text-danger">{{ $errors->first('kode') }}</span>
-                                @endif
-                            </div>
-                            <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="tanggalmulai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_mulai') }}</label>
                                     <input type="date" id="tanggalmulai" name="tanggalmulai"class="form-control date {{ $errors->has('tanggalmulai') ? 'is-invalid' : '' }}" value="{{ old('tanggalmulai', \Carbon\Carbon::parse($program->tanggalmulai)->format('Y-m-d')) }}" required>
@@ -62,7 +66,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="tanggalselesai" class="control-label small mb-0">{{ __('cruds.program.form.tgl_selesai') }}</label>
                                     <input type="date" id="tanggalselesai" name="tanggalselesai" class="form-control date {{ $errors->has('tanggalselesai') ? 'is-invalid' : '' }}" value="{{ old('tanggalselesai', \Carbon\Carbon::parse($program->tanggalselesai)->format('Y-m-d')) }}" required>
@@ -72,7 +76,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="totalnilai" class="control-label small mb-0">{{ __('cruds.program.form.total_nilai') }}</label>
                                     <input type="text" id="totalnilai" name="totalnilai" class="form-control currency {{ $errors->has('totalnilai') ? 'is-invalid' : '' }}" minlength="0" value="{{ old('totalnilai', $program->totalnilai) }}" step="0.001" required>
