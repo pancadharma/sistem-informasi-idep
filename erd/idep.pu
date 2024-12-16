@@ -302,9 +302,6 @@ entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
     --
     id_programoutcomeoutputactivity : int <<fk>>
-    id_bentukkegiatan: int <<fk>>
-    id_kategorilokasikegiatan : int <<fk>>
-    id_jenisinstitusi : int <<fk>> null
     id_user : int <<fk>>
     id_jenisbantuan : int <<fk>> null
     id_satuan : int <<fk>> null
