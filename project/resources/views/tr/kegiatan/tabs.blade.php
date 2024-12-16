@@ -1,87 +1,71 @@
 <div class="col-12 col-sm-12">
-    <div class="card card-primary card-outline card-outline-tabs">
-        <div class="card-header border-bottom-0 p-0">
+    <div class="card card-primary card-tabs">
+        <div class="card-header border-bottom-0 card-header p-0 pt-1">
             <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
+                <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
+                    <i class="bi bi-arrows-collapse"></i>
+                </button>
                 <li class="nav-item">
-                    <a class="nav-link active" id="basic-nav-tab" data-toggle="pill"
-                       href="#basic-tabs" role="tab" aria-controls="basic-tabs"
-                       aria-selected="true">{{ __('cruds.program.lokasi.label') }}</a>
+                    <a class="nav-link active" id="basic-tab" data-toggle="pill" href="#tab-basic" role="tab" aria-controls="tab-basic" aria-selected="true">
+                        {{ __('cruds.kegiatan.tabs.basic') }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="description-nav-tab" data-toggle="pill"
-                       href="#description-tab" role="tab" aria-controls="description-tab"
-                       aria-selected="false">{{ __('cruds.program.donor.label') }}</a>
+                    <a class="nav-link" id="description-nav-tab" data-toggle="pill" href="#description-tab" role="tab" aria-controls="description-tab" aria-selected="false">
+                        {{ __('cruds.kegiatan.tabs.description') }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="hasil-nav-tab" data-toggle="pill"
-                       href="#hasil-tab" role="tab" aria-controls="hasil-tab"
-                       aria-selected="false">{{ __('cruds.program.staff.label') }}</a>
+                    <a class="nav-link" id="hasil-nav-tab" data-toggle="pill" href="#tab-hasil" role="tab" aria-controls="tab-hasil" aria-selected="false">
+                        {{ __('cruds.kegiatan.tabs.hasil') }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-outcome-tab" data-toggle="pill"
-                       href="#custom-tabs-four-outcome" role="tab" aria-controls="custom-tabs-four-outcome"
-                       aria-selected="false">{{ __('cruds.program.outcome.label') }}</a>
+                    <a class="nav-link" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
+                        {{ __('cruds.kegiatan.peserta.tab') }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-partner-tab" data-toggle="pill"
-                       href="#custom-tabs-four-partner" role="tab" aria-controls="custom-tabs-four-partner"
-                       aria-selected="false">{{ __('cruds.program.partner.label') }}</a>
+                    <a class="nav-link" id="tab-files" data-toggle="pill" href="#tab-file" role="tab" aria-controls="tab-file" aria-selected="false">
+                        {{ __('cruds.kegiatan.tabs.file') }}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-report-tab" data-toggle="pill"
-                       href="#custom-tabs-four-report" role="tab" aria-controls="custom-tabs-four-report"
-                       aria-selected="false">{{ __('cruds.program.report.label') }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-objective-tab" data-toggle="pill"
-                       href="#custom-tabs-four-objective" role="tab" aria-controls="custom-tabs-four-objective"
-                       aria-selected="false">{{ __('cruds.program.objective.label') }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-four-goals-tab" data-toggle="pill"
-                       href="#custom-tabs-four-goals" role="tab" aria-controls="custom-tabs-four-goals"
-                       aria-selected="false">{{ __('cruds.program.goals.label') }}</a>
+                    <a class="nav-link" id="custom-tabs-four-report-tab" data-toggle="pill" href="#tab-penulis" role="tab" aria-controls="tab-penulis" aria-selected="false">
+                        {{ __('cruds.kegiatan.tabs.penulis') }}
+                    </a>
                 </li>
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
-                <div class="tab-pane fade show active" id="basic-tabs" role="tabpanel"
-                     aria-labelledby="basic-tabs">
-{{--                    @include('tr.program.detail.lokasi')--}}
+                <div class="tab-pane fade show active" id="tab-basic" role="tabpanel" aria-labelledby="basic-tab">
+                    @include('tr.kegiatan.tabs.basic')
                 </div>
-                <div class="tab-pane fade" id="description-tab" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-profile-tab">
-{{--                    @include('tr.program.detail.donor')--}}
+                <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                    @include('tr.kegiatan.tabs.description')
                 </div>
-                <div class="tab-pane fade" id="hasil-tab" role="tabpanel"
-                     aria-labelledby="hasil-tab">
-{{--                    @include('tr.program.detail.staff')--}}
+                <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
+                    @include('tr.kegiatan.tabs.hasil')
                 </div>
-                <div class="tab-pane fade" id="custom-tabs-four-outcome" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-outcome-tab">
-{{--                    @include('tr.program.detail.outcome')--}}
+                <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
+                    @include('tr.kegiatan.tabs.peserta')
                 </div>
-                <div class="tab-pane fade" id="custom-tabs-four-partner" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-partner-tab">
-{{--                    @include('tr.program.detail.partner')--}}
+                <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
+                    @include('tr.kegiatan.tabs.file-uploads')
                 </div>
-                <div class="tab-pane fade" id="custom-tabs-four-report" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-report-tab">
-{{--                    @include('tr.program.detail.reposrtschedule')--}}
+                <div class="tab-pane fade" id="tab-penulis" role="tabpanel" aria-labelledby="tab-penulis">
+                    @include('tr.kegiatan.tabs.penulis')
                 </div>
-                <div class="tab-pane fade" id="custom-tabs-four-objective" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-objective-tab">
-{{--                    @include('tr.program.detail.objective')--}}
-                </div>
-                <div class="tab-pane fade" id="custom-tabs-four-goals" role="tabpanel"
-                     aria-labelledby="custom-tabs-four-goals-tab">
-{{--                    @include('tr.program.detail.goals')--}}
-                </div>
-
             </div>
+        </div>
+        <div class="card-footer">
+            @stack('next-button')
         </div>
 
     </div>
 </div>
+
+
+
 

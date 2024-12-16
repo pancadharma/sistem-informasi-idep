@@ -105,6 +105,22 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->belongsTo(Mjabatan::class, 'jabatan_id');
     }
+    public function program_users()
+    {
+        return $this->belongsTo(Program_User::class, 'user_id');
+    }
+
+    public function peran()
+    {
+        return $this->belongsToMany(Peran::class, 'trprogramuser', 'user_id', 'peran_id')
+            ->withPivot('program_id');
+    }
+
+
+    public function program()
+    {
+        return $this->belongsToMany(Program::class, 'trprogramuser', 'user_id', 'program_id');
+    }
 
     public function getImageAttribute()
     {
@@ -125,10 +141,10 @@ class User extends Authenticatable implements HasMedia
             // ->useDisk('userprofile')
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
-            // ->registerMediaConversions(function (Media $media) {
-            //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
-            //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
-            // });
+        // ->registerMediaConversions(function (Media $media) {
+        //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
+        //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
+        // });
     }
 
     public function adminlte_image()
@@ -136,14 +152,12 @@ class User extends Authenticatable implements HasMedia
         $user_name = $this->username ?? Auth::user()->username;
         $media = $this->getFirstMedia($user_name);
         return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/idep.png';
-
     }
     public function full_profile()
     {
         $user_name = $this->username ?? Auth::user()->username;
         $media = $this->getFirstMedia($user_name);
         return $media ? $media->getUrl() : '/vendor/adminlte/dist/img/idep.png';
-
     }
 
     public function adminlte_desc()
@@ -160,5 +174,4 @@ class User extends Authenticatable implements HasMedia
         $identifier = $this->username ?? $this->id; // Get username or id
         return route('profile.show', ['identifier' => $identifier]); // Generate route
     }
-
 }

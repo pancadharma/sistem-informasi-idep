@@ -22,4 +22,9 @@ class Peran extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function program()
+    {
+        return $this->belongsToMany(Program::class, 'trprogramuser', 'peran_id', 'program_id');
+    }
 }

@@ -160,7 +160,9 @@ $.fn.dataTable.ext.errMode = 'throw';
 {{-- Add common CSS customizations --}}
 
 @push('css')
-{{-- <style type="text/css">
-
-</style> --}}
+    <style type="text/css">
+    .select2 {
+        width:100%!important;
+    }
+    </style>
 @endpush

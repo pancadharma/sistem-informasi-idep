@@ -91,6 +91,12 @@ class Kegiatan extends Model implements HasMedia
         return $file;
     }
 
+    // public function getDurationInDays()
+    // {
+    //     return Carbon::parse($this->tanggalmulai)
+    //         ->diffInDays(Carbon::parse($this->tanggalselesai));
+    // }
+
     public function getDurationInDays()
     {
         return Carbon::parse($this->tanggalmulai)

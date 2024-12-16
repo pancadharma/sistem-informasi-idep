@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Program_Partner extends Model
 {
     use Auditable, HasFactory;
-    public $table = "trprogramkelompokmarjinal";
+    public $table = "trprogrampartner";
     protected $fillable = [
         'program_id', 
         'partner_id', 

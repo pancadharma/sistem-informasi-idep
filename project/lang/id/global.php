@@ -28,6 +28,7 @@ return [
     'logout'                         => 'Keluar',
     'month'                          => 'Bulan',
     'no'                             => 'Tidak',
+    'select'                         => 'Pilih',
     'pleaseSelect'                   => 'Silakan pilih',
     'selectProv'                     => 'Silakan pilih Provinsi',
     'selectKab'                      => 'Silakan pilih Kabupaten',

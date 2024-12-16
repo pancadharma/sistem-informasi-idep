@@ -1,21 +1,31 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.kecamatan.list'))
-@section('content_header_title', __('cruds.kecamatan.title'))
+@section('content_header_title', __('cruds.kecamatan.list'))
 @section('sub_breadcumb', __('cruds.kecamatan.title'))
 
 @section('content_body')
     @include('master.kecamatan.create')
 
-    <div class="container-fluid content-header">
+    {{-- <div class="container-fluid content-header">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="text-muted">{{ __('cruds.kecamatan.list')}}</h1>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="card card-outline card-primary">
+
+        {{-- <div class="card-header">
+            <h3 class="card-title">{{__('cruds.kecamatan.list')}}</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" title="{{ __('global.create') . ' ' . __('cruds.kecamatan.nama') }}">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div> --}}
+
         <div class="card-body table-responsive">
             <table id="kecamatan_list" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap ajaxTable datatable-kecamatan" style="width:100%">
                 <thead>

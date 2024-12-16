@@ -67,6 +67,10 @@ class Program extends Model implements HasMedia
     {
         return $this->belongsToMany(KaitanSdg::class, 'trprogramkaitansdg', 'program_id', 'kaitansdg_id');
     }
+    public function partner()
+    {
+        return $this->belongsToMany(Partner::class, 'trprogrampartner', 'program_id', 'partner_id');
+    }
     // Program Lokasi Relation
     public function lokasi()
     {
@@ -83,6 +87,18 @@ class Program extends Model implements HasMedia
         return $this->hasMany(Program_Outcome::class, 'program_id');
     }
 
+    public function staff()
+    {
+        return $this->belongsToMany(User::class, 'trprogramuser', 'program_id', 'user_id')
+            ->withPivot('peran_id');
+    }
+
+    public function peran()
+    {
+        return $this->belongsToMany(Peran::class, 'trprogramuser', 'program_id', 'peran_id');
+    }
+
+
     public function objektif()
     {
         return $this->hasOne(ProgramObjektif::class, 'program_id');
@@ -91,7 +107,7 @@ class Program extends Model implements HasMedia
     {
         return $this->hasOne(ProgramGoal::class, 'program_id');
     }
-
+    
     public function jadwalreport()
     {
         return $this->hasMany(Program_Report_Schedule::class, 'program_id');

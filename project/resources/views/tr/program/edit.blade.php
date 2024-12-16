@@ -403,4 +403,5 @@
 
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
+@include('tr.program.js.detail-edit.partner')
 @endpush

@@ -42,6 +42,10 @@ class Program_User extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function staff()
+    {
+        return $this->belongsTo(User::class);
+    }
     public function peran()
     {
         return $this->belongsTo(Peran::class);

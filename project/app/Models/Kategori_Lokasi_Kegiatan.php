@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kategori_Lokasi_Kegiatan extends Model
 {
+    use HasFactory, Auditable;
     protected $table = 'mkategorilokasikegiatan';
 
     protected $fillable = [

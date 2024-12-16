@@ -2,8 +2,9 @@
 
 @section('subtitle', __('cruds.kegiatan.add'))
 {{--@section('content_header_title', __('cruds.kegiatan.add'))--}}
-@section('content_header_title') {!!  '&nbsp;'  !!} @endsection
-@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span>@endsection
+@section('content_header_title')<strong> <i class="fas fa-edit"></i>{{ __('cruds.kegiatan.add') }}</strong> @endsection
+@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
 
 @section('content_body')
     <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
@@ -11,10 +12,17 @@
         @method('POST')
 
         <div class="row">
-            <div class="col-sm-12">
+            {{-- @include('tr.kegiatan.details.create') --}}
+        </div>
+        <div class="row">
+            @include('tr.kegiatan.tabs')
+        </div>
+
+        {{-- <div class="row"> --}}
+            {{-- <div class="col-sm-12">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <strong>
+                        <strong><i class="fas fa-edit"></i>
                             {{ __('cruds.kegiatan.add') }}
                         </strong>
                         <div class="card-tools">
@@ -23,14 +31,7 @@
                             </button>
                         </div>
                     </div>
-                    {{-- Informasi Dasar --}}
-                    <div class="card-body pb-0">
-                        <div class="row">
-
-                        </div>
-                    </div>
-                    {{-- Call Detail Activity for Create Here --}}
-                    <div class="card-body pt-0">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
@@ -39,8 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- Submit Button --}}
-                    <div class="card-body pt-0">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
@@ -53,8 +53,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div> --}}
+        {{-- </div> --}}
     </form>
 @stop
 
@@ -78,11 +78,10 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
+
+
+
 @include('tr.kegiatan.js.create')
-{{-- @include('tr.kegiatan.js.detail-create.donor')
-@include('tr.kegiatan.js.detail-create.lokasi')
-@include('tr.kegiatan.js.detail-create.staff')
-@include('tr.kegiatan.js.detail-create.reportschedule')
-@include('tr.kegiatan.js.detail-create.outcome')
-@include('tr.kegiatan.js.detail-create.partner') --}}
+@stack('basic_tab_js')
+
 @endpush

@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.desa.list'))
-@section('content_header_title', __('cruds.desa.title'))
+@section('content_header_title', __('cruds.desa.list'))
 @section('sub_breadcumb', __('cruds.desa.title'))
 
 @section('content_body')
     @include('master.desa.create')
-    <div class="container-fluid content-header">
+    {{-- <div class="container-fluid content-header">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="text-muted">{{ trans('cruds.desa.list')}}</h1>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="card card-outline card-primary">
         <div class="card-body table-responsive">
