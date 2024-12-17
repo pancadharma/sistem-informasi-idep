@@ -507,6 +507,7 @@ return [
         'select'            => 'Pilih Kegiatan',
         'no_selected'       => 'Tidak ada kegiatan yang dipilih',
         'no_activity'       => 'Output ini tidak memiliki Kegiatan, klik ikon :icon untuk menambahkan kegiatan',
+        'search'            => 'Mencari Kegiatan',
     ],
 
     'kegiatan'                      => [

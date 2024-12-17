@@ -22,7 +22,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
-                        {{ __('cruds.kegiatan.peserta.tab') }}
+                        {{ __('cruds.kegiatan.tabs.peserta') }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -49,7 +49,7 @@
                     @include('tr.kegiatan.tabs.hasil')
                 </div>
                 <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
-                    @include('tr.kegiatan.tabs.peserta')
+                    @include('tr.kegiatan.tabs.beneficiaries')
                 </div>
                 <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
                     @include('tr.kegiatan.tabs.file-uploads')

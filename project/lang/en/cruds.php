@@ -509,6 +509,7 @@ return [
         'select'                                 => 'Select Activity',
         'no_selected'                            => 'No Activity Selected',
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
+        'search'                                 => 'Searching Activity',
     ],
 
     'kegiatan'                                   => [
@@ -559,7 +560,7 @@ return [
             'basic'                              => 'Basic Information',
             'description'                        => 'Description',
             'hasil'                              => 'Result Activity',
-            'peserta'                            => 'Participant',
+            'peserta'                            => 'Beneficiaries',
             'file'                               => 'File',
             'penulis'                            => 'Author of the Activity',
         ],

@@ -25,7 +25,7 @@
     <!-- nama kegiatan-->
     <label for="nama_kegiatan" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.basic.nama') }}</label>
     <div class="col-sm-12 col-md-12 col-lg-6 order-4 order-md-4 self-center">
-        <input type="text" class="form-control" id="nama_kegiatan" placeholder=" {{ __('cruds.kegiatan.basic.nama') }}" name="nama" required>
+        <input type="text" class="form-control" id="nama_kegiatan" placeholder=" {{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan" required>
     </div>
 </div>
 
@@ -77,6 +77,12 @@
         </select>
     </div>
 </div>
+<div class="form-group row">
+    <label for="maps" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('Maps Location') }}</label>
+    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+        <div id="map"></div>
+    </div>
+</div>
 
 @include('tr.kegiatan.tabs.program')
 @include('tr.kegiatan.tabs.program-act')
@@ -88,7 +94,77 @@
 </div>
 @endpush
 
+@push('css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    #map { height: 280px; }
+</style>
+@endpush
 @push('basic_tab_js')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script defer>
+    // $(document).ready(function() {
+    //     $('#longitude').on('input', function() {
+    //         var long = $('#longitude').val();
+    //         var lat = $('#latitude').val();
+    //         getLocation(lat,long);
+    //     });
+
+    // });
+    // function getLocation(lat,long) {
+    //     var map = L.map('map').setView([-8.62194696592589, 115.20178628198094], 10);
+    //     var marker = L.marker([-8.62194696592589, 115.20178628198094]).addTo(map);
+    //     var marker2 = L.marker([-8.696465207462973, 115.25669378518013]).addTo(map);
+
+    //         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //             maxZoom: 18,
+    //             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    //         }).addTo(map);
+    // }
+
+    $(document).ready(function() {
+        var map, marker;
+
+        // Inisialisasi peta
+        initMap();
+
+        $('#longitude').on('input', function() {
+            var long = parseFloat($('#longitude').val());
+            var lat = parseFloat($('#lat').val());
+
+            if (!isNaN(lat) && !isNaN(long)) {
+                updateMarker(lat, long);
+            }
+        });
+
+        $('#lat').on('input', function() {
+            var lat = parseFloat($('#lat').val());
+            var long = parseFloat($('#longitude').val());
+
+            if (!isNaN(lat) && !isNaN(long)) {
+                updateMarker(lat, long);
+            }
+        });
+
+        function initMap() {
+            map = L.map('map').setView([-8.62194696592589, 115.20178628198094], 8);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="/">RGBDev</a>'
+            }).addTo(map);
+
+            marker = L.marker([-8.62194696592589, 115.20178628198094]).addTo(map);
+            marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+        }
+
+        function updateMarker(lat, long) {
+            marker.setLatLng([lat, long]);
+            map.setView([lat, long], 16);
+        }
+        });
+</script>
+
 <!-- javascript to push javascript to stack('basic_tab_js') -->
 <script>
     // Next button
@@ -132,20 +208,15 @@ $(document).ready(function() {
     $('#kode_kegiatan').click(function(e) {
         if (!programId) {
             e.preventDefault(); // Prevent modal from opening
-            // Toast.fire({
-            //     icon: "warning",
-            //     title: "Please select a program first.",
-            //     timer: 2000,
-            //     timerProgressBar: true,
-            // });
-
-            Swal.fire({
-                title: 'Oops...',
-                text: 'Please select a program first.',
-                icon: 'error',
+            Toast.fire({
+                icon: "warning",
+                title: "Opssss...",
+                text: "Please select a program first.",
+                timer: 3000,
+                position: "top-end",
                 timerProgressBar: true,
-                timer:1000,
             });
+
             $('#ModalDaftarProgram').modal('show');
             return false;
         }
@@ -166,8 +237,9 @@ $(document).ready(function() {
             beforeSend: function() {
                 Toast.fire({
                     icon: "info",
-                    title: "Fetching activities...",
-                    timer: 1000,
+                    title: "{{ __('cruds.activity.search') }}...",
+                    timer: 2000,
+                    position: "top-end",
                     timerProgressBar: true,
                 });
             },
@@ -220,14 +292,17 @@ $(document).ready(function() {
         var activity_Desk = $(this).closest('tr').data('deskripsi');
         var activity_Ind = $(this).closest('tr').data('indikator');
         var activity_Tar = $(this).closest('tr').data('target');
+
+
         console.log(`Selected Activity ID: ${activity_Id}, Deskripsi: ${activity_Desk}`, `Indikator: ${activity_Ind}`, `Target: ${activity_Tar}`);
 
-
+        $('#id_programoutcomeoutputactivity').val(activity_Id);
+        $('#nama_kegiatan').val(activity_Desk).prop('disabled', true);
         $('#kode_program').prop('disabled', true);
+
         $('#ModalDaftarProgramActivity').modal('hide');
     });
 
 });
-
 </script>
 @endpush

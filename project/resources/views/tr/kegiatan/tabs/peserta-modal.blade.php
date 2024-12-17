@@ -8,7 +8,7 @@
                     {{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('global.close') }}">
-                    <span aria-hidden="true">&times;</span>
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
