@@ -302,55 +302,160 @@ entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
     --
     id_programoutcomeoutputactivity : int <<fk>>
+    fasepelaporan : int
+    id_jeniskegiatan : int <<fk>>
+    id_desa : int <<fk>>
     id_user : int <<fk>>
-    id_jenisbantuan : int <<fk>> null
-    id_satuan : int <<fk>> null
-    id_dusun : int <<fk>>
+    lokasi : varchar (500) null
+    long : decimal (9,6) null
+    lat : decimal (9,6) null
     tanggalmulai : datetime
     tanggalselesai : datetime
-    long : decimal (9,6)
-    lat : decimal (9,6)
-    tempat : varchar (200) 
-    deskripsi : varchar (500) null
-    tujuan : varchar (500) null
-    yangterlibat : varchar (500) null
-    pelatih: varchar (500) null
-    informasilain : varchar (500) null
-    luaslahan : varchar (50) null
-    tindaklanjut : varchar (500) null
-    tantangan : varchar (500) null
-    rekomendasi : varchar (500) null
     status : varchar (50)
-    created_at : datetime
-    update_at : datetime
-    jumlahpenerimamanfaat : int
-    jumlahpenerimamanfaatwoman : int
-    jumlahpenerimamanfaatman : int
-    jumlahpenerimamanfaatgirl : int
-    jumlahpenerimamanfaatboy : int 
+    mitra : varchar (300) null
+    
+    deskripsilatarbelakang : varchar (500) null
+    deskripsitujuan : varchar (500) null
+    deskripsikeluaran : varchar (500) null
+    deskripsiyangdikaji : varchar (500) null
+
+    assessmentyangterlibat: varchar (500) null
+    assessmenttemuan : varchar (500) null
+    assessmenttambahan : bit
+    assessmenttambahan_ket : varchar (500) null
+    assessmentkendala : varchar (500) null
+    assessmentisu : varchar (500) null
+    assessmentpembelajaran : varchar (500) null
+
+    sosialisasiyangterlibat : varchar (500) null
+    sosialisasitemuan : varchar (500) null
+    sosialisasitambahan : bit
+    sosialisasitambahan_ket : varchar (500) null
+    sosialisasikendala : varchar (500) null
+    sosialisasiisu : varchar (500) null
+    sosialisasipembelajaran : varchar (500) null
+
+    pelatihanpelatih : varchar (500) null
+    pelatihanhasil : varchar (500) null
+    pelatihandistribusi : bit
+    pelatihandistribusi_ket : varchar (500) null
+    pelatihanrencana : varchar (500) null
+    pelatihanunggahan : bit
+    pelatihanisu : varchar (500) null
+    pelatihanpembelajaran : varchar (500) null
+
+    pembelanjaandetailbarang : varchar (500) null
+    pembelanjaanmulai : datetime null
+    pembelanjaanselesai : datetime null
+    pembelanjaandistribusimulai : datetime null
+    pembelanjaandistribusiselesai : datetime null
+    pembelanjaanterdistribusi : bit
+    pembelanjaanakandistribusi : bit
+    pembelanjaanakandistribusi_ket : varchar (500) null
+    pembelanjaankendala : varchar (500) null
+    pembelanjaanisu : varchar (500) null
+    pembelanjaanpembelajaran : varchar (500) null
+
+    pengembanganjeniskomponen : varchar (500) null
+    pengembanganberapakomponen : varchar (500) null
+    pengembanganlokasikomponen : varchar (500) null
+    pengembanganyangterlibat : varchar (500) null
+    pengembanganrencana : varchar (500) null
+    pengembangankendala : varchar (500) null
+    pengembanganisu : varchar (500) null
+    pengembanganpembelajaran : varchar (500) null
+
+    kampanyeyangdikampanyekan : varchar (500) null
+    kampanyejenis : varchar (200) null
+    kampanyebentukkegiatan : varchar (500) null
+    kampanyeyangterlibat : varchar (500) null
+    kampanyeyangdisasar : varchar (500) null
+    kampanyejangkauan : varchar (500) null
+    kampanyerencana : varchar (500) null
+    kampanyekendala : varchar (500) null
+    kampanyeisu : varchar (500) null
+    kampanyepembelajaran : varchar (500) null
+
+    pemetaanyangdihasilkan : varchar (500) null
+    pemetaanluasan : varchar (500) null
+    pemetaanunit : varchar (500) null
+    pemetaanyangterlibat : varchar (500) null
+    pemetaanrencana : varchar (500) null
+    pemetaanisu : varchar (500) null
+    pemetaanpembelajaran : varchar (500) null
+
+    monitoringyangdipantau : varchar (500) null
+    monitoringdata : varchar (500) null
+    monitoringyangterlibat : varchar (500) null
+    monitoringmetode : varchar (500) null
+    monitoringhasil : varchar (500) null
+    monitoringkegiatanselanjutnya : bit
+    monitoringkegiatanselanjutnya_ket : varchar (500) null
+    monitoringkendala : varchar (500) null
+    monitoringisu : varchar (500) null
+    monitoringpembelajaran : varchar (500) null
+
+    kunjunganlembaga : varchar (500) null
+    kunjunganpeserta : varchar (500) null
+    kunjunganyangdilakukan : varchar (500) null
+    kunjunganhasil : varchar (500) null
+    kunjunganpotensipendapatan : varchar (500) null
+    kunjunganrencana : varchar (500) null
+    kunjungankendala : varchar (500) null
+    kunjunganisu : varchar (500) null
+    kunjunganpembelajaran : varchar (500) null
+
+    konsultasilembaga : varchar (500) null
+    konsultasikomponen : varchar (500) null
+    konsultasiyangdilakukan : varchar (500) null
+    konsultasihasil : varchar (500) null
+    konsultasipotensipendapatan : varchar (500) null
+    konsultasirencana : varchar (500) null
+    konsultasikendala : varchar (500) null
+    konsultasiisu : varchar (500) null
+    konsultasipembelajaran : varchar (500) null
+
+    lainnyamengapadilakukan : varchar (500) null
+    lainnyadampak : varchar (500) null
+    lainnyasumberpendanaan : varchar (200) null
+    lainnyasumberpendanaan_ket : varchar (500) null
+    lainnyayangterlibat : varchar (500) null
+    lainnyarencana : varchar (500) null
+    lainnyakendala : varchar (500) null
+    lainnyaisu : varchar (500) null
+    lainnyapembelajaran : varchar (500) null
+
+    penerimamanfaatdewasaperempuan : int
+    penerimamanfaatdewasalakilaki : int
+    penerimamanfaatdewasatotal : int
+    penerimamanfaatlansiaperempuan : int
+    penerimamanfaatlansialakilaki : int 
+    penerimamanfaatlansiatotal : int 
+    penerimamanfaatremajaperempuan : int 
+    penerimamanfaatremajalakilaki: int 
+    penerimamanfaatremajatotal : int 
+    penerimamanfaatanakperempuan : int 
+    penerimamanfaatanaklakilaki : int 
+    penerimamanfaatanaktotal : int
+    penerimamanfaatperempuantotal : int
+    penerimamanfaatlakilakitotal : int
+    penerimamanfaattotal : int
 }
 
-entity "trkegiatanpeserta" as trkegiatanpeserta {
+entity "mjeniskegiatan" as mjeniskegiatan {
     *id : int <<auto>>
     --
-    id_kegiatan: int <<fk>>
-    noidentitas: varchar (50)
-    nama: varchar (300)
-    jeniskelamin: varchar (50) null
-    tanggalahir: datetime
-    disabilitas: bit
-    hamil: bit
-    statuskawin: varchar (50) null
-    nokartukeluarga: varchar (50) null
-    jenispeserta: varchar (50) 
-    namakepalakeluarga : varchar (50)
+    nama : varchar (200)
 }
 
-entity "trkegiatanpesertamarjinal" as trkegiatanpesertamarjinal {
+entity "trkegiatanpenerimamanfaat" as trkegiatanpenerimamanfaat {
     *id : int <<auto>>
     --
-    id_kegiatanpeserta : int <<fk>>
+    id_kegiatan : int <<fk>>
     id_kelompokmarjinal : int <<fk>>
+    perempuan : int
+    lakilaki : int
+    total : int
 }
 
 entity "trkegiatandokumen" as trkegiatandokumen {
