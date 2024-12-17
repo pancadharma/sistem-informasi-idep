@@ -124,6 +124,18 @@
                                     <tbody id="edit-has-activity-${index}" data-edit-body-id="${index}" class="data-activity-edit">
                                         <tr data-activity-id="${index}">
                                             <input type="hidden" name="activity_id[]" value="${activityId}">
+                                            <th width="10%">Kode Kegiatan</th>
+                                            <td width="90%">
+                                                <textarea type="textarea" id="edit_kode_${index}" name="kode[]" class="form-control" placeholder="Kode Kegiatan" rows="3" maxlength="1000">${activity.kode ?? ''}</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="10%">Nama Kegiatan</th>
+                                            <td width="90%">
+                                                <textarea type="textarea" id="edit_nama_${index}" name="nama[]" class="form-control" placeholder="Nama Kegiatan" rows="3" maxlength="1000">${activity.nama ?? ''}</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th width="10%">Deskripsi Kegiatan</th>
                                             <td width="90%">
                                                 <textarea type="textarea" id="edit_deskripsi_${index}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="3" maxlength="1000">${activity.deskripsi ?? ''}</textarea>
@@ -233,9 +245,21 @@
             let newActivityTbody = `
                 <tbody id="edit-has-activity-${activityIndex}" data-edit-body-id="${activityIndex}" class="data-activity-edit">
                     <tr data-activity-id="${activityIndex}">
+                        <th width="10%">Kode Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id="edit_kode_${activityIndex}" name="kode[]" class="form-control" placeholder="Kode Kegiatan" rows="3" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
                         <th width="10%">Deskripsi Kegiatan</th>
                         <td width="90%">
                         <textarea type="textarea" id="edit_deskripsi_${activityIndex}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="3" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">Nama Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id="edit_nama_${activityIndex}" name="nama[]" class="form-control" placeholder="Nama Kegiatan" rows="3" maxlength="1000"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -312,7 +336,9 @@
                     id: $(this).find('input[name="activity_id[]"]').val(),
                     deskripsi: $(this).find('textarea[name="deskripsi[]"]').val(),
                     indikator: $(this).find('textarea[name="indikator[]"]').val(),
-                    target: $(this).find('textarea[name="target[]"]').val()
+                    target: $(this).find('textarea[name="target[]"]').val(),
+                    kode: $(this).find('textarea[name="kode[]"]').val(),
+                    nama: $(this).find('textarea[name="nama[]"]').val()
                 };
                 formData.activities.push(activity);
             });
