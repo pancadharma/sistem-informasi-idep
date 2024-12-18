@@ -968,6 +968,8 @@ class ProgramController extends Controller
                 'activities.*.deskripsi' => 'nullable|string|max:1000',
                 'activities.*.indikator' => 'nullable|string|max:1000',
                 'activities.*.target' => 'nullable|string|max:1000',
+                'activities.*.kode' => 'nullable|string|max:1000',
+                'activities.*.nama' => 'nullable|string|max:1000',
             ]);
 
             DB::beginTransaction();
@@ -987,6 +989,8 @@ class ProgramController extends Controller
                         'deskripsi' => $activity['deskripsi'],
                         'indikator' => $activity['indikator'],
                         'target' => $activity['target'],
+                        'kode' => $activity['kode'],
+                        'nama' => $activity['nama'],
                     ]);
                 }
                 DB::commit();
@@ -1052,6 +1056,8 @@ class ProgramController extends Controller
                                 'deskripsi' => $activity['deskripsi'],
                                 'indikator' => $activity['indikator'],
                                 'target' => $activity['target'],
+                                'nama' => $activity['nama'],
+                                'kode' => $activity['kode'],
                                 // Include other fields as necessary
                             ]
                         );
@@ -1062,6 +1068,8 @@ class ProgramController extends Controller
                                 'deskripsi' => $activity['deskripsi'],
                                 'indikator' => $activity['indikator'],
                                 'target' => $activity['target'],
+                                'nama' => $activity['nama'],
+                                'kode' => $activity['kode'],
                                 // Include other fields as necessary
                             ]
                         );
