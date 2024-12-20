@@ -564,8 +564,12 @@
         // Optional: Add a clear button or method to reset stored data
         $('#clearStorageButton').on('click', function() {
             clearStoredFormData();
-
+            $('#createKegiatan').each(function() {
+                inputFields = $(this).find('input, select, textarea').removeAttr('disabled');
+                inputFields.each(function() {
+                    $(this).val('');
+                });
+            });
         });
     });
-
 </script>

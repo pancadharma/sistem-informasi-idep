@@ -576,6 +576,18 @@ return [
             'tanggalmulai'                       => 'Start Date',
             'tanggalselesai'                     => 'End Date',
             'nama_mitra'                         => 'Partner Name',
+            'lokasi_kegiatan'                    => 'Activity Location',
+            'jenis_kegiatan'                     => 'Type of Activity',
+            'fase_pelaporan'                     => 'Reporting Phase',
+            'status_kegiatan'                    => 'Activity Status',
+            'long'                               => 'Longitude',
+            'lat'                                => 'Latitude',
+            'tambah_lokasi'                      => 'Add Location',
+            'tooltip'                            => [
+                'lokasi'                         => 'Please fill in the name of the location where this activity is carried out, can be filled in more than 1 location if needed',
+                'long_lat'                           => 'Please copy-paste the coordinates of the activity location and explain the name of the location (can be more than one location)',
+
+            ],
         ],
         'description'                            => [
             'label'                              => 'Activity Description',
