@@ -140,7 +140,7 @@ class KegiatanController extends Controller
     {
         $program = Program::with([
             'outcome.output.activities' => function ($query) {
-                $query->select('id', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
             }
         ])->where('id', $programId)->first();
 

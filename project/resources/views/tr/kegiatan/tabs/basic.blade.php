@@ -52,9 +52,9 @@
         <input type="text" class="form-control" id="lat" placeholder="{{ __('cruds.kegiatan.lat') }}" name="lat">
     </div>
     <!-- longitude-->
-    <label for="longitude" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.long') }}</label>
+    <label for="long" class="col-sm-12 col-md-12 col-lg-2 order-3 order-md-3 col-form-label text-sm-left text-md-left text-lg-right self-center">{{ __('cruds.kegiatan.long') }}</label>
     <div class="col-sm-12 col-md-12 col-lg-2 order-4 order-md-4 self-center">
-        <input type="text" class="form-control" id="longitude" placeholder="{{ __('cruds.kegiatan.long') }}" name="longitude">
+        <input type="text" class="form-control" id="long" placeholder="{{ __('cruds.kegiatan.long') }}" name="long">
     </div>
 </div>
 <div class="form-group row">
@@ -79,7 +79,7 @@
 </div>
 <div class="form-group row">
     <label for="maps" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label self-center">{{ __('Maps Location') }}</label>
-    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+    <div class="col-sm col-md col-lg-4 order-2 order-md-2 self-center">
         <div id="map"></div>
     </div>
 </div>
@@ -103,33 +103,14 @@
 @push('basic_tab_js')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script defer>
-    // $(document).ready(function() {
-    //     $('#longitude').on('input', function() {
-    //         var long = $('#longitude').val();
-    //         var lat = $('#latitude').val();
-    //         getLocation(lat,long);
-    //     });
-
-    // });
-    // function getLocation(lat,long) {
-    //     var map = L.map('map').setView([-8.62194696592589, 115.20178628198094], 10);
-    //     var marker = L.marker([-8.62194696592589, 115.20178628198094]).addTo(map);
-    //     var marker2 = L.marker([-8.696465207462973, 115.25669378518013]).addTo(map);
-
-    //         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //             maxZoom: 18,
-    //             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    //         }).addTo(map);
-    // }
-
     $(document).ready(function() {
         var map, marker;
 
         // Inisialisasi peta
         initMap();
 
-        $('#longitude').on('input', function() {
-            var long = parseFloat($('#longitude').val());
+        $('#long').on('input', function() {
+            var long = parseFloat($('#long').val());
             var lat = parseFloat($('#lat').val());
 
             if (!isNaN(lat) && !isNaN(long)) {
@@ -139,7 +120,7 @@
 
         $('#lat').on('input', function() {
             var lat = parseFloat($('#lat').val());
-            var long = parseFloat($('#longitude').val());
+            var long = parseFloat($('#long').val());
 
             if (!isNaN(lat) && !isNaN(long)) {
                 updateMarker(lat, long);
@@ -260,9 +241,13 @@ $(document).ready(function() {
         const tbody = $('#list_program_out_activity tbody'); // Ensure tbody selector points to the correct table
         tbody.empty(); // Clear existing rows
         // Iterate over the activity data
+
+        if(data.length > 0){
         data.forEach(activity => {
             const row = `
-                <tr data-id="${activity.id}" data-deskripsi="${activity.deskripsi}" data-indikator="${activity.indikator}" data-target="${activity.target}">
+                <tr data-id="${activity.id}" data-kode="${activity.kode}" data-nama="${activity.nama}" data-deskripsi="${activity.deskripsi}" data-indikator="${activity.indikator}" data-target="${activity.target}">
+                    <td>${activity.kode}</td>
+                    <td>${activity.nama}</td>
                     <td>${activity.deskripsi}</td>
                     <td>${activity.indikator}</td>
                     <td>${activity.target}</td>
@@ -275,6 +260,17 @@ $(document).ready(function() {
             `;
             tbody.append(row); // Append the row to the table body
         });
+        }
+        else{
+            const row = `
+                <tr>
+                    <td colspan="6" class="dt-empty text-center">
+                        {{ __('global.no_results') }}
+                    </td>
+                </tr>
+            `;
+            tbody.append(row); // Append the row to the table body
+        }
 
         // Show the modal
         $('#ModalDaftarProgramActivity').modal('show');
@@ -283,21 +279,21 @@ $(document).ready(function() {
     // Event listener for selecting an activity from the modal
     $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
         e.preventDefault();
-        let activityId = $(this).data('id');
-        let activityDeskripsi = $(this).data('deskripsi');
-        let activityIndikator = $(this).data('indikator');
-        let activityTarget = $(this).data('target');
-
         var activity_Id = $(this).closest('tr').data('id');
         var activity_Desk = $(this).closest('tr').data('deskripsi');
         var activity_Ind = $(this).closest('tr').data('indikator');
         var activity_Tar = $(this).closest('tr').data('target');
 
+        let activityKode = $(this).closest('tr').data('kode');
+        let activityNama = $(this).closest('tr').data('nama');
 
-        console.log(`Selected Activity ID: ${activity_Id}, Deskripsi: ${activity_Desk}`, `Indikator: ${activity_Ind}`, `Target: ${activity_Tar}`);
+
+        console.log(`Selected Activity ID: ${activity_Id}, Kode: ${activityKode}`, `Nama: ${activityNama}`, `Desc: ${activity_Desk}`);
 
         $('#id_programoutcomeoutputactivity').val(activity_Id);
-        $('#nama_kegiatan').val(activity_Desk).prop('disabled', true);
+        $('#kode_kegiatan').val(activityKode);
+        $('#nama_kegiatan').val(activityNama).prop('disabled', true);
+
         $('#kode_program').prop('disabled', true);
 
         $('#ModalDaftarProgramActivity').modal('hide');
