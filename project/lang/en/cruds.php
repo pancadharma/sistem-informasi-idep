@@ -543,7 +543,7 @@ return [
         'tantangan'                              => 'Challenges',
         'rekomendasi'                            => 'Recommendations',
         'user'                                   => 'User',
-        'status'                                 => 'Status',
+        'status'                                 => 'Activity Status',
         'indicator'                              => 'Activity Indicator',
         'list'                                   => 'List Activity',
         'add'                                    => 'Add Activity',
@@ -555,6 +555,7 @@ return [
         'bentuk_kegiatan'                        => 'Per Activity',
         'kategori_lokasi_kegiatan'               => 'Location Category',
         'no_selected'                            => 'No Activity Selected',
+
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
         'tabs'                                   => [
             'basic'                              => 'Basic Information',

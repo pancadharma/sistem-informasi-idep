@@ -10,9 +10,9 @@
 </div>
 -->
 <div class="form-group row list_peserta">
-    <label for="tindak_lanjut" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.hasil.tindak_lanjut') }}</label>
+    <label for="peserta" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">{{ __('cruds.kegiatan.hasil.tindak_lanjut') }}</label>
     <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-        <textarea name="tindak_lanjut" id="tindak_lanjut" class="form-control summernote" rows="2"
+        <textarea name="peserta" id="peserta" class="form-control summernote" rows="2"
         placeholder=" {{ __('cruds.kegiatan.hasil.tindak_lanjut') }}"></textarea>
    </div>
 </div>

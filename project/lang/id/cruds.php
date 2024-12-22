@@ -541,7 +541,7 @@ return [
         'tantangan'                 => 'Tantangan',
         'rekomendasi'               => 'Rekomendasi',
         'user'                      => 'Pengguna',
-        'status'                    => 'Status',
+        'status'                    => 'Status Kegiatan',
         'indicator'                 => 'Indikator Kegiatan',
         'list'                      => 'Daftar Kegiatan',
         'add'                       => 'Tambah Kegiatan',
