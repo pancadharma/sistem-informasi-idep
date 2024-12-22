@@ -509,6 +509,7 @@ return [
         'select'                                 => 'Select Activity',
         'no_selected'                            => 'No Activity Selected',
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
+        'search'                                 => 'Searching Activity',
     ],
 
     'kegiatan'                                   => [
@@ -542,7 +543,7 @@ return [
         'tantangan'                              => 'Challenges',
         'rekomendasi'                            => 'Recommendations',
         'user'                                   => 'User',
-        'status'                                 => 'Status',
+        'status'                                 => 'Activity Status',
         'indicator'                              => 'Activity Indicator',
         'list'                                   => 'List Activity',
         'add'                                    => 'Add Activity',
@@ -554,12 +555,13 @@ return [
         'bentuk_kegiatan'                        => 'Per Activity',
         'kategori_lokasi_kegiatan'               => 'Location Category',
         'no_selected'                            => 'No Activity Selected',
+
         'no_activity'                            => 'This Output does not have any Activity, click icon :icon to add activity',
         'tabs'                                   => [
             'basic'                              => 'Basic Information',
             'description'                        => 'Description',
             'hasil'                              => 'Result Activity',
-            'peserta'                            => 'Participant',
+            'peserta'                            => 'Beneficiaries',
             'file'                               => 'File',
             'penulis'                            => 'Author of the Activity',
         ],
@@ -575,6 +577,18 @@ return [
             'tanggalmulai'                       => 'Start Date',
             'tanggalselesai'                     => 'End Date',
             'nama_mitra'                         => 'Partner Name',
+            'lokasi_kegiatan'                    => 'Activity Location',
+            'jenis_kegiatan'                     => 'Type of Activity',
+            'fase_pelaporan'                     => 'Reporting Phase',
+            'status_kegiatan'                    => 'Activity Status',
+            'long'                               => 'Longitude',
+            'lat'                                => 'Latitude',
+            'tambah_lokasi'                      => 'Add Location',
+            'tooltip'                            => [
+                'lokasi'                         => 'Please fill in the name of the location where this activity is carried out, can be filled in more than 1 location if needed',
+                'long_lat'                           => 'Please copy-paste the coordinates of the activity location and explain the name of the location (can be more than one location)',
+
+            ],
         ],
         'description'                            => [
             'label'                              => 'Activity Description',

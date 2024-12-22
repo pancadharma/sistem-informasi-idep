@@ -7,8 +7,8 @@
                     <i class="bi bi-person-plus"></i>
                     {{ __('cruds.kegiatan.list') }}
                 </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('global.close') }}">
-                    <span aria-hidden="true">&times;</span>
+                <button type="button" class="close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="{{ __('global.close') }}">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -16,12 +16,8 @@
                     <table class="table table-bordered table-striped" id="list_program_out_activity">
                         <thead>
                             <tr>
-                                {{--
                                 <th>{{ __('cruds.kegiatan.kode') }}</th>
                                 <th>{{ __('cruds.kegiatan.nama') }}</th>
-
-                                --}}
-                                <!--should be changed based on what data is showing kode & nama kegiatan commented above-->
                                 <th>{{ __('cruds.activity.deskripsi') }}</th>
                                 <th>{{ __('cruds.activity.indicator') }}</th>
                                 <th>{{ __('cruds.activity.target') }}</th>
@@ -29,7 +25,10 @@
                             </tr>
                         </thead>
                         <tbody id="data-program-kegiatan">
-                            {{-- autofill by js based on selected program --}}
+                        {{-- autofill by js based on selected program --}}
+                        <tr>
+                            <td>{{ __('global.loading') }}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

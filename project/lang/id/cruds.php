@@ -507,6 +507,7 @@ return [
         'select'            => 'Pilih Kegiatan',
         'no_selected'       => 'Tidak ada kegiatan yang dipilih',
         'no_activity'       => 'Output ini tidak memiliki Kegiatan, klik ikon :icon untuk menambahkan kegiatan',
+        'search'            => 'Mencari Kegiatan',
     ],
 
     'kegiatan'                      => [
@@ -540,7 +541,7 @@ return [
         'tantangan'                 => 'Tantangan',
         'rekomendasi'               => 'Rekomendasi',
         'user'                      => 'Pengguna',
-        'status'                    => 'Status',
+        'status'                    => 'Status Kegiatan',
         'indicator'                 => 'Indikator Kegiatan',
         'list'                      => 'Daftar Kegiatan',
         'add'                       => 'Tambah Kegiatan',
@@ -573,6 +574,19 @@ return [
             'tanggalmulai'          => 'Tanggal Mulai',
             'tanggalselesai'        => 'Tanggal Selesai',
             'nama_mitra'            => 'Nama Mitra',
+            'lokasi_kegiatan'       => 'Lokasi Kegiatan',
+            'kategori_lokasi'       => 'Kategori Lokasi',
+            'jenis_kegiatan'        => 'Jenis Kegiatan',
+            'fase_pelaporan'        => 'Fase Pelaporan',
+            'status_kegiatan'       => 'Status Kegiatan',
+            'long'                  => 'Longitude',
+            'lat'                   => 'Latitude',
+            'tambah_lokasi'         => 'Tambah Lokasi',
+            'tooltip'               => [
+                'lokasi'            => 'Silakan isi nama lokasi dimana kegiatan ini dilakukan, dapat diisi lebih dari 1 lokasi jika diperlukan',
+                'long_lat'              => 'Silahkan copy-paste titik koordinat lokasi kegiatan dan jelaskan nama lokasinya (bisa lebih dari satu lokasi)',
+            ],
+
         ],
         'description'       => [
             'label'                 => 'Deskripsi Kegiatan (Apa Kegiatannya) ?',
