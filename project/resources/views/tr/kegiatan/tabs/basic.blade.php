@@ -35,17 +35,43 @@
     </div>
 </div>
 
-<!-- durasi kegiatan-->
+<!-- fase pelaporan-->
 <div class="form-group row">
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="fase_pelaporan" class="input-group col-form-label">
+            <strong>{{ __('cruds.kegiatan.basic.fase_pelaporan') }} </strong>
+            <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
+        </label>
+        <div class="select2-purple">
+            <select class="form-control" name="fase_pelaporan" id="fase_pelaporan">
+                <option value="">{{ __('global.pleaseSelect') }}</option>
+                @for ($i = 1; $i <= 99; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+    </div>
+<!-- jenis kegiatan-->
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="jenis_kegiatan" class="input-group col-form-label">
+            <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
+        </label>
+        <div class="select2-purple">
+            <select class="form-control select2" name="jenis_kegiatan" id="jenis_kegiatan" data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
+                <!-- Options will be populated by select2 -->
+            </select>
+        </div>
+    </div>
+<!-- durasi kegiatan-->
     <!-- tgl mulai-->
-    <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1">
+    <div class="col-sm-6 col-md-6 col-lg-3 self-center order-1 order-md-1">
         <label for="tanggalmulai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
         </label>
         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai">
     </div>
     <!-- tgl selesai-->
-    <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
+    <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
         <label for="tanggalselesai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalselesai') }}
         </label>
@@ -57,24 +83,25 @@
 <div class="form-group row">
     <div class="col-sm-12 col-md-9 col-lg-9 self-center order-2 order-md-2">
         <label for="nama_mitra" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
-        <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="nama_mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="nama_mitra">
-        </select>
+        <div class="select2-purple">
+            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="nama_mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="nama_mitra" multiple>
+            </select>
+        </div>
     </div>
 <!-- status kegiatan-->
     <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
         <label for="status" class="input-group col-form-label">
             <strong>{{ __('cruds.status.title') }}</strong>
         </label>
-            <div class="select2-purple">
-                <select class="form-control" name="status" id="status" required>
-                    <optgroup label="{{ __('cruds.kegiatan.status') }}">
-                        <option value="draft">Draft</option>
-                        <option value="ongoing" disabled>Ongoing</option>
-                        <option value="completed" disabled>Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </optgroup>
-                </select>
-            </div>
+        <div class="select2-purple">
+            <select class="form-control" name="status" id="status" required placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.status_kegiatan') }}">
+                <optgroup label="{{ __('cruds.kegiatan.status') }}">
+                    @foreach($statusOptions as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                    @endforeach
+                </optgroup>
+            </select>
+        </div>
     </div>
 </div>
 
@@ -96,25 +123,22 @@
     <div class="card-body pl-0 pt-1 pb-0 pr-1 list-lokasi-kegiatan">
         <div class="form-group row lokasi-kegiatan mb-0">
             <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
-                <label {{-- for="lokasi" --}} class="input-group col-form-label">
+                <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
                     <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
                 </label>
-                {{-- <input type="text" class="form-control" id="lokasi" placeholder="{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}" name="lokasi[]"> --}}
             </div>
             <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
-                <label {{-- for="lat" --}} class="input-group col-form-label">
+                <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.lat') }}
                     <i class="bi bi-pin-map-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
                 </label>
-                {{-- <input type="text" class="form-control" id="lat" placeholder="{{ __('cruds.kegiatan.basic.lat') }}" name="lat[]"> --}}
             </div>
             <div class="col-sm-10 col-md-3 col-lg-3 self-center order-3 order-md-3">
-                <label {{-- for="long" --}} class="input-group col-form-label">
+                <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.long') }}
                     <i class="bi bi-geo" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
                 </label>
-                {{-- <input type="text" class="form-control" id="long" placeholder="{{ __('cruds.kegiatan.basic.long') }}" name="long[]"> --}}
             </div>
         </div>
     </div>
@@ -122,7 +146,7 @@
 
 <div class="form-group row">
     <div class="col-sm-12 col-md-12 col-lg-4 self-center order-1 order-md-1">
-        <label {{-- for="maps"  --}}class="input-group col-form-label">
+        <label class="input-group col-form-label">
             {{ __('Maps Location') }}
             <i class="bi bi-map-fill"></i>
         </label>
@@ -155,10 +179,8 @@
 <script>
     $(document).ready(function() {
         var map, markers = []; // Array to hold all markers
-
         // Initialize the map
         initMap();
-
         // Event listener for longitude and latitude changes
         $(document).on('input', 'input[name="long[]"]', function() {
             var container = $(this).closest('.lokasi-kegiatan');
@@ -207,21 +229,16 @@
         $(document).on('click', '.remove-staff-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
-
             if (markers[index]) {
                 map.removeLayer(markers[index]);
                 markers.splice(index, 1);
             }
-
             row.remove();
-
-            // Update remaining markers' popup content
             updateAllMarkers();
         });
 
         function initMap() {
-            map = L.map('map').setView([-8.62194696592589, 115.20178628198094], 9);
-
+            map = L.map('map').setView([-8.38054848, 115.16239243], 9);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: '&copy; <a href="/">RGBDev</a>'
@@ -283,16 +300,16 @@
 
         function generatePopupContent(index) {
             var locationRow = $('.lokasi-kegiatan').eq(index);
-            var kode_kegiatan = $('#kode_kegiatan').val();
-            var nama_kegiatan = $('#nama_kegiatan').val();
-            var nama_desa = $('#nama_desa').val();
+            var kode_kegiatan = $('#kode_kegiatan').val() || '';
+            var nama_kegiatan = $('#nama_kegiatan').val() || '';
             var lokasi = locationRow.find('input[name="lokasi[]"]').val() || '';
 
             return `
-                <strong>Kode Kegiatan:</strong> ${kode_kegiatan}<br>
-                <strong>Nama Kegiatan:</strong> ${nama_kegiatan}<br>
-                <strong>Nama Desa:</strong> ${nama_desa}<br>
-                <strong>Lokasi:</strong> ${lokasi}
+                <strong>{{ __('cruds.kegiatan.basic.kode') }}:</strong> ${kode_kegiatan}<br>
+                <strong>{{ __('cruds.kegiatan.basic.nama') }}:</strong> ${nama_kegiatan}<br>
+
+                <br><br>
+                <strong>{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}:</strong> ${lokasi}
             `;
         }
 
@@ -465,4 +482,44 @@
         }
     });
 </script>
+
+<!-- JS for drop down jenis kegiatan -->
+<script>
+    $(document).ready(function() {
+        $('#jenis_kegiatan').select2({
+            placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.jenis_kegiatan') }}',
+            ajax: {
+                url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
+                dataType: 'json',
+                processResults: function (data) {
+                    var results = [];
+                    $.each(data, function(group, options) {
+                        var optgroup = {
+                            text: group,
+                            children: []
+                        };
+                        $.each(options, function(id, text) {
+                            optgroup.children.push({
+                                id: id,
+                                text: text
+                            });
+                        });
+                        results.push(optgroup);
+                    });
+                    return {
+                        results: results
+                    };
+                }
+            }
+        });
+
+        $('#fase_pelaporan').select2({
+            placeholder: '{{ __('global.pleaseSelect') }}',
+        });
+        $('#status').select2({
+            placeholder: '{{ __('global.pleaseSelect' ).' '.__('cruds.kegiatan.basic.status_kegiatan') }}',
+        });
+    });
+</script>
+
 @endpush

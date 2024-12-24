@@ -61,10 +61,8 @@
         });
     }
 </script>
-<!-- Script for Kegiatan Peserta -->
+<!-- Script for Input Summernote -->
 <script>
-    // Initialize Summernote editors
-    // for all textarea with class .summermnote
     $(document).ready(function() {
         $('.summernote').each(function() {
             if (!$(this).data('initialized')) {
@@ -102,6 +100,8 @@
             tanggalmulai: $('#tanggalmulai').val(),
             tanggalselesai: $('#tanggalselesai').val(),
             nama_mitra: $('#nama_mitra').val(),
+            status: $('#status').val(),
+            fase_pelaporan: $('#fase_pelaporan').val(),
 
 
             deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
@@ -132,27 +132,69 @@
         // Save form data to localStorage
         localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
     }
+    // function initializeSelect2WithDynamicUrl(fieldId) {
+    //     var apiUrl = $('#' + fieldId).data('api-url');
+    //     var placeholder = $('#' + fieldId).attr('placeholder');
+    //     $('#' + fieldId).select2({
+    //         ajax: {
+    //             url: apiUrl,
+    //             dataType: 'json',
+    //             delay: 300, // Debounce time
+    //             data: function (params) {
+    //                 return {
+    //                     search: params.term || '', // Search term, empty for initial load
+    //                     page: params.page || 1 // Page number
+    //                 };
+    //             },
+    //             processResults: function (data, params) {
+    //                 params.page = params.page || 1;
+    //                 return {
+    //                     results: data.data.map(item => ({
+    //                         id: item.id,
+    //                         text: item.nama
+    //                     })),
+    //                     pagination: {
+    //                         more: data.current_page < data.last_page
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         },
+    //         minimumInputLength: 0, // Minimum input length to trigger search
+    //         placeholder: placeholder,
+    //         allowClear: true // Allow clearing the selection
+    //     });
+    // }
+
+    // Function to initialize Select2 with dynamic URL
     function initializeSelect2WithDynamicUrl(fieldId) {
-        var apiUrl = $('#' + fieldId).data('api-url');
-        var placeholder = $('#' + fieldId).attr('placeholder');
-        $('#' + fieldId).select2({
+        var select2Field = $('#' + fieldId);
+        var apiUrl = select2Field.data('api-url');
+
+        select2Field.select2({
+            width: '100%',
+            placeholder: select2Field.attr('placeholder'),
+            allowClear: true,
             ajax: {
                 url: apiUrl,
                 dataType: 'json',
-                delay: 300, // Debounce time
+                delay: 250,
                 data: function (params) {
                     return {
-                        search: params.term || '', // Search term, empty for initial load
-                        page: params.page || 1 // Page number
+                        search: params.term,
+                        page: params.page || 1
                     };
                 },
                 processResults: function (data, params) {
                     params.page = params.page || 1;
+
                     return {
-                        results: data.data.map(item => ({
-                            id: item.id,
-                            text: item.nama
-                        })),
+                        results: data.data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama
+                            };
+                        }),
                         pagination: {
                             more: data.current_page < data.last_page
                         }
@@ -160,12 +202,88 @@
                 },
                 cache: true
             },
-            minimumInputLength: 0, // Minimum input length to trigger search
-            placeholder: placeholder,
-            allowClear: true // Allow clearing the selection
+            minimumInputLength: 0
         });
     }
 
+    // function loadFormDataFromStorage() {
+    //     var storedData = localStorage.getItem('kegiatanFormData');
+    //     if (storedData) {
+    //         var formData = JSON.parse(storedData);
+
+    //         // Populate basic form fields
+    //         $('#program_id').val(formData.program_id || '');
+    //         $('#program_kode').val(formData.program_kode || '');
+    //         //
+    //         $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+    //         $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+    //         $('#nama_desa').val(formData.nama_desa || '');
+    //         $('#lokasi').val(formData.lokasi || '');
+    //         $('#lat').val(formData.lat || '');
+    //         $('#longitude').val(formData.longitude || '');
+    //         $('#tanggalmulai').val(formData.tanggalmulai || '');
+    //         $('#tanggalselesai').val(formData.tanggalselesai || '');
+    //         $('#nama_mitra').val(formData.nama_mitra || '');
+    //         $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
+    //         // $('#deskripsi_kegiatan').summernote('code', formData.deskripsi_kegiatan || '');
+
+    //         $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
+    //         $('#yang_terlibat').val(formData.yang_terlibat || '');
+    //         $('#pelatih_asal').val(formData.pelatih_asal || '');
+    //         $('#kegiatan').val(formData.kegiatan || '');
+    //         $('#informasi_lain').val(formData.informasi_lain || '');
+    //         $('#luas_lahan').val(formData.luas_lahan || '');
+    //         $('#barang').val(formData.barang || '');
+    //         $('#satuan').val(formData.satuan || '');
+    //         $('#others').val(formData.others || '');
+
+    //         // Populate Summernote fields
+    //         $('.summernote').each(function () {
+    //             const id = $(this).attr('id');
+    //             if (!id) {
+    //                 console.error('Found Summernote element with undefined id:', this);
+    //                 return; // Skip this element
+    //             }
+    //             const value = formData[id] || '';
+    //             $(this).summernote('code', value); // Set the content
+    //             // console.log(`Setting content for ${id}: ${value}`);
+    //         });
+
+
+
+    //         // Populate and initialize select2 fields with fetched data from API
+    //         $('.select2').each(function () {
+    //             var fieldId = $(this).attr('id');
+    //             var value = formData[fieldId];
+    //             if (value) {
+    //                 var select2Field = $(this);
+    //                 var apiUrl = $(this).data('api-url');
+    //                 $.ajax({
+    //                     url: apiUrl,
+    //                     method: 'GET',
+    //                     data: { id: value },
+    //                     success: function (data) {
+    //                         var item = data.data.find(item => item.id == value);
+    //                         if (item) {
+    //                             var newOption = new Option(item.nama, item.id, false, true);
+    //                             select2Field.append(newOption).trigger('change');
+    //                         }
+    //                     },
+    //                     error: function (error) {
+    //                         console.error('Error fetching data:', error);
+    //                     }
+    //                 });
+    //             }
+    //             initializeSelect2WithDynamicUrl(fieldId);
+    //         });
+    //     } else {
+    //         // Initialize select2 fields even if there's no data in localStorage
+    //         $('.select2').each(function () {
+    //             var fieldId = $(this).attr('id');
+    //             initializeSelect2WithDynamicUrl(fieldId);
+    //         });
+    //     }
+    // }
     function loadFormDataFromStorage() {
         var storedData = localStorage.getItem('kegiatanFormData');
         if (storedData) {
@@ -174,7 +292,6 @@
             // Populate basic form fields
             $('#program_id').val(formData.program_id || '');
             $('#program_kode').val(formData.program_kode || '');
-            //
             $('#kode_kegiatan').val(formData.kode_kegiatan || '');
             $('#nama_kegiatan').val(formData.nama_kegiatan || '');
             $('#nama_desa').val(formData.nama_desa || '');
@@ -183,10 +300,11 @@
             $('#longitude').val(formData.longitude || '');
             $('#tanggalmulai').val(formData.tanggalmulai || '');
             $('#tanggalselesai').val(formData.tanggalselesai || '');
-            $('#nama_mitra').val(formData.nama_mitra || '');
-            $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
-            // $('#deskripsi_kegiatan').summernote('code', formData.deskripsi_kegiatan || '');
+            $('#status').val(formData.status || '');
+            $('#fase_pelaporan').val(formData.fase_pelaporan || '');
 
+
+            $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
             $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
             $('#yang_terlibat').val(formData.yang_terlibat || '');
             $('#pelatih_asal').val(formData.pelatih_asal || '');
@@ -202,39 +320,74 @@
                 const id = $(this).attr('id');
                 if (!id) {
                     console.error('Found Summernote element with undefined id:', this);
-                    return; // Skip this element
+                    return;
                 }
                 const value = formData[id] || '';
-                $(this).summernote('code', value); // Set the content
-                // console.log(`Setting content for ${id}: ${value}`);
+                $(this).summernote('code', value);
             });
 
-
+            if (formData.jenis_kegiatan) {
+                var apiUrl = $('#jenis_kegiatan').data('api-url');
+                $.ajax({
+                    url: apiUrl,
+                    method: 'GET',
+                    data: { id: formData.jenis_kegiatan },
+                    success: function (response) {
+                        if (response.data && response.data.length > 0) {
+                            var item = response.data[0];
+                            var newOption = new Option(item.nama, item.id, true, true);
+                            $('#jenis_kegiatan')
+                                .append(newOption)
+                                .trigger('change');
+                        }
+                    }
+                });
+            }
 
             // Populate and initialize select2 fields with fetched data from API
-            $('.select2').each(function () {
+            // $('.select2').each(function () {
+            $('.select2').not('#jenis_kegiatan').each(function () {
                 var fieldId = $(this).attr('id');
-                var value = formData[fieldId];
-                if (value) {
-                    var select2Field = $(this);
-                    var apiUrl = $(this).data('api-url');
+                var values = formData[fieldId];
+                var select2Field = $(this);
+                var apiUrl = $(this).data('api-url');
+
+                if (values) {
+                    // Handle both single value and array of values
+                    var valueArray = Array.isArray(values) ? values : [values];
+
                     $.ajax({
                         url: apiUrl,
                         method: 'GET',
-                        data: { id: value },
+                        data: { id: valueArray },
                         success: function (data) {
-                            var item = data.data.find(item => item.id == value);
-                            if (item) {
-                                var newOption = new Option(item.nama, item.id, false, true);
-                                select2Field.append(newOption).trigger('change');
+                            // Clear existing options
+                            select2Field.empty();
+
+                            // Add options from API response
+                            if (data.data && Array.isArray(data.data)) {
+                                data.data.forEach(function(item) {
+                                    var newOption = new Option(item.nama, item.id, true, true);
+                                    select2Field.append(newOption);
+                                });
                             }
+
+                            // Initialize Select2
+                            initializeSelect2WithDynamicUrl(fieldId);
+
+                            // Set the values and trigger change
+                            select2Field.val(valueArray).trigger('change');
                         },
                         error: function (error) {
-                            console.error('Error fetching data:', error);
+                            console.error('Error fetching Select2 data:', error);
+                            // Still initialize Select2 even if there's an error
+                            initializeSelect2WithDynamicUrl(fieldId);
                         }
                     });
+                } else {
+                    // Initialize Select2 even if no values are stored
+                    initializeSelect2WithDynamicUrl(fieldId);
                 }
-                initializeSelect2WithDynamicUrl(fieldId);
             });
         } else {
             // Initialize select2 fields even if there's no data in localStorage

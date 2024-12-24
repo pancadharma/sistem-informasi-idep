@@ -150,30 +150,60 @@ class WilayahController extends Controller
         return response()->json($desa);
     }
 
+    // public function getKegiatanMitra(Request $request)
+    // {
+    //     // Validate request inputs
+    //     $request->validate([
+    //         'search' => 'nullable|string|max:255',
+    //         'page' => 'nullable|integer|min:1',
+    //         'id' => 'nullable|integer', // Add id validation
+    //     ]);
+
+    //     // Retrieve search, page, and id inputs
+    //     $search = $request->input('search', '');
+    //     $page = $request->input('page', 1);
+    //     $id = $request->input('id', null);
+
+    //     // Build query to include both name search and id check
+    //     $mitra = Partner::when($id, function ($query, $id) {
+    //         return $query->where('id', $id);
+    //     }, function ($query) use ($search) {
+    //         return $query->where('nama', 'like', "%{$search}%");
+    //     });
+    //     $mitra = $mitra->paginate(20, ['*'], 'page', $page);
+    //     return response()->json($mitra);
+    // }
+
     public function getKegiatanMitra(Request $request)
     {
         // Validate request inputs
         $request->validate([
             'search' => 'nullable|string|max:255',
             'page' => 'nullable|integer|min:1',
-            'id' => 'nullable|integer', // Add id validation
+            'id' => 'nullable|array|min:1', // Changed to array validation
+            'id.*' => 'integer', // Validate each ID in the array
         ]);
 
-        // Retrieve search, page, and id inputs
+        // Retrieve search, page, and ids inputs
         $search = $request->input('search', '');
         $page = $request->input('page', 1);
-        $id = $request->input('id', null);
+        $ids = $request->input('id', []);
 
-        // Build query to include both name search and id check
-        $mitra = Partner::when($id, function ($query, $id) {
-            return $query->where('id', $id);
+        // Convert single ID to array if needed
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
+        }
+
+        // Build query to include both name search and ids check
+        $mitra = Partner::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
             return $query->where('nama', 'like', "%{$search}%");
         });
+
         $mitra = $mitra->paginate(20, ['*'], 'page', $page);
         return response()->json($mitra);
     }
-
 
 
     public function getKegiatanPenulis(Request $request)

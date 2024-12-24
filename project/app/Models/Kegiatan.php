@@ -136,12 +136,36 @@ class Kegiatan extends Model implements HasMedia
 
     public function activity()
     {
-        // programoutcomeoutputactivity_id
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    // public function program()
-    // {
-    //     return $this->belongsTo(Program::class);
-    // }
+    public const STATUS_SELECT = [
+        'draft'    => 'Draft',
+        'ongoing'  => 'Ongoing',
+        'completed' => 'Completed',
+        'cancelled ' => 'Cancelled',
+    ];
+
+    public static function getJenisKegiatan(): array
+    {
+        return [
+            1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
+            2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
+            3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
+            4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
+            5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
+            6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
+            7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
+            8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
+            9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
+            10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
+            11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
+            12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
+            13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
+            14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
+            15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
+            16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
+            17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
+        ];
+    }
 }

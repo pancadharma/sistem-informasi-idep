@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\Kelurahan;
+use App\Models\Partner;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Program_Outcome_Output;
@@ -89,7 +91,8 @@ class KegiatanController extends Controller
     {
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
-            return view('tr.kegiatan.create', compact('program'));
+            $statusOptions = Kegiatan::STATUS_SELECT;
+            return view('tr.kegiatan.create', compact('program', 'statusOptions'));
         }
         return response()->json([
             'success' => false,
@@ -187,5 +190,152 @@ class KegiatanController extends Controller
         });
         $satuan = $satuan->paginate(20, ['*'], 'page', $page);
         return response()->json($satuan);
+    }
+
+    // public function getJenisKegiatan()
+    // {
+    //     $jenisKegiatan = Kegiatan::getJenisKegiatan();
+    //     $first = __('cruds.kegiatan.basic.bentuk');
+    //     $second =  __('cruds.kegiatan.basic.sektor');
+
+    //     $groupedData = [
+    //         $first => array_slice($jenisKegiatan, 0, 11, true),
+    //         $second => array_slice($jenisKegiatan, 11, null, true)
+    //     ];
+    //     return response()->json($groupedData);
+    // }
+
+    // public function getJenisKegiatan(Request $request)
+    // {
+    //     $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+    //     // If requesting specific ID(s)
+    //     if ($request->has('id')) {
+    //         $ids = is_array($request->id) ? $request->id : [$request->id];
+
+    //         $data = collect($jenisKegiatan)
+    //             ->filter(function ($value, $key) use ($ids) {
+    //                 return in_array($key, $ids);
+    //             })
+    //             ->map(function ($nama, $id) {
+    //                 return [
+    //                     'id' => $id,
+    //                     'nama' => $nama
+    //                 ];
+    //             })
+    //             ->values()
+    //             ->all();
+
+    //         return response()->json(['data' => $data]);
+    //     }
+
+    //     // For dropdown listing - transform to match Select2 format
+    //     $data = collect($jenisKegiatan)
+    //         ->map(function ($nama, $id) {
+    //             return [
+    //                 'id' => $id,
+    //                 'nama' => $nama
+    //             ];
+    //         })
+    //         ->values()
+    //         ->all();
+
+    //     return response()->json(['data' => $data]);
+    // }
+
+    public function getJenisKegiatan(Request $request)
+    {
+        $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+        if ($request->has('id')) {
+            // If requesting specific ID(s)
+            $id = $request->input('id');
+            $data = collect($jenisKegiatan)
+                ->filter(function ($value, $key) use ($id) {
+                    return $key == $id;
+                })
+                ->map(function ($text, $id) {
+                    return [
+                        'id' => $id,
+                        'nama' => $text
+                    ];
+                })
+                ->values()
+                ->all();
+
+            return response()->json(['data' => $data]);
+        }
+
+        // For dropdown listing
+        $first = __('cruds.kegiatan.basic.bentuk');
+        $second =  __('cruds.kegiatan.basic.sektor');
+
+        $groupedData = [
+            $first => array_slice($jenisKegiatan, 0, 11, true),
+            $second => array_slice($jenisKegiatan, 11, null, true)
+        ];
+        return response()->json($groupedData);
+    }
+
+    public function getKegiatanMitra(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|array|min:1', // Changed to array validation
+            'id.*' => 'integer', // Validate each ID in the array
+        ]);
+
+        // Retrieve search, page, and ids inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+
+        // Convert single ID to array if needed
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
+        }
+
+        // Build query to include both name search and ids check
+        $mitra = Partner::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+
+        $mitra = $mitra->paginate(20, ['*'], 'page', $page);
+        return response()->json($mitra);
+    }
+
+    public function getKegiatanDesa(Request $request)
+    {
+        // Validate request inputs
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|array|min:1', // Changed to array validation
+            'id.*' => 'integer', // Validate each ID in the array
+        ]);
+
+        // Retrieve search, page, and ids inputs
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+
+        // Convert single ID to array if needed
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
+        }
+
+        // Build query to include both name search and ids check
+        $desa = Kelurahan::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+
+        $desa = $desa->paginate(20, ['*'], 'page', $page);
+        return response()->json($desa);
     }
 }

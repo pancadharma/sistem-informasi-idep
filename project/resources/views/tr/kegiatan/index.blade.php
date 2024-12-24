@@ -9,6 +9,12 @@
     @endcan
 @endsection
 @section('sub_breadcumb', __('cruds.kegiatan.list'))
+
+@section('preloader')
+    <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
+    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
+@endsection
+
 @section('content_body')
     <div class="card card-outline card-primary">
         <div class="card-header">
