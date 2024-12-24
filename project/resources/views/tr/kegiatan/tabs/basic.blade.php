@@ -177,255 +177,204 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-    $(document).ready(function() {
-        var map, markers = []; // Array to hold all markers
-        // Initialize the map
-        initMap();
-        // Event listener for longitude and latitude changes
-        $(document).on('input', 'input[name="long[]"]', function() {
-            var container = $(this).closest('.lokasi-kegiatan');
-            var long = parseFloat($(this).val());
-            var lat = parseFloat(container.find('input[name="lat[]"]').val());
-            var index = $('.lokasi-kegiatan').index(container);
+$(document).ready(function() {
+    var map, markers = [], currentKecamatan = '', currentKabupaten = '';
 
-            if (!isNaN(lat) && !isNaN(long)) {
-                updateMarkerAtIndex(lat, long, index);
-            }
-        });
+    function initMap() {
+        map = L.map('map').setView([-8.38054848, 115.16239243], 9);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="/">RGBDev</a>'
+        }).addTo(map);
 
-        $(document).on('input', 'input[name="lat[]"]', function() {
-            var container = $(this).closest('.lokasi-kegiatan');
-            var lat = parseFloat($(this).val());
-            var long = parseFloat(container.find('input[name="long[]"]').val());
-            var index = $('.lokasi-kegiatan').index(container);
+        // Initialize GeoJSON layer with proper styling and interactions
+        var bataskec = L.geoJson(null, {
+            style: function(feature) {
+                return {
+                    fillColor: "white",
+                    fillOpacity: 0,
+                    color: "black",
+                    weight: 1,
+                    opacity: 0.6
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                layer.on({
+                    click: function(e) {
+                        // Store current location data
+                        currentKecamatan = feature.properties.KECAMATAN;
+                        currentKabupaten = feature.properties.KABUPATEN;
 
-            if (!isNaN(lat) && !isNaN(long)) {
-                updateMarkerAtIndex(lat, long, index);
-            }
-        });
-
-        // Add event listener for location name changes
-        $(document).on('input', 'input[name="lokasi[]"]', function() {
-            var container = $(this).closest('.lokasi-kegiatan');
-            var index = $('.lokasi-kegiatan').index(container);
-
-            // Update popup content if marker exists
-            if (markers[index]) {
-                markers[index].setPopupContent(generatePopupContent(index));
-            }
-        });
-
-        // Add new location and marker on button click
-        $('#btn-lokasi-kegiatan').on('click', function() {
-            addNewLocationInputs();
-        });
-
-        // Listen for changes in kode_kegiatan, nama_kegiatan, and nama_desa
-        $('#kode_kegiatan, #nama_kegiatan, #nama_desa').on('input change', function() {
-            updateAllMarkers();
-        });
-
-        // Event listener for deleting a location
-        $(document).on('click', '.remove-staff-row', function() {
-            var row = $(this).closest('.lokasi-kegiatan');
-            var index = $('.lokasi-kegiatan').index(row);
-            if (markers[index]) {
-                map.removeLayer(markers[index]);
-                markers.splice(index, 1);
-            }
-            row.remove();
-            updateAllMarkers();
-        });
-
-        // function initMap() {
-        //     map = L.map('map').setView([-8.38054848, 115.16239243], 9);
-        //     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //         maxZoom: 18,
-        //         attribution: '&copy; <a href="/">RGBDev</a>'
-        //     }).addTo(map);
-
-        //     // Add click event to map
-        //     map.on('click', function(e) {
-        //         // Get the last added location inputs
-        //         var lastLocationInputs = $('.lokasi-kegiatan').last();
-        //         var index = $('.lokasi-kegiatan').index(lastLocationInputs);
-
-        //         // Set the latitude and longitude values
-        //         lastLocationInputs.find('input[name="lat[]"]').val(e.latlng.lat.toFixed(8));
-        //         lastLocationInputs.find('input[name="long[]"]').val(e.latlng.lng.toFixed(8));
-
-        //         // Update marker for this location
-        //         updateMarkerAtIndex(e.latlng.lat, e.latlng.lng, index);
-        //     });
-        // }
-        function initMap() {
-            map = L.map('map').setView([-8.38054848, 115.16239243], 9);
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 18,
-                attribution: '&copy; <a href="/">RGBDev</a>'
-            }).addTo(map);
-
-
-
-            /* Overlay Layers */
-            var highlight = L.geoJson(null);
-            var highlightStyle = {
-                stroke: false,
-                fillColor: "#00FFFF",
-                fillOpacity: 0.7,
-                radius: 10
-            };
-
-            // Initialize the GeoJSON layer
-            var bataskec = L.geoJson(null, {
-                style: function(feature) {
-                    return {
-                        fillColor: "white",
-                        //Warna tengah polygon
-                        fillOpacity: 0,
-                        color: "black",
-                        weight: 1,
-                        opacity: 0.6,
-                        clickable: true
-                    };
-                },
-                onEachFeature: function(feature, layer) {
-                    if (feature.properties) {
-                        var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Kecamatan</th><td>" + feature.properties.KECAMATAN + "</td></tr>" + "<table>";
-                        layer.on({
-                            click: function(e) {
-                                console.log(content);
-                                console.log(feature.properties.KABUPATEN);
-                                console.log(feature.properties.KECAMATAN);
-                            }
-                        });
-                    }
-                    layer.on({
-                        mouseover: function(e) {
-                            var layer = e.target;
-                            layer.setStyle({
-                                weight: 3,
-                                color: "#00FFFF",
-                                opacity: 1
-                            });
-                            if (!L.Browser.ie && !L.Browser.opera) {
-                                layer.bringToFront();
-                            }
-                        },
-                        mouseout: function(e) {
-                            bataskec.resetStyle(e.target);
+                        // If there's an active marker, update its popup
+                        var index = $('.lokasi-kegiatan').index($('.lokasi-kegiatan').last());
+                        if (markers[index]) {
+                            markers[index].setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
                         }
-                    });
-                }
-            });
-
-            // Load the GeoJSON data and add it to the bataskec layer
-            $.getJSON("/data/batas_kecamatan1.geojson", function(data) {
-                bataskec.addData(data);
-                map.addLayer(bataskec);
-            });
-
-            // Add click event to map
-            map.on('click', function(e) {
-                // Get the last added location inputs
-                var lastLocationInputs = $('.lokasi-kegiatan').last();
-                var index = $('.lokasi-kegiatan').index(lastLocationInputs);
-
-                // Set the latitude and longitude values
-                lastLocationInputs.find('input[name="lat[]"]').val(e.latlng.lat.toFixed(8));
-                lastLocationInputs.find('input[name="long[]"]').val(e.latlng.lng.toFixed(8));
-
-                // Update marker for this location
-                updateMarkerAtIndex(e.latlng.lat, e.latlng.lng, index);
-            });
-        }
-
-        function updateMarkerAtIndex(lat, long, index) {
-            // Remove existing marker at this index if it exists
-            if (markers[index]) {
-                map.removeLayer(markers[index]);
+                    },
+                    mouseover: function(e) {
+                        var layer = e.target;
+                        layer.setStyle({
+                            weight: 3,
+                            color: "#00FFFF",
+                            opacity: 1
+                        });
+                        layer.bringToFront();
+                    },
+                    mouseout: function(e) {
+                        bataskec.resetStyle(e.target);
+                    }
+                });
             }
+        });
 
-            // Create new marker
-            var marker = L.marker([lat, long]).addTo(map);
-            markers[index] = marker;
+        // Load GeoJSON data
+        $.getJSON("/data/batas_kecamatan1.geojson", function(data) {
+            bataskec.addData(data);
+            map.addLayer(bataskec);
+        });
 
-            // Update popup content
-            marker.bindPopup(generatePopupContent(index)).openPopup();
+        // Map click handler
+        map.on('click', function(e) {
+            var lastLocationInputs = $('.lokasi-kegiatan').last();
+            var index = $('.lokasi-kegiatan').index(lastLocationInputs);
 
-            // Center map on the marker
-            map.setView([lat, long], 16);
-        }
+            lastLocationInputs.find('input[name="lat[]"]').val(e.latlng.lat.toFixed(8));
+            lastLocationInputs.find('input[name="long[]"]').val(e.latlng.lng.toFixed(8));
 
-        function addNewLocationInputs() {
-            var newLocationField = `
-                <div class="form-group row lokasi-kegiatan">
-                    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
-                        <input type="text" class="form-control" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}">
-                    </div>
-                    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
-                        <input type="text" class="form-control" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
-                    </div>
-                    <div class="col-sm-10 col-md-3 col-lg-3 self-center order-3 order-md-3">
-                        <input type="text" class="form-control" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
-                    </div>
-                    <div class="col-sm-2 col-md-2 col-lg-2 self-center order-4 order-md-4">
-                        <button type="button" class="btn btn-danger remove-staff-row btn-flat">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>`;
+            // Get kecamatan and kabupaten based on click location
+            var clickedPoint = e.latlng;
+            var foundLocation = false;
 
-            $('.list-lokasi-kegiatan').append(newLocationField);
-        }
-
-        function generatePopupContent(index) {
-            var locationRow = $('.lokasi-kegiatan').eq(index);
-            var kode_kegiatan = $('#kode_kegiatan').val() || '';
-            var nama_kegiatan = $('#nama_kegiatan').val() || '';
-            var lokasi = locationRow.find('input[name="lokasi[]"]').val() || '';
-
-            return `
-                <strong>{{ __('cruds.kegiatan.basic.kode') }}:</strong> ${kode_kegiatan}<br>
-                <strong>{{ __('cruds.kegiatan.basic.nama') }}:</strong> ${nama_kegiatan}<br>
-
-                <br><br>
-                <strong>{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}:</strong> ${lokasi}
-            `;
-        }
-
-        function updateAllMarkers() {
-            $('.lokasi-kegiatan').each(function(index) {
-                var marker = markers[index];
-                if (marker) {
-                    marker.setPopupContent(generatePopupContent(index));
+            bataskec.eachLayer(function(layer) {
+                if (!foundLocation && layer.getBounds().contains(clickedPoint)) {
+                    currentKecamatan = layer.feature.properties.KECAMATAN;
+                    currentKabupaten = layer.feature.properties.KABUPATEN;
+                    foundLocation = true;
                 }
             });
+
+            updateMarkerAtIndex(e.latlng.lat, e.latlng.lng, index);
+        });
+    }
+
+    function updateMarkerAtIndex(lat, long, index) {
+        if (markers[index]) {
+            map.removeLayer(markers[index]);
         }
 
-        // Event listener for selecting an activity from the modal
-        $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
-            e.preventDefault();
-            var activity_Id = $(this).closest('tr').data('id');
-            var activity_Desk = $(this).closest('tr').data('deskripsi');
-            var activity_Ind = $(this).closest('tr').data('indikator');
-            var activity_Tar = $(this).closest('tr').data('target');
+        var marker = L.marker([lat, long]).addTo(map);
+        markers[index] = marker;
 
-            let activityKode = $(this).closest('tr').data('kode');
-            let activityNama = $(this).closest('tr').data('nama');
+        marker.bindPopup(generatePopupContent(index, currentKecamatan, currentKabupaten)).openPopup();
+        map.setView([lat, long], 12);
+    }
 
+    function generatePopupContent(index, kecamatan, kabupaten) {
+        var locationRow = $('.lokasi-kegiatan').eq(index);
+        var kode_kegiatan = $('#kode_kegiatan').val() || '';
+        var nama_kegiatan = $('#nama_kegiatan').val() || '';
+        var lokasi = locationRow.find('input[name="lokasi[]"]').val() || '';
 
-            // console.log(`Selected Activity ID: ${activity_Id}, Kode: ${activityKode}`, `Nama: ${activityNama}`, `Desc: ${activity_Desk}`);
+        return `
+            <strong>{{ __('cruds.kegiatan.basic.kode') }}:</strong> ${kode_kegiatan}<br>
+            <strong>{{ __('cruds.kegiatan.basic.nama') }}:</strong> ${nama_kegiatan}<br>
+            <strong>Kecamatan:</strong> ${kecamatan || ''}<br>
+            <strong>Kabupaten:</strong> ${kabupaten || ''}<br><br>
+            <strong>{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}:</strong> ${lokasi}<br>
+        `;
+    }
 
-            $('#id_programoutcomeoutputactivity').val(activity_Id);
-            $('#kode_kegiatan').val(activityKode);
-            $('#nama_kegiatan').val(activityNama).prop('disabled', true);
+    function updateAllMarkers() {
+        $('.lokasi-kegiatan').each(function(index) {
+            var marker = markers[index];
+            if (marker) {
+                // Get coordinates from inputs
+                var lat = parseFloat($(this).find('input[name="lat[]"]').val());
+                var long = parseFloat($(this).find('input[name="long[]"]').val());
 
-            $('#kode_program').prop('disabled', true);
-            updateAllMarkers()
-            $('#ModalDaftarProgramActivity').modal('hide');
+                // Find kecamatan and kabupaten for these coordinates
+                var foundLocation = false;
+                bataskec.eachLayer(function(layer) {
+                    if (!foundLocation && layer.getBounds().contains([lat, long])) {
+                        currentKecamatan = layer.feature.properties.KECAMATAN;
+                        currentKabupaten = layer.feature.properties.KABUPATEN;
+                        foundLocation = true;
+                    }
+                });
+
+                marker.setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
+            }
         });
+    }
+
+    // Event handlers
+    $(document).on('input', 'input[name="long[]"], input[name="lat[]"]', function() {
+        var container = $(this).closest('.lokasi-kegiatan');
+        var long = parseFloat(container.find('input[name="long[]"]').val());
+        var lat = parseFloat(container.find('input[name="lat[]"]').val());
+        var index = $('.lokasi-kegiatan').index(container);
+
+        if (!isNaN(lat) && !isNaN(long)) {
+            updateMarkerAtIndex(lat, long, index);
+        }
     });
+
+    // Retain your existing event handlers for other functionality
+    $('#btn-lokasi-kegiatan').on('click', addNewLocationInputs);
+    $('#kode_kegiatan, #nama_kegiatan, #nama_desa').on('input change', updateAllMarkers);
+
+    // Initialize the map
+    initMap();
+    function addNewLocationInputs() {
+        var newLocationField = `
+            <div class="form-group row lokasi-kegiatan">
+                <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                    <input type="text" class="form-control" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}">
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
+                    <input type="text" class="form-control" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
+                </div>
+                <div class="col-sm-10 col-md-3 col-lg-3 self-center order-3 order-md-3">
+                    <input type="text" class="form-control" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2 self-center order-4 order-md-4">
+                    <button type="button" class="btn btn-danger remove-staff-row btn-flat">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>`;
+
+        $('.list-lokasi-kegiatan').append(newLocationField);
+    }
+    // Add activity selection handler
+    $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
+        e.preventDefault();
+        var activity_Id = $(this).closest('tr').data('id');
+        var activityKode = $(this).closest('tr').data('kode');
+        var activityNama = $(this).closest('tr').data('nama');
+
+        $('#id_programoutcomeoutputactivity').val(activity_Id);
+        $('#kode_kegiatan').val(activityKode);
+        $('#nama_kegiatan').val(activityNama).prop('disabled', true);
+        $('#kode_program').prop('disabled', true);
+
+        updateAllMarkers();
+        $('#ModalDaftarProgramActivity').modal('hide');
+    });
+
+    // Add the remove location handler
+    $(document).on('click', '.remove-staff-row', function() {
+        var row = $(this).closest('.lokasi-kegiatan');
+        var index = $('.lokasi-kegiatan').index(row);
+        if (markers[index]) {
+            map.removeLayer(markers[index]);
+            markers.splice(index, 1);
+        }
+        row.remove();
+        updateAllMarkers();
+    });
+
+});
 
 </script>
 
