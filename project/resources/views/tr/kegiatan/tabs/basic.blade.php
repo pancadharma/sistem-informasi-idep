@@ -94,7 +94,7 @@
             <strong>{{ __('cruds.status.title') }}</strong>
         </label>
         <div class="select2-purple">
-            <select class="form-control" name="status" id="status" required>
+            <select class="form-control" name="status" id="status" required placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.status_kegiatan') }}">
                 <optgroup label="{{ __('cruds.kegiatan.status') }}">
                     @foreach($statusOptions as $key => $label)
                         <option value="{{ $key }}">{{ $label }}</option>
@@ -300,16 +300,16 @@
 
         function generatePopupContent(index) {
             var locationRow = $('.lokasi-kegiatan').eq(index);
-            var kode_kegiatan = $('#kode_kegiatan').val();
-            var nama_kegiatan = $('#nama_kegiatan').val();
-            var nama_desa = $('#nama_desa').val();
+            var kode_kegiatan = $('#kode_kegiatan').val() || '';
+            var nama_kegiatan = $('#nama_kegiatan').val() || '';
             var lokasi = locationRow.find('input[name="lokasi[]"]').val() || '';
 
             return `
-                <strong>Kode Kegiatan:</strong> ${kode_kegiatan}<br>
-                <strong>Nama Kegiatan:</strong> ${nama_kegiatan}<br>
-                <strong>Nama Desa:</strong> ${nama_desa}<br>
-                <strong>Lokasi:</strong> ${lokasi}
+                <strong>{{ __('cruds.kegiatan.basic.kode') }}:</strong> ${kode_kegiatan}<br>
+                <strong>{{ __('cruds.kegiatan.basic.nama') }}:</strong> ${nama_kegiatan}<br>
+
+                <br><br>
+                <strong>{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}:</strong> ${lokasi}
             `;
         }
 
@@ -515,6 +515,9 @@
 
         $('#fase_pelaporan').select2({
             placeholder: '{{ __('global.pleaseSelect') }}',
+        });
+        $('#status').select2({
+            placeholder: '{{ __('global.pleaseSelect' ).' '.__('cruds.kegiatan.basic.status_kegiatan') }}',
         });
     });
 </script>
