@@ -146,23 +146,26 @@ class Kegiatan extends Model implements HasMedia
         'cancelled ' => 'Cancelled',
     ];
 
-    public const JENIS_KEGIATAN = [
-        '1'     => 'Assessment',
-        '2'     => 'Sosialisasi, workshop, peluasan jejaring, dan/atau pemetaan stakeholder',
-        '3'     => 'Pelatihan / penguatan kapasitas',
-        '4'     => 'Pembelanjaan / distribusi',
-        '5'     => 'Pengembangan model',
-        '6'     => 'Kampanye / advokasi',
-        '7'     => 'Pemetaan',
-        '8'     => 'Monitoring dan evaluasi',
-        '9'     => 'Kunjungan / visitasi',
-        '10'    => 'Konsultansi',
-        '11'    => 'Others',
-        '12'    => 'Ekonomi',
-        '14'    => 'Lingkungan',
-        '15'    => 'Sosial Budaya',
-        '16'    => 'Kebencanaan',
-        '17'    => 'Pendidikan',
-        '18'    => 'Kesehatan Masyarakat',
-    ];
+    public static function getJenisKegiatan(): array
+    {
+        return [
+            1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
+            2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
+            3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
+            4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
+            5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
+            6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
+            7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
+            8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
+            9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
+            10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
+            11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
+            12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
+            13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
+            14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
+            15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
+            16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
+            17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
+        ];
+    }
 }

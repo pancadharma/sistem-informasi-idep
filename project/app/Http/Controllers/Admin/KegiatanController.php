@@ -192,10 +192,13 @@ class KegiatanController extends Controller
 
     public function getJenisKegiatan()
     {
-        $jenisKegiatan = Kegiatan::JENIS_KEGIATAN;
+        $jenisKegiatan = Kegiatan::getJenisKegiatan();
+        $first = __('cruds.kegiatan.basic.bentuk');
+        $second =  __('cruds.kegiatan.basic.sektor');
+
         $groupedData = [
-            'Bentuk' => array_slice($jenisKegiatan, 0, 11, true),
-            'Sektor' => array_slice($jenisKegiatan, 11, null, true)
+            $first => array_slice($jenisKegiatan, 0, 11, true),
+            $second => array_slice($jenisKegiatan, 11, null, true)
         ];
         return response()->json($groupedData);
     }

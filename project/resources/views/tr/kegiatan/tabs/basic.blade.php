@@ -51,9 +51,7 @@
             </select>
         </div>
     </div>
-{{-- </div> --}}
 <!-- jenis kegiatan-->
-{{-- <div class="form-group row"> --}}
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="jenis_kegiatan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
@@ -64,12 +62,7 @@
             </select>
         </div>
     </div>
-{{-- </div> --}}
-
-
-
 <!-- durasi kegiatan-->
-{{-- <div class="form-group row"> --}}
 <!-- tgl mulai-->
     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-1 order-md-1">
         <label for="tanggalmulai" class="input-group col-form-label">
