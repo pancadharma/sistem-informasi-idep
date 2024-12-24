@@ -2,6 +2,7 @@
 
 return [
     'details'                        => 'Details',
+    'loading'                        => 'Loading',
     'actions'                        => 'Actions',
     'success'                        => 'Success',
     'add'                            => 'Add',

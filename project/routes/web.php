@@ -143,8 +143,7 @@ Route::middleware(['auth'])->group(function () {
     //kegiatan api - program
     Route::get('kegiatan/api/satuan', [KegiatanController::class, 'getSatuan'])->name('api.kegiatan.satuan');
     Route::get('kegiatan/api/program/{id}/out/activity', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
-
-
+    Route::get('kegiatan/api/jenis_kegiatan', [KegiatanController::class, 'getJenisKegiatan'])->name('api.kegiatan.jenis_kegiatan');
 
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);

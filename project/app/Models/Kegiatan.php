@@ -136,12 +136,33 @@ class Kegiatan extends Model implements HasMedia
 
     public function activity()
     {
-        // programoutcomeoutputactivity_id
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    // public function program()
-    // {
-    //     return $this->belongsTo(Program::class);
-    // }
+    public const STATUS_SELECT = [
+        'draft'    => 'Draft',
+        'ongoing'  => 'Ongoing',
+        'completed' => 'Completed',
+        'cancelled ' => 'Cancelled',
+    ];
+
+    public const JENIS_KEGIATAN = [
+        '1'     => 'Assessment',
+        '2'     => 'Sosialisasi, workshop, peluasan jejaring, dan/atau pemetaan stakeholder',
+        '3'     => 'Pelatihan / penguatan kapasitas',
+        '4'     => 'Pembelanjaan / distribusi',
+        '5'     => 'Pengembangan model',
+        '6'     => 'Kampanye / advokasi',
+        '7'     => 'Pemetaan',
+        '8'     => 'Monitoring dan evaluasi',
+        '9'     => 'Kunjungan / visitasi',
+        '10'    => 'Konsultansi',
+        '11'    => 'Others',
+        '12'    => 'Ekonomi',
+        '14'    => 'Lingkungan',
+        '15'    => 'Sosial Budaya',
+        '16'    => 'Kebencanaan',
+        '17'    => 'Pendidikan',
+        '18'    => 'Kesehatan Masyarakat',
+    ];
 }

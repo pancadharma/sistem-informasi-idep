@@ -2,6 +2,7 @@
 
 return [
     'details'                        => 'Detail',
+    'loading'                        => 'Memuat',
     'actions'                        => 'Opsi',
     'add'                            => 'Tambah',
     'success'                        => 'Sukses',

@@ -234,7 +234,7 @@
                                     </label>
                                     <div class="select2-green">
                                         <select class="form-control select2" name="status" id="status" required>
-                                            <optgroup label="Status Progran">
+                                            <optgroup label="Status Program">
                                                 <option value="draft">Draft</option>
                                                 <option value="running" disabled>Running</option>
                                                 <option value="submit" disabled>Submit</option>
@@ -316,4 +316,3 @@
 @include('tr.program.js.detail-create.partner')
 {{-- @include('tr.program.js.validate') --}}
 @endpush
-        

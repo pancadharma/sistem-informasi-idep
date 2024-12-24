@@ -35,17 +35,50 @@
     </div>
 </div>
 
-<!-- durasi kegiatan-->
+<!-- fase pelaporan-->
 <div class="form-group row">
-    <!-- tgl mulai-->
-    <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1">
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="fase_pelaporan" class="input-group col-form-label">
+            <strong>{{ __('cruds.kegiatan.basic.fase_pelaporan') }} </strong>
+            <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
+        </label>
+        <div class="select2-purple">
+            <select class="form-control" name="fase_pelaporan" id="fase_pelaporan">
+                <option value="">{{ __('global.pleaseSelect') }}</option>
+                @for ($i = 1; $i <= 99; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
+        </div>
+    </div>
+{{-- </div> --}}
+<!-- jenis kegiatan-->
+{{-- <div class="form-group row"> --}}
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="jenis_kegiatan" class="input-group col-form-label">
+            <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
+        </label>
+        <div class="select2-purple">
+            <select class="form-control" name="jenis_kegiatan" id="jenis_kegiatan">
+                <!-- Options will be populated by select2 -->
+            </select>
+        </div>
+    </div>
+{{-- </div> --}}
+
+
+
+<!-- durasi kegiatan-->
+{{-- <div class="form-group row"> --}}
+<!-- tgl mulai-->
+    <div class="col-sm-6 col-md-6 col-lg-3 self-center order-1 order-md-1">
         <label for="tanggalmulai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
         </label>
         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai">
     </div>
-    <!-- tgl selesai-->
-    <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
+<!-- tgl selesai-->
+    <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
         <label for="tanggalselesai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalselesai') }}
         </label>
@@ -65,16 +98,15 @@
         <label for="status" class="input-group col-form-label">
             <strong>{{ __('cruds.status.title') }}</strong>
         </label>
-            <div class="select2-purple">
-                <select class="form-control" name="status" id="status" required>
-                    <optgroup label="{{ __('cruds.kegiatan.status') }}">
-                        <option value="draft">Draft</option>
-                        <option value="ongoing" disabled>Ongoing</option>
-                        <option value="completed" disabled>Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </optgroup>
-                </select>
-            </div>
+        <div class="select2-purple">
+            <select class="form-control" name="status" id="status" required>
+                <optgroup label="{{ __('cruds.kegiatan.status') }}">
+                    @foreach($statusOptions as $key => $label)
+                        <option value="{{ $key }}">{{ $label }}</option>
+                    @endforeach
+                </optgroup>
+            </select>
+        </div>
     </div>
 </div>
 
@@ -465,4 +497,39 @@
         }
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $('#jenis_kegiatan').select2({
+            placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.jenis_kegiatan') }}',
+            ajax: {
+                url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
+                dataType: 'json',
+                processResults: function (data) {
+                    var results = [];
+                    $.each(data, function(group, options) {
+                        var optgroup = {
+                            text: group,
+                            children: []
+                        };
+                        $.each(options, function(id, text) {
+                            optgroup.children.push({
+                                id: id,
+                                text: text
+                            });
+                        });
+                        results.push(optgroup);
+                    });
+                    return {
+                        results: results
+                    };
+                }
+            }
+        });
+
+        $('#fase_pelaporan').select2({
+            placeholder: '{{ __('global.pleaseSelect') }}',
+        });
+    });
+</script>
+
 @endpush

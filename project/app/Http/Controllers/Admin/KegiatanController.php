@@ -89,7 +89,8 @@ class KegiatanController extends Controller
     {
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
-            return view('tr.kegiatan.create', compact('program'));
+            $statusOptions = Kegiatan::STATUS_SELECT;
+            return view('tr.kegiatan.create', compact('program', 'statusOptions'));
         }
         return response()->json([
             'success' => false,
@@ -187,5 +188,15 @@ class KegiatanController extends Controller
         });
         $satuan = $satuan->paginate(20, ['*'], 'page', $page);
         return response()->json($satuan);
+    }
+
+    public function getJenisKegiatan()
+    {
+        $jenisKegiatan = Kegiatan::JENIS_KEGIATAN;
+        $groupedData = [
+            'Bentuk' => array_slice($jenisKegiatan, 0, 11, true),
+            'Sektor' => array_slice($jenisKegiatan, 11, null, true)
+        ];
+        return response()->json($groupedData);
     }
 }

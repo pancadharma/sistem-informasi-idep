@@ -586,7 +586,8 @@ return [
             'tambah_lokasi'                      => 'Add Location',
             'tooltip'                            => [
                 'lokasi'                         => 'Please fill in the name of the location where this activity is carried out, can be filled in more than 1 location if needed',
-                'long_lat'                           => 'Please copy-paste the coordinates of the activity location and explain the name of the location (can be more than one location)',
+                'long_lat'                       => 'Please copy-paste the coordinates of the activity location and explain the name of the location (can be more than one location)',
+                'fase_pelaporan'                 => 'Please fill in the phase of the reporting from the activity that you are carrying out',
 
             ],
         ],

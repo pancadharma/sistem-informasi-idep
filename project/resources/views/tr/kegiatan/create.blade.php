@@ -6,6 +6,11 @@
 @section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
 @section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
 
+@section('preloader')
+    <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
+    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
+@endsection
+
 @section('content_body')
     <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf

@@ -585,6 +585,7 @@ return [
             'tooltip'               => [
                 'lokasi'            => 'Silakan isi nama lokasi dimana kegiatan ini dilakukan, dapat diisi lebih dari 1 lokasi jika diperlukan',
                 'long_lat'              => 'Silahkan copy-paste titik koordinat lokasi kegiatan dan jelaskan nama lokasinya (bisa lebih dari satu lokasi)',
+                'fase_pelaporan'        => 'Silahkan isi fase keberapakah pelaporan dari kegiatan yang Anda susun ini?',
             ],
 
         ],
