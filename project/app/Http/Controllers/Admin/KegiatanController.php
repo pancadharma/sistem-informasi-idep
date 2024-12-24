@@ -190,9 +190,81 @@ class KegiatanController extends Controller
         return response()->json($satuan);
     }
 
-    public function getJenisKegiatan()
+    // public function getJenisKegiatan()
+    // {
+    //     $jenisKegiatan = Kegiatan::getJenisKegiatan();
+    //     $first = __('cruds.kegiatan.basic.bentuk');
+    //     $second =  __('cruds.kegiatan.basic.sektor');
+
+    //     $groupedData = [
+    //         $first => array_slice($jenisKegiatan, 0, 11, true),
+    //         $second => array_slice($jenisKegiatan, 11, null, true)
+    //     ];
+    //     return response()->json($groupedData);
+    // }
+
+    // public function getJenisKegiatan(Request $request)
+    // {
+    //     $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+    //     // If requesting specific ID(s)
+    //     if ($request->has('id')) {
+    //         $ids = is_array($request->id) ? $request->id : [$request->id];
+
+    //         $data = collect($jenisKegiatan)
+    //             ->filter(function ($value, $key) use ($ids) {
+    //                 return in_array($key, $ids);
+    //             })
+    //             ->map(function ($nama, $id) {
+    //                 return [
+    //                     'id' => $id,
+    //                     'nama' => $nama
+    //                 ];
+    //             })
+    //             ->values()
+    //             ->all();
+
+    //         return response()->json(['data' => $data]);
+    //     }
+
+    //     // For dropdown listing - transform to match Select2 format
+    //     $data = collect($jenisKegiatan)
+    //         ->map(function ($nama, $id) {
+    //             return [
+    //                 'id' => $id,
+    //                 'nama' => $nama
+    //             ];
+    //         })
+    //         ->values()
+    //         ->all();
+
+    //     return response()->json(['data' => $data]);
+    // }
+
+    public function getJenisKegiatan(Request $request)
     {
         $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+        if ($request->has('id')) {
+            // If requesting specific ID(s)
+            $id = $request->input('id');
+            $data = collect($jenisKegiatan)
+                ->filter(function ($value, $key) use ($id) {
+                    return $key == $id;
+                })
+                ->map(function ($text, $id) {
+                    return [
+                        'id' => $id,
+                        'nama' => $text
+                    ];
+                })
+                ->values()
+                ->all();
+
+            return response()->json(['data' => $data]);
+        }
+
+        // For dropdown listing
         $first = __('cruds.kegiatan.basic.bentuk');
         $second =  __('cruds.kegiatan.basic.sektor');
 
