@@ -237,12 +237,93 @@
             updateAllMarkers();
         });
 
+        // function initMap() {
+        //     map = L.map('map').setView([-8.38054848, 115.16239243], 9);
+        //     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //         maxZoom: 18,
+        //         attribution: '&copy; <a href="/">RGBDev</a>'
+        //     }).addTo(map);
+
+        //     // Add click event to map
+        //     map.on('click', function(e) {
+        //         // Get the last added location inputs
+        //         var lastLocationInputs = $('.lokasi-kegiatan').last();
+        //         var index = $('.lokasi-kegiatan').index(lastLocationInputs);
+
+        //         // Set the latitude and longitude values
+        //         lastLocationInputs.find('input[name="lat[]"]').val(e.latlng.lat.toFixed(8));
+        //         lastLocationInputs.find('input[name="long[]"]').val(e.latlng.lng.toFixed(8));
+
+        //         // Update marker for this location
+        //         updateMarkerAtIndex(e.latlng.lat, e.latlng.lng, index);
+        //     });
+        // }
         function initMap() {
             map = L.map('map').setView([-8.38054848, 115.16239243], 9);
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
                 attribution: '&copy; <a href="/">RGBDev</a>'
             }).addTo(map);
+
+
+
+            /* Overlay Layers */
+            var highlight = L.geoJson(null);
+            var highlightStyle = {
+                stroke: false,
+                fillColor: "#00FFFF",
+                fillOpacity: 0.7,
+                radius: 10
+            };
+
+            // Initialize the GeoJSON layer
+            var bataskec = L.geoJson(null, {
+                style: function(feature) {
+                    return {
+                        fillColor: "white",
+                        //Warna tengah polygon
+                        fillOpacity: 0,
+                        color: "black",
+                        weight: 1,
+                        opacity: 0.6,
+                        clickable: true
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties) {
+                        var content = "<table class='table table-striped table-bordered table-condensed'>" + "<tr><th>Kecamatan</th><td>" + feature.properties.KECAMATAN + "</td></tr>" + "<table>";
+                        layer.on({
+                            click: function(e) {
+                                console.log(content);
+                                console.log(feature.properties.KABUPATEN);
+                                console.log(feature.properties.KECAMATAN);
+                            }
+                        });
+                    }
+                    layer.on({
+                        mouseover: function(e) {
+                            var layer = e.target;
+                            layer.setStyle({
+                                weight: 3,
+                                color: "#00FFFF",
+                                opacity: 1
+                            });
+                            if (!L.Browser.ie && !L.Browser.opera) {
+                                layer.bringToFront();
+                            }
+                        },
+                        mouseout: function(e) {
+                            bataskec.resetStyle(e.target);
+                        }
+                    });
+                }
+            });
+
+            // Load the GeoJSON data and add it to the bataskec layer
+            $.getJSON("/data/batas_kecamatan1.geojson", function(data) {
+                bataskec.addData(data);
+                map.addLayer(bataskec);
+            });
 
             // Add click event to map
             map.on('click', function(e) {
@@ -345,6 +426,7 @@
             $('#ModalDaftarProgramActivity').modal('hide');
         });
     });
+
 </script>
 
 <!-- javascript to push javascript to stack('basic_tab_js') -->
