@@ -82,9 +82,9 @@
 <!-- nama mitra-->
 <div class="form-group row">
     <div class="col-sm-12 col-md-9 col-lg-9 self-center order-2 order-md-2">
-        <label for="nama_mitra" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
+        <label for="mitra" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
         <div class="select2-purple">
-            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="nama_mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="nama_mitra" multiple>
+            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="mitra" multiple>
             </select>
         </div>
     </div>

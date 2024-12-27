@@ -614,7 +614,11 @@ return [
         ],
         'description'                            => [
             'label'                              => 'Activity Description',
+            'latar_belakang'                     => 'Background Description',
             'tujuan'                             => 'Activity Purpose',
+            'tujuan_helper'                      => 'Please write the purpose of the activity, can be derived from the ToR of the activity!',
+            'deskripsikeluaran'                  => 'Output Description',
+            'keluaran_helper'                    => 'Please write the output description of the activity, can be derived from the ToR of the activity!',
             'involved'                           => 'Who Involved',
             'yang_terlibat'                      => 'Involved People',
             'pelatih_asal'                       => 'Who is the Coach and From',
@@ -633,7 +637,8 @@ return [
             'rekomendasi'                        => 'Recommendations',
         ],
         'peserta'                                => [
-            'label'                              => 'Beneficiaries',
+            'label'                              => 'Beneficiaries of the Activity',
+            'helper'                             => 'Fill in the 2 tables below as a receipt/beneficiary of the activity, please note the form absense',
             'peserta'                            => 'Beneficiaries',
             'nama'                               => 'Beneficiaries Name',
             'pria'                               => 'Men',
@@ -660,6 +665,14 @@ return [
             'cerai_mati'                         => 'Widowed',
             'placeholder_no_identitas'           => 'Please Input 16 digit NIK',
             'placeholder_no_kk'                  => 'Please Input 16 digit No. KK',
+            'total'                              => 'Total',
+            'dewasa'                             => 'Adults (Age 18-59)',
+            'remaja'                             => 'Teenagers (Age 18-24, based on BKKBN)',
+            'anak'                               => 'Children (Age < 18, based on SCI recommendation)',
+            'lansia'                             => 'Elderly (Age > 60, based Perpres 88 of 2021)',
+            'disabilitas'                        => 'Disabilities',
+            'non_disabilitas'                    => 'Non-Disabilities',
+            'marjinal_lain'                      => 'Other Marginalized Groups',
 
 
         ],
