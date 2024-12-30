@@ -664,7 +664,7 @@ return [
             'cerai_mati'                         => 'Cerai Mati',
             'placeholder_no_identitas'           => 'Masukkan 16 digit NIK',
             'placeholder_no_kk'                  => 'Masukkan 16 digit No. KK',
-            'total'                              => 'Total',
+            'total'                              => 'Total Penerima',
             'dewasa'                             => 'Dewasa (Umur 25 - 59 tahun)',
             'lansia'                             => 'Lansia (Umur > 60 tahun keatas, berdasarkan data Perpres 88 Tahun 2021)',
             'remaja'                             => 'Remaja (Umur 18 - 24 tahun, berdasarkan BKKBN dengan penyusaian)',

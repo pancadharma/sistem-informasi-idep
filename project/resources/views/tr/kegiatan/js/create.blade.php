@@ -726,3 +726,166 @@
         });
     });
 </script>
+
+<!-- Script for description.blade.php -->
+<script>
+    $(document).ready(function() {
+        function calculateTotals() {
+            // Calculate row totals and update respective fields
+            $('tr').each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
+
+            // Calculate overall totals
+            let totalPerempuan = 0;
+            let totalLakilaki = 0;
+            let totalAll = 0;
+
+            totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
+
+            totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
+
+            totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
+
+            // Update overall total fields
+            // $('#penerimamanfaatperempuantotal').text(totalPerempuan);
+            // $('#penerimamanfaatlakilakitotal').text(totalLakilaki);
+            // $('#penerimamanfaattotal').text(totalAll);
+            $('#penerimamanfaatperempuantotal').val(totalPerempuan);
+            $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaattotal').val(totalAll);
+        }
+
+        // Trigger calculateTotals on input change
+        $('.calculate').on('input', function() {
+            calculateTotals();
+        });
+
+        // Initial calculation
+        calculateTotals();
+    // });
+    // $(document).ready(function() {
+        var table = $('#peserta_kegiatan_summary').DataTable({
+            width: '100%',
+            columns: [{ width: '40%', targets: 0 }, { width: '20%', targets: 1 }, { width: '20%', targets: 2 }, { width: '20%', targets: 3 }],
+            layout: {
+                topStart: null,
+                bottom: null,
+                bottomStart: null,
+                bottomEnd: null
+            },
+            searching: false,
+            ordering: false, // 'sorting' should be 'ordering'
+            columnDefs: [
+                {
+                    searchable: false,
+                    orderable: false,
+                    targets: [0, 1, 2, 3]
+                },
+                { width: '40%', targets: 0 },
+                { width: '20%', targets: 1 },
+                { width: '20%', targets: 2 },
+                { width: '20%', targets: 3 }
+            ]
+        });
+        $('#submit_peserta').on('click', function(e) {
+            e.preventDefault();
+            var data = table.$('input, select').serialize();
+            console.log(data);
+            // Parse serialized data
+            var params = new URLSearchParams(data);
+            var parsedData = {
+                dewasa: {
+                    perempuan: params.get('penerimamanfaatdewasaperempuan'),
+                    laki: params.get('penerimamanfaatdewasalakilaki'),
+                    total: params.get('penerimamanfaatdewasatotal')
+                },
+                lansia: {
+                    perempuan: params.get('penerimamanfaatlansiaperempuan'),
+                    laki: params.get('penerimamanfaatlansialakilaki'),
+                    total: params.get('penerimamanfaatlansiatotal')
+                },
+                remaja: {
+                    perempuan: params.get('penerimamanfaatremajaperempuan'),
+                    laki: params.get('penerimamanfaatremajalakilaki'),
+                    total: params.get('penerimamanfaatremajatotal')
+                },
+                anak: {
+                    perempuan: params.get('penerimamanfaatanakperempuan'),
+                    laki: params.get('penerimamanfaatanaklakilaki'),
+                    total: params.get('penerimamanfaatanaktotal')
+                },
+                total: {
+                    perempuan: params.get('penerimamanfaatperempuantotal'),
+                    laki: params.get('penerimamanfaatlakilakitotal'),
+                    total: params.get('penerimamanfaattotal')
+                }
+            };
+
+            // Create SweetAlert content
+            var htmlContent = `
+            <table style="width:100%; text-align:left;">
+                <tr>
+                <th>Category</th>
+                <th>Female</th>
+                <th>Male</th>
+                <th>Total</th>
+                </tr>
+                <tr>
+                <td>Dewasa</td>
+                <td>${parsedData.dewasa.perempuan}</td>
+                <td>${parsedData.dewasa.laki}</td>
+                <td>${parsedData.dewasa.total}</td>
+                </tr>
+                <tr>
+                <td>Lansia</td>
+                <td>${parsedData.lansia.perempuan}</td>
+                <td>${parsedData.lansia.laki}</td>
+                <td>${parsedData.lansia.total}</td>
+                </tr>
+                <tr>
+                <td>Remaja</td>
+                <td>${parsedData.remaja.perempuan}</td>
+                <td>${parsedData.remaja.laki}</td>
+                <td>${parsedData.remaja.total}</td>
+                </tr>
+                <tr>
+                <td>Anak-anak</td>
+                <td>${parsedData.anak.perempuan}</td>
+                <td>${parsedData.anak.laki}</td>
+                <td>${parsedData.anak.total}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <th>${parsedData.total.perempuan}</th>
+                    <th>${parsedData.total.laki}</th>
+                    <th>${parsedData.total.total}</th>
+                </tr>
+            </table>
+            `;
+
+            // Display SweetAlert with dynamic content
+            Swal.fire({
+                title: 'Participant Data Summary',
+                html: htmlContent,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+
+        });
+
+    });
+</script>
+

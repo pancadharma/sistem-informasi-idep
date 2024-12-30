@@ -300,7 +300,7 @@ entity "trprogramdokumen" as trprogramdokumen {
 
 entity "trkegiatan" as trkegiatan {
     *id : int <<auto>>
-    --
+    \--
     id_programoutcomeoutputactivity : int <<fk>>
     fasepelaporan : int
     id_jeniskegiatan : int <<fk>>
@@ -313,7 +313,7 @@ entity "trkegiatan" as trkegiatan {
     tanggalselesai : datetime
     status : varchar (50)
     mitra : varchar (300) null
-    
+
     deskripsilatarbelakang : varchar (500) null
     deskripsitujuan : varchar (500) null
     deskripsikeluaran : varchar (500) null
@@ -429,14 +429,27 @@ entity "trkegiatan" as trkegiatan {
     penerimamanfaatdewasalakilaki : int
     penerimamanfaatdewasatotal : int
     penerimamanfaatlansiaperempuan : int
-    penerimamanfaatlansialakilaki : int 
-    penerimamanfaatlansiatotal : int 
-    penerimamanfaatremajaperempuan : int 
-    penerimamanfaatremajalakilaki: int 
-    penerimamanfaatremajatotal : int 
-    penerimamanfaatanakperempuan : int 
-    penerimamanfaatanaklakilaki : int 
+    penerimamanfaatlansialakilaki : int
+    penerimamanfaatlansiatotal : int
+    penerimamanfaatremajaperempuan : int
+    penerimamanfaatremajalakilaki: int
+    penerimamanfaatremajatotal : int
+    penerimamanfaatanakperempuan : int
+    penerimamanfaatanaklakilaki : int
     penerimamanfaatanaktotal : int
+
+    penerimamanfaatdisabilitasperempuan : int
+    penerimamanfaatdisabilitaslakilaki: int
+    penerimamanfaatdisabilitastotal : int
+
+    penerimamanfaatnondisabilitasperempuan : int
+    penerimamanfaatnondisabilitaslakilaki : int
+    penerimamanfaatnondisabilitastotal : int
+
+    penerimamanfaatmarjinalperempuan : int
+    penerimamanfaatmarjinallakilaki : int
+    penerimamanfaatmarjinaltotal : int
+
     penerimamanfaatperempuantotal : int
     penerimamanfaatlakilakitotal : int
     penerimamanfaattotal : int
