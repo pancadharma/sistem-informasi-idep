@@ -132,39 +132,6 @@
         // Save form data to localStorage
         localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
     }
-    // function initializeSelect2WithDynamicUrl(fieldId) {
-    //     var apiUrl = $('#' + fieldId).data('api-url');
-    //     var placeholder = $('#' + fieldId).attr('placeholder');
-    //     $('#' + fieldId).select2({
-    //         ajax: {
-    //             url: apiUrl,
-    //             dataType: 'json',
-    //             delay: 300, // Debounce time
-    //             data: function (params) {
-    //                 return {
-    //                     search: params.term || '', // Search term, empty for initial load
-    //                     page: params.page || 1 // Page number
-    //                 };
-    //             },
-    //             processResults: function (data, params) {
-    //                 params.page = params.page || 1;
-    //                 return {
-    //                     results: data.data.map(item => ({
-    //                         id: item.id,
-    //                         text: item.nama
-    //                     })),
-    //                     pagination: {
-    //                         more: data.current_page < data.last_page
-    //                     }
-    //                 };
-    //             },
-    //             cache: true
-    //         },
-    //         minimumInputLength: 0, // Minimum input length to trigger search
-    //         placeholder: placeholder,
-    //         allowClear: true // Allow clearing the selection
-    //     });
-    // }
 
     // Function to initialize Select2 with dynamic URL
     function initializeSelect2WithDynamicUrl(fieldId) {
@@ -206,84 +173,6 @@
         });
     }
 
-    // function loadFormDataFromStorage() {
-    //     var storedData = localStorage.getItem('kegiatanFormData');
-    //     if (storedData) {
-    //         var formData = JSON.parse(storedData);
-
-    //         // Populate basic form fields
-    //         $('#program_id').val(formData.program_id || '');
-    //         $('#program_kode').val(formData.program_kode || '');
-    //         //
-    //         $('#kode_kegiatan').val(formData.kode_kegiatan || '');
-    //         $('#nama_kegiatan').val(formData.nama_kegiatan || '');
-    //         $('#nama_desa').val(formData.nama_desa || '');
-    //         $('#lokasi').val(formData.lokasi || '');
-    //         $('#lat').val(formData.lat || '');
-    //         $('#longitude').val(formData.longitude || '');
-    //         $('#tanggalmulai').val(formData.tanggalmulai || '');
-    //         $('#tanggalselesai').val(formData.tanggalselesai || '');
-    //         $('#nama_mitra').val(formData.nama_mitra || '');
-    //         $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
-    //         // $('#deskripsi_kegiatan').summernote('code', formData.deskripsi_kegiatan || '');
-
-    //         $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
-    //         $('#yang_terlibat').val(formData.yang_terlibat || '');
-    //         $('#pelatih_asal').val(formData.pelatih_asal || '');
-    //         $('#kegiatan').val(formData.kegiatan || '');
-    //         $('#informasi_lain').val(formData.informasi_lain || '');
-    //         $('#luas_lahan').val(formData.luas_lahan || '');
-    //         $('#barang').val(formData.barang || '');
-    //         $('#satuan').val(formData.satuan || '');
-    //         $('#others').val(formData.others || '');
-
-    //         // Populate Summernote fields
-    //         $('.summernote').each(function () {
-    //             const id = $(this).attr('id');
-    //             if (!id) {
-    //                 console.error('Found Summernote element with undefined id:', this);
-    //                 return; // Skip this element
-    //             }
-    //             const value = formData[id] || '';
-    //             $(this).summernote('code', value); // Set the content
-    //             // console.log(`Setting content for ${id}: ${value}`);
-    //         });
-
-
-
-    //         // Populate and initialize select2 fields with fetched data from API
-    //         $('.select2').each(function () {
-    //             var fieldId = $(this).attr('id');
-    //             var value = formData[fieldId];
-    //             if (value) {
-    //                 var select2Field = $(this);
-    //                 var apiUrl = $(this).data('api-url');
-    //                 $.ajax({
-    //                     url: apiUrl,
-    //                     method: 'GET',
-    //                     data: { id: value },
-    //                     success: function (data) {
-    //                         var item = data.data.find(item => item.id == value);
-    //                         if (item) {
-    //                             var newOption = new Option(item.nama, item.id, false, true);
-    //                             select2Field.append(newOption).trigger('change');
-    //                         }
-    //                     },
-    //                     error: function (error) {
-    //                         console.error('Error fetching data:', error);
-    //                     }
-    //                 });
-    //             }
-    //             initializeSelect2WithDynamicUrl(fieldId);
-    //         });
-    //     } else {
-    //         // Initialize select2 fields even if there's no data in localStorage
-    //         $('.select2').each(function () {
-    //             var fieldId = $(this).attr('id');
-    //             initializeSelect2WithDynamicUrl(fieldId);
-    //         });
-    //     }
-    // }
     function loadFormDataFromStorage() {
         var storedData = localStorage.getItem('kegiatanFormData');
         if (storedData) {
@@ -731,39 +620,61 @@
 <script>
     $(document).ready(function() {
         function calculateTotals() {
-        // Calculate row totals and update respective fields
-        $('tr').each(function() {
-            let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
-            let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-            let total = pria + wanita;
-            $(this).find('input[id$="total"]').val(total);
-        });
+            // Calculate row totals and update respective fields
+            $('tr').each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
 
-        // Calculate overall totals
-        let totalPerempuan = 0;
-        let totalLakilaki = 0;
-        let totalAll = 0;
+            // Calculate overall totals
+            let totalPerempuan = 0;
+            let totalLakilaki = 0;
+            let totalAll = 0;
 
-        totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
-        totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
-        totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
-        totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
 
-        totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
-        totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
-        totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
-        totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
 
-        totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
-        totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
-        totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
-        totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
 
-        // Update overall total fields
-        $('#penerimamanfaatperempuantotal').val(totalPerempuan);
-        $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
-        $('#penerimamanfaattotal').val(totalAll);
-    }
+            // Update overall total fields
+            $('#penerimamanfaatperempuantotal').val(totalPerempuan);
+            $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaattotal').val(totalAll);
+
+            let totalBeneficiariesPerempuan = 0;
+            let totalBeneficiariesLakilaki = 0;
+            let totalBeneficiariesTotal = 0;
+
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+
+            // Update overall total fields
+            $('#total_beneficiaries_perempuan').val(totalBeneficiariesPerempuan);
+            $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
+            $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
+
+        }
 
 
         // Trigger calculateTotals on input change
@@ -771,13 +682,15 @@
             calculateTotals();
         });
 
+        $('.hitung').on('input', function() {
+            calculateTotals();
+        });
+
         // Initial calculation
         calculateTotals();
-    // });
-    // $(document).ready(function() {
+
         var table = $('#peserta_kegiatan_summary').DataTable({
             width: '100%',
-            columns: [{ width: '40%', targets: 0 }, { width: '20%', targets: 1 }, { width: '20%', targets: 2 }, { width: '20%', targets: 3 }],
             layout: {
                 topStart: null,
                 bottom: null,
@@ -798,6 +711,7 @@
                 { width: '20%', targets: 3 }
             ]
         });
+        // alert modal for data peserta
         $('#submit_peserta').on('click', function(e) {
             e.preventDefault();
             var data = table.$('input, select').serialize();
