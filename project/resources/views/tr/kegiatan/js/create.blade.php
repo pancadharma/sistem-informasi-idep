@@ -71,6 +71,7 @@
                     width: '100%',
                     toolbar: [
                         ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['table', ['table']],
                         ['color', ['color']],
                         ['paragraph', ['paragraph']],
                         ['view', ['fullscreen', 'codeview']],
