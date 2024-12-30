@@ -731,42 +731,40 @@
 <script>
     $(document).ready(function() {
         function calculateTotals() {
-            // Calculate row totals and update respective fields
-            $('tr').each(function() {
-                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
-                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-                let total = pria + wanita;
-                $(this).find('input[id$="total"]').val(total);
-            });
+        // Calculate row totals and update respective fields
+        $('tr').each(function() {
+            let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+            let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+            let total = pria + wanita;
+            $(this).find('input[id$="total"]').val(total);
+        });
 
-            // Calculate overall totals
-            let totalPerempuan = 0;
-            let totalLakilaki = 0;
-            let totalAll = 0;
+        // Calculate overall totals
+        let totalPerempuan = 0;
+        let totalLakilaki = 0;
+        let totalAll = 0;
 
-            totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
-            totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
-            totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
-            totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
+        totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
+        totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
+        totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
+        totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
 
-            totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
-            totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
-            totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
-            totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
+        totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
+        totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
+        totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
+        totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
 
-            totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
-            totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
-            totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
-            totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
+        totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
+        totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
+        totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+        totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
 
-            // Update overall total fields
-            // $('#penerimamanfaatperempuantotal').text(totalPerempuan);
-            // $('#penerimamanfaatlakilakitotal').text(totalLakilaki);
-            // $('#penerimamanfaattotal').text(totalAll);
-            $('#penerimamanfaatperempuantotal').val(totalPerempuan);
-            $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
-            $('#penerimamanfaattotal').val(totalAll);
-        }
+        // Update overall total fields
+        $('#penerimamanfaatperempuantotal').val(totalPerempuan);
+        $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+        $('#penerimamanfaattotal').val(totalAll);
+    }
+
 
         // Trigger calculateTotals on input change
         $('.calculate').on('input', function() {
@@ -868,10 +866,10 @@
                 <td>${parsedData.anak.total}</td>
                 </tr>
                 <tr>
-                    <th>Total</th>
-                    <th>${parsedData.total.perempuan}</th>
-                    <th>${parsedData.total.laki}</th>
-                    <th>${parsedData.total.total}</th>
+                <th>Total</th>
+                <th>${parsedData.total.perempuan}</th>
+                <th>${parsedData.total.laki}</th>
+                <th>${parsedData.total.total}</th>
                 </tr>
             </table>
             `;
