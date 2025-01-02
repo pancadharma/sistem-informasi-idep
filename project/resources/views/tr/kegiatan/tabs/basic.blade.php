@@ -179,16 +179,17 @@
 <script>
 $(document).ready(function() {
     var map, markers = [], currentKecamatan = '', currentKabupaten = '';
+    var bataskec = null;  // **[HIGHLIGHT]** Declare bataskec here, outside initMap
 
     function initMap() {
         map = L.map('map').setView([-8.38054848, 115.16239243], 9);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            attribution: '&copy; <a href="/">RGBDev</a>'
+            attribution: '© <a href="/">RGBDev</a>'
         }).addTo(map);
 
         // Initialize GeoJSON layer with proper styling and interactions
-        var bataskec = L.geoJson(null, {
+        bataskec = L.geoJson(null, { // **[HIGHLIGHT]** Assign the value to the bataskec variable declared outside
             style: function(feature) {
                 return {
                     fillColor: "white",
@@ -231,6 +232,7 @@ $(document).ready(function() {
         $.getJSON("/data/batas_kecamatan1.geojson", function(data) {
             bataskec.addData(data);
             map.addLayer(bataskec);
+            updateAllMarkers(); // **[HIGHLIGHT]** Call updateAllMarkers after the data is loaded
         });
 
         // Map click handler
@@ -292,17 +294,20 @@ $(document).ready(function() {
                 var lat = parseFloat($(this).find('input[name="lat[]"]').val());
                 var long = parseFloat($(this).find('input[name="long[]"]').val());
 
-                // Find kecamatan and kabupaten for these coordinates
-                var foundLocation = false;
-                bataskec.eachLayer(function(layer) {
-                    if (!foundLocation && layer.getBounds().contains([lat, long])) {
-                        currentKecamatan = layer.feature.properties.KECAMATAN;
-                        currentKabupaten = layer.feature.properties.KABUPATEN;
-                        foundLocation = true;
-                    }
-                });
+                // Check if lat and long are valid numbers before proceeding
+                if (!isNaN(lat) && !isNaN(long)) {
+                    // Find kecamatan and kabupaten for these coordinates
+                    var foundLocation = false;
+                    bataskec.eachLayer(function(layer) {
+                        if (!foundLocation && layer.getBounds().contains([lat, long])) {
+                            currentKecamatan = layer.feature.properties.KECAMATAN;
+                            currentKabupaten = layer.feature.properties.KABUPATEN;
+                            foundLocation = true;
+                        }
+                    });
 
-                marker.setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
+                    marker.setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
+                }
             }
         });
     }
@@ -375,7 +380,6 @@ $(document).ready(function() {
     });
 
 });
-
 </script>
 
 <!-- javascript to push javascript to stack('basic_tab_js') -->
