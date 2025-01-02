@@ -168,7 +168,7 @@
 @push('css')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <style>
-    #map { height: 280px; }
+    #map { height: 500px; }
 </style>
 @endpush
 @push('basic_tab_js')
@@ -268,7 +268,7 @@ $(document).ready(function() {
         markers[index] = marker;
 
         marker.bindPopup(generatePopupContent(index, currentKecamatan, currentKabupaten)).openPopup();
-        map.setView([lat, long], 12);
+        map.setView([lat, long], 14);
     }
 
     function generatePopupContent(index, kecamatan, kabupaten) {
