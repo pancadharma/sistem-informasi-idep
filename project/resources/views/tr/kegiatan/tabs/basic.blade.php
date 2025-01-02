@@ -518,7 +518,7 @@ $(document).ready(function() {
     });
 </script>
 
-<!-- JS for drop down jenis kegiatan -->
+{{-- <!-- JS for drop down jenis kegiatan -->
 <script>
     $(document).ready(function() {
         $('#jenis_kegiatan').select2({
@@ -555,6 +555,6 @@ $(document).ready(function() {
             placeholder: '{{ __('global.pleaseSelect' ).' '.__('cruds.kegiatan.basic.status_kegiatan') }}',
         });
     });
-</script>
+</script> --}}
 
 @endpush
