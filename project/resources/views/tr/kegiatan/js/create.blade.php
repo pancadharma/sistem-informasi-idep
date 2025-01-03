@@ -804,7 +804,10 @@
 
 <!-- JS for drop down jenis kegiatan -->
 <script>
+
     $(document).ready(function() {
+
+
         $('#jenis_kegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.jenis_kegiatan') }}',
             ajax: {
@@ -832,6 +835,46 @@
             }
         });
 
+        // function updateToggleDisplay(toggleInput) {
+            //     var isChecked = toggleInput.is(':checked');
+            //     var displayTarget = toggleInput.data('display');
+            //     $(displayTarget).text(isChecked ? 'Yes' : 'No');
+            // }
+            // // Initial update when the page loads
+            // $('.toggle-input').each(function() {
+        //     updateToggleDisplay($(this));
+        // });
+
+        // // Update on toggle input change
+        // $('.toggle-input').on('change', function() {
+            //     updateToggleDisplay($(this));
+            // });
+
+        // Function to update "Yes/No" display for a given toggle input
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        function updateToggleDisplay(toggleInput) {
+            var isChecked = toggleInput.is(':checked');
+            var displayTarget = toggleInput.data('display');
+            $(`#${displayTarget}`).text(isChecked ? 'Yes' : 'No'); // added # selector
+            // set the input value to 1 or 0
+            // set the input value to yes or no
+            toggleInput.val(isChecked ? 'yes' : 'no');
+            // toggleInput.val(isChecked ? 1 : 0);
+        }
+        // Initial update when the page loads
+        $('.toggle-input').each(function() {
+        updateToggleDisplay($(this));
+        });
+        // Update on toggle input change
+        $('.toggle-input').on('change', function() {
+            updateToggleDisplay($(this));
+        });
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
         $('#fase_pelaporan').select2({
             placeholder: '{{ __('global.pleaseSelect') }}',
         });
@@ -852,7 +895,6 @@
             "9": "kunjungan",
             "10": "konsultasi",
             "11": "lainnya",
-
         };
             const formContainer = $('#dynamic-form-container');
 
@@ -877,18 +919,18 @@
                 let formFields = '';
                 const fields = {
                     assessment: [
-                        { label: 'Yang Terlibat', name: 'assessmentyangterlibat', type: 'textarea' },
-                        { label: 'Temuan', name: 'assessmenttemuan', type: 'textarea' },
-                        { label: 'Tambahan', name: 'assessmenttambahan', type: 'checkbox' },
-                        { label: 'Tambahan (Keterangan)', name: 'assessmenttambahan_ket', type: 'textarea' },
-                        { label: 'Kendala', name: 'assessmentkendala', type: 'textarea' },
-                        { label: 'Isu', name: 'assessmentisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'assessmentpembelajaran', type: 'textarea' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}', name: 'assessmentyangterlibat', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}', name: 'assessmenttemuan', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}', name: 'assessmenttambahan', type: 'radio', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}', name: 'assessmenttambahan_ket', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}', name: 'assessmentkendala', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}', name: 'assessmentisu', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}' },
+                        { label: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}', name: 'assessmentpembelajaran', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}' },
                     ],
                     sosialisasi: [
                         { label: 'Yang Terlibat', name: 'sosialisasiyangterlibat', type: 'textarea' },
                         { label: 'Temuan', name: 'sosialisasitemuan', type: 'textarea' },
-                        { label: 'Tambahan', name: 'sosialisasitambahan', type: 'checkbox' },
+                        { label: 'Tambahan', name: 'sosialisasitambahan', type: 'radio' },
                         { label: 'Tambahan (Keterangan)', name: 'sosialisasitambahan_ket', type: 'textarea' },
                         { label: 'Kendala', name: 'sosialisasikendala', type: 'textarea' },
                         { label: 'Isu', name: 'sosialisasiisu', type: 'textarea' },
@@ -897,10 +939,10 @@
                     pelatihan: [
                         { label: 'Pelatih', name: 'pelatihanpelatih', type: 'textarea' },
                         { label: 'Hasil', name: 'pelatihanhasil', type: 'textarea' },
-                        { label: 'Distribusi', name: 'pelatihandistribusi', type: 'checkbox' },
+                        { label: 'Distribusi', name: 'pelatihandistribusi', type: 'radio' },
                         { label: 'Distribusi (Keterangan)', name: 'pelatihandistribusi_ket', type: 'textarea' },
                         { label: 'Rencana', name: 'pelatihanrencana', type: 'textarea' },
-                        { label: 'Unggahan', name: 'pelatihanunggahan', type: 'checkbox' },
+                        { label: 'Unggahan', name: 'pelatihanunggahan', type: 'radio' },
                         { label: 'Isu', name: 'pelatihanisu', type: 'textarea' },
                         { label: 'Pembelajaran', name: 'pelatihanpembelajaran', type: 'textarea' },
                     ],
@@ -910,8 +952,8 @@
                         { label: 'Selesai', name: 'pembelanjaanselesai', type: 'datetime-local' },
                         { label: 'Distribusi Mulai', name: 'pembelanjaandistribusimulai', type: 'datetime-local' },
                         { label: 'Distribusi Selesai', name: 'pembelanjaandistribusiselesai', type: 'datetime-local' },
-                        { label: 'Terdistribusi', name: 'pembelanjaanterdistribusi', type: 'checkbox' },
-                        { label: 'Akan Distribusi', name: 'pembelanjaanakandistribusi', type: 'checkbox' },
+                        { label: 'Terdistribusi', name: 'pembelanjaanterdistribusi', type: 'radio' },
+                        { label: 'Akan Distribusi', name: 'pembelanjaanakandistribusi', type: 'radio' },
                         { label: 'Akan Distribusi (Keterangan)', name: 'pembelanjaanakandistribusi_ket', type: 'textarea' },
                         { label: 'Kendala', name: 'pembelanjaankendala', type: 'textarea' },
                         { label: 'Isu', name: 'pembelanjaanisu', type: 'textarea' },
@@ -954,7 +996,7 @@
                         { label: 'Yang Terlibat', name: 'monitoringyangterlibat', type: 'textarea' },
                         { label: 'Metode', name: 'monitoringmetode', type: 'textarea' },
                         { label: 'Hasil', name: 'monitoringhasil', type: 'textarea' },
-                        { label: 'Kegiatan Selanjutnya', name: 'monitoringkegiatanselanjutnya', type: 'checkbox' },
+                        { label: 'Kegiatan Selanjutnya', name: 'monitoringkegiatanselanjutnya', type: 'radio' },
                         { label: 'Kegiatan Selanjutnya (Keterangan)', name: 'monitoringkegiatanselanjutnya_ket', type: 'textarea' },
                         { label: 'Kendala', name: 'monitoringkendala', type: 'textarea' },
                         { label: 'Isu', name: 'monitoringisu', type: 'textarea' },
@@ -997,13 +1039,31 @@
                 };
                 if (fields[fieldPrefix]) {
                     fields[fieldPrefix].forEach(field => {
-                    const fieldId = `${fieldPrefix}-${field.name}`;
+                        const fieldId = `${fieldPrefix}-${field.name}`;
+                        // if (field.type === 'checkbox') {
+                        // formFields += `
+                        //         <div class="form-group row">
+                        //             <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+                        //             <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                        //                 <div class="custom-control custom-switch">
+                        //                     <input type="checkbox" class="custom-control-input toggle-input" data-display="#"${fieldId}-display"" name="${field.name}" id="${fieldId}">
+                        //                     <label class="custom-control-label" for="${fieldId}"></label>
+                        //                     <span id="${fieldId}-display">No</span>
+                        //                 </div>
+                        //             </div>
+                        //         </div>
+                        //     `;
+                        // }
                         if (field.type === 'checkbox') {
-                        formFields += `
+                            formFields += `
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
                                     <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                                        <input type="checkbox" class="form-control" name="${field.name}" id="${fieldId}">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input toggle-input" data-display="${fieldId}-display" name="${field.name}" id="${fieldId}">
+                                            <label class="custom-control-label" for="${fieldId}"></label>
+                                            <span id="${fieldId}-display">No</span>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -1015,6 +1075,23 @@
                                     <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                                         <textarea name="${field.name}" id="${fieldId}" class="form-control summernote" rows="2"
                                         placeholder="${field.label}"></textarea>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        else if (field.type === 'radio') {
+                            formFields += `
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1">${field.label}</label>
+                                    <div class="col-sm col-md col-lg order-2 order-md-2">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="${fieldId}-yes" name="${field.name}" value="yes" class="custom-control-input custom-control-input-success">
+                                            <label class="custom-control-label" for="${fieldId}-yes">Yes</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="${fieldId}-no" name="${field.name}" value="no" class="custom-control-input custom-control-input-danger">
+                                            <label class="custom-control-label" for="${fieldId}-no">No</label>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -1032,9 +1109,11 @@
 
                     });
                 }
-
+                setTimeout(() => {
+                    $('.summernote').summernote();
+                }, 0);
                 return formFields;
-            }
+        }
     });
 
 </script>

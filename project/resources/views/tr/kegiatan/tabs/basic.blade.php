@@ -108,8 +108,8 @@
 
 <div class="form-group row">
     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label for="nama_desa" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.desa') }}</label>
-        <select name="nama_desa" id="nama_desa" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
+        <label for="desa_id" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.desa') }}</label>
+        <select name="desa_id" id="desa_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
         </select>
     </div>
 </div>
