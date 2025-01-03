@@ -108,8 +108,8 @@
 
 <div class="form-group row">
     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label for="nama_desa" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.desa') }}</label>
-        <select name="nama_desa" id="nama_desa" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
+        <label for="desa_id" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.desa') }}</label>
+        <select name="desa_id" id="desa_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.desa') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.desa') }}">
         </select>
     </div>
 </div>
@@ -168,7 +168,7 @@
 @push('css')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <style>
-    #map { height: 280px; }
+    #map { height: 500px; }
 </style>
 @endpush
 @push('basic_tab_js')
@@ -179,16 +179,17 @@
 <script>
 $(document).ready(function() {
     var map, markers = [], currentKecamatan = '', currentKabupaten = '';
+    var bataskec = null;  // **[HIGHLIGHT]** Declare bataskec here, outside initMap
 
     function initMap() {
         map = L.map('map').setView([-8.38054848, 115.16239243], 9);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            attribution: '&copy; <a href="/">RGBDev</a>'
+            attribution: '© <a href="/">RGBDev</a>'
         }).addTo(map);
 
         // Initialize GeoJSON layer with proper styling and interactions
-        var bataskec = L.geoJson(null, {
+        bataskec = L.geoJson(null, { // **[HIGHLIGHT]** Assign the value to the bataskec variable declared outside
             style: function(feature) {
                 return {
                     fillColor: "white",
@@ -231,6 +232,7 @@ $(document).ready(function() {
         $.getJSON("/data/batas_kecamatan1.geojson", function(data) {
             bataskec.addData(data);
             map.addLayer(bataskec);
+            updateAllMarkers(); // **[HIGHLIGHT]** Call updateAllMarkers after the data is loaded
         });
 
         // Map click handler
@@ -266,7 +268,7 @@ $(document).ready(function() {
         markers[index] = marker;
 
         marker.bindPopup(generatePopupContent(index, currentKecamatan, currentKabupaten)).openPopup();
-        map.setView([lat, long], 12);
+        map.setView([lat, long], 14);
     }
 
     function generatePopupContent(index, kecamatan, kabupaten) {
@@ -292,17 +294,20 @@ $(document).ready(function() {
                 var lat = parseFloat($(this).find('input[name="lat[]"]').val());
                 var long = parseFloat($(this).find('input[name="long[]"]').val());
 
-                // Find kecamatan and kabupaten for these coordinates
-                var foundLocation = false;
-                bataskec.eachLayer(function(layer) {
-                    if (!foundLocation && layer.getBounds().contains([lat, long])) {
-                        currentKecamatan = layer.feature.properties.KECAMATAN;
-                        currentKabupaten = layer.feature.properties.KABUPATEN;
-                        foundLocation = true;
-                    }
-                });
+                // Check if lat and long are valid numbers before proceeding
+                if (!isNaN(lat) && !isNaN(long)) {
+                    // Find kecamatan and kabupaten for these coordinates
+                    var foundLocation = false;
+                    bataskec.eachLayer(function(layer) {
+                        if (!foundLocation && layer.getBounds().contains([lat, long])) {
+                            currentKecamatan = layer.feature.properties.KECAMATAN;
+                            currentKabupaten = layer.feature.properties.KABUPATEN;
+                            foundLocation = true;
+                        }
+                    });
 
-                marker.setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
+                    marker.setPopupContent(generatePopupContent(index, currentKecamatan, currentKabupaten));
+                }
             }
         });
     }
@@ -375,7 +380,6 @@ $(document).ready(function() {
     });
 
 });
-
 </script>
 
 <!-- javascript to push javascript to stack('basic_tab_js') -->
@@ -514,7 +518,7 @@ $(document).ready(function() {
     });
 </script>
 
-<!-- JS for drop down jenis kegiatan -->
+{{-- <!-- JS for drop down jenis kegiatan -->
 <script>
     $(document).ready(function() {
         $('#jenis_kegiatan').select2({
@@ -551,6 +555,6 @@ $(document).ready(function() {
             placeholder: '{{ __('global.pleaseSelect' ).' '.__('cruds.kegiatan.basic.status_kegiatan') }}',
         });
     });
-</script>
+</script> --}}
 
 @endpush
