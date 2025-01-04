@@ -550,18 +550,18 @@
         // Existing formatDate and parseFormattedDate functions remain the same
         function parseFormattedDate(formattedDate) {
             const months = {
-                'Januari': '01'
-                , 'Februari': '02'
-                , 'Maret': '03'
-                , 'April': '04'
-                , 'Mei': '05'
-                , 'Juni': '06'
-                , 'Juli': '07'
-                , 'Agustus': '08'
-                , 'September': '09'
-                , 'Oktober': '10'
-                , 'November': '11'
-                , 'Desember': '12'
+                'Januari': '01',
+                'Februari': '02',
+                'Maret': '03',
+                'April': '04',
+                'Mei': '05',
+                'Juni': '06',
+                'Juli': '07',
+                'Agustus': '08',
+                'September': '09',
+                'Oktober': '10',
+                'November': '11',
+                'Desember': '12',
             };
 
             const parts = formattedDate.split(' ');
@@ -574,8 +574,7 @@
 
         function formatDate(dateString) {
             const months = [
-                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'
-                , 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
             ];
 
             const date = new Date(dateString);
@@ -1105,8 +1104,13 @@
                 });
             }
             setTimeout(() => {
-                $('.summernote').summernote();
-            }, 0);
+                $('.summernote').summernote({
+                    height: 500,
+                    width: '100%',
+                    inheritPlaceholder: true,
+                    codeviewFilter: false,
+                });
+            }, 250);
             return formFields;
         }
     });
