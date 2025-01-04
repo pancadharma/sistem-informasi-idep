@@ -242,4 +242,7 @@ Route::middleware(['auth'])->group(function () {
     // Route Untuk Kegiatan
     Route::resource('kegiatan', KegiatanController::class);
     Route::get('kegiatan/api/list', [KegiatanController::class, 'list_kegiatan'])->name('api.kegiatan.list');
+
+    //bentuk or sektor kegiatan
+    Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
 });

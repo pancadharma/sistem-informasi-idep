@@ -235,8 +235,7 @@
             }
 
             // Populate and initialize select2 fields with fetched data from API
-            // $('.select2').each(function () {
-            $('.select2').not('#jenis_kegiatan').each(function () {
+            $('.select2').not('#jenis_kegiatan, #sektor_kegiatan').each(function () {
                 var fieldId = $(this).attr('id');
                 var values = formData[fieldId];
                 var select2Field = $(this);
@@ -804,10 +803,7 @@
 
 <!-- JS for drop down jenis kegiatan -->
 <script>
-
     $(document).ready(function() {
-
-
         $('#jenis_kegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.jenis_kegiatan') }}',
             ajax: {
@@ -835,20 +831,32 @@
             }
         });
 
-        // function updateToggleDisplay(toggleInput) {
-            //     var isChecked = toggleInput.is(':checked');
-            //     var displayTarget = toggleInput.data('display');
-            //     $(displayTarget).text(isChecked ? 'Yes' : 'No');
-            // }
-            // // Initial update when the page loads
-            // $('.toggle-input').each(function() {
-        //     updateToggleDisplay($(this));
-        // });
-
-        // // Update on toggle input change
-        // $('.toggle-input').on('change', function() {
-            //     updateToggleDisplay($(this));
-            // });
+        $('#sektor_kegiatan').select2({
+            placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.sektor_kegiatan') }}',
+            ajax: {
+                url: '{{ route('api.kegiatan.sektor_kegiatan') }}',
+                dataType: 'json',
+                processResults: function (data) {
+                    var results = [];
+                    $.each(data, function(group, options) {
+                        var optgroup = {
+                            text: group,
+                            children: []
+                        };
+                        $.each(options, function(id, text) {
+                            optgroup.children.push({
+                                id: id,
+                                text: text
+                            });
+                        });
+                        results.push(optgroup);
+                    });
+                    return {
+                        results: results
+                    };
+                }
+            }
+        });
 
         // Function to update "Yes/No" display for a given toggle input
         ////////////////////////////////////////////////////////////////////////////////////
@@ -899,220 +907,207 @@
             const formContainer = $('#dynamic-form-container');
 
             // Event handler for jenis_kegiatan dropdown change
-            $('#jenis_kegiatan').on('change', function() {
-                const selectedValue = $(this).val();
-                const fieldPrefix = formFieldMap[selectedValue];
+        $('#jenis_kegiatan').on('change', function() {
+            const selectedValue = $(this).val();
+            const fieldPrefix = formFieldMap[selectedValue];
 
-                // Clear any existing form fields
-                formContainer.empty();
+            // Clear any existing form fields
+            formContainer.empty();
 
-                if (fieldPrefix) {
-                    // Generate form fields based on selected value
-                     const formFields = getFormFields(fieldPrefix);
+            if (fieldPrefix) {
+                // Generate form fields based on selected value
+                    const formFields = getFormFields(fieldPrefix);
 
-                    // Append the form fields to the container
-                     formContainer.append(formFields);
-                  }
-            });
-
-            function getFormFields(fieldPrefix) {
-                let formFields = '';
-                const fields = {
-                    assessment: [
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}', name: 'assessmentyangterlibat', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}', name: 'assessmenttemuan', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}', name: 'assessmenttambahan', type: 'radio', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}', name: 'assessmenttambahan_ket', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}', name: 'assessmentkendala', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}', name: 'assessmentisu', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}' },
-                        { label: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}', name: 'assessmentpembelajaran', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}' },
-                    ],
-                    sosialisasi: [
-                        { label: 'Yang Terlibat', name: 'sosialisasiyangterlibat', type: 'textarea' },
-                        { label: 'Temuan', name: 'sosialisasitemuan', type: 'textarea' },
-                        { label: 'Tambahan', name: 'sosialisasitambahan', type: 'radio' },
-                        { label: 'Tambahan (Keterangan)', name: 'sosialisasitambahan_ket', type: 'textarea' },
-                        { label: 'Kendala', name: 'sosialisasikendala', type: 'textarea' },
-                        { label: 'Isu', name: 'sosialisasiisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'sosialisasipembelajaran', type: 'textarea' },
-                    ],
-                    pelatihan: [
-                        { label: 'Pelatih', name: 'pelatihanpelatih', type: 'textarea' },
-                        { label: 'Hasil', name: 'pelatihanhasil', type: 'textarea' },
-                        { label: 'Distribusi', name: 'pelatihandistribusi', type: 'radio' },
-                        { label: 'Distribusi (Keterangan)', name: 'pelatihandistribusi_ket', type: 'textarea' },
-                        { label: 'Rencana', name: 'pelatihanrencana', type: 'textarea' },
-                        { label: 'Unggahan', name: 'pelatihanunggahan', type: 'radio' },
-                        { label: 'Isu', name: 'pelatihanisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'pelatihanpembelajaran', type: 'textarea' },
-                    ],
-                    pembelanjaan: [
-                        { label: 'Detail Barang', name: 'pembelanjaandetailbarang', type: 'textarea' },
-                        { label: 'Mulai', name: 'pembelanjaanmulai', type: 'datetime-local' },
-                        { label: 'Selesai', name: 'pembelanjaanselesai', type: 'datetime-local' },
-                        { label: 'Distribusi Mulai', name: 'pembelanjaandistribusimulai', type: 'datetime-local' },
-                        { label: 'Distribusi Selesai', name: 'pembelanjaandistribusiselesai', type: 'datetime-local' },
-                        { label: 'Terdistribusi', name: 'pembelanjaanterdistribusi', type: 'radio' },
-                        { label: 'Akan Distribusi', name: 'pembelanjaanakandistribusi', type: 'radio' },
-                        { label: 'Akan Distribusi (Keterangan)', name: 'pembelanjaanakandistribusi_ket', type: 'textarea' },
-                        { label: 'Kendala', name: 'pembelanjaankendala', type: 'textarea' },
-                        { label: 'Isu', name: 'pembelanjaanisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'pembelanjaanpembelajaran', type: 'textarea' },
-                    ],
-                    pengembangan: [
-                        { label: 'Jenis Komponen', name: 'pengembanganjeniskomponen', type: 'textarea' },
-                        { label: 'Berapa Komponen', name: 'pengembanganberapakomponen', type: 'textarea' },
-                        { label: 'Lokasi Komponen', name: 'pengembanganlokasikomponen', type: 'textarea' },
-                        { label: 'Yang Terlibat', name: 'pengembanganyangterlibat', type: 'textarea' },
-                        { label: 'Rencana', name: 'pengembanganrencana', type: 'textarea' },
-                        { label: 'Kendala', name: 'pengembangankendala', type: 'textarea' },
-                        { label: 'Isu', name: 'pengembanganisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'pengembanganpembelajaran', type: 'textarea' },
-                    ],
-                    kampanye: [
-                        { label: 'Yang Dikampanyekan', name: 'kampanyeyangdikampanyekan', type: 'textarea' },
-                        { label: 'Jenis', name: 'kampanyejenis', type: 'textarea' },
-                        { label: 'Bentuk Kegiatan', name: 'kampanyebentukkegiatan', type: 'textarea' },
-                        { label: 'Yang Terlibat', name: 'kampanyeyangterlibat', type: 'textarea' },
-                        { label: 'Yang Disasar', name: 'kampanyeyangdisasar', type: 'textarea' },
-                        { label: 'Jangkauan', name: 'kampanyejangkauan', type: 'textarea' },
-                        { label: 'Rencana', name: 'kampanyerencana', type: 'textarea' },
-                        { label: 'Kendala', name: 'kampanyekendala', type: 'textarea' },
-                        { label: 'Isu', name: 'kampanyeisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'kampanyepembelajaran', type: 'textarea' },
-                    ],
-                    pemetaan: [
-                        { label: 'Yang Dihasilkan', name: 'pemetaanyangdihasilkan', type: 'textarea' },
-                        { label: 'Luasan', name: 'pemetaanluasan', type: 'textarea' },
-                        { label: 'Unit', name: 'pemetaanunit', type: 'textarea' },
-                        { label: 'Yang Terlibat', name: 'pemetaanyangterlibat', type: 'textarea' },
-                        { label: 'Rencana', name: 'pemetaanrencana', type: 'textarea' },
-                        { label: 'Isu', name: 'pemetaanisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'pemetaanpembelajaran', type: 'textarea' },
-                    ],
-                    monitoring: [
-                        { label: 'Yang Dipantau', name: 'monitoringyangdipantau', type: 'textarea' },
-                        { label: 'Data', name: 'monitoringdata', type: 'textarea' },
-                        { label: 'Yang Terlibat', name: 'monitoringyangterlibat', type: 'textarea' },
-                        { label: 'Metode', name: 'monitoringmetode', type: 'textarea' },
-                        { label: 'Hasil', name: 'monitoringhasil', type: 'textarea' },
-                        { label: 'Kegiatan Selanjutnya', name: 'monitoringkegiatanselanjutnya', type: 'radio' },
-                        { label: 'Kegiatan Selanjutnya (Keterangan)', name: 'monitoringkegiatanselanjutnya_ket', type: 'textarea' },
-                        { label: 'Kendala', name: 'monitoringkendala', type: 'textarea' },
-                        { label: 'Isu', name: 'monitoringisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'monitoringpembelajaran', type: 'textarea' },
-                    ],
-                    kunjungan: [
-                        { label: 'Lembaga', name: 'kunjunganlembaga', type: 'textarea' },
-                        { label: 'Peserta', name: 'kunjunganpeserta', type: 'textarea' },
-                        { label: 'Yang Dilakukan', name: 'kunjunganyangdilakukan', type: 'textarea' },
-                        { label: 'Hasil', name: 'kunjunganhasil', type: 'textarea' },
-                        { label: 'Potensi Pendapatan', name: 'kunjunganpotensipendapatan', type: 'textarea' },
-                        { label: 'Rencana', name: 'kunjunganrencana', type: 'textarea' },
-                        { label: 'Kendala', name: 'kunjungankendala', type: 'textarea' },
-                        { label: 'Isu', name: 'kunjunganisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'kunjunganpembelajaran', type: 'textarea' },
-                    ],
-                    konsultasi: [
-                        { label: 'Lembaga', name: 'konsultasilembaga', type: 'textarea' },
-                        { label: 'Komponen', name: 'konsultasikomponen', type: 'textarea' },
-                        { label: 'Yang Dilakukan', name: 'konsultasiyangdilakukan', type: 'textarea' },
-                        { label: 'Hasil', name: 'konsultasihasil', type: 'textarea' },
-                        { label: 'Potensi Pendapatan', name: 'konsultasipotensipendapatan', type: 'textarea' },
-                        { label: 'Rencana', name: 'konsultasirencana', type: 'textarea' },
-                        { label: 'Kendala', name: 'konsultasikendala', type: 'textarea' },
-                        { label: 'Isu', name: 'konsultasiisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'konsultasipembelajaran', type: 'textarea' },
-                    ],
-                    lainnya: [
-                        { label: 'Mengapa Dilakukan', name: 'lainnyamengapadilakukan', type: 'textarea' },
-                        { label: 'Dampak', name: 'lainnyadampak', type: 'textarea' },
-                        { label: 'Sumber Pendanaan', name: 'lainnyasumberpendanaan', type: 'textarea' },
-                        { label: 'Sumber Pendanaan (Keterangan)', name: 'lainnyasumberpendanaan_ket', type: 'textarea' },
-                        { label: 'Yang Terlibat', name: 'lainnyayangterlibat', type: 'textarea' },
-                        { label: 'Rencana', name: 'lainnyarencana', type: 'textarea' },
-                        { label: 'Kendala', name: 'lainnyakendala', type: 'textarea' },
-                        { label: 'Isu', name: 'lainnyaisu', type: 'textarea' },
-                        { label: 'Pembelajaran', name: 'lainnyapembelajaran', type: 'textarea' },
-                    ],
-
-                };
-                if (fields[fieldPrefix]) {
-                    fields[fieldPrefix].forEach(field => {
-                        const fieldId = `${fieldPrefix}-${field.name}`;
-                        // if (field.type === 'checkbox') {
-                        // formFields += `
-                        //         <div class="form-group row">
-                        //             <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
-                        //             <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                        //                 <div class="custom-control custom-switch">
-                        //                     <input type="checkbox" class="custom-control-input toggle-input" data-display="#"${fieldId}-display"" name="${field.name}" id="${fieldId}">
-                        //                     <label class="custom-control-label" for="${fieldId}"></label>
-                        //                     <span id="${fieldId}-display">No</span>
-                        //                 </div>
-                        //             </div>
-                        //         </div>
-                        //     `;
-                        // }
-                        if (field.type === 'checkbox') {
-                            formFields += `
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
-                                    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input toggle-input" data-display="${fieldId}-display" name="${field.name}" id="${fieldId}">
-                                            <label class="custom-control-label" for="${fieldId}"></label>
-                                            <span id="${fieldId}-display">No</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        else if (field.type === 'textarea') {
-                            formFields += `
-                                <div class="form-group row">
-                                <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
-                                    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                                        <textarea name="${field.name}" id="${fieldId}" class="form-control summernote" rows="2"
-                                        placeholder="${field.label}"></textarea>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        else if (field.type === 'radio') {
-                            formFields += `
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1">${field.label}</label>
-                                    <div class="col-sm col-md col-lg order-2 order-md-2">
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="${fieldId}-yes" name="${field.name}" value="yes" class="custom-control-input custom-control-input-success">
-                                            <label class="custom-control-label" for="${fieldId}-yes">Yes</label>
-                                        </div>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio" id="${fieldId}-no" name="${field.name}" value="no" class="custom-control-input custom-control-input-danger">
-                                            <label class="custom-control-label" for="${fieldId}-no">No</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                        else {
-                            formFields += `
-                            <div class="form-group row">
-                                    <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
-                                    <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                                        <input type="${field.type}" class="form-control" name="${field.name}" id="${fieldId}">
-                                    </div>
-                                </div>
-                            `;
-                        }
-
-                    });
+                // Append the form fields to the container
+                    formContainer.append(formFields);
                 }
-                setTimeout(() => {
-                    $('.summernote').summernote();
-                }, 0);
-                return formFields;
+        });
+
+        function getFormFields(fieldPrefix) {
+            let formFields = '';
+            const fields = {
+                assessment: [
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}', name: 'assessmentyangterlibat', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}', name: 'assessmenttemuan', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}', name: 'assessmenttambahan', type: 'radio', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}', name: 'assessmenttambahan_ket', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}', name: 'assessmentkendala', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}', name: 'assessmentisu', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}' },
+                    { label: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}', name: 'assessmentpembelajaran', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}' },
+                ],
+                sosialisasi: [
+                    { label: 'Yang Terlibat', name: 'sosialisasiyangterlibat', type: 'textarea' },
+                    { label: 'Temuan', name: 'sosialisasitemuan', type: 'textarea' },
+                    { label: 'Tambahan', name: 'sosialisasitambahan', type: 'radio' },
+                    { label: 'Tambahan (Keterangan)', name: 'sosialisasitambahan_ket', type: 'textarea' },
+                    { label: 'Kendala', name: 'sosialisasikendala', type: 'textarea' },
+                    { label: 'Isu', name: 'sosialisasiisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'sosialisasipembelajaran', type: 'textarea' },
+                ],
+                pelatihan: [
+                    { label: 'Pelatih', name: 'pelatihanpelatih', type: 'textarea' },
+                    { label: 'Hasil', name: 'pelatihanhasil', type: 'textarea' },
+                    { label: 'Distribusi', name: 'pelatihandistribusi', type: 'radio' },
+                    { label: 'Distribusi (Keterangan)', name: 'pelatihandistribusi_ket', type: 'textarea' },
+                    { label: 'Rencana', name: 'pelatihanrencana', type: 'textarea' },
+                    { label: 'Unggahan', name: 'pelatihanunggahan', type: 'radio' },
+                    { label: 'Isu', name: 'pelatihanisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'pelatihanpembelajaran', type: 'textarea' },
+                ],
+                pembelanjaan: [
+                    { label: 'Detail Barang', name: 'pembelanjaandetailbarang', type: 'textarea' },
+                    { label: 'Mulai', name: 'pembelanjaanmulai', type: 'datetime-local' },
+                    { label: 'Selesai', name: 'pembelanjaanselesai', type: 'datetime-local' },
+                    { label: 'Distribusi Mulai', name: 'pembelanjaandistribusimulai', type: 'datetime-local' },
+                    { label: 'Distribusi Selesai', name: 'pembelanjaandistribusiselesai', type: 'datetime-local' },
+                    { label: 'Terdistribusi', name: 'pembelanjaanterdistribusi', type: 'radio' },
+                    { label: 'Akan Distribusi', name: 'pembelanjaanakandistribusi', type: 'radio' },
+                    { label: 'Akan Distribusi (Keterangan)', name: 'pembelanjaanakandistribusi_ket', type: 'textarea' },
+                    { label: 'Kendala', name: 'pembelanjaankendala', type: 'textarea' },
+                    { label: 'Isu', name: 'pembelanjaanisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'pembelanjaanpembelajaran', type: 'textarea' },
+                ],
+                pengembangan: [
+                    { label: 'Jenis Komponen', name: 'pengembanganjeniskomponen', type: 'textarea' },
+                    { label: 'Berapa Komponen', name: 'pengembanganberapakomponen', type: 'textarea' },
+                    { label: 'Lokasi Komponen', name: 'pengembanganlokasikomponen', type: 'textarea' },
+                    { label: 'Yang Terlibat', name: 'pengembanganyangterlibat', type: 'textarea' },
+                    { label: 'Rencana', name: 'pengembanganrencana', type: 'textarea' },
+                    { label: 'Kendala', name: 'pengembangankendala', type: 'textarea' },
+                    { label: 'Isu', name: 'pengembanganisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'pengembanganpembelajaran', type: 'textarea' },
+                ],
+                kampanye: [
+                    { label: 'Yang Dikampanyekan', name: 'kampanyeyangdikampanyekan', type: 'textarea' },
+                    { label: 'Jenis', name: 'kampanyejenis', type: 'textarea' },
+                    { label: 'Bentuk Kegiatan', name: 'kampanyebentukkegiatan', type: 'textarea' },
+                    { label: 'Yang Terlibat', name: 'kampanyeyangterlibat', type: 'textarea' },
+                    { label: 'Yang Disasar', name: 'kampanyeyangdisasar', type: 'textarea' },
+                    { label: 'Jangkauan', name: 'kampanyejangkauan', type: 'textarea' },
+                    { label: 'Rencana', name: 'kampanyerencana', type: 'textarea' },
+                    { label: 'Kendala', name: 'kampanyekendala', type: 'textarea' },
+                    { label: 'Isu', name: 'kampanyeisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'kampanyepembelajaran', type: 'textarea' },
+                ],
+                pemetaan: [
+                    { label: 'Yang Dihasilkan', name: 'pemetaanyangdihasilkan', type: 'textarea' },
+                    { label: 'Luasan', name: 'pemetaanluasan', type: 'textarea' },
+                    { label: 'Unit', name: 'pemetaanunit', type: 'textarea' },
+                    { label: 'Yang Terlibat', name: 'pemetaanyangterlibat', type: 'textarea' },
+                    { label: 'Rencana', name: 'pemetaanrencana', type: 'textarea' },
+                    { label: 'Isu', name: 'pemetaanisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'pemetaanpembelajaran', type: 'textarea' },
+                ],
+                monitoring: [
+                    { label: 'Yang Dipantau', name: 'monitoringyangdipantau', type: 'textarea' },
+                    { label: 'Data', name: 'monitoringdata', type: 'textarea' },
+                    { label: 'Yang Terlibat', name: 'monitoringyangterlibat', type: 'textarea' },
+                    { label: 'Metode', name: 'monitoringmetode', type: 'textarea' },
+                    { label: 'Hasil', name: 'monitoringhasil', type: 'textarea' },
+                    { label: 'Kegiatan Selanjutnya', name: 'monitoringkegiatanselanjutnya', type: 'radio' },
+                    { label: 'Kegiatan Selanjutnya (Keterangan)', name: 'monitoringkegiatanselanjutnya_ket', type: 'textarea' },
+                    { label: 'Kendala', name: 'monitoringkendala', type: 'textarea' },
+                    { label: 'Isu', name: 'monitoringisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'monitoringpembelajaran', type: 'textarea' },
+                ],
+                kunjungan: [
+                    { label: 'Lembaga', name: 'kunjunganlembaga', type: 'textarea' },
+                    { label: 'Peserta', name: 'kunjunganpeserta', type: 'textarea' },
+                    { label: 'Yang Dilakukan', name: 'kunjunganyangdilakukan', type: 'textarea' },
+                    { label: 'Hasil', name: 'kunjunganhasil', type: 'textarea' },
+                    { label: 'Potensi Pendapatan', name: 'kunjunganpotensipendapatan', type: 'textarea' },
+                    { label: 'Rencana', name: 'kunjunganrencana', type: 'textarea' },
+                    { label: 'Kendala', name: 'kunjungankendala', type: 'textarea' },
+                    { label: 'Isu', name: 'kunjunganisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'kunjunganpembelajaran', type: 'textarea' },
+                ],
+                konsultasi: [
+                    { label: 'Lembaga', name: 'konsultasilembaga', type: 'textarea' },
+                    { label: 'Komponen', name: 'konsultasikomponen', type: 'textarea' },
+                    { label: 'Yang Dilakukan', name: 'konsultasiyangdilakukan', type: 'textarea' },
+                    { label: 'Hasil', name: 'konsultasihasil', type: 'textarea' },
+                    { label: 'Potensi Pendapatan', name: 'konsultasipotensipendapatan', type: 'textarea' },
+                    { label: 'Rencana', name: 'konsultasirencana', type: 'textarea' },
+                    { label: 'Kendala', name: 'konsultasikendala', type: 'textarea' },
+                    { label: 'Isu', name: 'konsultasiisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'konsultasipembelajaran', type: 'textarea' },
+                ],
+                lainnya: [
+                    { label: 'Mengapa Dilakukan', name: 'lainnyamengapadilakukan', type: 'textarea' },
+                    { label: 'Dampak', name: 'lainnyadampak', type: 'textarea' },
+                    { label: 'Sumber Pendanaan', name: 'lainnyasumberpendanaan', type: 'textarea' },
+                    { label: 'Sumber Pendanaan (Keterangan)', name: 'lainnyasumberpendanaan_ket', type: 'textarea' },
+                    { label: 'Yang Terlibat', name: 'lainnyayangterlibat', type: 'textarea' },
+                    { label: 'Rencana', name: 'lainnyarencana', type: 'textarea' },
+                    { label: 'Kendala', name: 'lainnyakendala', type: 'textarea' },
+                    { label: 'Isu', name: 'lainnyaisu', type: 'textarea' },
+                    { label: 'Pembelajaran', name: 'lainnyapembelajaran', type: 'textarea' },
+                ],
+
+            };
+            if (fields[fieldPrefix]) {
+                fields[fieldPrefix].forEach(field => {
+                    const fieldId = `${fieldPrefix}-${field.name}`;
+                    if (field.type === 'checkbox') {
+                        formFields += `
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+
+                                <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input toggle-input" data-display="${fieldId}-display" name="${field.name}" id="${fieldId}">
+                                        <label class="custom-control-label" for="${fieldId}"></label>
+                                        <span id="${fieldId}-display">No</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    else if (field.type === 'textarea') {
+                        formFields += `
+                            <div class="form-group row">
+                            <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+                                <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                                    <textarea name="${field.name}" id="${fieldId}" class="form-control summernote" rows="2"
+                                    placeholder="${field.label}"></textarea>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    else if (field.type === 'radio') {
+                        formFields += `
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1">${field.label}</label>
+                                <div class="col-sm col-md col-lg order-2 order-md-2">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="${fieldId}-yes" name="${field.name}" value="yes" class="custom-control-input custom-control-input-success">
+                                        <label class="custom-control-label" for="${fieldId}-yes">Yes</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="${fieldId}-no" name="${field.name}" value="no" class="custom-control-input custom-control-input-danger">
+                                        <label class="custom-control-label" for="${fieldId}-no">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    else {
+                        formFields += `
+                        <div class="form-group row">
+                                <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+                                <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                                    <input type="${field.type}" class="form-control" name="${field.name}" id="${fieldId}">
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                });
+            }
+            setTimeout(() => {
+                $('.summernote').summernote();
+            }, 0);
+            return formFields;
         }
     });
 

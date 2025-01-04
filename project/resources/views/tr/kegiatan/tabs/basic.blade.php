@@ -52,12 +52,24 @@
         </div>
     </div>
 <!-- jenis kegiatan-->
+<!-- bentuk kegiatan-->
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="jenis_kegiatan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
         </label>
         <div class="select2-purple">
             <select class="form-control select2" name="jenis_kegiatan" id="jenis_kegiatan" data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
+                <!-- Options will be populated by select2 -->
+            </select>
+        </div>
+    </div>
+<!-- sektor kegiatan-->
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="sektor_kegiatan" class="input-group col-form-label">
+            <strong>{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</strong>
+        </label>
+        <div class="select2-purple">
+            <select class="form-control select2" name="sektor_kegiatan" id="sektor_kegiatan" data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
@@ -518,43 +530,5 @@ $(document).ready(function() {
     });
 </script>
 
-{{-- <!-- JS for drop down jenis kegiatan -->
-<script>
-    $(document).ready(function() {
-        $('#jenis_kegiatan').select2({
-            placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.jenis_kegiatan') }}',
-            ajax: {
-                url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
-                dataType: 'json',
-                processResults: function (data) {
-                    var results = [];
-                    $.each(data, function(group, options) {
-                        var optgroup = {
-                            text: group,
-                            children: []
-                        };
-                        $.each(options, function(id, text) {
-                            optgroup.children.push({
-                                id: id,
-                                text: text
-                            });
-                        });
-                        results.push(optgroup);
-                    });
-                    return {
-                        results: results
-                    };
-                }
-            }
-        });
-
-        $('#fase_pelaporan').select2({
-            placeholder: '{{ __('global.pleaseSelect') }}',
-        });
-        $('#status').select2({
-            placeholder: '{{ __('global.pleaseSelect' ).' '.__('cruds.kegiatan.basic.status_kegiatan') }}',
-        });
-    });
-</script> --}}
 
 @endpush

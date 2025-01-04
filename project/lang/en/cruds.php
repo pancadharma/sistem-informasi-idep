@@ -579,6 +579,7 @@ return [
             'nama_mitra'                         => 'Partner Name',
             'lokasi_kegiatan'                    => 'Activity Location',
             'jenis_kegiatan'                     => 'Type of Activity',
+            'sektor_kegiatan'                    => 'Activity Sector',
             'data_jenis_kegiatan'                => [
                 '1'                              => 'Assessment',
                 '2'                              => 'Socialisation, workshops, networking, and/or stakeholder mapping',

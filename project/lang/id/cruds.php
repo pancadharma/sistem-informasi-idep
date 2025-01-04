@@ -577,6 +577,7 @@ return [
             'lokasi_kegiatan'       => 'Lokasi Kegiatan',
             'kategori_lokasi'       => 'Kategori Lokasi',
             'jenis_kegiatan'        => 'Jenis Kegiatan',
+            'sektor_kegiatan'       => 'Sektor Kegiatan',
             'data_jenis_kegiatan'   => [
                 '1'                 => 'Assessment',
                 '2'                 => 'Sosialisasi, workshop, peluasan jejaring, dan/atau pemetaan stakeholder',
