@@ -35,6 +35,7 @@ class Kegiatan extends Model implements HasMedia
         'mitra_id',
         'bentuk_kegiatan_id',
         'sektor_kegiatan_id',
+        'fase_pelaporan',
 
         'kode',
         'nama',

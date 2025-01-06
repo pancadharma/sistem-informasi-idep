@@ -873,6 +873,16 @@ return [
             'disabilitas'                        => 'Disabilitas',
             'non_disabilitas'                    => 'Non-Disabilitas',
             'marjinal_lain'                      => 'Kelompok Marjinal Lainnya',
+            'kategori'                           => 'Category',
+            'grand_total'                        => 'Total',
+            'female'                             => 'Wanita',
+            'male'                               => 'Pria',
+            'elderly'                            => 'Lansia',
+            'adult'                              => 'Dewasa',
+            'kids'                               => 'Anak-Anak',
+            'teen'                               => 'Remaja',
+            'info'                               => 'Info Data Penerima Manfaat',
+
 
 
         ],

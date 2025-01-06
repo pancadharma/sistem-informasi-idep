@@ -747,39 +747,39 @@
 
             // Create SweetAlert content
             var htmlContent = `
-            <table style="width:100%; text-align:left;">
+            <table style="width:100%; text-align:left;" class="table-sm table-borderless">
                 <tr>
-                <th>Category</th>
-                <th>Female</th>
-                <th>Male</th>
-                <th>Total</th>
+                <th>{{ __('cruds.kegiatan.peserta.kategori') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
                 </tr>
                 <tr>
-                <td>Dewasa</td>
+                <td>{{ __('cruds.kegiatan.peserta.adult') }}</td>
                 <td>${parsedData.dewasa.perempuan}</td>
                 <td>${parsedData.dewasa.laki}</td>
                 <td>${parsedData.dewasa.total}</td>
                 </tr>
                 <tr>
-                <td>Lansia</td>
+                <td>{{ __('cruds.kegiatan.peserta.elderly') }}</td>
                 <td>${parsedData.lansia.perempuan}</td>
                 <td>${parsedData.lansia.laki}</td>
                 <td>${parsedData.lansia.total}</td>
                 </tr>
                 <tr>
-                <td>Remaja</td>
+                <td>{{ __('cruds.kegiatan.peserta.teen') }}</td>
                 <td>${parsedData.remaja.perempuan}</td>
                 <td>${parsedData.remaja.laki}</td>
                 <td>${parsedData.remaja.total}</td>
                 </tr>
                 <tr>
-                <td>Anak-anak</td>
+                <td>{{ __('cruds.kegiatan.peserta.kids') }}</td>
                 <td>${parsedData.anak.perempuan}</td>
                 <td>${parsedData.anak.laki}</td>
                 <td>${parsedData.anak.total}</td>
                 </tr>
                 <tr>
-                <th>Total</th>
+                <td>{{ __('cruds.kegiatan.peserta.grand_total') }}</td>
                 <th>${parsedData.total.perempuan}</th>
                 <th>${parsedData.total.laki}</th>
                 <th>${parsedData.total.total}</th>
@@ -789,7 +789,7 @@
 
             // Display SweetAlert with dynamic content
             Swal.fire({
-                title: 'Participant Data Summary',
+                title: "{{ __('cruds.kegiatan.peserta.info') }}",
                 html: htmlContent,
                 icon: 'info',
                 confirmButtonText: 'OK'
@@ -801,6 +801,7 @@
 </script>
 
 <!-- JS for drop down jenis kegiatan -->
+
 <script>
     $(document).ready(function() {
         $('#jenis_kegiatan').select2({
@@ -903,144 +904,151 @@
             "10": "konsultasi",
             "11": "lainnya",
         };
-            const formContainer = $('#dynamic-form-container');
+        const formContainer = $('#dynamic-form-container');
 
-            // Event handler for jenis_kegiatan dropdown change
+        // Event handler for jenis_kegiatan dropdown change
         $('#jenis_kegiatan').on('change', function() {
             const selectedValue = $(this).val();
             const fieldPrefix = formFieldMap[selectedValue];
-
-            // Clear any existing form fields
             formContainer.empty();
-
             if (fieldPrefix) {
-                // Generate form fields based on selected value
-                    const formFields = getFormFields(fieldPrefix);
+                const formFields = getFormFields(fieldPrefix);
+                formContainer.append(formFields);
 
-                // Append the form fields to the container
-                    formContainer.append(formFields);
-                }
+                $('.summernote').each(function() {
+                    const placeholder = $(this).attr('placeholder');
+                    $('.summernote').summernote({
+                        inheritPlaceholder: true,
+                        height: 150,
+                        width: '100%',
+                        codeviewFilter: false,
+                    })
+                    $(this).summernote('placeholder', placeholder);
+                    // console.info("data", placeholder)
+                });
+            }
+
         });
 
         function getFormFields(fieldPrefix) {
             let formFields = '';
             const fields = {
                 assessment: [
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}', name: 'assessmentyangterlibat', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}', name: 'assessmenttemuan', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}', name: 'assessmenttambahan', type: 'radio', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}', name: 'assessmenttambahan_ket', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}', name: 'assessmentkendala', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}', name: 'assessmentisu', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}' },
-                    { label: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}', name: 'assessmentpembelajaran', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmentyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}', name: 'assessmentyangterlibat', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentyangterlibat") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmenttemuan") }}', label: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}', name: 'assessmenttemuan', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttemuan") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmenttambahan") }}', label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}', name: 'assessmenttambahan', type: 'radio', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmenttambahan_ket") }}', label: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}', name: 'assessmenttambahan_ket', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmenttambahan_ket") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmentkendala") }}', label: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}', name: 'assessmentkendala', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentkendala") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmentisu") }}', label: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}', name: 'assessmentisu', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentisu") }}' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_assessmentpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}', name: 'assessmentpembelajaran', type: 'textarea', placeholder: '{{ __("cruds.kegiatan.hasil.assessmentpembelajaran") }}' },
                 ],
                 sosialisasi: [
-                    { label: 'Yang Terlibat', name: 'sosialisasiyangterlibat', type: 'textarea' },
-                    { label: 'Temuan', name: 'sosialisasitemuan', type: 'textarea' },
-                    { label: 'Tambahan', name: 'sosialisasitambahan', type: 'radio' },
-                    { label: 'Tambahan (Keterangan)', name: 'sosialisasitambahan_ket', type: 'textarea' },
-                    { label: 'Kendala', name: 'sosialisasikendala', type: 'textarea' },
-                    { label: 'Isu', name: 'sosialisasiisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'sosialisasipembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasiyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasiyangterlibat") }}', name: 'sosialisasiyangterlibat', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasitemuan") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasitemuan") }}', name: 'sosialisasitemuan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasitambahan") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasitambahan") }}', name: 'sosialisasitambahan', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasitambahan_ket") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasitambahan_ket") }}', name: 'sosialisasitambahan_ket', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasikendala") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasikendala") }}', name: 'sosialisasikendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasiisu") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasiisu") }}', name: 'sosialisasiisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_sosialisasipembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.sosialisasipembelajaran") }}', name: 'sosialisasipembelajaran', type: 'textarea' },
                 ],
                 pelatihan: [
-                    { label: 'Pelatih', name: 'pelatihanpelatih', type: 'textarea' },
-                    { label: 'Hasil', name: 'pelatihanhasil', type: 'textarea' },
-                    { label: 'Distribusi', name: 'pelatihandistribusi', type: 'radio' },
-                    { label: 'Distribusi (Keterangan)', name: 'pelatihandistribusi_ket', type: 'textarea' },
-                    { label: 'Rencana', name: 'pelatihanrencana', type: 'textarea' },
-                    { label: 'Unggahan', name: 'pelatihanunggahan', type: 'radio' },
-                    { label: 'Isu', name: 'pelatihanisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'pelatihanpembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanpelatih") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanpelatih") }}', name: 'pelatihanpelatih', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanhasil") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanhasil") }}', name: 'pelatihanhasil', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihandistribusi") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihandistribusi") }}', name: 'pelatihandistribusi', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihandistribusi_ket") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihandistribusi_ket") }}', name: 'pelatihandistribusi_ket', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanrencana") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanrencana") }}', name: 'pelatihanrencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanunggahan") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanunggahan") }}', name: 'pelatihanunggahan', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanisu") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanisu") }}', name: 'pelatihanisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pelatihanpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.pelatihanpembelajaran") }}', name: 'pelatihanpembelajaran', type: 'textarea' },
                 ],
                 pembelanjaan: [
-                    { label: 'Detail Barang', name: 'pembelanjaandetailbarang', type: 'textarea' },
-                    { label: 'Mulai', name: 'pembelanjaanmulai', type: 'datetime-local' },
-                    { label: 'Selesai', name: 'pembelanjaanselesai', type: 'datetime-local' },
-                    { label: 'Distribusi Mulai', name: 'pembelanjaandistribusimulai', type: 'datetime-local' },
-                    { label: 'Distribusi Selesai', name: 'pembelanjaandistribusiselesai', type: 'datetime-local' },
-                    { label: 'Terdistribusi', name: 'pembelanjaanterdistribusi', type: 'radio' },
-                    { label: 'Akan Distribusi', name: 'pembelanjaanakandistribusi', type: 'radio' },
-                    { label: 'Akan Distribusi (Keterangan)', name: 'pembelanjaanakandistribusi_ket', type: 'textarea' },
-                    { label: 'Kendala', name: 'pembelanjaankendala', type: 'textarea' },
-                    { label: 'Isu', name: 'pembelanjaanisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'pembelanjaanpembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaandetailbarang") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaandetailbarang") }}', name: 'pembelanjaandetailbarang', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanmulai") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanmulai") }}', name: 'pembelanjaanmulai', type: 'datetime-local' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanselesai") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanselesai") }}', name: 'pembelanjaanselesai', type: 'datetime-local' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaandistribusimulai") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaandistribusimulai") }}', name: 'pembelanjaandistribusimulai', type: 'datetime-local' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaandistribusiselesai") }}', name: 'pembelanjaandistribusiselesai', type: 'datetime-local' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanterdistribusi") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanterdistribusi") }}', name: 'pembelanjaanterdistribusi', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanakandistribusi") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanakandistribusi") }}', name: 'pembelanjaanakandistribusi', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanakandistribusi_ket") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanakandistribusi_ket") }}', name: 'pembelanjaanakandistribusi_ket', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaankendala") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaankendala") }}', name: 'pembelanjaankendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanisu") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanisu") }}', name: 'pembelanjaanisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pembelanjaanpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.pembelanjaanpembelajaran") }}', name: 'pembelanjaanpembelajaran', type: 'textarea' },
                 ],
                 pengembangan: [
-                    { label: 'Jenis Komponen', name: 'pengembanganjeniskomponen', type: 'textarea' },
-                    { label: 'Berapa Komponen', name: 'pengembanganberapakomponen', type: 'textarea' },
-                    { label: 'Lokasi Komponen', name: 'pengembanganlokasikomponen', type: 'textarea' },
-                    { label: 'Yang Terlibat', name: 'pengembanganyangterlibat', type: 'textarea' },
-                    { label: 'Rencana', name: 'pengembanganrencana', type: 'textarea' },
-                    { label: 'Kendala', name: 'pengembangankendala', type: 'textarea' },
-                    { label: 'Isu', name: 'pengembanganisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'pengembanganpembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganjeniskomponen") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganjeniskomponen") }}', name: 'pengembanganjeniskomponen', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganberapakomponen") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganberapakomponen") }}', name: 'pengembanganberapakomponen', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganlokasikomponen") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganlokasikomponen") }}', name: 'pengembanganlokasikomponen', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganyangterlibat") }}', name: 'pengembanganyangterlibat', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganrencana") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganrencana") }}', name: 'pengembanganrencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembangankendala") }}', label: '{{ __("cruds.kegiatan.hasil.pengembangankendala") }}', name: 'pengembangankendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganisu") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganisu") }}', name: 'pengembanganisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_pengembanganpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.pengembanganpembelajaran") }}', name: 'pengembanganpembelajaran', type: 'textarea' },
                 ],
                 kampanye: [
-                    { label: 'Yang Dikampanyekan', name: 'kampanyeyangdikampanyekan', type: 'textarea' },
-                    { label: 'Jenis', name: 'kampanyejenis', type: 'textarea' },
-                    { label: 'Bentuk Kegiatan', name: 'kampanyebentukkegiatan', type: 'textarea' },
-                    { label: 'Yang Terlibat', name: 'kampanyeyangterlibat', type: 'textarea' },
-                    { label: 'Yang Disasar', name: 'kampanyeyangdisasar', type: 'textarea' },
-                    { label: 'Jangkauan', name: 'kampanyejangkauan', type: 'textarea' },
-                    { label: 'Rencana', name: 'kampanyerencana', type: 'textarea' },
-                    { label: 'Kendala', name: 'kampanyekendala', type: 'textarea' },
-                    { label: 'Isu', name: 'kampanyeisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'kampanyepembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyeyangdikampanyekan") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyeyangdikampanyekan") }}', name: 'kampanyeyangdikampanyekan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyejenis") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyejenis") }}', name: 'kampanyejenis', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyebentukkegiatan") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyebentukkegiatan") }}', name: 'kampanyebentukkegiatan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyeyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyeyangterlibat") }}', name: 'kampanyeyangterlibat', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyeyangdisasar") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyeyangdisasar") }}', name: 'kampanyeyangdisasar', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyejangkauan") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyejangkauan") }}', name: 'kampanyejangkauan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyerencana") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyerencana") }}', name: 'kampanyerencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyekendala") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyekendala") }}', name: 'kampanyekendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyeisu") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyeisu") }}', name: 'kampanyeisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kampanyepembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.kampanyepembelajaran") }}', name: 'kampanyepembelajaran', type: 'textarea' },
                 ],
                 pemetaan: [
-                    { label: 'Yang Dihasilkan', name: 'pemetaanyangdihasilkan', type: 'textarea' },
-                    { label: 'Luasan', name: 'pemetaanluasan', type: 'textarea' },
-                    { label: 'Unit', name: 'pemetaanunit', type: 'textarea' },
-                    { label: 'Yang Terlibat', name: 'pemetaanyangterlibat', type: 'textarea' },
-                    { label: 'Rencana', name: 'pemetaanrencana', type: 'textarea' },
-                    { label: 'Isu', name: 'pemetaanisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'pemetaanpembelajaran', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanyangdihasilkan") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanyangdihasilkan") }}', name: 'pemetaanyangdihasilkan', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanluasan") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanluasan") }}', name: 'pemetaanluasan', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanunit") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanunit") }}', name: 'pemetaanunit', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanyangterlibat") }}', name: 'pemetaanyangterlibat', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanrencana") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanrencana") }}', name: 'pemetaanrencana', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanisu") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanisu") }}', name: 'pemetaanisu', type: 'textarea' },
+                    {i: '{{ __("cruds.kegiatan.hasil.i_pemetaanpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.pemetaanpembelajaran") }}', name: 'pemetaanpembelajaran', type: 'textarea' },
                 ],
                 monitoring: [
-                    { label: 'Yang Dipantau', name: 'monitoringyangdipantau', type: 'textarea' },
-                    { label: 'Data', name: 'monitoringdata', type: 'textarea' },
-                    { label: 'Yang Terlibat', name: 'monitoringyangterlibat', type: 'textarea' },
-                    { label: 'Metode', name: 'monitoringmetode', type: 'textarea' },
-                    { label: 'Hasil', name: 'monitoringhasil', type: 'textarea' },
-                    { label: 'Kegiatan Selanjutnya', name: 'monitoringkegiatanselanjutnya', type: 'radio' },
-                    { label: 'Kegiatan Selanjutnya (Keterangan)', name: 'monitoringkegiatanselanjutnya_ket', type: 'textarea' },
-                    { label: 'Kendala', name: 'monitoringkendala', type: 'textarea' },
-                    { label: 'Isu', name: 'monitoringisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'monitoringpembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringyangdipantau") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringyangdipantau") }}', name: 'monitoringyangdipantau', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringdata") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringdata") }}', name: 'monitoringdata', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringyangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringyangterlibat") }}', name: 'monitoringyangterlibat', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringmetode") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringmetode") }}', name: 'monitoringmetode', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringhasil") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringhasil") }}', name: 'monitoringhasil', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringkegiatanselanjutnya") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringkegiatanselanjutnya") }}', name: 'monitoringkegiatanselanjutnya', type: 'radio' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringkegiatanselanjutnya_ket") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringkegiatanselanjutnya_ket") }}', name: 'monitoringkegiatanselanjutnya_ket', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringkendala") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringkendala") }}', name: 'monitoringkendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringisu") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringisu") }}', name: 'monitoringisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_monitoringpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.monitoringpembelajaran") }}', name: 'monitoringpembelajaran', type: 'textarea' },
                 ],
                 kunjungan: [
-                    { label: 'Lembaga', name: 'kunjunganlembaga', type: 'textarea' },
-                    { label: 'Peserta', name: 'kunjunganpeserta', type: 'textarea' },
-                    { label: 'Yang Dilakukan', name: 'kunjunganyangdilakukan', type: 'textarea' },
-                    { label: 'Hasil', name: 'kunjunganhasil', type: 'textarea' },
-                    { label: 'Potensi Pendapatan', name: 'kunjunganpotensipendapatan', type: 'textarea' },
-                    { label: 'Rencana', name: 'kunjunganrencana', type: 'textarea' },
-                    { label: 'Kendala', name: 'kunjungankendala', type: 'textarea' },
-                    { label: 'Isu', name: 'kunjunganisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'kunjunganpembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganlembaga") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganlembaga") }}', name: 'kunjunganlembaga', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganpeserta") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganpeserta") }}', name: 'kunjunganpeserta', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganyangdilakukan") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganyangdilakukan") }}', name: 'kunjunganyangdilakukan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganhasil") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganhasil") }}', name: 'kunjunganhasil', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganpotensipendapatan") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganpotensipendapatan") }}', name: 'kunjunganpotensipendapatan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganrencana") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganrencana") }}', name: 'kunjunganrencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjungankendala") }}', label: '{{ __("cruds.kegiatan.hasil.kunjungankendala") }}', name: 'kunjungankendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganisu") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganisu") }}', name: 'kunjunganisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_kunjunganpembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.kunjunganpembelajaran") }}', name: 'kunjunganpembelajaran', type: 'textarea' },
                 ],
                 konsultasi: [
-                    { label: 'Lembaga', name: 'konsultasilembaga', type: 'textarea' },
-                    { label: 'Komponen', name: 'konsultasikomponen', type: 'textarea' },
-                    { label: 'Yang Dilakukan', name: 'konsultasiyangdilakukan', type: 'textarea' },
-                    { label: 'Hasil', name: 'konsultasihasil', type: 'textarea' },
-                    { label: 'Potensi Pendapatan', name: 'konsultasipotensipendapatan', type: 'textarea' },
-                    { label: 'Rencana', name: 'konsultasirencana', type: 'textarea' },
-                    { label: 'Kendala', name: 'konsultasikendala', type: 'textarea' },
-                    { label: 'Isu', name: 'konsultasiisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'konsultasipembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasilembaga") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasilembaga") }}', name: 'konsultasilembaga', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasikomponen") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasikomponen") }}', name: 'konsultasikomponen', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasiyangdilakukan") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasiyangdilakukan") }}', name: 'konsultasiyangdilakukan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasihasil") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasihasil") }}', name: 'konsultasihasil', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasipotensipendapatan") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasipotensipendapatan") }}', name: 'konsultasipotensipendapatan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasirencana") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasirencana") }}', name: 'konsultasirencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasikendala") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasikendala") }}', name: 'konsultasikendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasiisu") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasiisu") }}', name: 'konsultasiisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_konsultasipembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.konsultasipembelajaran") }}', name: 'konsultasipembelajaran', type: 'textarea' },
                 ],
                 lainnya: [
-                    { label: 'Mengapa Dilakukan', name: 'lainnyamengapadilakukan', type: 'textarea' },
-                    { label: 'Dampak', name: 'lainnyadampak', type: 'textarea' },
-                    { label: 'Sumber Pendanaan', name: 'lainnyasumberpendanaan', type: 'textarea' },
-                    { label: 'Sumber Pendanaan (Keterangan)', name: 'lainnyasumberpendanaan_ket', type: 'textarea' },
-                    { label: 'Yang Terlibat', name: 'lainnyayangterlibat', type: 'textarea' },
-                    { label: 'Rencana', name: 'lainnyarencana', type: 'textarea' },
-                    { label: 'Kendala', name: 'lainnyakendala', type: 'textarea' },
-                    { label: 'Isu', name: 'lainnyaisu', type: 'textarea' },
-                    { label: 'Pembelajaran', name: 'lainnyapembelajaran', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyamengapadilakukan") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyamengapadilakukan") }}', name: 'lainnyamengapadilakukan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyadampak") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyadampak") }}', name: 'lainnyadampak', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyasumberpendanaan") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyasumberpendanaan") }}', name: 'lainnyasumberpendanaan', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyasumberpendanaan_ket") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyasumberpendanaan_ket") }}', name: 'lainnyasumberpendanaan_ket', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyayangterlibat") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyayangterlibat") }}', name: 'lainnyayangterlibat', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyarencana") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyarencana") }}', name: 'lainnyarencana', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyakendala") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyakendala") }}', name: 'lainnyakendala', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyaisu") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyaisu") }}', name: 'lainnyaisu', type: 'textarea' },
+                    { i: '{{ __("cruds.kegiatan.hasil.i_lainnyapembelajaran") }}', label: '{{ __("cruds.kegiatan.hasil.lainnyapembelajaran") }}', name: 'lainnyapembelajaran', type: 'textarea' },
                 ],
 
             };
@@ -1050,7 +1058,10 @@
                     if (field.type === 'checkbox') {
                         formFields += `
                             <div class="form-group row">
-                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">
+                                    ${field.label}
+                                    <i class="fas fa-info-circle text-success" data-toggle="tooltip" title="${field.i}"></i>
+                                </label>
 
                                 <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                                     <div class="custom-control custom-switch">
@@ -1065,10 +1076,14 @@
                     else if (field.type === 'textarea') {
                         formFields += `
                             <div class="form-group row">
-                            <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
-                                <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                                    <textarea name="${field.name}" id="${fieldId}" class="form-control summernote" rows="2"
-                                    placeholder="${field.label}"></textarea>
+                            <label for="${field.name}"
+                                class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label"
+                                data-toggle="tooltip" title="${field.label}">
+                                ${field.label}
+                                <i class="fas fa-info-circle text-success" data-toggle="tooltip" title="${field.i}"></i>
+                            </label>
+                            <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                                <textarea name="${field.name}" id="${fieldId}" class="form-control summernote" rows="2" data-placeholder="${field.i}" placeholder="${field.i}"></textarea>
                                 </div>
                             </div>
                         `;
@@ -1076,7 +1091,10 @@
                     else if (field.type === 'radio') {
                         formFields += `
                             <div class="form-group row">
-                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1">${field.label}</label>
+                                <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1" data-toggle="tooltip"
+                                title="${field.label}">${field.label}
+                                    <i class="fas fa-info-circle text-success" data-toggle="tooltip" title="${field.i}"></i>
+                                </label>
                                 <div class="col-sm col-md col-lg order-2 order-md-2">
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="${fieldId}-yes" name="${field.name}" value="yes" class="custom-control-input custom-control-input-success">
@@ -1093,7 +1111,9 @@
                     else {
                         formFields += `
                         <div class="form-group row">
-                                <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label">${field.label}</label>
+                                <label for="${field.name}" class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1 col-form-label" data-toggle="tooltip" title="${field.label}">${field.label}
+                                    <i class="fas fa-info-circle text-success" data-toggle="tooltip" title="${field.i}"></i>
+                                </label>
                                 <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                                     <input type="${field.type}" class="form-control" name="${field.name}" id="${fieldId}">
                                 </div>
@@ -1103,16 +1123,85 @@
 
                 });
             }
-            setTimeout(() => {
-                $('.summernote').summernote({
-                    height: 500,
-                    width: '100%',
-                    inheritPlaceholder: true,
-                    codeviewFilter: false,
-                });
-            }, 250);
+            // setTimeout(() => {
+            //     $('.summernote').summernote({
+            //         height: 500,
+            //         width: '100%',
+            //         inheritPlaceholder: true,
+            //         codeviewFilter: false,
+            //         placeholder: function () {
+            //             return $(this).closest('.form-group.row').find('label').attr('title') || '';
+            //         },
+            //     });
+
+            //     $('.summernote').each(function() {
+            //         const placeholder = $(this).attr('placeholder');
+            //         $(this).summernote('placeholder', placeholder);
+            //     });
+            // }, 250);
+            // Inisialisasi Summernote setelah menambahkan elemen ke DOM
+
+            // setTimeout(() => {
+            //     // const placeholder = $(this).attr('placeholder');
+            //     // $('.summernote').summernote({
+            //     //     height: 600,
+            //     //     width: '100%',
+            //     //     codeviewFilter: false,
+            //     //     placeholder: placeholder,
+            //     // });
+
+
+            //     $('.summernote').each(function() {
+            //         const placeholder = $(this).attr('placeholder');
+
+            //         $(this).summernote('placeholder', placeholder);
+            //         console.info("data", placeholder)
+            //     });
+
+
+            // }, 500);
             return formFields;
         }
+
     });
 
+</script>
+
+<!-- fase kegiatan js to fecth data an autoamtically pre-populate fase -->
+<script>
+    $(document).ready(function () {
+
+        // Function to fetch and update fase pelaporan
+        function fetchFasePelaporan(programOutcomeOutputActivityId){
+            if(!programOutcomeOutputActivityId){
+                $('#fase_pelaporan').val(1).trigger('change');
+                $('#fase_pelaporan option').prop('disabled', false);
+                return;
+            }
+            $.ajax({
+                url: '{{ url("kegiatan/api/fase-pelaporan") }}/' + programOutcomeOutputActivityId,
+                method: 'GET',
+                success: function (data) {
+                    $('#fase_pelaporan').val(data.next_fase_pelaporan).trigger('change');
+                    $('#fase_pelaporan option').prop('disabled', false); // Enable all options first
+                    $.each(data.disabled_fase, function(index, value) {
+                        $('#fase_pelaporan option[value="' + value + '"]').prop('disabled', true);
+                    });
+                }
+            });
+        }
+        //listen to program id change
+        $('#program_id').on('change', function(){
+            const programOutcomeOutputActivityId =  $('#programoutcomeoutputactivity_id').val();
+            fetchFasePelaporan(programOutcomeOutputActivityId);
+        });
+        //listen to program out activity id change
+        $('#programoutcomeoutputactivity_id').on('change', function() {
+            const programOutcomeOutputActivityId = $(this).val();
+                fetchFasePelaporan(programOutcomeOutputActivityId);
+        });
+            //Initial Load
+            const initialProgramOutcomeOutputActivityId = $('#programoutcomeoutputactivity_id').val();
+            fetchFasePelaporan(initialProgramOutcomeOutputActivityId);
+    });
 </script>

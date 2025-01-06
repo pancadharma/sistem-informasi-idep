@@ -20,11 +20,11 @@
                         {{ __('cruds.kegiatan.tabs.hasil') }}
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.peserta') }}
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" id="tab-files" data-toggle="pill" href="#tab-file" role="tab" aria-controls="tab-file" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.file') }}
@@ -48,9 +48,9 @@
                 <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
                     @include('tr.kegiatan.tabs.hasil')
                 </div>
-                <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
+                {{-- <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
                     @include('tr.kegiatan.tabs.beneficiaries')
-                </div>
+                </div> --}}
                 <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
                     @include('tr.kegiatan.tabs.file-uploads')
                 </div>
