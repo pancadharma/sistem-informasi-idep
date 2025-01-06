@@ -92,7 +92,11 @@ class KegiatanController extends Controller
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
-            return view('tr.kegiatan.create', compact('program', 'statusOptions'));
+
+
+            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+
+            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities'));
         }
         return response()->json([
             'success' => false,
@@ -322,5 +326,27 @@ class KegiatanController extends Controller
             $second => array_slice($jenisKegiatan, 11, null, true)
         ];
         return response()->json($groupedData);
+    }
+
+    public function fetchNextFasePelaporan(Request $request, $programOutcomeOutputActivityId)
+    {
+        if (!$programOutcomeOutputActivityId) {
+            return response()->json(['next_fase_pelaporan' => 1, 'disabled_fase' => []]);
+        }
+        $nextFasePelaporan = Kegiatan::where('programoutcomeoutputactivity_id', $programOutcomeOutputActivityId)
+            ->max('fase_pelaporan');
+
+        $existingFasePelaporan = Kegiatan::where('programoutcomeoutputactivity_id', $programOutcomeOutputActivityId)
+            ->pluck('fase_pelaporan')->toArray();
+
+        if ($nextFasePelaporan === null) {
+            $nextFasePelaporan = 1;
+        } else {
+            $nextFasePelaporan++;
+            if ($nextFasePelaporan > 99) {
+                $nextFasePelaporan = 1;
+            }
+        }
+        return response()->json(['next_fase_pelaporan' => $nextFasePelaporan, 'disabled_fase' => $existingFasePelaporan]);
     }
 }

@@ -22,7 +22,7 @@
         <label for="kode_kegiatan" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.kode') }}
         </label>
-        <input type="hidden" class="form-control" id="id_programoutcomeoutputactivity" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="id_programoutcomeoutputactivity">
+        <input type="hidden" class="form-control" id="programoutcomeoutputactivity_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="programoutcomeoutputactivity_id">
         <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
         data-toggle="modal" data-target="#ModalDaftarProgramActivity">
     </div>
@@ -66,7 +66,7 @@
             <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
         </label>
         <div class="select2-purple">
-            <select class="form-control" name="fase_pelaporan" id="fase_pelaporan">
+            <select class="form-control select2-readonly" name="fase_pelaporan" id="fase_pelaporan">
                 <option value="">{{ __('global.pleaseSelect') }}</option>
                 @for ($i = 1; $i <= 99; $i++)
                     <option value="{{ $i }}">{{ $i }}</option>
@@ -476,17 +476,29 @@
         ////////////////////////////////////////////////////////////////////////////////////
         $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
             e.preventDefault();
+            // Fetch the selected program details
             var activity_Id = $(this).closest('tr').data('id');
             var activityKode = $(this).closest('tr').data('kode');
             var activityNama = $(this).closest('tr').data('nama');
 
-            $('#id_programoutcomeoutputactivity').val(activity_Id);
+
+            // Update the hidden input and display fields
+            // $('#id_programoutcomeoutputactivity').val(activityId).trigger('change');
+            // $('#kode_kegiatan').val(activityKode);
+            // $('#nama_kegiatan').val(activityNama).prop('disabled', true);
+
+
+            $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
             $('#kode_kegiatan').val(activityKode);
             $('#nama_kegiatan').val(activityNama).prop('disabled', true);
             $('#kode_program').prop('disabled', true);
 
             MapManager.updateAllMarkers();
-            $('#ModalDaftarProgramActivity').modal('hide');
+            $('#nama_kegiatan').focus();
+            setTimeout(function() {
+                $('#ModalDaftarProgramActivity').modal('hide');
+            }, 200);
+
         });
 
         // Add the remove location handler
@@ -571,12 +583,17 @@
             $('#kode_program').val(programKode);
             $('#nama_program').val(programNama).prop('disabled', true);
 
-            $('#id_programoutcomeoutputactivitykode_kegiatan').val('').trigger('change');
+            $('#programoutcomeoutputactivity_id, #kode_kegiatan').val('').trigger('change');
             $('#kode_kegiatan').val('').trigger('change');
             $('#nama_kegiatan').val('').trigger('change');
 
-            // Close the program selection modal
-            $('#ModalDaftarProgram').modal('hide');
+            // Blur the currently focused element
+            $('#nama_kegiatan').focus();
+            setTimeout(function() {
+                $('#ModalDaftarProgram').modal('hide');
+            }, 200);
+
+
         });
 
         // Handle opening the activities modal
@@ -587,7 +604,7 @@
                     icon: "warning",
                     title: "Opssss...",
                     text: "Please select a program first.",
-                    timer: 3000,
+                    timer: 2000,
                     position: "top-end",
                     timerProgressBar: true,
                 });
