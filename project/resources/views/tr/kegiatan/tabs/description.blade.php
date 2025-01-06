@@ -134,11 +134,11 @@
     </div>
 </div>
 
-<div class="form-group row">
+{{-- <div class="form-group row">
     <div class="col-sm col-md col-lg self-center">
         <button id="submit_peserta" type="submit" class="mb-0 self-center input-group btn btn-secondary">See Data</button>
     </div>
-</div>
+</div> --}}
 
 
 <div class="form-group row mb-0">

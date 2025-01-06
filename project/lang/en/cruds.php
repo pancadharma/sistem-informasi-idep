@@ -874,6 +874,16 @@ return [
             'disabilitas'                        => 'Disabilities',
             'non_disabilitas'                    => 'Non-Disabilities',
             'marjinal_lain'                      => 'Other Marginalized Groups',
+            'kategori'                           => 'Category',
+            'grand_total'                        => 'Totals',
+            'female'                             => 'Female',
+            'male'                               => 'Male',
+            'elderly'                            => 'Elderly',
+            'adult'                              => 'Adult',
+            'kids'                               => 'Kids',
+            'teen'                               => 'Teen',
+            'info'                               => 'Beneficiary Data Summary',
+
 
 
         ],

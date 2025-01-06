@@ -747,39 +747,39 @@
 
             // Create SweetAlert content
             var htmlContent = `
-            <table style="width:100%; text-align:left;">
+            <table style="width:100%; text-align:left;" class="table-sm table-borderless">
                 <tr>
-                <th>Category</th>
-                <th>Female</th>
-                <th>Male</th>
-                <th>Total</th>
+                <th>{{ __('cruds.kegiatan.peserta.kategori') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
                 </tr>
                 <tr>
-                <td>Dewasa</td>
+                <td>{{ __('cruds.kegiatan.peserta.adult') }}</td>
                 <td>${parsedData.dewasa.perempuan}</td>
                 <td>${parsedData.dewasa.laki}</td>
                 <td>${parsedData.dewasa.total}</td>
                 </tr>
                 <tr>
-                <td>Lansia</td>
+                <td>{{ __('cruds.kegiatan.peserta.elderly') }}</td>
                 <td>${parsedData.lansia.perempuan}</td>
                 <td>${parsedData.lansia.laki}</td>
                 <td>${parsedData.lansia.total}</td>
                 </tr>
                 <tr>
-                <td>Remaja</td>
+                <td>{{ __('cruds.kegiatan.peserta.teen') }}</td>
                 <td>${parsedData.remaja.perempuan}</td>
                 <td>${parsedData.remaja.laki}</td>
                 <td>${parsedData.remaja.total}</td>
                 </tr>
                 <tr>
-                <td>Anak-anak</td>
+                <td>{{ __('cruds.kegiatan.peserta.kids') }}</td>
                 <td>${parsedData.anak.perempuan}</td>
                 <td>${parsedData.anak.laki}</td>
                 <td>${parsedData.anak.total}</td>
                 </tr>
                 <tr>
-                <th>Total</th>
+                <td>{{ __('cruds.kegiatan.peserta.grand_total') }}</td>
                 <th>${parsedData.total.perempuan}</th>
                 <th>${parsedData.total.laki}</th>
                 <th>${parsedData.total.total}</th>
@@ -789,7 +789,7 @@
 
             // Display SweetAlert with dynamic content
             Swal.fire({
-                title: 'Participant Data Summary',
+                title: "{{ __('cruds.kegiatan.peserta.info') }}",
                 html: htmlContent,
                 icon: 'info',
                 confirmButtonText: 'OK'
