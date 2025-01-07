@@ -1123,43 +1123,6 @@
 
                 });
             }
-            // setTimeout(() => {
-            //     $('.summernote').summernote({
-            //         height: 500,
-            //         width: '100%',
-            //         inheritPlaceholder: true,
-            //         codeviewFilter: false,
-            //         placeholder: function () {
-            //             return $(this).closest('.form-group.row').find('label').attr('title') || '';
-            //         },
-            //     });
-
-            //     $('.summernote').each(function() {
-            //         const placeholder = $(this).attr('placeholder');
-            //         $(this).summernote('placeholder', placeholder);
-            //     });
-            // }, 250);
-            // Inisialisasi Summernote setelah menambahkan elemen ke DOM
-
-            // setTimeout(() => {
-            //     // const placeholder = $(this).attr('placeholder');
-            //     // $('.summernote').summernote({
-            //     //     height: 600,
-            //     //     width: '100%',
-            //     //     codeviewFilter: false,
-            //     //     placeholder: placeholder,
-            //     // });
-
-
-            //     $('.summernote').each(function() {
-            //         const placeholder = $(this).attr('placeholder');
-
-            //         $(this).summernote('placeholder', placeholder);
-            //         console.info("data", placeholder)
-            //     });
-
-
-            // }, 500);
             return formFields;
         }
 

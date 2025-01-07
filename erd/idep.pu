@@ -319,17 +319,6 @@ entity "trkegiatan" as trkegiatan {
     deskripsikeluaran : varchar (500) null
     deskripsiyangdikaji : varchar (500) null
 
-
-
-
-
-
-
-
-    
-
-
-
     penerimamanfaatdewasaperempuan : int
     penerimamanfaatdewasalakilaki : int
     penerimamanfaatdewasatotal : int
@@ -544,7 +533,7 @@ entity "trkegiatanpenulis" as trkegiatanpenulis {
     id_peran : int <<fk>>
 }
 
-entity "trmealspenerimamanfaat" as trprogrampenerimamanfaat {
+entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
