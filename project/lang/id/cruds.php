@@ -889,6 +889,7 @@ return [
         'file'                                   => [
             'label'                              => 'File',
             'upload'                             => 'Unggah File',
+            'upload_media'                       => 'Unggah Media Gambar/Video',
             'caption'                            => 'Masukkan File Informasi',
             'daftar_absen'                       => 'Catatan Pendidikan',
             'formulir_persetujuan'               => 'Formulir Persetujuan',

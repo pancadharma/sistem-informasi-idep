@@ -2,7 +2,7 @@
 <div class="card-body pt-0">
     <div class="row">
         <div class="col-lg-12">
-            <label for="dokumen_pendukung" class="control-label small mb-0">
+            <label for="dokumen_pendukung" class="control-label mb-0">
                 <strong>
                     {{ __('cruds.kegiatan.file.upload') }}
                 </strong>
@@ -23,9 +23,9 @@
 <div class="card-body pt-0">
     <div class="row">
         <div class="col-lg-12">
-            <label for="media_pendukung" class="control-label small mb-0">
+            <label for="media_pendukung" class="control-label mb-0">
                 <strong>
-                    {{ __('cruds.kegiatan.file.upload') }}
+                    {{ __('cruds.kegiatan.file.upload_media') }}
                 </strong>
                 <span class="text-red">
                     {{-- ONLY FOR MEDIA FILES ONLY --}}
@@ -51,7 +51,7 @@
         function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize) {
             $("#" + fileInputId).fileinput({
                 theme: "fa5",
-                showBrowse: true,
+                showBrowse: false,
                 showUpload: false,
                 showRemove: false,
                 showCaption: true,
@@ -61,12 +61,8 @@
                 maxFileSize: maxSize,
                 allowedFileExtensions: allowedExtensions,
                 overwriteInitial: false,
-                initialPreviewAsData: true,
-                fileActionSettings: {
-                    showRemove: true,
-                    showUpload: false,
-                    showZoom: true,
-                },
+                initialPreview: [], // Initialize with empty preview
+                initialPreviewConfig: []
             }).on('fileloaded', function(event, file, previewId, index, reader) {
                 var uniqueId = fileInputId + '-' + (new Date().getTime());
                 fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
@@ -88,6 +84,9 @@
                 fileCaptions = {}; // Reset the tracking object
                 $('#' + captionContainerId).empty();
             }).on('filebatchselected', function(event, files) {
+                // Clear all caption inputs when new files are selected
+                fileCaptions = {}; // Reset the tracking object
+                $('#' + captionContainerId).empty();
                 // Iterate over each selected file and trigger the fileloaded event manually
                 for (var i = 0; i < files.length; i++) {
                     var file = files[i];
