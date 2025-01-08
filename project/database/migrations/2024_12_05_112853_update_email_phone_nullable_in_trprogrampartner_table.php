@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('trprogrampartner', function (Blueprint $table) {
-            $table->string('email')->nullable(false)->change();
-            $table->string('phone')->nullable(false)->change();
+            $table->string('email')->nullable()->change();
+            $table->string('phone')->nullable()->change();
         });
     }
 };
