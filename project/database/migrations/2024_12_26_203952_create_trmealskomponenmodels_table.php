@@ -31,6 +31,15 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Schema::dropIfExists('trmealskomponenmodel');
+        // Schema::table('trmealskomponenmodel', function (Blueprint $table) {
+        //     $table->dropForeign(['id_komponenmodel']);
+        //     $table->dropForeign(['id_targetreinstra']);
+        //     $table->dropForeign(['id_program']);
+        // });
+
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('trmealskomponenmodel');
+        Schema::enableForeignKeyConstraints();
     }
 };

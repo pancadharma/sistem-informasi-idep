@@ -306,18 +306,18 @@ entity "trkegiatan" as trkegiatan {
     id_jeniskegiatan : int <<fk>>
     id_desa : int <<fk>>
     id_user : int <<fk>>
-    lokasi : varchar (500) null
+    lokasi : text null
     long : decimal (9,6) null
     lat : decimal (9,6) null
     tanggalmulai : datetime
     tanggalselesai : datetime
     status : varchar (50)
-    mitra : varchar (300) null
+    mitra : json null
 
-    deskripsilatarbelakang : varchar (500) null
-    deskripsitujuan : varchar (500) null
-    deskripsikeluaran : varchar (500) null
-    deskripsiyangdikaji : varchar (500) null
+    deskripsilatarbelakang : text null
+    deskripsitujuan : text null
+    deskripsikeluaran : text null
+    deskripsiyangdikaji : text null
 
     penerimamanfaatdewasaperempuan : int
     penerimamanfaatdewasalakilaki : int
