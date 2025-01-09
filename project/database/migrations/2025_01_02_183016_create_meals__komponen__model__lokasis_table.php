@@ -19,9 +19,9 @@ return new class extends Migration
             $table->unsignedBigInteger('kecamatan_id')->nullable(); // Nullable foreign key
             $table->unsignedBigInteger('kabupaten_id')->nullable(); // Nullable foreign key
             $table->unsignedBigInteger('provinsi_id')->nullable(); // Nullable foreign key
-            $table->decimal('long', 9, 6)->nullable(); // Longitude
-            $table->decimal('lat', 9, 6)->nullable(); // Latitude
-            $table->unsignedBigInteger('id_satuan')->nullable(); // Foreign key
+            $table->double('long')->nullable();
+            $table->double('lat')->nullable();
+            $table->unsignedBigInteger('satuan_id')->nullable(); // Foreign key
             $table->integer('jumlah')->nullable(); // Integer field
             $table->timestamps(); // Timestamps
 
