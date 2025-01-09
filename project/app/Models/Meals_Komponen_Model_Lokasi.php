@@ -23,15 +23,15 @@ class Meals_Komponen_Model_Lokasi extends Model
 
     // Allow mass-assignment for these fields
     protected $fillable = [
-        'id_mealskomponenmodel',
-        'id_dusun',
-        'id_desa',
-        'id_kecamatan',
-        'id_kabupaten',
-        'id_provinsi',
+        'mealskomponenmodel_id',
+        'dusun_id',
+        'desa_id',
+        'kecamatan_id',
+        'kabupaten_id',
+        'provinsi_id',
         'long',
         'lat',
-        'id_satuan',
+        'satuan_id',
         'jumlah',
     ];
 
@@ -40,36 +40,36 @@ class Meals_Komponen_Model_Lokasi extends Model
      */
     public function mealsKomponenModel()
     {
-        return $this->belongsTo(Meals_Komponen_Model::class, 'id_mealskomponenmodel', 'id');
+        return $this->belongsTo(Meals_Komponen_Model::class, 'mealskomponenmodel_id', 'id');
     }
 
     public function satuan()
     {
-        return $this->belongsTo(Satuan::class, 'id_satuan', 'id');
+        return $this->belongsTo(Satuan::class, 'satuan_id', 'id');
     }
 
     public function dusun()
     {
-        return $this->belongsTo(Dusun::class, 'id_dusun', 'id');
+        return $this->belongsTo(Dusun::class, 'dusun_id', 'id');
     }
 
     public function desa()
     {
-        return $this->belongsTo(Kelurahan::class, 'id_desa', 'id');
+        return $this->belongsTo(Kelurahan::class, 'desa_id', 'id');
     }
 
     public function kecamatan()
     {
-        return $this->belongsTo(Kecamatan::class, 'id_kecamatan', 'id');
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id', 'id');
     }
 
     public function kabupaten()
     {
-        return $this->belongsTo(Kabupaten::class, 'id_kabupaten', 'id');
+        return $this->belongsTo(Kabupaten::class, 'kabupaten_id', 'id');
     }
 
     public function provinsi()
     {
-        return $this->belongsTo(Provinsi::class, 'id_provinsi', 'id');
+        return $this->belongsTo(Provinsi::class, 'provinsi_id', 'id');
     }
 }
