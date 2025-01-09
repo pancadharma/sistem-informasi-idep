@@ -260,6 +260,23 @@ class Kegiatan extends Model implements HasMedia
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
+    public function jenis_kegiatan()
+    {
+        return $this->belongsTo(Jenis_Kegiatan::class, 'jenis_kegiatan_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->hasMany(Kegiatan_Lokasi::class, 'kegiatan_id');
+    }
+
+    public function mitra()
+    {
+        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
+    }
+
+
+
     public const STATUS_SELECT = [
         'draft'    => 'Draft',
         'ongoing'  => 'Ongoing',
