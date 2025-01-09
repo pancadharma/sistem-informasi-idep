@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('mitra_id')->constrained('mpartner')->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['kegiatan_id', 'mitra_id']);
+            // $table->unique(['kegiatan_id', 'mitra_id']);
         });
     }
 
@@ -27,10 +27,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::disableForeignKeyConstraints();
+        // Schema::table('trkegiatan_mitra', function (Blueprint $table) {
+        //     $table->dropUnique(['kegiatan_id', 'mitra_id']);
+        // });
         Schema::dropIfExists('trkegiatan_mitra');
-        Schema::table('trkegiatan_mitra', function (Blueprint $table) {
-            $table->dropUnique(['kegiatan_id', 'mitra_id']);
-        });
         Schema::enableForeignKeyConstraints();
     }
 };
