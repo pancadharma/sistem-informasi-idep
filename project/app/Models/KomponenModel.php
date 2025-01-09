@@ -6,10 +6,13 @@ use DateTimeInterface;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class KomponenModel extends Model
 {
     use Auditable, HasFactory;
+
     protected $table = 'mkomponenmodel';
 
     protected $fillable = [
