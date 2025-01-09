@@ -18,9 +18,9 @@ class Meals_Komponen_Model extends Model
     protected $table = 'trmealskomponenmodel'; // Table name
 
     protected $fillable = [
-        'id_program',
-        'id_komponenmodel',
-        'id_targetreinstra',
+        'program_id',
+        'komponenmodel_id',
+        'targetreinstra_id',
         'totaljumlah',
         'created_at',
         'updated_at',
@@ -30,20 +30,20 @@ class Meals_Komponen_Model extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-    
+
     // Relationships
     public function program()
     {
-        return $this->belongsTo(Program::class, 'id_program', 'id');
+        return $this->belongsTo(Program::class, 'program_id', 'id');
     }
 
     public function komponenModel()
     {
-        return $this->belongsTo(KomponenModel::class, 'id_komponenmodel', 'id');
+        return $this->belongsTo(KomponenModel::class, 'komponenmodel_id', 'id');
     }
 
     public function targetReinstra()
     {
-        return $this->belongsTo(TargetReinstra::class, 'id_targetreinstra', 'id');
+        return $this->belongsTo(TargetReinstra::class, 'targetreinstra_id', 'id');
     }
 }
