@@ -1089,6 +1089,7 @@
                         `;
                     }
                     else if (field.type === 'radio') {
+                        const selectedValue = field.value || '0'; // Default to '0' if not set
                         formFields += `
                             <div class="form-group row">
                                 <label class="col-sm-3 col-md-3 col-lg-2 order-1 order-md-1" data-toggle="tooltip"
@@ -1097,11 +1098,11 @@
                                 </label>
                                 <div class="col-sm col-md col-lg order-2 order-md-2">
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="${fieldId}-yes" name="${field.name}" value="yes" class="custom-control-input custom-control-input-success">
+                                        <input type="radio" id="${fieldId}-yes" name="${field.name}" value="1" class="custom-control-input custom-control-input-success" ${selectedValue == '1' ? 'checked' : ''}>
                                         <label class="custom-control-label" for="${fieldId}-yes">Yes</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="${fieldId}-no" name="${field.name}" value="no" class="custom-control-input custom-control-input-danger">
+                                        <input type="radio" id="${fieldId}-no" name="${field.name}" value="0" class="custom-control-input custom-control-input-danger" ${selectedValue == '0' ? 'checked' : ''}>
                                         <label class="custom-control-label" for="${fieldId}-no">No</label>
                                     </div>
                                 </div>

@@ -34,4 +34,9 @@ class Partner extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function kegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'kegiatan_mitra', 'mitra_id', 'kegiatan_id');
+    }
 }
