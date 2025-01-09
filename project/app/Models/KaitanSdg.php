@@ -25,8 +25,8 @@ class KaitanSdg extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);
-        // Chain fluent methods for configuration options
+        ->logOnly(['*']); // Pastikan log yang diinginkan
+
     }
 
     protected function serializeDate(DateTimeInterface $date)
