@@ -9,6 +9,12 @@
     @endcan
 @endsection
 @section('sub_breadcumb', __('cruds.kegiatan.list'))
+
+@section('preloader')
+    <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
+    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
+@endsection
+
 @section('content_body')
     <div class="card card-outline card-primary">
         <div class="card-header">
@@ -26,7 +32,8 @@
                 style="width:100%">
                 <thead>
                     <tr>
-                        {{-- <th class="text-center align-middle" style="width: 5%;">No.</th>
+                        <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
+                        {{--
                         <th>{{ __('cruds.program.nama') }}</th>
                         <th>{{ __('cruds.kegiatan.nama') }}</th>
                         <th>{{ __('cruds.desa.form.nama') }}</th>

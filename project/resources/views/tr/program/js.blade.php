@@ -205,6 +205,8 @@
                             return '<span class="badge badge-secondary">Draft</span>';
                         } else if (data === 'pending') {
                             return '<span class="badge badge-warning">Pending</span>';
+                        } else if (data === 'running') {
+                            return '<span class="badge bg-teal">Running</span>';
                         } else if (data === 'submit') {
                             return '<span class="badge badge-success">Submit</span>';
                         }

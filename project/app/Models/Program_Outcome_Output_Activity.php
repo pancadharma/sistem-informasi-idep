@@ -19,6 +19,8 @@ class Program_Outcome_Output_Activity extends Model
         'deskripsi',
         'indikator',
         'target',
+        'kode',
+        'nama',
         'created_at',
         'updated_at',
     ];

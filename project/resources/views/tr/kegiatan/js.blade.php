@@ -1,3 +1,5 @@
+
+<!-- Index Kegiatan List -->
 <script>
     $(document).ready(function () {
         $('#kegiatan-list').DataTable({
@@ -74,10 +76,11 @@
                     pageLength: 10,
                 }
             },
-            order: [0, 'asc'],
+            order: [1, 'asc'],
             lengthMenu: [10,25,50,100],
 
         });
     });
 
 </script>
+

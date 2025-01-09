@@ -29,28 +29,149 @@ class Kegiatan extends Model implements HasMedia
 
     protected $fillable = [
         'programoutcomeoutputactivity_id',
+        'jenis_kegiatan_id',
+        'desa_id',
+        'user_id',
+        'mitra_id',
+        'bentuk_kegiatan_id',
+        'sektor_kegiatan_id',
+        'fase_pelaporan',
+
         'kode',
         'nama',
         'tanggalmulai',
         'tanggalselesai',
-        'dusun_id',
         'long',
         'lat',
-        'kategorilokasikegiatan_id',
-        'tempat',
-        'deskripsi',
-        'tujuan',
-        'yangterlibat',
-        'pelatih',
-        'informasilain',
-        'luaslahan',
-        'jenisbantuan_id',
-        'satuan_id',
-        'tindaklanjut',
-        'tantangan',
-        'rekomendasi',
-        'user_id',
+        'lokasi',
         'status',
+
+        // update based on idep.pu
+        'fasepelaporan',
+        'deskripsilatarbelakang',
+        'deskripsitujuan',
+        'deskripsikeluaran',
+        'deskripsiyangdikaji',
+
+        'assessmentyangterlibat',
+        'assessmenttemuan',
+        'assessmenttambahan',
+        'assessmenttambahan_ket',
+        'assessmentkendala',
+        'assessmentisu',
+        'assessmentpembelajaran',
+        'sosialisasiyangterlibat',
+        'sosialisasitemuan',
+        'sosialisasitambahan',
+        'sosialisasitambahan_ket',
+        'sosialisasikendala',
+        'sosialisasiisu',
+        'sosialisasipembelajaran',
+        'pelatihanpelatih',
+        'pelatihanhasil',
+        'pelatihandistribusi',
+        'pelatihandistribusi_ket',
+        'pelatihanrencana',
+        'pelatihanunggahan',
+        'pelatihanisu',
+        'pelatihanpembelajaran',
+        'pembelanjaandetailbarang',
+        'pembelanjaanmulai',
+        'pembelanjaanselesai',
+        'pembelanjaandistribusimulai',
+        'pembelanjaandistribusiselesai',
+        'pembelanjaanterdistribusi',
+        'pembelanjaanakandistribusi',
+        'pembelanjaanakandistribusi_ket',
+        'pembelanjaankendala',
+        'pembelanjaanisu',
+        'pembelanjaanpembelajaran',
+        'pengembanganjeniskomponen',
+        'pengembanganberapakomponen',
+        'pengembanganlokasikomponen',
+        'pengembanganyangterlibat',
+        'pengembanganrencana',
+        'pengembangankendala',
+        'pengembanganisu',
+        'pengembanganpembelajaran',
+        'kampanyeyangdikampanyekan',
+        'kampanyejenis',
+        'kampanyebentukkegiatan',
+        'kampanyeyangterlibat',
+        'kampanyeyangdisasar',
+        'kampanyejangkauan',
+        'kampanyerencana',
+        'kampanyekendala',
+        'kampanyeisu',
+        'kampanyepembelajaran',
+        'pemetaanyangdihasilkan',
+        'pemetaanluasan',
+        'pemetaanunit',
+        'pemetaanyangterlibat',
+        'pemetaanrencana',
+        'pemetaanisu',
+        'pemetaanpembelajaran',
+        'monitoringyangdipantau',
+        'monitoringdata',
+        'monitoringyangterlibat',
+        'monitoringmetode',
+        'monitoringhasil',
+        'monitoringkegiatanselanjutnya',
+        'monitoringkegiatanselanjutnya_ket',
+        'monitoringkendala',
+        'monitoringisu',
+        'monitoringpembelajaran',
+        'kunjunganlembaga',
+        'kunjunganpeserta',
+        'kunjunganyangdilakukan',
+        'kunjunganhasil',
+        'kunjunganpotensipendapatan',
+        'kunjunganrencana',
+        'kunjungankendala',
+        'kunjunganisu',
+        'kunjunganpembelajaran',
+        'konsultasilembaga',
+        'konsultasikomponen',
+        'konsultasiyangdilakukan',
+        'konsultasihasil',
+        'konsultasipotensipendapatan',
+        'konsultasirencana',
+        'konsultasikendala',
+        'konsultasiisu',
+        'konsultasipembelajaran',
+        'lainnyamengapadilakukan',
+        'lainnyadampak',
+        'lainnyasumberpendanaan',
+        'lainnyasumberpendanaan_ket',
+        'lainnyayangterlibat',
+        'lainnyarencana',
+        'lainnyakendala',
+        'lainnyaisu',
+        'lainnyapembelajaran',
+        'penerimamanfaatdewasaperempuan',
+        'penerimamanfaatdewasalakilaki',
+        'penerimamanfaatdewasatotal',
+        'penerimamanfaatlansiaperempuan',
+        'penerimamanfaatlansialakilaki',
+        'penerimamanfaatlansiatotal',
+        'penerimamanfaatremajaperempuan',
+        'penerimamanfaatremajalakilak',
+        'penerimamanfaatremajatotal',
+        'penerimamanfaatanakperempuan',
+        'penerimamanfaatanaklakilaki',
+        'penerimamanfaatanaktotal',
+        'penerimamanfaatdisabilitasperempuan',
+        'penerimamanfaatdisabilitaslakilak',
+        'penerimamanfaatdisabilitastotal',
+        'penerimamanfaatnondisabilitasperempuan',
+        'penerimamanfaatnondisabilitaslakilaki',
+        'penerimamanfaatnondisabilitastotal',
+        'penerimamanfaatmarjinalperempuan',
+        'penerimamanfaatmarjinallakilaki',
+        'penerimamanfaatmarjinaltotal',
+        'penerimamanfaatperempuantotal',
+        'penerimamanfaatlakilakitotal',
+        'penerimamanfaattotal',
         'created_at',
         'updated_at',
     ];
@@ -136,12 +257,54 @@ class Kegiatan extends Model implements HasMedia
 
     public function activity()
     {
-        // programoutcomeoutputactivity_id
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    // public function program()
-    // {
-    //     return $this->belongsTo(Program::class);
-    // }
+    public function jenis_kegiatan()
+    {
+        return $this->belongsTo(Jenis_Kegiatan::class, 'jenis_kegiatan_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->hasMany(Kegiatan_Lokasi::class, 'kegiatan_id');
+    }
+
+    public function mitra()
+    {
+        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
+    }
+
+
+
+    public const STATUS_SELECT = [
+        'draft'    => 'Draft',
+        'ongoing'  => 'Ongoing',
+        'completed' => 'Completed',
+        'cancelled ' => 'Cancelled',
+    ];
+
+
+    public static function getJenisKegiatan(): array
+    {
+        return [
+            1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
+            2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
+            3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
+            4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
+            5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
+            6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
+            7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
+            8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
+            9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
+            10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
+            11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
+            12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
+            13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
+            14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
+            15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
+            16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
+            17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
+        ];
+    }
 }

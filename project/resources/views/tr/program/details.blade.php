@@ -384,6 +384,18 @@
 
             let newActivityTbody = `
                 <tbody id="has-activity-${activityIndex}" data-body-id="${activityIndex}" class="data-activity">
+                    <tr>
+                        <th width="10%">Kode Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id=kode_"${activityIndex}" name="kode[]" class="form-control" placeholder="Kode Kegiatan" rows="1" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="10%">Nama Kegiatan</th>
+                        <td width="90%">
+                        <textarea type="textarea" id=nama_"${activityIndex}" name="nama[]" class="form-control" placeholder="Nama Kegiatan" rows="1" maxlength="1000"></textarea>
+                        </td>
+                    </tr>
                     <tr data-activity-id="${activityIndex}">
                         <th width="10%">Deskripsi Kegiatan</th>
                         <td width="90%">
@@ -411,7 +423,7 @@
                             </button>
                         </div>
                         </td>
-                </tr>
+                    </tr>
                 </tbody>`;
             $('#activity_output_list').append(newActivityTbody);
 
@@ -496,7 +508,9 @@
                 let activity = {
                     deskripsi: $(this).find('textarea[name="deskripsi[]"]').val(),
                     indikator: $(this).find('textarea[name="indikator[]"]').val(),
-                    target: $(this).find('textarea[name="target[]"]').val()
+                    target: $(this).find('textarea[name="target[]"]').val(),
+                    kode: $(this).find('textarea[name="kode[]"]').val(),
+                    nama: $(this).find('textarea[name="nama[]"]').val(),
                 };
                 formData.activities.push(activity);
             });
