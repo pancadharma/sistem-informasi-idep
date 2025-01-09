@@ -267,6 +267,7 @@ class Kegiatan extends Model implements HasMedia
         'cancelled ' => 'Cancelled',
     ];
 
+
     public static function getJenisKegiatan(): array
     {
         return [
