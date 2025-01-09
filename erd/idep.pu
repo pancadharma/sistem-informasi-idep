@@ -306,29 +306,18 @@ entity "trkegiatan" as trkegiatan {
     id_jeniskegiatan : int <<fk>>
     id_desa : int <<fk>>
     id_user : int <<fk>>
-    lokasi : varchar (500) null
+    lokasi : text null
     long : decimal (9,6) null
     lat : decimal (9,6) null
     tanggalmulai : datetime
     tanggalselesai : datetime
     status : varchar (50)
-    mitra : varchar (300) null
+    mitra : json null
 
-    deskripsilatarbelakang : varchar (500) null
-    deskripsitujuan : varchar (500) null
-    deskripsikeluaran : varchar (500) null
-    deskripsiyangdikaji : varchar (500) null
-
-
-
-
-
-
-
-
-    
-
-
+    deskripsilatarbelakang : text null
+    deskripsitujuan : text null
+    deskripsikeluaran : text null
+    deskripsiyangdikaji : text null
 
     penerimamanfaatdewasaperempuan : int
     penerimamanfaatdewasalakilaki : int
@@ -396,135 +385,135 @@ entity "trkegiatanpelatihan" as trkegiatanpelatihan {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    pelatihanpelatih : varchar (500) null
-    pelatihanhasil : varchar (500) null
+    pelatihanpelatih : text null
+    pelatihanhasil : text null
     pelatihandistribusi : bit
-    pelatihandistribusi_ket : varchar (500) null
-    pelatihanrencana : varchar (500) null
+    pelatihandistribusi_ket : text null
+    pelatihanrencana : text null
     pelatihanunggahan : bit
-    pelatihanisu : varchar (500) null
-    pelatihanpembelajaran : varchar (500) null
+    pelatihanisu : text null
+    pelatihanpembelajaran : text null
 }
 
 entity "trkegiatanpembelanjaan" as trkegiatanpembelanjaan {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    pembelanjaandetailbarang : varchar (500) null
+    pembelanjaandetailbarang : text null
     pembelanjaanmulai : datetime null
     pembelanjaanselesai : datetime null
     pembelanjaandistribusimulai : datetime null
     pembelanjaandistribusiselesai : datetime null
     pembelanjaanterdistribusi : bit
     pembelanjaanakandistribusi : bit
-    pembelanjaanakandistribusi_ket : varchar (500) null
+    pembelanjaanakandistribusi_ket : text null
     pembelanjaankendala : varchar (500) null
-    pembelanjaanisu : varchar (500) null
-    pembelanjaanpembelajaran : varchar (500) null
+    pembelanjaanisu : text null
+    pembelanjaanpembelajaran : text null
 }
 
 entity "trkegiatanpengembangan" as trkegiatanpengembangan {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    pengembanganjeniskomponen : varchar (500) null
-    pengembanganberapakomponen : varchar (500) null
-    pengembanganlokasikomponen : varchar (500) null
-    pengembanganyangterlibat : varchar (500) null
-    pengembanganrencana : varchar (500) null
-    pengembangankendala : varchar (500) null
-    pengembanganisu : varchar (500) null
-    pengembanganpembelajaran : varchar (500) null
+    pengembanganjeniskomponen : text null
+    pengembanganberapakomponen : text null
+    pengembanganlokasikomponen : text null
+    pengembanganyangterlibat : text null
+    pengembanganrencana : text null
+    pengembangankendala : text null
+    pengembanganisu : text null
+    pengembanganpembelajaran : text null
 }
 
 entity "trkegiatankampanye" as trkegiatankampanye {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    kampanyeyangdikampanyekan : varchar (500) null
-    kampanyejenis : varchar (200) null
-    kampanyebentukkegiatan : varchar (500) null
-    kampanyeyangterlibat : varchar (500) null
-    kampanyeyangdisasar : varchar (500) null
-    kampanyejangkauan : varchar (500) null
-    kampanyerencana : varchar (500) null
-    kampanyekendala : varchar (500) null
-    kampanyeisu : varchar (500) null
-    kampanyepembelajaran : varchar (500) null
+    kampanyeyangdikampanyekan : text null
+    kampanyejenis : text null
+    kampanyebentukkegiatan : text null
+    kampanyeyangterlibat : text null
+    kampanyeyangdisasar : text null
+    kampanyejangkauan : text null
+    kampanyerencana : text null
+    kampanyekendala : text null
+    kampanyeisu : text null
+    kampanyepembelajaran : text null
 }
 
 entity "trkegiatanpemetaan" as trkegiatanpemetaan {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    pemetaanyangdihasilkan : varchar (500) null
-    pemetaanluasan : varchar (500) null
-    pemetaanunit : varchar (500) null
-    pemetaanyangterlibat : varchar (500) null
-    pemetaanrencana : varchar (500) null
-    pemetaanisu : varchar (500) null
-    pemetaanpembelajaran : varchar (500) null
+    pemetaanyangdihasilkan : text null
+    pemetaanluasan : text null
+    pemetaanunit : text null
+    pemetaanyangterlibat : text null
+    pemetaanrencana : text null
+    pemetaanisu : text null
+    pemetaanpembelajaran : text null
 }
 
 entity "trkegiatanmonitoring" as trkegiatanmonitoring {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    monitoringyangdipantau : varchar (500) null
-    monitoringdata : varchar (500) null
-    monitoringyangterlibat : varchar (500) null
-    monitoringmetode : varchar (500) null
-    monitoringhasil : varchar (500) null
+    monitoringyangdipantau : text null
+    monitoringdata : text null
+    monitoringyangterlibat : text null
+    monitoringmetode : text null
+    monitoringhasil : text null
     monitoringkegiatanselanjutnya : bit
-    monitoringkegiatanselanjutnya_ket : varchar (500) null
-    monitoringkendala : varchar (500) null
-    monitoringisu : varchar (500) null
-    monitoringpembelajaran : varchar (500) null
+    monitoringkegiatanselanjutnya_ket : text null
+    monitoringkendala : text null
+    monitoringisu : text null
+    monitoringpembelajaran : text null
 }
 
 entity "trkegiatankunjungan" as trkegiatankunjungan {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    kunjunganlembaga : varchar (500) null
-    kunjunganpeserta : varchar (500) null
-    kunjunganyangdilakukan : varchar (500) null
-    kunjunganhasil : varchar (500) null
-    kunjunganpotensipendapatan : varchar (500) null
-    kunjunganrencana : varchar (500) null
-    kunjungankendala : varchar (500) null
-    kunjunganisu : varchar (500) null
-    kunjunganpembelajaran : varchar (500) null
+    kunjunganlembaga : text null
+    kunjunganpeserta : text null
+    kunjunganyangdilakukan : text null
+    kunjunganhasil : text null
+    kunjunganpotensipendapatan : text null
+    kunjunganrencana : text null
+    kunjungankendala : text null
+    kunjunganisu : text null
+    kunjunganpembelajaran : text null
 }
 
 entity "trkegiatankonsultasi" as trkegiatankonsultasi {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    konsultasilembaga : varchar (500) null
-    konsultasikomponen : varchar (500) null
-    konsultasiyangdilakukan : varchar (500) null
-    konsultasihasil : varchar (500) null
-    konsultasipotensipendapatan : varchar (500) null
-    konsultasirencana : varchar (500) null
-    konsultasikendala : varchar (500) null
-    konsultasiisu : varchar (500) null
-    konsultasipembelajaran : varchar (500) null
+    konsultasilembaga : text null
+    konsultasikomponen : text null
+    konsultasiyangdilakukan : text null
+    konsultasihasil : text null
+    konsultasipotensipendapatan : text null
+    konsultasirencana : text null
+    konsultasikendala : text null
+    konsultasiisu : text null
+    konsultasipembelajaran : text null
 }
 
 entity "trkegiatanlainnya" as trkegiatanlainnya {
     *id : int <<auto>>
     --
     id_kegiatan : int <<fk>>
-    lainnyamengapadilakukan : varchar (500) null
-    lainnyadampak : varchar (500) null
-    lainnyasumberpendanaan : varchar (200) null
-    lainnyasumberpendanaan_ket : varchar (500) null
-    lainnyayangterlibat : varchar (500) null
-    lainnyarencana : varchar (500) null
-    lainnyakendala : varchar (500) null
-    lainnyaisu : varchar (500) null
-    lainnyapembelajaran : varchar (500) null
+    lainnyamengapadilakukan : text null
+    lainnyadampak : text null
+    lainnyasumberpendanaan : text null
+    lainnyasumberpendanaan_ket : text null
+    lainnyayangterlibat : text null
+    lainnyarencana : text null
+    lainnyakendala : text null
+    lainnyaisu : text null
+    lainnyapembelajaran : text null
 }
 
 entity "trkegiatandokumen" as trkegiatandokumen {
@@ -533,8 +522,8 @@ entity "trkegiatandokumen" as trkegiatandokumen {
     id_kegiatan : int <<fk>>
     filepath : varchar (200)
     nama : varchar (200)
-    keterangan : varchar (200)
-}
+    keterangan : text
+}   
 
 entity "trkegiatanpenulis" as trkegiatanpenulis {
     *id : int <<auto>>
@@ -544,7 +533,7 @@ entity "trkegiatanpenulis" as trkegiatanpenulis {
     id_peran : int <<fk>>
 }
 
-entity "trmealspenerimamanfaat" as trprogrampenerimamanfaat {
+entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     *id : int <<auto>>
     --
     id_program : int <<fk>>

@@ -890,6 +890,7 @@ return [
         'file'                                   => [
             'label'                              => 'Files',
             'upload'                             => 'Upload Files',
+            'upload_media'                       => 'Upload Media Images/Video',
             'caption'                            => 'Input File Information',
             'daftar_absen'                       => 'Attendance List',
             'formulir_persetujuan'               => 'Consent Forms',

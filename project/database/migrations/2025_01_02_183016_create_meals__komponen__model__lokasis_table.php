@@ -21,9 +21,18 @@ return new class extends Migration
             $table->unsignedBigInteger('id_provinsi')->nullable(); // Nullable foreign key
             $table->decimal('long', 9, 6)->nullable(); // Longitude
             $table->decimal('lat', 9, 6)->nullable(); // Latitude
-            $table->unsignedBigInteger('id_satuan'); // Foreign key
-            $table->integer('jumlah'); // Integer field
-            $table->timestamps(); // Timestamps (created_at, updated_at)
+            $table->unsignedBigInteger('id_satuan')->nullable(); // Foreign key
+            $table->integer('jumlah')->nullable(); // Integer field
+            $table->timestamps(); // Timestamps
+
+            // Foreign key constraints in case @siva forgot to add them
+            $table->foreign('id_mealskomponenmodel')->references('id')->on('trmealskomponenmodel')->onDelete('cascade');
+            $table->foreign('id_dusun')->references('id')->on('dusun')->onDelete('set null');
+            $table->foreign('id_desa')->references('id')->on('kelurahan')->onDelete('set null');
+            $table->foreign('id_kecamatan')->references('id')->on('kecamatan')->onDelete('set null');
+            $table->foreign('id_kabupaten')->references('id')->on('kabupaten')->onDelete('set null');
+            $table->foreign('id_provinsi')->references('id')->on('provinsi')->onDelete('set null');
+            $table->foreign('id_satuan')->references('id')->on('msatuan')->onDelete('cascade');
         });
     }
 
@@ -34,6 +43,9 @@ return new class extends Migration
      */
     public function down()
     {
+        // Schema::dropIfExists('trmealskomponenmodellokasi');
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('trmealskomponenmodellokasi');
+        Schema::enableForeignKeyConstraints();
     }
 };

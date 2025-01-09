@@ -1,3 +1,5 @@
+
+<!-- Index Kegiatan List -->
 <script>
     $(document).ready(function () {
         $('#kegiatan-list').DataTable({
