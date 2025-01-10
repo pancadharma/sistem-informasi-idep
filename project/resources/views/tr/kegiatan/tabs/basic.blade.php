@@ -54,19 +54,19 @@
             <strong>{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</strong>
         </label>
         <div class="select2-purple">
-            <select class="form-control select2" name="sektor_kegiatan" id="sektor_kegiatan" data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
+            <select class="form-control select2" name="sektor_kegiatan" id="sektor_kegiatan" multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
     </div>
     <!-- fase pelaporan-->
     <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
-        <label for="fase_pelaporan" class="input-group col-form-label">
+        <label for="fasepelaporan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.fase_pelaporan') }} </strong>
             <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
         </label>
         <div class="select2-purple">
-            <select class="form-control select2-readonly" name="fase_pelaporan" id="fase_pelaporan">
+            <select class="form-control select2-readonly" name="fasepelaporan" id="fasepelaporan">
                 <option value="">{{ __('global.pleaseSelect') }}</option>
                 @for ($i = 1; $i <= 99; $i++)
                     <option value="{{ $i }}">{{ $i }}</option>
@@ -533,11 +533,9 @@
                 <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
                     <input type="text" class="form-control" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
                 </div>
-                <div class="col-sm-10 col-md-3 col-lg-3 self-center order-3 order-md-3">
-                    <input type="text" class="form-control" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
-                </div>
-                <div class="col-sm-2 col-md-2 col-lg-2 self-center order-4 order-md-4">
-                    <button type="button" class="btn btn-danger remove-staff-row btn-flat">
+                <div class="col-sm-12 col-md-6 col-lg-6 self-center order-3 order-md-3 d-flex align-items-center">
+                    <input type="text" class="form-control flex-grow-1" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                    <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>

@@ -102,7 +102,11 @@
             tanggalselesai: $('#tanggalselesai').val(),
             nama_mitra: $('#nama_mitra').val(),
             status: $('#status').val(),
-            fase_pelaporan: $('#fase_pelaporan').val(),
+            fasepelaporan: $('#fasepelaporan').val(),
+
+            sektor_kegiatan: $('#sektor_kegiatan').val(),
+
+
 
 
             deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
@@ -191,7 +195,7 @@
             $('#tanggalmulai').val(formData.tanggalmulai || '');
             $('#tanggalselesai').val(formData.tanggalselesai || '');
             $('#status').val(formData.status || '');
-            $('#fase_pelaporan').val(formData.fase_pelaporan || '');
+            $('#fasepelaporan').val(formData.fasepelaporan || '');
 
 
             $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
@@ -227,6 +231,23 @@
                             var item = response.data[0];
                             var newOption = new Option(item.nama, item.id, true, true);
                             $('#jenis_kegiatan')
+                                .append(newOption)
+                                .trigger('change');
+                        }
+                    }
+                });
+            }
+            if (formData.sektor_kegiatan) {
+                var apiUrl = $('#sektor_kegiatan').data('api-url');
+                $.ajax({
+                    url: apiUrl,
+                    method: 'GET',
+                    data: { id: formData.sektor_kegiatan },
+                    success: function (response) {
+                        if (response.data && response.data.length > 0) {
+                            var item = response.data[0];
+                            var newOption = new Option(item.nama, item.id, true, true);
+                            $('#sektor_kegiatan')
                                 .append(newOption)
                                 .trigger('change');
                         }
@@ -883,7 +904,7 @@
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-        $('#fase_pelaporan').select2({
+        $('#fasepelaporan').select2({
             placeholder: '{{ __('global.pleaseSelect') }}',
         });
         $('#status').select2({
@@ -1138,18 +1159,18 @@
         // Function to fetch and update fase pelaporan
         function fetchFasePelaporan(programOutcomeOutputActivityId){
             if(!programOutcomeOutputActivityId){
-                $('#fase_pelaporan').val(1).trigger('change');
-                $('#fase_pelaporan option').prop('disabled', false);
+                $('#fasepelaporan').val(1).trigger('change');
+                $('#fasepelaporan option').prop('disabled', false);
                 return;
             }
             $.ajax({
                 url: '{{ url("kegiatan/api/fase-pelaporan") }}/' + programOutcomeOutputActivityId,
                 method: 'GET',
                 success: function (data) {
-                    $('#fase_pelaporan').val(data.next_fase_pelaporan).trigger('change');
-                    $('#fase_pelaporan option').prop('disabled', false); // Enable all options first
+                    $('#fasepelaporan').val(data.next_fase_pelaporan).trigger('change');
+                    $('#fasepelaporan option').prop('disabled', false); // Enable all options first
                     $.each(data.disabled_fase, function(index, value) {
-                        $('#fase_pelaporan option[value="' + value + '"]').prop('disabled', true);
+                        $('#fasepelaporan option[value="' + value + '"]').prop('disabled', true);
                     });
                 }
             });
