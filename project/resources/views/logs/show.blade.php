@@ -8,7 +8,7 @@
         <li class="list-group-item"><strong>User:</strong> {{ $log->causer->nama ?? 'System' }}</li>
         <li class="list-group-item"><strong>Event:</strong> {{ ucfirst($log->event) }}</li>
         <li class="list-group-item"><strong>Model:</strong> {{ class_basename($log->subject_type) }}</li>
-        <li class="list-group-item"><strong>Model ID:</strong> {{ $log->subject_id }}</li>
+        {{-- <li class="list-group-item"><strong>Model ID:</strong> {{ $log->subject_id }}</li> --}}
         <li class="list-group-item"><strong>Time:</strong> {{ $log->created_at->format('Y-m-d H:i:s') }}</li>
         <li class="list-group-item">
             <strong>Old Values:</strong>
@@ -22,7 +22,7 @@
                         $isChanged = $value !== $newValue;
                     @endphp
                     <li>
-                        {{ ucfirst($key) }}: 
+                        {{ ucfirst($key) }}:
                         <span @if($isChanged) style="font-weight: bold;" @endif>{{ $value }}</span>
                     </li>
                 @empty
@@ -42,7 +42,7 @@
                         $isChanged = $value !== $oldValue;
                     @endphp
                     <li>
-                        {{ ucfirst($key) }}: 
+                        {{ ucfirst($key) }}:
                         <span @if($isChanged) style="font-weight: bold;" @endif>{{ $value }}</span>
                     </li>
                 @empty
