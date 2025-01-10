@@ -161,6 +161,10 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
     }
+    public function penulis()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id', 'peran_id');
+    }
 
 
 
