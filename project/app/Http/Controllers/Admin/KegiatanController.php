@@ -96,11 +96,11 @@ class KegiatanController extends Controller
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
-
+            $kegiatan = new Kegiatan();
 
             $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
 
-            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities'));
+            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan'));
         }
         return response()->json([
             'success' => false,
@@ -235,12 +235,6 @@ class KegiatanController extends Controller
                 //If you have file inputs
                 'dokumen'
             ]));
-
-
-
-
-
-
             $this->storeKegiatanHasil($request, $kegiatan);
 
 
@@ -494,10 +488,10 @@ class KegiatanController extends Controller
             return response()->json(['next_fase_pelaporan' => 1, 'disabled_fase' => []]);
         }
         $nextFasePelaporan = Kegiatan::where('programoutcomeoutputactivity_id', $programOutcomeOutputActivityId)
-            ->max('fase_pelaporan');
+            ->max('fasepelaporan');
 
         $existingFasePelaporan = Kegiatan::where('programoutcomeoutputactivity_id', $programOutcomeOutputActivityId)
-            ->pluck('fase_pelaporan')->toArray();
+            ->pluck('fasepelaporan')->toArray();
 
         if ($nextFasePelaporan === null) {
             $nextFasePelaporan = 1;
@@ -664,5 +658,4 @@ class KegiatanController extends Controller
     }
 
     //method to store kegiatan basic tab data
-
 }
