@@ -57,6 +57,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meals__feedback__responses');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('trmealsfrm');
+        Schema::enableForeignKeyConstraints();
     }
 };
