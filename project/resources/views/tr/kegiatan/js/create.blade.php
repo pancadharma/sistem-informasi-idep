@@ -237,26 +237,27 @@
                     }
                 });
             }
-            if (formData.sektor_kegiatan) {
-                var apiUrl = $('#sektor_kegiatan').data('api-url');
-                $.ajax({
-                    url: apiUrl,
-                    method: 'GET',
-                    data: { id: formData.sektor_kegiatan },
-                    success: function (response) {
-                        if (response.data && response.data.length > 0) {
-                            var item = response.data[0];
-                            var newOption = new Option(item.nama, item.id, true, true);
-                            $('#sektor_kegiatan')
-                                .append(newOption)
-                                .trigger('change');
-                        }
-                    }
-                });
-            }
+            // if (formData.sektor_kegiatan) {
+            //     var apiUrl = $('#sektor_kegiatan').data('api-url');
+            //     $.ajax({
+            //         url: apiUrl,
+            //         method: 'GET',
+            //         data: { id: formData.sektor_kegiatan },
+            //         success: function (response) {
+            //             if (response.data && response.data.length > 0) {
+            //                 var item = response.data[0];
+            //                 var newOption = new Option(item.nama, item.id, true, true);
+            //                 $('#sektor_kegiatan')
+            //                     .append(newOption)
+            //                     .trigger('change');
+            //             }
+            //         }
+            //     });
+            // }
 
             // Populate and initialize select2 fields with fetched data from API
-            $('.select2').not('#jenis_kegiatan, #sektor_kegiatan').each(function () {
+            // $('.select2').not('#jenis_kegiatan, #sektor_kegiatan').each(function () {
+            $('.select2').not('#jenis_kegiatan').each(function () {
                 var fieldId = $(this).attr('id');
                 var values = formData[fieldId];
                 var select2Field = $(this);
@@ -852,32 +853,32 @@
             }
         });
 
-        $('#sektor_kegiatan').select2({
-            placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.sektor_kegiatan') }}',
-            ajax: {
-                url: '{{ route('api.kegiatan.sektor_kegiatan') }}',
-                dataType: 'json',
-                processResults: function (data) {
-                    var results = [];
-                    $.each(data, function(group, options) {
-                        var optgroup = {
-                            text: group,
-                            children: []
-                        };
-                        $.each(options, function(id, text) {
-                            optgroup.children.push({
-                                id: id,
-                                text: text
-                            });
-                        });
-                        results.push(optgroup);
-                    });
-                    return {
-                        results: results
-                    };
-                }
-            }
-        });
+        // $('#sektor_kegiatan').select2({
+        //     placeholder: '{{ __('global.pleaseSelect').' '. __('cruds.kegiatan.basic.sektor_kegiatan') }}',
+        //     ajax: {
+        //         url: '{{ route('api.kegiatan.sektor_kegiatan') }}',
+        //         dataType: 'json',
+        //         processResults: function (data) {
+        //             var results = [];
+        //             $.each(data, function(group, options) {
+        //                 var optgroup = {
+        //                     text: group,
+        //                     children: []
+        //                 };
+        //                 $.each(options, function(id, text) {
+        //                     optgroup.children.push({
+        //                         id: id,
+        //                         text: text
+        //                     });
+        //                 });
+        //                 results.push(optgroup);
+        //             });
+        //             return {
+        //                 results: results
+        //             };
+        //         }
+        //     }
+        // });
 
         // Function to update "Yes/No" display for a given toggle input
         ////////////////////////////////////////////////////////////////////////////////////
