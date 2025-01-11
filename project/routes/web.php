@@ -250,6 +250,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
     Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
+    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
 
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
