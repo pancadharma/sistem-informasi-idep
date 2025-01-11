@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Auditable;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
@@ -24,25 +25,21 @@ class mSektor extends Model
         'created_at',
         'updated_at',
     ];
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
-    protected $appends = [
-        'created_at_human',
-        'updated_at_human',
-    ];
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-    ];
+
     protected $dates = [
         'created_at',
         'updated_at',
     ];
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    public $timestamps = true;
+
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+    public function getTglMulaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
 
     public function kegiatan_sektor()
     {

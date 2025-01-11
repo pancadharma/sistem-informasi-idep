@@ -28,6 +28,16 @@ class Kegiatan_Sektor extends Model
         'updated_at',
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function getTglMulaiAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
@@ -39,6 +49,6 @@ class Kegiatan_Sektor extends Model
     }
     public function sektor()
     {
-        return $this->belongsTo(Sektor::class, 'sektor_id');
+        return $this->belongsTo(mSektor::class, 'sektor_id');
     }
 }

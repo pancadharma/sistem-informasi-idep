@@ -10,6 +10,7 @@ use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Kelurahan;
+use App\Models\mSektor;
 use App\Models\Partner;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -20,6 +21,7 @@ use App\Models\Satuan;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class KegiatanController extends Controller
@@ -449,36 +451,31 @@ class KegiatanController extends Controller
         return response()->json($desa);
     }
 
-    // kegiantan sector
     public function getSektorKegiatan(Request $request)
     {
-        $jenisKegiatan = Kegiatan::getJenisKegiatan(); //static function in modal not from database yet
-        if ($request->has('id')) {
-            // If requesting specific ID(s)
-            $id = $request->input('id');
-            $data = collect($jenisKegiatan)
-                ->filter(function ($value, $key) use ($id) {
-                    return $key == $id;
-                })
-                ->map(function ($text, $id) {
-                    return [
-                        'id' => $id,
-                        'nama' => $text
-                    ];
-                })
-                ->values()
-                ->all();
+        $request->validate([
+            'search'    => 'nullable|string|max:255',
+            'page'      => 'nullable|integer|min:1',
+            'id'        => 'nullable|array|min:1',
+            'id.*'      => 'integer',
+        ]);
 
-            return response()->json(['data' => $data]);
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
         }
-        // For dropdown listing
-        // $first = __('cruds.kegiatan.basic.bentuk');
-        $second =  __('cruds.kegiatan.basic.sektor');
-        $groupedData = [
-            // $first => array_slice($jenisKegiatan, 0, 11, true),
-            $second => array_slice($jenisKegiatan, 11, null, true)
-        ];
-        return response()->json($groupedData);
+
+        $data = mSektor::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+
+        $data = $data->paginate(20, ['*'], 'page', $page);
+        return response()->json($data);
     }
 
     // auto select next fase pelaporan on create kegiatan form
