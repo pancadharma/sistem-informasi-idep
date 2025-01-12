@@ -537,11 +537,185 @@
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-
-
     });
 
     // Utility Functions
+
+    function addNewLocationInputs() {
+        var uniqueId = Date.now();
+        var newLocationField = `
+            <div class="form-group row lokasi-kegiatan">
+                <div class="col-sm-12 col-md-2 col-lg-1 self-center order-1">
+                    <select name="provinsi_id[]" class="form-control dynamic-select2 provinsi-select"
+                        id="provinsi-${uniqueId}"
+                        data-placeholder="Pilih Provinsi">
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-1 self-center order-2">
+                    <select name="kabupaten_id[]" class="form-control dynamic-select2 kabupaten-select"
+                        id="kabupaten-${uniqueId}"
+                        data-placeholder="Pilih Kabupaten">
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-1 self-center order-3">
+                    <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select"
+                        id="kecamatan-${uniqueId}"
+                        data-placeholder="Pilih Kecamatan">
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-4">
+                    <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select"
+                        id="kelurahan-${uniqueId}"
+                        data-placeholder="Pilih Kelurahan">
+                    </select>
+                </div>
+                 <div class="col-sm-12 col-md-2 col-lg-2 self-center order-5">
+                    <input type="text" class="form-control" name="lokasi[]" placeholder="Nama Lokasi">
+                 </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-6">
+                    <input type="text" class="form-control" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-7 d-flex align-items-center">
+                    <input type="text" class="form-control flex-grow-1" name="long[]" placeholder="Longitude">
+                    <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>`;
+
+        $('.list-lokasi-kegiatan').append(newLocationField);
+
+        // Initialize provinsi select2
+        $(`#provinsi-${uniqueId}`).select2({
+            placeholder: 'Pilih Provinsi',
+            allowClear: true,
+            ajax: {
+                url: "{{ route('api.kegiatan.provinsi') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+
+       // Initialize kabupaten select2
+        $(`#kabupaten-${uniqueId}`).select2({
+            placeholder: 'Pilih Kabupaten',
+            allowClear: true,
+            ajax: {
+                url: "{{ route('api.kegiatan.kabupaten') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        provinsi_id: $(`#provinsi-${uniqueId}`).val(), // Get the province ID
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+
+
+        // Initialize kecamatan select2
+            $(`#kecamatan-${uniqueId}`).select2({
+                placeholder: 'Pilih Kecamatan',
+                allowClear: true,
+                ajax: {
+                    url:  "{{ route('api.kegiatan.kecamatan') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kabupaten_id: $(`#kabupaten-${uniqueId}`).val(),
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                    }
+            });
+
+
+            // Initialize kelurahan select2
+            $(`#kelurahan-${uniqueId}`).select2({
+                placeholder: 'Pilih Kelurahan',
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('api.kegiatan.kelurahan') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+
+            // Handle dependencies
+            $(`#provinsi-${uniqueId}`).on('change', function() {
+                $(`#kabupaten-${uniqueId}`).val(null).trigger('change');
+                $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
+                $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+            });
+
+            $(`#kabupaten-${uniqueId}`).on('change', function() {
+                $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
+                $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+            });
+
+
+            $(`#kecamatan-${uniqueId}`).on('change', function() {
+            $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+            });
+    }
     // function addNewLocationInputs() {
     //     var newLocationField = `
     //         <div class="form-group row lokasi-kegiatan">
@@ -719,177 +893,176 @@
     //     })
     // }
 
-    function addNewLocationInputs() {
-    var uniqueId = Date.now();
-    var newLocationField = `
-        <div class="form-group row lokasi-kegiatan">
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1">
-                <select name="provinsi_id[]" class="form-control dynamic-select2 provinsi-select"
-                    id="provinsi-${uniqueId}"
-                    data-placeholder="Pilih Provinsi">
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-2">
-                <select name="kabupaten_id[]" class="form-control dynamic-select2 kabupaten-select"
-                    id="kabupaten-${uniqueId}"
-                    data-placeholder="Pilih Kabupaten">
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-3">
-                <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select"
-                    id="kecamatan-${uniqueId}"
-                    data-placeholder="Pilih Kecamatan">
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-4">
-                <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select"
-                    id="kelurahan-${uniqueId}"
-                    data-placeholder="Pilih Kelurahan">
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-5">
-                <input type="text" class="form-control" name="lat[]" placeholder="Latitude">
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-6 d-flex align-items-center">
-                <input type="text" class="form-control flex-grow-1" name="long[]" placeholder="Longitude">
-                <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </div>`;
+    // function addNewLocationInputs() {
+    //     var uniqueId = Date.now();
+    //     var newLocationField = `
+    //         <div class="form-group row lokasi-kegiatan">
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1">
+    //                 <select name="provinsi_id[]" class="form-control dynamic-select2 provinsi-select"
+    //                     id="provinsi-${uniqueId}"
+    //                     data-placeholder="Pilih Provinsi">
+    //                 </select>
+    //             </div>
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-2">
+    //                 <select name="kabupaten_id[]" class="form-control dynamic-select2 kabupaten-select"
+    //                     id="kabupaten-${uniqueId}"
+    //                     data-placeholder="Pilih Kabupaten">
+    //                 </select>
+    //             </div>
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-3">
+    //                 <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select"
+    //                     id="kecamatan-${uniqueId}"
+    //                     data-placeholder="Pilih Kecamatan">
+    //                 </select>
+    //             </div>
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-4">
+    //                 <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select"
+    //                     id="kelurahan-${uniqueId}"
+    //                     data-placeholder="Pilih Kelurahan">
+    //                 </select>
+    //             </div>
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-5">
+    //                 <input type="text" class="form-control" name="lat[]" placeholder="Latitude">
+    //             </div>
+    //             <div class="col-sm-12 col-md-2 col-lg-2 self-center order-6 d-flex align-items-center">
+    //                 <input type="text" class="form-control flex-grow-1" name="long[]" placeholder="Longitude">
+    //                 <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
+    //                     <i class="bi bi-trash"></i>
+    //                 </button>
+    //             </div>
+    //         </div>`;
 
-    $('.list-lokasi-kegiatan').append(newLocationField);
+    //     $('.list-lokasi-kegiatan').append(newLocationField);
 
-    // Initialize provinsi select2
-    $(`#provinsi-${uniqueId}`).select2({
-        placeholder: 'Pilih Provinsi',
-        allowClear: true,
-        ajax: {
-            url: "{{ route('api.kegiatan.provinsi') }}",
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term,
-                    page: params.page || 1
-                };
-            },
-            processResults: function(data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.results,
-                    pagination: {
-                        more: data.pagination.more
-                    }
-                };
-            },
-            cache: true
-        }
-    });
+    //     // Initialize provinsi select2
+    //     $(`#provinsi-${uniqueId}`).select2({
+    //         placeholder: 'Pilih Provinsi',
+    //         allowClear: true,
+    //         ajax: {
+    //             url: "{{ route('api.kegiatan.provinsi') }}",
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function(params) {
+    //                 return {
+    //                     search: params.term,
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function(data, params) {
+    //                 params.page = params.page || 1;
+    //                 return {
+    //                     results: data.results,
+    //                     pagination: {
+    //                         more: data.pagination.more
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         }
+    //     });
 
-    // Initialize kabupaten select2
-    $(`#kabupaten-${uniqueId}`).select2({
-        placeholder: 'Pilih Kabupaten',
-        allowClear: true,
-        ajax: {
-            url: "{{ route('api.kegiatan.kabupaten') }}",
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term,
-                    provinsi_id: $(`#provinsi-${uniqueId}`).val(),
-                    page: params.page || 1
-                };
-            },
-            processResults: function(data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.data,
-                    pagination: {
-                        more: (params.page * 10) < data.total
-                    }
-                };
-            },
-            cache: true
-        }
-    }).prop('disabled', true);
+    //     // Initialize kabupaten select2
+    //     $(`#kabupaten-${uniqueId}`).select2({
+    //         placeholder: 'Pilih Kabupaten',
+    //         allowClear: true,
+    //         ajax: {
+    //             url: "{{ route('api.kegiatan.kabupaten') }}",
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function(params) {
+    //                 return {
+    //                     search: params.term,
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function(data, params) {
+    //                 params.page = params.page || 1;
+    //                 return {
+    //                     results: data.results,
+    //                     pagination: {
+    //                         more: data.pagination.more
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         }
+    //     }).prop('disabled', true);
 
-    // Initialize kecamatan select2
-    $(`#kecamatan-${uniqueId}`).select2({
-        placeholder: 'Pilih Kecamatan',
-        allowClear: true,
-        ajax: {
-            url:  "{{ route('api.kegiatan.kecamatan') }}",
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term,
-                    kabupaten_id: $(`#kabupaten-${uniqueId}`).val(),
-                    page: params.page || 1
-                };
-            },
-            processResults: function(data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.data,
-                    pagination: {
-                        more: (params.page * 10) < data.total
-                    }
-                };
-            },
-            cache: true
-        }
-    }).prop('disabled', true);
+    //     // Initialize kecamatan select2
+    //     $(`#kecamatan-${uniqueId}`).select2({
+    //         placeholder: 'Pilih Kecamatan',
+    //         allowClear: true,
+    //         ajax: {
+    //             url:  "{{ route('api.kegiatan.kecamatan') }}",
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function(params) {
+    //                 return {
+    //                     search: params.term,
+    //                     kabupaten_id: $(`#kabupaten-${uniqueId}`).val(),
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function(data, params) {
+    //                 params.page = params.page || 1;
+    //                 return {
+    //                     results: data.results,
+    //                     pagination: {
+    //                         more: data.pagination.more
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         }
+    //     }).prop('disabled', true);
 
-    // Initialize kelurahan select2
-    $(`#kelurahan-${uniqueId}`).select2({
-        placeholder: 'Pilih Kelurahan',
-        allowClear: true,
-        ajax: {
-            url: "{{ route('api.kegiatan.kelurahan') }}",
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term,
-                    kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
-                    page: params.page || 1
-                };
-            },
-            processResults: function(data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.data,
-                    pagination: {
-                        more: (params.page * 10) < data.total
-                    }
-                };
-            },
-            cache: true
-        }
-    }).prop('disabled', true);
+    //     // Initialize kelurahan select2
+    //     $(`#kelurahan-${uniqueId}`).select2({
+    //         placeholder: 'Pilih Kelurahan',
+    //         allowClear: true,
+    //         ajax: {
+    //             url: "{{ route('api.kegiatan.kelurahan') }}",
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function(params) {
+    //                 return {
+    //                     search: params.term,
+    //                     kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function(data, params) {
+    //                 params.page = params.page || 1;
+    //                 return {
+    //                     results: data.results,
+    //                     pagination: {
+    //                         more: data.pagination.more
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         }
+    //     }).prop('disabled', true);
 
-    // Handle dependencies
-    $(`#provinsi-${uniqueId}`).on('change', function() {
-        $(`#kabupaten-${uniqueId}`).prop('disabled', !$(this).val());
-        $(`#kabupaten-${uniqueId}`).val(null).trigger('change');
-        $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
-        $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
-    });
+    //     // Handle dependencies
+    //     $(`#provinsi-${uniqueId}`).on('change', function() {
+    //         $(`#kabupaten-${uniqueId}`).prop('disabled', !$(this).val());
+    //         $(`#kabupaten-${uniqueId}`).val(null).trigger('change');
+    //         $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
+    //         $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+    //     });
 
-    $(`#kabupaten-${uniqueId}`).on('change', function() {
-        $(`#kecamatan-${uniqueId}`).prop('disabled', !$(this).val());
-        $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
-        $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
-    });
+    //     $(`#kabupaten-${uniqueId}`).on('change', function() {
+    //         $(`#kecamatan-${uniqueId}`).prop('disabled', !$(this).val());
+    //         $(`#kecamatan-${uniqueId}`).val(null).trigger('change');
+    //         $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+    //     });
 
-    $(`#kecamatan-${uniqueId}`).on('change', function() {
-        $(`#kelurahan-${uniqueId}`).prop('disabled', !$(this).val());
-        $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
-    });
-}
+    //     $(`#kecamatan-${uniqueId}`).on('change', function() {
+    //         $(`#kelurahan-${uniqueId}`).prop('disabled', !$(this).val());
+    //         $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+    //     });
+    // }
 
 
 </script>
