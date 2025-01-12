@@ -197,7 +197,6 @@
             $('#status').val(formData.status || '');
             $('#fasepelaporan').val(formData.fasepelaporan || '');
 
-
             $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
             $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
             $('#yang_terlibat').val(formData.yang_terlibat || '');
@@ -237,27 +236,9 @@
                     }
                 });
             }
-            // if (formData.sektor_kegiatan) {
-            //     var apiUrl = $('#sektor_kegiatan').data('api-url');
-            //     $.ajax({
-            //         url: apiUrl,
-            //         method: 'GET',
-            //         data: { id: formData.sektor_kegiatan },
-            //         success: function (response) {
-            //             if (response.data && response.data.length > 0) {
-            //                 var item = response.data[0];
-            //                 var newOption = new Option(item.nama, item.id, true, true);
-            //                 $('#sektor_kegiatan')
-            //                     .append(newOption)
-            //                     .trigger('change');
-            //             }
-            //         }
-            //     });
-            // }
-
-            // Populate and initialize select2 fields with fetched data from API
-            // $('.select2').not('#jenis_kegiatan, #sektor_kegiatan').each(function () {
-            $('.select2').not('#jenis_kegiatan').each(function () {
+            var uniqueId = Date.now();
+            // exclude some select2 field id attribute
+            $('.select2').not('#jenis_kegiatan, #provinsi, #kabupaten, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]').each(function () { $
                 var fieldId = $(this).attr('id');
                 var values = formData[fieldId];
                 var select2Field = $(this);
