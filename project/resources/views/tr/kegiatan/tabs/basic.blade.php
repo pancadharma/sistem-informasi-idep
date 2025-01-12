@@ -134,19 +134,37 @@
     </div>
     <div class="card-body pl-0 pt-1 pb-0 pr-1 list-lokasi-kegiatan">
         <div class="form-group row lokasi-kegiatan mb-0">
-            <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1 order-md-1">
                 <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
                     <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
                 </label>
             </div>
-            <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
+            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1 order-md-1">
+                <label class="input-group col-form-label">
+                    {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
+                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
+                </label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1 order-md-1">
+                <label class="input-group col-form-label">
+                    {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
+                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
+                </label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1 order-md-1">
+                <label class="input-group col-form-label">
+                    {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
+                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
+                </label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2 self-center order-2 order-md-2">
                 <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.lat') }}
                     <i class="bi bi-pin-map-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
                 </label>
             </div>
-            <div class="col-sm-10 col-md-3 col-lg-3 self-center order-3 order-md-3">
+            <div class="col-sm-10 col-md-2 col-lg-2 self-center order-3 order-md-3">
                 <label class="input-group col-form-label">
                     {{ __('cruds.kegiatan.basic.long') }}
                     <i class="bi bi-geo" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
@@ -189,7 +207,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-        // ErrorHandler Module
+    // ErrorHandler Module
     const ErrorHandler = {
         handleMapError: function(error) {
             console.error('Map Initialization Error:', error);
@@ -372,10 +390,10 @@
             var long = locationRow.find('input[name="long[]"]').val() || '';
 
             return `
-                <strong>{{ __('cruds.kegiatan.basic.kode') }}:</strong> ${kode_kegiatan}<br>
-                <strong>{{ __('cruds.kegiatan.basic.nama') }}:</strong> ${nama_kegiatan}<br>
-                <strong>Kecamatan:</strong> ${kecamatan || ''}<br>
-                <strong>Kabupaten:</strong> ${kabupaten || ''}<br><br>
+                <strong>{{ __('cruds.kegiatan.basic.kode') }} :</strong> ${kode_kegiatan}<br>
+                <strong>{{ __('cruds.kegiatan.basic.nama') }} :</strong> ${nama_kegiatan}<br>
+                <strong>{{ __('cruds.kecamatan.title') }} :</strong> ${kecamatan || ''}<br>
+                <strong>{{ __('cruds.kabupaten.title') }} :</strong> ${kabupaten || ''}<br><br>
                 <strong>{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}:</strong> ${lokasi}<br>
                 <strong>Latitude:</strong> ${lat}<br>
                 <strong>Longitude:</strong> ${long}<br>
@@ -433,7 +451,7 @@
         ////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-                // Add event listener for location input changes
+        // Add event listener for location input changes
         $(document).on('input', 'input[name="lokasi[]"]', function() {
             const container = $(this).closest('.lokasi-kegiatan');
             const index = $('.lokasi-kegiatan').index(container);
@@ -527,13 +545,13 @@
     function addNewLocationInputs() {
         var newLocationField = `
             <div class="form-group row lokasi-kegiatan">
-                <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-1 order-md-1">
                     <input type="text" class="form-control" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}">
                 </div>
-                <div class="col-sm-12 col-md-3 col-lg-3 self-center order-2 order-md-2">
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-2 order-md-2">
                     <input type="text" class="form-control" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
                 </div>
-                <div class="col-sm-12 col-md-6 col-lg-6 self-center order-3 order-md-3 d-flex align-items-center">
+                <div class="col-sm-12 col-md-2 col-lg-2 self-center order-3 order-md-3 d-flex align-items-center">
                     <input type="text" class="form-control flex-grow-1" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
                     <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
                         <i class="bi bi-trash"></i>
