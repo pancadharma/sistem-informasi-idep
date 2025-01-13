@@ -252,23 +252,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
     Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
 
-    // Route::get('kegiatan/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.kegiatan.provinsi');
-    // Route::get('kegiatan/api/kab/{id}', [
-    //     WilayahController::class,
-    //     'getKabupaten'
-    // ])->name('api.kegiatan.kabupaten');
-    // Route::get('kegiatan/api/kec/{id}', [
-    //     WilayahController::class,
-    //     'getKecamatan'
-    // ])->name('api.kegiatan.kecamatan');
-    // Route::get('kegiatan/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.kegiatan.kelurahan');
-    // Route::get('kegiatan/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.kegiatan.dusun');
-
     Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
-        Route::get('kegiatan/api/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
-        Route::get('kegiatan/api/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
-        Route::get('kegiatan/api/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
-        Route::get('kegiatan/api/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
+        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
+        Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
+        Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
     });
 
 
