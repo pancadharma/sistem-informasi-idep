@@ -592,6 +592,7 @@
             localStorage.removeItem('pesertaFormData');
             localStorage.removeItem('participantsData');
             localStorage.removeItem('kegiatanFormData');
+            localStorage.removeItem('KegiatanLokasi');
 
             // Reset the form and clear Summernote content
             $('#createKegiatan')[0].reset();
