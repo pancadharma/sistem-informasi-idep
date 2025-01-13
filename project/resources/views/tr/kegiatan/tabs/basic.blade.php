@@ -119,12 +119,12 @@
 
 
 <div class="form-group row">
-    <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
+    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
         <label for="provinsi_id" class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
         <select name="provinsi_id" id="provinsi_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.provinsi') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.provinsi.title') }}">
         </select>
     </div>
-    <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
+    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
         <label for="kabupaten_id" class="input-group col-form-label">{{ __('cruds.kabupaten.title') }}</label>
         <select name="kabupaten_id" id="kabupaten_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.kabupaten') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kabupaten.title') }}">
         </select>
