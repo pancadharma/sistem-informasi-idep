@@ -107,6 +107,8 @@
             sektor_kegiatan: $('#sektor_kegiatan').val(),
 
 
+            provinsi_id : $('#provinsi_id').val(),
+            kabupaten_id : $('#kabupaten_id').val(),
 
 
             deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
@@ -196,6 +198,10 @@
             $('#tanggalselesai').val(formData.tanggalselesai || '');
             $('#status').val(formData.status || '');
             $('#fasepelaporan').val(formData.fasepelaporan || '');
+
+            $('#provinsi_id').val(formData.provinsi_id || '');
+            $('#kabupaten_id').val(formData.kabupaten_id || '');
+
 
             $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
             $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
