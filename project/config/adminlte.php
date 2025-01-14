@@ -355,7 +355,7 @@ return [
         ],
         [
             'text' => 'log',
-            'url' => '#',
+            'url' => 'logs',
             'icon' => 'fas fa-file-contract',
             'icon_color' => 'yellow',
             'active' => ['log', 'log*', 'log:@^evaluasi/[0-9]+$@'],
