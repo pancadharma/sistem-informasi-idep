@@ -606,6 +606,10 @@ return [
             'long'                  => 'Longitude',
             'lat'                   => 'Latitude',
             'tambah_lokasi'         => 'Tambah Lokasi',
+            'select_provinsi'       => 'Pilih Provinsi',
+            'select_kabupaten'      => 'Pilih Kabupaten',
+            'select_kecamatan'      => 'Pilih Kecamatan',
+            'select_desa'           => 'Pilih Desa',
             'tooltip'               => [
                 'lokasi'            => 'Silakan isi nama lokasi dimana kegiatan ini dilakukan, dapat diisi lebih dari 1 lokasi jika diperlukan',
                 'long_lat'          => 'Silahkan copy-paste titik koordinat lokasi kegiatan dan jelaskan nama lokasinya (bisa lebih dari satu lokasi)',

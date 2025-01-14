@@ -277,7 +277,7 @@
     $(document).ready(function() {
 
         $(`#provinsi_id`).select2({
-            placeholder: 'Pilih Provinsi',
+            placeholder: '{{ __("cruds.kegiatan.basic.select_provinsi") }}',
             allowClear: true,
             ajax: {
                 url: "{{ route('api.kegiatan.provinsi') }}",
@@ -304,7 +304,7 @@
 
         // Initialize kabupaten select2
         $(`#kabupaten_id`).select2({
-            placeholder: 'Pilih Kabupaten',
+            placeholder: '{{ __("cruds.kegiatan.basic.select_kabupaten") }}',
             allowClear: true,
             ajax: {
                 url: "{{ route('api.kegiatan.kabupaten') }}",
@@ -387,7 +387,7 @@
 
             // Initialize kecamatan select2
             $(`#kecamatan-${uniqueId}`).select2({
-                placeholder: 'Pilih Kecamatan',
+                placeholder: '{{ __("cruds.kegiatan.basic.select_kecamatan") }}',
                 allowClear: true,
                 ajax: {
                     url: "{{ route('api.kegiatan.kecamatan') }}",
@@ -409,12 +409,23 @@
                             }
                         };
                     },
-                    cache: true
+                    cache: true,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'There was an error fetching Kecamatan data. Please try again later.',
+                            position: 'center',
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                        $('#kecamatan-' + uniqueId).focus();
+                    }
                 }
             });
 
             $(`#kelurahan-${uniqueId}`).select2({
-                placeholder: 'Pilih Desa',
+                placeholder: '{{ __("cruds.kegiatan.basic.select_desa") }}',
                 allowClear: true,
                 ajax: {
                     url: "{{ route('api.kegiatan.kelurahan') }}",

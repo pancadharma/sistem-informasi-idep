@@ -608,6 +608,10 @@ return [
             'long'                               => 'Longitude',
             'lat'                                => 'Latitude',
             'tambah_lokasi'                      => 'Add Location',
+            'select_provinsi'                    => 'Select Province',
+            'select_kabupaten'                   => 'Select Kabupaten',
+            'select_kecamatan'                   => 'Select Kecamatan',
+            'select_desa'                        => 'Select Desa',
             'tooltip'                            => [
                 'lokasi'                         => 'Please fill in the name of the location where this activity is carried out, can be filled in more than 1 location if needed',
                 'long_lat'                       => 'Please copy-paste the coordinates of the activity location and explain the name of the location (can be more than one location)',
