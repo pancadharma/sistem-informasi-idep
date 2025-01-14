@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Select2 Inputs</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <select id="initialSelect1" class="select2 form-control mb-3">
+                    <option value="">Select an option</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select id="initialSelect2" class="select2 form-control mb-3">
+                    <option value="">Select an option</option>
+                    <option value="A">Option A</option>
+                    <option value="B">Option B</option>
+                </select>
+            </div>
+        </div>
+        <button id="addRowButton" class="btn btn-primary mb-3">Add Row</button>
+        <table id="inputTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Kecamatan</th>
+                    <th>Kelurahan</th>
+                    <th>Lokasi</th>
+                    <th>Long</th>
+                    <th>Lat</th>
+                    <th>Coordinate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be added here -->
+            </tbody>
+        </table>
+        <button id="submitButton" class="btn btn-success">Submit</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+
+            $('#addRowButton').click(function() {
+                var initialSelect1 = $('#initialSelect1').val();
+                var initialSelect2 = $('#initialSelect2').val();
+
+                if (initialSelect1 && initialSelect2) {
+                    addInputRow();
+                } else {
+                    alert('Please select values for both initial fields.');
+                }
+            });
+
+            $('#submitButton').click(function() {
+                var data = gatherData();
+                alert('Submitted Data: ' + JSON.stringify(data, null, 2));
+            });
+
+            function addInputRow() {
+                var rowIndex = $('#inputTable tbody tr').length + 1;
+                var newRow = `
+                    <tr>
+                        <td>
+                            <select id="kecamatan_id_${rowIndex}" class="select2 kecamatan form-control">
+                                <option value="">Select Kecamatan</option>
+                                <option value="1">Kecamatan 1</option>
+                                <option value="2">Kecamatan 2</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select id="kelurahan_id_${rowIndex}" class="select2 kelurahan form-control">
+                                <option value="">Select Kelurahan</option>
+                                <option value="1">Kelurahan 1</option>
+                                <option value="2">Kelurahan 2</option>
+                            </select>
+                        </td>
+                        <td><input type="text" id="lokasi_${rowIndex}" class="lokasi form-control"></td>
+                        <td><input type="text" id="long_${rowIndex}" class="long form-control"></td>
+                        <td><input type="text" id="lat_${rowIndex}" class="lat form-control"></td>
+                        <td><input type="hidden" id="coordinate_${rowIndex}" class="coordinate"></td>
+                        <td><button class="btn btn-danger removeRowButton">Remove</button></td>
+                    </tr>`;
+
+                $('#inputTable tbody').append(newRow);
+
+                // Initialize select2 for the new row
+                $(`#kecamatan_id_${rowIndex}`).select2();
+                $(`#kelurahan_id_${rowIndex}`).select2();
+
+                // Add event listener for kecamatan change
+                $(`#kecamatan_id_${rowIndex}`).on('change', function() {
+                    var kecamatanId = $(this).val();
+                    // Load kelurahan options based on kecamatanId
+                    // This is where you would make an AJAX call to get the kelurahan options
+                    // For demonstration, we'll just clear the options
+                    $(`#kelurahan_id_${rowIndex}`).empty().append('<option value="">Select Kelurahan</option>');
+                });
+
+                // Add event listener for long and lat change
+                $(`#long_${rowIndex}, #lat_${rowIndex}`).on('change', function() {
+                    var long = $(`#long_${rowIndex}`).val();
+                    var lat = $(`#lat_${rowIndex}`).val();
+                    $(`#coordinate_${rowIndex}`).val(long + ',' + lat);
+                });
+
+                // Add event listener for remove button
+                $(`#inputTable tbody tr:last-child .removeRowButton`).on('click', function() {
+                    $(this).closest('tr').remove();
+                });
+            }
+
+            // Function to gather data from all rows
+            function gatherData() {
+                var data = [];
+                $('#inputTable tbody tr').each(function(index) {
+                    var rowData = {
+                        kecamatan_id: $(this).find('.kecamatan').val(),
+                        kelurahan_id: $(this).find('.kelurahan').val(),
+                        lokasi: $(this).find('.lokasi').val(),
+                        long: $(this).find('.long').val(),
+                        lat: $(this).find('.lat').val(),
+                        coordinate: $(this).find('.coordinate').val()
+                    };
+                    data.push(rowData);
+                });
+                return data;
+            }
+        });
+    </script>
+</body>
+</html>
