@@ -413,7 +413,6 @@
                 }
             });
 
-            // Initialize kelurahan select2
             $(`#kelurahan-${uniqueId}`).select2({
                 placeholder: 'Pilih Desa',
                 allowClear: true,
@@ -422,22 +421,34 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
-                        return {
-                            search: params.term,
-                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
-                            page: params.page || 1
-                        };
+                    return {
+                        search: params.term,
+                        kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                        page: params.page || 1
+                    };
                     },
                     processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                        more: data.pagination.more
+                        }
+                    };
                     },
-                    cache: true
+                    cache: true,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching Kelurahan data:", textStatus, errorThrown);
+                        Toast.fire({
+                            icon: 'error', // Use 'error' icon for errors
+                            title: 'Please Select Kecamatan First!',
+                            text: 'Kelurahan data depends on Kecamatan data. Please select a Kecamatan first.',
+                            position: 'center',
+                            timer: 2000, // Increased timer to 3 seconds for better visibility
+                            timerProgressBar: true
+                        });
+                        $('#kecamatan-' + uniqueId).focus();
+                    }
                 }
             });
 
