@@ -533,6 +533,58 @@ entity "trkegiatanpenulis" as trkegiatanpenulis {
     id_peran : int <<fk>>
 }
 
+entity "trmealstargetprogress" as trmealstargetprogress {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    tanggal : datetime
+}
+
+entity "trmealstargetprogressactivity" as trmealstargetprogressactivity {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcomeoutputactivity : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
+entity "trmealstargetprogressoutput" as trmealstargetprogressoutput {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcomeoutput : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
+entity "trmealstargetprogressoutcome" as trmealstargetprogressoutcome {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcome : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
 entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     *id : int <<auto>>
     --
