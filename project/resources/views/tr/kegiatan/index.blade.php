@@ -27,10 +27,9 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <table id="kegiatan-list" class="table table-bordered responsive datatable-kegiatan"
-                style="width:100%">
-                <thead>
+        <div class="card-body table-responsive">
+            <table id="kegiatan-list" class="table responsive-table table-bordered datatable-kegiatan" width="100%">
+                <thead class="text-nowrap">
                     <tr>
                         <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
                         {{--

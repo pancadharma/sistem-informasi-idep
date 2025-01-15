@@ -15,7 +15,7 @@ class ProvinsiSeeder extends Seeder
     public function run(): void
     {
         // $provinsi = base_path('../database/idep/provinsi.json');
-        
+
         // $provinsi_data = json_decode(File::get($provinsi), true);
 
         // $data = [

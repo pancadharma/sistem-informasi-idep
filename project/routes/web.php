@@ -4,13 +4,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DusunController;
 use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
+use App\Http\Controllers\Admin\KegiatanController;
 use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
@@ -19,15 +22,13 @@ use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\MPendonorController;
+use App\Http\Controllers\Admin\TrProgramController;
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
-use App\Http\Controllers\Admin\TrProgramController;
-use App\Http\Controllers\Admin\ProgramController;
-use App\Http\Controllers\Admin\UserProfileController;
-use App\Http\Controllers\Admin\KegiatanController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -246,4 +247,26 @@ Route::middleware(['auth'])->group(function () {
     //bentuk or sektor kegiatan
     Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
     Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
+
+    Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
+    Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
+    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
+
+    Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
+        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
+        Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
+        Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
+    });
+
+    //
+    Route::get('/api/geojson/provinsi/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
+
+    // Route for getting kabupaten geojson
+    Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
+
+
+    //SPATIE Activity logs
+    Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
 });

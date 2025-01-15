@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Province and District Selector with Map</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        select {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Select Province and District</h1>
+
+<select id="provinsi_id" style="width: 200px;">
+    <option value="">Select Province</option>
+    <option value="62">Kalimantan Tengah</option>
+    <option value="63">Kalimantan Selatan</option>
+    <option value="64">Kalimantan Timur</option>
+    <option value="65">Kalimantan Utara</option>
+    <option value="71">Sulawesi Utara</option>
+    <option value="72">Sulawesi Tengah</option>
+    <option value="73">Sulawesi Selatan</option>
+    <option value="74">Sulawesi Tenggara</option>
+    <option value="75">Gorontalo</option>
+    <option value="76">Sulawesi Barat</option>
+    <option value="81">Maluku</option>
+    <option value="82">Maluku Utara</option>
+    <option value="91">Papua</option>
+    <option value="92">Papua Barat</option>
+    <option value="93">Papua Selatan</option>
+    <option value="94">Papua Tengah</option>
+    <option value="95">Papua Pegunungan</option>
+</select>
+
+<select id="kabupaten_id" style="width: 200px;">
+    <option value="">Select District</option>
+</select>
+
+<div id="map"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg"></script> <!-- Replace YOUR_API_KEY -->
+
+<script>
+// Initialize Select2
+$(document).ready(function() {
+    $('#provinsi_id').select2();
+    
+    // Hardcoded districts based on selected province
+    const districts = {
+        '62': [
+            { id: '62-1', text: 'District A1' },
+            { id: '62-2', text: 'District A2' }
+        ],
+        '63': [
+            { id: '63-1', text: 'District B1' },
+            { id: '63-2', text: 'District B2' }
+        ],
+        // Add more districts for other provinces as needed...
+    };
+
+    $('#provinsi_id').on('change', function() {
+        const selectedProvinsi = $(this).val();
+        
+        // Clear and reset kabupaten_id dropdown
+        $('#kabupaten_id').empty().append('<option value="">Select District</option>').trigger('change');
+
+        if (selectedProvinsi) {
+            const districtOptions = districts[selectedProvinsi] || [];
+            districtOptions.forEach(function(item) {
+                $('#kabupaten_id').append(new Option(item.text, item.id));
+            });
+            $('#kabupaten_id').select2();
+        }
+    });
+});
+
+// Initialize Google Map
+let map;
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -7.5, lng: 112 }, // Default center
+        zoom: 5,
+    });
+}
+
+// Handle district selection to update the map
+$('#kabupaten_id').on('change', function() {
+    const selectedKabupaten = $(this).val();
+    
+    // Example coordinates for demonstration
+    const coordinates = {
+        '62-1': { lat: -7.6, lng: 112.6 }, // Coordinates for District A1
+        '62-2': { lat: -7.7, lng: 112.7 }, // Coordinates for District A2
+        '63-1': { lat: -7.8, lng: 112.8 }, // Coordinates for District B1
+        '63-2': { lat: -7.9, lng: 112.9 }  // Coordinates for District B2
+        // Add more districts as needed...
+    };
+    
+    const location = coordinates[selectedKabupaten];
+    
+    if (location) {
+        map.setCenter(location);
+        map.setZoom(10); // Zoom in on the district
+        new google.maps.Marker({
+            position: location,
+            map,
+            title: `Selected District`
+        });
+    }
+});
+
+// Initialize map when document is ready
+$(document).ready(initMap);
+</script>
+
+</body>
+</html>

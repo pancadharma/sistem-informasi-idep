@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use Carbon\Carbon;
-use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Enums\Fit;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Kegiatan extends Model implements HasMedia
@@ -29,125 +30,18 @@ class Kegiatan extends Model implements HasMedia
 
     protected $fillable = [
         'programoutcomeoutputactivity_id',
-        'jenis_kegiatan_id',
+        'fasepelaporan',
+        'jeniskegiatan_id',
         'desa_id',
         'user_id',
-        'mitra_id',
-        'bentuk_kegiatan_id',
-        'sektor_kegiatan_id',
-        'fase_pelaporan',
-
-        'kode',
-        'nama',
         'tanggalmulai',
         'tanggalselesai',
-        'long',
-        'lat',
-        'lokasi',
         'status',
-
-        // update based on idep.pu
-        'fasepelaporan',
+        'mitra_id',
         'deskripsilatarbelakang',
         'deskripsitujuan',
         'deskripsikeluaran',
         'deskripsiyangdikaji',
-
-        'assessmentyangterlibat',
-        'assessmenttemuan',
-        'assessmenttambahan',
-        'assessmenttambahan_ket',
-        'assessmentkendala',
-        'assessmentisu',
-        'assessmentpembelajaran',
-        'sosialisasiyangterlibat',
-        'sosialisasitemuan',
-        'sosialisasitambahan',
-        'sosialisasitambahan_ket',
-        'sosialisasikendala',
-        'sosialisasiisu',
-        'sosialisasipembelajaran',
-        'pelatihanpelatih',
-        'pelatihanhasil',
-        'pelatihandistribusi',
-        'pelatihandistribusi_ket',
-        'pelatihanrencana',
-        'pelatihanunggahan',
-        'pelatihanisu',
-        'pelatihanpembelajaran',
-        'pembelanjaandetailbarang',
-        'pembelanjaanmulai',
-        'pembelanjaanselesai',
-        'pembelanjaandistribusimulai',
-        'pembelanjaandistribusiselesai',
-        'pembelanjaanterdistribusi',
-        'pembelanjaanakandistribusi',
-        'pembelanjaanakandistribusi_ket',
-        'pembelanjaankendala',
-        'pembelanjaanisu',
-        'pembelanjaanpembelajaran',
-        'pengembanganjeniskomponen',
-        'pengembanganberapakomponen',
-        'pengembanganlokasikomponen',
-        'pengembanganyangterlibat',
-        'pengembanganrencana',
-        'pengembangankendala',
-        'pengembanganisu',
-        'pengembanganpembelajaran',
-        'kampanyeyangdikampanyekan',
-        'kampanyejenis',
-        'kampanyebentukkegiatan',
-        'kampanyeyangterlibat',
-        'kampanyeyangdisasar',
-        'kampanyejangkauan',
-        'kampanyerencana',
-        'kampanyekendala',
-        'kampanyeisu',
-        'kampanyepembelajaran',
-        'pemetaanyangdihasilkan',
-        'pemetaanluasan',
-        'pemetaanunit',
-        'pemetaanyangterlibat',
-        'pemetaanrencana',
-        'pemetaanisu',
-        'pemetaanpembelajaran',
-        'monitoringyangdipantau',
-        'monitoringdata',
-        'monitoringyangterlibat',
-        'monitoringmetode',
-        'monitoringhasil',
-        'monitoringkegiatanselanjutnya',
-        'monitoringkegiatanselanjutnya_ket',
-        'monitoringkendala',
-        'monitoringisu',
-        'monitoringpembelajaran',
-        'kunjunganlembaga',
-        'kunjunganpeserta',
-        'kunjunganyangdilakukan',
-        'kunjunganhasil',
-        'kunjunganpotensipendapatan',
-        'kunjunganrencana',
-        'kunjungankendala',
-        'kunjunganisu',
-        'kunjunganpembelajaran',
-        'konsultasilembaga',
-        'konsultasikomponen',
-        'konsultasiyangdilakukan',
-        'konsultasihasil',
-        'konsultasipotensipendapatan',
-        'konsultasirencana',
-        'konsultasikendala',
-        'konsultasiisu',
-        'konsultasipembelajaran',
-        'lainnyamengapadilakukan',
-        'lainnyadampak',
-        'lainnyasumberpendanaan',
-        'lainnyasumberpendanaan_ket',
-        'lainnyayangterlibat',
-        'lainnyarencana',
-        'lainnyakendala',
-        'lainnyaisu',
-        'lainnyapembelajaran',
         'penerimamanfaatdewasaperempuan',
         'penerimamanfaatdewasalakilaki',
         'penerimamanfaatdewasatotal',
@@ -155,13 +49,13 @@ class Kegiatan extends Model implements HasMedia
         'penerimamanfaatlansialakilaki',
         'penerimamanfaatlansiatotal',
         'penerimamanfaatremajaperempuan',
-        'penerimamanfaatremajalakilak',
+        'penerimamanfaatremajalakilaki',
         'penerimamanfaatremajatotal',
         'penerimamanfaatanakperempuan',
         'penerimamanfaatanaklakilaki',
         'penerimamanfaatanaktotal',
         'penerimamanfaatdisabilitasperempuan',
-        'penerimamanfaatdisabilitaslakilak',
+        'penerimamanfaatdisabilitaslakilaki',
         'penerimamanfaatdisabilitastotal',
         'penerimamanfaatnondisabilitasperempuan',
         'penerimamanfaatnondisabilitaslakilaki',
@@ -211,12 +105,6 @@ class Kegiatan extends Model implements HasMedia
 
         return $file;
     }
-
-    // public function getDurationInDays()
-    // {
-    //     return Carbon::parse($this->tanggalmulai)
-    //         ->diffInDays(Carbon::parse($this->tanggalselesai));
-    // }
 
     public function getDurationInDays()
     {
@@ -274,6 +162,15 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
     }
+    public function penulis()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id', 'peran_id');
+    }
+
+    public function sektor()
+    {
+        return $this->belongsToMany(mSektor::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+    }
 
 
 
@@ -307,4 +204,5 @@ class Kegiatan extends Model implements HasMedia
             17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
         ];
     }
+
 }

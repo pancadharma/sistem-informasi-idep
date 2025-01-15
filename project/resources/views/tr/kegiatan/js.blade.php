@@ -5,7 +5,7 @@
         $('#kegiatan-list').DataTable({
             serverSide: true,
             processing: true,
-            responsive: true,
+            // responsive: true,
             ajax: '{{ route('api.kegiatan.list') }}',
             columns: [
                 {
@@ -25,6 +25,7 @@
                 {data: 'tanggalselesai', name: 'tanggalselesai', title: '{{ __('cruds.kegiatan.tanggalselesai') }}'},
                 {data: 'duration_in_days', name: 'duration_in_days', title: '{{ __('cruds.kegiatan.durasi') }}'},
                 {data: 'tempat', name: 'tempat', title: '{{ __('cruds.kegiatan.tempat') }}'},
+                {data: 'fase', name: 'tempat', title: '{{ __('cruds.kegiatan.fase') }}'},
                 {data: 'status', name: 'status', title: '{{ __('cruds.kegiatan.status') }}'},
                 {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center'},
             ],

@@ -6,18 +6,27 @@ use DateTime;
 use DateTimeZone;
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Yajra\DataTables\Facades\DataTables;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kabupaten extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, LogsActivity;
 
     public $table = 'kabupaten';
     protected $fillable = ['kode', 'nama', 'type', 'provinsi_id', 'aktif', 'latitude', 'longitude', 'coordinates', 'created_at', 'updated_at'];
     protected $dates = ['created_at','updated_at',];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
+    
+    
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'provinsi_id');
