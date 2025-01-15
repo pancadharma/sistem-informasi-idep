@@ -259,6 +259,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
     });
 
+    //
+    Route::get('/api/geojson/provinsi/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
+
+    // Route for getting kabupaten geojson
+    Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
 
     //SPATIE Activity logs
