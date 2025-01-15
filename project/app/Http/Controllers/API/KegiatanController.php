@@ -9,8 +9,7 @@ use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
-
-
+use Illuminate\Http\JsonResponse;
 
 class KegiatanController extends Controller
 {
@@ -216,5 +215,48 @@ class KegiatanController extends Controller
                 'more' => $results->hasMorePages(),
             ],
         ]);
+    }
+
+
+    /**
+     * Get kabupaten geojson data by ID
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getKabupatenGeojson(int $id): JsonResponse
+    {
+        try {
+            $kabupaten = Kabupaten::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'path' => json_decode($kabupaten->path, true), // Decode JSON if necessary
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kabupaten not found',
+                'error' => $e->getMessage()
+            ], 404);
+        }
+    }
+
+    public function getProvinsiGeojson(int $id): JsonResponse
+    {
+        try {
+            $provinsi = Provinsi::findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'path' => json_decode($provinsi->path, true), // Decode JSON if necessary
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Provinsi not found',
+                'error' => $e->getMessage()
+            ], 404);
+        }
     }
 }
