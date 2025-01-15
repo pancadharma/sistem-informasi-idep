@@ -293,64 +293,57 @@
     }
 
      // Declare updateMap function outside of $(document).ready()
-     function updateMap() {
-        try {
-            var provinsiId = $('#provinsi_id').val();
-            var kabupatenId = $('#kabupaten_id').val();
+    function fetchAndDisplayGeoJSON(id, type, layerVar, color, parentLayer) {
+        if (id) {
+            fetch(`/api/geojson/${type}/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const geojson = convertPathToGeoJSON([data.path]);
+                    if (geojson) {
+                        layerVar = L.geoJSON(geojson, {
+                            style: { color: color, weight: 2, fillOpacity: 0.3 }
+                        }).addTo(map);
 
-            // Clear previous layers based on select2 values
-            if (!provinsiId && provinsiLayer) {
-                map.removeLayer(provinsiLayer);
-                provinsiLayer = null;
-            }
-            if (!kabupatenId && kabupatenLayer) {
-                map.removeLayer(kabupatenLayer);
-                kabupatenLayer = null;
-            }
-
-            if (provinsiId) {
-                fetch(`/api/geojson/provinsi/${provinsiId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const geojson = convertPathToGeoJSON([data.path]);
-                        if (geojson) {
-                            provinsiLayer = L.geoJSON(geojson, {
-                                style: { /* ... */ }
-                            }).addTo(map);
-                            map.fitBounds(provinsiLayer.getBounds());
+                        if (parentLayer) {
+                            map.fitBounds(parentLayer.getBounds());
                         } else {
-                            console.error('geoJson Provinsi is null or invalid');
+                            map.fitBounds(layerVar.getBounds());
                         }
-                    })
-                    .catch(error => {
-                        if (error instanceof SyntaxError) {
-                            console.error("JSON Parsing Error:", error);
-                        } else if (error.message.startsWith("HTTP error!")) {
-                            console.error("Network Error:", error);
-                        } else {
-                            console.error("GeoJSON Loading Error:", error);
-                        }
-                        ErrorHandler.handleGeojsonError(error);
-                    });
-            }
-
-
-            if (kabupatenId) {
-                    // ... (Kabupaten Fetch and Layer code remains the same - include enhanced error handling like in provinsiId section)
-            } else {
-                if (provinsiLayer) {
-                    map.fitBounds(provinsiLayer.getBounds());
-                }
-            }
-        } catch (e) {
-            console.error("Error in updateMap:", e);
-            ErrorHandler.handleGeojsonError(e); // Handle unexpected errors
+                    } else {
+                        console.error(`geoJson ${type} is null or invalid`);
+                    }
+                })
+                .catch(error => {
+                    if (error instanceof SyntaxError) {
+                        console.error("JSON Parsing Error:", error);
+                    } else if (error.message.startsWith("HTTP error!")) {
+                        console.error("Network Error:", error);
+                    } else {
+                        console.error("GeoJSON Loading Error:", error);
+                    }
+                    ErrorHandler.handleGeojsonError(error);
+                });
         }
+    }
+
+
+    function updateMap() {
+        let provinsiId = $('#provinsi_id').val();
+        let kabupatenId = $('#kabupaten_id').val();
+
+        // Clear layers if selections are cleared
+        if (!provinsiId && provinsiLayer) { map.removeLayer(provinsiLayer); provinsiLayer = null; }
+        if (!kabupatenId && kabupatenLayer) { map.removeLayer(kabupatenLayer); kabupatenLayer = null; }
+
+
+        fetchAndDisplayGeoJSON(provinsiId, 'provinsi', provinsiLayer, '#2563eb');
+        fetchAndDisplayGeoJSON(kabupatenId, 'kabupaten', kabupatenLayer, '#dc2626', provinsiLayer);
+
     }
 
     $(document).ready(function() {
