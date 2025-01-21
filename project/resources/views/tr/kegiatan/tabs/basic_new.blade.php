@@ -215,12 +215,14 @@
 </style>
 @endpush
 @push('basic_tab_js')
-<script>
 
+<!--script for maps behavoiour-->
+<script>
     // Variables to store current GeoJSON layers
     var provinsiLayer = null;
     var kabupatenLayer = null;
     var map;
+    let uniqueId = Date.now();
 
     const MapHandler = {
         // Function to ensure coordinates are in proper format [longitude, latitude]
@@ -394,7 +396,9 @@
 
     }
 
-     // Declare updateMap function outside of $(document).ready()
+    /*
+    // Declare updateMap function outside of $(document).ready()
+    */
      function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
         if (!id) {
             if (type === 'provinsi') {
@@ -753,7 +757,8 @@
             const index = $('.lokasi-kegiatan').index(container);
 
             if (!isNaN(lat) && !isNaN(long)) {
-                saveLocationToLocalStorage(uniqueId);
+                // saveLocationToLocalStorage(uniqueId);
+                validateCoordinate(lat, long);
             } else {
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
@@ -860,48 +865,32 @@
 
 
     // additional to add click on maps
-    // Previous map handler code remains the same...
-
-    // Add this to your document ready function
     $(document).ready(function() {
-        // Previous code remains...
-
-        // Add map click handler
         var clickMarker = null;
 
         map.on('click', function(e) {
-            // Remove previous marker if exists
             if (clickMarker) {
                 map.removeLayer(clickMarker);
             }
-
-            // Get clicked coordinates
             const lat = e.latlng.lat.toFixed(6);
             const lng = e.latlng.lng.toFixed(6);
-
-            // Add a marker at clicked location
             clickMarker = L.marker(e.latlng).addTo(map);
 
-            // Create popup content
             const popupContent = `
                 <div>
                     <strong>Coordinates:</strong><br>
                     Latitude: ${lat}<br>
                     Longitude: ${lng}<br>
-                    <button class="btn btn-sm btn-primary mt-2" onclick="useCoordinates(${lat}, ${lng})">
-                        Use These Coordinates
-                    </button>
                 </div>
             `;
-
-            // Add popup to marker
             clickMarker.bindPopup(popupContent).openPopup();
         });
     });
 
     // Function to use coordinates in the form
-    function useCoordinates(lat, lng) {
+    function useCoordinates(lat, lng, e) {
         // Find the last empty coordinate input pair
+        e.preventDefault();
         const locationRows = $('.lokasi-kegiatan');
         let targetRow = null;
 
