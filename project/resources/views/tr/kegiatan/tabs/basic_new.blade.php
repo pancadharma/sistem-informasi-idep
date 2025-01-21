@@ -857,5 +857,96 @@
             return null;
         }
     }
+
+
+    // additional to add click on maps
+    // Previous map handler code remains the same...
+
+    // Add this to your document ready function
+    $(document).ready(function() {
+        // Previous code remains...
+
+        // Add map click handler
+        var clickMarker = null;
+
+        map.on('click', function(e) {
+            // Remove previous marker if exists
+            if (clickMarker) {
+                map.removeLayer(clickMarker);
+            }
+
+            // Get clicked coordinates
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+
+            // Add a marker at clicked location
+            clickMarker = L.marker(e.latlng).addTo(map);
+
+            // Create popup content
+            const popupContent = `
+                <div>
+                    <strong>Coordinates:</strong><br>
+                    Latitude: ${lat}<br>
+                    Longitude: ${lng}<br>
+                    <button class="btn btn-sm btn-primary mt-2" onclick="useCoordinates(${lat}, ${lng})">
+                        Use These Coordinates
+                    </button>
+                </div>
+            `;
+
+            // Add popup to marker
+            clickMarker.bindPopup(popupContent).openPopup();
+        });
+    });
+
+    // Function to use coordinates in the form
+    function useCoordinates(lat, lng) {
+        // Find the last empty coordinate input pair
+        const locationRows = $('.lokasi-kegiatan');
+        let targetRow = null;
+
+        locationRows.each(function() {
+            const latInput = $(this).find('.lat-input');
+            const longInput = $(this).find('.lang-input');
+
+            if (!latInput.val() && !longInput.val()) {
+                targetRow = $(this);
+                return false; // Break the loop
+            }
+        });
+
+        // If no empty inputs found, create new location row
+        if (!targetRow) {
+            const uniqueId = addNewLocationInputs();
+            targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
+        }
+
+        // Fill in the coordinates
+        if (targetRow) {
+            targetRow.find('.lat-input').val(lat).trigger('change');
+            targetRow.find('.lang-input').val(lng).trigger('change');
+        }
+    }
+
+    // Add this helper function to format coordinates
+    function formatCoordinate(value, type) {
+        const val = parseFloat(value);
+        if (isNaN(val)) return '';
+
+        // Validate range
+        if (type === 'latitude' && (val < -90 || val > 90)) return '';
+        if (type === 'longitude' && (val < -180 || val > 180)) return '';
+
+        return val.toFixed(6);
+    }
+
+    // Enhance the existing validateCoordinate function
+    function validateCoordinate(value, type) {
+        const formattedValue = formatCoordinate(value, type);
+        return {
+            valid: formattedValue !== '',
+            value: formattedValue
+        };
+    }
 </script>
 @endpush
