@@ -215,11 +215,115 @@
 </style>
 @endpush
 @push('basic_tab_js')
+
+<!--script for maps behavoiour-->
 <script>
     // Variables to store current GeoJSON layers
     var provinsiLayer = null;
     var kabupatenLayer = null;
     var map;
+    let uniqueId = Date.now();
+
+    const MapHandler = {
+        // Function to ensure coordinates are in proper format [longitude, latitude]
+        formatCoordinate: function(coord) {
+            // If coordinates are in [lat, lng] format, swap them to [lng, lat]
+            if (Array.isArray(coord) && coord.length === 2) {
+                return [parseFloat(coord[1]), parseFloat(coord[0])];
+            }
+            return null;
+        },
+
+        // Normalize the coordinate array structure
+        normalizeCoordinates: function(pathData) {
+            try {
+                if (!Array.isArray(pathData)) {
+                    console.error("Invalid path data:", pathData);
+                    return null;
+                }
+
+                // Handle case where data is direct array of coordinate pairs
+                if (pathData.length === 2 && typeof pathData[0] === 'number') {
+                    return [[this.formatCoordinate(pathData)]];
+                }
+
+                // Handle single polygon
+                if (pathData.length > 0 && Array.isArray(pathData[0]) && pathData[0].length === 2 && typeof pathData[0][0] === 'number') {
+                    const formattedCoords = pathData.map(coord => this.formatCoordinate(coord));
+                    // Ensure polygon is closed
+                    if (JSON.stringify(formattedCoords[0]) !== JSON.stringify(formattedCoords[formattedCoords.length - 1])) {
+                        formattedCoords.push(formattedCoords[0]);
+                    }
+                    return [formattedCoords];
+                }
+
+                // Handle multi-polygon structure
+                return pathData.map(polygon => {
+                    if (!Array.isArray(polygon)) return null;
+
+                    const formattedPolygon = polygon.map(coord => this.formatCoordinate(coord));
+                    // Ensure polygon is closed
+                    if (JSON.stringify(formattedPolygon[0]) !== JSON.stringify(formattedPolygon[formattedPolygon.length - 1])) {
+                        formattedPolygon.push(formattedPolygon[0]);
+                    }
+                    return formattedPolygon;
+                }).filter(Boolean);
+
+            } catch (e) {
+                console.error("Error normalizing coordinates:", e);
+                return null;
+            }
+        },
+
+        convertToGeoJSON: function(pathData) {
+            try {
+                if (!pathData) return null;
+
+                const normalizedCoords = this.normalizeCoordinates(pathData);
+                if (!normalizedCoords) return null;
+
+                return {
+                    type: "Feature",
+                    geometry: {
+                        type: "MultiPolygon",
+                        coordinates: [normalizedCoords] // Wrap in array for MultiPolygon
+                    },
+                    properties: {}
+                };
+            } catch (e) {
+                console.error("Error converting to GeoJSON:", e);
+                return null;
+            }
+        },
+
+        clearLayer: function(layer) {
+            if (layer && map.hasLayer(layer)) {
+                map.removeLayer(layer);
+                return null;
+            }
+            return layer;
+        },
+
+        displayGeoJSON: function(geojson, color) {
+            if (!geojson) return null;
+
+            return L.geoJSON(geojson, {
+                style: {
+                    color: color,
+                    weight: 2,
+                    fillOpacity: 0.3
+                }
+            }).addTo(map);
+        },
+
+        updateMapBounds: function(layer, parentLayer) {
+            if (parentLayer && map.hasLayer(parentLayer)) {
+                map.fitBounds(parentLayer.getBounds());
+            } else if (layer && map.hasLayer(layer)) {
+                map.fitBounds(layer.getBounds());
+            }
+        }
+    };
 
 
     const ErrorHandler = {
@@ -292,63 +396,84 @@
 
     }
 
-     // Declare updateMap function outside of $(document).ready()
-    function fetchAndDisplayGeoJSON(id, type, layerVar, color, parentLayer) {
-        if (id) {
-            fetch(`/api/geojson/${type}/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const geojson = convertPathToGeoJSON([data.path]);
-                    if (geojson) {
-                        layerVar = L.geoJSON(geojson, {
-                            style: { color: color, weight: 2, fillOpacity: 0.3 }
-                        }).addTo(map);
-
-                        if (parentLayer) {
-                            map.fitBounds(parentLayer.getBounds());
-                        } else {
-                            map.fitBounds(layerVar.getBounds());
-                        }
-                    } else {
-                        console.error(`geoJson ${type} is null or invalid`);
-                    }
-                })
-                .catch(error => {
-                    if (error instanceof SyntaxError) {
-                        console.error("JSON Parsing Error:", error);
-                    } else if (error.message.startsWith("HTTP error!")) {
-                        console.error("Network Error:", error);
-                    } else {
-                        console.error("GeoJSON Loading Error:", error);
-                    }
-                    ErrorHandler.handleGeojsonError(error);
-                });
+    /*
+    // Declare updateMap function outside of $(document).ready()
+    */
+     function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
+        if (!id) {
+            if (type === 'provinsi') {
+                provinsiLayer = MapHandler.clearLayer(provinsiLayer);
+            } else if (type === 'kabupaten') {
+                kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+            }
+            return;
         }
+
+        fetch(`/api/geojson/${type}/${id}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                // Clear existing layer
+                if (type === 'provinsi') {
+                    provinsiLayer = MapHandler.clearLayer(provinsiLayer);
+                } else if (type === 'kabupaten') {
+                    kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+                }
+
+                // Convert and display new data
+                const geojson = MapHandler.convertToGeoJSON(data.path);
+                if (!geojson) {
+                    console.error(`Invalid GeoJSON data for ${type}:`, data.path);
+                    return;
+                }
+
+                const newLayer = MapHandler.displayGeoJSON(geojson, color);
+
+                // Store new layer reference
+                if (type === 'provinsi') {
+                    provinsiLayer = newLayer;
+                } else if (type === 'kabupaten') {
+                    kabupatenLayer = newLayer;
+                }
+
+                // Update map bounds
+                MapHandler.updateMapBounds(newLayer, parentLayer);
+            })
+            .catch(error => {
+                console.error(`Error loading ${type} data:`, error);
+                ErrorHandler.handleGeojsonError(error);
+            });
     }
 
-
     function updateMap() {
-        let provinsiId = $('#provinsi_id').val();
-        let kabupatenId = $('#kabupaten_id').val();
+        const provinsiId = $('#provinsi_id').val();
+        const kabupatenId = $('#kabupaten_id').val();
 
-        // Clear layers if selections are cleared
-        if (!provinsiId && provinsiLayer) { map.removeLayer(provinsiLayer); provinsiLayer = null; }
-        if (!kabupatenId && kabupatenLayer) { map.removeLayer(kabupatenLayer); kabupatenLayer = null; }
+        // Update provinsi first
+        fetchAndDisplayGeoJSON(provinsiId, 'provinsi', '#2563eb');
 
-
-        fetchAndDisplayGeoJSON(provinsiId, 'provinsi', provinsiLayer, '#2563eb');
-        fetchAndDisplayGeoJSON(kabupatenId, 'kabupaten', kabupatenLayer, '#dc2626', provinsiLayer);
-
+        // Then update kabupaten if we have both IDs
+        if (provinsiId && kabupatenId) {
+            fetchAndDisplayGeoJSON(kabupatenId, 'kabupaten', '#dc2626', provinsiLayer);
+        }
     }
 
     $(document).ready(function() {
           // Initialize the map
         map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
+
+        $('#provinsi_id').on('change', function() {
+        // Clear kabupaten selection and layer
+            $('#kabupaten_id').val(null).trigger('change');
+            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+            updateMap();
+        });
+
+        $('#kabupaten_id').on('change', function() {
+            updateMap();
+        });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
@@ -420,17 +545,19 @@
             $('.select2-container').css('z-index', 999);
             });
 
-    // Add event listener to provinsi_id to trigger kabupaten update
-        $(`#provinsi_id`).on('change', function() {
-            $(`#kabupaten_id`).val(null).trigger('change');
-            // Clear existing location fields
-            $('.list-lokasi-kegiatan').empty();
-            updateMap();
-        });
+        // Add event listener to provinsi_id to trigger kabupaten update
+        // $(`#provinsi_id`).on('change', function() {
+        //     $(`#kabupaten_id`).val(null).trigger('change');
+        //     // Clear existing location fields
+        //     $('.list-lokasi-kegiatan').empty();
+        //     updateMap();
+        // });
 
-        $(`#kabupaten_id`).on('change', function() {
-            updateMap();
-        });
+        // $('#kabupaten_id').on('change', function() {
+        //     updateMap();
+        // });
+
+
         function addNewLocationInputs(uniqueId) {
             if (!uniqueId) {
                 uniqueId = Date.now();
@@ -630,7 +757,8 @@
             const index = $('.lokasi-kegiatan').index(container);
 
             if (!isNaN(lat) && !isNaN(long)) {
-                saveLocationToLocalStorage(uniqueId);
+                // saveLocationToLocalStorage(uniqueId);
+                validateCoordinate(lat, long);
             } else {
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
@@ -733,6 +861,81 @@
             console.error("Error parsing or converting path to geojson:", e);
             return null;
         }
+    }
+
+
+    // additional to add click on maps
+    $(document).ready(function() {
+        var clickMarker = null;
+
+        map.on('click', function(e) {
+            if (clickMarker) {
+                map.removeLayer(clickMarker);
+            }
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+            clickMarker = L.marker(e.latlng).addTo(map);
+
+            const popupContent = `
+                <div>
+                    <strong>Coordinates:</strong><br>
+                    Latitude: ${lat}<br>
+                    Longitude: ${lng}<br>
+                </div>
+            `;
+            clickMarker.bindPopup(popupContent).openPopup();
+        });
+    });
+
+    // Function to use coordinates in the form
+    function useCoordinates(lat, lng, e) {
+        // Find the last empty coordinate input pair
+        e.preventDefault();
+        const locationRows = $('.lokasi-kegiatan');
+        let targetRow = null;
+
+        locationRows.each(function() {
+            const latInput = $(this).find('.lat-input');
+            const longInput = $(this).find('.lang-input');
+
+            if (!latInput.val() && !longInput.val()) {
+                targetRow = $(this);
+                return false; // Break the loop
+            }
+        });
+
+        // If no empty inputs found, create new location row
+        if (!targetRow) {
+            const uniqueId = addNewLocationInputs();
+            targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
+        }
+
+        // Fill in the coordinates
+        if (targetRow) {
+            targetRow.find('.lat-input').val(lat).trigger('change');
+            targetRow.find('.lang-input').val(lng).trigger('change');
+        }
+    }
+
+    // Add this helper function to format coordinates
+    function formatCoordinate(value, type) {
+        const val = parseFloat(value);
+        if (isNaN(val)) return '';
+
+        // Validate range
+        if (type === 'latitude' && (val < -90 || val > 90)) return '';
+        if (type === 'longitude' && (val < -180 || val > 180)) return '';
+
+        return val.toFixed(6);
+    }
+
+    // Enhance the existing validateCoordinate function
+    function validateCoordinate(value, type) {
+        const formattedValue = formatCoordinate(value, type);
+        return {
+            valid: formattedValue !== '',
+            value: formattedValue
+        };
     }
 </script>
 @endpush
