@@ -29,7 +29,7 @@
                 </strong>
                 <span class="text-red">
                     {{-- ONLY FOR MEDIA FILES ONLY --}}
-                    ( {{ __('allowed file: .jpg, .png, .jpeg, .mp4, .mkv | max: 10 MB') }} )
+                    ( {{ __('allowed file: .jpg, .png, .jpeg | max: 10 MB') }} )
                 </span>
             </label>
             <div class="form-group file-loading">
@@ -103,7 +103,7 @@
         }
 
         handleFileInput('dokumen_pendukung', 'captions-container-docs', docFileCaptions, ['docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'], 4096);
-        handleFileInput('media_pendukung', 'captions-container-media', mediaFileCaptions, ['jpg', 'png', 'jpeg', 'mp4', 'mkv'], 10240);
+        handleFileInput('media_pendukung', 'captions-container-media', mediaFileCaptions, ['jpg', 'png', 'jpeg'], 10240);
     });
 </script>
 @endpush
