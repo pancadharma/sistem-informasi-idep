@@ -165,4 +165,11 @@ $.fn.dataTable.ext.errMode = 'throw';
         width:100%!important;
     }
     </style>
+    <style>
+        .form-control:focus {
+            border-color: #d9edf7;
+            -webkit-box-shadow: 0 0 0px 2px rgb(87 204 193 / 72%);
+            box-shadow: 0 0 0px 2px rgb(87 204 193 / 72%);
+        }
+    </style>
 @endpush

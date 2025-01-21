@@ -5,12 +5,20 @@ namespace App\Models;
 use DateTimeInterface;
 use App\Models\Kelurahan;
 use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Dusun extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, LogsActivity;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']); // Pastikan log yang diinginkan
+    }
+
     public $table = "dusun";
     protected $fillable = [
         'kode', 'nama', 'aktif', 'desa_id', 'kode_pos', 'created_at','updated_at'
