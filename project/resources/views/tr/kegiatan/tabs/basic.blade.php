@@ -858,7 +858,6 @@
 
 
         map.on('click', function(e) {
-        // Remove previous marker if exists
             if (clickMarker) {
                 map.removeLayer(clickMarker);
             }
@@ -879,12 +878,12 @@
                     let address = {};
 
                     if (data && data.display_name) {
-                        locationName = data.display_name;
+                        locationName = data.display_name || data.name;
 
                         // Extract address components
                         address = {
                             road: data.address.road || '',
-                            suburb: data.address.suburb || '',
+                            suburb: data.address.suburb || data.address.city_district || '',
                             city: data.address.city || data.address.town || data.address.village || '',
                             county: data.address.county || '',
                             state: data.address.state || '',
@@ -895,11 +894,11 @@
                     // Create popup content
                     const popupContent = `
                         <div>
-                            <strong>Location Details:</strong><br>
+                            <strong>Location Details</strong><br>
                             <b>Name:</b> ${locationName}<br>
                             <b>Coordinates:</b><br>
-                            Latitude: ${lat}<br>
-                            Longitude: ${lng}<br>
+                            <li>Latitude: ${lat}</li>
+                            <li>Longitude: ${lng}</li>
                             <br>
                             <strong>Address Components:</strong><br>
                             Road: ${address.road}<br>
@@ -942,19 +941,24 @@
                 });
         });
 
-        $(document).on('click', '.use-coordinates', function(e) {
+        $(document).on('click', '.leaflet-popup .use-coordinates', function(e) {
             e.preventDefault(); // Prevent any default form submission
 
             const lat = $(this).data('lat');
             const lng = $(this).data('lng');
+
+            // Debugging logs
+            console.log('Coordinates selected:', lat, lng);
 
             // Find the last empty coordinate input pair
             const locationRows = $('.lokasi-kegiatan');
             let targetRow = null;
 
             locationRows.each(function() {
-                const latInput = $(this).find('.lat-input');
-                const longInput = $(this).find('.lang-input');
+                // const latInput = $(this).find('.lat-input');
+                // const longInput = $(this).find('.lang-input');
+                const latInput = $(this).find(`#lat-${uniqueId}`);
+                const longInput = $(this).find(`#long-${uniqueId}`);
 
                 if (!latInput.val() && !longInput.val()) {
                     targetRow = $(this);
@@ -962,20 +966,38 @@
                 }
             });
 
-            // If no empty inputs found, create new location row
-            if (!targetRow) {
-                const uniqueId = addNewLocationInputs();
+            // Add this block here
+            if (!targetRow || targetRow.length === 0) {
+                // Manually create a new location row
+                const newUniqueId = addNewLocationInputs();
                 targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
             }
 
             // Fill in the coordinates
             if (targetRow) {
-                targetRow.find('.lat-input').val(lat).trigger('change');
-                targetRow.find('.lang-input').val(lng).trigger('change');
+                const latInput = targetRow.find(`#lat-${uniqueId}`);
+                const longInput = targetRow.find(`#long-${uniqueId}`);
+                // const latInput = targetRow.find('.lat-input');
+                // const longInput = targetRow.find('.lang-input');
+
+                // Debugging logs
+                console.log('Target row found:', targetRow);
+                console.log('Lat input:', latInput);
+                console.log('Long input:', longInput);
+
+                // Use .val() and trigger change event
+                latInput.val(lat).trigger('change');
+                longInput.val(lng).trigger('change');
+
+                // Additional validation trigger
+                latInput.trigger('blur');
+                longInput.trigger('blur');
             }
 
             // Close the popup
-            clickMarker.closePopup();
+            if (clickMarker) {
+                clickMarker.closePopup();
+            }
         });
     });
 

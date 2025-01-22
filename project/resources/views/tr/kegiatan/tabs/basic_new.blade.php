@@ -353,10 +353,12 @@
         },
 
         handleCoordinateError: function(message) {
-            Swal.fire({
+            Toast.fire({
                 icon: 'warning',
                 title: 'Invalid Coordinates',
-                text: message || 'The provided coordinates are invalid.'
+                text: message || 'The provided coordinates are invalid.',
+                timer: 300,
+                position: 'top-end',
             });
         }
     };
