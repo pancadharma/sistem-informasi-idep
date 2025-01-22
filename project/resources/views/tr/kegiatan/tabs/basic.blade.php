@@ -216,7 +216,117 @@
 @endpush
 @push('basic_tab_js')
 
+    <!--script for maps behavoiour-->
+
 <script>
+    // Variables to store current GeoJSON layers
+    var provinsiLayer = null;
+    var kabupatenLayer = null;
+    var map;
+    let uniqueId = Date.now();
+
+    const MapHandler = {
+        // Function to ensure coordinates are in proper format [longitude, latitude]
+        formatCoordinate: function(coord) {
+            // If coordinates are in [lat, lng] format, swap them to [lng, lat]
+            if (Array.isArray(coord) && coord.length === 2) {
+                return [parseFloat(coord[1]), parseFloat(coord[0])];
+            }
+            return null;
+        },
+
+        // Normalize the coordinate array structure
+        normalizeCoordinates: function(pathData) {
+            try {
+                if (!Array.isArray(pathData)) {
+                    console.error("Invalid path data:", pathData);
+                    return null;
+                }
+
+                // Handle case where data is direct array of coordinate pairs
+                if (pathData.length === 2 && typeof pathData[0] === 'number') {
+                    return [[this.formatCoordinate(pathData)]];
+                }
+
+                // Handle single polygon
+                if (pathData.length > 0 && Array.isArray(pathData[0]) && pathData[0].length === 2 && typeof pathData[0][0] === 'number') {
+                    const formattedCoords = pathData.map(coord => this.formatCoordinate(coord));
+                    // Ensure polygon is closed
+                    if (JSON.stringify(formattedCoords[0]) !== JSON.stringify(formattedCoords[formattedCoords.length - 1])) {
+                        formattedCoords.push(formattedCoords[0]);
+                    }
+                    return [formattedCoords];
+                }
+
+                // Handle multi-polygon structure
+                return pathData.map(polygon => {
+                    if (!Array.isArray(polygon)) return null;
+
+                    const formattedPolygon = polygon.map(coord => this.formatCoordinate(coord));
+                    // Ensure polygon is closed
+                    if (JSON.stringify(formattedPolygon[0]) !== JSON.stringify(formattedPolygon[formattedPolygon.length - 1])) {
+                        formattedPolygon.push(formattedPolygon[0]);
+                    }
+                    return formattedPolygon;
+                }).filter(Boolean);
+
+            } catch (e) {
+                console.error("Error normalizing coordinates:", e);
+                return null;
+            }
+        },
+
+        convertToGeoJSON: function(pathData) {
+            try {
+                if (!pathData) return null;
+
+                const normalizedCoords = this.normalizeCoordinates(pathData);
+                if (!normalizedCoords) return null;
+
+                return {
+                    type: "Feature",
+                    geometry: {
+                        type: "MultiPolygon",
+                        coordinates: [normalizedCoords] // Wrap in array for MultiPolygon
+                    },
+                    properties: {}
+                };
+            } catch (e) {
+                console.error("Error converting to GeoJSON:", e);
+                return null;
+            }
+        },
+
+        clearLayer: function(layer) {
+            if (layer && map.hasLayer(layer)) {
+                map.removeLayer(layer);
+                return null;
+            }
+            return layer;
+        },
+
+        displayGeoJSON: function(geojson, color) {
+            if (!geojson) return null;
+
+            return L.geoJSON(geojson, {
+                style: {
+                    color: color,
+                    weight: 2,
+                    fillOpacity: 0.3
+                }
+            }).addTo(map);
+        },
+
+        updateMapBounds: function(layer, parentLayer) {
+            if (parentLayer && map.hasLayer(parentLayer)) {
+                map.fitBounds(parentLayer.getBounds());
+            } else if (layer && map.hasLayer(layer)) {
+                map.fitBounds(layer.getBounds());
+            }
+        }
+    };
+
+
     const ErrorHandler = {
         handleMapError: function(error) {
             console.error('Map Initialization Error:', error);
@@ -244,14 +354,16 @@
         },
 
         handleCoordinateError: function(message) {
-            Swal.fire({
+            Toast.fire({
                 icon: 'warning',
                 title: 'Invalid Coordinates',
-                text: message || 'The provided coordinates are invalid.'
+                text: message || 'The provided coordinates are invalid.',
+                timer: 300,
+                position: 'top-end',
             });
         }
     };
-    // Place the validateCoordinate function in a global scope
+
     function validateCoordinate(value, type) {
         let isValid = false;
         let validatedValue = null;
@@ -287,7 +399,82 @@
 
     }
 
+    function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
+    if (!id) {
+        if (type === 'provinsi') {
+            provinsiLayer = MapHandler.clearLayer(provinsiLayer);
+        } else if (type === 'kabupaten') {
+            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+        }
+        return;
+    }
+
+    fetch(`/api/geojson/${type}/${id}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            // Clear existing layer
+            if (type === 'provinsi') {
+                provinsiLayer = MapHandler.clearLayer(provinsiLayer);
+            } else if (type === 'kabupaten') {
+                kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+            }
+
+            // Convert and display new data
+            const geojson = MapHandler.convertToGeoJSON(data.path);
+            if (!geojson) {
+                console.error(`Invalid GeoJSON data for ${type}:`, data.path);
+                return;
+            }
+
+            const newLayer = MapHandler.displayGeoJSON(geojson, color);
+
+            // Store new layer reference
+            if (type === 'provinsi') {
+                provinsiLayer = newLayer;
+            } else if (type === 'kabupaten') {
+                kabupatenLayer = newLayer;
+            }
+
+            // Update map bounds
+            MapHandler.updateMapBounds(newLayer, parentLayer);
+        })
+        .catch(error => {
+            console.error(`Error loading ${type} data:`, error);
+            ErrorHandler.handleGeojsonError(error);
+        });
+    }
+
+    function updateMap() {
+        const provinsiId = $('#provinsi_id').val();
+        const kabupatenId = $('#kabupaten_id').val();
+
+        // Update provinsi first
+        fetchAndDisplayGeoJSON(provinsiId, 'provinsi', '#2563eb');
+
+        // Then update kabupaten if we have both IDs
+        if (provinsiId && kabupatenId) {
+            fetchAndDisplayGeoJSON(kabupatenId, 'kabupaten', '#dc2626', provinsiLayer);
+        }
+    }
+
     $(document).ready(function() {
+        map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
+
+        $('#provinsi_id').on('change', function() {
+            $('#kabupaten_id').val(null).trigger('change');
+            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+            updateMap();
+        });
+
+        $('#kabupaten_id').on('change', function() {
+            updateMap();
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 
         $(`#provinsi_id`).select2({
             placeholder: '{{ __("cruds.kegiatan.basic.select_provinsi") }}',
@@ -313,9 +500,12 @@
                 },
                 cache: true
             }
+        }).on('select2:open', function (e) {
+            $('.select2-container').css('z-index', 1051);
+        }).on('select2:close', function (e) {
+            $('.select2-container').css('z-index', 999);
         });
 
-        // Initialize kabupaten select2
         $(`#kabupaten_id`).select2({
             placeholder: '{{ __("cruds.kegiatan.basic.select_kabupaten") }}',
             allowClear: true,
@@ -344,13 +534,10 @@
                 },
                 cache: true
             }
-        });
-
-        // Add event listener to provinsi_id to trigger kabupaten update
-        $(`#provinsi_id`).on('change', function() {
-            $(`#kabupaten_id`).val(null).trigger('change');
-            // Clear existing location fields
-            $('.list-lokasi-kegiatan').empty();
+        }).on('select2:open', function (e) {
+            $('.select2-container').css('z-index', 1051);
+        }).on('select2:close', function (e) {
+            $('.select2-container').css('z-index', 999);
         });
 
         function addNewLocationInputs(uniqueId) {
@@ -435,6 +622,10 @@
                         $('#kecamatan-' + uniqueId).focus();
                     }
                 }
+            }).on('select2:open', function (e) {
+                $('.select2-container').css('z-index', 1051);
+            }).on('select2:close', function (e) {
+                $('.select2-container').css('z-index', 999);
             });
 
             $(`#kelurahan-${uniqueId}`).select2({
@@ -445,20 +636,20 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
-                    return {
-                        search: params.term,
-                        kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
-                        page: params.page || 1
-                    };
+                        return {
+                            search: params.term,
+                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                            page: params.page || 1
+                        };
                     },
                     processResults: function(data, params) {
                     params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                        more: data.pagination.more
-                        }
-                    };
+                        return {
+                            results: data.results,
+                            pagination: {
+                            more: data.pagination.more
+                            }
+                        };
                     },
                     cache: true,
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -474,6 +665,10 @@
                         $('#kecamatan-' + uniqueId).focus();
                     }
                 }
+            }).on('select2:open', function (e) {
+                $('.select2-container').css('z-index', 1051);
+            }).on('select2:close', function (e) {
+                $('.select2-container').css('z-index', 999);
             });
 
             // Handle dependencies
@@ -493,11 +688,10 @@
             });
 
             $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`).on('change', function() {
-                // saveLocationToLocalStorage(uniqueId);
+
             });
 
             $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click', '.remove-staff-row', function() {
-                // removeLocationFromLocalStorage(uniqueId);
                 $(this).closest('.lokasi-kegiatan').remove();
             });
             return uniqueId
@@ -527,6 +721,7 @@
                     timer: 1000,
                     timerProgressBar: true
                 });
+
                 $('#kabupaten_id').focus();
                 return false;
             }
@@ -542,7 +737,8 @@
             const index = $('.lokasi-kegiatan').index(container);
 
             if (!isNaN(lat) && !isNaN(long)) {
-                saveLocationToLocalStorage(uniqueId);
+                // saveLocationToLocalStorage(uniqueId);
+                validateCoordinate(lat, long);
             } else {
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
@@ -566,139 +762,273 @@
 
         });
 
-        // Add the remove location handler
         $(document).on('click', '.remove-staff-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
             row.remove();
         });
+        updateMap();
     });
-</script>
 
-
-{{-- MAPS --}}
-
-<script defer>
-    $(document).ready(function () {
-        // Initialize the map
-        var map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Variables to store current GeoJSON layers
-        var provinsiLayer = null;
-        var kabupatenLayer = null;
-        function convertPathToGeoJSON(pathData) {
-            try {
-                const convertedCoordinates = pathData.map(polygon => {
-                    return polygon.map(ring => {
-                        const convertedRing = ring.map(coord => {
-                            let lng = parseFloat(coord[ 1 ]);
-                            let lat = parseFloat(coord[ 0 ]);
-
-                            if (isNaN(lng)) {
-                                console.error("Invalid lng", coord[ 1 ]);
-                                lng = 0;
-                            }
-                            if (isNaN(lat)) {
-                                console.error("Invalid lat", coord[ 0 ]);
-                                lat = 0;
-                            }
-                            return [ lng, lat ];
-                        });
-                        // ensure first and last point is same
-                        if (convertedRing.length > 0) {
-                            const firstCoord = convertedRing[ 0 ]
-                            const lastCoord = convertedRing[ convertedRing.length - 1 ]
-                            if (firstCoord[ 0 ] !== lastCoord[ 0 ] || firstCoord[ 1 ] !== lastCoord[ 1 ]) {
-                                convertedRing.push(firstCoord)
-                            }
-                        }
-                        return convertedRing;
-                    })
-                })
-                return {
-                    type: "Feature",
-                    geometry: {
-                        type: "MultiPolygon",
-                        coordinates: convertedCoordinates,
-                    }
-                };
-            } catch (e) {
-                console.error("Error parsing or converting path to geojson:", e)
+    function convertPathToGeoJSON(pathData) {
+        try {
+            if (!Array.isArray(pathData)) {
+                console.error("pathData is not an array:", pathData);
                 return null;
             }
-        }
-        const provinsiPath = [ [
-            [ [ -8.100002, 114.519701 ], [ -8.095996, 114.503341 ], [ -8.092949, 114.524537 ], [ -8.100002, 114.519701 ] ],
-            [ [ -8.746994, 115.234823 ], [ -8.750259, 115.224802 ], [ -8.743982, 115.218828 ], [ -8.729553, 115.224463 ], [ -8.721596, 115.237886 ], [ -8.729054, 115.244832 ], [ -8.735112, 115.238011 ], [ -8.730306, 115.250894 ], [ -8.742084, 115.240437 ], [ -8.741479, 115.226853 ], [ -8.746994, 115.234823 ] ],
-            [ [ -8.762691, 115.486108 ], [ -8.745983, 115.465669 ], [ -8.745084, 115.451275 ], [ -8.720702, 115.449327 ], [ -8.673648, 115.490757 ], [ -8.671937, 115.559462 ], [ -8.686277, 115.579262 ], [ -8.705585, 115.584703 ], [ -8.746245, 115.619169 ], [ -8.769948, 115.628524 ], [ -8.790472, 115.606795 ], [ -8.805681, 115.605966 ], [ -8.818415, 115.58463 ], [ -8.795751, 115.528274 ], [ -8.762691, 115.486108 ] ],
-            [ [ -8.698163, 115.448016 ], [ -8.687595, 115.462891 ], [ -8.71207, 115.443046 ], [ -8.703833, 115.439776 ], [ -8.698163, 115.448016 ] ],
-            [ [ -8.694394, 115.443789 ], [ -8.686238, 115.428416 ], [ -8.676185, 115.446912 ], [ -8.664763, 115.449104 ], [ -8.66811, 115.47115 ], [ -8.67866, 115.46959 ], [ -8.694394, 115.443789 ] ],
-            [ [ -8.4374, 114.84339 ], [ -8.432518, 114.821486 ], [ -8.410978, 114.794165 ], [ -8.396411, 114.734743 ], [ -8.407292, 114.634207 ], [ -8.398087, 114.581884 ], [ -8.345168, 114.541866 ], [ -8.333988, 114.522272 ], [ -8.307139, 114.517942 ], [ -8.277295, 114.485064 ], [ -8.216348, 114.447341 ], [ -8.164278, 114.434385 ], [ -8.165519, 114.441367 ], [ -8.184574, 114.442029 ], [ -8.17115, 114.457049 ], [ -8.176159, 114.456827 ], [ -8.166795, 114.476608 ], [ -8.154677, 114.444781 ], [ -8.122099, 114.434948 ], [ -8.096681, 114.436513 ], [ -8.094115, 114.490689 ], [ -8.134108, 114.523137 ], [ -8.151317, 114.512537 ], [ -8.154872, 114.523551 ], [ -8.132246, 114.553798 ], [ -8.141847, 114.566749 ], [ -8.131447, 114.562063 ], [ -8.120277, 114.584266 ], [ -8.123687, 114.594585 ], [ -8.129896, 114.587177 ], [ -8.138359, 114.592946 ], [ -8.127895, 114.625922 ], [ -8.143891, 114.656939 ], [ -8.144508, 114.694024 ], [ -8.169044, 114.748952 ], [ -8.196381, 114.862509 ], [ -8.183942, 114.909479 ], [ -8.176741, 114.997748 ], [ -8.143521, 115.048766 ], [ -8.108531, 115.079064 ], [ -8.084338, 115.114443 ], [ -8.06475, 115.156895 ], [ -8.062932, 115.188292 ], [ -8.104605, 115.29419 ], [ -8.111225, 115.336079 ], [ -8.128468, 115.357843 ], [ -8.161353, 115.450883 ], [ -8.231051, 115.557343 ], [ -8.325249, 115.631101 ], [ -8.357971, 115.696296 ], [ -8.387833, 115.711127 ], [ -8.424704, 115.694045 ], [ -8.462182, 115.634183 ], [ -8.506045, 115.610893 ], [ -8.516406, 115.582244 ], [ -8.500749, 115.53836 ], [ -8.503693, 115.522299 ], [ -8.515505, 115.507608 ], [ -8.529241, 115.514782 ], [ -8.541294, 115.507888 ], [ -8.555626, 115.462549 ], [ -8.570559, 115.445048 ], [ -8.576564, 115.363778 ], [ -8.62168, 115.305636 ], [ -8.663952, 115.261574 ], [ -8.692128, 115.266987 ], [ -8.709461, 115.25958 ], [ -8.714212, 115.227979 ], [ -8.726266, 115.213876 ], [ -8.746504, 115.211341 ], [ -8.746052, 115.206238 ], [ -8.718674, 115.209689 ], [ -8.734547, 115.187108 ], [ -8.723789, 115.186571 ], [ -8.727001, 115.182349 ], [ -8.777463, 115.177926 ], [ -8.771853, 115.184711 ], [ -8.790192, 115.221144 ], [ -8.766461, 115.215688 ], [ -8.75306, 115.220699 ], [ -8.801818, 115.236928 ], [ -8.834445, 115.213667 ], [ -8.848983, 115.167963 ], [ -8.845527, 115.112635 ], [ -8.838145, 115.088811 ], [ -8.828206, 115.084838 ], [ -8.8139, 115.090478 ], [ -8.804782, 115.114122 ], [ -8.791705, 115.12346 ], [ -8.777464, 115.165854 ], [ -8.760548, 115.1689 ], [ -8.750457, 115.152459 ], [ -8.71444, 115.167508 ], [ -8.674591, 115.145853 ], [ -8.643644, 115.104573 ], [ -8.581383, 115.059414 ], [ -8.477357, 114.934927 ], [ -8.4374, 114.84339 ] ]
-        ] ];
-        const kabupatenPath = [ [ [ [ -8.735726739697185, 115.21395685772295 ], [ -8.7467070382991, 115.21176702832575 ], [ -8.738045968046908, 115.20786987469502 ], [ -8.741422978987217, 115.20053993417069 ], [ -8.72902617711631, 115.21723099701295 ], [ -8.735726739697185, 115.21395685772295 ] ] ], [ [ [ -8.72337403068693, 115.23389600199889 ], [ -8.724296026440452, 115.23259296799117 ], [ -8.72376096309793, 115.23159703537497 ], [ -8.72312803912763, 115.23371402778025 ], [ -8.72337403068693, 115.23389600199889 ] ] ], [ [ [ -8.721402429878182, 115.23951372507841 ], [ -8.729052396850605, 115.24480802586977 ], [ -8.7369997966033, 115.23642042596191 ], [ -8.728305246389905, 115.24755630278116 ], [ -8.731082076776335, 115.25065436110997 ], [ -8.743866920821723, 115.23699863517895 ], [ -8.734930012310187, 115.22940397741175 ], [ -8.746779858203872, 115.23473009621702 ], [ -8.752062260964504, 115.2298522013181 ], [ -8.748183740387265, 115.21837130229382 ], [ -8.731689910560885, 115.22191015522958 ], [ -8.721402429878182, 115.23951372507841 ] ] ], [ [ [ -8.59153955840382, 115.2350164448532 ], [ -8.63217007678763, 115.25557466803666 ], [ -8.650443024625858, 115.27488099266374 ], [ -8.665629045044358, 115.26145498955624 ], [ -8.704308967185064, 115.26459402279598 ], [ -8.739038056061403, 115.18876381289968 ], [ -8.70696608341797, 115.18756198859498 ], [ -8.682325727750122, 115.17250843741455 ], [ -8.674896548836646, 115.17975179930616 ], [ -8.661854480699631, 115.1734298683938 ], [ -8.660080290073306, 115.1805350359632 ], [ -8.61619746074414, 115.18019297612497 ], [ -8.611896874840834, 115.19739969673864 ], [ -8.60502057124231, 115.19675435582896 ], [ -8.596174214568268, 115.21172426736112 ], [ -8.59153955840382, 115.2350164448532 ] ] ] ];
 
-        // Province selection change handler
-        $('#provinsi_id').on('change', function () {
-            var provinsiId = $(this).val();
-
-            // Clear previous layers
-            if (provinsiLayer) {
-                map.removeLayer(provinsiLayer);
-            }
-            if (kabupatenLayer) {
-                map.removeLayer(kabupatenLayer);
-            }
-
-            // Clear kabupaten select
-            $('#kabupaten_id').val(null).trigger('change');
-            $('#kabupaten_id').prop('disabled', !provinsiId);
-
-            if (provinsiId) {
-                const geojson = convertPathToGeoJSON(provinsiPath);
-                if (geojson) {
-                    // Add province layer
-                    provinsiLayer = L.geoJSON(geojson, {
-                        style: {
-                            color: '#2563eb',
-                            weight: 2,
-                            fillOpacity: 0.2
-                        }
-                    }).addTo(map);
-
-                    // Fit map to province bounds
-                    map.fitBounds(provinsiLayer.getBounds());
+            const convertedCoordinates = pathData.map(polygon => {
+                if (!Array.isArray(polygon)) {
+                    console.error("Polygon is not an array:", polygon);
+                    return null;
                 }
+                return polygon.map(ring => {
+                    if (!Array.isArray(ring)) {
+                        console.error("Ring is not an array:", ring);
+                        return null;
+                    }
+                    const convertedRing = ring.map(coord => {
+                        if (!Array.isArray(coord)) {
+                             console.error("Coordinate is not an array:", coord);
+                             return null;
+                        }
+
+                        if (coord.length < 2) {
+                           console.error("Coordinate is missing values:", coord);
+                           return null;
+                        }
+
+                        let lng = parseFloat(coord[1]);
+                        let lat = parseFloat(coord[0]);
+
+                        if (isNaN(lng)) {
+                            console.error("Invalid lng", coord[1]);
+                            lng = 0;
+                        }
+                        if (isNaN(lat)) {
+                            console.error("Invalid lat", coord[0]);
+                            lat = 0;
+                        }
+
+                        return [lng, lat];
+                    }).filter(coord => coord !== null); // Remove invalid coords
+
+                    // ensure first and last point is same
+                    if (convertedRing.length > 0) {
+                        const firstCoord = convertedRing[0];
+                        const lastCoord = convertedRing[convertedRing.length - 1];
+                        if (firstCoord[0] !== lastCoord[0] || firstCoord[1] !== lastCoord[1]) {
+                            convertedRing.push(firstCoord);
+                        }
+                    }
+                    return convertedRing;
+                }).filter(ring => ring !== null && ring.length > 0); // Remove invalid rings
+            }).filter(polygon => polygon !== null && polygon.length > 0);  // Remove invalid polygons
+
+            if(convertedCoordinates.length === 0){
+                 console.error("No valid convertedCoordinates:", convertedCoordinates)
+                 return null;
             }
+            return {
+                type: "Feature",
+                geometry: {
+                    type: "MultiPolygon",
+                    coordinates: convertedCoordinates,
+                }
+            };
+        } catch (e) {
+            console.error("Error parsing or converting path to geojson:", e);
+            return null;
+        }
+    }
+
+    // additional to add click on maps
+    $(document).ready(function() {
+        var clickMarker = null;
+        var reverseGeocodeMarker = null;
+
+        function reverseGeocode(lat, lng) {
+            return fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Reverse geocoding error:', error);
+                    return null;
+                });
+        }
+
+
+        map.on('click', function(e) {
+        // Remove previous marker if exists
+            if (clickMarker) {
+                map.removeLayer(clickMarker);
+            }
+            if (reverseGeocodeMarker) {
+                map.removeLayer(reverseGeocodeMarker);
+            }
+
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+
+            // Create marker
+            clickMarker = L.marker(e.latlng).addTo(map);
+
+            // Perform reverse geocoding
+            reverseGeocode(lat, lng)
+                .then(data => {
+                    let locationName = 'Unknown Location';
+                    let address = {};
+
+                    if (data && data.display_name) {
+                        locationName = data.display_name;
+
+                        // Extract address components
+                        address = {
+                            road: data.address.road || '',
+                            suburb: data.address.suburb || '',
+                            city: data.address.city || data.address.town || data.address.village || '',
+                            county: data.address.county || '',
+                            state: data.address.state || '',
+                            country: data.address.country || ''
+                        };
+                    }
+
+                    // Create popup content
+                    const popupContent = `
+                        <div>
+                            <strong>Location Details:</strong><br>
+                            <b>Name:</b> ${locationName}<br>
+                            <b>Coordinates:</b><br>
+                            Latitude: ${lat}<br>
+                            Longitude: ${lng}<br>
+                            <br>
+                            <strong>Address Components:</strong><br>
+                            Road: ${address.road}<br>
+                            Suburb: ${address.suburb}<br>
+                            City: ${address.city}<br>
+                            County: ${address.county}<br>
+                            State: ${address.state}<br>
+                            Country: ${address.country}<br>
+                            <br>
+                            <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
+                                    data-lat="${lat}"
+                                    data-lng="${lng}">
+                                Use These Coordinates
+                            </button>
+                        </div>
+                    `;
+
+                    // Bind popup
+                    clickMarker.bindPopup(popupContent).openPopup();
+                })
+                .catch(error => {
+                    console.error('Reverse geocoding error:', error);
+
+                    // Fallback popup if geocoding fails
+                    const popupContent = `
+                        <div>
+                            <strong>Coordinates:</strong><br>
+                            Latitude: ${lat}<br>
+                            Longitude: ${lng}<br>
+                            <br>
+                            <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
+                                    data-lat="${lat}"
+                                    data-lng="${lng}">
+                                Use These Coordinates
+                            </button>
+                        </div>
+                    `;
+
+                    clickMarker.bindPopup(popupContent).openPopup();
+                });
         });
 
-        // Kabupaten selection change handler
-        $('#kabupaten_id').on('change', function () {
-            var kabupatenId = $(this).val();
+        $(document).on('click', '.use-coordinates', function(e) {
+            e.preventDefault(); // Prevent any default form submission
 
-            if (kabupatenLayer) {
-                map.removeLayer(kabupatenLayer);
-            }
+            const lat = $(this).data('lat');
+            const lng = $(this).data('lng');
 
-            if (kabupatenId) {
-                const geojson = convertPathToGeoJSON(kabupatenPath);
-                if (geojson) {
-                    // Add kabupaten layer
-                    kabupatenLayer = L.geoJSON(geojson, {
-                        style: {
-                            color: '#dc2626',
-                            weight: 2,
-                            fillOpacity: 0.4
-                        }
-                    }).addTo(map);
+            // Find the last empty coordinate input pair
+            const locationRows = $('.lokasi-kegiatan');
+            let targetRow = null;
 
-                    // Fit map to kabupaten bounds
-                    map.fitBounds(kabupatenLayer.getBounds());
+            locationRows.each(function() {
+                const latInput = $(this).find('.lat-input');
+                const longInput = $(this).find('.lang-input');
+
+                if (!latInput.val() && !longInput.val()) {
+                    targetRow = $(this);
+                    return false; // Break the loop
                 }
+            });
+
+            // If no empty inputs found, create new location row
+            if (!targetRow) {
+                const uniqueId = addNewLocationInputs();
+                targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
             }
+
+            // Fill in the coordinates
+            if (targetRow) {
+                targetRow.find('.lat-input').val(lat).trigger('change');
+                targetRow.find('.lang-input').val(lng).trigger('change');
+            }
+
+            // Close the popup
+            clickMarker.closePopup();
         });
     });
+
+    // Function to use coordinates in the form
+    function useCoordinates(lat, lng, e) {
+        // Find the last empty coordinate input pair
+        e.preventDefault();
+        const locationRows = $('.lokasi-kegiatan');
+        let targetRow = null;
+
+        locationRows.each(function() {
+            const latInput = $(this).find('.lat-input');
+            const longInput = $(this).find('.lang-input');
+
+            if (!latInput.val() && !longInput.val()) {
+                targetRow = $(this);
+                return false; // Break the loop
+            }
+        });
+
+        // If no empty inputs found, create new location row
+        if (!targetRow) {
+            const uniqueId = addNewLocationInputs();
+            targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
+        }
+
+        // Fill in the coordinates
+        if (targetRow) {
+            targetRow.find('.lat-input').val(lat).trigger('change');
+            targetRow.find('.lang-input').val(lng).trigger('change');
+        }
+    }
+
+    // Add this helper function to format coordinates
+    function formatCoordinate(value, type) {
+        const val = parseFloat(value);
+        if (isNaN(val)) return '';
+
+        // Validate range
+        if (type === 'latitude' && (val < -90 || val > 90)) return '';
+        if (type === 'longitude' && (val < -180 || val > 180)) return '';
+
+        return val.toFixed(6);
+    }
+
+    // Enhance the existing validateCoordinate function
+    function validateCoordinate(value, type) {
+        const formattedValue = formatCoordinate(value, type);
+        return {
+            valid: formattedValue !== '',
+            value: formattedValue
+        };
+    }
 </script>
+
 @endpush
