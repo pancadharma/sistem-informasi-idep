@@ -40,7 +40,7 @@
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
                 <div class="tab-pane fade show active" id="tab-basic" role="tabpanel" aria-labelledby="basic-tab">
-                    @include('tr.kegiatan.tabs.basic_new')
+                    @include('tr.kegiatan.tabs.basic')
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
                     @include('tr.kegiatan.tabs.description')
