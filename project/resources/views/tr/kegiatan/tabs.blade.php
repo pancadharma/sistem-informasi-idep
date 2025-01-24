@@ -1,6 +1,7 @@
 <div class="col-12 col-sm-12">
     <div class="card card-primary card-tabs">
-        <div class="card-header border-bottom-0 card-header p-0 pt-1">
+        <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
+            <button type="button" class="btn btn-danger float-right" id="simpan_kegiatan">{{ __('global.save') }}</button>
             <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
                 <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
                     <i class="bi bi-arrows-collapse"></i>
@@ -20,11 +21,6 @@
                         {{ __('cruds.kegiatan.tabs.hasil') }}
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link" id="custom-tab-peserta" data-toggle="pill" href="#tab-peserta" role="tab" aria-controls="tab-peserta" aria-selected="false">
-                        {{ __('cruds.kegiatan.tabs.peserta') }}
-                    </a>
-                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link" id="tab-files" data-toggle="pill" href="#tab-file" role="tab" aria-controls="tab-file" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.file') }}
@@ -48,9 +44,7 @@
                 <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
                     @include('tr.kegiatan.tabs.hasil')
                 </div>
-                {{-- <div class="tab-pane fade" id="tab-peserta" role="tabpanel" aria-labelledby="tab-peserta">
-                    @include('tr.kegiatan.tabs.beneficiaries')
-                </div> --}}
+
                 <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
                     @include('tr.kegiatan.tabs.file-uploads')
                 </div>
