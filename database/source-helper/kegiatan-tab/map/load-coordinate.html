@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Markers in Bali</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg"></script>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        // Sample data with random coordinates in Bali Island
+        const locations = [
+            { lat: -8.409518, lng: 115.188919, title: "Ubud", description: "A town on the Indonesian island of Bali in Ubud District, located amongst rice paddies and steep ravines in the central foothills of the Gianyar regency." },
+            { lat: -8.723560, lng: 115.170791, title: "Kuta", description: "A beach and resort area in the south of the island of Bali, Indonesia." },
+            { lat: -8.670458, lng: 115.212629, title: "Seminyak", description: "A mixed tourist residential area on the west coast of Bali in Indonesia, just north of Kuta and Legian." },
+            { lat: -8.340539, lng: 115.092029, title: "Lovina", description: "A coastal area on the northwestern side of the island of Bali, Indonesia." },
+            { lat: -8.455371, lng: 115.262478, title: "Sanur", description: "A coastal stretch of beach east of Denpasar in southeast Bali." },
+            { lat: -8.800325, lng: 115.160507, title: "Nusa Dua", description: "A resort area built in the 1970s in southern Bali, Indonesia." },
+            { lat: -8.362017, lng: 115.166832, title: "Bedugul", description: "A mountain lake resort area in Bali, Indonesia." },
+            { lat: -8.544603, lng: 115.136497, title: "Tanah Lot", description: "A rock formation off the Indonesian island of Bali." },
+            { lat: -8.409518, lng: 115.188919, title: "Denpasar", description: "The capital city and main hub of the Indonesian province of Bali." },
+            { lat: -8.800325, lng: 115.160507, title: "Jimbaran", description: "A fishing village and tourist resort in Bali, Indonesia." },
+            { lat: -8.409518, lng: 115.188919, title: "Canggu", description: "A coastal village and an up-and-coming resort area in Bali, Indonesia." },
+            { lat: -8.409518, lng: 115.188919, title: "Amed", description: "A long coastal strip of fishing villages in East Bali." },
+            { lat: -8.409518, lng: 115.188919, title: "Padangbai", description: "A small port town in eastern Bali." },
+            { lat: -8.409518, lng: 115.188919, title: "Tulamben", description: "A small fishing village on the northeast coast of Bali." },
+            { lat: -8.409518, lng: 115.188919, title: "Nusa Penida", description: "An island southeast of Indonesia's island Bali and a district of Klungkung Regency." }
+        ];
+
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: { lat: -8.409518, lng: 115.188919 } // Center of Bali
+            });
+
+            locations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    title: location.title
+                });
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<h3>${location.title}</h3><p>${location.description}</p>`
+                });
+
+                marker.addListener('click', () => {
+                    infoWindow.open(map, marker);
+                });
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>
