@@ -265,6 +265,18 @@ Route::middleware(['auth'])->group(function () {
     // Route for getting kabupaten geojson
     Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
+    // MEALS
+    Route::group(['prefix' => 'meals', 'as' => 'meals.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsController::class, 'create'])->name('create');
+    });
+    Route::group(['prefix' => 'api/meals', 'as' => 'api.meals.'], function () {
+        Route::get('/datatable', [App\Http\Controllers\API\MealsController::class, 'getMealsDatatable'])->name('datatable');
+        // Route::get('/create', [App\Http\Controllers\API\MealsController::class, 'create'])->name('create');
+    });
+
+
+
 
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
