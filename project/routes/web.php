@@ -248,8 +248,37 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
     Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
 
+    Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
+    Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
+    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
+
+    Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
+        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
+        Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
+        Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
+    });
+
+    //
+    Route::get('/api/geojson/provinsi/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
+
+    // Route for getting kabupaten geojson
+    Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
+
+    // MEALS
+    Route::group(['prefix' => 'meals', 'as' => 'meals.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsController::class, 'create'])->name('create');
+    });
+    Route::group(['prefix' => 'api/meals', 'as' => 'api.meals.'], function () {
+        Route::get('/datatable', [App\Http\Controllers\API\MealsController::class, 'getMealsDatatable'])->name('datatable');
+        // Route::get('/create', [App\Http\Controllers\API\MealsController::class, 'create'])->name('create');
+    });
+
+
+
+
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
-
 });

@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use DateTimeInterface;
-use App\Models\Program;
-use App\Models\Mjabatan;
 use App\Traits\Auditable;
-use Spatie\Activitylog\LogOptions;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Program;
+use App\Models\User;
+use App\Models\Mjabatan;
 
 class Meals_Feedback_Response extends Model
 {
-    use HasFactory, Auditable, LogsActivity;
+    use HasFactory;
 
     protected $table = 'trmealsfrm';
 
@@ -40,12 +38,6 @@ class Meals_Feedback_Response extends Model
         'notelphandler',
         'deskripsi',
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
-    }
 
     // Relationships
     public function program()

@@ -8,11 +8,10 @@ use App\Traits\Auditable;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 
-use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -170,6 +169,15 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
     }
+    public function penulis()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id', 'peran_id');
+    }
+
+    public function sektor()
+    {
+        return $this->belongsToMany(mSektor::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+    }
 
 
 
@@ -203,4 +211,5 @@ class Kegiatan extends Model implements HasMedia
             17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
         ];
     }
+
 }

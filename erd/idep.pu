@@ -304,11 +304,7 @@ entity "trkegiatan" as trkegiatan {
     id_programoutcomeoutputactivity : int <<fk>>
     fasepelaporan : int
     id_jeniskegiatan : int <<fk>>
-    id_desa : int <<fk>>
     id_user : int <<fk>>
-    lokasi : text null
-    long : decimal (9,6) null
-    lat : decimal (9,6) null
     tanggalmulai : datetime
     tanggalselesai : datetime
     status : varchar (50)
@@ -353,6 +349,29 @@ entity "mjeniskegiatan" as mjeniskegiatan {
     *id : int <<auto>>
     --
     nama : varchar (200)
+}
+
+entity "msektor" as msektor {
+    *id : int <<auto>>
+    --
+    nama : varchar (200)
+}
+
+entity "trkegiatansektor" as trkegiatansektor {
+    *id : int <<auto>>
+    --
+    id_kegiatan : int <<fk>>
+    id_sektor : int <<fk>>
+}
+
+entity "trkegiatanlokasi" as trkegiatanlokasi {
+    *id : int <<auto>>
+    --
+    id_kegiatan : int <<fk>>
+    id_desa : int <<fk>>
+    lokasi : text null
+    long : decimal (9,6) null
+    lat : decimal (9,6) null
 }
 
 entity "trkegiatanassessment" as trkegiatanassessment {
@@ -533,6 +552,58 @@ entity "trkegiatanpenulis" as trkegiatanpenulis {
     id_peran : int <<fk>>
 }
 
+entity "trmealstargetprogress" as trmealstargetprogress {
+    *id : int <<auto>>
+    --
+    id_program : int <<fk>>
+    tanggal : datetime
+}
+
+entity "trmealstargetprogressactivity" as trmealstargetprogressactivity {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcomeoutputactivity : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
+entity "trmealstargetprogressoutput" as trmealstargetprogressoutput {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcomeoutput : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
+entity "trmealstargetprogressoutcome" as trmealstargetprogressoutcome {
+    *id : int <<auto>>
+    --
+    id_mealstargetprogress : int <<fk>>
+    id_programoutcome : int <<fk>>
+    achievments : varchar (500) null
+    progress : int null
+    persentasecomplete : decimal null
+    status : varchar (50)
+    challenges : text null
+    mitigation : text null
+    risk : varchar (50) null
+    notes : text null
+}
+
 entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     *id : int <<auto>>
     --
@@ -619,7 +690,7 @@ entity "trmealsfrm" as trmealsfrm {
     deskripsi : varchar (500)
 }
 
-entity "trmealsqb" as trmealsfrm {
+entity "trmealsqb" as trmealsqb {
     *id : int <<auto>>
     --
     id_program : int <<fk>>

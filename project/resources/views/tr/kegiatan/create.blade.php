@@ -15,57 +15,22 @@
     <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
-
-        <div class="row">
-            {{-- @include('tr.kegiatan.details.create') --}}
-        </div>
         <div class="row">
             @include('tr.kegiatan.tabs')
         </div>
-
-        {{-- <div class="row"> --}}
-            {{-- <div class="col-sm-12">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <strong><i class="fas fa-edit"></i>
-                            {{ __('cruds.kegiatan.add') }}
-                        </strong>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group mt-2">
-                                     @include('tr.kegiatan.tabs')
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group mt-2">
-                                    <button type="submit" class="btn btn-success btn-flat">
-                                        <i class="bi bi-save"></i>
-                                        {{ __('cruds.kegiatan.add') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-        {{-- </div> --}}
     </form>
 @stop
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
+    <style>
+        .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
+            position: sticky;
+            z-index: 1045;
+            top: 0;
+        }
+    </style>
 @endpush
 
 @push('js')
