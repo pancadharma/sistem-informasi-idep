@@ -2,21 +2,23 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+
+use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use Carbon\Carbon;
-use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Image\Enums\Fit;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Kegiatan extends Model implements HasMedia
 {
-    use Auditable, HasFactory, InteractsWithMedia, HasRoles;
+    use Auditable, HasFactory, InteractsWithMedia, HasRoles, LogsActivity;
 
     protected $table = 'trkegiatan';
 
@@ -73,6 +75,13 @@ class Kegiatan extends Model implements HasMedia
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
+    
     public function getTglMulaiAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;

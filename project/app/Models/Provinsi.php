@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Provinsi extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, Auditable;
     protected $table = 'provinsi';
 
 
@@ -35,6 +36,12 @@ class Provinsi extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     public function country()
     {
