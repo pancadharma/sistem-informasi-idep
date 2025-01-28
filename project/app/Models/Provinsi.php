@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Provinsi extends Model
 {
-    use Auditable, HasFactory, Auditable;
+    use Auditable, HasFactory, LogsActivity;
     protected $table = 'provinsi';
 
 
