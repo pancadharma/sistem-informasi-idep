@@ -1,3 +1,4 @@
+<!-- Modal -->
 <div class="modal fade" id="ModalDaftarProgram" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgram" theme="info">
     <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">
@@ -11,18 +12,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Input Pencarian -->
-                <div class="form-group mb-3">
-                    <input type="text" id="searchProgram" class="form-control" placeholder="{{ __('global.search') }} {{ __('cruds.kegiatan.basic.program_nama') }}">
-                </div>
-                <!-- Tabel Program -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped" id="list_program_kegiatan">
                         <thead>
                             <tr>
                                 <th>{{ __('cruds.kegiatan.basic.program_kode') }}</th>
                                 <th>{{ __('cruds.kegiatan.basic.program_nama') }}</th>
-                                <th>{{ __('global.action') }}</th>
+                                <th>{{ __('') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,24 +41,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.close') }}</button>
+                {{-- <button type="button" class="btn btn-primary" id="saveModalData">{{ __('global.save') }}</button> --}}
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    // Fungsi untuk menyaring data tabel
-    document.getElementById('searchProgram').addEventListener('input', function () {
-        let keyword = this.value.toLowerCase();
-        let rows = document.querySelectorAll('#list_program_kegiatan tbody tr');
-
-        rows.forEach(row => {
-            let programName = row.querySelector('td:nth-child(2)').innerText.toLowerCase(); // Kolom nama program
-            if (programName.includes(keyword)) {
-                row.style.display = ''; // Tampilkan baris jika cocok
-            } else {
-                row.style.display = 'none'; // Sembunyikan baris jika tidak cocok
-            }
-        });
-    });
-</script>
