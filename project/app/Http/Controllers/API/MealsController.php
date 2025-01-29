@@ -5,14 +5,15 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class MealsController extends Controller
 {
     public function getMealsDatatable(Request $request)
     {
-        if (!$request->ajax() && !$request->isJson()) {
-            return "Not an Ajax Request & JSON REQUEST";
-        }
+        // if (!$request->ajax() && !$request->isJson()) {
+        //     return "Not an Ajax Request & JSON REQUEST";
+        // }
 
         $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
             ->select('trkegiatan.*')

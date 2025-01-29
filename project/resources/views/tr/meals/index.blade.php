@@ -18,7 +18,8 @@
 @section('content_body')
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">{{__('cruds.meals.list')}}</h3>
+            <h3 class="card-title"><span class="material-symbols-outlined">
+                monitoring </span> {{__('cruds.meals.list')}}</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('meals.create') }}`"
                     title="{{ __('global.create') . ' ' . __('cruds.meals.label') }}">
@@ -29,7 +30,7 @@
 
         <div class="card-body table-responsive">
             <table id="mealsTable" class="table responsive-table table-bordered datatable-meals" width="100%">
-                <thead class="text-nowrap">
+                {{-- <thead class="text-nowrap">
                     <tr>
                         <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
                         <th>{{__('cruds.meals.nama')}}</th>
@@ -43,7 +44,7 @@
                         <th>{{__('cruds.meals.status')}}</th>
                         <th>{{__('global.action')}}</th>
                     </tr>
-                </thead>
+                </thead> --}}
             </table>
         </div>
     </div>

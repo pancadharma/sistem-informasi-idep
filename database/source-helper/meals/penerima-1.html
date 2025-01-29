@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,41 +10,48 @@
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #000;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         /* Modal Styles */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
-            padding-top: 60px; 
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
         }
+
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto; 
+            margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; 
+            width: 80%;
         }
+
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .close:hover,
         .close:focus {
             color: black;
@@ -52,54 +60,55 @@
         }
     </style>
 </head>
+
 <body>
 
-<h2>Form Input Data</h2>
+    <h2>Form Input Data</h2>
 
-<table id="dataTable">
-    <thead>
-        <tr>
-            <th>No.</th>
-            <th>Nama</th>
-            <th>Gender</th>
-            <th>Disabilitas</th>
-            <th>Kelompok Rentan</th>
-            <th>Desa</th>
-            <th>Dusun</th>
-            <th>RT</th>
-            <th>RW/Banjar</th>
-            <th>No. Telp</th>
-            <th>Jenis Kelompok/Instansi</th>
-            <th>Usia</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Baris data akan ditambahkan di sini -->
-    </tbody>
-</table>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Nama</th>
+                <th>Gender</th>
+                <th>Disabilitas</th>
+                <th>Kelompok Rentan</th>
+                <th>Desa</th>
+                <th>Dusun</th>
+                <th>RT</th>
+                <th>RW/Banjar</th>
+                <th>No. Telp</th>
+                <th>Jenis Kelompok/Instansi</th>
+                <th>Usia</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Baris data akan ditambahkan di sini -->
+        </tbody>
+    </table>
 
-<button id="addRowBtn">Tambah Data</button>
-<button id="submitDataBtn">Submit</button>
+    <button id="addRowBtn">Tambah Data</button>
+    <button id="submitDataBtn">Submit</button>
 
-<!-- Modal -->
-<div id="dataModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeModalBtn">&times;</span>
-        <h2>Data yang Akan Dikirim</h2>
-        <pre id="modalData"></pre>
-        <button id="sendDataBtn">Kirim Data</button>
+    <!-- Modal -->
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModalBtn">×</span>
+            <h2>Data yang Akan Dikirim</h2>
+            <pre id="modalData"></pre>
+            <button id="sendDataBtn">Kirim Data</button>
+        </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    let rowCount = 0;
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let rowCount = 0;
 
-    function addRow(event) {
-        event.preventDefault();
-        rowCount++;
-        const tableBody = document.querySelector("#dataTable tbody");
-        const newRow =  `
+        function addRow(event) {
+            event.preventDefault();
+            rowCount++;
+            const tableBody = document.querySelector("#dataTable tbody");
+             const newRow = `
             <td>${rowCount}</td>
             <td><input type="text" name="nama[]" required></td>
             <td>
@@ -117,33 +126,86 @@
             <td><input type="text" name="no_telp[]"></td>
             <td><input type="text" name="jenis_kelompok[]"></td>
             <td><input type="number" name="usia[]" required></td>
-        `;
-        $("#dataTable tbody").append(newRow);
-        // tableBody.appendChild(newRow);
-    }
+            `;
 
-    function closeModal() {
-        $("#dataModal").hide();
-    }
+             $("#dataTable tbody").append('<tr>' + newRow + '</tr>');
 
-    function sendData() {
-        // Implement AJAX request here to send data
-        closeModal();
-        alert("Data telah dikirim!");
-    }
+             //if you want to implement it without jquery use this code instead
+             // const newRowElement = document.createElement('tr');
+             // newRowElement.innerHTML = newRow;
+             // tableBody.appendChild(newRowElement);
+        }
 
-    $(document).ready(function() {
-        $("#addRowBtn").on("click", addRow);
-        $("#closeModalBtn").on("click", closeModal);
-        $("#sendDataBtn").on("click", sendData);
+        function closeModal() {
+            $("#dataModal").hide();
+        }
 
-        $(window).on("click", function(event) {
-            if ($(event.target).is("#dataModal")) {
-                closeModal();
-            }
+        function sendData() {
+            // Implement AJAX request here to send data
+            closeModal();
+            alert("Data telah dikirim!");
+        }
+
+
+        function collectData() {
+            const data = [];
+            $('#dataTable tbody tr').each(function(index, row) {
+            const rowData = {};
+                $(this).find('td').each(function(cellIndex, cell) {
+                    if (cellIndex === 0) {
+                       rowData['No'] = $(cell).text();
+                    }
+                    else if (cellIndex === 1){
+                        rowData['Nama'] = $(cell).find('input').val()
+                    } else if (cellIndex === 2) {
+                        rowData['Gender'] = $(cell).find('select').val()
+                    } else if (cellIndex === 3){
+                       rowData['Disabilitas'] = $(cell).find('input').val()
+                    }else if (cellIndex === 4){
+                       rowData['Kelompok Rentan'] = $(cell).find('input').val()
+                    }else if (cellIndex === 5){
+                       rowData['Desa'] = $(cell).find('input').val()
+                    }else if (cellIndex === 6){
+                        rowData['Dusun'] = $(cell).find('input').val()
+                    } else if (cellIndex === 7){
+                       rowData['RT'] = $(cell).find('input').val()
+                    } else if(cellIndex === 8) {
+                       rowData['RW/Banjar'] = $(cell).find('input').val()
+                    }else if(cellIndex === 9){
+                       rowData['No. Telp'] = $(cell).find('input').val()
+                    } else if (cellIndex === 10){
+                        rowData['Jenis Kelompok/Instansi'] = $(cell).find('input').val()
+                    } else if (cellIndex === 11){
+                         rowData['Usia'] = $(cell).find('input').val()
+                    }
+                });
+                data.push(rowData);
+            });
+             return data;
+        }
+
+
+        function showModal(){
+            const collectedData = collectData();
+            $('#modalData').text(JSON.stringify(collectedData, null, 2));
+            $('#dataModal').show()
+
+        }
+
+
+        $(document).ready(function () {
+            $("#addRowBtn").on("click", addRow);
+            $("#closeModalBtn").on("click", closeModal);
+            $("#sendDataBtn").on("click", sendData);
+            $("#submitDataBtn").on("click", showModal)
+            $(window).on("click", function (event) {
+                if ($(event.target).is("#dataModal")) {
+                    closeModal();
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
+
 </html>
