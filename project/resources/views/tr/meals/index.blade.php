@@ -18,8 +18,10 @@
 @section('content_body')
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title"><span class="material-symbols-outlined">
-                monitoring </span> {{__('cruds.meals.list')}}</h3>
+            <h3 class="card-title">
+                {{__('cruds.meals.list')}}
+                <span class="material-symbols-outlined">monitoring</span>
+            </h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('meals.create') }}`"
                     title="{{ __('global.create') . ' ' . __('cruds.meals.label') }}">
