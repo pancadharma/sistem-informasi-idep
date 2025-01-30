@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Data Entry with Modal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         /* Custom styles if needed */
         .checkmark {
@@ -25,6 +25,10 @@
         .table {
             min-width: 1200px;
         }
+
+        .select2 {
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -32,9 +36,13 @@
 
     <div class="container">
         <h2>Form Input Data</h2>
-        <button id="addDataBtn" class="btn btn-primary mt-3">Tambah Data</button>
+        <div class="d-flex justify-content-between align-items-center">
+            <button id="addDataBtn" class="btn btn-primary mt-3">Tambah Data</button>
+            <button id="submitDataBtn" class="btn btn-success mt-3">Submit</button>
+        </div>
         <div class="table-responsive mt-3">
-            <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan" style="width:100%">
+            <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan"
+                style="width:100%">
                 <thead style="background-color: #67e9ac !important">
                     <tr class="align-middle text-center display nowrap">
                         <th rowspan="2" class="text-center align-middle">#</th>
@@ -82,286 +90,411 @@
                                 <label class="form-label">Nama</label>
                                 <input type="text" class="form-control" name="nama" required>
                             </div>
-                             <div class="col">
-                                 <label class="form-label">Gender</label>
-                                  <select class="form-select" name="gender" required>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                             </div>
+                            <div class="col">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender" required>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
-                               <div class="col">
-                                  <label class="form-label">Disabilitas</label>
-                                    <input type="text" class="form-control" name="disabilitas">
-                                </div>
-                                 <div class="col">
-                                     <label class="form-label">Kelompok Rentan</label>
-                                       <input type="text" class="form-control" name="kelompok_rentan">
-                                 </div>
+                            <div class="col">
+                                <label class="form-label">Disabilitas</label>
+                                <input type="text" class="form-control" name="disabilitas">
+                            </div>
+                            <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
+                                <label class="form-label">Kelompok Rentan</label>
+                                <select class="form-select select2-multiple select2" name="kelompok_rentan" multiple>
+                                    <option value="Anak-anak">Anak-anak</option>
+                                    <option value="Lansia">Lansia</option>
+                                    <option value="Ibu Hamil">Ibu Hamil</option>
+                                    <option value="Penyandang Disabilitas">Penyandang Disabilitas</option>
+                                    <option value="Minoritas">Minoritas</option>
+                                </select>
+                            </div>
 
                         </div>
-                         <div class="row mb-3">
+                        <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label">RT</label>
                                 <input type="text" class="form-control" name="rt" required>
                             </div>
                             <div class="col">
-                                 <label class="form-label">RW / Banjar</label>
+                                <label class="form-label">RW / Banjar</label>
                                 <input type="text" class="form-control" name="rw_banjar" required>
-                             </div>
-                             <div class="col">
-                               <label class="form-label">Dusun</label>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Dusun</label>
                                 <input type="text" class="form-control" name="dusun" required>
-                             </div>
+                            </div>
 
-                                <div class="col">
-                                   <label class="form-label">Desa</label>
+                            <div class="col">
+                                <label class="form-label">Desa</label>
                                 <input type="text" class="form-control" name="desa" required>
-                              </div>
+                            </div>
                         </div>
                         <div class="row mb-3">
-                             <div class="col">
+                            <div class="col">
                                 <label class="form-label">No. Telp</label>
                                 <input type="text" class="form-control" name="no_telp">
-                             </div>
+                            </div>
                             <div class="col">
-                                 <label class="form-label">Jenis Kelompok/Instansi</label>
+                                <label class="form-label">Jenis Kelompok/Instansi</label>
                                 <input type="text" class="form-control" name="jenis_kelompok">
                             </div>
-                           <div class="col">
-                                   <label class="form-label">Usia</label>
-                                    <input type="number" class="form-control usia-input" name="usia" required>
-                                </div>
-                        </div>
-
-                    </form>
-                </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                       <button type="button" class="btn btn-primary" id="saveDataBtn">Save</button>
-                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Edit Form -->
-    <div class="modal fade" id="editDataModal" tabindex="-1" aria-labelledby="editDataModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="editDataModalLabel">Edit Data</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                    <form id="editDataForm">
-                        <input type="hidden" id="editRowId">
-                       <div class="row mb-3">
                             <div class="col">
-                                <label class="form-label">Nama</label>
-                                <input type="text" class="form-control" id="editNama" name="nama" required>
+                                <label class="form-label">Usia</label>
+                                <input type="number" class="form-control usia-input" name="usia" required>
                             </div>
-                             <div class="col">
-                                 <label class="form-label">Gender</label>
-                                  <select class="form-select" id="editGender" name="gender" required>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                             </div>
-                        </div>
-
-                        <div class="row mb-3">
-                               <div class="col">
-                                  <label class="form-label">Disabilitas</label>
-                                    <input type="text" class="form-control" id="editDisabilitas" name="disabilitas">
-                                </div>
-                                 <div class="col">
-                                     <label class="form-label">Kelompok Rentan</label>
-                                       <input type="text" class="form-control" id="editKelompokRentan" name="kelompok_rentan">
-                                 </div>
-
-                        </div>
-                         <div class="row mb-3">
-                            <div class="col">
-                                <label class="form-label">RT</label>
-                                <input type="text" class="form-control"  id="editRt" name="rt" required>
-                            </div>
-                            <div class="col">
-                                 <label class="form-label">RW / Banjar</label>
-                                <input type="text" class="form-control" id="editRwBanjar" name="rw_banjar" required>
-                             </div>
-                             <div class="col">
-                               <label class="form-label">Dusun</label>
-                                <input type="text" class="form-control" id="editDusun" name="dusun" required>
-                             </div>
-
-                                <div class="col">
-                                   <label class="form-label">Desa</label>
-                                <input type="text" class="form-control" id="editDesa" name="desa" required>
-                              </div>
-                        </div>
-                        <div class="row mb-3">
-                             <div class="col">
-                                <label class="form-label">No. Telp</label>
-                                <input type="text" class="form-control" id="editNoTelp" name="no_telp">
-                             </div>
-                            <div class="col">
-                                 <label class="form-label">Jenis Kelompok/Instansi</label>
-                                <input type="text" class="form-control" id="editJenisKelompok" name="jenis_kelompok">
-                            </div>
-                           <div class="col">
-                                   <label class="form-label">Usia</label>
-                                    <input type="number" class="form-control usia-input" id="editUsia" name="usia" required>
-                                </div>
                         </div>
 
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                       <button type="button" class="btn btn-primary" id="updateDataBtn">Update</button>
-                 </div>
-          </div>
-      </div>
-  </div>
+                    <button type="button" class="btn btn-primary" id="saveDataBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Form -->
+    <div class="modal fade" id="editDataModal" tabindex="-1" aria-labelledby="editDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDataModalLabel">Edit Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDataForm">
+                        <input type="hidden" id="editRowId">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Nama</label>
+                                <input type="text" class="form-control" id="editNama" name="nama" required>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" id="editGender" name="gender" required>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Disabilitas</label>
+                                <input type="text" class="form-control" id="editDisabilitas" name="disabilitas">
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Kelompok Rentan</label>
+                                <select class="form-select select2-multiple" id="editKelompokRentan"
+                                    name="kelompok_rentan" multiple>
+                                    <option value="Anak-anak">Anak-anak</option>
+                                    <option value="Lansia">Lansia</option>
+                                    <option value="Ibu Hamil">Ibu Hamil</option>
+                                    <option value="Penyandang Disabilitas">Penyandang Disabilitas</option>
+                                    <option value="Minoritas">Minoritas</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">RT</label>
+                                <input type="text" class="form-control" id="editRt" name="rt" required>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">RW / Banjar</label>
+                                <input type="text" class="form-control" id="editRwBanjar" name="rw_banjar" required>
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Dusun</label>
+                                <input type="text" class="form-control" id="editDusun" name="dusun" required>
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Desa</label>
+                                <input type="text" class="form-control" id="editDesa" name="desa" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">No. Telp</label>
+                                <input type="text" class="form-control" id="editNoTelp" name="no_telp">
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Jenis Kelompok/Instansi</label>
+                                <input type="text" class="form-control" id="editJenisKelompok" name="jenis_kelompok">
+                            </div>
+                            <div class="col">
+                                <label class="form-label">Usia</label>
+                                <input type="number" class="form-control usia-input" id="editUsia" name="usia" required>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateDataBtn">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Preview -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Preview Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="modalData"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="sendDataBtn">Kirim Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         let rowCount = 0;
 
         function addRow(data) {
             rowCount++;
-             const newRow = `
-            <tr data-row-id="${rowCount}">
-                <td class="text-center">${rowCount}</td>
-                <td>${data.nama}</td>
-                <td>${data.gender}</td>
-                <td>${data.disabilitas}</td>
-                <td>${data.kelompok_rentan}</td>
-                <td>${data.rt}</td>
-                 <td>${data.rw_banjar}</td>
-                <td>${data.dusun}</td>
-                <td>${data.desa}</td>
-                <td>${data.no_telp}</td>
-                <td>${data.jenis_kelompok}</td>
-                 <td class="usia-cell">${data.usia}</td>
-                <td class="text-center age-0-17"></td>
-                <td class="text-center age-18-24"></td>
-                <td class="text-center age-25-59"></td>
-                <td class="text-center age-60-plus"></td>
-                 <td class="text-center">
-                 <button class="btn btn-sm btn-info edit-btn">Edit</button>
-                 <button class="btn btn-sm btn-danger delete-btn">Delete</button>
-                 </td>
-            </tr>
-            `;
+            const newRow = `
+    <tr data-row-id="${rowCount}">
+        <td class="text-center">${rowCount}</td>
+        <td>${data.nama}</td>
+        <td>${data.gender}</td>
+        <td>${data.disabilitas}</td>
+        <td>${Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan.join(', ') : data.kelompok_rentan}</td>
+        <td>${data.rt}</td>
+         <td>${data.rw_banjar}</td>
+        <td>${data.dusun}</td>
+        <td>${data.desa}</td>
+        <td>${data.no_telp}</td>
+        <td>${data.jenis_kelompok}</td>
+         <td class="usia-cell">${data.usia}</td>
+        <td class="text-center age-0-17"></td>
+        <td class="text-center age-18-24"></td>
+        <td class="text-center age-25-59"></td>
+        <td class="text-center age-60-plus"></td>
+         <td class="text-center">
+         <button class="btn btn-sm btn-info edit-btn">Edit</button>
+         <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+         </td>
+    </tr>
+    `;
             $('#tableBody').append(newRow)
             updateAgeCheckmarks($('#tableBody').find(`tr[data-row-id="${rowCount}"]`).find('.usia-cell'));
         }
 
 
-         function updateAgeCheckmarks(usiaCell) {
-            const row = usiaCell.closest('tr')[0];
+        function updateAgeCheckmarks(usiaCell) {
+            const row = usiaCell.closest('tr')[ 0 ];
             const age = parseInt(usiaCell.text(), 10);
 
             row.querySelector('.age-0-17').innerHTML = (age >= 0 && age <= 17) ? '<span class="checkmark">✔</span>' : '';
             row.querySelector('.age-18-24').innerHTML = (age > 17 && age <= 24) ? '<span class="checkmark">✔</span>' : '';
             row.querySelector('.age-25-59').innerHTML = (age >= 25 && age <= 59) ? '<span class="checkmark">✔</span>' : '';
             row.querySelector('.age-60-plus').innerHTML = (age >= 60) ? '<span class="checkmark">✔</span>' : '';
-       }
+        }
 
 
 
         function closeModal() {
-             $('#dataModal').modal('hide');
+            $('#dataModal').modal('hide');
         }
 
         function saveRow() {
-              const formData = $('#dataForm').serializeArray().reduce((obj, item) => {
-                obj[item.name] = item.value;
+            const formData = $('#dataForm').serializeArray().reduce((obj, item) => {
+                if (obj[ item.name ]) {
+                    if (!Array.isArray(obj[ item.name ])) {
+                        obj[ item.name ] = [ obj[ item.name ] ];
+                    }
+                    obj[ item.name ].push(item.value);
+                } else {
+                    obj[ item.name ] = item.value;
+                }
                 return obj;
             }, {});
+
             addRow(formData);
             $('#dataModal').modal('hide');
-            $('#dataForm')[0].reset(); // Reset the form
+            $('#dataForm')[ 0 ].reset(); // Reset the form
+            $('.select2-multiple').val(null).trigger('change'); // Reset Select2
 
         }
 
-         function editRow(row) {
+        function editRow(row) {
             const rowId = $(row).closest('tr').data('row-id');
-           const currentRow =  $('#tableBody').find(`tr[data-row-id="${rowId}"]`);
-           const nama = currentRow.find('td:eq(1)').text();
-           const gender = currentRow.find('td:eq(2)').text();
-           const disabilitas = currentRow.find('td:eq(3)').text();
-           const kelompok_rentan = currentRow.find('td:eq(4)').text();
-           const rt = currentRow.find('td:eq(5)').text();
-           const rw_banjar = currentRow.find('td:eq(6)').text();
-           const dusun = currentRow.find('td:eq(7)').text();
-           const desa = currentRow.find('td:eq(8)').text();
-           const no_telp = currentRow.find('td:eq(9)').text();
-           const jenis_kelompok = currentRow.find('td:eq(10)').text();
-           const usia = currentRow.find('td:eq(11)').text();
+            const currentRow = $('#tableBody').find(`tr[data-row-id="${rowId}"]`);
+            const nama = currentRow.find('td:eq(1)').text();
+            const gender = currentRow.find('td:eq(2)').text();
+            const disabilitas = currentRow.find('td:eq(3)').text();
+            const kelompok_rentan = currentRow.find('td:eq(4)').text();
+            const rt = currentRow.find('td:eq(5)').text();
+            const rw_banjar = currentRow.find('td:eq(6)').text();
+            const dusun = currentRow.find('td:eq(7)').text();
+            const desa = currentRow.find('td:eq(8)').text();
+            const no_telp = currentRow.find('td:eq(9)').text();
+            const jenis_kelompok = currentRow.find('td:eq(10)').text();
+            const usia = currentRow.find('td:eq(11)').text();
+            const kelompokRentanValues = kelompok_rentan.split(',').map(item => item.trim());
 
 
-           $('#editRowId').val(rowId)
+            $('#editRowId').val(rowId)
             $('#editNama').val(nama)
             $('#editGender').val(gender);
             $('#editDisabilitas').val(disabilitas)
-            $('#editKelompokRentan').val(kelompok_rentan)
-             $('#editRt').val(rt)
+            $('#editKelompokRentan').val(kelompokRentanValues).trigger('change');
+            $('#editRt').val(rt)
             $('#editRwBanjar').val(rw_banjar)
             $('#editDusun').val(dusun)
             $('#editDesa').val(desa)
-           $('#editNoTelp').val(no_telp);
-           $('#editJenisKelompok').val(jenis_kelompok);
-           $('#editUsia').val(usia)
-          $('#editDataModal').modal('show');
-         }
+            $('#editNoTelp').val(no_telp);
+            $('#editJenisKelompok').val(jenis_kelompok);
+            $('#editUsia').val(usia)
+            $('#editDataModal').modal('show');
+        }
 
-           function updateRow() {
-                const rowId = $('#editRowId').val();
-                const formData = $('#editDataForm').serializeArray().reduce((obj, item) => {
-                     obj[item.name] = item.value;
-                    return obj;
-                  }, {});
+        function updateRow() {
+            const rowId = $('#editRowId').val();
+            const formData = $('#editDataForm').serializeArray().reduce((obj, item) => {
+                if (obj[ item.name ]) {
+                    if (!Array.isArray(obj[ item.name ])) {
+                        obj[ item.name ] = [ obj[ item.name ] ];
+                    }
+                    obj[ item.name ].push(item.value);
+                } else {
+                    obj[ item.name ] = item.value;
+                }
+                return obj;
+            }, {});
 
-               const currentRow =  $('#tableBody').find(`tr[data-row-id="${rowId}"]`);
-               currentRow.find('td:eq(1)').text(formData.nama);
-               currentRow.find('td:eq(2)').text(formData.gender);
-               currentRow.find('td:eq(3)').text(formData.disabilitas);
-                currentRow.find('td:eq(4)').text(formData.kelompok_rentan);
-               currentRow.find('td:eq(5)').text(formData.rt);
-                currentRow.find('td:eq(6)').text(formData.rw_banjar);
-                currentRow.find('td:eq(7)').text(formData.dusun);
-                currentRow.find('td:eq(8)').text(formData.desa);
-               currentRow.find('td:eq(9)').text(formData.no_telp);
-               currentRow.find('td:eq(10)').text(formData.jenis_kelompok);
-               currentRow.find('td:eq(11)').text(formData.usia);
-                updateAgeCheckmarks(currentRow.find('.usia-cell'))
-               $('#editDataModal').modal('hide');
-         }
+            const currentRow = $('#tableBody').find(`tr[data-row-id="${rowId}"]`);
+            currentRow.find('td:eq(1)').text(formData.nama);
+            currentRow.find('td:eq(2)').text(formData.gender);
+            currentRow.find('td:eq(3)').text(formData.disabilitas);
+            currentRow.find('td:eq(4)').text(Array.isArray(formData.kelompok_rentan) ? formData.kelompok_rentan.join(', ') : formData.kelompok_rentan);
+            currentRow.find('td:eq(5)').text(formData.rt);
+            currentRow.find('td:eq(6)').text(formData.rw_banjar);
+            currentRow.find('td:eq(7)').text(formData.dusun);
+            currentRow.find('td:eq(8)').text(formData.desa);
+            currentRow.find('td:eq(9)').text(formData.no_telp);
+            currentRow.find('td:eq(10)').text(formData.jenis_kelompok);
+            currentRow.find('td:eq(11)').text(formData.usia);
+            updateAgeCheckmarks(currentRow.find('.usia-cell'))
+            $('#editDataModal').modal('hide');
+            $('.select2-multiple').val(null).trigger('change'); // Reset Select2
+        }
         function deleteRow(row) {
             $(row).closest('tr').remove();
         }
 
+        function collectData() {
+            const data = [];
+            $('#dataTable tbody tr').each(function (index, row) {
+                const rowData = {};
+                $(this).find('td').each(function (cellIndex, cell) {
+                    if (cellIndex === 0) {
+                        rowData[ 'no' ] = parseInt($(cell).text());
+                    } else if (cellIndex === 1) {
+                        rowData[ 'nama' ] = $(cell).text();
+                    } else if (cellIndex === 2) {
+                        rowData[ 'gender' ] = $(cell).text();
+                    } else if (cellIndex === 3) {
+                        rowData[ 'disabilitas' ] = $(cell).text();
+                    } else if (cellIndex === 4) {
+                        const kelompokRentanValues = $(cell).text().split(',').map(item => item.trim());
+                        rowData[ 'kelompok_rentan' ] = kelompokRentanValues
+                    } else if (cellIndex === 5) {
+                        rowData[ 'rt' ] = $(cell).text();
+                    } else if (cellIndex === 6) {
+                        rowData[ 'rw_banjar' ] = $(cell).text();
+                    } else if (cellIndex === 7) {
+                        rowData[ 'dusun' ] = $(cell).text();
+                    } else if (cellIndex === 8) {
+                        rowData[ 'desa' ] = $(cell).text();
+                    } else if (cellIndex === 9) {
+                        rowData[ 'no_telp' ] = $(cell).text();
+                    } else if (cellIndex === 10) {
+                        rowData[ 'jenis_kelompok' ] = $(cell).text();
+                    } else if (cellIndex === 11) {
+                        rowData[ 'usia' ] = parseInt($(cell).text());
+                    }
+                    else if (cellIndex === 12) {
+                        rowData[ 'age_0_17' ] = $(cell).find('span').length > 0;
+                    } else if (cellIndex === 13) {
+                        rowData[ 'age_18_24' ] = $(cell).find('span').length > 0;
+                    } else if (cellIndex === 14) {
+                        rowData[ 'age_25_59' ] = $(cell).find('span').length > 0;
+                    } else if (cellIndex === 15) {
+                        rowData[ 'age_60_plus' ] = $(cell).find('span').length > 0;
+                    }
+                });
+                data.push(rowData);
+            });
+            return data;
+        }
 
-        $(document).ready(function() {
-            $("#addDataBtn").on("click", function() {
-                 $('#dataModal').modal('show');
+
+        function showPreviewModal() {
+            const collectedData = collectData();
+            $('#modalData').text(JSON.stringify(collectedData, null, 2));
+            $('#previewModal').modal('show')
+
+        }
+        function sendData() {
+            // Implement AJAX request here to send data
+            $('#previewModal').modal('hide');
+            alert("Data telah dikirim!");
+        }
+
+
+        $(document).ready(function () {
+            $("#addDataBtn").on("click", function () {
+                $('#dataModal').modal('show');
+                $('.select2-multiple').select2({
+                    dropdownParent: $('#dataModal')
+                });
             });
             $("#saveDataBtn").on("click", saveRow);
-            $('#tableBody').on('click', '.edit-btn', function() {
+            $('#tableBody').on('click', '.edit-btn', function () {
                 editRow(this);
             });
-              $('#updateDataBtn').on('click', updateRow);
-              $('#tableBody').on('click', '.delete-btn', function() {
-               deleteRow(this);
+            $('#updateDataBtn').on('click', updateRow);
+            $('#tableBody').on('click', '.delete-btn', function () {
+                deleteRow(this);
+            });
+            $('#submitDataBtn').on('click', showPreviewModal);
+            $('#sendDataBtn').on('click', sendData);
+
+            $('#editDataModal').on('show.bs.modal', function () {
+                $('.select2-multiple').select2({
+                    dropdownParent: $('#editDataModal')
+                });
             });
 
+        });
+
+
+        $('.select2').select2({
+            width:'resolve',
         });
     </script>
 </body>
