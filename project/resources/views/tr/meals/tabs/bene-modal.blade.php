@@ -73,12 +73,13 @@
                         </div>
                         <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
                             <label class="form-label">Kelompok Rentan</label>
-                            <select class="form-select select2-multiple select2" name="kelompok_rentan" multiple>
-                                <option value="Anak-anak">Anak-anak</option>
-                                <option value="Lansia">Lansia</option>
-                                <option value="Ibu Hamil">Ibu Hamil</option>
-                                <option value="Penyandang Disabilitas">Penyandang Disabilitas</option>
-                                <option value="Minoritas">Minoritas</option>
+                            <!-- In both ModalTambahPeserta and editDataModal -->
+                            <select class="form-select select2-multiple" name="kelompok_rentan" multiple>
+                                <option value="1">Anak-anak</option>
+                                <option value="2">Lansia</option>
+                                <option value="3">Ibu Hamil</option>
+                                <option value="4">Penyandang Disabilitas</option>
+                                <option value="5">Minoritas</option>
                             </select>
                         </div>
 
@@ -165,16 +166,14 @@
                         </div>
                         <div class="col">
                             <label class="form-label">Kelompok Rentan</label>
-                            <select class="form-select select2-multiple" id="editKelompokRentan"
-                                name="kelompok_rentan" multiple>
-                                <option value="Anak-anak">Anak-anak</option>
-                                <option value="Lansia">Lansia</option>
-                                <option value="Ibu Hamil">Ibu Hamil</option>
-                                <option value="Penyandang Disabilitas">Penyandang Disabilitas</option>
-                                <option value="Minoritas">Minoritas</option>
+                            <select class="form-select select2-multiple select2" id="editKelompokRentan" name="kelompok_rentan" multiple>
+                                <option value="1">Anak-anak</option>
+                                <option value="2">Lansia</option>
+                                <option value="3">Ibu Hamil</option>
+                                <option value="4">Penyandang Disabilitas</option>
+                                <option value="5">Minoritas</option>
                             </select>
                         </div>
-
                     </div>
                     <div class="row mb-3">
                         <div class="col">

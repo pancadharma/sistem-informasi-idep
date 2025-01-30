@@ -52,6 +52,8 @@
 
 
 @include('tr.meals.js.create')
+@include('tr.meals.js.beneficiaries')
+
 @stack('basic_tab_js')
 
 @endpush

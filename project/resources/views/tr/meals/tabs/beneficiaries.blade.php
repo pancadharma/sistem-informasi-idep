@@ -1,6 +1,3 @@
-
-
-
 <!-- Peserta Kegiatan-->
 <div class="form-group row tambah_peserta" id="tambah_peserta">
     <div class="col-12 pl-0 pr-0">
@@ -51,7 +48,7 @@
 @include('tr.meals.tabs.bene-modal')
 
 @push('basic_tab_js')
-    @include('tr.meals.js.beneficiaries')
 
 
 @endpush
+
