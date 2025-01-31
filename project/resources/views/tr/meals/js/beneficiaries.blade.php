@@ -284,27 +284,33 @@
             });
         }
 
+        const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
+        const disabilitasText = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + data.disabilitas + '"]').text();
+
+
+        // <td data-gender="${data.gender}" class="text-left align-middle">${data.gender}</td>
+        // <td data-disabilitas="${data.disabilitas}" class="text-left align-middle">${data.disabilitas}</td>
         const newRow = `
         <tr data-row-id="${rowCount}" class="nowrap">
-            <td class="text-center">${rowCount}</td>
-            <td data-nama="${data.nama}">${data.nama}</td>
-            <td data-gender="${data.gender}" class="text-center">${data.gender}</td>
-            <td data-disabilitas="${data.disabilitas}">${data.disabilitas}</td>
-            <td data-kelompok_rentan="${data.kelompok_rentan}">${kelompokRentanText.join(', ')}</td>
-            <td data-rt="${data.rt}">${data.rt}</td>
-            <td data-rw_banjar="${data.rw_banjar}">${data.rw_banjar}</td>
-            <td data-dusun="${data.dusun}">${data.dusun}</td>
-            <td data-desa="${data.desa}">${data.desa}</td>
-            <td data-no_telp="${data.no_telp}">${data.no_telp}</td>
-            <td data-jenis_kelompok="${data.jenis_kelompok}">${data.jenis_kelompok}</td>
-            <td data-usia="${data.usia}" class="usia-cell">${data.usia}</td>
-            <td class="text-center age-0-17"></td>
-            <td class="text-center age-18-24"></td>
-            <td class="text-center age-25-59"></td>
-            <td class="text-center age-60-plus"></td>
-            <td class="text-center">
-                <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><span class="material-symbols-outlined"> border_color </span></button>
-                <button class="btn btn-sm btn-danger delete-btn"><span class="material-symbols-outlined"> delete_forever </span></button>
+            <td class="text-center align-middle">${rowCount}</td>
+            <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
+            <td data-gender="${data.gender}" class="text-center align-middle">${genderText}</td>
+            <td data-disabilitas="${data.disabilitas}" class="text-left align-middle">${disabilitasText}</td>
+            <td data-kelompok_rentan="${data.kelompok_rentan}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
+            <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
+            <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
+            <td data-dusun="${data.dusun}" class="text-center align-middle">${data.dusun}</td>
+            <td data-desa="${data.desa}" class="text-center align-middle">${data.desa}</td>
+            <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+            <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
+            <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
+            <td class="text-center align-middle age-0-17"></td>
+            <td class="text-center align-middle age-18-24"></td>
+            <td class="text-center align-middle age-25-59"></td>
+            <td class="text-center align-middle age-60-plus"></td>
+            <td class="text-center align-middle">
+                <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
             </td>
         </tr>
         `;
@@ -437,10 +443,17 @@
                 ).join(', ')
                 : $('#editKelompokRentan option[value="' + formData.kelompok_rentan + '"]').text();
 
+            const genderText = $('#editGender option[value="' + formData.gender + '"]').text();
+            const disabilitasText = $('#editDisabilitas option[value="' + formData.disabilitas + '"]').text();
+
+
             const currentRow = $('#dataTable tbody').find(`tr[data-row-id="${rowId}"]`);
             currentRow.find('td:eq(1)').text(formData.nama).attr('data-nama', formData.nama);
-            currentRow.find('td:eq(2)').text(formData.gender).attr('data-gender', formData.gender);
-            currentRow.find('td:eq(3)').text(formData.disabilitas).attr('data-disabilitas', formData.disabilitas);
+            // currentRow.find('td:eq(2)').text(formData.gender).attr('data-gender', formData.gender);
+            // currentRow.find('td:eq(3)').text(formData.disabilitas).attr('data-disabilitas', formData.disabilitas);
+            currentRow.find('td:eq(2)').text(genderText).attr('data-gender', formData.gender);
+            currentRow.find('td:eq(3)').text(disabilitasText).attr('data-disabilitas', formData.disabilitas);
+
             currentRow.find('td:eq(4)').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
             currentRow.find('td:eq(5)').text(formData.rt).attr('data-rt', formData.rt);
             currentRow.find('td:eq(6)').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
@@ -469,7 +482,8 @@
             $('#ModalTambahPeserta').modal('show');
             $('.select2-multiple').select2({
                 dropdownParent: $('#ModalTambahPeserta'),
-                width: '100%'
+                width: '100%',
+                placeholder: "{{ __('cruds.meals.penerima_manfaat.sel_rentan') }} ...",
             });
         });
 

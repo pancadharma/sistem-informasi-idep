@@ -1,19 +1,16 @@
 <!-- Peserta Kegiatan-->
-<div class="form-group row tambah_peserta" id="tambah_peserta">
+<div class="row tambah_peserta" id="tambah_peserta">
     <div class="col-12 pl-0 pr-0">
-        {{-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
-            <i class="bi bi-person-plus"></i>
-        </button> --}}
         <button type="button" class="btn btn-warning mt-3" id="addDataBtn" data-toggle="modal" data-target="#ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
+            {{ __('global.add') .' '. '' }}
             <i class="bi bi-person-plus"></i>
-            {{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}
         </button>
     </div>
 </div>
-<div class="responsive list_peserta">
+<div class="row responsive list_peserta">
     <div class="table-responsive">
         <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan display nowrap">
-            <thead style="background-color: #67e9ac !important">
+            <thead style="background-color: rgb(64, 206, 8) !important">
                 <tr class="align-middle text-center display nowrap">
                     <th rowspan="2" class="text-center align-middle">#</th>
                     <th rowspan="2" class="align-middle">Nama</th>

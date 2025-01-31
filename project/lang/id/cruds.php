@@ -944,6 +944,7 @@ return [
         'activity_code'                          => 'Kode Kegiatan',
         'penerima_manfaat'                       => [
             'label'                              => 'Penerima Manfaat',
+            'sel_rentan'                         => 'Pilih Kelompok Rentan',
             'no'                                 => 'No.',
             'nama'                               => 'Nama',
             'gender'                             => 'Jenis Kelamin',

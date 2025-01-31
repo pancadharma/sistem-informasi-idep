@@ -51,72 +51,90 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="dataForm">
+                <form id="dataForm" class="big">
                     <div class="row mb-3">
-                        <div class="col">
-                            <label class="form-label">Nama</label>
+                        <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
+                            <label class="form-label mb-0">Nama <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nama" required>
                         </div>
-                        <div class="col">
-                            <label class="form-label">Gender</label>
-                            <select class="form-select" name="gender" required>
-                                <option value="laki">Laki-laki</option>
-                                <option value="perempuan">Perempuan</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col">
-                            <label class="form-label">Disabilitas</label>
-                            <input type="text" class="form-control" name="disabilitas">
+                        <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
+                            <label class="form-label mb-0">No. Telp</label>
+                            <input type="text" class="form-control" name="no_telp" placeholder="+62 999 222 333" >
                         </div>
-                        <div class="col-sm col-md col-lg order-2 order-md-2 self-center">
-                            <label class="form-label">Kelompok Rentan</label>
-                            <!-- In both ModalTambahPeserta and editDataModal -->
-                            <select class="form-select select2-multiple" name="kelompok_rentan" multiple>
-                                <option value="1">Anak-anak</option>
-                                <option value="2">Lansia</option>
-                                <option value="3">Ibu Hamil</option>
-                                <option value="4">Penyandang Disabilitas</option>
-                                <option value="5">Minoritas</option>
-                            </select>
-                        </div>
-
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="form-label">RT</label>
-                            <input type="text" class="form-control" name="rt" required>
-                        </div>
-                        <div class="col">
-                            <label class="form-label">RW / Banjar</label>
-                            <input type="text" class="form-control" name="rw_banjar" required>
-                        </div>
-                        <div class="col">
-                            <label class="form-label">Dusun</label>
-                            <input type="text" class="form-control" name="dusun" required>
-                        </div>
-
-                        <div class="col">
-                            <label class="form-label">Desa</label>
-                            <input type="text" class="form-control" name="desa" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <label class="form-label">No. Telp</label>
-                            <input type="text" class="form-control" name="no_telp">
-                        </div>
-                        <div class="col">
-                            <label class="form-label">Jenis Kelompok/Instansi</label>
-                            <input type="text" class="form-control" name="jenis_kelompok">
-                        </div>
-                        <div class="col">
-                            <label class="form-label">Usia</label>
+                        <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
+                            <label class="form-label mb-0">Usia <span class="text-danger">*</span></label>
                             <input type="number" class="form-control usia-input" name="usia" required>
                         </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2">
+                            <label class="form-label mb-0">Gender <span class="text-danger">*</span></label>
+                            <select class="form-control" name="gender" required>
+                                <option value="laki">Laki-laki</option>
+                                <option value="perempuan">Perempuan</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
+                            <label class="form-label mb-0">Disabilitas</label>
+                            <select class="form-control" id="disabilitas" name="disabilitas">
+                                <option value="Fisik">Fisik</option>
+                                <option value="Sensorik">Sensorik</option>
+                                <option value="Intelektual">Intelektual</option>
+                                <option value="Mental">Mental</option>
+                                <option value="Ganda">Ganda</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
+                            <label class="form-label mb-0">Kelompok Rentan</label>
+                            <div class="select2-green">
+                                <select class="form-select select2-multiple" name="kelompok_rentan" multiple>
+                                    <option value="1">Anak-anak</option>
+                                    <option value="2">Lansia</option>
+                                    <option value="3">Ibu Hamil</option>
+                                    <option value="4">Penyandang Disabilitas</option>
+                                    <option value="5">Minoritas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label mb-0">Jenis Kelompok / Instansi</label>
+                            <input type="text" class="form-control" name="jenis_kelompok">
+                        </div>
+                    </div>
+
+                    {{-- <div class=" card callout callout-danger"> --}}
+                        <div class="row mb-3">
+                            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
+                                <label class="form-label mb-0">Dusun</label>
+                                <input type="text" class="form-control" name="dusun" required>
+                            </div>
+
+                            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
+                                <label class="form-label mb-0">Desa</label>
+                                <input type="text" class="form-control" name="desa" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
+                                <label class="form-label mb-0">RT</label>
+                                <input type="text" class="form-control" name="rt" required>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1"> <
+                                <label class="form-label mb-0">RW / Banjar</label>
+                                <input type="text" class="form-control" name="rw_banjar" required>
+                            </div>
+                        </div>
+
+                    {{-- </div> --}}
 
                 </form>
             </div>
@@ -152,9 +170,10 @@
                         </div>
                         <div class="col">
                             <label class="form-label">Gender</label>
-                            <select class="form-select" id="editGender" name="gender" required>
+                            <select class="form-control" id="editGender" name="gender" required>
                                 <option value="laki">Laki-laki</option>
                                 <option value="perempuan">Perempuan</option>
+                                <option value="lainnya">Lainnya</option>
                             </select>
                         </div>
                     </div>
@@ -162,17 +181,26 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Disabilitas</label>
-                            <input type="text" class="form-control" id="editDisabilitas" name="disabilitas">
+                            {{-- <input type="text" class="form-control" id="editDisabilitas" name="disabilitas"> --}}
+                            <select class="form-control" id="editDisabilitas" name="disabilitas">
+                                <option value="Fisik">Fisik</option>
+                                <option value="Sensorik">Sensorik</option>
+                                <option value="Intelektual">Intelektual</option>
+                                <option value="Mental">Mental</option>
+                                <option value="Ganda">Ganda</option>
+                            </select>
                         </div>
                         <div class="col">
                             <label class="form-label">Kelompok Rentan</label>
-                            <select class="form-select select2-multiple select2" id="editKelompokRentan" name="kelompok_rentan" multiple>
-                                <option value="1">Anak-anak</option>
-                                <option value="2">Lansia</option>
-                                <option value="3">Ibu Hamil</option>
-                                <option value="4">Penyandang Disabilitas</option>
-                                <option value="5">Minoritas</option>
-                            </select>
+                            <div class="select2-cyan">
+                                <select class="form-select select2-multiple select2" id="editKelompokRentan" name="kelompok_rentan" multiple>
+                                    <option value="1">Anak-anak</option>
+                                    <option value="2">Lansia</option>
+                                    <option value="3">Ibu Hamil</option>
+                                    <option value="4">Penyandang Disabilitas</option>
+                                    <option value="5">Minoritas</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">

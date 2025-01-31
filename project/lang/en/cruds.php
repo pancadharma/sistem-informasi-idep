@@ -945,6 +945,7 @@ return [
         'activity_code'                 => 'Activity Code',
         'penerima_manfaat'              => [
             'label'                     => 'Beneficiaries',
+            'sel_rentan'                => 'Select Vulnerable Groups',
             'no'                        => 'No.',
             'nama'                      => 'Name',
             'gender'                    => 'Gender',
