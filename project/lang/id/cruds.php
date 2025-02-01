@@ -942,7 +942,7 @@ return [
         'action_plan_status'                     => 'Status Rencana Tindakan',
         'action_plan_date'                       => 'Tanggal Rencana Tindakan',
         'activity_code'                          => 'Kode Kegiatan',
-        'penerima_manfaat'                       => [
+        'penerima'                               => [
             'label'                              => 'Penerima Manfaat',
             'sel_rentan'                         => 'Pilih Kelompok Rentan',
             'no'                                 => 'No.',

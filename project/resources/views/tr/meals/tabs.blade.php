@@ -8,7 +8,7 @@
                 </button>
                 <li class="nav-item">
                     <a class="nav-link active" id="beneficiaries-tab" data-toggle="pill" href="#tab-beneficiaries" role="tab" aria-controls="tab-beneficiaries" aria-selected="true">
-                        {{ __('cruds.meals.penerima_manfaat.label') }}
+                        {{ __('cruds.meals.penerima.label') }}
                     </a>
                 </li>
                 <li class="nav-item">

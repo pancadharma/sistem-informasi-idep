@@ -4,18 +4,22 @@
 
     function addRow(data) {
         rowCount++;
-        // Convert selected values to text
-        let kelompokRentanText, disabilitasText = [];
-        if (Array.isArray(data.disabilitas)) {
-            disabilitasText = data.disabilitas.map(value => {
-                return $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]').text();
-            });
-        }
-        if (Array.isArray(data.kelompok_rentan)) {
-            kelompokRentanText = data.kelompok_rentan.map(value => {
-                return $('#ModalTambahPeserta select[name="kelompok_rentan"] option[value="' + value + '"]').text();
-            });
-        }
+        let disabilitasText = [];
+        let kelompokRentanText = [];
+
+        const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
+        const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
+
+        disabilitasText = disabilitasArray.map(value => {
+            const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
+            return option.length ? option.text() : '';
+        });
+
+        kelompokRentanText = kelompokRentanArray.map(value => {
+            const option = $('#ModalTambahPeserta select[name="kelompok_rentan"] option[value="' + value + '"]');
+            return option.length ? option.text() : '';
+        });
+
         const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
 
         const newRow = `
@@ -40,15 +44,15 @@
                 <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
                 <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
             </td>
-        </tr>
-        `;
+        </tr>`;
+
         $('#tableBody').append(newRow);
         updateAgeCheckmarks($('#dataTable tbody').find(`tr[data-row-id="${rowCount}"]`).find('.usia-cell'));
     }
 
     // Update the Select2 options in both modals
-    function loadKelompokRentan() {
-        const options = [
+    function loadSelect2Option() {
+        const kelompokRentanOption = [
             {id: '1', text: 'Anak-anak'},
             {id: '2', text: 'Lansia'},
             {id: '3', text: 'Ibu Hamil'},
@@ -56,21 +60,40 @@
             {id: '5', text: 'Minoritas'}
         ];
 
+        const disabilitasOptions = [
+            {id: 'Fisik', text: 'Fisik'},
+            {id: 'Sensorik', text: 'Sensorik'},
+            {id: 'Intelektual', text: 'Intelektual'},
+            {id: 'Mental', text: 'Mental'},
+            {id: 'Ganda', text: 'Ganda'}
+        ];
+
         // Initialize Select2 for add modal
         $('.select2-multiple').select2({
-            data: options,
+            data: kelompokRentanOption,
+            dropdownParent: $('#ModalTambahPeserta'),
+            width: '100%'
+        });
+
+        $('#disabilitas').select2({
+            data: disabilitasOptions,
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%'
         });
 
         // Initialize Select2 for edit modal
         $('#editKelompokRentan').select2({
-            data: options,
+            data: kelompokRentanOption,
+            dropdownParent: $('#editDataModal'),
+            width: '100%'
+        });
+
+        $('#editDisabilitas').select2({
+            data: disabilitasOptions,
             dropdownParent: $('#editDataModal'),
             width: '100%'
         });
     }
-
     function updateAgeCheckmarks(usiaCell) {
         const row = usiaCell.closest('tr')[0];
         const ageText = usiaCell.text().trim();
@@ -124,14 +147,17 @@
         const currentRow = $(row).closest('tr');
         const rowId = currentRow.data('row-id');
 
-        // Get the stored values from data attribute
+        // Get stored values from data attributes
+        const disabilitas = currentRow.find('td:eq(3)').attr('data-disabilitas');
+        const disabilitasValues = disabilitas ? disabilitas.split(',') : [];
+
         const kelompok_rentan = currentRow.find('td:eq(4)').attr('data-kelompok_rentan');
         const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(',') : [];
 
         $('#editRowId').val(rowId);
         $('#editNama').val(currentRow.find('td:eq(1)').attr('data-nama'));
-        $('#editGender').val(currentRow.find('td:eq(2)').attr('data-gender'));
-        $('#editDisabilitas').val(currentRow.find('td:eq(3)').attr('data-disabilitas'));
+        $('#editGender').val(currentRow.find('td:eq(2)').attr('data-gender')).trigger('change');
+        $('#editDisabilitas').val(disabilitasValues).trigger('change');
         $('#editKelompokRentan').val(kelompokRentanValues).trigger('change');
         $('#editRt').val(currentRow.find('td:eq(5)').attr('data-rt'));
         $('#editRwBanjar').val(currentRow.find('td:eq(6)').attr('data-rw_banjar'));
@@ -141,6 +167,7 @@
         $('#editJenisKelompok').val(currentRow.find('td:eq(10)').attr('data-jenis_kelompok'));
         $('#editUsia').val(currentRow.find('td:eq(11)').attr('data-usia'));
     }
+
 
     function updateRow() {
         const rowId = $('#editRowId').val();
@@ -166,22 +193,29 @@
 
             // Convert selected values to text for display
             const kelompokRentanText = Array.isArray(formData.kelompok_rentan)
-                ? formData.kelompok_rentan.map(value =>
-                    $('#editKelompokRentan option[value="' + value + '"]').text()
-                ).join(', ')
+                ? formData.kelompok_rentan.map(value => {
+                    const option = $('#editKelompokRentan option[value="' + value + '"]');
+                    return option.length ? option.text() : '';
+                }).join(', ')
                 : $('#editKelompokRentan option[value="' + formData.kelompok_rentan + '"]').text();
 
             const genderText = $('#editGender option[value="' + formData.gender + '"]').text();
-            const disabilitasText = $('#editDisabilitas option[value="' + formData.disabilitas + '"]').text();
-
+            const disabilitasText = Array.isArray(formData.disabilitas)
+                ? formData.disabilitas.map(value => {
+                    const option = $('#editDisabilitas option[value="' + value + '"]');
+                    return option.length ? option.text() : '';
+                }).join(', ')
+                : $('#editDisabilitas option[value="' + formData.disabilitas + '"]').text();
 
             const currentRow = $('#dataTable tbody').find(`tr[data-row-id="${rowId}"]`);
+            if (currentRow.length === 0) {
+                console.error('Row not found');
+                return;
+            }
+
             currentRow.find('td:eq(1)').text(formData.nama).attr('data-nama', formData.nama);
-            // currentRow.find('td:eq(2)').text(formData.gender).attr('data-gender', formData.gender);
-            // currentRow.find('td:eq(3)').text(formData.disabilitas).attr('data-disabilitas', formData.disabilitas);
             currentRow.find('td:eq(2)').text(genderText).attr('data-gender', formData.gender);
             currentRow.find('td:eq(3)').text(disabilitasText).attr('data-disabilitas', formData.disabilitas);
-
             currentRow.find('td:eq(4)').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
             currentRow.find('td:eq(5)').text(formData.rt).attr('data-rt', formData.rt);
             currentRow.find('td:eq(6)').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
@@ -190,31 +224,34 @@
             currentRow.find('td:eq(9)').text(formData.no_telp).attr('data-no_telp', formData.no_telp);
             currentRow.find('td:eq(10)').text(formData.jenis_kelompok).attr('data-jenis_kelompok', formData.jenis_kelompok);
             currentRow.find('td:eq(11)').text(formData.usia).attr('data-usia', formData.usia);
+
             updateAgeCheckmarks(currentRow.find('.usia-cell'));
 
             $('#editDataModal').modal('hide');
+
+            // Resetting all relevant fields after update
             $('.select2-multiple').val(null).trigger('change');
+            form.reset(); // Resetting all other fields in the edit data form
         } else {
             form.reportValidity();
         }
     }
+
 
     function deleteRow(row) {
         $(row).closest('tr').remove();
     }
 
     $(document).ready(function() {
-        loadKelompokRentan();
-
+        loadSelect2Option();
         $("#addDataBtn").on("click", function() {
             $('#ModalTambahPeserta').modal('show');
             $('.select2-multiple').select2({
                 dropdownParent: $('#ModalTambahPeserta'),
                 width: '100%',
-                placeholder: "{{ __('cruds.meals.penerima_manfaat.sel_rentan') }} ...",
+                placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
             });
         });
-
 
         $("#saveDataBtn").on("click", function(e) {
             e.preventDefault();
@@ -233,6 +270,7 @@
 
         $('#dataTable tbody').on('click', '.edit-btn', function(e) {
             e.preventDefault();
+            // loadDisabilitas();
             editRow(this);
             $('#editDataModal').modal('show');
             $('#editKelompokRentan').select2({
@@ -276,6 +314,11 @@
 
     $('#editDataModal').on('shown.bs.modal', function() {
         $('#editKelompokRentan').select2({
+            dropdownParent: $('#editDataModal'),
+            width: '100%'
+        });
+
+        $('#editDisabilitas').select2({
             dropdownParent: $('#editDataModal'),
             width: '100%'
         });
