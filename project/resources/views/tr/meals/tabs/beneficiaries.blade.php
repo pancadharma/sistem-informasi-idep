@@ -1,3 +1,22 @@
+<!-- Program and Activity Select -->
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+        <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+        <!-- id program -->
+        <input type="hidden" name="program_id" id="program_id">
+        <!-- kode program -->
+        <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
+        data-toggle="modal" data-target="#ModalDaftarProgram">
+    </div>
+    <!-- nama program-->
+    <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
+        <label for="nama_program" class="input-group col-form-label">
+            {{ __('cruds.kegiatan.basic.program_nama') }}
+        </label>
+        <input type="text" class="form-control" id="nama_program" placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
+    </div>
+</div>
+
 <!-- Peserta Kegiatan-->
 <div class="row tambah_peserta" id="tambah_peserta">
     <div class="col-12 pl-0 pr-0">

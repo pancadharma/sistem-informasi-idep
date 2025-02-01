@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kegiatan;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -63,5 +64,21 @@ class MealsController extends Controller
                 <i class="bi bi-' . $icon . '"></i>
                 <span class="d-none d-sm-inline"></span>
             </button>';
+    }
+
+
+    public function getPrograms(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = Program::query();
+
+            return DataTables::of($query)
+                ->addColumn('action', function($row) {
+                    return '<button type="button" class="btn btn-sm btn-danger select-program" data-id="' . $row->id . '" data-kode="' . $row->kode . '" data-nama="' . $row->nama . '">
+                    <i class="bi bi-plus"></i> </button>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 }

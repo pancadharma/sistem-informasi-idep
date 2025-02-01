@@ -272,7 +272,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::group(['prefix' => 'meals/api/', 'as' => 'api.meals.'], function () {
         Route::get('datatable', [App\Http\Controllers\API\MealsController::class, 'getMealsDatatable'])->name('datatable');
-        // Route::get('/create', [App\Http\Controllers\API\MealsController::class, 'create'])->name('create');
+        Route::get('program', [App\Http\Controllers\API\MealsController::class, 'getPrograms'])->name('program');
     });
 
 

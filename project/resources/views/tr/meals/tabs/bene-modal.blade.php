@@ -80,13 +80,15 @@
                     <div class="row mb-3">
                         <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Disabilitas</label>
-                            <select class="form-control" id="disabilitas" name="disabilitas">
-                                <option value="Fisik">Fisik</option>
-                                <option value="Sensorik">Sensorik</option>
-                                <option value="Intelektual">Intelektual</option>
-                                <option value="Mental">Mental</option>
-                                <option value="Ganda">Ganda</option>
-                            </select>
+                            <div class="select2-red">
+                                <select class="form-control" id="disabilitas" name="disabilitas" multiple>
+                                    <option value="Fisik">Fisik</option>
+                                    <option value="Sensorik">Sensorik</option>
+                                    <option value="Intelektual">Intelektual</option>
+                                    <option value="Mental">Mental</option>
+                                    <option value="Ganda">Ganda</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -114,23 +116,23 @@
                     {{-- <div class=" card callout callout-danger"> --}}
                         <div class="row mb-3">
                             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
-                                <label class="form-label mb-0">Dusun</label>
-                                <input type="text" class="form-control" name="dusun" required>
+                                <label class="form-label mb-0">Dusun <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="dusun">
                             </div>
 
                             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
-                                <label class="form-label mb-0">Desa</label>
-                                <input type="text" class="form-control" name="desa" required>
+                                <label class="form-label mb-0">Desa <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="desa">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
-                                <label class="form-label mb-0">RT</label>
+                                <label class="form-label mb-0">RT <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="rt" required>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1"> <
-                                <label class="form-label mb-0">RW / Banjar</label>
-                                <input type="text" class="form-control" name="rw_banjar" required>
+                            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1">
+                                <label class="form-label mb-0">RW / Banjar <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="rw_banjar">
                             </div>
                         </div>
 
