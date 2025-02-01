@@ -32,7 +32,7 @@
         <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan display nowrap">
             <thead style="background-color: rgba(255, 255, 255, 0) !important">
                 <tr class="align-middle text-center display nowrap">
-                    <th rowspan="2" class="text-center align-middle">#</th>
+                    <th rowspan="2" class="text-center align-middle d-none">#</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.meals.penerima.nama") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.meals.penerima.gender") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.meals.penerima.disability") }}</th>

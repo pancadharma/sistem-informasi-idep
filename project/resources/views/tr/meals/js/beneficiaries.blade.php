@@ -24,11 +24,11 @@
 
         const newRow = `
         <tr data-row-id="${rowCount}" class="nowrap">
-            <td class="text-center align-middle">${rowCount}</td>
+            <td class="text-center align-middle d-none">${rowCount}</td>
             <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
             <td data-gender="${data.gender}" class="text-center align-middle">${genderText}</td>
-            <td data-disabilitas="${data.disabilitas}" class="text-left align-middle">${disabilitasText.join(', ')}</td>
-            <td data-kelompok_rentan="${data.kelompok_rentan}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
+            <td data-disabilitas="${data.disabilitas.join(',')}" class="text-left align-middle">${disabilitasText.join(', ')}</td>
+            <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
             <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
             <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
             <td data-dusun="${data.dusun}" class="text-center align-middle">${data.dusun}</td>
@@ -134,14 +134,28 @@
                 return obj;
             }, {});
 
+            // Ensure disabilitas and kelompok_rentan are arrays
+            if (Array.isArray(formData.disabilitas)) {
+                formData.disabilitas = formData.disabilitas; // Already an array
+            } else {
+                formData.disabilitas = [formData.disabilitas]; // Convert to array if single value
+            }
+
+            if (Array.isArray(formData.kelompok_rentan)) {
+                formData.kelompok_rentan = formData.kelompok_rentan; // Already an array
+            } else {
+                formData.kelompok_rentan = [formData.kelompok_rentan]; // Convert to array if single value
+            }
             addRow(formData);
             $('#ModalTambahPeserta').modal('hide');
             $('#dataForm')[0].reset(); // Reset the form
-            $('.select2-multiple').val(null).trigger('change'); // Reset Select2
+            $('.select2-multiple').val(null).trigger('change'); // Reset Select2 for kelompok_rentan
+            $('#disabilitas').val(null).trigger('change'); // Reset Select2 for disabilitas
         } else {
             form.reportValidity();
         }
     }
+
 
     function editRow(row) {
         const currentRow = $(row).closest('tr');
