@@ -205,7 +205,7 @@
                     <div class="row mb-3">
                         <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Kelompok Rentan</label>
-                            <div class="select2-green">
+                            <div class="select2-info">
                                 <select class="form-select select2-multiple select2" id="editKelompokRentan" name="kelompok_rentan" multiple>
                                     <option value="">Select Kelompok Rentan</option> <!-- Optional placeholder -->
                                     <option value="1">Anak-anak</option>
