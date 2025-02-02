@@ -1,12 +1,19 @@
 <script>
-    if (typeof $ === "undefined") {
-        console.error("jQuery is not included. Please include jQuery in your HTML file.")
-    }
-    let rowCount = 0;
-    let editDataForm = null; // Initialize as null
+'use strict';
 
-    // Update the Select2 options in both modals
-    function loadSelect2Option() {
+// Declare jQuery variable if it's not globally defined.  This is a safer approach than assuming it will always be available.
+let $ = jQuery;
+
+if (typeof jQuery === "undefined") {
+    console.error("jQuery is not included. Please include jQuery in your HTML file.");
+    // Consider adding a more user-friendly error message or fallback
+}
+
+(function($) {
+    let rowCount = 0;
+    let editDataForm = null;
+
+    const loadSelect2Option = () => {
         const kelompokRentanOption = [
             {id: '1', text: 'Anak-anak'},
             {id: '2', text: 'Lansia'},
@@ -23,7 +30,6 @@
             {id: 'Ganda', text: 'Ganda'}
         ];
 
-        // Initialize Select2 for Kelompok Rentan in add modal
         $('.select2-multiple').select2({
             data: kelompokRentanOption,
             dropdownParent: $('#ModalTambahPeserta'),
@@ -36,7 +42,6 @@
             width: '100%'
         });
 
-        // Initialize Select2 for Kelompok Rentan for edit modal
         $('#editKelompokRentan').select2({
             data: kelompokRentanOption,
             dropdownParent: $('#editDataModal'),
@@ -48,8 +53,6 @@
             dropdownParent: $('#editDataModal'),
             width: '100%'
         });
-
-        // Select2 modal for desa and dusun
 
         $(`#desa_id`).select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
@@ -151,36 +154,31 @@
             minimumInputLength: 0,
             allowClear: true,
             dropdownParent: $('#editDataModal'),
-        })
-    }
-    // END SELECT2 INITIALIZATION
+        });
+    };
 
-    function updateAgeCheckmarks(usiaCell) {
+    const updateAgeCheckmarks = (usiaCell) => {
         const row = usiaCell.closest('tr')[0];
-        const ageText = usiaCell.text().trim();
-        const age = parseInt(ageText, 10);
+        const age = parseInt(usiaCell.text().trim(), 10);
 
-        // Clear all checkmarks if invalid age
-        if (isNaN(age)) {
-            row.querySelector('.age-0-17').innerHTML = '';
-            row.querySelector('.age-18-24').innerHTML = '';
-            row.querySelector('.age-25-59').innerHTML = '';
-            row.querySelector('.age- 60-plus').innerHTML = '';
-            return;
-        }
+        const ageRanges = [
+            { selector: '.age-0-17', range: [0, 17] },
+            { selector: '.age-18-24', range: [18, 24] },
+            { selector: '.age-25-59', range: [25, 59] },
+            { selector: '.age-60-plus', range: [60, Infinity] }
+        ];
 
-        // Proceed with valid age
-        row.querySelector('.age-0-17').innerHTML = (age >= 0 && age <= 17) ? '<span class="checkmark">✔</span>' : '';
-        row.querySelector('.age-18-24').innerHTML = (age > 17 && age <= 24) ? '<span class="checkmark">✔</span>' : '';
-        row.querySelector('.age-25-59').innerHTML = (age >= 25 && age <= 59) ? '<span class="checkmark">✔</span>' : '';
-        row.querySelector('.age-60-plus').innerHTML = (age >= 60) ? '<span class="checkmark">✔</span>' : '';
-    }
+        ageRanges.forEach(({ selector, range }) => {
+            row.querySelector(selector).innerHTML =
+                (age >= range[0] && age <= range[1]) ? '<span class="checkmark">✔</span>' : '';
+        });
+    };
 
-    function closeModal() {
+    const closeModal = () => {
         $('#ModalTambahPeserta').modal('hide');
-    }
+    };
 
-    function addRow(data) {
+    const addRow = (data) => {
         rowCount++;
         let disabilitasText = [];
         let kelompokRentanText = [];
@@ -188,8 +186,8 @@
         const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
         const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
 
-        const desaText = $("#desa_id option:selected").text()
-        const dusunText = $("#dusun_id option:selected").text()
+        const desaText = $("#desa_id option:selected").text();
+        const dusunText = $("#dusun_id option:selected").text();
 
         disabilitasText = disabilitasArray.map(value => {
             const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
@@ -204,8 +202,6 @@
         const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
 
         const newRow = `
-
-
         <tr data-row-id="${rowCount}" class="nowrap">
             <td class="text-center align-middle d-none">${rowCount}</td>
             <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
@@ -214,14 +210,11 @@
             <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
             <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
             <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
-
             <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
             <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-
             <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
             <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
             <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
-
             <td class="text-center align-middle age-0-17"></td>
             <td class="text-center align-middle age-18-24"></td>
             <td class="text-center align-middle age-25-59"></td>
@@ -234,62 +227,56 @@
         `;
         $('#tableBody').append(newRow);
         updateAgeCheckmarks($('#dataTable tbody').find(`tr[data-row-id="${rowCount}"]`).find('.usia-cell'));
-    }
+    };
 
-    function saveRow() {
-        const form = $('#dataForm')[0];
-        if (form.checkValidity()) {
-            const formData = $('#dataForm').serializeArray().reduce((obj, item) => {
-                if (obj[item.name]) {
-                    if (!Array.isArray(obj[item.name])) {
-                        obj[item.name] = [obj[item.name]];
+    const saveRow = () => {
+        try {
+            const form = $('#dataForm')[0];
+            if (form.checkValidity()) {
+                const formData = $('#dataForm').serializeArray().reduce((obj, item) => {
+                    if (obj[item.name]) {
+                        if (!Array.isArray(obj[item.name])) {
+                            obj[item.name] = [obj[item.name]];
+                        }
+                        obj[item.name].push(item.value);
+                    } else {
+                        obj[item.name] = item.value;
                     }
-                    obj[item.name].push(item.value);
-                } else {
-                    obj[item.name] = item.value;
-                }
-                return obj;
-            }, {});
+                    return obj;
+                }, {});
 
-            // Ensure disabilitas and kelompok_rentan are arrays
-            if (Array.isArray(formData.disabilitas)) {
-                formData.disabilitas = formData.disabilitas; // Already an array
-            } else {
-                formData.disabilitas = [formData.disabilitas]; // Convert to array if single value
-            }
+                formData.disabilitas = Array.isArray(formData.disabilitas) ? formData.disabilitas : [formData.disabilitas];
+                formData.kelompok_rentan = Array.isArray(formData.kelompok_rentan) ? formData.kelompok_rentan : [formData.kelompok_rentan];
 
-            if (Array.isArray(formData.kelompok_rentan)) {
-                formData.kelompok_rentan = formData.kelompok_rentan; // Already an array
+                addRow(formData);
+                $('#ModalTambahPeserta').modal('hide');
+                $('#dataForm')[0].reset();
+                $('.select2-multiple').val(null).trigger('change');
+                $('.select2').val(null).trigger('change');
+                $('#disabilitas').val(null).trigger('change');
             } else {
-                formData.kelompok_rentan = [formData.kelompok_rentan]; // Convert to array if single value
+                form.reportValidity();
             }
-            addRow(formData);
-            $('#ModalTambahPeserta').modal('hide');
-            $('#dataForm')[0].reset(); // Reset the form
-            $('.select2-multiple').val(null).trigger('change'); // Reset Select2 for kelompok_rentan
-            $('.select2').val(null).trigger('change'); // Reset Select2 for kelompok_rentan
-            $('#disabilitas').val(null).trigger('change'); // Reset Select2 for disabilitas
-        } else {
-            form.reportValidity();
+        } catch (error) {
+            console.error('Error saving row:', error);
+            // Display user-friendly error message
         }
-    }
+    };
 
-    function editRow(row) {
+    const editRow = (row) => {
         const currentRow = $(row).closest('tr');
         const rowId = currentRow.data('row-id');
 
-        // Get stored values from data attributes
         const disabilitas = currentRow.find('td:eq(3)').attr('data-disabilitas');
         const disabilitasValues = disabilitas ? disabilitas.split(',') : [];
 
         const kelompok_rentan = currentRow.find('td:eq(4)').attr('data-kelompok_rentan');
         const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(',') : [];
 
-
-        const desaId = currentRow.find("td[data-desa-id]").data("desa-id")
-        const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama")
-        const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id")
-        const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama")
+        const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
+        const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
+        const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
+        const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
 
         $('#editRowId').val(rowId);
         $('#editNama').val(currentRow.find('td:eq(1)').attr('data-nama'));
@@ -299,26 +286,22 @@
         $('#editRt').val(currentRow.find('td:eq(5)').attr('data-rt'));
         $('#editRwBanjar').val(currentRow.find('td:eq(6)').attr('data-rw_banjar'));
 
-
-        $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change")
-        $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change")
-
-        // $('#editDesa').val(currentRow.find('td:eq(8)').attr('data-desa'));
-        // $('#editDusun').val(currentRow.find('td:eq(7)').attr('data-dusun'));
+        $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
+        $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
 
         $('#editNoTelp').val(currentRow.find('td:eq(9)').attr('data-no_telp'));
         $('#editJenisKelompok').val(currentRow.find('td:eq(10)').attr('data-jenis_kelompok'));
         $('#editUsia').val(currentRow.find('td:eq(11)').attr('data-usia'));
-    }
+    };
 
-    function updateRow() {
+    const updateRow = () => {
         const rowId = $('#editRowId').val();
         const form = document.getElementById('editDataForm');
 
-        const desaId = $("#editDesa").val()
-        const desaText = $("#editDesa option:selected").text()
-        const dusunId = $("#editDusun").val()
-        const dusunText = $("#editDusun option:selected").text()
+        const desaId = $("#editDesa").val();
+        const desaText = $("#editDesa option:selected").text();
+        const dusunId = $("#editDusun").val();
+        const dusunText = $("#editDusun option:selected").text();
 
         if (!form) {
             console.error('Edit form not found');
@@ -338,7 +321,6 @@
                 return obj;
             }, {});
 
-            // Convert selected values to text for display
             const kelompokRentanText = Array.isArray(formData.kelompok_rentan)
                 ? formData.kelompok_rentan.map(value => {
                     const option = $('#editKelompokRentan option[value="' + value + '"]');
@@ -366,43 +348,54 @@
             currentRow.find('td:eq(4)').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
             currentRow.find('td:eq(5)').text(formData.rt).attr('data-rt', formData.rt);
             currentRow.find('td:eq(6)').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
-            // currentRow.find('td:eq(7)').text(formData.dusun).attr('data-dusun', formData.dusun);
-            // currentRow.find('td:eq(8)').text(formData.desa).attr('data-desa', formData.desa);
             currentRow.find('td:eq(9)').text(formData.no_telp).attr('data-no_telp', formData.no_telp);
             currentRow.find('td:eq(10)').text(formData.jenis_kelompok).attr('data-jenis_kelompok', formData.jenis_kelompok);
             currentRow.find('td:eq(11)').text(formData.usia).attr('data-usia', formData.usia);
 
-            currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText)
-            currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText)
+            currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
+            currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
 
             updateAgeCheckmarks(currentRow.find('.usia-cell'));
 
             $('#editDataModal').modal('hide');
 
-            // Resetting all relevant fields after update
             $('.select2-multiple').val(null).trigger('change');
-            form.reset(); // Resetting all other fields in the edit data form
+            form.reset();
         } else {
             form.reportValidity();
         }
-    }
+    };
 
-
-    function deleteRow(row) {
+    const deleteRow = (row) => {
         $(row).closest('tr').remove();
-    }
+    };
 
-    $(document).ready(function() {
+    const fetchDusunData = async (params) => {
+        try {
+            const response = await $.ajax({
+                url: '{{ route("api.meals.dusun") }}',
+                data: params,
+                dataType: 'json'
+            });
+            return {
+                results: response.results,
+                pagination: response.pagination
+            };
+        } catch (error) {
+            console.error('Error fetching dusun data:', error);
+            return { results: [], pagination: {} };
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
         loadSelect2Option();
 
-         $("#desa_id, #editDesa").on("change", function () {
-            const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun"
-            $(dusunSelect).val(null).trigger("change")
-
-            // Load dusun data immediately after desa selection
-            $(dusunSelect).select2("open")
-            $(dusunSelect).select2("close")
-        })
+        $("#desa_id, #editDesa").on("change", function () {
+            const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
+            $(dusunSelect).val(null).trigger("change");
+            $(dusunSelect).select2("open");
+            $(dusunSelect).select2("close");
+        });
 
         $("#addDataBtn").on("click", function() {
             $('#ModalTambahPeserta').modal('show');
@@ -428,7 +421,7 @@
             }
         });
 
-        $('#dataTable tbody').on('click', '.edit-btn', function(e) {
+        $(document).on('click', '.edit-btn', function(e) {
             e.preventDefault();
             editRow(this);
             $('#editDataModal').modal('show');
@@ -443,7 +436,7 @@
             updateRow();
         });
 
-        $('#dataTable tbody').on('click', '.delete-btn', function(e) {
+        $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             Swal.fire({
                 title: 'Are you sure?',
@@ -467,30 +460,98 @@
         });
     });
 
-    $('#ModalTambahPeserta').on('shown.bs.modal', function() {
+    $('#ModalTambahPeserta, #editDataModal').on('shown.bs.modal', function() {
         $(this).removeAttr('inert');
     });
 
-    $('#editDataModal').on('shown.bs.modal', function() {
-        $('#editKelompokRentan').select2({
-            dropdownParent: $('#editDataModal'),
-            width: '100%'
-        });
-
-        $('#editDisabilitas').select2({
-            dropdownParent: $('#editDataModal'),
-            width: '100%'
-        });
-        $(this).removeAttr('inert');
-    });
-
-    $('#ModalTambahPeserta').on('hide.bs.modal', function(e) {
+    $('#ModalTambahPeserta, #editDataModal').on('hide.bs.modal', function(e) {
         $(this).attr('inert', '');
         $(document.activeElement).blur();
     });
 
-    $('#editDataModal').on('hide.bs.modal', function(e) {
-        $(this).attr('inert', '');
-        $(document.activeElement).blur();
+
+
+})(jQuery);
+$(document).ready(function () {
+        const $desaIdField = $('#desa_id'); // Input/select for desa_id
+        const $dusunIdField = $('#dusun_id'); // Input/select for dusun_id
+
+        // Listen for the modal's "shown" event
+        $('#editModal').on('shown.bs.modal', function (event) {
+            const button = $(event.relatedTarget); // Button that triggered the modal
+            const desaId = button.data('desa-id'); // Extract info from data-* attributes
+            const dusunId = button.data('dusun-id'); // Extract info from data-* attributes
+
+            // Set the initial value of desa_id
+            $desaIdField.val(desaId);
+
+            // Fetch and populate the dusun_id options based on the initial desa_id
+            fetchDusunOptions(desaId)
+                .then(options => {
+                    populateDusunField(options);
+                    $dusunIdField.val(dusunId); // Set the initial value of dusun_id
+                })
+                .catch(error => {
+                    console.error('Error fetching initial dusun options:', error);
+                    showToast('Failed to load Dusun options. Please try again.');
+                });
+        });
+
+        // Add an event listener to detect changes in desa_id
+        $desaIdField.on('change', function () {
+            const selectedDesaId = $desaIdField.val();
+
+            // Clear the dusun_id field whenever desa_id changes
+            $dusunIdField.val(''); // Reset the field
+            $dusunIdField.prop('disabled', true); // Optionally disable until new options are loaded
+
+            // Show a toast notification to inform the user
+            showToast('Desa ID changed. Dusun ID has been cleared.');
+
+            // Simulate fetching new options for dusun_id based on the selected desa_id
+            fetchDusunOptions(selectedDesaId)
+                .then(options => {
+                    populateDusunField(options); // Populate the dusun_id field with new options
+                    $dusunIdField.prop('disabled', false); // Re-enable the field
+                })
+                .catch(error => {
+                    console.error('Error fetching dusun options:', error);
+                    showToast('Failed to load Dusun options. Please try again.');
+                });
+        });
+
+        // Function to show a toast notification
+        function showToast(message) {
+            const $toast = $('<div>').addClass('toast').text(message);
+            $('body').append($toast);
+            setTimeout(() => {
+                $toast.remove();
+            }, 3000);
+        }
+
+        // Function to fetch new options for dusun_id based on desa_id
+        function fetchDusunOptions(desaId) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (desaId) {
+                        resolve([
+                            { id: '1', name: 'Dusun A' },
+                            { id: '2', name: 'Dusun B' }
+                        ]);
+                    } else {
+                        reject('Invalid Desa ID');
+                    }
+                }, 1000); // Simulate network delay
+            });
+        }
+
+        // Function to populate the dusun_id field with options
+        function populateDusunField(options) {
+            $dusunIdField.empty(); // Clear existing options
+            $dusunIdField.append($('<option>').val('').text('-- Select Dusun --'));
+            $.each(options, function (index, option) {
+                $dusunIdField.append($('<option>').val(option.id).text(option.name));
+            });
+        }
     });
 </script>

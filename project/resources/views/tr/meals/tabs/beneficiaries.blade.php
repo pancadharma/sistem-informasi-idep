@@ -46,7 +46,7 @@
                 </tr>
                 <tr>
                     <th class="align-middle text-center">{{ __("cruds.meals.penerima.rt") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.meals.penerima.banjar") }}</th>
+                    <th class="align-middle text-center">RW <small>Banjar</small></th>
                     <th class="align-middle text-center">{{ __("cruds.meals.penerima.dusun") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.meals.penerima.desa") }}</th>
                     <th class="align-middle text-center">0-17</th>
