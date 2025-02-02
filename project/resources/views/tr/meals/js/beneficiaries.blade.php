@@ -395,14 +395,10 @@
     $(document).ready(function() {
         loadSelect2Option();
 
-         $("#desa_id, #editDesa").on("change", function () {
-            const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun"
-            $(dusunSelect).val(null).trigger("change")
-
-            // Load dusun data immediately after desa selection
-            $(dusunSelect).select2("open")
-            $(dusunSelect).select2("close")
-        })
+        $("#desa_id, #editDesa").on("change", function () {
+            const targetDusun = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
+            $(targetDusun).val(null).trigger("change"); // Clear Dusun selection
+        });
 
         $("#addDataBtn").on("click", function() {
             $('#ModalTambahPeserta').modal('show');

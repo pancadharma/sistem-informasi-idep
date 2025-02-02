@@ -1,5 +1,5 @@
 <script>
-'use strict';
+    'use strict';
 
 // Declare jQuery variable if it's not globally defined.  This is a safer approach than assuming it will always be available.
 let $ = jQuery;
@@ -390,11 +390,16 @@ if (typeof jQuery === "undefined") {
     document.addEventListener('DOMContentLoaded', () => {
         loadSelect2Option();
 
+        // $("#desa_id, #editDesa").on("change", function () {
+        //     const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
+        //     $(dusunSelect).val(null).trigger("change");
+        //     $(dusunSelect).select2("open");
+        //     $(dusunSelect).select2("close");
+        // });
+
         $("#desa_id, #editDesa").on("change", function () {
-            const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
-            $(dusunSelect).val(null).trigger("change");
-            $(dusunSelect).select2("open");
-            $(dusunSelect).select2("close");
+            const targetDusun = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
+            $(targetDusun).val(null).trigger("change"); // Clear Dusun selection
         });
 
         $("#addDataBtn").on("click", function() {
@@ -469,89 +474,5 @@ if (typeof jQuery === "undefined") {
         $(document.activeElement).blur();
     });
 
-
-
 })(jQuery);
-$(document).ready(function () {
-        const $desaIdField = $('#desa_id'); // Input/select for desa_id
-        const $dusunIdField = $('#dusun_id'); // Input/select for dusun_id
-
-        // Listen for the modal's "shown" event
-        $('#editModal').on('shown.bs.modal', function (event) {
-            const button = $(event.relatedTarget); // Button that triggered the modal
-            const desaId = button.data('desa-id'); // Extract info from data-* attributes
-            const dusunId = button.data('dusun-id'); // Extract info from data-* attributes
-
-            // Set the initial value of desa_id
-            $desaIdField.val(desaId);
-
-            // Fetch and populate the dusun_id options based on the initial desa_id
-            fetchDusunOptions(desaId)
-                .then(options => {
-                    populateDusunField(options);
-                    $dusunIdField.val(dusunId); // Set the initial value of dusun_id
-                })
-                .catch(error => {
-                    console.error('Error fetching initial dusun options:', error);
-                    showToast('Failed to load Dusun options. Please try again.');
-                });
-        });
-
-        // Add an event listener to detect changes in desa_id
-        $desaIdField.on('change', function () {
-            const selectedDesaId = $desaIdField.val();
-
-            // Clear the dusun_id field whenever desa_id changes
-            $dusunIdField.val(''); // Reset the field
-            $dusunIdField.prop('disabled', true); // Optionally disable until new options are loaded
-
-            // Show a toast notification to inform the user
-            showToast('Desa ID changed. Dusun ID has been cleared.');
-
-            // Simulate fetching new options for dusun_id based on the selected desa_id
-            fetchDusunOptions(selectedDesaId)
-                .then(options => {
-                    populateDusunField(options); // Populate the dusun_id field with new options
-                    $dusunIdField.prop('disabled', false); // Re-enable the field
-                })
-                .catch(error => {
-                    console.error('Error fetching dusun options:', error);
-                    showToast('Failed to load Dusun options. Please try again.');
-                });
-        });
-
-        // Function to show a toast notification
-        function showToast(message) {
-            const $toast = $('<div>').addClass('toast').text(message);
-            $('body').append($toast);
-            setTimeout(() => {
-                $toast.remove();
-            }, 3000);
-        }
-
-        // Function to fetch new options for dusun_id based on desa_id
-        function fetchDusunOptions(desaId) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if (desaId) {
-                        resolve([
-                            { id: '1', name: 'Dusun A' },
-                            { id: '2', name: 'Dusun B' }
-                        ]);
-                    } else {
-                        reject('Invalid Desa ID');
-                    }
-                }, 1000); // Simulate network delay
-            });
-        }
-
-        // Function to populate the dusun_id field with options
-        function populateDusunField(options) {
-            $dusunIdField.empty(); // Clear existing options
-            $dusunIdField.append($('<option>').val('').text('-- Select Dusun --'));
-            $.each(options, function (index, option) {
-                $dusunIdField.append($('<option>').val(option.id).text(option.name));
-            });
-        }
-    });
 </script>
