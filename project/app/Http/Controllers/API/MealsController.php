@@ -86,63 +86,174 @@ class MealsController extends Controller
     }
 
     public function getDesa(Request $request)
+    // {
+    //     $request->validate([
+    //         'search'    => 'nullable|string|max:255',
+    //         'page'      => 'nullable|integer|min:1',
+    //         'id'        => 'nullable|array|min:1',
+    //         'id.*'      => 'integer',
+    //     ]);
+
+    //     $search = $request->input('search', '');
+    //     $page = $request->input('page', 1);
+    //     $ids = $request->input('id', []);
+    //     $perPage = 20;
+
+    //     // $cacheKey = "desa_search_{$search}_page_{$page}";
+    //     $cacheKey = "desa_search_{$search}_page_{$page}_ids_" . implode(',', $ids);
+
+    //     //return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
+    //     return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $perPage) {
+    //         $query = Kelurahan::all();
+
+    //         if (!empty($ids)) {
+    //             $query->whereIn('id', $ids);
+    //         } elseif ($search !== '') {
+    //             $query->where('nama', 'like', "%{$search}%");
+    //         }
+
+    //         $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
+
+    //         return response()->json([
+    //             'results' => $results->map(function ($item) {
+    //                 return [
+    //                     'id' => $item->id,
+    //                     'text' => $item->nama,
+    //                 ];
+    //             })->all(),
+    //             'pagination' => [
+    //                 'more' => $results->hasMorePages(),
+    //             ],
+    //         ]);
+
+
+    //     });
+    // }
+
     {
-        $search = $request->search;
-        $page = $request->page ?? 1;
-        $perPage = 100;
+        $request->validate([
+            'search'    => 'nullable|string|max:255',
+            'page'      => 'nullable|integer|min:1',
+            'id'        => 'nullable|array|min:1',
+            'id.*'      => 'integer',
+        ]);
 
-        $cacheKey = "desas_search_{$search}_page_{$page}";
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
 
-        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $perPage) {
-            $query = Kelurahan::query();
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
+        }
 
-            if ($search) {
-                $query->where('nama', 'like', "%{$search}%");
-            }
-
-            $total = $query->count();
-
-            $desas = $query->select('id', 'nama as text')
-                           ->orderBy('nama')
-                           ->skip(($page - 1) * $perPage)
-                           ->take($perPage)
-                           ->get();
-
-            return [
-                'data' => $desas,
-                'total' => $total,
-            ];
+        $data = Kelurahan::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
         });
+
+        $perPage = 20; // or whatever pagination size you want
+        $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
+
+        return response()->json([
+            'results' => $results->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'text' => $item->nama,
+                ];
+            })->all(),
+            'pagination' => [
+                'more' => $results->hasMorePages(),
+            ],
+        ]);
     }
+
+    // public function getDusuns(Request $request)
+    // {
+    //     $search = $request->search;
+    //     $desaId = $request->desa_id;
+    //     $page = $request->page ?? 1;
+    //     $perPage = 100;
+
+    //     $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}";
+
+    //     return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $desaId, $page, $perPage) {
+    //         $query = Dusun::where('desa_id', $desaId);
+
+    //         if ($search) {
+    //             $query->where('nama', 'like', "%{$search}%");
+    //         }
+
+    //         $total = $query->count();
+
+    //         $dusuns = $query->select('id', 'nama as text')
+    //                         ->orderBy('nama')
+    //                         ->skip(($page - 1) * $perPage)
+    //                         ->take($perPage)
+    //                         ->get();
+
+    //         return [
+    //             'data' => $dusuns,
+    //             'total' => $total,
+    //         ];
+    //     });
+    // }
 
     public function getDusuns(Request $request)
     {
-        $search = $request->search;
-        $desaId = $request->desa_id;
-        $page = $request->page ?? 1;
-        $perPage = 100;
+        $request->validate([
+            'search'    => 'nullable|string|max:255',
+            'page'      => 'nullable|integer|min:1',
+            'id'        => 'nullable|array|min:1',
+            'id.*'      => 'integer',
+            'desa_id'   => 'required|exists:kelurahan,id'
+        ]);
 
-        $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}";
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+        $desaId = $request->input('desa_id');
+        $perPage = 20;
 
-        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $desaId, $page, $perPage) {
+        $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}_ids_" . implode(',', $ids);
+
+        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
             $query = Dusun::where('desa_id', $desaId);
 
-            if ($search) {
+            if (!empty($ids)) {
+                $query->whereIn('id', $ids);
+            } elseif ($search !== '') {
                 $query->where('nama', 'like', "%{$search}%");
             }
 
-            $total = $query->count();
+            $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
 
-            $dusuns = $query->select('id', 'nama as text')
-                            ->orderBy('nama')
-                            ->skip(($page - 1) * $perPage)
-                            ->take($perPage)
-                            ->get();
-
-            return [
-                'data' => $dusuns,
-                'total' => $total,
-            ];
+            return response()->json([
+                'results' => $results->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'text' => $item->nama,
+                    ];
+                })->all(),
+                'pagination' => [
+                    'more' => $results->hasMorePages(),
+                ],
+            ]);
         });
+    }
+
+    public function storeDusun(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'desa_id' => 'required|exists:kelurahan,id',
+        ]);
+
+        $dusun = Dusun::create($request->only(['nama', 'desa_id']));
+
+        // Clear cache for this desa's dusuns
+        Cache::forget("dusuns_desa_{$request->desa_id}_search__page_1");
+
+        return response()->json($dusun, 201);
     }
 }

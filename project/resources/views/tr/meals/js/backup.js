@@ -1,4 +1,4 @@
-<script>
+
     if (typeof $ === "undefined") {
         console.error("jQuery is not included. Please include jQuery in your HTML file.")
     }
@@ -50,9 +50,55 @@
         });
 
         // Select2 modal for desa and dusun
+        //// $("#desa_id").select2({
+        //     placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
+        //     ajax: {
+        //         url: '{{ route("api.meals.desa") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term,
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: (data, params) => {
+        //             params.page = params.page || 1
+        //             return {
+        //             results: data.data,
+        //             pagination: {
+        //                 more: params.page * 100 < data.total,
+        //             },
+        //             }
+        //         },
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#ModalTambahPeserta"),
+        //// })
+
+        // $("#desa_id").select2({
+        //     placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
+        //     ajax: {
+        //         url: '{{ route("api.meals.desa") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term,
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: (data) => ({
+        //             results: data.results,
+        //             pagination: data.pagination,
+        //         }),
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#ModalTambahPeserta"),
+        // });
+
 
         $(`#desa_id`).select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
+            ropdownParent: $("#ModalTambahPeserta"),
             allowClear: true,
             ajax: {
                 url: '{{ route("api.meals.desa") }}',
@@ -74,55 +120,134 @@
                     };
                 },
                 cache: true
+            }
+        });
+
+        $("#editDesa").select2({
+            placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
+            ajax: {
+                url: '{{ route("api.meals.desa") }}',
+                dataType: "json",
+                delay: 250,
+                data: (params) => ({
+                    search: params.term,
+                    page: params.page || 1,
+                }),
+                processResults: (data) => ({
+                    results: data.results,
+                    pagination: data.pagination,
+                }),
+                cache: true,
             },
+            allowClear: true,
             dropdownParent: $("#ModalTambahPeserta"),
         });
 
-        $(`#editDesa`).select2({
-            placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
-            allowClear: true,
-            ajax: {
-                url: '{{ route("api.meals.desa") }}',
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                },
-                cache: true
-            },
-            dropdownParent: $("#editDataModal"),
-        });
+        //// $("#editDesa").select2({
+        //     placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
+        //     ajax: {
+        //         url: '{{ route("api.meals.desa") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term,
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: (data, params) => {
+        //             params.page = params.page || 1
+        //             return {
+        //             results: data.data,
+        //             pagination: {
+        //                 more: params.page * 100 < data.total,
+        //             },
+        //             }
+        //         },
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#editDataModal"),
+        //// })
+
+        // $("#dusun_id").select2({
+        //     placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
+        //     ajax: {
+        //         url: '{{ route("api.meals.dusun") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term,
+        //             desa_id: $("#desa_id").val() || $("#editDesa").val(),
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: (data, params) => {
+        //             params.page = params.page || 1
+        //             return {
+        //             results: data.data,
+        //             pagination: {
+        //                 more: params.page * 100 < data.total,
+        //             },
+        //             }
+        //         },
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#ModalTambahPeserta"),
+        // })
+
+        // $("#editDusun").select2({
+        //     placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
+        //     ajax: {
+        //         url: '{{ route("api.meals.dusun") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term,
+        //             desa_id: $("#desa_id").val() || $("#editDesa").val(),
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: (data, params) => {
+        //             params.page = params.page || 1
+        //             return {
+        //             results: data.data,
+        //             pagination: {
+        //                 more: params.page * 100 < data.total,
+        //             },
+        //             }
+        //         },
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#editDataModal"),
+        // })
+
 
         $("#dusun_id").select2({
-            placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
+            placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
             ajax: {
                 url: '{{ route("api.meals.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
-                    search: params.term,
-                    desa_id: $("#desa_id").val() || $("#editDesa").val(),
-                    page: params.page || 1,
-                }),
-                processResults: function (data) {
-                    return {
-                        results: data.results,
-                        pagination: data.pagination,
-                    }
-                },
-                cache: true,
+                search: params.term,
+                desa_id: $("#desa_id").val() || $("#editDesa").val(),
+                page: params.page || 1,
+            }),
+            processResults: function (data) {
+                // Show/hide "Add Dusun" button based on results
+                const addDusunBtn = $("#" + this.$element.attr("id")).siblings(".input-group-append").find("span")
+
+                if (data.results.length === 0) {
+                    addDusunBtn.show()
+                } else {
+                    addDusunBtn.hide()
+                }
+
+                return {
+                    results: data.results,
+                    pagination: data.pagination,
+                }
+            },
+            cache: true,
             },
             minimumInputLength: 0,
             allowClear: true,
@@ -130,28 +255,169 @@
         });
 
         $("#editDusun").select2({
-            placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
+            placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
             ajax: {
                 url: '{{ route("api.meals.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
-                    search: params.term,
-                    desa_id: $("#desa_id").val() || $("#editDesa").val(),
-                    page: params.page || 1,
-                }),
-                processResults: function (data) {
-                    return {
-                        results: data.results,
-                        pagination: data.pagination,
-                    }
-                },
-                cache: true,
+                search: params.term,
+                desa_id: $("#desa_id").val() || $("#editDesa").val(),
+                page: params.page || 1,
+            }),
+            processResults: function (data) {
+                // Show/hide "Add Dusun" button based on results
+                const addDusunBtn = $("#" + this.$element.attr("id")).siblings(".input-group-append").find("button")
+
+                if (data.results.length === 0) {
+                    addDusunBtn.show()
+                } else {
+                    addDusunBtn.hide()
+                }
+
+                return {
+                    results: data.results,
+                    pagination: data.pagination,
+                }
+            },
+            cache: true,
             },
             minimumInputLength: 0,
             allowClear: true,
-            dropdownParent: $('#editDataModal'),
+            dropdownParent: $('#dusun_id'),
         })
+
+        //// $("#dusun_id").select2({
+        //     placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
+        //     ajax: {
+        //         url: '{{ route("api.meals.dusun") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //             search: params.term || "",
+        //             desa_id: $("#desa_id").val() || $("#editDesa").val(),
+        //             page: params.page || 1,
+        //         }),
+        //         processResults: function (data, params) {
+        //             params.page = params.page || 1
+
+        //             // Show/hide "Add Dusun" button based on results
+        //             const addDusunBtn = $("#" + this.$element.attr("id")).siblings(".input-group-append").find("button")
+        //             if (data.total === 0) {
+        //                 addDusunBtn.show()
+        //             } else {
+        //                 addDusunBtn.hide()
+        //             }
+
+        //             return {
+        //                 results: data.data,
+        //                 pagination: {
+        //                 more: params.page * 100 < data.total,
+        //                 },
+        //             }
+        //         },
+        //         cache: true,
+        //     },
+        //     allowClear: true,
+        //     dropdownParent: $("#ModalTambahPeserta"),
+        //// })
+
+        //// $("#editDusun").select2({
+        //     placeholder: "{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}",
+        //     ajax: {
+        //         url: '{{ route("api.meals.dusun") }}',
+        //         dataType: "json",
+        //         delay: 250,
+        //         data: (params) => ({
+        //         search: params.term || "",
+        //         desa_id: $("#desa_id").val() || $("#editDesa").val(),
+        //         page: params.page || 1,
+        //         }),
+        //         processResults: function (data, params) {
+        //         params.page = params.page || 1
+
+        //         // Show/hide "Add Dusun" button based on results
+        //         const addDusunBtn = $("#" + this.$element.attr("id")).siblings(".input-group-append").find("button")
+        //         if (data.total === 0) {
+        //             addDusunBtn.show()
+        //         } else {
+        //             addDusunBtn.hide()
+        //         }
+
+        //         return {
+        //             results: data.data,
+        //             pagination: {
+        //             more: params.page * 100 < data.total,
+        //             },
+        //         }
+        //         },
+        //         cache: true,
+        //     },
+        //     minimumInputLength: 0,
+        //     allowClear: true,
+        //     dropdownParent: $('#editDusun'),
+        //// })
+
+
+        // Event handler for desa selection change
+        $("#desa_id, #editDesa").on("change", function () {
+            const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun"
+            $(dusunSelect).val(null).trigger("change")
+
+            // Load dusun data immediately after desa selection
+            $(dusunSelect).select2("open")
+            $(dusunSelect).select2("close")
+        });
+
+          // Event handler for "Add Dusun" buttons
+        $("#addDusunBtn, #editAddDusunBtn").on("click", function () {
+            const desaId = $(this).closest(".modal").find('select[name="desa_id"]').val()
+            const desaName = $(this).closest(".modal").find('select[name="desa_id"] option:selected').text()
+
+            if (!desaId) {
+                 alert("Please select a Desa first.")
+            return
+            }
+
+            Swal.fire({
+                title: "Add New Dusun",
+                input: "text",
+                inputLabel: `Enter name for new Dusun in ${desaName}`,
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                    return "You need to write something!"
+                    }
+                },
+            }).then((result) => {
+            if (result.isConfirmed) {
+                // Send AJAX request to create new Dusun
+                $.ajax({
+                url:  '{{ route("api.meals.dusun.store") }}',
+                method: "POST",
+                // add token header to request
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                data: {
+                    nama: result.value,
+                    desa_id: desaId,
+                },
+                success: (response) => {
+                    // Add new Dusun to Select2 and select it
+                    const newOption = new Option(response.nama, response.id, true, true)
+                    $("#dusun_id, #editDusun").append(newOption).trigger("change")
+
+                    Swal.fire("Success", "New Dusun added successfully!", "success")
+                },
+                error: () => {
+                    Swal.fire("Error", "Failed to add new Dusun. Please try again.", "error")
+                },
+                })
+            }
+            })
+        })
+
     }
     // END SELECT2 INITIALIZATION
 
@@ -232,6 +498,31 @@
             </td>
         </tr>
         `;
+        // const newRow = `
+        // <tr data-row-id="${rowCount}" class="nowrap">
+        //     <td class="text-center align-middle d-none">${rowCount}</td>
+        //     <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
+        //     <td data-gender="${data.gender}" class="text-center align-middle">${genderText}</td>
+        //     <td data-disabilitas="${data.disabilitas.join(',')}" class="text-left align-middle">${disabilitasText.join(', ')}</td>
+        //     <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
+        //     <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
+        //     <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
+        //     <td data-dusun="${data.dusun}" class="text-center align-middle">${data.dusun}</td>
+        //     <td data-desa="${data.desa}" class="text-center align-middle">${data.desa}</td>
+        //     <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+        //     <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
+        //     <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
+        //     <td class="text-center align-middle age-0-17"></td>
+        //     <td class="text-center align-middle age-18-24"></td>
+        //     <td class="text-center align-middle age-25-59"></td>
+        //     <td class="text-center align-middle age-60-plus"></td>
+        //     <td class="text-center align-middle">
+        //         <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
+        //         <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
+        //     </td>
+        // </tr>
+        // `;
+
         $('#tableBody').append(newRow);
         updateAgeCheckmarks($('#dataTable tbody').find(`tr[data-row-id="${rowCount}"]`).find('.usia-cell'));
     }
@@ -394,7 +685,12 @@
     $(document).ready(function() {
         loadSelect2Option();
 
-         $("#desa_id, #editDesa").on("change", function () {
+        // $("#desa_id, #editDesa").on("change", function () {
+        //     const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun"
+        //     $(dusunSelect).val(null).trigger("change")
+        // })
+
+        $("#desa_id, #editDesa").on("change", function () {
             const dusunSelect = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun"
             $(dusunSelect).val(null).trigger("change")
 
@@ -493,3 +789,123 @@
         $(document.activeElement).blur();
     });
 </script>
+
+
+
+<script>
+    // $(document).ready(function() {
+    //     $('#desa').select2({
+    //         placeholder: 'Select Desa',
+    //         ajax: {
+    //             url: '{{ route("api.meals.desa") }}',
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function (params) {
+    //                 return {
+    //                     search: params.term,
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function (data, params) {
+    //                 params.page = params.page || 1;
+
+    //                 return {
+    //                     results: data.data,
+    //                     pagination: {
+    //                         more: (params.page * 100) < data.total
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         },
+    //         // minimumInputLength: 2,
+    //         allowClear: true
+    //     });
+
+    //     $('#dusun').select2({
+    //         placeholder: 'Select Dusun',
+    //         ajax: {
+    //             url: '{{ route("api.meals.dusun") }}',
+    //             dataType: 'json',
+    //             delay: 250,
+    //             data: function (params) {
+    //                 return {
+    //                     search: params.term,
+    //                     desa_id: $('#desa').val(),
+    //                     page: params.page || 1
+    //                 };
+    //             },
+    //             processResults: function (data, params) {
+    //                 params.page = params.page || 1;
+
+    //                 return {
+    //                     results: data.data,
+    //                     pagination: {
+    //                         more: (params.page * 100) < data.total
+    //                     }
+    //                 };
+    //             },
+    //             cache: true
+    //         },
+    //         // minimumInputLength: 2,
+    //         allowClear: true
+    //     });
+
+    //     // Clear dusun when desa changes
+    //     $('#desa').on('change', function() {
+    //         $('#dusun').val(null).trigger('change');
+    //     });
+    // });
+
+    // function initializeSelect2() {
+    //     $("#desa_id, #editDesa").select2({
+    //         placeholder: "Select Desa",
+    //         ajax: {
+    //         url: "/api/desas",
+    //         dataType: "json",
+    //         delay: 250,
+    //         data: (params) => ({
+    //             search: params.term,
+    //             page: params.page || 1,
+    //         }),
+    //         processResults: (data, params) => {
+    //             params.page = params.page || 1
+    //             return {
+    //             results: data.data,
+    //             pagination: {
+    //                 more: params.page * 100 < data.total,
+    //             },
+    //             }
+    //         },
+    //         cache: true,
+    //         },
+    //         minimumInputLength: 2,
+    //         allowClear: true,
+    //     })
+
+    //     $("#dusun_id, #editDusun").select2({
+    //         placeholder: "Select Dusun",
+    //         ajax: {
+    //         url: "/api/dusuns",
+    //         dataType: "json",
+    //         delay: 250,
+    //         data: (params) => ({
+    //             search: params.term,
+    //             desa_id: $("#desa_id").val() || $("#editDesa").val(),
+    //             page: params.page || 1,
+    //         }),
+    //         processResults: (data, params) => {
+    //             params.page = params.page || 1
+    //             return {
+    //             results: data.data,
+    //             pagination: {
+    //                 more: params.page * 100 < data.total,
+    //             },
+    //             }
+    //         },
+    //         cache: true,
+    //         },
+    //         minimumInputLength: 2,
+    //         allowClear: true,
+    //     })
+    // }
