@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dusun;
 use App\Models\Kegiatan;
+use App\Models\Kelurahan;
 use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
 
 class MealsController extends Controller
@@ -80,5 +83,66 @@ class MealsController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
+    }
+
+    public function getDesa(Request $request)
+    {
+        $search = $request->search;
+        $page = $request->page ?? 1;
+        $perPage = 100;
+
+        $cacheKey = "desas_search_{$search}_page_{$page}";
+
+        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $perPage) {
+            $query = Kelurahan::query();
+
+            if ($search) {
+                $query->where('nama', 'like', "%{$search}%");
+            }
+
+            $total = $query->count();
+
+            $desas = $query->select('id', 'nama as text')
+                           ->orderBy('nama')
+                           ->skip(($page - 1) * $perPage)
+                           ->take($perPage)
+                           ->get();
+
+            return [
+                'data' => $desas,
+                'total' => $total,
+            ];
+        });
+    }
+
+    public function getDusuns(Request $request)
+    {
+        $search = $request->search;
+        $desaId = $request->desa_id;
+        $page = $request->page ?? 1;
+        $perPage = 100;
+
+        $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}";
+
+        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $desaId, $page, $perPage) {
+            $query = Dusun::where('desa_id', $desaId);
+
+            if ($search) {
+                $query->where('nama', 'like', "%{$search}%");
+            }
+
+            $total = $query->count();
+
+            $dusuns = $query->select('id', 'nama as text')
+                            ->orderBy('nama')
+                            ->skip(($page - 1) * $perPage)
+                            ->take($perPage)
+                            ->get();
+
+            return [
+                'data' => $dusuns,
+                'total' => $total,
+            ];
+        });
     }
 }

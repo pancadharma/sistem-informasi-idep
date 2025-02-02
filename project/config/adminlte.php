@@ -345,7 +345,8 @@ return [
             'submenu' => [
                 [
                     'text'      => 'meals',
-                    'icon'      => 'nav-icon material-symbols-outlined',
+                    // 'icon'      => 'nav-icon material-symbols-outlined',
+                    'icon'      => 'nav-icon bi bi-graph-up',
                     'icon_text' => 'monitoring',
                     'route'     => 'meals.index',
                     'can'       => ['meals_access'],

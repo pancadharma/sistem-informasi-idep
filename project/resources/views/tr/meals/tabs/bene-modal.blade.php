@@ -115,14 +115,19 @@
                     <div class="row mb-3">
                         <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
                             <label class="form-label mb-0">Desa <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="desa">
+                            <select class="form-control select2" name="desa_id" id="desa_id" required>
+                                <option value="">Select Desa</option>
+                            </select>
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Dusun <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="dusun">
+                            <select class="form-control select2" name="dusun_id" id="dusun_id" required>
+                                <option value="">Select Dusun</option>
+                            </select>
                         </div>
-
                     </div>
+
+
                     <div class="row mb-3">
                         <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
                             <label class="form-label mb-0">RW / Banjar <span class="text-danger">*</span></label>
@@ -226,11 +231,15 @@
                     <div class="row mb-3">
                         <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1">
                             <label class="form-label mb-0">Desa <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="editDesa" name="desa" required>
+                            <select class="form-control select2" id="editDesa" name="desa_id" required>
+                                <option value="">Select Desa</option>
+                            </select>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Dusun <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="editDusun" name="dusun" required>
+                            <select class="form-control select2" id="editDusun" name="dusun_id" required>
+                                <option value="">Select Dusun</option>
+                            </select>
                         </div>
                     </div>
                     <!-- RT and RW fields -->

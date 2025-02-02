@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.meals.add'))
-@section('content_header_title')<strong>{{ __('cruds.meals.add') }}</strong> @endsection
+@section('content_header_title') <strong>{{ __('cruds.meals.add') }}</strong>  @endsection
 @section('sub_breadcumb')<a href="{{ route('meals.index') }}" title="{{ __('cruds.meals.list') }}"> {{ __('cruds.meals.list') }} </a> @endsection
 @section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.meals.add') }}">{{ __('cruds.meals.add') }}</span> @endsection
 

@@ -19,8 +19,8 @@
     <div class="card card-outline card-primary">
         <div class="card-header">
             <h3 class="card-title">
+                <i class="bi bi-graph-up"></i>
                 {{__('cruds.meals.list')}}
-                <span class="material-symbols-outlined">monitoring</span>
             </h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('meals.create') }}`"
