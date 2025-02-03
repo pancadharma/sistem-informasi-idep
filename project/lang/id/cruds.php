@@ -949,7 +949,7 @@ return [
             'nama'                               => 'Nama',
             'gender'                             => 'Jenis Kelamin',
             'disability'                         => 'Disabilitas',
-            'marjinal'                           => 'Kelompok Marjinal',
+            'marjinal'                           => 'Kelompok Rentan',
             'address'                            => 'Alamat',
             'rt'                                 => 'RT',
             'banjar'                             => 'RW / Banjar',

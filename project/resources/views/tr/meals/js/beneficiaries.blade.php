@@ -5,16 +5,7 @@
     let rowCount = 0;
     let editDataForm = null; // Initialize as null
 
-    // Update the Select2 options in both modals
     function loadSelect2Option() {
-        const kelompokRentanOption = [
-            {id: '1', text: 'Anak-anak'},
-            {id: '2', text: 'Lansia'},
-            {id: '3', text: 'Ibu Hamil'},
-            {id: '4', text: 'Penyandang Disabilitas'},
-            {id: '5', text: 'Minoritas'}
-        ];
-
         const disabilitasOptions = [
             {id: 'Fisik', text: 'Fisik'},
             {id: 'Sensorik', text: 'Sensorik'},
@@ -24,27 +15,74 @@
         ];
 
         // Initialize Select2 for Kelompok Rentan in add modal
-        $('.select2-multiple').select2({
-            data: kelompokRentanOption,
+        $('#kelompok_rentan').select2({
             dropdownParent: $('#ModalTambahPeserta'),
-            width: '100%'
-        });
-
-        $('#disabilitas').select2({
-            data: disabilitasOptions,
-            dropdownParent: $('#ModalTambahPeserta'),
-            width: '100%'
+            width: '100%',
+            allowClear: true,
+            ajax: {
+                url: '{{ route("api.meals.kelompok.rentan") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
         });
 
         // Initialize Select2 for Kelompok Rentan for edit modal
         $('#editKelompokRentan').select2({
-            data: kelompokRentanOption,
+            allowClear: true,
+            ajax: {
+                url: '{{ route("api.meals.kelompok.rentan") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
             dropdownParent: $('#editDataModal'),
+            width: '100%',
+            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+        });
+
+        $('#disabilitas').select2({
+            data: disabilitasOptions,
+            placeholder: '{{ __("global.select") ." ". __("cruds.meals.penerima.disability") }} ...',
+            dropdownParent: $('#ModalTambahPeserta'),
             width: '100%'
         });
 
+
         $('#editDisabilitas').select2({
             data: disabilitasOptions,
+            placeholder: '{{ __("global.select") ." ". __("cruds.meals.penerima.disability") }} ...',
             dropdownParent: $('#editDataModal'),
             width: '100%'
         });
@@ -180,6 +218,12 @@
         $('#ModalTambahPeserta').modal('hide');
     }
 
+    function getRandomColor() {
+        const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex];
+    }
+
     function addRow(data) {
         rowCount++;
         let disabilitasText = [];
@@ -193,25 +237,31 @@
 
         disabilitasText = disabilitasArray.map(value => {
             const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
-            return option.length ? option.text() : '';
+            const text = option.length ? option.text() : '';
+            const randomColor = getRandomColor(); // Get a random color
+            return `<span class="badge badge-${randomColor}">${text}</span>`;
         });
 
         kelompokRentanText = kelompokRentanArray.map(value => {
             const option = $('#ModalTambahPeserta select[name="kelompok_rentan"] option[value="' + value + '"]');
-            return option.length ? option.text() : '';
+            const text = option.length ? option.text() : '';
+            const randomColor = getRandomColor(); // Get a random color
+            return `<span class="badge badge-${randomColor}">${text}</span>`;
         });
 
         const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
 
+        const badgeColors = ["primary", "secondary", "success", "danger", "warning", "info", "light", "dark"];
+        const randomColor = badgeColors[Math.floor(Math.random() * badgeColors.length)];
+
+
         const newRow = `
-
-
         <tr data-row-id="${rowCount}" class="nowrap">
             <td class="text-center align-middle d-none">${rowCount}</td>
-            <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
-            <td data-gender="${data.gender}" class="text-center align-middle">${genderText}</td>
-            <td data-disabilitas="${data.disabilitas.join(',')}" class="text-left align-middle">${disabilitasText.join(', ')}</td>
-            <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle">${kelompokRentanText.join(', ')}</td>
+            <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
+            <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
+            <td data-disabilitas="${data.disabilitas.join(',')}" class="text-left align-middle text-wrap">${disabilitasText.join(', ')}</td>
+            <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle text-wrap">${kelompokRentanText.join(' ')}</td>
             <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
             <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
 
@@ -221,11 +271,12 @@
             <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
             <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
             <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
-
+            <td class="text-center align-middle" id="headerActivityProgram" data-activity-selected="0"></td>
             <td class="text-center align-middle age-0-17"></td>
             <td class="text-center align-middle age-18-24"></td>
             <td class="text-center align-middle age-25-59"></td>
             <td class="text-center align-middle age-60-plus"></td>
+
             <td class="text-center align-middle">
                 <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
                 <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
@@ -360,17 +411,15 @@
                 return;
             }
 
-            currentRow.find('td:eq(1)').text(formData.nama).attr('data-nama', formData.nama);
-            currentRow.find('td:eq(2)').text(genderText).attr('data-gender', formData.gender);
-            currentRow.find('td:eq(3)').text(disabilitasText).attr('data-disabilitas', formData.disabilitas);
-            currentRow.find('td:eq(4)').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
-            currentRow.find('td:eq(5)').text(formData.rt).attr('data-rt', formData.rt);
-            currentRow.find('td:eq(6)').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
-            // currentRow.find('td:eq(7)').text(formData.dusun).attr('data-dusun', formData.dusun);
-            // currentRow.find('td:eq(8)').text(formData.desa).attr('data-desa', formData.desa);
-            currentRow.find('td:eq(9)').text(formData.no_telp).attr('data-no_telp', formData.no_telp);
-            currentRow.find('td:eq(10)').text(formData.jenis_kelompok).attr('data-jenis_kelompok', formData.jenis_kelompok);
-            currentRow.find('td:eq(11)').text(formData.usia).attr('data-usia', formData.usia);
+            currentRow.find('td[data-nama]').text(formData.nama).attr('data-nama', formData.nama);
+            currentRow.find('td[data-gender]').text(genderText).attr('data-gender', formData.gender);
+            currentRow.find('td[data-disabilitas]').text(disabilitasText).attr('data-disabilitas', formData.disabilitas);
+            currentRow.find('td[data-kelompok_rentan]').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
+            currentRow.find('td[data-rt]').text(formData.rt).attr('data-rt', formData.rt);
+            currentRow.find('td[data-rw_banjar]').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
+            currentRow.find('td[data-no_telp]').text(formData.no_telp).attr('data-no_telp', formData.no_telp);
+            currentRow.find('td[data-jenis_kelompok]').text(formData.jenis_kelompok).attr('data-jenis_kelompok', formData.jenis_kelompok);
+            currentRow.find('td[data-usia]').text(formData.usia).attr('data-usia', formData.usia);
 
             currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText)
             currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText)
@@ -381,6 +430,12 @@
 
             // Resetting all relevant fields after update
             $('.select2-multiple').val(null).trigger('change');
+            $('.select2').val(null).trigger('change');
+            $('#disabilitas').val(null).trigger('change');
+            $('#kelompokRentan').val(null).trigger('change');
+            $('#editGender').val(null).trigger('change');
+
+
             form.reset(); // Resetting all other fields in the edit data form
         } else {
             form.reportValidity();
@@ -392,20 +447,39 @@
         $(row).closest('tr').remove();
     }
 
+    // load scripts when document is ready
+
     $(document).ready(function() {
         loadSelect2Option();
 
         $("#desa_id, #editDesa").on("change", function () {
             const targetDusun = $(this).attr("id") === "desa_id" ? "#dusun_id" : "#editDusun";
-            $(targetDusun).val(null).trigger("change"); // Clear Dusun selection
+            $(targetDusun).val(null).trigger("change");
         });
 
         $("#addDataBtn").on("click", function() {
-            $('#ModalTambahPeserta').modal('show');
-            $('.select2-multiple').select2({
-                dropdownParent: $('#ModalTambahPeserta'),
-                width: '100%',
-                placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            let programId = $('#program_id').val();
+            if (!programId || programId === "" || programId === undefined) {
+                Toast.fire({
+                    text:  '{{ __("global.pleaseSelect") ." ". __("cruds.program.title") }}',
+                    position: 'center',
+                    title: "Opssss...",
+                    timer: 500,
+                    timerProgressBar: true,
+                    icon: 'error',
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    showDenyButton: false,
+                });
+
+                 $('#kode_program').click();
+
+                return false; // this mean that the user didn't select a program
+            }
+
+            $('#ModalTambahPeserta').modal('show').on('shown.bs.modal', function() {
+                $(this).removeAttr('inert');
             });
         });
 
@@ -463,6 +537,38 @@
         });
     });
 
+    // end script of document ready
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Event handler for modal when it is shown
+    // So that would be able to remove the inert attribute
+    // To minimize the modal from being focused
+
     $('#ModalTambahPeserta').on('shown.bs.modal', function() {
         $(this).removeAttr('inert');
     });
@@ -489,4 +595,11 @@
         $(this).attr('inert', '');
         $(document.activeElement).blur();
     });
+
+
+
+
+
+
+
 </script>

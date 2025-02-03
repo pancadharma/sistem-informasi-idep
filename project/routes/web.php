@@ -275,6 +275,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('program', [App\Http\Controllers\API\MealsController::class, 'getPrograms'])->name('program');
         Route::get('desa', [App\Http\Controllers\API\MealsController::class, 'getDesa'])->name('desa');
         Route::get('dusun', [App\Http\Controllers\API\MealsController::class, 'getDusuns'])->name('dusun');
+        Route::get('kelompok-rentan', [App\Http\Controllers\API\MealsController::class, 'getKelompokRentan'])->name('kelompok.rentan');
         Route::post('dusun-simpan', [App\Http\Controllers\API\MealsController::class, 'storeDusun'])->name('dusun.store');
     });
 

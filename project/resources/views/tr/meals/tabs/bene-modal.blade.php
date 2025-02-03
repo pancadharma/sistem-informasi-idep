@@ -95,12 +95,13 @@
                         <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Kelompok Rentan</label>
                             <div class="select2-green">
-                                <select class="form-select select2-multiple" name="kelompok_rentan" multiple>
-                                    <option value="1">Anak-anak</option>
+                                <select class="form-select select2" name="kelompok_rentan" multiple id="kelompok_rentan">
+                                    <option value="">Select Kelompok Rentan</option>
+                                    {{-- <option value="1">Anak-anak</option>
                                     <option value="2">Lansia</option>
                                     <option value="3">Ibu Hamil</option>
                                     <option value="4">Penyandang Disabilitas</option>
-                                    <option value="5">Minoritas</option>
+                                    <option value="5">Minoritas</option> --}}
                                 </select>
                             </div>
                         </div>

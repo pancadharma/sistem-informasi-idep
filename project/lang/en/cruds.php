@@ -950,7 +950,7 @@ return [
             'nama'                      => 'Name',
             'gender'                    => 'Gender',
             'disability'                => 'Disability',
-            'marjinal'                  => 'Marjinal Group',
+            'marjinal'                  => 'Vulnerable Group',
             'address'                   => 'Address',
             'rt'                        => 'RT',
             'banjar'                    => 'RW / Banjar',
