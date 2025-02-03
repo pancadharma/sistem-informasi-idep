@@ -29,6 +29,13 @@
             z-index: 1045;
             top: 0;
         }
+        .wah {
+            display: grid;
+            align-content: space-around;
+            justify-content: center;
+            align-items: center;
+            justify-items: stretch;
+        }
     </style>
 @endpush
 
