@@ -42,6 +42,7 @@
                     <th rowspan="2" class="align-middle">{{ __("cruds.meals.penerima.jenis_kelompok") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.meals.penerima.age") }}</th>
                     <th colspan="4" class="text-center align-middle">{{ __("cruds.meals.penerima.age_group") }}</th>
+                    <th rowspan="2" class="text-center align-middle" id="headerActivityProgram">Activity Program</th>'
                     <th rowspan="2" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
                 <tr>
