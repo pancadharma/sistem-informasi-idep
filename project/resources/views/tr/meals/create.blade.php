@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.kegiatan.add'))
-@section('content_header_title')<strong>{{ __('cruds.kegiatan.add') }}</strong> @endsection
-@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
+@section('subtitle', __('cruds.meals.add'))
+@section('content_header_title') <strong>{{ __('cruds.meals.add') }}</strong>  @endsection
+@section('sub_breadcumb')<a href="{{ route('meals.index') }}" title="{{ __('cruds.meals.list') }}"> {{ __('cruds.meals.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.meals.add') }}">{{ __('cruds.meals.add') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -11,11 +11,11 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
+    <form id="createMEALS" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="row">
-            @include('tr.kegiatan.tabs')
+            @include('tr.meals.tabs')
         </div>
     </form>
 @stop
@@ -28,6 +28,13 @@
             position: sticky;
             z-index: 1045;
             top: 0;
+        }
+        .wah {
+            display: grid;
+            align-content: space-around;
+            justify-content: center;
+            align-items: center;
+            justify-items: stretch;
         }
     </style>
 @endpush
@@ -50,7 +57,11 @@
 
 
 
-@include('tr.kegiatan.js.create')
+@include('tr.meals.js.create')
+
 @stack('basic_tab_js')
+@include('tr.meals.js.beneficiaries')
+@include('tr.meals.js.program')
+@include('tr.meals.tabs.program')
 
 @endpush

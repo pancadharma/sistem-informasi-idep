@@ -690,7 +690,7 @@ entity "trmealsfrm" as trmealsfrm {
     deskripsi : varchar (500)
 }
 
-entity "trmealsqb" as trmealsfrm {
+entity "trmealsqb" as trmealsqb {
     *id : int <<auto>>
     --
     id_program : int <<fk>>

@@ -43,6 +43,7 @@ return [
     'program'           => 'Program',
     'kegiatan'          => 'Activity',
     'evaluasi'          => 'Evaluation',
+    'meals'             => 'MEALS',
     'log'               => 'Log',
     'laporan'           => 'Report',
     'cari'              => 'Search',

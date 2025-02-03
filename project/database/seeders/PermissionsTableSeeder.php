@@ -114,6 +114,12 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 91, 'nama' => 'kegiatan_details_delete'],
                 ['id' => 92, 'nama' => 'kegiatan_details_show'],
                 ['id' => 93, 'nama' => 'kegiatan_report'],
+                ['id' => 94, 'nama' => 'meals_access'],
+                ['id' => 95, 'nama' => 'meals_create'],
+                ['id' => 96, 'nama' => 'meals_index'],
+                ['id' => 97, 'nama' => 'meals_show'],
+                ['id' => 98, 'nama' => 'meals_edit'],
+
 
             ];
             foreach ($permissions as $data) {
