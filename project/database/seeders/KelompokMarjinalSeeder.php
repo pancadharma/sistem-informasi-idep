@@ -24,6 +24,15 @@ class KelompokMarjinalSeeder extends Seeder
             ['nama' => 'Etnis Minoritas', 'aktif' => 1],
             ['nama' => 'Pekerja Migran', 'aktif' => 1],
             ['nama' => 'Anak-anak di Zona Konflik', 'aktif' => 1],
+            ['nama' => 'Ibu Tunggal Kepala Keluarga', 'aktif' => 1],
+            ['nama' => 'Disabilitas', 'aktif' => 1],
+            ['nama' => 'Ekonomi Rendah', 'aktif' => 1],
+            ['nama' => 'Wilayah Sulit Akses', 'aktif' => 1],
+            ['nama' => 'ODHA', 'aktif' => 1],
+            ['nama' => 'Perempuan Hamil', 'aktif' => 1],
+            ['nama' => 'Bayi', 'aktif' => 1],
+            ['nama' => 'Non-Kelompok Rentan', 'aktif' => 1],
+
         ];
 
         foreach ($data as $item) {

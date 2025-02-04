@@ -18,6 +18,6 @@ class MealsController extends Controller
     public function create()
     {
         abort_if(Gate::denies('meals_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('tr.meals.meals_create');
+        return view('tr.meals.create');
     }
 }

@@ -15,18 +15,18 @@ class AMasterSeed extends Seeder
     public function run(): void
     {
         $this->call([
-            CountryTableSeeder::class,
-            ProvinsiSeeder::class,
-            KabupatenSeeder::class,
-            KecamatanSeeder::class,
-            KelurahanSeeder::class,
+            // CountryTableSeeder::class,
+            // ProvinsiSeeder::class,
+            // KabupatenSeeder::class,
+            // KecamatanSeeder::class,
+            // KelurahanSeeder::class,
             // Update KabupatenSeeder to include this seeder
             UpdateNegaraIdInProvinsiSeeder::class,
             UpdateKabupatenSeeder::class,
             UpdateProvinsiSeeder::class,
 
             // seed some fake data choosen from below class to fill the database
-            DusunSeederFaker::class, // DusunSeederFaker is a custom seeder that extends DusunSeeder
+            // DusunSeederFaker::class, // DusunSeederFaker is a custom seeder that extends DusunSeeder
             KaitanSdgSeeder::class,
             PeranSeeder::class,
             KelompokMarjinalSeeder::class,

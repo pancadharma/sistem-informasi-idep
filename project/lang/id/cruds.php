@@ -942,13 +942,14 @@ return [
         'action_plan_status'                     => 'Status Rencana Tindakan',
         'action_plan_date'                       => 'Tanggal Rencana Tindakan',
         'activity_code'                          => 'Kode Kegiatan',
-        'penerima_manfaat'                       => [
+        'penerima'                               => [
             'label'                              => 'Penerima Manfaat',
+            'sel_rentan'                         => 'Pilih Kelompok Rentan',
             'no'                                 => 'No.',
             'nama'                               => 'Nama',
             'gender'                             => 'Jenis Kelamin',
             'disability'                         => 'Disabilitas',
-            'marjinal'                           => 'Kelompok Marjinal',
+            'marjinal'                           => 'Kelompok Rentan',
             'address'                            => 'Alamat',
             'rt'                                 => 'RT',
             'banjar'                             => 'RW / Banjar',

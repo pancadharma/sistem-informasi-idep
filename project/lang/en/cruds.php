@@ -943,13 +943,14 @@ return [
         'action_plan_status'            => 'Action Plan Status',
         'action_plan_date'              => 'Action Plan Date',
         'activity_code'                 => 'Activity Code',
-        'penerima_manfaat'              => [
+        'penerima'                    => [
             'label'                     => 'Beneficiaries',
+            'sel_rentan'                => 'Select Vulnerable Groups',
             'no'                        => 'No.',
             'nama'                      => 'Name',
             'gender'                    => 'Gender',
             'disability'                => 'Disability',
-            'marjinal'                  => 'Marjinal Group',
+            'marjinal'                  => 'Vulnerable Group',
             'address'                   => 'Address',
             'rt'                        => 'RT',
             'banjar'                    => 'RW / Banjar',
