@@ -58,7 +58,7 @@ if (typeof jQuery === "undefined") {
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.desa") }}',
+                url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -85,7 +85,7 @@ if (typeof jQuery === "undefined") {
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.desa") }}',
+                url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -111,7 +111,7 @@ if (typeof jQuery === "undefined") {
         $("#dusun_id").select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
             ajax: {
-                url: '{{ route("api.meals.dusun") }}',
+                url: '{{ route("api.beneficiary.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
@@ -135,7 +135,7 @@ if (typeof jQuery === "undefined") {
         $("#editDusun").select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
             ajax: {
-                url: '{{ route("api.meals.dusun") }}',
+                url: '{{ route("api.beneficiary.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
@@ -373,7 +373,7 @@ if (typeof jQuery === "undefined") {
     const fetchDusunData = async (params) => {
         try {
             const response = await $.ajax({
-                url: '{{ route("api.meals.dusun") }}',
+                url: '{{ route("api.beneficiary.dusun") }}',
                 data: params,
                 dataType: 'json'
             });
@@ -407,7 +407,7 @@ if (typeof jQuery === "undefined") {
             $('.select2-multiple').select2({
                 dropdownParent: $('#ModalTambahPeserta'),
                 width: '100%',
-                placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+                placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
             });
         });
 

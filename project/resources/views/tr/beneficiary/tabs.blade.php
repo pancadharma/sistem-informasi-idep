@@ -8,7 +8,7 @@
                 </button>
                 <li class="nav-item">
                     <a class="nav-link active" id="beneficiaries-tab" data-toggle="pill" href="#tab-beneficiaries" role="tab" aria-controls="tab-beneficiaries" aria-selected="true">
-                        {{ __('cruds.meals.penerima.label') }}
+                        {{ __('cruds.beneficiary.penerima.label') }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -36,7 +36,7 @@
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
                 <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
-                    @include('tr.meals.tabs.beneficiaries')
+                    @include('tr.beneficiary.tabs.beneficiaries')
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
                     {{-- @include('tr.kegiatan.tabs.description') --}}

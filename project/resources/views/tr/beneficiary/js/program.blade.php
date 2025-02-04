@@ -11,7 +11,7 @@
                         processing: true,
                         serverSide: true,
                         ajax: {
-                            url: "{{ route('api.meals.program') }}",
+                            url: "{{ route('api.beneficiary.program') }}",
                             type: "GET"
                         },
                         columns: [

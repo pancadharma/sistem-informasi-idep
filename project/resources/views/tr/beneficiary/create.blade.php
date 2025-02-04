@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.meals.add'))
-@section('content_header_title') <strong>{{ __('cruds.meals.add') }}</strong>  @endsection
-@section('sub_breadcumb')<a href="{{ route('meals.index') }}" title="{{ __('cruds.meals.list') }}"> {{ __('cruds.meals.list') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.meals.add') }}">{{ __('cruds.meals.add') }}</span> @endsection
+@section('subtitle', __('cruds.beneficiary.add'))
+@section('content_header_title') <strong>{{ __('cruds.beneficiary.add') }}</strong>  @endsection
+@section('sub_breadcumb')<a href="{{ route('beneficiary.index') }}" title="{{ __('cruds.beneficiary.list') }}"> {{ __('cruds.beneficiary.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.beneficiary.add') }}">{{ __('cruds.beneficiary.add') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -15,7 +15,7 @@
         @csrf
         @method('POST')
         <div class="row">
-            @include('tr.meals.tabs')
+            @include('tr.beneficiary.tabs')
         </div>
     </form>
 @stop
@@ -57,11 +57,11 @@
 
 
 
-@include('tr.meals.js.create')
+@include('tr.beneficiary.js.create')
 
 @stack('basic_tab_js')
-@include('tr.meals.js.beneficiaries')
-@include('tr.meals.js.program')
-@include('tr.meals.tabs.program')
+@include('tr.beneficiary.js.beneficiaries')
+@include('tr.beneficiary.js.program')
+@include('tr.beneficiary.tabs.program')
 
 @endpush

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
 
-class MealsController extends Controller
+class BeneficiaryController extends Controller
 {
     public function getMealsDatatable(Request $request)
     {

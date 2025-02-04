@@ -914,18 +914,18 @@ return [
     ],
 
 
-    'meals'                                      => [
-        'title'                                  => 'MEALS',
-        'add'                                    => 'Tambah MEALS',
-        'edit'                                   => 'Edit MEALS',
-        'show'                                   => 'Tampilkan MEALS',
-        'delete'                                 => 'Hapus MEALS',
-        'label'                                  => 'MEALS',
-        'list'                                   => 'Daftar MEALS',
-        'nama'                                   => 'Nama MEALS',
+    'beneficiary'                                => [
+        'title'                                  => 'Penerima Manfaat',
+        'add'                                    => 'Tambah Penerima Manfaat',
+        'edit'                                   => 'Edit Penerima Manfaat',
+        'show'                                   => 'Tampilkan Penerima Manfaat',
+        'delete'                                 => 'Hapus Penerima Manfaat',
+        'label'                                  => 'Penerima Manfaat',
+        'list'                                   => 'Daftar Penerima Manfaat',
+        'nama'                                   => 'Nama Penerima Manfaat',
         'program_code'                           => 'Kode Program',
         'program_name'                           => 'Nama Program',
-        'kode'                                   => 'Kode MEALS',
+        'kode'                                   => 'Kode Penerima Manfaat',
         'achievments'                            => 'Pencapaian',
         'progress'                               => 'Kemajuan',
         'to_complete'                            => '% untuk menyelesaikan',

@@ -915,18 +915,18 @@ return [
 
     ],
 
-    'meals'                                      => [
-        'title'                         => 'MEALS',
-        'add'                           => 'Add MEALS',
-        'edit'                          => 'Edit MEALS',
-        'show'                          => 'Show MEALS',
-        'delete'                        => 'Delete MEALS',
-        'label'                         => 'MEALS',
-        'list'                          => 'MEALS List',
-        'nama'                          => 'MEALS Name',
+    'beneficiary'                                      => [
+        'title'                         => 'Beneficiary',
+        'add'                           => 'Add Beneficiary',
+        'edit'                          => 'Edit Beneficiary',
+        'show'                          => 'Show Beneficiary',
+        'delete'                        => 'Delete Beneficiary',
+        'label'                         => 'Beneficiary',
+        'list'                          => 'Beneficiary List',
+        'nama'                          => 'Beneficiary Name',
         'program_code'                  => 'Program Code',
         'program_name'                  => 'Program Name',
-        'kode'                          => 'MEALS Code',
+        'kode'                          => 'Beneficiary Code',
         'achievments'                   => 'Achievements',
         'progress'                      => 'Progress',
         'to_complete'                   => '% to complete',

@@ -22,12 +22,12 @@ if (typeof $ === "undefined") {
 
         // Initialize Select2 for Kelompok Rentan in add modal
         $('#kelompok_rentan').select2({
-            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.kelompok.rentan") }}',
+                url: '{{ route("api.beneficiary.kelompok.rentan") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -53,7 +53,7 @@ if (typeof $ === "undefined") {
         $('#editKelompokRentan').select2({
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.kelompok.rentan") }}',
+                url: '{{ route("api.beneficiary.kelompok.rentan") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -75,12 +75,12 @@ if (typeof $ === "undefined") {
             },
             dropdownParent: $('#editDataModal'),
             width: '100%',
-            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
         });
 
         $('#disabilitas').select2({
             data: disabilitasOptions,
-            placeholder: '{{ __("global.select") ." ". __("cruds.meals.penerima.disability") }} ...',
+            placeholder: '{{ __("global.select") ." ". __("cruds.beneficiary.penerima.disability") }} ...',
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%'
         });
@@ -88,7 +88,7 @@ if (typeof $ === "undefined") {
 
         $('#editDisabilitas').select2({
             data: disabilitasOptions,
-            placeholder: '{{ __("global.select") ." ". __("cruds.meals.penerima.disability") }} ...',
+            placeholder: '{{ __("global.select") ." ". __("cruds.beneficiary.penerima.disability") }} ...',
             dropdownParent: $('#editDataModal'),
             width: '100%'
         });
@@ -99,7 +99,7 @@ if (typeof $ === "undefined") {
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.desa") }}',
+                url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -126,7 +126,7 @@ if (typeof $ === "undefined") {
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.desa") }}',
+                url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -152,7 +152,7 @@ if (typeof $ === "undefined") {
         $("#dusun_id").select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
             ajax: {
-                url: '{{ route("api.meals.dusun") }}',
+                url: '{{ route("api.beneficiary.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
@@ -176,7 +176,7 @@ if (typeof $ === "undefined") {
         $("#editDusun").select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.dusun.title") }}',
             ajax: {
-                url: '{{ route("api.meals.dusun") }}',
+                url: '{{ route("api.beneficiary.dusun") }}',
                 dataType: "json",
                 delay: 250,
                 data: (params) => ({
@@ -200,12 +200,12 @@ if (typeof $ === "undefined") {
 
     function initializeSelect2ForKelompokRentan() {
         $('#kelompok_rentan').select2({
-            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%',
             allowClear: true,
             ajax: {
-                url: '{{ route("api.meals.kelompok.rentan") }}',
+                url: '{{ route("api.beneficiary.kelompok.rentan") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -232,7 +232,7 @@ if (typeof $ === "undefined") {
         $('#editKelompokRentan').select2({
             multiple: true,
             ajax: {
-                url: '{{ route("api.meals.kelompok.rentan") }}',
+                url: '{{ route("api.beneficiary.kelompok.rentan") }}',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
@@ -254,7 +254,7 @@ if (typeof $ === "undefined") {
             },
             dropdownParent: $('#editDataModal'),
             width: '80%',
-            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
         });
     }
     // END SELECT2 INITIALIZATION
@@ -647,7 +647,7 @@ if (typeof $ === "undefined") {
 
             // Send the data to the server
             $.ajax({
-                url: '/meals/kirim-peserta', // Replace with your actual endpoint
+                url: '/beneficiary/kirim-peserta', // Replace with your actual endpoint
                 method: 'POST',
                 data: JSON.stringify(finalData),
                 contentType: 'application/json',
