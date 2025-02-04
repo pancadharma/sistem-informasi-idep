@@ -26,3 +26,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - Add LTE via https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
 - Install plugin sweetalert2 by running -  php artisan adminlte:plugins install --plugin=sweetalert2
 - use php artisan adminlte to see available command list    
+
+
+## RUN
+cp .env.example .env

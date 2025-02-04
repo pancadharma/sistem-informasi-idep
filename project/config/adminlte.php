@@ -341,11 +341,16 @@ return [
             'text' => 'evaluasi',
             'icon' => 'fas fa-tachometer-alt',
             // 'url' => '#',
-            'active' => ['evaluasi', 'evaluasi*', 'regex:@^evaluasi/[0-9]+$@'],
+            'active' => ['evaluasi', 'evaluasi*', 'regex:@^meals/[0-9]+$@'],
             'submenu' => [
                 [
-                    'url' => '#',
-                    'text' => 'Hehe',
+                    'text'      => 'meals',
+                    // 'icon'      => 'nav-icon material-symbols-outlined',
+                    'icon'      => 'nav-icon bi bi-graph-up',
+                    'icon_text' => 'monitoring',
+                    'route'     => 'meals.index',
+                    'can'       => ['meals_access'],
+                    'active'    => ['meals', 'meals*', 'regex:@^meals/[0-9]+$@'],
                 ],
                 [
                     'url' => '#',

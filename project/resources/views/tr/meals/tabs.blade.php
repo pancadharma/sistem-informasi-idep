@@ -1,14 +1,14 @@
 <div class="col-12 col-sm-12">
     <div class="card card-primary card-tabs">
         <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-            <button type="button" class="btn btn-danger float-right" id="simpan_kegiatan">{{ __('global.save') }}</button>
+            {{-- <button type="button" class="btn btn-danger float-right" id="SimpanFormMeals">{{ __('global.save') }}</button> --}}
             <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
                 <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
                     <i class="bi bi-arrows-collapse"></i>
                 </button>
                 <li class="nav-item">
-                    <a class="nav-link active" id="basic-tab" data-toggle="pill" href="#tab-basic" role="tab" aria-controls="tab-basic" aria-selected="true">
-                        {{ __('cruds.kegiatan.tabs.basic') }}
+                    <a class="nav-link active" id="beneficiaries-tab" data-toggle="pill" href="#tab-beneficiaries" role="tab" aria-controls="tab-beneficiaries" aria-selected="true">
+                        {{ __('cruds.meals.penerima.label') }}
                     </a>
                 </li>
                 <li class="nav-item">
@@ -35,21 +35,21 @@
         </div>
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
-                <div class="tab-pane fade show active" id="tab-basic" role="tabpanel" aria-labelledby="basic-tab">
-                    @include('tr.kegiatan.tabs.basic')
+                <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
+                    @include('tr.meals.tabs.beneficiaries')
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                    @include('tr.kegiatan.tabs.description')
+                    {{-- @include('tr.kegiatan.tabs.description') --}}
                 </div>
                 <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
-                    @include('tr.kegiatan.tabs.hasil')
+                    {{-- @include('tr.kegiatan.tabs.hasil') --}}
                 </div>
 
                 <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                    @include('tr.kegiatan.tabs.file-uploads')
+                    {{-- @include('tr.kegiatan.tabs.file-uploads') --}}
                 </div>
                 <div class="tab-pane fade" id="tab-penulis" role="tabpanel" aria-labelledby="tab-penulis">
-                    @include('tr.kegiatan.tabs.penulis')
+                    {{-- @include('tr.kegiatan.tabs.penulis') --}}
                 </div>
             </div>
         </div>

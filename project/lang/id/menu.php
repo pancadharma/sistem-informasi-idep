@@ -42,6 +42,7 @@ return [
     'program'           => 'Program',
     'kegiatan'          => 'Kegiatan',
     'evaluasi'          => 'Evaluasi',
+    'meals'             => 'MEALS',
     'log'               => 'Log',
     'laporan'           => 'Laporan',
     'cari'              => 'Pencarian',

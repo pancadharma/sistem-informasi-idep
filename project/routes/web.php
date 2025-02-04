@@ -265,6 +265,22 @@ Route::middleware(['auth'])->group(function () {
     // Route for getting kabupaten geojson
     Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
+    // MEALS
+    Route::group(['prefix' => 'meals', 'as' => 'meals.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsController::class, 'create'])->name('create');
+    });
+    Route::group(['prefix' => 'meals/api/', 'as' => 'api.meals.'], function () {
+        Route::get('datatable', [App\Http\Controllers\API\MealsController::class, 'getMealsDatatable'])->name('datatable');
+        Route::get('program', [App\Http\Controllers\API\MealsController::class, 'getPrograms'])->name('program');
+        Route::get('desa', [App\Http\Controllers\API\MealsController::class, 'getDesa'])->name('desa');
+        Route::get('dusun', [App\Http\Controllers\API\MealsController::class, 'getDusuns'])->name('dusun');
+        Route::get('kelompok-rentan', [App\Http\Controllers\API\MealsController::class, 'getKelompokRentan'])->name('kelompok.rentan');
+        Route::post('dusun-simpan', [App\Http\Controllers\API\MealsController::class, 'storeDusun'])->name('dusun.store');
+    });
+
+
+
 
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');

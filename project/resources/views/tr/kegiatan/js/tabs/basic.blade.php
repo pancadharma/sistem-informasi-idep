@@ -1,222 +1,4 @@
-{{-- Basic Information --}}
-<div class="form-group row">
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-        <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
-    <!-- id program -->
-        <input type="hidden" name="program_id" id="program_id">
-    <!-- kode program -->
-        <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
-        data-toggle="modal" data-target="#ModalDaftarProgram">
-    </div>
-    <!-- nama program-->
-    <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-        <label for="nama_program" class="input-group col-form-label">
-            {{ __('cruds.kegiatan.basic.program_nama') }}
-        </label>
-        <input type="text" class="form-control" id="nama_program" placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
-    </div>
-</div>
-<div class="form-group row">
-    <!-- kode kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-        <label for="kode_kegiatan" class="input-group col-form-label">
-            {{ __('cruds.kegiatan.basic.kode') }}
-        </label>
-        <input type="hidden" class="form-control" id="programoutcomeoutputactivity_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="programoutcomeoutputactivity_id">
-        <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
-        data-toggle="modal" data-target="#ModalDaftarProgramActivity">
-    </div>
-    <!-- nama kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-        <label for="nama_kegiatan" class="input-group col-form-label">
-            {{ __('cruds.kegiatan.basic.nama') }}
-        </label>
-        <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan">
-    </div>
-</div>
 
-<div class="form-group row">
-    <!-- jenis kegiatan-->
-    <!-- bentuk kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-        <label for="jenis_kegiatan" class="input-group col-form-label">
-            <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
-        </label>
-        <div class="select2-purple">
-            <select class="form-control select2" name="jenis_kegiatan" id="jenis_kegiatan" data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
-                <!-- Options will be populated by select2 -->
-            </select>
-        </div>
-    </div>
-    <!-- sektor kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-        <label for="sektor_kegiatan" class="input-group col-form-label">
-            <strong>{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</strong>
-        </label>
-        <div class="select2-purple">
-            <select class="form-control select2" name="sektor_kegiatan" id="sektor_kegiatan" multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
-                <!-- Options will be populated by select2 -->
-            </select>
-        </div>
-    </div>
-    <!-- fase pelaporan-->
-    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
-        <label for="fasepelaporan" class="input-group col-form-label">
-            <strong>{{ __('cruds.kegiatan.basic.fase_pelaporan') }} </strong>
-            <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
-        </label>
-        <div class="select2-purple">
-            <select class="form-control select2-readonly" name="fasepelaporan" id="fasepelaporan">
-                <option value="">{{ __('global.pleaseSelect') }}</option>
-                @for ($i = 1; $i <= 99; $i++)
-                    <option value="{{ $i }}">{{ $i }}</option>
-                @endfor
-            </select>
-        </div>
-    </div>
-    <!-- durasi kegiatan-->
-    <!-- tgl mulai-->
-    <div class="col-sm-6 col-md-6 col-lg-2 self-center order-1 order-md-1">
-        <label for="tanggalmulai" class="input-group col-form-label">
-            {{ __('cruds.kegiatan.basic.tanggalmulai') }}
-        </label>
-        <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai">
-    </div>
-    <!-- tgl selesai-->
-    <div class="col-sm-6 col-md-6 col-lg-2 self-center order-2 order-md-2">
-        <label for="tanggalselesai" class="input-group col-form-label">
-            {{ __('cruds.kegiatan.basic.tanggalselesai') }}
-        </label>
-        <input type="date" class="form-control" id="tanggalselesai" name="tanggalselesai">
-    </div>
-</div>
-
-<!-- nama mitra-->
-<div class="form-group row">
-    <div class="col-sm-12 col-md-9 col-lg-9 self-center order-2 order-md-2">
-        <label for="mitra" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
-        <div class="select2-purple">
-            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="mitra" multiple>
-            </select>
-        </div>
-    </div>
-<!-- status kegiatan-->
-    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
-        <label for="status" class="input-group col-form-label">
-            <strong>{{ __('cruds.status.title') }}</strong>
-        </label>
-        <div class="select2-purple">
-            <select class="form-control" name="status" id="status" required placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.status_kegiatan') }}">
-                <optgroup label="{{ __('cruds.kegiatan.status') }}">
-                    @foreach($statusOptions as $key => $label)
-                        <option value="{{ $key }}">{{ $label }}</option>
-                    @endforeach
-                </optgroup>
-            </select>
-        </div>
-    </div>
-</div>
-
-
-<div class="form-group row">
-    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label for="provinsi_id" class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
-        <select name="provinsi_id" id="provinsi_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.provinsi') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.provinsi.title') }}">
-        </select>
-    </div>
-    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label for="kabupaten_id" class="input-group col-form-label">{{ __('cruds.kabupaten.title') }}</label>
-        <select name="kabupaten_id" id="kabupaten_id" class="form-control select2" data-api-url="{{ route('api.kegiatan.kabupaten') }}" data-placeholder="{{ __('global.pleaseSelect') .' '.__('cruds.kabupaten.title') }}">
-        </select>
-    </div>
-</div>
-
-<div class="card-info pt-2">
-    <div class="card-header pl-1">
-        <div class="col-sm-12 col-md-12 col-lg-4 self-center order-1 order-md-1">
-            <button type="button" id="btn-lokasi-kegiatan" class="btn btn-warning">{{ __('cruds.kegiatan.basic.tambah_lokasi') }}</button>
-        </div>
-    </div>
-    <div class="card-body pl-0 pt-1 pb-0 pr-1 mb-0">
-        <div class="form-group row lokasi-kegiatan mb-0">
-            <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
-                <label class="input-group col-form-label">
-                    {{ __('cruds.kecamatan.title') }}
-                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
-                </label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
-                <label class="input-group col-form-label">
-                    {{ __('cruds.desa.title') }}
-                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.desa.title') }}"></i>
-                </label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
-                <label class="input-group col-form-label">
-                    {{ __('cruds.kegiatan.basic.lokasi') }}
-                    <i class="bi bi-geo-alt-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.lokasi') }}"></i>
-                </label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2 self-center order-2 order-md-2">
-                <label class="input-group col-form-label">
-                    {{ __('cruds.kegiatan.basic.lat') }}
-                    <i class="bi bi-pin-map-fill" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
-                </label>
-            </div>
-            <div class="col-sm-10 col-md-10 col-lg-2 self-center order-3 order-md-3">
-                <label class="input-group col-form-label">
-                    {{ __('cruds.kegiatan.basic.long') }}
-                    <i class="bi bi-geo" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.long_lat') }}"></i>
-                </label>
-            </div>
-        </div>
-    </div>
-    <div class="list-lokasi-kegiatan"></div>
-</div>
-
-<div class="form-group row">
-    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label class="input-group col-form-label">
-            {{ __('Get Coordinate') }}
-            <i class="bi bi-map-fill"></i>
-        </label>
-        <div id="map" class="form-control col-form-label"></div>
-    </div>
-</div>
-
-
-@include('tr.kegiatan.tabs.program')
-@include('tr.kegiatan.tabs.program-act')
-
-@push('next-button')
-<div class="button" id="task_flyout">
-    <button type="button" id="clearStorageButton" class="btn btn-warning float-left">Reset</button>
-    <button type="button" id="next-button" class="btn btn-primary float-right">Next</button>
-</div>
-@endpush
-
-@push('css')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<style>
-    #map {
-        height: 500px;
-        width: 100%;
-        /* margin-top: 20px; */
-    }
-
-    .select-container {
-        /* margin-bottom: 15px; */
-    }
-
-    .select2-container {
-        width: 100% !important;
-        /* margin-bottom: 10px; */
-    }
-</style>
-@endpush
-@push('basic_tab_js')
-
-<!--script for maps behavoiour-->
 <script>
     // Variables to store current GeoJSON layers
     var provinsiLayer = null;
@@ -362,7 +144,7 @@
             });
         }
     };
-    // Place the validateCoordinate function in a global scope
+
     function validateCoordinate(value, type) {
         let isValid = false;
         let validatedValue = null;
@@ -398,55 +180,52 @@
 
     }
 
-    /*
-    // Declare updateMap function outside of $(document).ready()
-    */
-     function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
-        if (!id) {
+    function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
+    if (!id) {
+        if (type === 'provinsi') {
+            provinsiLayer = MapHandler.clearLayer(provinsiLayer);
+        } else if (type === 'kabupaten') {
+            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+        }
+        return;
+    }
+
+    fetch(`/api/geojson/${type}/${id}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            // Clear existing layer
             if (type === 'provinsi') {
                 provinsiLayer = MapHandler.clearLayer(provinsiLayer);
             } else if (type === 'kabupaten') {
                 kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
             }
-            return;
-        }
 
-        fetch(`/api/geojson/${type}/${id}`)
-            .then(response => {
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                return response.json();
-            })
-            .then(data => {
-                // Clear existing layer
-                if (type === 'provinsi') {
-                    provinsiLayer = MapHandler.clearLayer(provinsiLayer);
-                } else if (type === 'kabupaten') {
-                    kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
-                }
+            // Convert and display new data
+            const geojson = MapHandler.convertToGeoJSON(data.path);
+            if (!geojson) {
+                console.error(`Invalid GeoJSON data for ${type}:`, data.path);
+                return;
+            }
 
-                // Convert and display new data
-                const geojson = MapHandler.convertToGeoJSON(data.path);
-                if (!geojson) {
-                    console.error(`Invalid GeoJSON data for ${type}:`, data.path);
-                    return;
-                }
+            const newLayer = MapHandler.displayGeoJSON(geojson, color);
 
-                const newLayer = MapHandler.displayGeoJSON(geojson, color);
+            // Store new layer reference
+            if (type === 'provinsi') {
+                provinsiLayer = newLayer;
+            } else if (type === 'kabupaten') {
+                kabupatenLayer = newLayer;
+            }
 
-                // Store new layer reference
-                if (type === 'provinsi') {
-                    provinsiLayer = newLayer;
-                } else if (type === 'kabupaten') {
-                    kabupatenLayer = newLayer;
-                }
-
-                // Update map bounds
-                MapHandler.updateMapBounds(newLayer, parentLayer);
-            })
-            .catch(error => {
-                console.error(`Error loading ${type} data:`, error);
-                ErrorHandler.handleGeojsonError(error);
-            });
+            // Update map bounds
+            MapHandler.updateMapBounds(newLayer, parentLayer);
+        })
+        .catch(error => {
+            console.error(`Error loading ${type} data:`, error);
+            ErrorHandler.handleGeojsonError(error);
+        });
     }
 
     function updateMap() {
@@ -463,11 +242,9 @@
     }
 
     $(document).ready(function() {
-          // Initialize the map
         map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
 
         $('#provinsi_id').on('change', function() {
-        // Clear kabupaten selection and layer
             $('#kabupaten_id').val(null).trigger('change');
             kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
             updateMap();
@@ -505,60 +282,44 @@
                 cache: true
             }
         }).on('select2:open', function (e) {
-             // this make the select2 dropdown appear above other element that might overlap it
-             $('.select2-container').css('z-index', 1051);
+            $('.select2-container').css('z-index', 1051);
         }).on('select2:close', function (e) {
-           $('.select2-container').css('z-index', 999);
+            $('.select2-container').css('z-index', 999);
         });
 
-        // Initialize kabupaten select2
-            $(`#kabupaten_id`).select2({
-                placeholder: '{{ __("cruds.kegiatan.basic.select_kabupaten") }}',
-                allowClear: true,
-                ajax: {
-                    url: "{{ route('api.kegiatan.kabupaten') }}",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        const provinsiId = $(`#provinsi_id`).val();
-                        console.log("data : ", provinsiId);
+        $(`#kabupaten_id`).select2({
+            placeholder: '{{ __("cruds.kegiatan.basic.select_kabupaten") }}',
+            allowClear: true,
+            ajax: {
+                url: "{{ route('api.kegiatan.kabupaten') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    const provinsiId = $(`#provinsi_id`).val();
+                    console.log("data : ", provinsiId);
 
-                        return {
-                            search: params.term,
-                            provinsi_id: provinsiId,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    },
-                    cache: true
-                }
-            }).on('select2:open', function (e) {
-                // this make the select2 dropdown appear above other element that might overlap it
-                $('.select2-container').css('z-index', 1051);
-            }).on('select2:close', function (e) {
+                    return {
+                        search: params.term,
+                        provinsi_id: provinsiId,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        }).on('select2:open', function (e) {
+            $('.select2-container').css('z-index', 1051);
+        }).on('select2:close', function (e) {
             $('.select2-container').css('z-index', 999);
-            });
-
-        // Add event listener to provinsi_id to trigger kabupaten update
-        // $(`#provinsi_id`).on('change', function() {
-        //     $(`#kabupaten_id`).val(null).trigger('change');
-        //     // Clear existing location fields
-        //     $('.list-lokasi-kegiatan').empty();
-        //     updateMap();
-        // });
-
-        // $('#kabupaten_id').on('change', function() {
-        //     updateMap();
-        // });
-
+        });
 
         function addNewLocationInputs(uniqueId) {
             if (!uniqueId) {
@@ -643,8 +404,7 @@
                     }
                 }
             }).on('select2:open', function (e) {
-             // this make the select2 dropdown appear above other element that might overlap it
-             $('.select2-container').css('z-index', 1051);
+                $('.select2-container').css('z-index', 1051);
             }).on('select2:close', function (e) {
                 $('.select2-container').css('z-index', 999);
             });
@@ -657,20 +417,20 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
-                    return {
-                        search: params.term,
-                        kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
-                        page: params.page || 1
-                    };
+                        return {
+                            search: params.term,
+                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                            page: params.page || 1
+                        };
                     },
                     processResults: function(data, params) {
                     params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                        more: data.pagination.more
-                        }
-                    };
+                        return {
+                            results: data.results,
+                            pagination: {
+                            more: data.pagination.more
+                            }
+                        };
                     },
                     cache: true,
                     error: function(jqXHR, textStatus, errorThrown) {
@@ -687,10 +447,9 @@
                     }
                 }
             }).on('select2:open', function (e) {
-                 // this make the select2 dropdown appear above other element that might overlap it
-                 $('.select2-container').css('z-index', 1051);
+                $('.select2-container').css('z-index', 1051);
             }).on('select2:close', function (e) {
-               $('.select2-container').css('z-index', 999);
+                $('.select2-container').css('z-index', 999);
             });
 
             // Handle dependencies
@@ -710,11 +469,10 @@
             });
 
             $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`).on('change', function() {
-                // saveLocationToLocalStorage(uniqueId);
+
             });
 
             $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click', '.remove-staff-row', function() {
-                // removeLocationFromLocalStorage(uniqueId);
                 $(this).closest('.lokasi-kegiatan').remove();
             });
             return uniqueId
@@ -744,6 +502,7 @@
                     timer: 1000,
                     timerProgressBar: true
                 });
+
                 $('#kabupaten_id').focus();
                 return false;
             }
@@ -784,15 +543,14 @@
 
         });
 
-        // Add the remove location handler
         $(document).on('click', '.remove-staff-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
             row.remove();
         });
-        // Call updateMap() after select2 is initialized
         updateMap();
     });
+
     function convertPathToGeoJSON(pathData) {
         try {
             if (!Array.isArray(pathData)) {
@@ -865,27 +623,162 @@
         }
     }
 
-
     // additional to add click on maps
     $(document).ready(function() {
         var clickMarker = null;
+        var reverseGeocodeMarker = null;
+
+        function reverseGeocode(lat, lng) {
+            return fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Reverse geocoding error:', error);
+                    return null;
+                });
+        }
+
 
         map.on('click', function(e) {
             if (clickMarker) {
                 map.removeLayer(clickMarker);
             }
+            if (reverseGeocodeMarker) {
+                map.removeLayer(reverseGeocodeMarker);
+            }
+
             const lat = e.latlng.lat.toFixed(6);
             const lng = e.latlng.lng.toFixed(6);
+
+            // Create marker
             clickMarker = L.marker(e.latlng).addTo(map);
 
-            const popupContent = `
-                <div>
-                    <strong>Coordinates:</strong><br>
-                    Latitude: ${lat}<br>
-                    Longitude: ${lng}<br>
-                </div>
-            `;
-            clickMarker.bindPopup(popupContent).openPopup();
+            // Perform reverse geocoding
+            reverseGeocode(lat, lng)
+                .then(data => {
+                    let locationName = 'Unknown Location';
+                    let address = {};
+
+                    if (data && data.display_name) {
+                        locationName = data.display_name || data.name;
+
+                        // Extract address components
+                        address = {
+                            road: data.address.road || '',
+                            suburb: data.address.suburb || data.address.city_district || '',
+                            city: data.address.city || data.address.town || data.address.village || '',
+                            county: data.address.county || '',
+                            state: data.address.state || '',
+                            country: data.address.country || ''
+                        };
+                    }
+
+                    // Create popup content
+                    const popupContent = `
+                        <div>
+                            <strong>Location Details</strong><br>
+                            <b>Name:</b> ${locationName}<br>
+                            <b>Coordinates:</b><br>
+                            <li>Latitude: ${lat}</li>
+                            <li>Longitude: ${lng}</li>
+                            <br>
+                            <strong>Address Components:</strong><br>
+                            Road: ${address.road}<br>
+                            Suburb: ${address.suburb}<br>
+                            City: ${address.city}<br>
+                            County: ${address.county}<br>
+                            State: ${address.state}<br>
+                            Country: ${address.country}<br>
+                            <br>
+                        </div>
+                    `;
+                    // <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
+                    //                 data-lat="${lat}"
+                    //                 data-lng="${lng}">
+                    //             Use These Coordinates
+                    // </button>
+
+                    // Bind popup
+                    clickMarker.bindPopup(popupContent).openPopup();
+                })
+                .catch(error => {
+                    console.error('Reverse geocoding error:', error);
+
+                    // Fallback popup if geocoding fails
+                    const popupContent = `
+                        <div>
+                            <strong>Coordinates:</strong><br>
+                            Latitude: ${lat}<br>
+                            Longitude: ${lng}<br>
+                            <br>
+                            <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
+                                    data-lat="${lat}"
+                                    data-lng="${lng}">
+                                Use These Coordinates
+                            </button>
+                        </div>
+                    `;
+
+                    clickMarker.bindPopup(popupContent).openPopup();
+                });
+        });
+
+        $(document).on('click', '.leaflet-popup .use-coordinates', function(e) {
+            e.preventDefault(); // Prevent any default form submission
+
+            const lat = $(this).data('lat');
+            const lng = $(this).data('lng');
+
+            // Debugging logs
+            console.log('Coordinates selected:', lat, lng);
+
+            // Find the last empty coordinate input pair
+            const locationRows = $('.lokasi-kegiatan');
+            let targetRow = null;
+
+            locationRows.each(function() {
+                // const latInput = $(this).find('.lat-input');
+                // const longInput = $(this).find('.lang-input');
+                const latInput = $(this).find(`#lat-${uniqueId}`);
+                const longInput = $(this).find(`#long-${uniqueId}`);
+
+                if (!latInput.val() && !longInput.val()) {
+                    targetRow = $(this);
+                    return false; // Break the loop
+                }
+            });
+
+            // Add this block here
+            if (!targetRow || targetRow.length === 0) {
+                // Manually create a new location row
+                const newUniqueId = addNewLocationInputs();
+                targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
+            }
+
+            // Fill in the coordinates
+            if (targetRow) {
+                const latInput = targetRow.find(`#lat-${uniqueId}`);
+                const longInput = targetRow.find(`#long-${uniqueId}`);
+                // const latInput = targetRow.find('.lat-input');
+                // const longInput = targetRow.find('.lang-input');
+
+                // Debugging logs
+                console.log('Target row found:', targetRow);
+                console.log('Lat input:', latInput);
+                console.log('Long input:', longInput);
+
+                // Use .val() and trigger change event
+                latInput.val(lat).trigger('change');
+                longInput.val(lng).trigger('change');
+
+                // Additional validation trigger
+                latInput.trigger('blur');
+                longInput.trigger('blur');
+            }
+
+            // Close the popup
+            if (clickMarker) {
+                clickMarker.closePopup();
+            }
         });
     });
 
@@ -940,4 +833,3 @@
         };
     }
 </script>
-@endpush
