@@ -272,6 +272,7 @@ entity "trprogramoutcomeoutputactivity" as trprogramoutcomeoutputactivity {
     deskrispsi : varchar(500)
     indikator : varchar(500)
     target : varchar(500)
+    tipe : varhcar (200)
 }
 
 entity "trprogramlokasi" as trprogramlokasi {
@@ -669,25 +670,31 @@ entity "trmealsfrm" as trmealsfrm {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
+    id_userpenerima : int <<fk>> null
+    id_jabatanpenerima : int <<fk>> null
+    id_userhandler : int <<fk>> null
+    id_jabatanhandler : int <<fk>> null
+    id_sortofcomplains : int <<fk>> null
     tanggalregistrasi : datetime
-    umur : int
-    jeniskelamin : varchar (50)
-    statuskomplain : varchar (50)
-    notelp : varchar (20)
-    alamat : varchar (500)
-    hide : bit
-    id_userpenerima : int <<fk>>
-    id_jabatanpenerima : int <<fk>>
-    notelppenerima : varchar (20)
-    channels : varchar (100)
-    channelslainnya : varchar (100)
-    kategorikomplain : varchar (100)
-    deskripsikomplain : varchar (500)
-    tanggalselesai : datetime
-    id_userhandler : int <<fk>>
-    id_jabatanhandler : int <<fk>>
-    notelphandler : varchar (20)
-    deskripsi : varchar (500)
+    umur : int null
+    jeniskelamin : varchar (50) null
+    statuskomplain : varchar (50) null
+    notelp : varchar (20) null
+    alamat : varchar (500) null
+    notelppenerima : varchar (20) null
+    channels : varchar (100) null
+    channelslainnya : varchar (100) null
+    kategorikomplain : varchar (100) null
+    deskripsikomplain : text null
+    tanggalselesai : datetime null
+    notelphandler : varchar (20) null
+    deskripsi : text null
+}
+
+entity "msortofcomplaints" as msortofcomplaints {
+    *id : int <<auto>>
+    --
+    nama : varchar (500)
 }
 
 entity "trmealsqb" as trmealsqb {
