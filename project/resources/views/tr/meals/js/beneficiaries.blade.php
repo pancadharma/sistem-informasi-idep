@@ -1,7 +1,13 @@
 <script>
-    if (typeof $ === "undefined") {
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+if (typeof $ === "undefined") {
         console.error("jQuery is not included. Please include jQuery in your HTML file.")
-    }
+}
     let rowCount = 0;
     let editDataForm = null; // Initialize as null
 
@@ -191,6 +197,66 @@
             dropdownParent: $('#editDataModal'),
         })
     }
+
+    function initializeSelect2ForKelompokRentan() {
+        $('#kelompok_rentan').select2({
+            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+            dropdownParent: $('#ModalTambahPeserta'),
+            width: '100%',
+            allowClear: true,
+            ajax: {
+                url: '{{ route("api.meals.kelompok.rentan") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
+        });
+    }
+
+    function loadSelect2EditKelompokRentan(){
+        $('#editKelompokRentan').select2({
+            multiple: true,
+            ajax: {
+                url: '{{ route("api.meals.kelompok.rentan") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $('#editDataModal'),
+            width: '80%',
+            placeholder: "{{ __('cruds.meals.penerima.sel_rentan') }} ...",
+        });
+    }
     // END SELECT2 INITIALIZATION
 
     function updateAgeCheckmarks(usiaCell) {
@@ -226,48 +292,42 @@
 
     function addRow(data) {
         rowCount++;
-        let disabilitasText = [];
-        let kelompokRentanText = [];
 
         const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
         const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
 
-        const desaText = $("#desa_id option:selected").text()
-        const dusunText = $("#dusun_id option:selected").text()
+        const desaText = $("#desa_id option:selected").text();
+        const dusunText = $("#dusun_id option:selected").text();
 
-        disabilitasText = disabilitasArray.map(value => {
+        const disabilitasText = disabilitasArray.map(value => {
             const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
             const text = option.length ? option.text() : '';
             const randomColor = getRandomColor();
             return `<span class="badge badge-${randomColor}">${text}</span>`;
         });
 
-        kelompokRentanText = kelompokRentanArray.map(value => {
+        const kelompokRentanText = kelompokRentanArray.map(value => {
             const option = $('#ModalTambahPeserta select[name="kelompok_rentan"] option[value="' + value + '"]');
             const text = option.length ? option.text() : '';
-            const randomColor = getRandomColor()
+            const randomColor = getRandomColor();
             return `<span class="badge badge-${randomColor}">${text}</span>`;
         });
 
         const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
-
         const newRow = `
         <tr data-row-id="${rowCount}" class="nowrap">
             <td class="text-center align-middle d-none">${rowCount}</td>
             <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
             <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
-            <td data-disabilitas="${data.disabilitas.join(',')}" class="text-left align-middle text-wrap">${disabilitasText.join(', ')}</td>
-            <td data-kelompok_rentan="${data.kelompok_rentan.join(',')}" class="text-left align-middle text-wrap">${kelompokRentanText.join(' ')}</td>
+            <td data-disabilitas="${disabilitasArray.join(',')}" class="text-left align-middle text-wrap">${disabilitasText.join(', ')}</td>
+            <td data-kelompok_rentan="${kelompokRentanArray.join(',')}" class="text-left align-middle text-wrap">${kelompokRentanText.join(' ')}</td>
             <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
             <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
-
             <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
             <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-
             <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
             <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
             <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
-
             <td class="text-center align-middle age-0-17"></td>
             <td class="text-center align-middle age-18-24"></td>
             <td class="text-center align-middle age-25-59"></td>
@@ -284,7 +344,6 @@
 
         updateAgeCheckmarks($('#dataTable tbody').find(`tr[data-row-id="${rowCount}"]`).find('.usia-cell'));
         resetFormAdd();
-
     }
 
     function saveRow() {
@@ -323,6 +382,8 @@
     function resetFormAdd() {
         $('#dataForm')[0].reset();
         $('#kelompok_rentan').val(null).trigger('change');
+        $('#kelompok_rentan').select2('destroy').empty();
+        initializeSelect2ForKelompokRentan();
         $('#disabilitas').val(null).trigger('change');
         $('.select2-multiple').val(null).trigger('change');
         $('.select2').val(null).trigger('change');
@@ -334,42 +395,53 @@
         const rowId = currentRow.data('row-id');
 
         // Get stored values from data attributes
-        const disabilitas = currentRow.find('td:[data-disabilitas]').attr('data-disabilitas');
+        const disabilitas = currentRow.find('td[data-disabilitas]').attr('data-disabilitas');
         const disabilitasValues = disabilitas ? disabilitas.split(',') : [];
 
         const kelompok_rentan = currentRow.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan');
         const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(',') : [];
 
-        const desaId = currentRow.find("td[data-desa-id]").data("desa-id")
-        const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama")
-        const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id")
-        const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama")
+        const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
+        const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
+        const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
+        const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
 
         $('#editRowId').val(rowId);
-        $('#editNama').val(currentRow.find('td:eq(1)').attr('data-nama'));
-        $('#editGender').val(currentRow.find('td:eq(2)').attr('data-gender')).trigger('change');
-        $('#editDisabilitas').val(disabilitasValues).trigger('change');
-        $('#editKelompokRentan').val(kelompokRentanValues).trigger('change');
-        $('#editRt').val(currentRow.find('td:eq(5)').attr('data-rt'));
-        $('#editRwBanjar').val(currentRow.find('td:eq(6)').attr('data-rw_banjar'));
+        $('#editNama').val(currentRow.find('td[data-nama]').attr('data-nama'));
+        $('#editGender').val(currentRow.find('td[data-gender]').attr('data-gender')).trigger('change');
 
+        $('#editDisabilitas').val(null).trigger('change');
+        if (disabilitasValues.length > 0) {
+            $('#editDisabilitas').val(disabilitasValues).trigger('change');
+        }
 
-        $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change")
-        $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change")
+        $('#editKelompokRentan').val(null).trigger('change');
+        if (kelompokRentanValues.length > 0) {
+            const newOptions = kelompokRentanValues.map(value => new Option(value, value, true, true));
+            $('#editKelompokRentan').append(newOptions).trigger('change');
+        }
 
-        $('#editNoTelp').val(currentRow.find('td:eq(9)').attr('data-no_telp'));
-        $('#editJenisKelompok').val(currentRow.find('td:eq(10)').attr('data-jenis_kelompok'));
-        $('#editUsia').val(currentRow.find('td:eq(11)').attr('data-usia'));
+        $('#editRt').val(currentRow.find('td[data-rt]').attr('data-rt'));
+        $('#editRwBanjar').val(currentRow.find('td[data-rw_banjar]').attr('data-rw_banjar'));
+
+        $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
+        $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
+
+        $('#editNoTelp').val(currentRow.find('td[data-no_telp]').attr('data-no_telp'));
+        $('#editJenisKelompok').val(currentRow.find('td[data-jenis_kelompok]').attr('data-jenis_kelompok'));
+        $('#editUsia').val(currentRow.find('td[data-usia]').attr('data-usia'));
+
+        $('#editDataModal').modal('show');
     }
 
     function updateRow() {
         const rowId = $('#editRowId').val();
         const form = document.getElementById('editDataForm');
 
-        const desaId = $("#editDesa").val()
-        const desaText = $("#editDesa option:selected").text()
-        const dusunId = $("#editDusun").val()
-        const dusunText = $("#editDusun option:selected").text()
+        const desaId = $("#editDesa").val();
+        const desaText = $("#editDesa option:selected").text();
+        const dusunId = $("#editDusun").val();
+        const dusunText = $("#editDusun option:selected").text();
 
         if (!form) {
             console.error('Edit form not found');
@@ -389,18 +461,33 @@
                 return obj;
             }, {});
 
-            const genderText = $('#editGender option[value="' + formData.gender + '"]').text();
+            const genderText = $('#editGender option:selected').text();
 
-            const kelompokRentanText = Array.isArray(formData.kelompok_rentan) ? formData.kelompok_rentan.map(value => {
-                    const option = $('#editKelompokRentan option[value="' + value + '"]');
-                    return option.length ? option.text() : '';
-            }).join(', ') : $('#editKelompokRentan option[value="' + formData.kelompok_rentan + '"]').text();
+            // Generate badge HTML for kelompok_rentan
+            const kelompokRentanHtml = Array.isArray(formData.kelompok_rentan)
+                ? formData.kelompok_rentan.map(value => {
+                    const text = $('#editKelompokRentan option[value="' + value + '"]').text();
+                    const randomColor = getRandomColor();
+                    return `<span class="badge badge-${randomColor}">${text}</span>`;
+                }).join(' ')
+                : (() => {
+                    const text = $('#editKelompokRentan option:selected').text();
+                    const randomColor = getRandomColor();
+                    return `<span class="badge badge-${randomColor}">${text}</span>`;
+                })();
 
-            const disabilitasText = Array.isArray(formData.disabilitas) ? formData.disabilitas.map(value => {
-                const option = $('#editDisabilitas option[value="' + value + '"]');
-                    return option.length ? option.text() : '';
-            }).join(', '): $('#editDisabilitas option[value="' + formData.disabilitas + '"]').text();
-
+            // Generate badge HTML for disabilitas
+            const disabilitasHtml = Array.isArray(formData.disabilitas)
+                ? formData.disabilitas.map(value => {
+                    const text = $('#editDisabilitas option[value="' + value + '"]').text();
+                    const randomColor = getRandomColor();
+                    return `<span class="badge badge-${randomColor}">${text}</span>`;
+                }).join(' ')
+                : (() => {
+                    const text = $('#editDisabilitas option:selected').text();
+                    const randomColor = getRandomColor();
+                    return `<span class="badge badge-${randomColor}">${text}</span>`;
+                })();
 
             const currentRow = $('#dataTable tbody').find(`tr[data-row-id="${rowId}"]`);
             if (currentRow.length === 0) {
@@ -410,16 +497,17 @@
 
             currentRow.find('td[data-nama]').text(formData.nama).attr('data-nama', formData.nama);
             currentRow.find('td[data-gender]').text(genderText).attr('data-gender', formData.gender);
-            currentRow.find('td[data-disabilitas]').text(disabilitasText).attr('data-disabilitas', formData.disabilitas);
-            currentRow.find('td[data-kelompok_rentan]').text(kelompokRentanText).attr('data-kelompok_rentan', formData.kelompok_rentan);
+            currentRow.find('td[data-disabilitas]').html(disabilitasHtml).attr('data-disabilitas', formData.disabilitas);
+            // currentRow.find('td[data-kelompok_rentan]').html(kelompokRentanHtml).attr('data-kelompok_rentan', formData.kelompok_rentan);
+            currentRow.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan', formData.kelompok_rentan.join(','));
             currentRow.find('td[data-rt]').text(formData.rt).attr('data-rt', formData.rt);
             currentRow.find('td[data-rw_banjar]').text(formData.rw_banjar).attr('data-rw_banjar', formData.rw_banjar);
             currentRow.find('td[data-no_telp]').text(formData.no_telp).attr('data-no_telp', formData.no_telp);
             currentRow.find('td[data-jenis_kelompok]').text(formData.jenis_kelompok).attr('data-jenis_kelompok', formData.jenis_kelompok);
             currentRow.find('td[data-usia]').text(formData.usia).attr('data-usia', formData.usia);
 
-            currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText)
-            currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText)
+            currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
+            currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
 
             updateAgeCheckmarks(currentRow.find('.usia-cell'));
 
@@ -431,7 +519,6 @@
             $('#disabilitas').val(null).trigger('change');
             $('#editKelompokRentan').val(null).trigger('change');
             $('#editGender').val(null).trigger('change');
-
 
             form.reset(); // Resetting all other fields in the edit data form
         } else {
@@ -485,25 +572,12 @@
             saveRow();
         });
 
-        $("#dataForm").on("submit", function(e) {
-            e.preventDefault();
-            const form = $(this)[0];
-            if (form.checkValidity()) {
-                saveRow();
-                resetFormAddress();
-            } else {
-                form.reportValidity();
-            }
-        });
 
         $('#dataTable tbody').on('click', '.edit-btn', function(e) {
             e.preventDefault();
             editRow(this);
+            loadSelect2EditKelompokRentan();
             $('#editDataModal').modal('show');
-            $('#editKelompokRentan').select2({
-                dropdownParent: $('#editDataModal'),
-                width: '100%'
-            });
         });
 
         $('#updateDataBtn').on('click', function(e) {
@@ -533,14 +607,64 @@
             });
             return false;
         });
+
+        // preview data
+        $("#submitDataBtn").on("click", function() {
+            // Collect all the data from the table
+            let tableData = [];
+            $("#dataTable tbody tr").each(function() {
+                let row = $(this);
+                let rowData = {
+                    nama: row.find('td[data-nama]').attr('data-nama'),
+                    gender: row.find('td[data-gender]').attr('data-gender'),
+                    disabilitas: row.find('td[data-disabilitas]').attr('data-disabilitas').split(','),
+                    kelompok_rentan: row.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan').split(','),
+                    rt: row.find('td[data-rt]').attr('data-rt'),
+                    rw_banjar: row.find('td[data-rw_banjar]').attr('data-rw_banjar'),
+                    dusun_id: row.find('td[data-dusun-id]').attr('data-dusun-id'),
+                    desa_id: row.find('td[data-desa-id]').attr('data-desa-id'),
+                    no_telp: row.find('td[data-no_telp]').attr('data-no_telp'),
+                    jenis_kelompok: row.find('td[data-jenis_kelompok]').attr('data-jenis_kelompok'),
+                    usia: row.find('td[data-usia]').attr('data-usia')
+                };
+                tableData.push(rowData);
+            });
+
+            // Convert the data to a formatted JSON string
+            let jsonData = JSON.stringify(tableData, null, 2);
+
+            // Display the JSON data in the modal
+            $("#modalData").text(jsonData);
+
+            // Show the modal
+            $("#previewModalsData").modal('show');
+        });
+
+        // send data to controller
+        $("#sendDataBtn").on("click", function() {
+            // Get the JSON data from the modal
+            let finalData = JSON.parse($("#modalData").text());
+
+            // Send the data to the server
+            $.ajax({
+                url: '/meals/kirim-peserta', // Replace with your actual endpoint
+                method: 'POST',
+                data: JSON.stringify(finalData),
+                contentType: 'application/json',
+                success: function(response) {
+                    // Handle success
+                    alert('Data sent successfully!');
+                    $("#previewModal").modal('hide');
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    alert('Error sending data: ' + error);
+                }
+            });
+        });
     });
 
     // end script of document ready
-
-
-
-
-
 
 
 

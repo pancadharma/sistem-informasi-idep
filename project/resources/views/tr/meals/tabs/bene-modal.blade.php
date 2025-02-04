@@ -1,4 +1,4 @@
-<div class="modal fade" id="previewModals" tabindex="-1" aria-labelledby="previewModalsLabel" aria-hidden="true">
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,30 +6,49 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <pre id="modalData"></pre>
-                <form id="previewData"></form>
+                <pre id="modalData2"></pre>
+                <form id="previewData2"></form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="sendDataBtn">Kirim Data</button>
+                <button type="button" class="btn btn-primary">Kirim Data</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="previewModal2" tabindex="-1" aria-labelledby="previewModalLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalsLabel2">Preview Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="modalDat2a"></pre>
+                <form id="previewData2"></form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Kirim Data</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+<div class="modal fade" id="previewModalsData" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="previewModalsData" >
+    <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="previewModalLabel">Preview Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="previewModalsDataTitle">Preview Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('global.close') }}">
+                    <span>&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <pre id="modalData"></pre>
-                <form id="previewData"></form>
+                <pre id="modalData" style="white-space: pre-wrap; word-wrap: break-word;"></pre>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary"data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="sendDataBtn">Kirim Data</button>
             </div>
         </div>
@@ -95,13 +114,7 @@
                         <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Kelompok Rentan</label>
                             <div class="select2-green">
-                                <select class="form-select select2" name="kelompok_rentan" multiple id="kelompok_rentan">
-                                    <option value="">Select Kelompok Rentan</option>
-                                    {{-- <option value="1">Anak-anak</option>
-                                    <option value="2">Lansia</option>
-                                    <option value="3">Ibu Hamil</option>
-                                    <option value="4">Penyandang Disabilitas</option>
-                                    <option value="5">Minoritas</option> --}}
+                                <select class="form-control select2-multiple select2" name="kelompok_rentan" multiple id="kelompok_rentan">
                                 </select>
                             </div>
                         </div>
@@ -117,7 +130,7 @@
                         <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
                             <label class="form-label mb-0">Desa <span class="text-danger">*</span></label>
                             <div class="select2-green">
-                                <select class="form-select select2" name="desa_id" id="desa_id" required>
+                                <select class="form-control select2" name="desa_id" id="desa_id" required>
                                     <option value="">Select Desa</option>
                                 </select>
                             </div>
@@ -125,7 +138,7 @@
                         <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
                             <label class="form-label mb-0">Dusun <span class="text-danger">*</span></label>
                             <div class="select2-green">
-                                <select class="form-select select2" name="dusun_id" id="dusun_id" required>
+                                <select class="form-control select2" name="dusun_id" id="dusun_id">
                                     <option value="">Select Dusun</option>
                                 </select>
                             </div>
@@ -217,12 +230,6 @@
                             <label class="form-label mb-0">Kelompok Rentan</label>
                             <div class="select2-info">
                                 <select class="form-select select2-multiple select2" id="editKelompokRentan" name="kelompok_rentan" multiple>
-                                    <option value="">Select Kelompok Rentan</option> <!-- Optional placeholder -->
-                                    <option value="1">Anak-anak</option>
-                                    <option value="2">Lansia</option>
-                                    <option value="3">Ibu Hamil</option>
-                                    <option value="4">Penyandang Disabilitas</option>
-                                    <option value="5">Minoritas</option>
                                 </select>
                             </div>
                         </div>
