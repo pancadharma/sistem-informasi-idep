@@ -54,20 +54,20 @@
                         <div class="card-body">
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <p class="text-break">
+                                <p class="text-break line-text">
                                     {{ old('goal', $program->objektif->deskripsi ?? '') }}
                                 </p>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->objektif->indikator ?? '') }}
+                                <p class="text-break line-text">
+                                    {{ old('indikator', $program->objektif->indikator ?? '') }}
                                 </p>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->objektif->target ?? '') }}
+                                <p class="text-break line-text">
+                                    {{ old('target', $program->objektif->target ?? '') }}
                                 </p>
                             </div>
 
@@ -84,21 +84,21 @@
                         <div class="card-body">
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <p class="text-break">
+                                <div class="line-text p-0">
                                     {{ old('goal', $program->goal->deskripsi ?? '') }}
-                                </p>
+                                </div>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <p class="text-break">
+                                <div class="line-text p-0">
                                     {{ old('goal', $program->goal->indikator ?? '') }}
-                                </p>
+                                </div>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <p class="text-break">
+                                <div class="line-text p-0">
                                     {{ old('goal', $program->goal->target ?? '') }}
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -121,34 +121,29 @@
             <div class="card-body hide" id="detail_outcome">
                 <div class="row">
                     <div class="input-field col-lg-4">
-                        {{-- <input id="deskripsi" name="deskripsi" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.desc') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.desc') }}"> --}}
-                        {{-- <label for="deskripsi">{{ __('cruds.program.outcome.desc') }}</label> --}}
                         <div class="text-wrap">
                             <div class="label font-weight-bold">{{ __('cruds.program.outcome.desc') }}</div>
-                            <p class="text-break">
-                                <span id="deskripsi" name="deskripsi"></span>
-                            </p>
+                            {{-- <div class="line-text mt-0"> --}}
+                                <span id="deskripsi" name="deskripsi" class="line-text p-0"></span>
+                            {{-- </div> --}}
                         </div>
 
                     </div>
                     <div class="input-field col-lg-4">
-                        {{-- <input id="indikator" name="indikator" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.indicator') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.indicator') }}">
-                        <label for="indikator">{{ __('cruds.program.outcome.indicator') }}</label> --}}
                         <div class="text-wrap">
                             <div class="label font-weight-bold">{{ __('cruds.program.outcome.indicator') }}</div>
-                            <p class="text-break">
-                                <span id="indikator" name="indikator"></span>
-                            </p>
+                            <span id="indikator" name="indikator" class="line-text p-0"></span>
+                                {{-- alternative use .split().join
+                                    document.getElementById('deskripsi').innerHTML = (response.data.deskripsi || '').split(/\r\n|\n/).join('<br>');
+                                --}}
                         </div>
                     </div>
                     <div class="input-field col-lg-4">
-                        {{-- <input id="target" name="target" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
-                        <label for="target">{{ __('cruds.program.outcome.target') }}</label> --}}
                         <div class="text-wrap">
                             <div class="label font-weight-bold">{{ __('cruds.program.outcome.target') }}</div>
-                            <p class="text-break">
-                                <span id="target" name="target"></span>
-                            </p>
+                            {{-- <div class="line-text mt-0"> --}}
+                                <span id="target" name="target" class="line-text p-0"></span>
+                            {{-- </div> --}}
                         </div>
                     </div>
                 </div>
@@ -194,6 +189,12 @@
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/materialize.css') }}">
+
+<style>
+    .line-text{
+        white-space: pre-line!important;
+    }
+</style>
 
 @endpush
 
@@ -338,12 +339,11 @@
                             $('#outcome-title').text(outcomeIndex);
                             $('#outcome-number').text(outcomeIndex);
 
-                            // $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
+
                             $('#deskripsi').html(response.data.deskripsi ?? '')
-                            // $('#indikator').val(response.data.indikator ?? '').trigger('input');
                             $('#indikator').html(response.data.indikator ?? '');
-                            // $('#target').val(response.data.target ?? '').trigger('input');
-                            $('#target').html(response.data.target ?? '');
+                            $('#target').html(response.data?.target ?? '');
+
                             $('#goal').focus().trigger('input');
                             $('#objektif').trigger('input');
                             $('#programoutcome_id').val(response.data.id);
