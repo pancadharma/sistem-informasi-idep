@@ -50,16 +50,17 @@
                                 setTimeout(() => {
                                     if (data && Array.isArray(data)) {
                                         data.forEach(function(pendonor) {
+
                                             let containerId =
                                                 `pendonor-container-${pendonor.id}`;
-                                            $('#pendonor-container')
+                                                $('#pendonor-container')
                                                 .append(`
                                                     <div class="row" id="${containerId}">
                                                         <div class="col-lg-3 form-group">
                                                             <div class="input-group">
                                                                 <label for="nama_pendonor-${pendonor.id}" class="input-group small mb-0">{{ __('cruds.program.donor.nama') }}</label>
                                                                 <input type="hidden" name="pendonor_id[]" value="${pendonor.id}" id="pendonor-${pendonor.id}">
-                                                                <input type="hidden" name="program_id[]" value="${pendonor.id}" id="pendonor-${pendonor.id}">
+                                                                <input type="hidden" name="program_id[]" value="${pendonor.id}" id="program-${pendonor.id}">
                                                                 <input type="text" id="nama_pendonor-${pendonor.id}" name="nama_pendonor" class="form-control" value="${pendonor.nama || ''}" readonly>
                                                             </div>
                                                         </div>
@@ -78,7 +79,7 @@
                                                         <div class="col-lg-3 form-group">
                                                             <div class="input-group">
                                                                 <label for="nilaidonasi-${pendonor.id}" class="input-group small mb-0">{{ __('cruds.program.donor.val') }}</label>
-                                                                <input type="text" id="nilaidonasi-${pendonor.id}" name="nilaidonasi[]" class="form-control currency" value="${pendonor.nilaidonasi || 0}">
+                                                                <input type="text" id="nilaidonasi-${pendonor.id}" name="nilaidonasi[]" class="form-control currency nilaidonasi-value" value="${pendonor.nilaidonasi || 0}">
                                                                 <span class="input-group-append">
                                                                     <button type="button" class="btn btn-danger form-control remove-pendonor nilaidonasi btn-flat" data-target="${containerId}"><i class="bi bi-trash"></i></button>
                                                                 </span>
@@ -86,27 +87,12 @@
                                                         </div>
                                                     </div>
                                                 `);
-                                            var nilaidonasiElement =
-                                                `#nilaidonasi-${pendonor.id}`;
-                                            if (!AutoNumeric
-                                                .getAutoNumericElement(
-                                                    nilaidonasiElement)
-                                            ) {
-                                                // console.log(`Initializing AutoNumeric for ${nilaidonasiElement} with value: ${pendonor.nilaidonasi}`);
-                                                new AutoNumeric(
-                                                    nilaidonasiElement, {
-                                                        digitGroupSeparator: '.',
-                                                        decimalCharacter: ',',
-                                                        currencySymbol: 'Rp ',
-                                                        modifyValueOnWheel: false
-                                                    });
-
-                                                AutoNumeric
-                                                    .getAutoNumericElement(
-                                                        nilaidonasiElement
-                                                    ).set(pendonor
-                                                        .nilaidonasi);
-                                            }
+                                                new AutoNumeric(`#nilaidonasi-${pendonor.id}`, {
+                                                    digitGroupSeparator: '.',
+                                                    decimalCharacter: ',',
+                                                    currencySymbol: 'Rp ',
+                                                    modifyValueOnWheel: false
+                                                });
                                         });
                                     } else {
                                         console.error('Invalid data format',
