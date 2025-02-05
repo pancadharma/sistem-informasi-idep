@@ -54,21 +54,15 @@
                         <div class="card-body">
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <p class="text-break line-text">
-                                    {{ old('goal', $program->objektif->deskripsi ?? '') }}
-                                </p>
+                                <span class="line-text text-justify">{{ trim($program->objektif->deskripsi ?? '') }}</span>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <p class="text-break line-text">
-                                    {{ old('indikator', $program->objektif->indikator ?? '') }}
-                                </p>
+                                <span class="line-text text-justify">{{ trim($program->objektif->indikator ?? '') }}</span>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <p class="text-break line-text">
-                                    {{ old('target', $program->objektif->target ?? '') }}
-                                </p>
+                                <span class="line-text text-justify">{{ trim($program->objektif->target ?? '') }}</span>
                             </div>
 
                         </div>
@@ -84,21 +78,15 @@
                         <div class="card-body">
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <div class="line-text p-0">
-                                    {{ old('goal', $program->goal->deskripsi ?? '') }}
-                                </div>
+                                <div class="line-text text-justify">{{ old('goal', $program->goal->deskripsi ?? '') }}</div>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <div class="line-text p-0">
-                                    {{ old('goal', $program->goal->indikator ?? '') }}
-                                </div>
+                                <div class="line-text text-justify">{{ old('goal', $program->goal->indikator ?? '') }}</div>
                             </div>
                             <div class="text-wrap">
                                 <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <div class="line-text p-0">
-                                    {{ old('goal', $program->goal->target ?? '') }}
-                                </div>
+                                <div class="line-text text-justify">{{ old('goal', $program->goal->target ?? '') }}</div>
                             </div>
                         </div>
                     </div>
@@ -163,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body pr-0 pl-0 pt-0">
+            <div class="card-body p-0">
                 <table id="outcome_output_list" class="highlight striped" style="width:100%">
                     <thead class="">
                         <tr>
@@ -192,7 +180,11 @@
 
 <style>
     .line-text{
-        white-space: pre-line!important;
+        white-space: pre-line !important;
+        display: block;
+        padding-block-end: 1rem;
+        padding-block-start: 0.25rem;
+        margin: 0;
     }
 </style>
 
@@ -276,10 +268,11 @@
                             response.data.forEach(function(output) {
                                 $('#row-output').append(`
                                 <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                                    <td class="pl-3">${output.deskripsi ?? ''}</td>
-                                    <td>${output.indikator ?? ''}</td>
-                                    <td>${output.target ?? ''}</td>
-                                    <td><div class="button-container">
+                                    <td class="pl-3 align-top"><span class="line-text p-0 text-capitalize">${output.deskripsi ?? ''}</span></td>
+                                    <td class="align-top"><span class="line-text p-0 text-capitalize">${output.indikator ?? ''}<span></td>
+                                    <td class="align-top"><span class="line-text p-0 text-capitalize">${output.target ?? ''}</span></td>
+                                    <td class="align-top">
+                                        <div class="button-container">
                                             <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success btnEditOutcomeOutput" data-action="edit" data-output-id="${output.id}" data-index="${output.id}" data-outcome-id="${output.programoutcome_id}">
                                             <i class="bi bi-pencil-square"></i>
                                             </button>
@@ -293,7 +286,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            text: response.message,
+                            text: response.message || "Oppss.. Something went wrong",
                         });
                     }
                 }, 100);
@@ -303,7 +296,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    html: errorMessage,
+                    html: errorMessage || '',
                     confirmButtonText: 'Okay'
                 });
             }
@@ -340,9 +333,10 @@
                             $('#outcome-number').text(outcomeIndex);
 
 
-                            $('#deskripsi').html(response.data.deskripsi ?? '')
-                            $('#indikator').html(response.data.indikator ?? '');
-                            $('#target').html(response.data?.target ?? '');
+                            // When loading outcome data
+                            $('#deskripsi').html((response.data.deskripsi || '').split(/\r\n|\n/).join('<br>'));
+                            $('#indikator').html((response.data.indikator || '').split(/\r\n|\n/).join('<br>'));
+                            $('#target').html((response.data.target || '').split(/\r\n|\n/).join('<br>'));
 
                             $('#goal').focus().trigger('input');
                             $('#objektif').trigger('input');
@@ -358,7 +352,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
-                                text: response.message,
+                                text: response.message || "Oppss.. Something went wrong",
                             });
                         }
                     }, 300);
@@ -368,7 +362,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: errorMessage,
+                        html: errorMessage || "Oppss.. Something went wrong",
                         confirmButtonText: 'Okay'
                     });
                 },
