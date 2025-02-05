@@ -256,8 +256,16 @@ if (typeof $ === "undefined") {
                 cache: true
             },
             dropdownParent: $('#editDataModal'),
-            width: '80%',
+            width: '100%',
+            closeOnSelect: false,
             placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+        }).on('select2:unselecting', function() {
+            $(this).data('unselecting', true);
+        }).on('select2:opening', function(e) {
+            if ($(this).data('unselecting')) {
+                $(this).removeData('unselecting');
+                e.preventDefault();
+            }
         });
     }
     // END SELECT2 INITIALIZATION
@@ -309,11 +317,17 @@ if (typeof $ === "undefined") {
             return `<span class="badge badge-${randomColor}">${text}</span>`;
         });
 
-        const kelompokRentanText = kelompokRentanArray.map(value => {
-            const option = $('#ModalTambahPeserta select[name="kelompok_rentan"] option[value="' + value + '"]');
-            const text = option.length ? option.text() : '';
+        const kelompokRentanData = kelompokRentanArray.map(value => {
+            const option = $('#kelompok_rentan').select2('data').find(opt => opt.id === value) || { id: value, text: value };
+            return {
+                id: option.id,
+                text: option.text
+            };
+        });
+
+        const kelompokRentanText = kelompokRentanData.map(item => {
             const randomColor = getRandomColor();
-            return `<span class="badge badge-${randomColor}">${text}</span>`;
+            return `<span class="badge badge-${randomColor}">${item.text}</span>`;
         });
 
         const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
@@ -323,7 +337,7 @@ if (typeof $ === "undefined") {
             <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
             <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
             <td data-disabilitas="${disabilitasArray.join(',')}" class="text-left align-middle text-wrap">${disabilitasText.join(', ')}</td>
-            <td data-kelompok_rentan="${kelompokRentanArray.join(',')}" class="text-left align-middle text-wrap">${kelompokRentanText.join(' ')}</td>
+            <td data-kelompok_rentan="${kelompokRentanArray.join(',')}" data-kelompok_rentan_full='${JSON.stringify(kelompokRentanData)}' class="text-left align-middle text-wrap">${kelompokRentanText.join(' ')}</td>
             <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
             <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
             <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
@@ -402,7 +416,52 @@ if (typeof $ === "undefined") {
         const disabilitasValues = disabilitas ? disabilitas.split(',') : [];
 
         const kelompok_rentan = currentRow.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan');
-        const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(',') : [];
+        const kelompokRentanValues = currentRow.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan').split(',');
+
+        $('#editKelompokRentan').select2({
+            multiple: true,
+            ajax: {
+                url: '{{ route("api.beneficiary.kelompok.rentan") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1,
+                        selected: kelompokRentanValues // Pass selected values to server
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+
+                    // If it's the first page, prepend the selected options
+                    if (params.page === 1) {
+                        const selectedOptions = kelompokRentanValues.map(value => {
+                            const option = currentRow.find(`td[data-kelompok_rentan="${value}"]`);
+                            return {
+                                id: value,
+                                text: option.text() || value
+                            };
+                        });
+
+                        // Combine selected options with search results
+                        data.results = [...selectedOptions, ...data.results];
+                    }
+
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $('#editDataModal'),
+            width: '100%',
+            closeOnSelect: false,
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+        }).val(kelompokRentanValues).trigger('change');
 
         const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
         const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
@@ -418,11 +477,6 @@ if (typeof $ === "undefined") {
             $('#editDisabilitas').val(disabilitasValues).trigger('change');
         }
 
-        $('#editKelompokRentan').val(null).trigger('change');
-        if (kelompokRentanValues.length > 0) {
-            const newOptions = kelompokRentanValues.map(value => new Option(value, value, true, true));
-            $('#editKelompokRentan').append(newOptions).trigger('change');
-        }
 
         $('#editRt').val(currentRow.find('td[data-rt]').attr('data-rt'));
         $('#editRwBanjar').val(currentRow.find('td[data-rw_banjar]').attr('data-rw_banjar'));
