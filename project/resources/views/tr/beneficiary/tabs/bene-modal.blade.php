@@ -81,7 +81,7 @@
                     <div class="row mb-3">
                         <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
                             <label class="form-label mb-0">No. Telp</label>
-                            <input type="text" class="form-control" name="no_telp" placeholder="+62 999 222 333" >
+                            <input type="text" class="form-control" name="no_telp" placeholder="" >
                         </div>
                         <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
                             <label class="form-label mb-0">Usia <span class="text-danger">*</span></label>
@@ -127,24 +127,41 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
-                            <label class="form-label mb-0">Desa <span class="text-danger">*</span></label>
-                            <div class="select2-green">
-                                <select class="form-control select2" name="desa_id" id="desa_id" required>
-                                    <option value="">Select Desa</option>
+                        {{-- desa --}}
+                        <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
+                            <div class="form-input">
+                                <label class="form-label mb-0"><strong>{{ __('cruds.desa.title') }}</strong> <span class="text-danger">*</span></label>
+                                <select class="form-control select2bs4" name="desa_id" id="desa_id" required>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
-                            <label class="form-label mb-0">Dusun <span class="text-danger">*</span></label>
-                            <div class="select2-green">
-                                <select class="form-control select2" name="dusun_id" id="dusun_id">
-                                    <option value="">Select Dusun</option>
-                                </select>
+                        {{-- dusun --}}
+                        <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center">
+                            <div class="col-11">
+                                <div class="row">
+                                    <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
+                                    <div class="col-12 pl-0">
+                                        <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-input">
+                                <label class="form-label mb-0">&nbsp;</label>
+                                <button type="button" class="form-control btn btn-success addDusun btn-sm ml-1">
+                                    <i class="bi bi-plus"></i>
+                                </button>
                             </div>
                         </div>
+                        {{-- <div class="col-sm-12 col-md-12 col-lg-6 self-center order-7 d-flex align-items-center">
+                            <label class="input-group col-form-label"><i class="bi bi-geo" data-toggle="tooltip" title="" data-original-title="Silahkan copy-paste titik koordinat lokasi kegiatan dan jelaskan nama lokasinya (bisa lebih dari satu lokasi)"></i>
+                            </label>
+                            <input type="text" class="form-control lang-input flex-grow-1 is-invalid" id="long-1738777836209" name="long[]" placeholder="Longitude">
+                            <select class="form-control select2" name="dusun_id" id="dusun_id"></select>
+                            <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div> --}}
                     </div>
-
 
                     <div class="row mb-3">
                         <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
@@ -194,7 +211,7 @@
                     <div class="row mb-3">
                         <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
                             <label class="form-label mb-0">No. Telp</label>
-                            <input type="text" class="form-control" id="editNoTelp" name="no_telp" placeholder="+62 999 222 333">
+                            <input type="text" class="form-control" id="editNoTelp" name="no_telp" placeholder="">
                         </div>
                         <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
                             <label class="form-label mb-0">Usia <span class="text-danger">*</span></label>

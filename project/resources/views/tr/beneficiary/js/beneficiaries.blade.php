@@ -25,6 +25,7 @@ if (typeof $ === "undefined") {
             placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%',
+            closeOnSelect: false,
             allowClear: true,
             ajax: {
                 url: '{{ route("api.beneficiary.kelompok.rentan") }}',
@@ -75,11 +76,13 @@ if (typeof $ === "undefined") {
             },
             dropdownParent: $('#editDataModal'),
             width: '100%',
+            closeOnSelect: false,
             placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
         });
 
         $('#disabilitas').select2({
             data: disabilitasOptions,
+            closeOnSelect: false,
             placeholder: '{{ __("global.select") ." ". __("cruds.beneficiary.penerima.disability") }} ...',
             dropdownParent: $('#ModalTambahPeserta'),
             width: '100%'
@@ -97,7 +100,6 @@ if (typeof $ === "undefined") {
 
         $(`#desa_id`).select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
-            allowClear: true,
             ajax: {
                 url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
@@ -119,12 +121,12 @@ if (typeof $ === "undefined") {
                 },
                 cache: true
             },
+            dropdownPositionOption: 'below',
             dropdownParent: $("#ModalTambahPeserta"),
         });
 
         $(`#editDesa`).select2({
             placeholder: '{{ __("global.pleaseSelect") ." ". __("cruds.desa.title") }}',
-            allowClear: true,
             ajax: {
                 url: '{{ route("api.beneficiary.desa") }}',
                 dataType: 'json',
@@ -147,6 +149,7 @@ if (typeof $ === "undefined") {
                 cache: true
             },
             dropdownParent: $("#editDataModal"),
+            dropdownPositionOption: 'below',
         });
 
         $("#dusun_id").select2({
@@ -169,7 +172,7 @@ if (typeof $ === "undefined") {
                 cache: true,
             },
             minimumInputLength: 0,
-            allowClear: true,
+            dropdownPositionOption: 'below',
             dropdownParent: $('#ModalTambahPeserta'),
         });
 
