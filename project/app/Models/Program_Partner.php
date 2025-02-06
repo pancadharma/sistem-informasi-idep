@@ -4,12 +4,14 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Program_Partner extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, LogsActivity;
     public $table = "trprogrampartner";
     protected $fillable = [
         'program_id', 
@@ -23,6 +25,12 @@ class Program_Partner extends Model
         'updated_at',
         'created_at'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
+use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Program_User extends Model
 {
-    use HasFactory, Auditable, HasRoles;
+    use HasFactory, Auditable, HasRoles, LogsActivity;
 
     protected $table = 'trprogramuser';
 
@@ -27,6 +29,12 @@ class Program_User extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

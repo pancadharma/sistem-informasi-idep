@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
+use App\Traits\Auditable;
 use App\Models\Program_Outcome;
+use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Program_Outcome_Output extends Model
 {
-    use HasFactory, Auditable, HasRoles;
+    use HasFactory, Auditable, HasRoles, LogsActivity;
 
     protected $table = 'trprogramoutcomeoutput';
 
@@ -28,6 +30,12 @@ class Program_Outcome_Output extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

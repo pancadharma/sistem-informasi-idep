@@ -11,7 +11,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class KomponenModel extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, LogsActivity;
 
     protected $table = 'mkomponenmodel';
 
@@ -20,6 +20,12 @@ class KomponenModel extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

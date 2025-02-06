@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Program;
+use App\Traits\Auditable;
 use App\Models\KomponenModel;
 use App\Models\TargetReinstra;
-
+use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Meals_Komponen_Model extends Model
 {
-    use HasFactory;
+    use HasFactory, Auditable, LogsActivity;
 
     protected $table = 'trmealskomponenmodel'; // Table name
 
@@ -25,6 +26,12 @@ class Meals_Komponen_Model extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {
