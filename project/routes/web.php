@@ -129,11 +129,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('dusun', DusunController::class);
 
     //Wilayah Call Drop Down / Select2
-    Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
-    Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
-    Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
-    Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
-    Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
+    // Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
+    // Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
+    // Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
+    // Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
+    // Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
 
     // kegiatan api
     // Route::get('kegiatan/api/desa', [WilayahController::class, 'getKegiatanDesa'])->name('api.kegiatan.desa');
@@ -276,7 +276,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('desa',              [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
         Route::get('dusun',             [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
         Route::get('kelompok-rentan',   [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
-        Route::post('dusun-simpan',     [App\Http\Controllers\API\BeneficiaryController::class, 'storeDusun'])->name('dusun.store');
+    });
+    Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
+        Route::get('prov',         [WilayahController::class, 'getProvinsi'])->name('prov');
+        Route::get('kab/{id}',     [WilayahController::class, 'getKabupaten'])->name('kab');
+        Route::get('kec/{id}',     [WilayahController::class, 'getKecamatan'])->name('kec');
+        Route::get('desa/{id}',    [WilayahController::class, 'getDesa'])->name('desa');
+        Route::get('dusun/{id}',   [WilayahController::class, 'getDusun'])->name('dusun');
+
+        Route::POST('simpan/dusun',   [WilayahController::class, 'createDusun'])->name('dusun.simpan');
     });
 
 

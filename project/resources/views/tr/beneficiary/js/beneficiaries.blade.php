@@ -199,6 +199,7 @@
                 },
                 dropdownParent: $("#ModalTambahPeserta"),
                 width: "100%",
+                minimumInputLength: 2,
             });
 
             $("#editDusun").select2({

@@ -63,5 +63,6 @@
 @include('tr.beneficiary.js.beneficiaries')
 @include('tr.beneficiary.js.program')
 @include('tr.beneficiary.tabs.program')
+@include('tr.beneficiary.tabs.dusun-modal')
 
 @endpush
