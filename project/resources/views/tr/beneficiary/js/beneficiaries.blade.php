@@ -89,6 +89,34 @@
                     cache: true,
                 },
             });
+
+            $("#editKelompokRentan").select2({
+                placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+                dropdownParent: $("#editDataModal"),
+                width: "100%",
+                allowClear: true,
+                ajax: {
+                    url: '{{ route('api.beneficiary.kelompok.rentan') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+            });
         }
 
         function initializeSelect2ForDesa() {
