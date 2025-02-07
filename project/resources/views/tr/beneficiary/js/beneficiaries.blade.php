@@ -358,6 +358,14 @@
             const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(",") : [];
             const kelompokRentanFullData = JSON.parse(currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan_full") || "[]");
 
+            const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
+            const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
+            const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
+            const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
+
+            // console.log("Data Kelompok Full Data", kelompokRentanFullData);
+            // console.log("Data Kelompok Values", kelompokRentanValues);
+
             $("#editKelompokRentan").select2({
                 multiple: true,
                 ajax: {
@@ -389,7 +397,16 @@
                 placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
             });
 
+            kelompokRentanFullData.forEach(function(item) {
+                if ($("#editKelompokRentan option[value='" + item.id + "']").length === 0) {
+                    var option = new Option(item.text, item.id, true, true);
+                    $("#editKelompokRentan").append(option);
+                }
+            });
+            // Kemudian set nilai dan trigger change
             $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
+            $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
+
 
             $("#editRowId").val(rowId);
             $("#editNama").val(currentRow.find("td[data-nama]").attr("data-nama"));
@@ -397,12 +414,6 @@
             $("#editDisabilitas").val(disabilitasValues).trigger("change");
             $("#editRt").val(currentRow.find("td[data-rt]").attr("data-rt"));
             $("#editRwBanjar").val(currentRow.find("td[data-rw_banjar]").attr("data-rw_banjar"));
-
-            const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
-            const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
-            const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
-            const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
-
             $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
             $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
 
@@ -475,11 +486,14 @@
 
                 currentRow.find("td[data-nama]").text(formData.nama).attr("data-nama", formData.nama);
                 currentRow.find("td[data-gender]").text(genderText).attr("data-gender", formData.gender);
+
                 currentRow.find("td[data-disabilitas]").html(formData.disabilitas.map((value) => {
                     const text = $('#editDisabilitas option[value="' + value + '"]').text();
                     const randomColor = getRandomColor();
                     return `<span class="badge badge-${randomColor}">${text}</span>`;
                 }).join(" ")).attr("data-disabilitas", formData.disabilitas.join(","));
+
+
                 currentRow.find("td[data-rt]").text(formData.rt).attr("data-rt", formData.rt);
                 currentRow.find("td[data-rw_banjar]").text(formData.rw_banjar).attr("data-rw_banjar", formData.rw_banjar);
                 currentRow.find("td[data-no_telp]").text(formData.no_telp).attr("data-no_telp", formData.no_telp);
@@ -552,6 +566,7 @@
 
             $("#dataTable tbody").on("click", ".edit-btn", function(e) {
                 e.preventDefault();
+                // console.log(this);
                 editRow(this);
             });
 

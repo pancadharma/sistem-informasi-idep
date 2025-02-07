@@ -219,4 +219,31 @@ class BeneficiaryController extends Controller
             ],
         ]);
     }
+
+
+    public function getActivityProgram($programId)
+    {
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $programId)->first();
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found'], 404);
+        }
+
+        $activities = [];
+        if ($program) {
+            foreach ($program->outcome as $out) {
+                foreach ($out->output as $come_output) {
+                    foreach ($come_output->activities as $activity) {
+                        $activities[] = $activity;
+                    }
+                }
+            }
+        }
+
+        return response()->json($activities);
+    }
 }
