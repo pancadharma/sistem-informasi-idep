@@ -953,7 +953,8 @@ return [
             'marjinal'                  => 'Vulnerable Group',
             'address'                   => 'Address',
             'rt'                        => 'RT',
-            'banjar'                    => 'RW / Banjar',
+            'rw'                        => 'RW',
+            'banjar'                    => 'Banjar',
             'dusun'                     => 'Hamlet',
             'desa'                      => 'Villages',
             'no_telp'                   => 'Phone No.',
@@ -968,6 +969,10 @@ return [
             'adult_age'                 => '18-59',
             'elderly'                   => 'Elderly',
             'elderly_age'               => '>60',
+            'laki'                      => 'Male',
+            'perempuan'                 => 'Female',
+            'lainnya'                   => 'Other',
+
 
         ],
     ],
