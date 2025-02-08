@@ -45,7 +45,7 @@
                     <th rowspan="2" class="text-center align-middle text-nowrap" id="headerActivityProgram">Activity Program</th>
                     <th rowspan="2" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
-                <tr>
+                <tr id="activityHeaders">
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>

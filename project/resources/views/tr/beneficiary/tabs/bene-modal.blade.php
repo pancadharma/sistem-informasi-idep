@@ -1,5 +1,5 @@
 <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog    ">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="previewModalsLabel">Preview Data</h5>
@@ -59,7 +59,7 @@
 <!-- Modal Add Beneficiaries Data -->
 <div class="modal fade" id="ModalTambahPeserta" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" theme="success">
     <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content"> 
             <div class="modal-header bg-success">
                 <h5 class="modal-title" id="ModalTambahPesertaTitle">
                     <i class="bi bi-person-plus"></i>
@@ -162,6 +162,17 @@
                         <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
                             <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="rt" required>
+                        </div>
+                    </div>
+                    {{-- select activity --}}
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="pilihActivity">
+                            <div class="select2-green">
+                                <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
+                                <select class="form-select select2 select2-multiple" name="activitySelect" id="activitySelect" multiple>
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </form>
