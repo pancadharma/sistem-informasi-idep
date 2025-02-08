@@ -45,7 +45,14 @@
             placeholder: "Select Activities",
             width: "100%",
             dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
-        })
+        });
+
+        // Initialize select2 for edit modal
+        $("#activitySelectEdit").select2({
+            placeholder: "Select Activities",
+            width: "100%",
+            dropdownParent: $("#editDataModal"),
+        });
 
         $(document).on('click', '.select-program', function() {
             const id = $(this).data('id');
@@ -62,7 +69,8 @@
             fetch(url)
                 .then(response => response.json())
                 .then(activities => {
-                    populateActivitySelect(activities);
+                    populateActivitySelect(activities, $("#activitySelect"));
+                    populateActivitySelect(activities, $("#activitySelectEdit"));
                     updateActivityHeaders(activities);
                 })
                 .catch(error => console.error('Error fetching activities:', error));
@@ -70,13 +78,24 @@
             $('#ModalDaftarProgram').modal('hide');
         });
 
-        function populateActivitySelect(activities) {
-            const activitySelect = $('#activitySelect');
-            activitySelect.empty(); // Clear existing options
+        // function populateActivitySelect(activities) {
+        //     const activitySelect = $('#activitySelect');
+        //     activitySelect.empty(); // Clear existing options
 
+        //     activities.forEach(activity => {
+        //         const option = new Option(activity.kode, activity.id, false, false);
+        //         activitySelect.append(option).trigger('change');
+        //     });
+        // }
+
+
+        function populateActivitySelect(activities, selectElement) {
+            selectElement.empty(); // Clear existing options
+            
             activities.forEach(activity => {
                 const option = new Option(activity.kode, activity.id, false, false);
-                activitySelect.append(option).trigger('change');
+                console.log(option)
+                selectElement.append(option).trigger('change');
             });
         }
 
