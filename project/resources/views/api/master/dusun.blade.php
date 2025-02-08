@@ -3,7 +3,7 @@
         {{ __('global.create')  .' '. __('cruds.dusun.title')}}
     </div>
     <div class="card-body">
-        <form id="submit_dusun" action="{{ route('api.dusun.simpan')}}" method="POST" autocomplete="off" novalidate>
+        <form id="submit_dusun" action="{{ route('api.beneficiary.dusun.simpan')}}" method="POST" autocomplete="off" novalidate>
             @csrf
             @method('POST')
 

@@ -91,7 +91,7 @@
                             <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
                             <select class="form-control" name="gender" required>
                                 <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
-                                <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan]') }}</option>
+                                <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
                                 <option value="lainnya">{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
                             </select>
                         </div>
@@ -211,9 +211,9 @@
                         <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2">
                             <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
                             <select class="form-control" id="editGender" name="gender" required>
-                                <option value="laki">Laki-laki</option>
-                                <option value="perempuan">Perempuan</option>
-                                <option value="lainnya">Lainnya</option>
+                                <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
+                                <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
+                                <option value="lainnya">{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
                             </select>
                         </div>
                     </div>

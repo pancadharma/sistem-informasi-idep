@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\API\BeneficiaryController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -276,6 +277,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('desa',              [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
         Route::get('dusun',             [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
         Route::get('kelompok-rentan',   [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
+        Route::POST('dusun/save',       [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
     Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
         Route::get('prov',         [WilayahController::class, 'getProvinsi'])->name('prov');
@@ -284,7 +286,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('desa/{id}',    [WilayahController::class, 'getDesa'])->name('desa');
         Route::get('dusun/{id}',   [WilayahController::class, 'getDusun'])->name('dusun');
 
-        Route::POST('simpan/dusun',   [WilayahController::class, 'createDusun'])->name('dusun.simpan');
+        Route::POST('dusun/save',  [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
 
 
