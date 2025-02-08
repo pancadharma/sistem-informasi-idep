@@ -47,7 +47,7 @@
                 </tr>
                 <tr>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-toggle="tooltip" data-placement="top"></i></sup></th>
+                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
                     <th class="align-middle text-center">0-17</th>
