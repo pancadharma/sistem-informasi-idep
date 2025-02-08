@@ -11,7 +11,7 @@
                         {{ __('cruds.beneficiary.penerima.label') }}
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" id="description-nav-tab" data-toggle="pill" href="#description-tab" role="tab" aria-controls="description-tab" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.description') }}
                     </a>
@@ -30,7 +30,7 @@
                     <a class="nav-link" id="custom-tabs-four-report-tab" data-toggle="pill" href="#tab-penulis" role="tab" aria-controls="tab-penulis" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.penulis') }}
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
         <div class="card-body">
