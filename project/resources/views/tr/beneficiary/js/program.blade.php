@@ -42,17 +42,58 @@
 
         // Initialize select2 for activity selection
         $("#activitySelect").select2({
-            placeholder: "Select Activities",
+            placeholder: "HAH Activities...",
             width: "100%",
             dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
         });
 
         // Initialize select2 for edit modal
         $("#activitySelectEdit").select2({
-            placeholder: "Select Activities",
+            placeholder: "Edit Activities",
             width: "100%",
             dropdownParent: $("#editDataModal"),
         });
+
+        // $(document).on('click', '.select-program', function() {
+        //     const id = $(this).data('id');
+        //     const kode = $(this).data('kode');
+        //     const nama = $(this).data('nama');
+        //     const url = "{{ route('api.program.activity', ':id') }}".replace(':id', id);
+
+        //     $('#program_id').val(id);
+        //     $('#kode_program').val(kode);
+        //     $('#nama_program').val(nama).prop('disabled', true);
+
+        //     // Fetch activities based on the selected program
+        //     // fetch(`/api/getActivityProgram/${id}`)
+        //     fetch(url)
+        //         .then(response => response.json())
+        //         .then(activities => {
+        //             populateActivitySelect(activities, $("#activitySelect"));
+        //             populateActivitySelect(activities, $("#activitySelectEdit"));
+        //             updateActivityHeaders(activities);
+        //         })
+        //         .catch(error => console.error('Error fetching activities:', error));
+
+        //     $('#ModalDaftarProgram').modal('hide');
+        // });
+
+
+        // function populateActivitySelect(activities, selectElement) {
+            
+        //     activities.forEach(activity => {
+        //         const option = new Option(activity.kode, activity.id, false, false);
+        //         selectElement.empty(); // Clear existing options
+        //         selectElement.append('<option value="">Pilih Aja Dulu</option>');
+
+        //         $.each(activity, function() {
+        //             selectElement.select2();
+        //             let dataoptions = '<option value="' + activity.id + '" data-id="' + activity.id + '" title="'+ activity.nama+'">' + activity.kode + '</option>';
+        //             console.log("coba aja ini", dataoptions);
+        //             selectElement.append(dataoptions).trigger('change');
+        //         });
+        //     });
+        // }
 
         $(document).on('click', '.select-program', function() {
             const id = $(this).data('id');
@@ -65,7 +106,6 @@
             $('#nama_program').val(nama).prop('disabled', true);
 
             // Fetch activities based on the selected program
-            // fetch(`/api/getActivityProgram/${id}`)
             fetch(url)
                 .then(response => response.json())
                 .then(activities => {
@@ -78,25 +118,19 @@
             $('#ModalDaftarProgram').modal('hide');
         });
 
-        // function populateActivitySelect(activities) {
-        //     const activitySelect = $('#activitySelect');
-        //     activitySelect.empty(); // Clear existing options
-
-        //     activities.forEach(activity => {
-        //         const option = new Option(activity.kode, activity.id, false, false);
-        //         activitySelect.append(option).trigger('change');
-        //     });
-        // }
-
-
         function populateActivitySelect(activities, selectElement) {
-            selectElement.empty(); // Clear existing options
-            
+            // Clear existing options before adding new ones
+            selectElement.empty().append('Pilih Aja Dulu');
+
             activities.forEach(activity => {
+                // Create and append option for each activity
                 const option = new Option(activity.kode, activity.id, false, false);
-                console.log(option)
-                selectElement.append(option).trigger('change');
+                option.setAttribute('title', activity.nama); // Set title attribute for tooltip or additional info
+                selectElement.append(option);
             });
+
+            // Refresh Select2 after adding options
+            selectElement.select2();
         }
 
         function updateActivityHeaders(activities) {

@@ -428,7 +428,20 @@
             $("#dataForm")[0].reset();
             $("#kelompok_rentan").val(null).trigger("change");
             $("#disabilitas").val(null).trigger("change");
+            $("#activitySelect").val(null).trigger("change");
+            $("#desa_id").val(null).trigger("change");
+            $("#dusun_id").val(null).trigger("change");
             $("#ModalTambahPeserta").modal("hide");
+        }
+
+        function resetFormEdit() {
+            $("#editDataForm")[0].reset();
+            $("#kelompok_rentan").val(null).trigger("change");
+            $("#editDisabilitas").val(null).trigger("change");
+            $("#activitySelectEdit").val(null).trigger("change");
+            $("#editDesa").val(null).trigger("change");
+            $("#editDusun").val(null).trigger("change");
+            $("#editDataModal").modal("hide");
         }
 
         function editRow(row) {
@@ -446,9 +459,6 @@
             const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
             const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
             const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
-
-            // console.log("Data Kelompok Full Data", kelompokRentanFullData);
-            // console.log("Data Kelompok Values", kelompokRentanValues);
 
             $("#editKelompokRentan").select2({
                 multiple: true,
@@ -487,6 +497,23 @@
                     $("#editKelompokRentan").append(option);
                 }
             });
+
+            const selectedActivities = [];
+
+            $('#activityHeaders th.activity-header').each((index, header) => {
+                const activityId = $(header).data('activity-id');
+                const isChecked = currentRow.find(`td:eq(${11 + index})`).text().includes('✔️'); // Adjust index based on your table structure
+                if (isChecked) {
+                    selectedActivities.push(activityId.toString());
+                }
+            });
+
+            console.info("Activities: ", selectedActivities)
+
+            // Populate #activitySelectEdit with the selected activities
+            $("#activitySelectEdit").val(selectedActivities).trigger('change');
+
+
             // Kemudian set nilai dan trigger change
             $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
             $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
@@ -590,6 +617,7 @@
 
                 updateAgeCheckmarks(currentRow.find(".usia-cell"));
 
+                resetFormEdit();
                 $("#editDataModal").modal("hide");
 
                 $("#disabilitas").val(null).trigger("change");
