@@ -346,16 +346,19 @@
             const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
 
             // Get the selected activities data
-            const selectedActivities = $("#activitySelect").val();
-
+            // const selectedActivities = $("#activitySelect").val();
+            const selectedActivities = $("#activitySelect").val() || [];
+            
             // Get all activity headers
             const activityHeaders = $('#activityHeaders th.activity-header');
+            
 
-            // Prepare cells for each activity
+            // Prepare cells for each activity with data-id
             const activityCells = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
                 const isChecked = selectedActivities.includes(activityId.toString());
-                return `<td class="text-center align-middle">${isChecked ? '✔️' : ''}</td>`;
+                const checkmark = isChecked ? '✔️' : '';
+                return `<td class="text-center align-middle" data-program-activity-id="${activityId}">${checkmark}</td>`;
             }).get().join('');
 
             const newRow = `
@@ -498,20 +501,28 @@
                 }
             });
 
-            const selectedActivities = [];
+            // const selectedActivities = [];
 
-            $('#activityHeaders th.activity-header').each((index, header) => {
+            const activityHeaders = $('#activityHeaders th.activity-header');
+
+            const selectedActivities = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
-                const isChecked = currentRow.find(`td:eq(${11 + index})`).text().includes('✔️'); // Adjust index based on your table structure
-                if (isChecked) {
-                    selectedActivities.push(activityId.toString());
-                }
-            });
+                // Check if the cell has a data-program-activity-id that matches the header's activity-id
+                const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
+                const isChecked = cell.text().trim() === '✔️'; // Assuming checkmark still indicates selection
+                return isChecked ? activityId.toString() : null;
+            }).get().filter(Boolean);
 
+            // Ensure Select2 is initialized
+            if (!$('#activitySelectEdit').data('select2')) {
+                $('#activitySelectEdit').select2({
+                    placeholder: "Select Activities",
+                    allowClear: true
+                });
+            }
+
+            $('#activitySelectEdit').val(selectedActivities).trigger('change');
             console.info("Activities: ", selectedActivities)
-
-            // Populate #activitySelectEdit with the selected activities
-            $("#activitySelectEdit").val(selectedActivities).trigger('change');
 
 
             // Kemudian set nilai dan trigger change
