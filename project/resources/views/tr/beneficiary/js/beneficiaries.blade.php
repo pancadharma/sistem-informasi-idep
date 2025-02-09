@@ -588,6 +588,11 @@
                     formData.jenis_kelompok = [formData.jenis_kelompok];
                 }
 
+                const updatedActivities = $("#activitySelectEdit").val() || [];
+                // Update activities in the row
+                const activityHeaders = $('#activityHeaders th.activity-header');
+
+
                 const genderText = $("#editGender option:selected").text();
 
                 const kelompokRentanData = $("#editKelompokRentan").select2("data").map(item => ({
@@ -605,6 +610,18 @@
                     console.error("Row not found");
                     return;
                 }
+
+                
+                activityHeaders.each(function(index) {
+                    const activityId = $(this).data('activity-id');
+                    const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
+                    if (updatedActivities.includes(activityId.toString())) {
+                        cell.text('✔️'); // Set checkmark if activity is in updated list
+                    } else {
+                        cell.text(''); // Clear checkmark if activity is not in updated list
+                    }
+                });
+
 
                 currentRow.find("td[data-nama]").text(formData.nama).attr("data-nama", formData.nama);
                 currentRow.find("td[data-gender]").text(genderText).attr("data-gender", formData.gender);
