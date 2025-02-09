@@ -310,7 +310,7 @@
 
 
 
-<x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="fas fa-bolt" size='lg' static-backdrop>
+<x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop>
     <form id="editDataForm" class="big">
         <input type="hidden" id="editRowId">
 
@@ -412,11 +412,13 @@
         </div>
     </form>
     <x-slot name="footerSlot">
+        <button	type='button' class='btn btn-secondary' data-dismiss='modal'>{{ __('global.close') }}</button>
+        <button	type='button' class='btn btn-primary' id='updateDataBtn'>{{ __('global.update') }}</button>
     </x-slot>
 </x-adminlte-modal>
 
 
-<x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="fas fa-bolt" size='lg' static-backdrop >
+<x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop >
     <form id="dataForm" class="big">
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
@@ -478,7 +480,7 @@
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
                 <div class="form-input">
                     <label class="form-label mb-0"><strong>{{ __('cruds.desa.title') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-control select2bs4" name="desa_id" id="desa_id" required>
+                    <select class="form-control select2" name="desa_id" id="desa_id" required>
                     </select>
                 </div>
             </div>
@@ -516,7 +518,7 @@
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivity">
                 <div class="select2-green">
                     <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-control select2 select2-multiple" name="activitySelect" id="activitySelect" multiple>
+                    <select class="form-select select2 select2-multiple" name="activitySelect" multiple id="activitySelect" >
                         <!-- Options will be populated dynamically -->
                     </select>
                 </div>
