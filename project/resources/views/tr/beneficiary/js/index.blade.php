@@ -4,7 +4,7 @@
             serverSide: true,
             processing: true,
             // responsive: true,
-            ajax: '{{ route('api.meals.datatable') }}',
+            ajax: '{{ route('api.beneficiary.datatable') }}',
             columns: [
                 {
                     data: 'DT_RowIndex',

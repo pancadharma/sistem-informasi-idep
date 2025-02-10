@@ -43,6 +43,11 @@ class UserProfileController extends Controller
                 return redirect()->route('profile.show', ['identifier' => auth()->user()->username]);
                 // abort(404, 'User Not Found');
             }
+            // if user does not have jabatan_id then flash message
+            if (!$user->jabatan_id) {
+                session()->flash('warning', 'User does not have a role assigned');
+            }
+            
         } else {
             abort(403, 'Dilarang access');
             return redirect()->route('profile.show', ['identifier' => auth()->user()->username]);

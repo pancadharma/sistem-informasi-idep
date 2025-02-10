@@ -8,10 +8,10 @@
                 </button>
                 <li class="nav-item">
                     <a class="nav-link active" id="beneficiaries-tab" data-toggle="pill" href="#tab-beneficiaries" role="tab" aria-controls="tab-beneficiaries" aria-selected="true">
-                        {{ __('cruds.meals.penerima.label') }}
+                        {{ __('cruds.beneficiary.penerima.label') }}
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link" id="description-nav-tab" data-toggle="pill" href="#description-tab" role="tab" aria-controls="description-tab" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.description') }}
                     </a>
@@ -30,13 +30,13 @@
                     <a class="nav-link" id="custom-tabs-four-report-tab" data-toggle="pill" href="#tab-penulis" role="tab" aria-controls="tab-penulis" aria-selected="false">
                         {{ __('cruds.kegiatan.tabs.penulis') }}
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content" id="details-kegiatan-tabContent">
                 <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
-                    @include('tr.meals.tabs.beneficiaries')
+                    @include('tr.beneficiary.tabs.beneficiaries')
                 </div>
                 <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
                     {{-- @include('tr.kegiatan.tabs.description') --}}

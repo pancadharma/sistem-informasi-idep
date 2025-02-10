@@ -27,6 +27,7 @@ use App\Models\Program_Outcome_Output_Activity;
 use App\Models\ProgramGoal;
 use App\Models\ProgramObjektif;
 use App\Models\Program_Report_Schedule;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -165,7 +166,7 @@ class ProgramController extends Controller
                     \Log::info('No files found in the request.');
                 }
             }
-            
+
             // save program partner
             $program->partner()->sync($request->input('partner', []));
             // save program lokasi
@@ -252,11 +253,8 @@ class ProgramController extends Controller
         $kelompokMarjinal = Kelompok_Marjinal::pluck('nama', 'id');
         $KaitanSDGs = KaitanSdg::pluck('nama', 'id');
 
-        // Eager load related models
-        //$program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome']);
         $program->load(['targetReinstra', 'kelompokMarjinal', 'kaitanSDG', 'lokasi', 'pendonor', 'outcome', 'jadwalreport', 'goal', 'objektif', 'staff.peran', 'partner']);
 
-        // Dynamically fetch media files based on program ID
         $mediaFiles = $program->getMedia('program_' . $program->id);
 
         // Prepare preview data for all media files
@@ -281,13 +279,8 @@ class ProgramController extends Controller
         }
 
         foreach ($program->staff as $staff) {
-            // $staff->load('peran'); // Not necessary for pivot data
             $staffdata = $staff->pivot->peran_id;
-            // dd($staffdata); // This will stop execution and dump the value of $staffdata
         }
-
-        // return $program->staff;
-
         return view('tr.program.edit', compact('program', 'initialPreview', 'initialPreviewConfig'));
     }
 
@@ -460,11 +453,35 @@ class ProgramController extends Controller
     }
 
     // Method digunakan untuk pencaraian data di select2 program tab donor
+    // public function getProgramDonor(Request $request)
+    // {
+    //     $search = $request->input('search');
+    //     $page = $request->input('page', 1);
+    //     $pendonor = MPendonor::where('nama', 'like', "%{$search}%")->get();
+    //     return response()->json($pendonor);
+    // }
+
     public function getProgramDonor(Request $request)
     {
-        $search = $request->input('search');
+        // Cache individual pendonor details
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'id' => 'nullable|integer', // Add id validation
+        ]);
+
+        // Retrieve search, page, and id inputs
+        $search = $request->input('search', '');
         $page = $request->input('page', 1);
-        $pendonor = MPendonor::where('nama', 'like', "%{$search}%")->get();
+        $id = $request->input('id', null);
+
+        // Build query to include both name search and id check
+        $pendonor = MPendonor::when($id, function ($query, $id) {
+            return $query->where('id', $id);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+        $pendonor = $pendonor->paginate(20, ['*'], 'page', $page);
         return response()->json($pendonor);
     }
 

@@ -1,3 +1,4 @@
+
 <?php
 
 return [
@@ -44,6 +45,7 @@ return [
     'kegiatan'          => 'Activity',
     'evaluasi'          => 'Evaluation',
     'meals'             => 'MEALS',
+    'beneficiary'       => 'Beneficiary',
     'log'               => 'Log',
     'laporan'           => 'Report',
     'cari'              => 'Search',

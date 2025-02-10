@@ -41,6 +41,21 @@ class MPendonor extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    /**
+     * Mutator for nama to ensure proper formatting
+     *
+     * @param string $value
+     * @return string
+     */
+    public function getNamaAttribute($value)
+    {
+        return ucwords(strtolower($value));
+    }
 
     public function mpendonnorkategori()
     {

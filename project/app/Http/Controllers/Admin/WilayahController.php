@@ -9,6 +9,7 @@ use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDusunRequest;
 use App\Models\Partner;
 use App\Models\User;
 
@@ -241,6 +242,64 @@ class WilayahController extends Controller
                 'more' => $Jabatan->hasMorePages()
             ]
         ]);
+    }
+
+
+    public function createDusun(StoreDusunRequest $request){
+
+        // call method store in DusunController
+        $dusunController = new DusunController();
+        return $dusunController->store($request);
+        // try {
+        //     $data = $request->validated();
+        //     Dusun::create($data);
+        //     return response()->json([
+        //         'success'   => true,
+        //         'message'   =>  __('cruds.data.data') .' '.__('cruds.dusun.title') .' '. $request->nama .' '. __('cruds.data.added'),
+        //         'status'    => Response::HTTP_CREATED,
+        //         'data'      => $data,
+        //     ]);
+        // } catch (ValidationException $e) {
+        //     // Handle validation errors
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Validation failed.',
+        //         'errors'  => $e->errors(),
+        //         'data'  => $request,
+        //     ], 422);
+
+        // } catch (ModelNotFoundException $e) {
+        //     // Handle model not found errors
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Resource not found.',
+        //         'data'  => $request,
+        //     ], 404);
+
+        // } catch (HttpException $e) {
+        //     // Handle HTTP-specific exceptions
+        //     return response()->json([
+        //         'success'   => false,
+        //         'message'   => $e->getMessage(),
+        //         'data'      => $request,
+        //     ], $e->getStatusCode());
+
+        // } catch (Exception $e) {
+        //     // Handle all other exceptions
+        //     return response()->json([
+        //         'success'   => false,
+        //         'data'      => $request,
+        //         'message'   => 'An error occurred.',
+        //         'error'     => $e->getMessage(),
+        //     ], 500);
+        // }catch (QueryException $e){
+        //     return response()->json([
+        //         'success'   => false,
+        //         'data'      => $request,
+        //         'message'   => 'An error occurred.',
+        //         'error'     => $e->getMessage(),
+        //     ], 500);
+        // }
     }
 
 

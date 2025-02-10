@@ -1,5 +1,11 @@
 {{-- delete the form tag --}}
 <div class="col-md-12">
+<button type="button" id="addDonasiButton" class="btn btn-primary btn-flat">
+    <i class="bi bi-plus"></i>
+</button>
+</div>
+
+<div class="col-md-12 d-none">
     <div class="form-group">
         <label for="donor" class="small control-label">
             <strong>

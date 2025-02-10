@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\API\BeneficiaryController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -129,11 +130,11 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('dusun', DusunController::class);
 
     //Wilayah Call Drop Down / Select2
-    Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
-    Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
-    Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
-    Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
-    Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
+    // Route::get('/api/prov', [WilayahController::class, 'getProvinsi'])->name('api.prov');
+    // Route::get('/api/kab/{id}', [WilayahController::class, 'getKabupaten'])->name('api.kab');
+    // Route::get('/api/kec/{id}', [WilayahController::class, 'getKecamatan'])->name('api.kec');
+    // Route::get('/api/desa/{id}', [WilayahController::class, 'getDesa'])->name('api.desa');
+    // Route::get('/api/dusun/{id}', [WilayahController::class, 'getDusun'])->name('api.dusun');
 
     // kegiatan api
     // Route::get('kegiatan/api/desa', [WilayahController::class, 'getKegiatanDesa'])->name('api.kegiatan.desa');
@@ -266,17 +267,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
     // MEALS
-    Route::group(['prefix' => 'meals', 'as' => 'meals.'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\MealsController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\Admin\MealsController::class, 'create'])->name('create');
+    Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
+        Route::get('/',                 [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
+        Route::get('/create',           [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
     });
-    Route::group(['prefix' => 'meals/api/', 'as' => 'api.meals.'], function () {
-        Route::get('datatable', [App\Http\Controllers\API\MealsController::class, 'getMealsDatatable'])->name('datatable');
-        Route::get('program', [App\Http\Controllers\API\MealsController::class, 'getPrograms'])->name('program');
-        Route::get('desa', [App\Http\Controllers\API\MealsController::class, 'getDesa'])->name('desa');
-        Route::get('dusun', [App\Http\Controllers\API\MealsController::class, 'getDusuns'])->name('dusun');
-        Route::get('kelompok-rentan', [App\Http\Controllers\API\MealsController::class, 'getKelompokRentan'])->name('kelompok.rentan');
-        Route::post('dusun-simpan', [App\Http\Controllers\API\MealsController::class, 'storeDusun'])->name('dusun.store');
+    Route::group(['prefix' => 'beneficiary/api/', 'as' => 'api.beneficiary.'], function () {
+        Route::get('datatable',             [App\Http\Controllers\API\BeneficiaryController::class, 'getMealsDatatable'])->name('datatable');
+        Route::get('program',               [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('program');
+        Route::get('desa',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
+        Route::get('dusun',                 [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
+        Route::get('kelompok-rentan',       [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
+        Route::POST('dusun/save',           [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
+        Route::GET('activity/{id}',         [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
+    });
+    Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
+        Route::get('prov',                  [WilayahController::class, 'getProvinsi'])->name('prov');
+        Route::get('kab/{id}',              [WilayahController::class, 'getKabupaten'])->name('kab');
+        Route::get('kec/{id}',              [WilayahController::class, 'getKecamatan'])->name('kec');
+        Route::get('desa/{id}',             [WilayahController::class, 'getDesa'])->name('desa');
+        Route::get('dusun/{id}',            [WilayahController::class, 'getDusun'])->name('dusun');
+        Route::GET('activity/{id}',         [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
+
+        Route::POST('dusun/save',  [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
 
 

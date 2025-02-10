@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.meals.list'))
+@section('subtitle', __('cruds.beneficiary.list'))
 @section('content_header_title')
     @can('meals_access')
-        <a class="btn-success btn" href="{{ route('meals.create') }}" title="{{ __('cruds.meals.add') }}">
-            {{ __('global.create') .' '.__('cruds.meals.label') }}
+        <a class="btn-success btn" href="{{ route('beneficiary.create') }}" title="{{ __('cruds.beneficiary.add') }}">
+            {{ __('global.create') .' '.__('cruds.beneficiary.label') }}
         </a>
     @endcan
 @endsection
-@section('sub_breadcumb', __('cruds.meals.list'))
+@section('sub_breadcumb', __('cruds.beneficiary.list'))
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -20,30 +20,30 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="bi bi-graph-up"></i>
-                {{__('cruds.meals.list')}}
+                {{__('cruds.beneficiary.list')}}
             </h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('meals.create') }}`"
-                    title="{{ __('global.create') . ' ' . __('cruds.meals.label') }}">
+                <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('beneficiary.create') }}`"
+                    title="{{ __('global.create') . ' ' . __('cruds.beneficiary.label') }}">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
         </div>
 
         <div class="card-body table-responsive">
-            <table id="mealsTable" class="table responsive-table table-bordered datatable-meals" width="100%">
+            <table id="mealsTable" class="table responsive-table table-bordered datatable-beneficiary" width="100%">
                 {{-- <thead class="text-nowrap">
                     <tr>
                         <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
-                        <th>{{__('cruds.meals.nama')}}</th>
-                        <th>{{__('cruds.meals.kode')}}</th>
-                        <th>{{__('cruds.meals.program_code')}}</th>
-                        <th>{{__('cruds.meals.program_name')}}</th>
-                        <th>{{__('cruds.meals.description')}}</th>
-                        <th>{{__('cruds.meals.achievments')}}</th>
-                        <th>{{__('cruds.meals.progress')}}</th>
-                        <th>{{__('cruds.meals.to_complete')}}</th>
-                        <th>{{__('cruds.meals.status')}}</th>
+                        <th>{{__('cruds.beneficiary.nama')}}</th>
+                        <th>{{__('cruds.beneficiary.kode')}}</th>
+                        <th>{{__('cruds.beneficiary.program_code')}}</th>
+                        <th>{{__('cruds.beneficiary.program_name')}}</th>
+                        <th>{{__('cruds.beneficiary.description')}}</th>
+                        <th>{{__('cruds.beneficiary.achievments')}}</th>
+                        <th>{{__('cruds.beneficiary.progress')}}</th>
+                        <th>{{__('cruds.beneficiary.to_complete')}}</th>
+                        <th>{{__('cruds.beneficiary.status')}}</th>
                         <th>{{__('global.action')}}</th>
                     </tr>
                 </thead> --}}
@@ -64,7 +64,7 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
-@include('tr.meals.js.index')
+@include('tr.beneficiary.js.index')
 @endpush
 
 

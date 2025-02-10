@@ -19,7 +19,7 @@
     function formatErrorMessages(errors) {
         let message = '<br><ul style="text-align:left!important">';
         for (const field in errors) {
-            errors[field].forEach(function(error) {
+            errors[ field ].forEach(function (error) {
                 message += `<li>${error}</li>`;
             });
         }
@@ -41,7 +41,7 @@
     function addInvalidClassToFields(errors) {
         for (const field in errors) {
             if (errors.hasOwnProperty(field)) {
-                errors[field].forEach(function(error) {
+                errors[ field ].forEach(function (error) {
                     const inputField = $(`[name="${field}"]`);
                     if (inputField.length) {
                         inputField.addClass('is-invalid');
@@ -55,7 +55,7 @@
         }
 
         // Attach an event listener to remove the invalid class and message on input change
-        $('input, textarea, select').on('input change', function() {
+        $('input, textarea, select').on('input change', function () {
             $(this).removeClass('is-invalid');
             $(this).next('.invalid-feedback').remove();
         });
@@ -71,7 +71,7 @@
     //     decimal: ',',
     //     affixesStay: false
     // });
-    $(document).ready(function() {
+    $(document).ready(function () {
         new AutoNumeric('#totalnilai', {
             digitGroupSeparator: '.',
             decimalCharacter: ',',
@@ -92,7 +92,7 @@
             uploadAsync: false,
             browseOnZoneClick: true,
             maxFileSize: 4096,
-            allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls',
+            allowedFileExtensions: [ 'jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls',
                 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
@@ -109,36 +109,36 @@
                 'txt': '<i class="fas fa-file-alt text-info"></i>',
             },
             previewFileExtSettings: {
-                'doc': function(ext) {
+                'doc': function (ext) {
                     return ext.match(/(doc|docx)$/i);
                 },
-                'xls': function(ext) {
+                'xls': function (ext) {
                     return ext.match(/(xls|xlsx)$/i);
                 },
-                'ppt': function(ext) {
+                'ppt': function (ext) {
                     return ext.match(/(ppt|pptx)$/i);
                 },
-                'zip': function(ext) {
+                'zip': function (ext) {
                     return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
                 },
-                'htm': function(ext) {
+                'htm': function (ext) {
                     return ext.match(/(htm|html)$/i);
                 },
-                'txt': function(ext) {
+                'txt': function (ext) {
                     return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
                 },
-                'mov': function(ext) {
+                'mov': function (ext) {
                     return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
                 },
-                'mp3': function(ext) {
+                'mp3': function (ext) {
                     return ext.match(/(mp3|wav)$/i);
                 }
             },
             overwriteInitial: false,
-        }).on('fileloaded', function(event, file, previewId, index, reader) {
+        }).on('fileloaded', function (event, file, previewId, index, reader) {
             fileIndex++;
             var uniqueId = 'file-' + fileIndex;
-            fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
+            fileCaptions[ uniqueId ] = file.name; // Track the file with its unique ID
             $('#captions-container').append(
                 `<div class="form-group" id="caption-group-${uniqueId}">
                     <label for="caption-${uniqueId}"> {{ __('cruds.program.ket_file') }} ${file.name}</label>
@@ -147,25 +147,25 @@
             );
             // Store the unique identifier in the file preview element
             $(`#${previewId}`).attr('data-unique-id', uniqueId);
-        }).on('fileremoved', function(event, id) {
+        }).on('fileremoved', function (event, id) {
             // Remove the corresponding caption input
             var uniqueId = $(`#${id}`).attr('data-unique-id');
-            delete fileCaptions[uniqueId]; // Remove the file from the tracking object
+            delete fileCaptions[ uniqueId ]; // Remove the file from the tracking object
             $(`#caption-group-${uniqueId}`).remove();
-        }).on('fileclear', function(event) {
+        }).on('fileclear', function (event) {
             // Clear all caption inputs when files are cleared
             fileCaptions = {}; // Reset the tracking object
             $('#captions-container').empty();
-        }).on('filebatchselected', function(event, files) {
+        }).on('filebatchselected', function (event, files) {
             // Clear all caption inputs when new files are selected
             fileCaptions = {}; // Reset the tracking object
             $('#captions-container').empty();
             // Iterate over each selected file and trigger the fileloaded event manually
             for (var i = 0; i < files.length; i++) {
-                var file = files[i];
+                var file = files[ i ];
                 fileIndex++;
                 var uniqueId = 'file-' + fileIndex;
-                fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
+                fileCaptions[ uniqueId ] = file.name; // Track the file with its unique ID
                 $('#captions-container').append(
                     `<div class="form-group" id="caption-group-${uniqueId}">
                         <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
@@ -191,9 +191,9 @@
                 url: data_kelompokmarjinal,
                 method: 'GET',
                 delay: 1000,
-                processResults: function(data) {
+                processResults: function (data) {
                     return {
-                        results: data.map(function(item) {
+                        results: data.map(function (item) {
                             return {
                                 id: item.id,
                                 text: item.nama // Mapping 'nama' to 'text'
@@ -201,7 +201,7 @@
                         })
                     };
                 },
-                data: function(params) {
+                data: function (params) {
                     var query = {
                         search: params.term,
                         page: params.page || 1
@@ -221,9 +221,9 @@
                 url: data_reinstra,
                 method: 'GET',
                 delay: 1000,
-                processResults: function(data) {
+                processResults: function (data) {
                     return {
-                        results: data.map(function(item) {
+                        results: data.map(function (item) {
                             return {
                                 id: item.id,
                                 text: item.nama // Mapping 'nama' to 'text'
@@ -231,7 +231,7 @@
                         })
                     };
                 },
-                data: function(params) {
+                data: function (params) {
                     var query = {
                         search: params.term,
                         page: params.page || 1
@@ -253,9 +253,9 @@
                 url: data_sdg,
                 method: 'GET',
                 delay: 1000,
-                processResults: function(data) {
+                processResults: function (data) {
                     return {
-                        results: data.map(function(item) {
+                        results: data.map(function (item) {
                             return {
                                 id: item.id,
                                 text: item.nama // Mapping 'nama' to 'text'
@@ -263,7 +263,7 @@
                         })
                     };
                 },
-                data: function(params) {
+                data: function (params) {
                     var query = {
                         search: params.term,
                         page: params.page || 1
@@ -273,110 +273,81 @@
             }
         });
 
-        // CREATE PROGRAM AND SAVE SOME DETAILS
-        // $('#createProgram').on('submit', function(e) {
-        //     e.preventDefault();
-        //     $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-        //     var formData = new FormData(this);
 
-        //     var fieldsToRemove = [];
-        //     $('input.currency').each(function() {
-        //         fieldsToRemove.push($(this).attr('name'));
-        //     });
-        //     // Remove original masked `nilaidonasi` values from FormData
-        //     fieldsToRemove.forEach(function(field) {
-        //         formData.delete(field);
-        //     });
-        //     // Unmask all AutoNumeric fields and append unmasked values
-        //     $('input.currency').each(function() {
-        //         var unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-        //         formData.append($(this).attr('name'), unmaskedValue);
-        //     });
-
-        //     $.ajax({
-        //         url: "{{ route('program.store') }}",
-        //         method: 'POST',
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         beforeSend: function() {
-        //             Toast.fire({
-        //                 icon: "info",
-        //                 title: "Processing...",
-        //                 timer: 3000,
-        //                 timerProgressBar: true,
-        //             });
-        //         },
-        //         success: function(response) {
-        //             setTimeout(() => {
-        //                 if (response.success === true) {
-        //                     Swal.fire({
-        //                         title: "{{ __('global.success') }}",
-        //                         text: response.message,
-        //                         icon: "success",
-        //                         timer: 500,
-        //                         timerProgressBar: true,
-        //                     });
-        //                     $(this).trigger('reset');
-        //                     $('#createProgram')[0].reset();
-        //                     $('#createProgram').trigger('reset');
-        //                     $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
-        //                     // $(".btn-tool").trigger('click');
-        //                     $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
-        //                     setTimeout(function() {
-        //                         window.location.href ="{{ route('program.index') }}"; //redirect into index program
-        //                     }, 500);
-        //                 }
-        //             }, 500);
-        //         },
-        //         error: function(xhr, textStatus, errorThrown) {
-        //             $('#createProgram').find('button[type="submit"]').removeAttr('disabled');
-        //             const errorMessage = getErrorMessage(xhr);
-        //             const response = JSON.parse(xhr.responseText);
-        //             if (response.errors) {
-        //                 addInvalidClassToFields(response.errors);
-        //             }
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Error!',
-        //                 html: errorMessage,
-        //                 confirmButtonText: 'Okay'
-        //             });
-        //         },
-        //         complete: function() {
-        //             setTimeout(() => {
-        //                 $(this).find('button[type="submit"]').removeAttr(
-        //                     'disabled');
-        //             }, 500);
-        //         }
-        //     });
-
-        // });
-
-        $('#createProgram').on('submit', function(e) {
+        $('#createProgram').on('submit', function (e) {
             e.preventDefault();
             $('#outcomeTemplate').find('textarea, input').attr('disabled', true);
             const $form = $(this);
             $form.find('button[type="submit"]').attr('disabled', true);
+
             let formData = new FormData(this);
 
-            // Remove original masked values from FormData
-            $('input.currency').each(function() {
-                formData.delete($(this).attr('name'));
-                const unmaskedValue = AutoNumeric.getAutoNumericElement(this).getNumericString();
-                formData.append($(this).attr('name'), unmaskedValue);
-            });
-
             // Collect selected staff and peran data from the dynamically added rows
-            $('.staff-select').each(function() {
+            $('.staff-select').each(function () {
                 formData.append('staff[]', $(this).val());
             });
-            $('.peran-select').each(function() {
+            $('.peran-select').each(function () {
                 formData.append('peran[]', $(this).val());
             });
 
             $('#outcomeTemplate').find('textarea, input').removeAttr('disabled');
-            console.log(formData);
+
+            var fieldsToRemove = [];
+            $('input.currency').each(function () {
+                fieldsToRemove.push($(this).attr('name'));
+            });
+
+            // Remove original masked `nilaidonasi` values from FormData
+            fieldsToRemove.forEach(function (field) {
+                formData.delete(field);
+            });
+
+            // Unmask all AutoNumeric fields before submitting, excluding #totalnilai
+            var nilaidonasiValues = [];
+            $('input.currency').each(function () {
+                if ($(this).attr('id') !== 'totalnilai') {
+                    var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
+                    if (autoNumericElement !== null) {
+                        var unmaskedValue = autoNumericElement.getNumericString();
+                        formData.append($(this).attr('name'), unmaskedValue);
+                        nilaidonasiValues.push(unmaskedValue);
+                    } else {
+                        console.error('AutoNumeric not initialized for:', this);
+                    }
+                }
+            });
+
+            const totalNilaiInput = document.querySelector('#totalnilai');
+            if (totalNilaiInput) {
+                const totalNilaiAutoNumeric = AutoNumeric.getAutoNumericElement(totalNilaiInput);
+                if (totalNilaiAutoNumeric) {
+                    const totalNilaiUnmasked = totalNilaiAutoNumeric.getNumericString(); // Get unmasked value
+                    formData.append('totalnilai', totalNilaiUnmasked); // Append to FormData
+                } else {
+                    console.error('AutoNumeric not initialized for #totalnilai');
+                }
+            }
+
+            // Log arrays for debugging
+            var pendonorIds = formData.getAll('pendonor_id[]');
+            console.log('pendonor_id[]:', pendonorIds);
+            console.log('nilaidonasi[]:', nilaidonasiValues);
+
+            // Check for length mismatch
+            if (pendonorIds.length !== nilaidonasiValues.length) {
+                console.error('Mismatch between pendonor_id and nilaidonasi arrays');
+                $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Mismatch Error',
+                    text: 'Mismatch between pendonor_id and nilaidonasi arrays.'
+                });
+                return; // Prevent form submission
+            }
+            // Detailed logging
+            for (var pair of formData.entries()) {
+                console.log(`${pair[ 0 ]}: ${pair[ 1 ]}`);
+            }
 
             $.ajax({
                 url: "{{ route('program.store') }}",
@@ -384,15 +355,29 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                beforeSend: function() {
+                beforeSend: function () {
+                    // Prepare JSON for preview
+                    const jsonPreview = {};
+                    // Collect data from FormData
+                    formData.forEach((value, key) => {
+                        if (!jsonPreview[ key ]) {
+                            jsonPreview[ key ] = [];
+                        }
+                        jsonPreview[ key ].push(value);
+                    });
+                    jsonPreview[ 'nilaidonasi[]' ] = nilaidonasiValues;
+
+                    console.log("log before send", jsonPreview);
+
                     Toast.fire({
                         icon: "info",
                         title: "Processing...",
                         timer: 3000,
                         timerProgressBar: true,
                     });
+
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         Swal.fire({
                             title: "{{ __('global.success') }}",
@@ -401,14 +386,16 @@
                             timer: 500,
                             timerProgressBar: true,
                         }).then(() => {
-                            $form[0].reset();
+                            $form[ 0 ].reset();
                             $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
                             $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                            $('#pendonor-container').empty(); // Clear dynamically added rows
+                            $('#donor').val(null).trigger('change'); // Reset Select2 dropdown
                             window.location.href = "{{ route('program.index') }}";
                         });
                     }
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     $form.find('button[type="submit"]').removeAttr('disabled');
                     const response = JSON.parse(xhr.responseText);
                     if (response.errors) {
@@ -417,11 +404,11 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        html: getErrorMessage(xhr),
+                        html: getErrorMessage(xhr) || 'An error occurred.',
                         confirmButtonText: 'Okay'
                     });
                 },
-                complete: function() {
+                complete: function () {
                     setTimeout(() => {
                         $form.find('button[type="submit"]').removeAttr('disabled');
                     }, 500);

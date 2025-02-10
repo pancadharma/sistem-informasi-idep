@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDusunRequest;
 use App\Models\Dusun;
 use App\Models\Kegiatan;
 use App\Models\Kelompok_Marjinal;
 use App\Models\Kelurahan;
 use App\Models\Program;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class MealsController extends Controller
+class BeneficiaryController extends Controller
 {
     public function getMealsDatatable(Request $request)
     {
@@ -168,18 +175,50 @@ class MealsController extends Controller
         });
     }
 
-    public function storeDusun(Request $request)
+    public function storeDusun(StoreDusunRequest $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'desa_id' => 'required|exists:kelurahan,id',
-        ]);
+        try {
+            $data = $request->validated();
+            $dusun = Dusun::create($data);
 
-        $dusun = Dusun::create($request->only(['nama', 'desa_id']));
+            // Clear cache with more specific key
+            Cache::forget("dusuns_desa_{$request->desa_id}_search__page_1_ids_");
 
-        // Clear cache for this desa's dusuns
-        Cache::forget("dusuns_desa_{$request->desa_id}_search__page_1");
-        return response()->json($dusun, 201);
+            return response()->json([
+                'success'   => true,
+                'message'   => __('cruds.data.data') . ' ' . __('cruds.dusun.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
+                'status'    => Response::HTTP_CREATED,
+                'data'      => $dusun, // Return the created model instead of validated data
+            ], Response::HTTP_CREATED);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+            ], Response::HTTP_NOT_FOUND);
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Database error occurred.',
+                'error'   => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred.',
+                'error'   => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
 
@@ -219,4 +258,33 @@ class MealsController extends Controller
             ],
         ]);
     }
+
+
+    public function getActivityProgram($programId)
+    {
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $programId)->first();
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found'], 404);
+        }
+
+        $activities = [];
+        if ($program) {
+            foreach ($program->outcome as $out) {
+                foreach ($out->output as $come_output) {
+                    foreach ($come_output->activities as $activity) {
+                        $activities[] = $activity;
+                    }
+                }
+            }
+        }
+
+        return response()->json($activities);
+    }
+
+
 }
