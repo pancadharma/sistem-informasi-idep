@@ -21,29 +21,31 @@ class Meals_Penerima_Manfaat extends Model
     protected $table = "tr_meals_penerima_manfaat";
 
     protected $fillable = [
-        'meals_id',
-        'name',
-        'gender',
-        'disability',
-        'marginal_group',
-        'address',
+        'program_id',
+        'user_id',
+        'dusun_id',
+        // 'desa_id',
+        'jenis_kelompok_id',
+        'nama',
+        'notelp',
+        'jeniskelamin',
+        'umur',
+        'disabilitas',
+        // id_kelompokmarjinal : int <<fk>> null
+        'rw',
         'rt',
-        'rw_banjar',
-        'dusun',
-        'desa',
-        'phone_no',
-        'group_type',
-        'age',
-        'age_group',
-        'child_age',
-        'youth_age',
-        'adult_age',
-        'elderly_age'
     ];
 
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function program(){
+        return $this->belongsTo(Program::class);
+    }
+    public function dusun(){
+        return $this->belongsTo(Dusun::class);
     }
 
     public function meal()

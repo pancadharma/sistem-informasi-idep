@@ -287,6 +287,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('desa/{id}',             [WilayahController::class, 'getDesa'])->name('desa');
         Route::get('dusun/{id}',            [WilayahController::class, 'getDusun'])->name('dusun');
         Route::GET('activity/{id}',         [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
+        Route::get('jenis-kelompok',        [BeneficiaryController::class, 'getJenisKelompok'])->name('jenis.kelompok');
 
         Route::POST('dusun/save',  [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });

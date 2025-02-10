@@ -873,7 +873,7 @@ return [
             'placeholder_no_identitas'           => 'Please Input 16 digit NIK',
             'placeholder_no_kk'                  => 'Please Input 16 digit No. KK',
             'total'                              => 'Total',
-            'dewasa'                             => 'Adults (Age 18-59)',
+            'dewasa'                             => 'Adults (Age 24-59)',
             'remaja'                             => 'Teenagers (Age 18-24, based on BKKBN)',
             'anak'                               => 'Children (Age < 18, based on SCI recommendation)',
             'lansia'                             => 'Elderly (Age > 60, based Perpres 88 of 2021)',

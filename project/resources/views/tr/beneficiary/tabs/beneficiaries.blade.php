@@ -50,10 +50,10 @@
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                    <th class="align-middle text-center bg-cyan">0-17</th>
-                    <th class="align-middle text-center bg-teal">18-24</th>
-                    <th class="align-middle text-center bg-yellow">25-59</th>
-                    <th class="align-middle text-center bg-pink"> >60 </th>
+                    <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                    <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                    <th class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                    <th class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="display nowrap">

@@ -59,7 +59,9 @@
             initializeSelect2ForKelompokRentan();
             initializeSelect2ForDesa();
             initializeSelect2ForDusun();
+            initalizeJenisKelompok(); // initialize the select for jenis kelompok
         }
+
 
         function initializeSelect2ForKelompokRentan() {
             $("#kelompok_rentan").select2({
@@ -199,7 +201,7 @@
                 },
                 dropdownParent: $("#ModalTambahPeserta"),
                 width: "100%",
-                minimumInputLength: 2,
+                // minimumInputLength: 2,
             });
 
             $("#editDusun").select2({
@@ -226,6 +228,77 @@
                 dropdownParent: $("#editDataModal"),
                 width: "100%",
             });
+        }
+
+        function initalizeJenisKelompok(){
+            let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
+            $("#jenis_kelompok").select2({
+                placeholder: placeholder,
+                ajax: {
+                    url: '{{ route('api.jenis.kelompok') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    // data: function(params) {
+                    //     return {
+                    //         search: params.term,
+                    //         page: params.page || 1,
+                    //     };
+                    // },
+                    // processResults: function(data, params) {
+                    //     params.page = params.page || 1;
+                    //     return {
+                    //         results: data.results,
+                    //         pagination: {
+                    //             more: data.pagination.more,
+                    //         },
+                    //     };
+                    // },
+                    cache: true,
+                },
+                dropdownParent: $("#ModalTambahPeserta"),
+                width: "100%",
+            });
+            $("#editJenisKelompok").select2({
+                placeholder: placeholder,
+                ajax: {
+                    url: '{{ route('api.jenis.kelompok') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+                dropdownParent: $("#editDataModal"),
+                width: "100%",
+            });
+
+
         }
 
         function updateAgeCheckmarks(usiaCell) {
@@ -261,6 +334,7 @@
 
             const desaText = $("#desa_id option:selected").text();
             const dusunText = $("#dusun_id option:selected").text();
+            const jenisKelompokText = $("#jenis_kelompok option:selected").text();
 
             const disabilitasText = disabilitasArray.map((value) => {
                 const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
@@ -309,7 +383,7 @@
                 <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
                 <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
                 <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
-                <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
+                <td data-jenis_kelompok="${data.jenis_kelompok}" data-jenis_kelompok-text="${jenisKelompokText}" class="text-center align-middle">${jenisKelompokText}</td>
                 <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
                 <td class="text-center align-middle age-0-17"></td>
                 <td class="text-center align-middle age-18-24"></td>
@@ -396,8 +470,14 @@
 
             const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
             const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
+
             const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
             const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
+
+            const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok");
+            const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text");
+
+            // console.log("jenis_kelompk:", jenisKelompokId, jenisKelompokNama);
 
             $("#editKelompokRentan").select2({
                 multiple: true,
@@ -454,12 +534,13 @@
             }
 
             $('#activitySelectEdit').val(selectedActivities).trigger('change');
-            console.info("Activities: ", selectedActivities)
+            // console.info("Activities: ", selectedActivities)
 
 
             // Kemudian set nilai dan trigger change
             $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
-            $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
+            // $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
+            // $("#editJenisKelompok").val(jenisKelompokId).trigger("change");
 
 
             $("#editRowId").val(rowId);
@@ -470,9 +551,10 @@
             $("#editRwBanjar").val(currentRow.find("td[data-rw_banjar]").attr("data-rw_banjar"));
             $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
             $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
+            $("#editJenisKelompok").append(new Option(jenisKelompokNama, jenisKelompokId, true, true)).trigger("change");
+            // $("#editJenisKelompok").val(currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"));
 
             $("#editNoTelp").val(currentRow.find("td[data-no_telp]").attr("data-no_telp"));
-            $("#editJenisKelompok").val(currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"));
             $("#editUsia").val(currentRow.find("td[data-usia]").attr("data-usia"));
 
             $("#editDataModal").modal("show");
@@ -486,6 +568,11 @@
             const desaText = $("#editDesa option:selected").text();
             const dusunId = $("#editDusun").val();
             const dusunText = $("#editDusun option:selected").text();
+
+            const jenisKelompokId = $("#editJenisKelompok").val();
+            const jenisKelompokText = $("#editJenisKelompok option:selected").text();
+
+            console.log("Update Jenis Kelompok Value: ", jenisKelompokId + jenisKelompokText);
 
             if (!form) {
                 console.error("Edit form not found");
@@ -568,10 +655,11 @@
                 currentRow.find("td[data-rt]").text(formData.rt).attr("data-rt", formData.rt);
                 currentRow.find("td[data-rw_banjar]").text(formData.rw_banjar).attr("data-rw_banjar", formData.rw_banjar);
                 currentRow.find("td[data-no_telp]").text(formData.no_telp).attr("data-no_telp", formData.no_telp);
-                currentRow.find("td[data-jenis_kelompok]").text(formData.jenis_kelompok.join(", ")).attr("data-jenis_kelompok", formData.jenis_kelompok.join(","));
+                // currentRow.find("td[data-jenis_kelompok]").text(formData.jenis_kelompok.join(", ")).attr("data-jenis_kelompok", formData.jenis_kelompok.join(","));
                 currentRow.find("td[data-usia]").text(formData.usia).attr("data-usia", formData.usia);
                 currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
                 currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
+                currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok", jenisKelompokId).attr("data-jenis_kelompok-text", jenisKelompokText).text(jenisKelompokText);
 
                 currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
 
