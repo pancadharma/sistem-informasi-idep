@@ -334,6 +334,7 @@
 
             const desaText = $("#desa_id option:selected").text();
             const dusunText = $("#dusun_id option:selected").text();
+            const jenisKelompokText = $("#jenis_kelompok option:selected").text();
 
             const disabilitasText = disabilitasArray.map((value) => {
                 const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
@@ -382,7 +383,7 @@
                 <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
                 <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
                 <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
-                <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
+                <td data-jenis_kelompok="${data.jenis_kelompok}" data-jenis_kelompok-text"${jenisKelompokText}" class="text-center align-middle">${jenisKelompokText}</td>
                 <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
                 <td class="text-center align-middle age-0-17"></td>
                 <td class="text-center align-middle age-18-24"></td>
@@ -472,6 +473,9 @@
             const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
             const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
 
+            const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok");
+            const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text");
+
             $("#editKelompokRentan").select2({
                 multiple: true,
                 ajax: {
@@ -543,6 +547,7 @@
             $("#editRwBanjar").val(currentRow.find("td[data-rw_banjar]").attr("data-rw_banjar"));
             $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
             $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
+            $("#editJenisKelompok").append(new Option(jenisKelompokNama, jenisKelompokId, true, true)).trigger("change");
 
             $("#editNoTelp").val(currentRow.find("td[data-no_telp]").attr("data-no_telp"));
             $("#editJenisKelompok").val(currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"));
