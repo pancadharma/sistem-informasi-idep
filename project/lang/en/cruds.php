@@ -960,7 +960,7 @@ return [
             'desa'                      => 'Villages',
             'no_telp'                   => 'Phone No.',
             'no_telp_placholder'        => 'Input Phone No',
-            'jenis_kelompok'            => 'Type of Group/Agency',
+            'jenis_kelompok'            => 'Type of Group',
             'age'                       => 'Age',
             'age_group'                 => 'Age Group',
             'child'                     => 'Child',

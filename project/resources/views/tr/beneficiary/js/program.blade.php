@@ -4,32 +4,93 @@
     $(document).ready(function() {
         let programTable;
 
-        $('#kode_program').on('click', function() {
-            setTimeout(() => {
-                if (!programTable) {
-                    programTable = $('#list_program_kegiatan').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "{{ route('api.beneficiary.program') }}",
-                            type: "GET"
-                        },
-                        columns: [
-                            { data: 'kode', name: 'kode', className: "align-self text-left", width: "20%", },
-                            { data: 'nama', name: 'nama', className: "align-self text-left", width: "70%" },
-                            { data: 'action', name: 'action', width: "10%", className: "align-self text-center", orderable: false, searchable: false }
-                        ],
-                        responsive: true,
-                        language: {
-                            processing: "<i class='fa fa-spinner fa-spin'></i> Memuat..."
-                        },
-                        lengthMenu: [5, 10, 25, 50, 100],
-                        bDestroy: true // Important to re-initialize datatable
-                    });
+        // $('#kode_program').on('click', function() {
+        //     setTimeout(() => {
+        //         if (!programTable) {
+        //             programTable = $('#list_program_kegiatan').DataTable({
+        //                 processing: true,
+        //                 serverSide: true,
+        //                 ajax: {
+        //                     url: "{{ route('api.beneficiary.program') }}",
+        //                     type: "GET"
+        //                 },
+        //                 columns: [
+        //                     { data: 'kode', name: 'kode', className: "align-self text-left", width: "20%", },
+        //                     { data: 'nama', name: 'nama', className: "align-self text-left", width: "70%" },
+        //                     { data: 'action', name: 'action', width: "10%", className: "align-self text-center", orderable: false, searchable: false }
+        //                 ],
+        //                 responsive: true,
+        //                 language: {
+        //                     processing: "<i class='fa fa-spinner fa-spin'></i> Memuat..."
+        //                 },
+        //                 lengthMenu: [5, 10, 25, 50, 100],
+        //                 bDestroy: true // Important to re-initialize datatable
+        //             });
+        //         }
+        //     }, 500);
+        //     $('#ModalDaftarProgram').removeAttr('inert');
+        //     $('#ModalDaftarProgram').modal('show');
+        // });
+
+
+        function showConfirmationModal() {
+            Swal.fire({
+                title: 'Change Program Confirmation',
+                text: 'Changing the program will clear all current entries. Do you want to proceed?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Clear All',
+                cancelButtonText: 'No, Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    clearTableRows();
+                    setTimeout(() => {
+                        $('#kode_program').click();
+                    }, 500);
                 }
-            }, 500);
-            $('#ModalDaftarProgram').removeAttr('inert');
-            $('#ModalDaftarProgram').modal('show');
+            });
+        }
+
+        function clearTableRows() {
+            $("#dataTable tbody tr").remove();
+            rowCount = 0; // Reset row count if needed for your application logic
+        }
+
+        $('#kode_program').on('click', function(e) {
+            e.preventDefault();
+            if ($("#dataTable tbody tr").length > 0) {
+                showConfirmationModal();
+                return false;
+            } else {
+                setTimeout(() => {
+                    if (!programTable) {
+                        programTable = $('#list_program_kegiatan').DataTable({
+                            processing: true,
+                            serverSide: true,
+                            width: '100%',
+                            ajax: {
+                                url: "{{ route('api.beneficiary.program') }}",
+                                type: "GET"
+                            },
+                            columns: [
+                                { data: 'kode', name: 'kode', className: "align-self text-left", width: "20%", },
+                                { data: 'nama', name: 'nama', className: "align-self text-left", width: "70%" },
+                                { data: 'action', name: 'action', width: "10%", className: "align-self text-center", orderable: false, searchable: false }
+                            ],
+                            responsive: true,
+                            language: {
+                                processing: " Memuat..."
+                            },
+                            lengthMenu: [5, 10, 25, 50, 100],
+                            bDestroy: true // Important to re-initialize datatable
+                        });
+                    }
+                }, 500);
+                $('#ModalDaftarProgram').removeAttr('inert');
+                $('#ModalDaftarProgram').modal('show');
+            }
         });
 
         $('#ModalDaftarProgram').on('hidden.bs.modal', function (e) {
@@ -40,60 +101,15 @@
             $(this).attr('inert', '');
         });
 
-        // Initialize select2 for activity selection
         $("#activitySelect").select2({
-            placeholder: "HAH Activities...",
             width: "100%",
             dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
         });
 
-        // Initialize select2 for edit modal
         $("#activitySelectEdit").select2({
-            placeholder: "Edit Activities",
             width: "100%",
             dropdownParent: $("#editDataModal"),
         });
-
-        // $(document).on('click', '.select-program', function() {
-        //     const id = $(this).data('id');
-        //     const kode = $(this).data('kode');
-        //     const nama = $(this).data('nama');
-        //     const url = "{{ route('api.program.activity', ':id') }}".replace(':id', id);
-
-        //     $('#program_id').val(id);
-        //     $('#kode_program').val(kode);
-        //     $('#nama_program').val(nama).prop('disabled', true);
-
-        //     // Fetch activities based on the selected program
-        //     // fetch(`/api/getActivityProgram/${id}`)
-        //     fetch(url)
-        //         .then(response => response.json())
-        //         .then(activities => {
-        //             populateActivitySelect(activities, $("#activitySelect"));
-        //             populateActivitySelect(activities, $("#activitySelectEdit"));
-        //             updateActivityHeaders(activities);
-        //         })
-        //         .catch(error => console.error('Error fetching activities:', error));
-
-        //     $('#ModalDaftarProgram').modal('hide');
-        // });
-
-
-        // function populateActivitySelect(activities, selectElement) {
-            
-        //     activities.forEach(activity => {
-        //         const option = new Option(activity.kode, activity.id, false, false);
-        //         selectElement.empty(); // Clear existing options
-        //         selectElement.append('<option value="">Pilih Aja Dulu</option>');
-
-        //         $.each(activity, function() {
-        //             selectElement.select2();
-        //             let dataoptions = '<option value="' + activity.id + '" data-id="' + activity.id + '" title="'+ activity.nama+'">' + activity.kode + '</option>';
-        //             console.log("coba aja ini", dataoptions);
-        //             selectElement.append(dataoptions).trigger('change');
-        //         });
-        //     });
-        // }
 
         $(document).on('click', '.select-program', function() {
             const id = $(this).data('id');
@@ -138,16 +154,15 @@
                 const activityHeaders = activities.map(activity => `
                     <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
                 `).join('');
-
                 $('#activityHeaders').html(`
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                    <th class="align-middle text-center">0-17</th>
-                    <th class="align-middle text-center">18-24</th>
-                    <th class="align-middle text-center">25-59</th>
-                    <th class="align-middle text-center"> > 60 </th>
+                    <th class="align-middle text-center bg-cyan">0-17</th>
+                    <th class="align-middle text-center bg-teal">18-24</th>
+                    <th class="align-middle text-center bg-yellow">25-59</th>
+                    <th class="align-middle text-center bg-pink"> > 60 </th>
                     ${activityHeaders}
                 `);
 

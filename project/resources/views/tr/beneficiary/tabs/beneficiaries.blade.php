@@ -30,7 +30,7 @@
 <div class="row responsive list_peserta">
     <div class="col-12 table-responsive">
         <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan display text-nowrap">
-            <thead style="background-color: rgba(255, 255, 255, 0) !important">
+            <thead style="background-color: rgba(255, 255, 255, 0) !important" class="text-sm">
                 <tr class="align-middle text-center display nowrap">
                     <th rowspan="2" class="text-center align-middle d-none">#</th>
                     <th rowspan="2" class="align-middle text-nowrap">{{ __("cruds.beneficiary.penerima.nama") }}</th>
@@ -42,18 +42,18 @@
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.jenis_kelompok") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.beneficiary.penerima.age") }}</th>
                     <th colspan="4" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.age_group") }}</th>
-                    <th rowspan="2" class="text-center align-middle text-nowrap" id="headerActivityProgram">Activity Program</th>
+                    <th rowspan="2" class="text-center align-middle text-nowrap" id="headerActivityProgram">Activity</th>
                     <th rowspan="2" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
-                <tr id="activityHeaders">
+                <tr id="activityHeaders" class="text-sm">
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                    <th class="align-middle text-center">0-17</th>
-                    <th class="align-middle text-center">18-24</th>
-                    <th class="align-middle text-center">25-59</th>
-                    <th class="align-middle text-center"> > 60 </th>
+                    <th class="align-middle text-center bg-cyan">0-17</th>
+                    <th class="align-middle text-center bg-teal">18-24</th>
+                    <th class="align-middle text-center bg-yellow">25-59</th>
+                    <th class="align-middle text-center bg-pink"> >60 </th>
                 </tr>
             </thead>
             <tbody id="tableBody" class="display nowrap">

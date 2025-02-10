@@ -241,75 +241,17 @@
                 return;
             }
 
-            row.querySelector(".age-0-17").innerHTML = age >= 0 && age <= 17 ? '<span class="checkmark">✔</span>' : "";
-            row.querySelector(".age-18-24").innerHTML = age > 17 && age <= 24 ? '<span class="checkmark">✔</span>' : "";
-            row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark">✔</span>' : "";
-            row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark">✔</span>' : "";
+            // row.querySelector(".age-0-17").innerHTML = age >= 0 && age <= 17 ? '<span class="checkmark">✔</span>' : "";
+            // row.querySelector(".age-18-24").innerHTML = age > 17 && age <= 24 ? '<span class="checkmark">✔</span>' : "";
+            // row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark">✔</span>' : "";
+            // row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark">✔</span>' : "";
+            // <i class="bi bi-check2-square text-success" title="✔️"></i>
+
+            row.querySelector(".age-0-17").innerHTML = age >= 0 && age <= 17 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
+            row.querySelector(".age-18-24").innerHTML = age > 17 && age <= 24 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
+            row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
+            row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
         }
-
-        // function addRow(data) {
-        //     rowCount++;
-
-        //     const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
-        //     const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
-
-        //     const desaText = $("#desa_id option:selected").text();
-        //     const dusunText = $("#dusun_id option:selected").text();
-
-        //     const disabilitasText = disabilitasArray.map((value) => {
-        //         const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
-        //         const text = option.length ? option.text() : "";
-        //         const randomColor = getRandomColor();
-        //         return `<span class="badge badge-${randomColor}">${text}</span>`;
-        //     });
-
-        //     const kelompokRentanData = kelompokRentanArray.map((value) => {
-        //         const option = $("#kelompok_rentan").select2("data").find((opt) => opt.id === value) || {
-        //             id: value,
-        //             text: value
-        //         };
-        //         return {
-        //             id: option.id,
-        //             text: option.text,
-        //         };
-        //     });
-
-        //     const kelompokRentanText = kelompokRentanData.map((item) => {
-        //         const randomColor = getRandomColor();
-        //         return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-        //     });
-
-        //     const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
-        //     const newRow = `
-        //     <tr data-row-id="${rowCount}" class="nowrap">
-        //         <td class="text-center align-middle d-none">${rowCount}</td>
-        //         <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
-        //         <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
-        //         <td data-disabilitas="${disabilitasArray.join(",")}" class="text-left align-middle text-wrap">${disabilitasText.join(", ")}</td>
-        //         <td data-kelompok_rentan="${kelompokRentanArray.join(",")}" data-kelompok_rentan_full='${JSON.stringify(kelompokRentanData)}' class="text-left align-middle text-wrap">${kelompokRentanText.join(" ")}</td>
-        //         <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
-        //         <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
-        //         <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
-        //         <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-        //         <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
-        //         <td data-jenis_kelompok="${data.jenis_kelompok}" class="text-center align-middle">${data.jenis_kelompok}</td>
-        //         <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
-        //         <td class="text-center align-middle age-0-17"></td>
-        //         <td class="text-center align-middle age-18-24"></td>
-        //         <td class="text-center align-middle age-25-59"></td>
-        //         <td class="text-center align-middle age-60-plus"></td>
-        //         <td class="text-center align-middle" id="headerActivityProgram" data-activity-selected="0"></td>
-        //         <td class="text-center align-middle">
-        //             <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
-        //             <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
-        //         </td>
-        //     </tr>
-        //     `;
-
-        //     $("#tableBody").append(newRow);
-        //     updateAgeCheckmarks($("#dataTable tbody").find(`tr[data-row-id="${rowCount}"]`).find(".usia-cell"));
-        //     resetFormAdd();
-        // }
 
         function addRow(data) {
             rowCount++;
@@ -345,15 +287,9 @@
 
             const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
 
-            // Get the selected activities data
-            // const selectedActivities = $("#activitySelect").val();
             const selectedActivities = $("#activitySelect").val() || [];
-            
-            // Get all activity headers
             const activityHeaders = $('#activityHeaders th.activity-header');
-            
 
-            // Prepare cells for each activity with data-id
             const activityCells = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
                 const isChecked = selectedActivities.includes(activityId.toString());
@@ -501,13 +437,9 @@
                 }
             });
 
-            // const selectedActivities = [];
-
             const activityHeaders = $('#activityHeaders th.activity-header');
-
             const selectedActivities = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
-                // Check if the cell has a data-program-activity-id that matches the header's activity-id
                 const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
                 const isChecked = cell.text().trim() === '✔️'; // Assuming checkmark still indicates selection
                 return isChecked ? activityId.toString() : null;
@@ -611,7 +543,7 @@
                     return;
                 }
 
-                
+
                 activityHeaders.each(function(index) {
                     const activityId = $(this).data('activity-id');
                     const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
