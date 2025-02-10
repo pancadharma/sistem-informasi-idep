@@ -59,7 +59,9 @@
             initializeSelect2ForKelompokRentan();
             initializeSelect2ForDesa();
             initializeSelect2ForDusun();
+            initalizeJenisKelompok(); // initialize the select for jenis kelompok
         }
+
 
         function initializeSelect2ForKelompokRentan() {
             $("#kelompok_rentan").select2({
@@ -199,7 +201,7 @@
                 },
                 dropdownParent: $("#ModalTambahPeserta"),
                 width: "100%",
-                minimumInputLength: 2,
+                // minimumInputLength: 2,
             });
 
             $("#editDusun").select2({
@@ -226,6 +228,77 @@
                 dropdownParent: $("#editDataModal"),
                 width: "100%",
             });
+        }
+
+        function initalizeJenisKelompok(){
+            let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
+            $("#jenis_kelompok").select2({
+                placeholder: placeholder,
+                ajax: {
+                    url: '{{ route('api.jenis.kelompok') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    // data: function(params) {
+                    //     return {
+                    //         search: params.term,
+                    //         page: params.page || 1,
+                    //     };
+                    // },
+                    // processResults: function(data, params) {
+                    //     params.page = params.page || 1;
+                    //     return {
+                    //         results: data.results,
+                    //         pagination: {
+                    //             more: data.pagination.more,
+                    //         },
+                    //     };
+                    // },
+                    cache: true,
+                },
+                dropdownParent: $("#ModalTambahPeserta"),
+                width: "100%",
+            });
+            $("#editJenisKelompok").select2({
+                placeholder: placeholder,
+                ajax: {
+                    url: '{{ route('api.jenis.kelompok') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+                dropdownParent: $("#editDataModal"),
+                width: "100%",
+            });
+
+
         }
 
         function updateAgeCheckmarks(usiaCell) {
