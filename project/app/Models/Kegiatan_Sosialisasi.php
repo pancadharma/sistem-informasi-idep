@@ -5,12 +5,14 @@ namespace App\Models;
 use DateTimeInterface;
 use App\Models\Kegiatan;
 use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kegiatan_Sosialisasi extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory, Auditable, LogsActivity;
 
     protected $table = 'trkegiatansosialisasi';
 
@@ -26,6 +28,12 @@ class Kegiatan_Sosialisasi extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected $date = [
         'created_at',

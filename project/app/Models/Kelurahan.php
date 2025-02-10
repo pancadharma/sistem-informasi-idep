@@ -4,12 +4,14 @@ namespace App\Models;
 
 use DateTimeInterface;
 use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kelurahan extends Model
 {
-    use Auditable, HasFactory;
+    use Auditable, HasFactory, LogsActivity;
     public $table = "kelurahan";
     protected $fillable = [
         'id','kode', 'nama', 'aktif', 'kecamatan_id', 'created_at','updated_at'
@@ -18,6 +20,12 @@ class Kelurahan extends Model
         'updated_at',
         'created_at'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     protected function serializeDate(DateTimeInterface $date)
     {

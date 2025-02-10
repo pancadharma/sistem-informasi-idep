@@ -2,21 +2,23 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
+use App\Models\Dusun;
+use App\Models\Satuan;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
-use App\Models\Dusun;
-use App\Models\Satuan;
+use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use App\Models\Meals_Komponen_Model;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Meals_Komponen_Model_Lokasi extends Model
 {
-    use HasFactory;
+    use HasFactory, Auditable, LogsActivity;
 
     // Define the table name
     protected $table = 'trmealskomponenmodellokasi';
@@ -34,6 +36,12 @@ class Meals_Komponen_Model_Lokasi extends Model
         'satuan_id',
         'jumlah',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
 
     /**
      * Relationships (if applicable)

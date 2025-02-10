@@ -19,7 +19,7 @@
                     @forelse ($outcomes as $index => $outcome)
                     <li class="nav-item">
                         <button type="button" class="nav-link btn text-left btn-block btn-list-outcome waves-effect waves-teal" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                            {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
+                            {{ __('cruds.program.outcome.label') }} {{ $index + 1 }}
                             <i class="bi bi-box-arrow-in-right text-danger float-right align-middle mt-2" title="{{ __('global.details') }} {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}"></i>
                         </button>
                     </li>
@@ -100,7 +100,7 @@
                 <div class="row">
                     <div class="col pl-2">
                         <h3 class="card-title pt-2">
-                            {{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span>
+                            {{ __('global.details') . ' ' . __('cruds.program.outcome.label') }} <span id="outcome-title"></span>
                         </h3>
                     </div>
                 </div>
