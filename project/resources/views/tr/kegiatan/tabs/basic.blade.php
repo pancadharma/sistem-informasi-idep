@@ -38,7 +38,7 @@
 <div class="form-group row">
     <!-- jenis kegiatan-->
     <!-- bentuk kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+    <div class="form-group col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
         <label for="jenis_kegiatan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
         </label>
@@ -49,7 +49,7 @@
         </div>
     </div>
     <!-- sektor kegiatan-->
-    <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+    <div class="form-group col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
         <label for="sektor_kegiatan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</strong>
         </label>
@@ -60,7 +60,7 @@
         </div>
     </div>
     <!-- fase pelaporan-->
-    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
+    <div class="form-group col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="fasepelaporan" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.fase_pelaporan') }} </strong>
             <i class="bi bi-question-circle" data-toggle="tooltip" title="{{ __('cruds.kegiatan.basic.tooltip.fase_pelaporan') }}"></i>
@@ -76,14 +76,14 @@
     </div>
     <!-- durasi kegiatan-->
     <!-- tgl mulai-->
-    <div class="col-sm-6 col-md-6 col-lg-2 self-center order-1 order-md-1">
+    <div class="form-group col-sm-6 col-md-6 col-lg-3 self-center order-1 order-md-1">
         <label for="tanggalmulai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
         </label>
         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai">
     </div>
     <!-- tgl selesai-->
-    <div class="col-sm-6 col-md-6 col-lg-2 self-center order-2 order-md-2">
+    <div class="form-group col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
         <label for="tanggalselesai" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.tanggalselesai') }}
         </label>
