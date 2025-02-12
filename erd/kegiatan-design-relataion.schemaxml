@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8mb4" collation="utf8mb4_0900_ai_ci">idep-lte</database>
+</source>
+<canvas zoom="200">
+<tables>
+<table name="trkegiatan" view="colnames">
+<left>3016</left>
+<top>976</top>
+<width>342</width>
+<height>992</height>
+<sql_create_table>CREATE TABLE `trkegiatan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `programoutcomeoutputactivity_id` bigint unsigned NOT NULL,
+  `fasepelaporan` int NOT NULL,
+  `jeniskegiatan_id` bigint unsigned NOT NULL,
+  `desa_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `tanggalmulai` datetime NOT NULL,
+  `tanggalselesai` datetime NOT NULL,
+  `status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mitra_id` bigint unsigned NOT NULL,
+  `deskripsilatarbelakang` text COLLATE utf8mb4_unicode_ci,
+  `deskripsitujuan` text COLLATE utf8mb4_unicode_ci,
+  `deskripsikeluaran` text COLLATE utf8mb4_unicode_ci,
+  `deskripsiyangdikaji` text COLLATE utf8mb4_unicode_ci,
+  `penerimamanfaatdewasaperempuan` int DEFAULT NULL,
+  `penerimamanfaatdewasalakilaki` int DEFAULT NULL,
+  `penerimamanfaatdewasatotal` int DEFAULT NULL,
+  `penerimamanfaatlansiaperempuan` int DEFAULT NULL,
+  `penerimamanfaatlansialakilaki` int DEFAULT NULL,
+  `penerimamanfaatlansiatotal` int DEFAULT NULL,
+  `penerimamanfaatremajaperempuan` int DEFAULT NULL,
+  `penerimamanfaatremajalakilaki` int DEFAULT NULL,
+  `penerimamanfaatremajatotal` int DEFAULT NULL,
+  `penerimamanfaatanakperempuan` int DEFAULT NULL,
+  `penerimamanfaatanaklakilaki` int DEFAULT NULL,
+  `penerimamanfaatanaktotal` int DEFAULT NULL,
+  `penerimamanfaatdisabilitasperempuan` int DEFAULT NULL,
+  `penerimamanfaatdisabilitaslakilaki` int DEFAULT NULL,
+  `penerimamanfaatdisabilitastotal` int DEFAULT NULL,
+  `penerimamanfaatnondisabilitasperempuan` int DEFAULT NULL,
+  `penerimamanfaatnondisabilitaslakilaki` int DEFAULT NULL,
+  `penerimamanfaatnondisabilitastotal` int DEFAULT NULL,
+  `penerimamanfaatmarjinalperempuan` int DEFAULT NULL,
+  `penerimamanfaatmarjinallakilaki` int DEFAULT NULL,
+  `penerimamanfaatmarjinaltotal` int DEFAULT NULL,
+  `penerimamanfaatperempuantotal` int DEFAULT NULL,
+  `penerimamanfaatlakilakitotal` int DEFAULT NULL,
+  `penerimamanfaattotal` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatan_programoutcomeoutputactivity_id_foreign` (`programoutcomeoutputactivity_id`),
+  KEY `trkegiatan_jeniskegiatan_id_foreign` (`jeniskegiatan_id`),
+  KEY `trkegiatan_desa_id_foreign` (`desa_id`),
+  KEY `trkegiatan_user_id_foreign` (`user_id`),
+  KEY `trkegiatan_mitra_id_foreign` (`mitra_id`),
+  CONSTRAINT `trkegiatan_desa_id_foreign` FOREIGN KEY (`desa_id`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_jeniskegiatan_id_foreign` FOREIGN KEY (`jeniskegiatan_id`) REFERENCES `mjeniskegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_mitra_id_foreign` FOREIGN KEY (`mitra_id`) REFERENCES `mpartner` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_programoutcomeoutputactivity_id_foreign` FOREIGN KEY (`programoutcomeoutputactivity_id`) REFERENCES `trprogramoutcomeoutputactivity` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatan_lokasi" view="colnames">
+<left>600</left>
+<top>920</top>
+<width>322</width>
+<height>260</height>
+<sql_create_table>CREATE TABLE `trkegiatan_lokasi` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `desa_id` bigint unsigned DEFAULT NULL,
+  `lokasi` text COLLATE utf8mb4_unicode_ci,
+  `long` double DEFAULT NULL,
+  `lat` double DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatan_lokasi_kegiatan_id_foreign` (`kegiatan_id`),
+  KEY `trkegiatan_lokasi_desa_id_foreign` (`desa_id`),
+  CONSTRAINT `trkegiatan_lokasi_desa_id_foreign` FOREIGN KEY (`desa_id`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_lokasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatan_mitra" view="colnames">
+<left>2756</left>
+<top>200</top>
+<width>386</width>
+<height>320</height>
+<sql_create_table>CREATE TABLE `trkegiatan_mitra` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `mitra_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatan_mitra_kegiatan_id_foreign` (`kegiatan_id`),
+  KEY `trkegiatan_mitra_mitra_id_foreign` (`mitra_id`),
+  CONSTRAINT `trkegiatan_mitra_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_mitra_mitra_id_foreign` FOREIGN KEY (`mitra_id`) REFERENCES `mpartner` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatan_sektor" view="colnames">
+<left>172</left>
+<top>566</top>
+<width>420</width>
+<height>320</height>
+<sql_create_table>CREATE TABLE `trkegiatan_sektor` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatan_sektor_kegiatan_id_foreign` (`kegiatan_id`),
+  KEY `trkegiatan_sektor_sektor_id_foreign` (`sektor_id`),
+  CONSTRAINT `trkegiatan_sektor_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatan_sektor_sektor_id_foreign` FOREIGN KEY (`sektor_id`) REFERENCES `msektor` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatanassessment" view="colnames">
+<left>2278</left>
+<top>36</top>
+<width>440</width>
+<height>306</height>
+<sql_create_table>CREATE TABLE `trkegiatanassessment` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `assessmentyangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `assessmenttemuan` text COLLATE utf8mb4_unicode_ci,
+  `assessmenttambahan` tinyint(1) NOT NULL DEFAULT '0',
+  `assessmenttambahan_ket` text COLLATE utf8mb4_unicode_ci,
+  `assessmentkendala` text COLLATE utf8mb4_unicode_ci,
+  `assessmentisu` text COLLATE utf8mb4_unicode_ci,
+  `assessmentpembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatanassessment_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatanassessment_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatankampanye" view="colnames">
+<left>1700</left>
+<top>142</top>
+<width>440</width>
+<height>282</height>
+<sql_create_table>CREATE TABLE `trkegiatankampanye` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `kampanyeyangdikampanyekan` text COLLATE utf8mb4_unicode_ci,
+  `kampanyejenis` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kampanyebentukkegiatan` text COLLATE utf8mb4_unicode_ci,
+  `kampanyeyangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `kampanyeyangdisasar` text COLLATE utf8mb4_unicode_ci,
+  `kampanyejangkauan` text COLLATE utf8mb4_unicode_ci,
+  `kampanyerencana` text COLLATE utf8mb4_unicode_ci,
+  `kampanyekendala` text COLLATE utf8mb4_unicode_ci,
+  `kampanyeisu` text COLLATE utf8mb4_unicode_ci,
+  `kampanyepembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatankampanye_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatankampanye_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatankonsultasi" view="colnames">
+<left>2546</left>
+<top>1642</top>
+<width>420</width>
+<height>302</height>
+<sql_create_table>CREATE TABLE `trkegiatankonsultasi` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `konsultasilembaga` text COLLATE utf8mb4_unicode_ci,
+  `konsultasikomponen` text COLLATE utf8mb4_unicode_ci,
+  `konsultasiyangdilakukan` text COLLATE utf8mb4_unicode_ci,
+  `konsultasihasil` text COLLATE utf8mb4_unicode_ci,
+  `konsultasipotensipendapatan` text COLLATE utf8mb4_unicode_ci,
+  `konsultasirencana` text COLLATE utf8mb4_unicode_ci,
+  `konsultasikendala` text COLLATE utf8mb4_unicode_ci,
+  `konsultasiisu` text COLLATE utf8mb4_unicode_ci,
+  `konsultasipembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatankonsultasi_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatankonsultasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatankunjungan" view="colnames">
+<left>1316</left>
+<top>1516</top>
+<width>420</width>
+<height>282</height>
+<sql_create_table>CREATE TABLE `trkegiatankunjungan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `kunjunganlembaga` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganpeserta` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganyangdilakukan` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganhasil` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganpotensipendapatan` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganrencana` text COLLATE utf8mb4_unicode_ci,
+  `kunjungankendala` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganisu` text COLLATE utf8mb4_unicode_ci,
+  `kunjunganpembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatankunjungan_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatankunjungan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatanlainnya" view="colnames">
+<left>458</left>
+<top>1386</top>
+<width>436</width>
+<height>598</height>
+<sql_create_table>CREATE TABLE `trkegiatanlainnya` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `lainnyamengapadilakukan` text COLLATE utf8mb4_unicode_ci,
+  `lainnyadampak` text COLLATE utf8mb4_unicode_ci,
+  `lainnyasumberpendanaan` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lainnyasumberpendanaan_ket` text COLLATE utf8mb4_unicode_ci,
+  `lainnyayangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `lainnyarencana` text COLLATE utf8mb4_unicode_ci,
+  `lainnyakendala` text COLLATE utf8mb4_unicode_ci,
+  `lainnyaisu` text COLLATE utf8mb4_unicode_ci,
+  `lainnyapembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatanlainnya_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatanlainnya_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatanmonitoring" view="colnames">
+<left>1886</left>
+<top>1618</top>
+<width>490</width>
+<height>402</height>
+<sql_create_table>CREATE TABLE `trkegiatanmonitoring` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `monitoringyangdipantau` text COLLATE utf8mb4_unicode_ci,
+  `monitoringdata` text COLLATE utf8mb4_unicode_ci,
+  `monitoringyangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `monitoringmetode` text COLLATE utf8mb4_unicode_ci,
+  `monitoringhasil` text COLLATE utf8mb4_unicode_ci,
+  `monitoringkegiatanselanjutnya` tinyint(1) NOT NULL DEFAULT '0',
+  `monitoringkegiatanselanjutnya_ket` text COLLATE utf8mb4_unicode_ci,
+  `monitoringkendala` text COLLATE utf8mb4_unicode_ci,
+  `monitoringisu` text COLLATE utf8mb4_unicode_ci,
+  `monitoringpembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatanmonitoring_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatanmonitoring_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trprogramoutcomeoutputactivity" view="colnames">
+<left>3740</left>
+<top>516</top>
+<width>394</width>
+<height>462</height>
+<sql_create_table>CREATE TABLE `trprogramoutcomeoutputactivity` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kode` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `programoutcomeoutput_id` bigint unsigned NOT NULL,
+  `deskripsi` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `indikator` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `target` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trprogramoutcomeoutputactivity_programoutcomeoutput_id_foreign` (`programoutcomeoutput_id`),
+  CONSTRAINT `trprogramoutcomeoutputactivity_programoutcomeoutput_id_foreign` FOREIGN KEY (`programoutcomeoutput_id`) REFERENCES `trprogramoutcomeoutput` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatanpengembangan" view="colnames">
+<left>1036</left>
+<top>260</top>
+<width>462</width>
+<height>342</height>
+<sql_create_table>CREATE TABLE `trkegiatanpengembangan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `pengembanganjeniskomponen` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganberapakomponen` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganlokasikomponen` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganyangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganrencana` text COLLATE utf8mb4_unicode_ci,
+  `pengembangankendala` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganisu` text COLLATE utf8mb4_unicode_ci,
+  `pengembanganpembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatanpengembangan_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatanpengembangan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatanpenulis" view="colnames">
+<left>3742</left>
+<top>1686</top>
+<width>410</width>
+<height>420</height>
+<sql_create_table>CREATE TABLE `trkegiatanpenulis` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `peran_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatanpenulis_kegiatan_id_foreign` (`kegiatan_id`),
+  KEY `trkegiatanpenulis_user_id_foreign` (`user_id`),
+  KEY `trkegiatanpenulis_peran_id_foreign` (`peran_id`),
+  CONSTRAINT `trkegiatanpenulis_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatanpenulis_peran_id_foreign` FOREIGN KEY (`peran_id`) REFERENCES `mperan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trkegiatanpenulis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="trkegiatansosialisasi" view="colnames">
+<left>1006</left>
+<top>2040</top>
+<width>370</width>
+<height>530</height>
+<sql_create_table>CREATE TABLE `trkegiatansosialisasi` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `sosialisasiyangterlibat` text COLLATE utf8mb4_unicode_ci,
+  `sosialisasitemuan` text COLLATE utf8mb4_unicode_ci,
+  `sosialisasitambahan` tinyint(1) NOT NULL DEFAULT '0',
+  `sosialisasitambahan_ket` text COLLATE utf8mb4_unicode_ci,
+  `sosialisasikendala` text COLLATE utf8mb4_unicode_ci,
+  `sosialisasiisu` text COLLATE utf8mb4_unicode_ci,
+  `sosialisasipembelajaran` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trkegiatansosialisasi_kegiatan_id_foreign` (`kegiatan_id`),
+  CONSTRAINT `trkegiatansosialisasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="users" view="colnames">
+<left>4466</left>
+<top>1038</top>
+<width>290</width>
+<height>598</height>
+<sql_create_table>CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jabatan_id` bigint unsigned DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `aktif` tinyint(1) DEFAULT '0',
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`),
+  UNIQUE KEY `users_username_unique` (`username`),
+  KEY `users_jabatan_id_foreign` (`jabatan_id`),
+  CONSTRAINT `users_jabatan_id_foreign` FOREIGN KEY (`jabatan_id`) REFERENCES `mjabatan` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="mpartner" view="colnames">
+<left>3416</left>
+<top>16</top>
+<width>342</width>
+<height>300</height>
+<sql_create_table>CREATE TABLE `mpartner` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `keterangan` longtext COLLATE utf8mb4_unicode_ci,
+  `aktif` int DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="msektor" view="colnames">
+<left>612</left>
+<top>46</top>
+<width>220</width>
+<height>292</height>
+<sql_create_table>CREATE TABLE `msektor` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="mperan" view="colnames">
+<left>3160</left>
+<top>2272</top>
+<width>520</width>
+<height>322</height>
+<sql_create_table>CREATE TABLE `mperan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `aktif` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
