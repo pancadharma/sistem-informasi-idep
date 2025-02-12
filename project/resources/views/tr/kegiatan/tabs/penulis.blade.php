@@ -9,9 +9,9 @@
     <div class="col-12">
     </div>
 </div>
-<div class="form-group row" id="list_penulis">
+{{-- <div class="form-group row" id="list_penulis_2">
 
-</div>
+</div> --}}
 
 <div class="form-group row col-md-12" id="list_penulis_edit">
     @foreach ($kegiatan->penulis as $penulis)

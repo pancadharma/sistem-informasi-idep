@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\Jenis_Kegiatan;
 use App\Models\Kelurahan;
 use App\Models\mSektor;
 use App\Models\Partner;
@@ -23,6 +24,8 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
+use function Laravel\Prompts\error;
 
 class KegiatanController extends Controller
 {
@@ -358,7 +361,11 @@ class KegiatanController extends Controller
 
     public function getJenisKegiatan(Request $request)
     {
-        $jenisKegiatan = Kegiatan::getJenisKegiatan();
+        // $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+        $jenisKegiatan = Jenis_Kegiatan::select('id', 'nama')->get()->mapWithKeys(function ($item) {
+            return [$item->id => $item->nama];
+        })->toArray();
 
         if ($request->has('id')) {
             // If requesting specific ID(s)

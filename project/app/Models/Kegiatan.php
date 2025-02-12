@@ -16,6 +16,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Jenis_Kegiatan;
+
+
 
 class Kegiatan extends Model implements HasMedia
 {
@@ -32,14 +35,14 @@ class Kegiatan extends Model implements HasMedia
 
     protected $fillable = [
         'programoutcomeoutputactivity_id',
-        'fasepelaporan',
         'jeniskegiatan_id',
         'desa_id',
         'user_id',
+        'mitra_id',
+        'fasepelaporan',
         'tanggalmulai',
         'tanggalselesai',
         'status',
-        'mitra_id',
         'deskripsilatarbelakang',
         'deskripsitujuan',
         'deskripsikeluaran',
@@ -82,7 +85,7 @@ class Kegiatan extends Model implements HasMedia
         return LogOptions::defaults()
         ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
-    
+
     public function getTglMulaiAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
@@ -190,28 +193,35 @@ class Kegiatan extends Model implements HasMedia
         'cancelled ' => 'Cancelled',
     ];
 
-
     public static function getJenisKegiatan(): array
     {
-        return [
-            1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
-            2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
-            3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
-            4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
-            5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
-            6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
-            7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
-            8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
-            9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
-            10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
-            11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
-            12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
-            13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
-            14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
-            15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
-            16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
-            17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
-        ];
+        return Jenis_Kegiatan::select('id', 'nama')->get()->mapWithKeys(function ($item) {
+            return [$item->id => $item->nama];
+        })->toArray();
     }
+
+    // public static function getJenisKegiatan(): array
+    // {
+
+    //     return [
+    //         1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
+    //         2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
+    //         3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
+    //         4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
+    //         5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
+    //         6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
+    //         7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
+    //         8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
+    //         9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
+    //         10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
+    //         11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
+    //         12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
+    //         13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
+    //         14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
+    //         15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
+    //         16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
+    //         17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
+    //     ];
+    // }
 
 }
