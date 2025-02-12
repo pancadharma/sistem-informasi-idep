@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dusun;
+use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
@@ -258,5 +259,41 @@ class KegiatanController extends Controller
                 'error' => $e->getMessage()
             ], 404);
         }
+    }
+
+    public function getJenisKegiatan(Request $request)
+    {
+        $jenisKegiatan = Jenis_Kegiatan::select('id', 'nama')->get()->mapWithKeys(function ($item) {
+            return [$item->id => $item->nama];
+        })->toArray();
+
+        if ($request->has('id')) {
+            // If requesting specific ID(s)
+            $id = $request->input('id');
+            $data = collect($jenisKegiatan)
+                ->filter(function ($value, $key) use ($id) {
+                    return $key == $id;
+                })
+                ->map(function ($text, $id) {
+                    return [
+                        'id' => $id,
+                        'nama' => $text
+                    ];
+                })
+                ->values()
+                ->all();
+
+            return response()->json(['data' => $data]);
+        }
+
+        // For dropdown listing
+        $first = __('cruds.kegiatan.basic.bentuk');
+        // $second =  __('cruds.kegiatan.basic.sektor');
+
+        $groupedData = [
+            $first => array_slice($jenisKegiatan, 0, 11, true),
+            // $second => array_slice($jenisKegiatan, 11, null, true)
+        ];
+        return response()->json($groupedData);
     }
 }

@@ -24,9 +24,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
-use function Laravel\Prompts\error;
-
 class KegiatanController extends Controller
 {
     public function index()
@@ -525,7 +522,7 @@ class KegiatanController extends Controller
                     'assessmentkendala',
                     'assessmentisu',
                     'assessmentpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 2: // Sosialisasi
                 TrkegiatanSosialisasi::create(array_merge($request->only([
@@ -536,7 +533,7 @@ class KegiatanController extends Controller
                     'sosialisasikendala',
                     'sosialisasiisu',
                     'sosialisasipembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 3: // Pelatihan
                 TrkegiatanPelatihan::create(array_merge($request->only([
@@ -548,7 +545,7 @@ class KegiatanController extends Controller
                     'pelatihanunggahan',
                     'pelatihanisu',
                     'pelatihanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 4: // Pembelanjaan
                 TrkegiatanPembelanjaan::create(array_merge($request->only([
@@ -563,7 +560,7 @@ class KegiatanController extends Controller
                     'pembelanjaankendala',
                     'pembelanjaanisu',
                     'pembelanjaanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 5: // Pengembangan
                 TrkegiatanPengembangan::create(array_merge($request->only([
@@ -575,7 +572,7 @@ class KegiatanController extends Controller
                     'pengembangankendala',
                     'pengembanganisu',
                     'pengembanganpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 6: // Kampanye
                 TrkegiatanKampanye::create(array_merge($request->only([
@@ -589,7 +586,7 @@ class KegiatanController extends Controller
                     'kampanyekendala',
                     'kampanyeisu',
                     'kampanyepembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 7: // Pemetaan
                 TrkegiatanPemetaan::create(array_merge($request->only([
@@ -600,7 +597,7 @@ class KegiatanController extends Controller
                     'pemetaanrencana',
                     'pemetaanisu',
                     'pemetaanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 8: // Monitoring
                 TrkegiatanMonitoring::create(array_merge($request->only([
@@ -614,7 +611,7 @@ class KegiatanController extends Controller
                     'monitoringkendala',
                     'monitoringisu',
                     'monitoringpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 9: // Kunjungan
                 TrkegiatanKunjungan::create(array_merge($request->only([
@@ -627,7 +624,7 @@ class KegiatanController extends Controller
                     'kunjungankendala',
                     'kunjunganisu',
                     'kunjunganpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 10: // Konsultasi
                 TrkegiatanKonsultasi::create(array_merge($request->only([
@@ -640,7 +637,7 @@ class KegiatanController extends Controller
                     'konsultasikendala',
                     'konsultasiisu',
                     'konsultasipembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 11: // Lainnya
                 TrkegiatanLainnya::create(array_merge($request->only([
@@ -653,7 +650,7 @@ class KegiatanController extends Controller
                     'lainnyakendala',
                     'lainnyaisu',
                     'lainnyapembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             default:
                 // Handle invalid jenisKegiatan (e.g., throw an exception)
