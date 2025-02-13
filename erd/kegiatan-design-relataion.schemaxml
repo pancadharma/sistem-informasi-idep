@@ -3,13 +3,13 @@
 <source>
 <database charset="utf8mb4" collation="utf8mb4_0900_ai_ci">idep-lte</database>
 </source>
-<canvas zoom="200">
+<canvas zoom="90">
 <tables>
 <table name="trkegiatan" view="colnames">
-<left>3016</left>
-<top>976</top>
-<width>342</width>
-<height>992</height>
+<left>1357</left>
+<top>439</top>
+<width>260</width>
+<height>280</height>
 <sql_create_table>CREATE TABLE `trkegiatan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `programoutcomeoutputactivity_id` bigint unsigned NOT NULL,
@@ -65,10 +65,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatan_lokasi" view="colnames">
-<left>600</left>
-<top>920</top>
-<width>322</width>
-<height>260</height>
+<left>270</left>
+<top>414</top>
+<width>225</width>
+<height>117</height>
 <sql_create_table>CREATE TABLE `trkegiatan_lokasi` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -86,10 +86,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatan_mitra" view="colnames">
-<left>2756</left>
-<top>200</top>
-<width>386</width>
-<height>320</height>
+<left>1240</left>
+<top>90</top>
+<width>101</width>
+<height>147</height>
 <sql_create_table>CREATE TABLE `trkegiatan_mitra` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -104,10 +104,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatan_sektor" view="colnames">
-<left>172</left>
-<top>566</top>
-<width>420</width>
-<height>320</height>
+<left>77</left>
+<top>255</top>
+<width>101</width>
+<height>147</height>
 <sql_create_table>CREATE TABLE `trkegiatan_sektor` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned DEFAULT NULL,
@@ -122,10 +122,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatanassessment" view="colnames">
-<left>2278</left>
-<top>36</top>
-<width>440</width>
-<height>306</height>
+<left>1025</left>
+<top>16</top>
+<width>176</width>
+<height>239</height>
 <sql_create_table>CREATE TABLE `trkegiatanassessment` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -144,10 +144,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatankampanye" view="colnames">
-<left>1700</left>
-<top>142</top>
-<width>440</width>
-<height>282</height>
+<left>765</left>
+<top>64</top>
+<width>203</width>
+<height>280</height>
 <sql_create_table>CREATE TABLE `trkegiatankampanye` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -169,10 +169,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatankonsultasi" view="colnames">
-<left>2546</left>
-<top>1642</top>
-<width>420</width>
-<height>302</height>
+<left>1146</left>
+<top>739</top>
+<width>190</width>
+<height>269</height>
 <sql_create_table>CREATE TABLE `trkegiatankonsultasi` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -193,10 +193,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatankunjungan" view="colnames">
-<left>1316</left>
-<top>1516</top>
-<width>420</width>
-<height>282</height>
+<left>592</left>
+<top>682</top>
+<width>193</width>
+<height>269</height>
 <sql_create_table>CREATE TABLE `trkegiatankunjungan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -217,10 +217,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatanlainnya" view="colnames">
-<left>458</left>
-<top>1386</top>
-<width>436</width>
-<height>598</height>
+<left>206</left>
+<top>624</top>
+<width>196</width>
+<height>269</height>
 <sql_create_table>CREATE TABLE `trkegiatanlainnya` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -241,10 +241,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatanmonitoring" view="colnames">
-<left>1886</left>
-<top>1618</top>
-<width>490</width>
-<height>402</height>
+<left>849</left>
+<top>728</top>
+<width>222</width>
+<height>280</height>
 <sql_create_table>CREATE TABLE `trkegiatanmonitoring` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -266,10 +266,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trprogramoutcomeoutputactivity" view="colnames">
-<left>3740</left>
-<top>516</top>
-<width>394</width>
-<height>462</height>
+<left>1683</left>
+<top>232</top>
+<width>177</width>
+<height>208</height>
 <sql_create_table>CREATE TABLE `trprogramoutcomeoutputactivity` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kode` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -286,10 +286,10 @@
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatanpengembangan" view="colnames">
-<left>1036</left>
-<top>260</top>
-<width>462</width>
-<height>342</height>
+<left>466</left>
+<top>117</top>
+<width>209</width>
+<height>116</height>
 <sql_create_table>CREATE TABLE `trkegiatanpengembangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -309,10 +309,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatanpenulis" view="colnames">
-<left>3742</left>
-<top>1686</top>
-<width>410</width>
-<height>420</height>
+<left>1684</left>
+<top>759</top>
+<width>101</width>
+<height>162</height>
 <sql_create_table>CREATE TABLE `trkegiatanpenulis` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -330,10 +330,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="trkegiatansosialisasi" view="colnames">
-<left>1006</left>
-<top>2040</top>
-<width>370</width>
-<height>530</height>
+<left>453</left>
+<top>918</top>
+<width>167</width>
+<height>239</height>
 <sql_create_table>CREATE TABLE `trkegiatansosialisasi` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `kegiatan_id` bigint unsigned NOT NULL,
@@ -352,10 +352,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="users" view="colnames">
-<left>4466</left>
-<top>1038</top>
-<width>290</width>
-<height>598</height>
+<left>2010</left>
+<top>467</top>
+<width>131</width>
+<height>269</height>
 <sql_create_table>CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -378,10 +378,10 @@
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="mpartner" view="colnames">
-<left>3416</left>
-<top>16</top>
-<width>342</width>
-<height>300</height>
+<left>1537</left>
+<top>7</top>
+<width>100</width>
+<height>177</height>
 <sql_create_table>CREATE TABLE `mpartner` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -394,10 +394,10 @@
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="msektor" view="colnames">
-<left>612</left>
-<top>46</top>
-<width>220</width>
-<height>292</height>
+<left>275</left>
+<top>21</top>
+<width>99</width>
+<height>131</height>
 <sql_create_table>CREATE TABLE `msektor` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -407,10 +407,10 @@
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 <table name="mperan" view="colnames">
-<left>3160</left>
-<top>2272</top>
-<width>520</width>
-<height>322</height>
+<left>1422</left>
+<top>1022</top>
+<width>99</width>
+<height>147</height>
 <sql_create_table>CREATE TABLE `mperan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -419,6 +419,20 @@
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="mjeniskegiatan" view="colnames">
+<left>1912</left>
+<top>762</top>
+<width>99</width>
+<height>147</height>
+<sql_create_table>CREATE TABLE `mjeniskegiatan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `nama` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `aktif` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
 </table>
 </tables>
 </canvas>

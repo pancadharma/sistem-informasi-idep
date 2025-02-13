@@ -18,6 +18,7 @@ class Kegiatan_Lokasi extends Model
 
     protected $fillable = [
         'kegiatan_id',
+        'desa_id',
         'lokasi',
         'long',
         'lat',
@@ -45,9 +46,18 @@ class Kegiatan_Lokasi extends Model
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
+    public function trkegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+    }
     public function kegiatans()
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+    }
+
+    public function desa()
+    {
+        return $this->belongsTo(Kelurahan::class, 'desa_id');
     }
 
 
