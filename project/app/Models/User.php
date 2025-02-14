@@ -181,4 +181,10 @@ class User extends Authenticatable implements HasMedia
         ->withPivot('peran_id')
         ->withTimestamps();
     }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Mjabatan::class, 'jabatan_id');
+    }
+
 }

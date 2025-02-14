@@ -52,5 +52,63 @@
 
 @include('tr.kegiatan.js.create')
 @stack('basic_tab_js')
+    <script>
+        $(document).ready(function() {
+            $('#simpan_kegiatan').on('click', function(e) {
+                e.preventDefault();
 
+                // Get form data
+                let formData = new FormData($('#createKegiatan')[0]);
+                let serializedData = $("#createKegiatan").serializeArray();
+
+                // Convert serialized data to a readable format for display
+                let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
+
+                // Show form data in pre in Sweet Alert modal
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah anda yakin ingin menyimpan data ini?',
+                    html: `<pre>${displayData}</pre>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, simpan!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('api.kegiatan.satuan') }}", // Ensure this is the correct route
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            success: function(data) {
+                                Swal.fire(
+                                    'Berhasil!',
+                                    'Data berhasil disimpan.',
+                                    'success'
+                                ).then((result) => {
+                                    if (result.isConfirmed) {
+                                        // Optionally redirect or reset form here
+                                        // location.reload(); // Example to reload page
+                                        // $('#createKegiatan')[0].reset(); // Reset form
+                                    }
+                                });
+                            },
+                            error: function(data) {
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Data gagal disimpan.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+
+    </script>
 @endpush
