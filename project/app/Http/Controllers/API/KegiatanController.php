@@ -330,6 +330,7 @@ class KegiatanController extends Controller
             $kegiatan->mitra()->sync($request->input('mitra_id', []));
             $kegiatan->sektor()->sync($request->input('sektor_id', []));
             $this->storePenulisKegiatan($request, $kegiatan);
+            $this->storeLocations($request, $kegiatan);
 
             // trkegiatan_lokasi
             // Get the arrays of data
@@ -535,9 +536,13 @@ class KegiatanController extends Controller
                 throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
         }
     }
-    public function getActivityTypes()
+
+    public function storeHasilKegiatan(Request $request, Kegiatan $kegiatan)
     {
-        return [
+        $jenisKegiatan = $request->input('jeniskegiatan_id');
+        $idKegiatan = $kegiatan->id;
+
+        $modelMapping = [
             1 => Kegiatan_Assessment::class,
             2 => Kegiatan_Sosialisasi::class,
             3 => Kegiatan_Pelatihan::class,
@@ -550,7 +555,54 @@ class KegiatanController extends Controller
             10 => Kegiatan_Konsultasi::class,
             11 => Kegiatan_Lainnya::class,
         ];
+
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
+        }
+
+        $model = $modelMapping[$jenisKegiatan];
+        $data = $request->only([
+            // Add common fields here if any exist across all types
+            'kegiatan_id' => $idKegiatan,
+        ]);
+
+        // Add type-specific fields dynamically
+        $typeSpecificFields = $this->getTypeSpecificFields($jenisKegiatan);
+        $data = array_merge($data, $request->only($typeSpecificFields));
+
+        $model::create($data);
     }
+
+    protected function getTypeSpecificFields(int $jenisKegiatan): array
+    {
+        switch ($jenisKegiatan) {
+            case 1:
+                return ['assessmentyangterlibat', 'assessmenttemuan', 'assessmenttambahan', 'assessmenttambahan_ket', 'assessmentkendala', 'assessmentisu', 'assessmentpembelajaran'];
+            case 2:
+                return ['sosialisasiyangterlibat', 'sosialisasitemuan', 'sosialisasitambahan', 'sosialisasitambahan_ket', 'sosialisasikendala', 'sosialisasiisu', 'sosialisasipembelajaran'];
+            case 3:
+                return ['pelatihanpelatih', 'pelatihanhasil', 'pelatihandistribusi', 'pelatihandistribusi_ket', 'pelatihanrencana', 'pelatihanunggahan', 'pelatihanisu', 'pelatihanpembelajaran'];
+            case 4:
+                return ['pembelanjaandetailbarang', 'pembelanjaanmulai', 'pembelanjaanselesai', 'pembelanjaandistribusimulai', 'pembelanjaandistribusiselesai', 'pembelanjaanterdistribusi', 'pembelanjaanakandistribusi', 'pembelanjaanakandistribusi_ket', 'pembelanjaankendala', 'pembelanjaanisu', 'pembelanjaanpembelajaran'];
+            case 5:
+                return ['pengembanganjeniskomponen', 'pengembanganberapakomponen', 'pengembanganlokasikomponen', 'pengembanganyangterlibat', 'pengembanganrencana', 'pengembangankendala', 'pengembanganisu', 'pengembanganpembelajaran'];
+            case 6:
+                return ['kampanyeyangdikampanyekan', 'kampanyejenis', 'kampanyebentukkegiatan', 'kampanyeyangterlibat', 'kampanyeyangdisasar', 'kampanyejangkauan', 'kampanyerencana', 'kampanyekendala', 'kampanyeisu', 'kampanyepembelajaran'];
+            case 7:
+                return ['pemetaanyangdihasilkan', 'pemetaanluasan', 'pemetaanunit', 'pemetaanyangterlibat', 'pemetaanrencana', 'pemetaanisu', 'pemetaanpembelajaran'];
+            case 8:
+                return ['monitoringyangdipantau', 'monitoringdata', 'monitoringyangterlibat', 'monitoringmetode', 'monitoringhasil', 'monitoringkegiatanselanjutnya', 'monitoringkegiatanselanjutnya_ket', 'monitoringkendala', 'monitoringisu', 'monitoringpembelajaran'];
+            case 9:
+                return ['kunjunganlembaga', 'kunjunganpeserta', 'kunjunganyangdilakukan', 'kunjunganhasil', 'kunjunganpotensipendapatan', 'kunjunganrencana', 'kunjungankendala', 'kunjunganisu', 'kunjunganpembelajaran'];
+            case 10:
+                return ['konsultasilembaga', 'konsultasikomponen', 'konsultasiyangdilakukan', 'konsultasihasil', 'konsultasipotensipendapatan', 'konsultasirencana', 'konsultasikendala', 'konsultasiisu', 'konsultasipembelajaran'];
+            case 11:
+                return ['lainnyamengapadilakukan', 'lainnyadampak', 'lainnyasumberpendanaan_ket', 'lainnyayangterlibat', 'lainnyarencana', 'lainnyakendala', 'lainnyaisu', 'lainnyapembelajaran'];
+            default:
+                return [];
+        }
+    }
+
 
     public function storePenulisKegiatan(Request $request, Kegiatan $kegiatan)
     {
