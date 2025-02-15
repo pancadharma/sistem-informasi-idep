@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\Kegiatan_Lokasi;
 use App\Models\Kelurahan;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class KegiatanController extends Controller
@@ -295,5 +298,140 @@ class KegiatanController extends Controller
             // $second => array_slice($jenisKegiatan, 11, null, true)
         ];
         return response()->json($groupedData);
+    }
+
+
+    // update the API/KegiatanController with api to store , update, and get data
+    public function storeApi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'programoutcomeoutputactivity_id'   => 'required|exists:trprogramoutcomeoutputactivity,id',
+
+            // validation of trkegiatan_lokasi
+            'kelurahan_id'                      => ['array'],
+            'kelurahan_id.*'                    => ['nullable', 'integer', 'exists:kelurahan,id'],
+            'kecamatan_id'                      => ['array'],
+            'kecamatan_id.*'                    => ['nullable', 'integer', 'exists:kecamatan,id'],
+            'lokasi'                            => ['array'],
+            'lokasi.*'                          => ['nullable', 'string',],
+            'lat'                               => ['array'],
+            'lat.*'                             => ['nullable', 'string',],
+            'long'                              => ['array'],
+            'long.*'                            => ['nullable', 'string',],
+
+
+            // 'kecamatan_id.*'                    => 'required|exists:kecamatan,id',
+            // 'kelurahan_id.*'                    => 'required|exists:kelurahan,id',
+            // 'lokasi.*'                          => 'required|string',
+            // 'lat.*'                             => 'required|numeric',
+            // 'long.*'                            => 'required|numeric',
+
+
+            // this input for model Kegiatan
+            // 'jeniskegiatan_id'                  => ['required', 'exists:mjeniskegiatan,id'],
+
+            // 'mitra_id'                          => ['array'],
+            // 'mitra_id.*'                        => ['nullable', 'integer', 'exists:mpartner,id'],
+
+            // 'user_id'                           => ['required', 'exist:users,id'],
+            // 'fasepelaporan'                     => ['required', 'integer'],
+
+
+            // 'tanggalmulai',
+            // 'tanggalselesai',
+            // 'status',
+            // 'deskripsilatarbelakang',
+            // 'deskripsitujuan',
+            // 'deskripsikeluaran',
+            // 'deskripsiyangdikaji',
+            // 'penerimamanfaatdewasaperempuan',
+            // 'penerimamanfaatdewasalakilaki',
+            // 'penerimamanfaatdewasatotal',
+            // 'penerimamanfaatlansiaperempuan',
+            // 'penerimamanfaatlansialakilaki',
+            // 'penerimamanfaatlansiatotal',
+            // 'penerimamanfaatremajaperempuan',
+            // 'penerimamanfaatremajalakilaki',
+            // 'penerimamanfaatremajatotal',
+            // 'penerimamanfaatanakperempuan',
+            // 'penerimamanfaatanaklakilaki',
+            // 'penerimamanfaatanaktotal',
+            // 'penerimamanfaatdisabilitasperempuan',
+            // 'penerimamanfaatdisabilitaslakilaki',
+            // 'penerimamanfaatdisabilitastotal',
+            // 'penerimamanfaatnondisabilitasperempuan',
+            // 'penerimamanfaatnondisabilitaslakilaki',
+            // 'penerimamanfaatnondisabilitastotal',
+            // 'penerimamanfaatmarjinalperempuan',
+            // 'penerimamanfaatmarjinallakilaki',
+            // 'penerimamanfaatmarjinaltotal',
+            // 'penerimamanfaatperempuantotal',
+            // 'penerimamanfaatlakilakitotal',
+            // 'penerimamanfaattotal',
+            // 'created_at',
+            // 'updated_at',
+            // other validation fields related to other tables
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $kegiatan = Trkegiatan::create([
+                'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
+
+            ]);
+
+            // trkegiatan_lokasi
+            // Get the arrays of data
+            $kecamatanIds = $request->input('kecamatan_id', []);
+            $kelurahanIds = $request->input('kelurahan_id', []);
+            $lokasiValues = $request->input('lokasi', []);
+            $latValues = $request->input('lat', []);
+            $longValues = $request->input('long', []);
+
+            // Check if all arrays have the same length
+            $arrayLengths = [
+                count($kecamatanIds),
+                count($kelurahanIds),
+                count($lokasiValues),
+                count($latValues),
+                count($longValues),
+            ];
+
+            if (count(array_unique($arrayLengths)) !== 1) {
+                DB::rollback();
+                return response()->json(['error' => 'Array lengths are inconsistent'], 400);
+            }
+            $locationCount = count($kecamatanIds); // You could use any of the arrays
+
+            // Loop through the arrays and create location records
+            for ($i = 0; $i < $locationCount; $i++) {
+                Kegiatan_Lokasi::create([
+                    'kegiatan_id' => $kegiatan->id,
+                    'desa_id' => $kelurahanIds[$i],
+                    'lokasi' => $lokasiValues[$i],
+                    'lat' => $latValues[$i],
+                    'long' => $longValues[$i],
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(
+                [
+                    'success' => true,
+                    'data' => $kegiatan
+                ],
+                201
+            );
+        } catch (\Throwable $th) {
+            //throw $th;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
+        }
     }
 }
