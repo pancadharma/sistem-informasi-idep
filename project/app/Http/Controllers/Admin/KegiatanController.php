@@ -10,6 +10,16 @@ use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Jenis_Kegiatan;
+use App\Models\Kegiatan_Assessment;
+use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Kunjungan;
+use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Monitoring;
+use App\Models\Kegiatan_Pelatihan;
+use App\Models\Kegiatan_Pembelanjaan;
+use App\Models\Kegiatan_Pemetaan;
+use App\Models\Kegiatan_Pengembangan;
+use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
 use App\Models\mSektor;
 use App\Models\Partner;
@@ -509,12 +519,12 @@ class KegiatanController extends Controller
 
     public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
     {
-        $jenisKegiatan = $request->input('jenis_kegiatan');
+        $jenisKegiatan = $request->input('jeniskegiatan_id');
         $idKegiatan = $kegiatan->id;
 
         switch ($jenisKegiatan) {
             case 1: // Assessment
-                TrkegiatanAssessment::create(array_merge($request->only([
+                Kegiatan_Assessment::create(array_merge($request->only([
                     'assessmentyangterlibat',
                     'assessmenttemuan',
                     'assessmenttambahan',
@@ -525,7 +535,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 2: // Sosialisasi
-                TrkegiatanSosialisasi::create(array_merge($request->only([
+                Kegiatan_Sosialisasi::create(array_merge($request->only([
                     'sosialisasiyangterlibat',
                     'sosialisasitemuan',
                     'sosialisasitambahan',
@@ -536,7 +546,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 3: // Pelatihan
-                TrkegiatanPelatihan::create(array_merge($request->only([
+                Kegiatan_Pelatihan::create(array_merge($request->only([
                     'pelatihanpelatih',
                     'pelatihanhasil',
                     'pelatihandistribusi',
@@ -548,7 +558,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 4: // Pembelanjaan
-                TrkegiatanPembelanjaan::create(array_merge($request->only([
+                Kegiatan_Pembelanjaan::create(array_merge($request->only([
                     'pembelanjaandetailbarang',
                     'pembelanjaanmulai',
                     'pembelanjaanselesai',
@@ -563,7 +573,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 5: // Pengembangan
-                TrkegiatanPengembangan::create(array_merge($request->only([
+                Kegiatan_Pengembangan::create(array_merge($request->only([
                     'pengembanganjeniskomponen',
                     'pengembanganberapakomponen',
                     'pengembanganlokasikomponen',
@@ -575,7 +585,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 6: // Kampanye
-                TrkegiatanKampanye::create(array_merge($request->only([
+                Kegiatan_Kampanye::create(array_merge($request->only([
                     'kampanyeyangdikampanyekan',
                     'kampanyejenis',
                     'kampanyebentukkegiatan',
@@ -589,7 +599,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 7: // Pemetaan
-                TrkegiatanPemetaan::create(array_merge($request->only([
+                Kegiatan_Pemetaan::create(array_merge($request->only([
                     'pemetaanyangdihasilkan',
                     'pemetaanluasan',
                     'pemetaanunit',
@@ -600,7 +610,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 8: // Monitoring
-                TrkegiatanMonitoring::create(array_merge($request->only([
+                Kegiatan_Monitoring::create(array_merge($request->only([
                     'monitoringyangdipantau',
                     'monitoringdata',
                     'monitoringyangterlibat',
@@ -614,7 +624,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 9: // Kunjungan
-                TrkegiatanKunjungan::create(array_merge($request->only([
+                Kegiatan_Kunjungan::create(array_merge($request->only([
                     'kunjunganlembaga',
                     'kunjunganpeserta',
                     'kunjunganyangdilakukan',
@@ -627,7 +637,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 10: // Konsultasi
-                TrkegiatanKonsultasi::create(array_merge($request->only([
+                Kegiatana_Konsultasi::create(array_merge($request->only([
                     'konsultasilembaga',
                     'konsultasikomponen',
                     'konsultasiyangdilakukan',
@@ -640,7 +650,7 @@ class KegiatanController extends Controller
                 ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 11: // Lainnya
-                TrkegiatanLainnya::create(array_merge($request->only([
+                Kegiatan_Lainnya::create(array_merge($request->only([
                     'lainnyamengapadilakukan',
                     'lainnyadampak',
                     'lainnyasumberpendanaan',
