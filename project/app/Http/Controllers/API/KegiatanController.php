@@ -24,9 +24,13 @@ use App\Models\Kegiatan_Pemetaan;
 use App\Models\Kegiatan_Pengembangan;
 use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
+use Exception;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use PHPUnit\Event\Code\Throwable;
 
 class KegiatanController extends Controller
 {
@@ -315,80 +319,17 @@ class KegiatanController extends Controller
 
 
     // update the API/KegiatanController with api to store , update, and get data
-    public function storeApi(Request $request)
+    public function storeApi(StoreKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        $validator = Validator::make($request->all(), [
-            'programoutcomeoutputactivity_id'   => 'required|exists:trprogramoutcomeoutputactivity,id',
-
-            // validation of trkegiatan_lokasi
-            'kelurahan_id'                      => ['array'],
-            'kelurahan_id.*'                    => ['nullable', 'integer', 'exists:kelurahan,id'],
-            'kecamatan_id'                      => ['array'],
-            'kecamatan_id.*'                    => ['nullable', 'integer', 'exists:kecamatan,id'],
-            'lokasi'                            => ['array'],
-            'lokasi.*'                          => ['nullable', 'string',],
-            'lat'                               => ['array'],
-            'lat.*'                             => ['nullable', 'string',],
-            'long'                              => ['array'],
-            'long.*'                            => ['nullable', 'string',],
-
-            // this input for model Kegiatan
-            // 'jeniskegiatan_id'                  => ['required', 'exists:mjeniskegiatan,id'],
-
-            // 'mitra_id'                          => ['array'],
-            // 'mitra_id.*'                        => ['nullable', 'integer', 'exists:mpartner,id'],
-
-            // 'user_id'                           => ['required', 'exist:users,id'],
-            // 'fasepelaporan'                     => ['required', 'integer'],
-
-
-            // 'tanggalmulai',
-            // 'tanggalselesai',
-            // 'status',
-            // 'deskripsilatarbelakang',
-            // 'deskripsitujuan',
-            // 'deskripsikeluaran',
-            // 'deskripsiyangdikaji',
-            // 'penerimamanfaatdewasaperempuan',
-            // 'penerimamanfaatdewasalakilaki',
-            // 'penerimamanfaatdewasatotal',
-            // 'penerimamanfaatlansiaperempuan',
-            // 'penerimamanfaatlansialakilaki',
-            // 'penerimamanfaatlansiatotal',
-            // 'penerimamanfaatremajaperempuan',
-            // 'penerimamanfaatremajalakilaki',
-            // 'penerimamanfaatremajatotal',
-            // 'penerimamanfaatanakperempuan',
-            // 'penerimamanfaatanaklakilaki',
-            // 'penerimamanfaatanaktotal',
-            // 'penerimamanfaatdisabilitasperempuan',
-            // 'penerimamanfaatdisabilitaslakilaki',
-            // 'penerimamanfaatdisabilitastotal',
-            // 'penerimamanfaatnondisabilitasperempuan',
-            // 'penerimamanfaatnondisabilitaslakilaki',
-            // 'penerimamanfaatnondisabilitastotal',
-            // 'penerimamanfaatmarjinalperempuan',
-            // 'penerimamanfaatmarjinallakilaki',
-            // 'penerimamanfaatmarjinaltotal',
-            // 'penerimamanfaatperempuantotal',
-            // 'penerimamanfaatlakilakitotal',
-            // 'penerimamanfaattotal',
-            // 'created_at',
-            // 'updated_at',
-            // other validation fields related to other tables
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        DB::beginTransaction();
-
         try {
-            $kegiatan = Trkegiatan::create([
+            DB::beginTransaction();
+            $kegiatan = Kegiatan::create([
                 'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
-
+                // $request->validated();
             ]);
+            $kegiatan->mitra()->sync($request->input('mitra_id', []));
+            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+            $this->storePenulisKegiatan($request, $kegiatan);
 
             // trkegiatan_lokasi
             // Get the arrays of data
@@ -425,15 +366,18 @@ class KegiatanController extends Controller
             }
 
             DB::commit();
-            return response()->json(
-                [
-                    'success' => true,
-                    'data' => $kegiatan
-                ],
-                201
-            );
+            return response()->json([
+                'success' => true,
+                'data'    => $kegiatan,
+                'message' => __('global.create_success'),
+            ],201);
         } catch (\Throwable $th) {
-            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create record: ' . $th->getMessage(),
+                'error'   => $th->getMessage(),
+            ], 500);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
@@ -608,9 +552,139 @@ class KegiatanController extends Controller
         ];
     }
 
-    public function storeKegiatanLokasi(StoreKegiatanRequest $request, Kegiatan $kegiatan)
+    public function storePenulisKegiatan(Request $request, Kegiatan $kegiatan)
     {
-        $jenisKegiatan = $request->input('jeniskegiatan_id');
+        $penulis = $request->input('penulis', []);
+        $jabatan = $request->input('jabatan', []);
+
+        if (count($penulis) !== count($jabatan)) {
+            throw new Exception('Penulis and Jabatan count mismatch.');
+        }
+
+        // Prepare the data for syncing
+        $dataPenulisJabatan = [];
+        foreach ($penulis as $index => $penulisID) {
+            $dataPenulisJabatan[$penulisID] = ['peran_id' => $jabatan[$index]];
+        }
+
+        // Sync the penulis with the jabatan data
+        $kegiatan->penulis()->sync($dataPenulisJabatan);
     }
+
+
+    public function storeKegiatanLokasi(Request $request, Kegiatan $kegiatan)
+    {
+        $locationData = $this->prepareLocationData($request, $kegiatan);
+
+        if ($locationData === false) {
+            throw new \Exception("Invalid location data");
+        }
+        try {
+            Kegiatan_Lokasi::insert($locationData);
+        } catch (\Exception $e) {
+            Log::error('Failed to store locations: ' . $e->getMessage());
+            throw new Exception("Failed to store location data: " . $e->getMessage());
+        }
+
+    }
+
+
+    protected function prepareLocationData(Request $request, Kegiatan $kegiatan)
+    {
+        $kecamatanIds = $request->input('kecamatan_id', []);
+        $kelurahanIds = $request->input('kelurahan_id', []);
+        $lokasiValues = $request->input('lokasi', []);
+        $latValues = $request->input('lat', []);
+        $longValues = $request->input('long', []);
+
+        $arrayLengths = [
+            count($kecamatanIds),
+            count($kelurahanIds),
+            count($lokasiValues),
+            count($latValues),
+            count($longValues),
+        ];
+
+        if (count(array_unique($arrayLengths)) !== 1) {
+            return false; // Indicate inconsistent data
+        }
+
+        $locationData = [];
+        $locationCount = count($kecamatanIds);
+        for ($i = 0; $i < $locationCount; $i++) {
+
+            $locationData[] = [
+                'kegiatan_id' => $kegiatan->id,
+                'desa_id' => $kelurahanIds[$i],
+                'lokasi' => $lokasiValues[$i],
+                'lat' => $latValues[$i],
+                'long' => $longValues[$i],
+            ];
+        }
+        return $locationData;
+    }
+
+    protected function storeLocations(Request $request, Kegiatan $kegiatan)
+    {
+        $locationData = $this->prepareLocationData($request, $kegiatan);
+
+        if ($locationData === false) {
+            throw new \Exception("Invalid location data");
+        }
+
+        foreach ($locationData as $location) {
+            Kegiatan_Lokasi::create($location);
+        }
+    }
+    protected function updateLocations(Request $request, Kegiatan $kegiatan)
+    {
+        $newLocationData = $this->prepareLocationData($request, $kegiatan); // Pass $kegiatan here
+
+        if ($newLocationData === false) {
+            throw new \Exception("Invalid location data");
+        }
+
+        // Delete existing locations
+        $kegiatan->lokasi()->delete();
+
+        // Insert new locations
+        foreach ($newLocationData as $location) {
+            $kegiatan->lokasi()->create($location);
+        }
+    }
+
+    // public function updateApi(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    public function updateApi(Request $request, Kegiatan $kegiatan)
+    {
+        try {
+            DB::beginTransaction();
+
+            $kegiatan->update([
+                'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
+            ]);
+
+            $this->syncRelationships($request, $kegiatan);
+            $this->updateLocations($request, $kegiatan);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $kegiatan,
+                'message' => __('global.update_success'),
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update record: ' . $th->getMessage(),
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
+
 
 }
