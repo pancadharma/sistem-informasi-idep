@@ -329,49 +329,18 @@ class KegiatanController extends Controller
             ]);
             $kegiatan->mitra()->sync($request->input('mitra_id', []));
             $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+
+            $this->storeHasilKegiatan($request, $kegiatan);
+            $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
-            $this->storeLocations($request, $kegiatan);
-
-            // trkegiatan_lokasi
-            // Get the arrays of data
-            $kecamatanIds = $request->input('kecamatan_id', []);
-            $kelurahanIds = $request->input('kelurahan_id', []);
-            $lokasiValues = $request->input('lokasi', []);
-            $latValues = $request->input('lat', []);
-            $longValues = $request->input('long', []);
-
-            // Check if all arrays have the same length
-            $arrayLengths = [
-                count($kecamatanIds),
-                count($kelurahanIds),
-                count($lokasiValues),
-                count($latValues),
-                count($longValues),
-            ];
-
-            if (count(array_unique($arrayLengths)) !== 1) {
-                DB::rollback();
-                return response()->json(['error' => 'Array lengths are inconsistent'], 400);
-            }
-            $locationCount = count($kecamatanIds); // You could use any of the arrays
-
-            // Loop through the arrays and create location records
-            for ($i = 0; $i < $locationCount; $i++) {
-                Kegiatan_Lokasi::create([
-                    'kegiatan_id' => $kegiatan->id,
-                    'desa_id' => $kelurahanIds[$i],
-                    'lokasi' => $lokasiValues[$i],
-                    'lat' => $latValues[$i],
-                    'long' => $longValues[$i],
-                ]);
-            }
 
             DB::commit();
             return response()->json([
                 'success' => true,
                 'data'    => $kegiatan,
                 'message' => __('global.create_success'),
-            ],201);
+            ], 201);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
@@ -385,161 +354,48 @@ class KegiatanController extends Controller
         }
     }
 
+    // public function storeHasilKegiatan(Request $request, Kegiatan $kegiatan)
+    // {
+    //     $jenisKegiatan = $request->input('jeniskegiatan_id');
+    //     $idKegiatan = $kegiatan->id;
 
-    // store kegiatan related to jenis kegiatan
-    public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
+    //     $modelMapping = [
+    //         1   => Kegiatan_Assessment::class,
+    //         2   => Kegiatan_Sosialisasi::class,
+    //         3   => Kegiatan_Pelatihan::class,
+    //         4   => Kegiatan_Pembelanjaan::class,
+    //         5   => Kegiatan_Pengembangan::class,
+    //         6   => Kegiatan_Kampanye::class,
+    //         7   => Kegiatan_Pemetaan::class,
+    //         8   => Kegiatan_Monitoring::class,
+    //         9   => Kegiatan_Kunjungan::class,
+    //         10  => Kegiatan_Konsultasi::class,
+    //         11  => Kegiatan_Lainnya::class,
+    //     ];
+
+    //     if (!isset($modelMapping[$jenisKegiatan])) {
+    //         throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
+    //     }
+    //     $modelClass = $modelMapping[$jenisKegiatan];
+    //     $model = $modelMapping[$jenisKegiatan];
+
+    //     $validationRules = $this->getValidationRules($jenisKegiatan);
+
+    //     $data = $request->only([
+    //         // Add common fields here if any exist across all types
+    //         'kegiatan_id' => $idKegiatan,
+    //     ]);
+
+    //     // Add type-specific fields dynamically
+    //     $typeSpecificFields = $this->getTypeSpecificFields($jenisKegiatan);
+    //     $data = array_merge($data, $request->only($typeSpecificFields));
+
+    //     $model::create($data);
+    // }
+
+    public function storeHasilKegiatan(StoreKegiatanRequest $request, Trkegiatan $kegiatan)
     {
-        $jenisKegiatan = $request->input('jeniskegiatan_id');
-        $idKegiatan = $kegiatan->id;
-
-        switch ($jenisKegiatan) {
-            case 1: // Assessment
-                Kegiatan_Assessment::create(array_merge($request->only([
-                    'assessmentyangterlibat',
-                    'assessmenttemuan',
-                    'assessmenttambahan',
-                    'assessmenttambahan_ket',
-                    'assessmentkendala',
-                    'assessmentisu',
-                    'assessmentpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 2: // Sosialisasi
-                Kegiatan_Sosialisasi::create(array_merge($request->only([
-                    'sosialisasiyangterlibat',
-                    'sosialisasitemuan',
-                    'sosialisasitambahan',
-                    'sosialisasitambahan_ket',
-                    'sosialisasikendala',
-                    'sosialisasiisu',
-                    'sosialisasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 3: // Pelatihan
-                Kegiatan_Pelatihan::create(array_merge($request->only([
-                    'pelatihanpelatih',
-                    'pelatihanhasil',
-                    'pelatihandistribusi',
-                    'pelatihandistribusi_ket',
-                    'pelatihanrencana',
-                    'pelatihanunggahan',
-                    'pelatihanisu',
-                    'pelatihanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 4: // Pembelanjaan
-                Kegiatan_Pembelanjaan::create(array_merge($request->only([
-                    'pembelanjaandetailbarang',
-                    'pembelanjaanmulai',
-                    'pembelanjaanselesai',
-                    'pembelanjaandistribusimulai',
-                    'pembelanjaandistribusiselesai',
-                    'pembelanjaanterdistribusi',
-                    'pembelanjaanakandistribusi',
-                    'pembelanjaanakandistribusi_ket',
-                    'pembelanjaankendala',
-                    'pembelanjaanisu',
-                    'pembelanjaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 5: // Pengembangan
-                Kegiatan_Pengembangan::create(array_merge($request->only([
-                    'pengembanganjeniskomponen',
-                    'pengembanganberapakomponen',
-                    'pengembanganlokasikomponen',
-                    'pengembanganyangterlibat',
-                    'pengembanganrencana',
-                    'pengembangankendala',
-                    'pengembanganisu',
-                    'pengembanganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 6: // Kampanye
-                Kegiatan_Kampanye::create(array_merge($request->only([
-                    'kampanyeyangdikampanyekan',
-                    'kampanyejenis',
-                    'kampanyebentukkegiatan',
-                    'kampanyeyangterlibat',
-                    'kampanyeyangdisasar',
-                    'kampanyejangkauan',
-                    'kampanyerencana',
-                    'kampanyekendala',
-                    'kampanyeisu',
-                    'kampanyepembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 7: // Pemetaan
-                Kegiatan_Pemetaan::create(array_merge($request->only([
-                    'pemetaanyangdihasilkan',
-                    'pemetaanluasan',
-                    'pemetaanunit',
-                    'pemetaanyangterlibat',
-                    'pemetaanrencana',
-                    'pemetaanisu',
-                    'pemetaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 8: // Monitoring
-                Kegiatan_Monitoring::create(array_merge($request->only([
-                    'monitoringyangdipantau',
-                    'monitoringdata',
-                    'monitoringyangterlibat',
-                    'monitoringmetode',
-                    'monitoringhasil',
-                    'monitoringkegiatanselanjutnya',
-                    'monitoringkegiatanselanjutnya_ket',
-                    'monitoringkendala',
-                    'monitoringisu',
-                    'monitoringpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 9: // Kunjungan
-                Kegiatan_Kunjungan::create(array_merge($request->only([
-                    'kunjunganlembaga',
-                    'kunjunganpeserta',
-                    'kunjunganyangdilakukan',
-                    'kunjunganhasil',
-                    'kunjunganpotensipendapatan',
-                    'kunjunganrencana',
-                    'kunjungankendala',
-                    'kunjunganisu',
-                    'kunjunganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 10: // Konsultasi
-                Kegiatan_Konsultasi::create(array_merge($request->only([
-                    'konsultasilembaga',
-                    'konsultasikomponen',
-                    'konsultasiyangdilakukan',
-                    'konsultasihasil',
-                    'konsultasipotensipendapatan',
-                    'konsultasirencana',
-                    'konsultasikendala',
-                    'konsultasiisu',
-                    'konsultasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 11: // Lainnya
-                Kegiatan_Lainnya::create(array_merge($request->only([
-                    'lainnyamengapadilakukan',
-                    'lainnyadampak',
-                    'lainnyasumberpendanaan_ket',
-                    'lainnyayangterlibat',
-                    'lainnyarencana',
-                    'lainnyakendala',
-                    'lainnyaisu',
-                    'lainnyapembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            default:
-                // Handle invalid jenisKegiatan (e.g., throw an exception)
-                throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
-        }
-    }
-
-    public function storeHasilKegiatan(Request $request, Kegiatan $kegiatan)
-    {
-        $jenisKegiatan = $request->input('jeniskegiatan_id');
+        $jenisKegiatan = (int)$request->input('jeniskegiatan_id');
         $idKegiatan = $kegiatan->id;
 
         $modelMapping = [
@@ -557,22 +413,16 @@ class KegiatanController extends Controller
         ];
 
         if (!isset($modelMapping[$jenisKegiatan])) {
-            throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
+            throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
         }
 
-        $model = $modelMapping[$jenisKegiatan];
-        $data = $request->only([
-            // Add common fields here if any exist across all types
-            'kegiatan_id' => $idKegiatan,
-        ]);
+        $modelClass = $modelMapping[$jenisKegiatan];
+        $validatedData = $request->validated();
+        $validatedData['kegiatan_id'] = $idKegiatan;
+        $modelClass::create($validatedData);
 
-        // Add type-specific fields dynamically
-        $typeSpecificFields = $this->getTypeSpecificFields($jenisKegiatan);
-        $data = array_merge($data, $request->only($typeSpecificFields));
-
-        $model::create($data);
+        return response()->json(['message' => 'Kegiatan created successfully'], 201);
     }
-
     protected function getTypeSpecificFields(int $jenisKegiatan): array
     {
         switch ($jenisKegiatan) {
@@ -624,7 +474,7 @@ class KegiatanController extends Controller
     }
 
 
-    public function storeKegiatanLokasi(Request $request, Kegiatan $kegiatan)
+    public function storeLokasiKegiatan(Request $request, Kegiatan $kegiatan)
     {
         $locationData = $this->prepareLocationData($request, $kegiatan);
 
@@ -637,7 +487,6 @@ class KegiatanController extends Controller
             Log::error('Failed to store locations: ' . $e->getMessage());
             throw new Exception("Failed to store location data: " . $e->getMessage());
         }
-
     }
 
 
@@ -733,10 +582,4 @@ class KegiatanController extends Controller
             ], 500);
         }
     }
-
-
-
-
-
-
 }

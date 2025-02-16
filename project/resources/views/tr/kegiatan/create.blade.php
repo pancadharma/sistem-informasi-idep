@@ -2,8 +2,10 @@
 
 @section('subtitle', __('cruds.kegiatan.add'))
 @section('content_header_title')<strong>{{ __('cruds.kegiatan.add') }}</strong> @endsection
-@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
+@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}">
+    {{ __('cruds.kegiatan.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span
+    title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -11,7 +13,8 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
+    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
+        enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="row">
@@ -33,7 +36,7 @@
 @endpush
 
 @push('js')
-@section('plugins.Sweetalert2', true)
+    @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
@@ -52,63 +55,106 @@
 
 @include('tr.kegiatan.js.create')
 @stack('basic_tab_js')
-    <script>
-        $(document).ready(function() {
-            $('#simpan_kegiatan').on('click', function(e) {
-                e.preventDefault();
+<script>
+    $(document).ready(function() {
 
-                // Get form data
-                let formData = new FormData($('#createKegiatan')[0]);
-                let serializedData = $("#createKegiatan").serializeArray();
+        function validasiLongLat() {
+            let latInputs = document.querySelectorAll('input[name="lat[]"]');
+            let longInputs = document.querySelectorAll('input[name="long[]"]');
+            let isValid = true;
 
-                // Convert serialized data to a readable format for display
-                let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
+            for (let i = 0; i < latInputs.length; i++) {
+                let latValue = latInputs[i].value.trim();
+                let longValue = longInputs[i].value.trim();
 
-                // Show form data in pre in Sweet Alert modal
+                // Check if latitude is empty or not a valid number between -90 and 90
+                if (!latValue || isNaN(parseFloat(latValue)) || parseFloat(latValue) < -90 || parseFloat(
+                        latValue) > 90) {
+                    isValid = false;
+                    latInputs[i].classList.add('is-invalid');
+                } else {
+                    latInputs[i].classList.remove('is-invalid');
+                }
+
+                // Check if longitude is empty or not a valid number between -180 and 180
+                if (!longValue || isNaN(parseFloat(longValue)) || parseFloat(longValue) < -180 || parseFloat(
+                        longValue) > 180) {
+                    isValid = false;
+                    longInputs[i].classList.add('is-invalid');
+                } else {
+                    longInputs[i].classList.remove('is-invalid');
+                }
+            }
+
+            return isValid;
+        }
+
+
+        $('#simpan_kegiatan').on('click', function(e) {
+            e.preventDefault();
+            if (!validasiLongLat()) {
                 Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Apakah anda yakin ingin menyimpan data ini?',
-                    html: `<pre>${displayData}</pre>`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, simpan!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('api.kegiatan.satuan') }}", // Ensure this is the correct route
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            cache: false,
-                            success: function(data) {
-                                Swal.fire(
-                                    'Berhasil!',
-                                    'Data berhasil disimpan.',
-                                    'success'
-                                ).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // Optionally redirect or reset form here
-                                        // location.reload(); // Example to reload page
-                                        // $('#createKegiatan')[0].reset(); // Reset form
-                                    }
-                                });
-                            },
-                            error: function(data) {
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Data gagal disimpan.',
-                                    'error'
-                                );
-                            }
-                        });
-                    }
+                    title: 'Gagal!',
+                    text: 'Please fill in all latitude and longitude fields with valid values.',
+                    icon: 'error'
                 });
+
+                return;
+            }
+            // Get form data
+            let formData = new FormData($('#createKegiatan')[0]);
+            let serializedData = $("#createKegiatan").serializeArray();
+
+            // Convert serialized data to a readable format for display
+            let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
+
+            console.log(serializedData);
+            console.info(formData);
+            // Show form data in pre in Sweet Alert modal
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah anda yakin ingin menyimpan data ini?',
+                html: `<pre>${displayData}</pre>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function(data) {
+                            Swal.fire({
+
+                                title: 'Berhasil!',
+                                text: 'Data berhasil disimpan.',
+                                icon: 'success'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Optionally redirect or reset form here
+                                    // location.reload(); // Example to reload page
+                                    // $('#createKegiatan')[0].reset(); // Reset form
+                                }
+                            });
+                        },
+                        error: function(data) {
+                            Swal.fire({
+
+                                title: 'Gagal!',
+                                text: 'Data gagal disimpan.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
             });
         });
-
-
-    </script>
+    });
+</script>
 @endpush
