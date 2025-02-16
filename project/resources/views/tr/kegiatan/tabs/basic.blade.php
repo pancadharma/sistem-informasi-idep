@@ -4,6 +4,7 @@
         <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
     <!-- id program -->
         <input type="hidden" name="program_id" id="program_id">
+        <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}">
     <!-- kode program -->
         <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
         data-toggle="modal" data-target="#ModalDaftarProgram">
@@ -39,22 +40,22 @@
     <!-- jenis kegiatan-->
     <!-- bentuk kegiatan-->
     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-        <label for="jenis_kegiatan" class="input-group col-form-label">
+        <label for="jeniskegiatan_id" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
         </label>
         <div class="select2-purple">
-            <select class="form-control select2" name="jenis_kegiatan" id="jenis_kegiatan" data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
+            <select class="form-control select2" name="jeniskegiatan_id" id="jeniskegiatan_id" data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
     </div>
     <!-- sektor kegiatan-->
     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1 mb-1">
-        <label for="sektor_kegiatan" class="input-group col-form-label">
+        <label for="sektor_id" class="input-group col-form-label">
             <strong>{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</strong>
         </label>
         <div class="select2-purple">
-            <select class="form-control select2" name="sektor_kegiatan" id="sektor_kegiatan" multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
+            <select class="form-control select2" name="sektor_id[]" id="sektor_id" multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
@@ -94,9 +95,9 @@
 <!-- nama mitra-->
 <div class="form-group row">
     <div class="col-sm-12 col-md-9 col-lg-9 self-center order-2 order-md-2">
-        <label for="mitra" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
+        <label for="mitra_id" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
         <div class="select2-purple">
-            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="mitra" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="mitra" multiple>
+            <select class="form-control select2" data-api-url="{{ route('api.kegiatan.mitra') }}" id="mitra_id" placeholder=" {{ __('global.pleaseSelect') .' '.__('cruds.kegiatan.basic.nama_mitra') }}" name="mitra_id[]" multiple>
             </select>
         </div>
     </div>

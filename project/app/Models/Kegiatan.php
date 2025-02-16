@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\User;
 use DateTimeInterface;
 use App\Traits\Auditable;
 use Spatie\Image\Enums\Fit;
-use Spatie\MediaLibrary\HasMedia;
 
+use App\Models\Jenis_Kegiatan;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +18,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use App\Models\Jenis_Kegiatan;
 
 
 
@@ -36,9 +37,7 @@ class Kegiatan extends Model implements HasMedia
     protected $fillable = [
         'programoutcomeoutputactivity_id',
         'jeniskegiatan_id',
-        'desa_id',
         'user_id',
-        'mitra_id',
         'fasepelaporan',
         'tanggalmulai',
         'tanggalselesai',
@@ -89,6 +88,21 @@ class Kegiatan extends Model implements HasMedia
     public function getTglMulaiAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setPenulisAttribute($value)
+    {
+        // Set the penulis_id attribute to the ID of the user associated with the penulis input
+        $this->attributes['penulis_id'] = $value;
+    }
+
+    public function getPenulisAttribute($value)
+    {
+        // Get the penulis_id attribute from the ID of the user associated with the penulis input
+        // return User::where('id', $value)->first()?->nama;
+        return User::where('nama', $value)->first()?->id;
+
+
     }
 
     public function setTglMulaiAttribute($value)
@@ -188,13 +202,11 @@ class Kegiatan extends Model implements HasMedia
 
     public function penulis_kegiatan()
     {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id', 'peran_id');
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id', 'peran_id');
     }
     public function penulis()
     {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id')
-        ->withPivot('peran_id')
-        ->withTimestamps();
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
     }
 
 

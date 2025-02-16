@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Role;
+use App\Models\User;
 use DateTimeInterface;
 use App\Models\Kegiatan;
 use App\Traits\Auditable;
@@ -18,7 +20,7 @@ class Kegiatan_Penulis extends Model
 
     protected $fillable = [
         'kegiatan_id',
-        'user_id',
+        'penulis_id',
         'peran_id',
         'created_at',
         'updated_at',
@@ -34,7 +36,7 @@ class Kegiatan_Penulis extends Model
         return LogOptions::defaults()
         ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
-    
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
@@ -47,7 +49,7 @@ class Kegiatan_Penulis extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'penulis_id');
     }
 
     public function peran()

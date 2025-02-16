@@ -14,7 +14,7 @@
 </div> --}}
 
 <div class="form-group row col-md-12" id="list_penulis_edit">
-    @foreach ($kegiatan->penulis as $penulis)
+    {{-- @foreach ($kegiatanPenulis as $penulis)
 
     <div class="row penulis-row col-12">
         <div class="col-lg-5 form-group mb-0">
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    @endforeach
+    @endforeach --}}
 </div>
 <!-- End Penulis Laporan Kegiatan-->
 

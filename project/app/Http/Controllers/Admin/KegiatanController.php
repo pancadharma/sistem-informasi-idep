@@ -19,6 +19,7 @@ use App\Models\Kegiatan_Pelatihan;
 use App\Models\Kegiatan_Pembelanjaan;
 use App\Models\Kegiatan_Pemetaan;
 use App\Models\Kegiatan_Pengembangan;
+use App\Models\Kegiatan_Penulis;
 use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
 use App\Models\mSektor;
@@ -109,10 +110,13 @@ class KegiatanController extends Controller
             $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
             $kegiatan = new Kegiatan();
+            $kegiatanPenulis = Kegiatan_Penulis::all();
+
+            // dd($kegiatanPenulis ?? []);
 
             $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
 
-            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan'));
+            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
         }
         return response()->json([
             'success' => false,

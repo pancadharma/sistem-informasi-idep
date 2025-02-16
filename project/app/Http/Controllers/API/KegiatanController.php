@@ -24,6 +24,7 @@ use App\Models\Kegiatan_Pemetaan;
 use App\Models\Kegiatan_Pengembangan;
 use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
+use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Validator;
@@ -322,14 +323,18 @@ class KegiatanController extends Controller
     public function storeApi(StoreKegiatanRequest $request, Kegiatan $kegiatan)
     {
         try {
+            $user = User::findOrFail($request->user_id);
+            $data = $request->validated();
             DB::beginTransaction();
-            $kegiatan = Kegiatan::create([
-                'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
-                // $request->validated();
-            ]);
+            // $kegiatan = Kegiatan::create([
+            //     'user_id' => $request->user_id,
+            //     'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
+            //     'fasepelaporan' => $request->fasepelaporan,
+            //     'jeniskegiatan_id' => $request->jeniskegiatan_id,
+            // ]);
+            $kegiatan = Kegiatan::create($data);
             $kegiatan->mitra()->sync($request->input('mitra_id', []));
             $kegiatan->sektor()->sync($request->input('sektor_id', []));
-
 
             $this->storeHasilKegiatan($request, $kegiatan);
             $this->storeLokasiKegiatan($request, $kegiatan);
@@ -338,7 +343,8 @@ class KegiatanController extends Controller
             DB::commit();
             return response()->json([
                 'success' => true,
-                'data'    => $kegiatan,
+                'data'    => $data,
+                'created by' => $user->nama,
                 'message' => __('global.create_success'),
             ], 201);
         } catch (\Throwable $th) {
@@ -353,47 +359,7 @@ class KegiatanController extends Controller
             return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
         }
     }
-
-    // public function storeHasilKegiatan(Request $request, Kegiatan $kegiatan)
-    // {
-    //     $jenisKegiatan = $request->input('jeniskegiatan_id');
-    //     $idKegiatan = $kegiatan->id;
-
-    //     $modelMapping = [
-    //         1   => Kegiatan_Assessment::class,
-    //         2   => Kegiatan_Sosialisasi::class,
-    //         3   => Kegiatan_Pelatihan::class,
-    //         4   => Kegiatan_Pembelanjaan::class,
-    //         5   => Kegiatan_Pengembangan::class,
-    //         6   => Kegiatan_Kampanye::class,
-    //         7   => Kegiatan_Pemetaan::class,
-    //         8   => Kegiatan_Monitoring::class,
-    //         9   => Kegiatan_Kunjungan::class,
-    //         10  => Kegiatan_Konsultasi::class,
-    //         11  => Kegiatan_Lainnya::class,
-    //     ];
-
-    //     if (!isset($modelMapping[$jenisKegiatan])) {
-    //         throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
-    //     }
-    //     $modelClass = $modelMapping[$jenisKegiatan];
-    //     $model = $modelMapping[$jenisKegiatan];
-
-    //     $validationRules = $this->getValidationRules($jenisKegiatan);
-
-    //     $data = $request->only([
-    //         // Add common fields here if any exist across all types
-    //         'kegiatan_id' => $idKegiatan,
-    //     ]);
-
-    //     // Add type-specific fields dynamically
-    //     $typeSpecificFields = $this->getTypeSpecificFields($jenisKegiatan);
-    //     $data = array_merge($data, $request->only($typeSpecificFields));
-
-    //     $model::create($data);
-    // }
-
-    public function storeHasilKegiatan(StoreKegiatanRequest $request, Trkegiatan $kegiatan)
+    public function storeHasilKegiatan(StoreKegiatanRequest $request, Kegiatan $kegiatan)
     {
         $jenisKegiatan = (int)$request->input('jeniskegiatan_id');
         $idKegiatan = $kegiatan->id;
@@ -456,10 +422,13 @@ class KegiatanController extends Controller
 
     public function storePenulisKegiatan(Request $request, Kegiatan $kegiatan)
     {
+        // how do I populate kegiatan_id for testing since I am not creating a kegiatan in table yet, need hardcode it
+
         $penulis = $request->input('penulis', []);
         $jabatan = $request->input('jabatan', []);
 
-        if (count($penulis) !== count($jabatan)) {
+        if (count($penulis) !== count($jabatan))
+        {
             throw new Exception('Penulis and Jabatan count mismatch.');
         }
 
@@ -472,7 +441,6 @@ class KegiatanController extends Controller
         // Sync the penulis with the jabatan data
         $kegiatan->penulis()->sync($dataPenulisJabatan);
     }
-
 
     public function storeLokasiKegiatan(Request $request, Kegiatan $kegiatan)
     {
@@ -525,18 +493,18 @@ class KegiatanController extends Controller
         return $locationData;
     }
 
-    protected function storeLocations(Request $request, Kegiatan $kegiatan)
-    {
-        $locationData = $this->prepareLocationData($request, $kegiatan);
+    // protected function storeLocations(Request $request, Kegiatan $kegiatan)
+    // {
+    //     $locationData = $this->prepareLocationData($request, $kegiatan);
 
-        if ($locationData === false) {
-            throw new \Exception("Invalid location data");
-        }
+    //     if ($locationData === false) {
+    //         throw new \Exception("Invalid location data");
+    //     }
 
-        foreach ($locationData as $location) {
-            Kegiatan_Lokasi::create($location);
-        }
-    }
+    //     foreach ($locationData as $location) {
+    //         Kegiatan_Lokasi::create($location);
+    //     }
+    // }
     protected function updateLocations(Request $request, Kegiatan $kegiatan)
     {
         $newLocationData = $this->prepareLocationData($request, $kegiatan); // Pass $kegiatan here

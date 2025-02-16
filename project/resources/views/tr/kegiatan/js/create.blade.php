@@ -365,7 +365,7 @@
             });
 
             if (formData.jenis_kegiatan) {
-                var apiUrl = $('#jenis_kegiatan').data('api-url');
+                var apiUrl = $('#jeniskegiatan_id').data('api-url');
                 $.ajax({
                     url: apiUrl,
                     method: 'GET',
@@ -376,7 +376,7 @@
                         if (response.data && response.data.length > 0) {
                             var item = response.data[0];
                             var newOption = new Option(item.nama, item.id, true, true);
-                            $('#jenis_kegiatan')
+                            $('#jeniskegiatan_id')
                                 .append(newOption)
                                 .trigger('change');
                         }
@@ -385,7 +385,7 @@
             }
             var uniqueId = Date.now();
             // exclude some select2 field id attribute
-            $('.select2').not('#jenis_kegiatan, #provinsi_id, #kabupaten_id, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]').each(function() {
+            $('.select2').not('#jeniskegiatan_id, #provinsi_id, #kabupaten_id, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]').each(function() {
                 $
                 var fieldId = $(this).attr('id');
                 var values = formData[fieldId];
@@ -969,7 +969,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#jenis_kegiatan').select2({
+        $('#jeniskegiatan_id').select2({
             placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kegiatan.basic.jenis_kegiatan') }}',
             ajax: {
                 url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
@@ -1039,7 +1039,7 @@
         const formContainer = $('#dynamic-form-container');
 
         // Event handler for jenis_kegiatan dropdown change
-        $('#jenis_kegiatan').on('change', function() {
+        $('#jeniskegiatan_id').on('change', function() {
             const selectedValue = $(this).val();
             const fieldPrefix = formFieldMap[selectedValue];
             formContainer.empty();
