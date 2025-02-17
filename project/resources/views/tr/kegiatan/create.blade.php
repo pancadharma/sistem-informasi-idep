@@ -91,6 +91,7 @@
 
         function validasiProgramIDActivityID() {
             let program_id = $('#program_id').val();
+            let kode_program = $('#kode_program').val();
             let activity_id = $('#programoutcomeoutputactivity_id').val();
 
             // Check if either program_id and activity_id is empty or invalid
@@ -98,6 +99,9 @@
                 return false;
             }
             if (isNaN(program_id) || isNaN(activity_id)) {
+                return false;
+            }
+            if (program_id !== '' && activity_id !== '') {
                 return false;
             }
 

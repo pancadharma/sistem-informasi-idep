@@ -234,6 +234,8 @@
         var formData = {
             program_id: $('#program_id').val(),
             program_kode: $('#program_kode').val(),
+            kode_program : $('#kode_program').val(),
+            nama_program : $('#nama_program').val(),
             kode_kegiatan: $('#kode_kegiatan').val(),
             nama_kegiatan: $('#nama_kegiatan').val(),
             nama_desa: $('#nama_desa').val(),
@@ -327,8 +329,12 @@
             // Populate basic form fields
             $('#program_id').val(formData.program_id || '');
             $('#program_kode').val(formData.program_kode || '');
+            $('#kode_program').val(formData.kode_program || '');
+            $('#nama_program').val(formData.nama_program || '');
+
             $('#kode_kegiatan').val(formData.kode_kegiatan || '');
             $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+
             $('#nama_desa').val(formData.nama_desa || '');
             $('#lokasi').val(formData.lokasi || '');
             $('#lat').val(formData.lat || '');
