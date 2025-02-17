@@ -96,14 +96,11 @@ class Kegiatan extends Model implements HasMedia
         $this->attributes['penulis_id'] = $value;
     }
 
-    public function getPenulisAttribute($value)
+    public function getPenulisAttribute()
     {
-        // Get the penulis_id attribute from the ID of the user associated with the penulis input
-        // return User::where('id', $value)->first()?->nama;
-        return User::where('nama', $value)->first()?->id;
-
-
+        return isset($this->attributes['penulis_id']) ? User::find($this->attributes['penulis_id']) : null;
     }
+
 
     public function setTglMulaiAttribute($value)
     {
@@ -174,10 +171,6 @@ class Kegiatan extends Model implements HasMedia
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    public function jenis_kegiatan()
-    {
-        return $this->belongsTo(Jenis_Kegiatan::class, 'jenis_kegiatan_id');
-    }
     public function jenisKegiatan()
     {
         return $this->belongsTo(Jenis_Kegiatan::class, 'jeniskegiatan_id');
@@ -198,12 +191,6 @@ class Kegiatan extends Model implements HasMedia
         return $this->hasMany(Kegiatan_Lokasi::class, 'kegiatan_id');
     }
 
-
-
-    public function penulis_kegiatan()
-    {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id', 'peran_id');
-    }
     public function penulis()
     {
         return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
@@ -214,7 +201,7 @@ class Kegiatan extends Model implements HasMedia
         'draft'    => 'Draft',
         'ongoing'  => 'Ongoing',
         'completed' => 'Completed',
-        'cancelled ' => 'Cancelled',
+        'cancelled' => 'Cancelled',
     ];
 
     public static function getJenisKegiatan(): array
@@ -273,16 +260,10 @@ class Kegiatan extends Model implements HasMedia
 
     public function kegiatan_penulis()
     {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id')
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
         ->withPivot('peran_id')
         ->withTimestamps();
     }
-
-    public function sektors()
-    {
-        return $this->belongsToMany(mSektor::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
-    }
-
     public function sektor()
     {
         return $this->belongsToMany(mSektor::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
@@ -298,7 +279,5 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsTo(Kelurahan::class, 'desa_id');
     }
-
-
 
 }

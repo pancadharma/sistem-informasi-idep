@@ -109,14 +109,12 @@ class KegiatanController extends Controller
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
-            $kegiatan = new Kegiatan();
-            $kegiatanPenulis = Kegiatan_Penulis::all();
-
-            // dd($kegiatanPenulis ?? []);
+            $kegiatan = new Kegiatan(); // Empty instance
+            $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
 
             $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
 
-            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan'));
         }
         return response()->json([
             'success' => false,
@@ -124,6 +122,8 @@ class KegiatanController extends Controller
             'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
         ], Response::HTTP_FORBIDDEN);
     }
+
+
 
     public function store(Request $request)
     {
@@ -304,9 +304,21 @@ class KegiatanController extends Controller
         return view('tr.kegiatan.show');
     }
 
-    public function edit($id)
+    public function edit(Kegiatan $kegiatan)
     {
-        return view('tr.kegiatan.edit');
+        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+            $program = Program::all();
+            $statusOptions = Kegiatan::STATUS_SELECT;
+            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+            $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+
+            return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+        }
+        return response()->json([
+            'success' => false,
+            'status' => 'error',
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
+        ], Response::HTTP_FORBIDDEN);
     }
 
     public function update(Request $request, $id)

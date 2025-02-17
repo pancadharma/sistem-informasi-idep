@@ -89,6 +89,21 @@
             return isValid;
         }
 
+        function validasiProgramIDActivityID() {
+            let program_id = $('#program_id').val();
+            let activity_id = $('#programoutcomeoutputactivity_id').val();
+
+            // Check if either program_id and activity_id is empty or invalid
+            if (!program_id && !activity_id) {
+                return false;
+            }
+            if (isNaN(program_id) || isNaN(activity_id)) {
+                return false;
+            }
+
+            return true; // Return true if both values are valid
+        }
+
 
         $('#simpan_kegiatan').on('click', function(e) {
             e.preventDefault();
@@ -98,7 +113,14 @@
                     text: 'Please fill in all latitude and longitude fields with valid values.',
                     icon: 'error'
                 });
-
+                return;
+            }
+            if (!validasiProgramIDActivityID()) {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Please select a Program or Activity first',
+                    icon: 'error'
+                });
                 return;
             }
             // Get form data
