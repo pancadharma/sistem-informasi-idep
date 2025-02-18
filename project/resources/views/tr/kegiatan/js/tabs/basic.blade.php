@@ -524,25 +524,6 @@
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
         });
-
-
-        $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
-            e.preventDefault();
-            var activity_Id = $(this).closest('tr').data('id');
-            var activityKode = $(this).closest('tr').data('kode');
-            var activityNama = $(this).closest('tr').data('nama');
-
-            $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
-            $('#kode_kegiatan').val(activityKode);
-            $('#nama_kegiatan').val(activityNama).prop('disabled', true);
-            $('#kode_program').prop('disabled', true);
-            $('#nama_kegiatan').focus();
-            setTimeout(function() {
-                $('#ModalDaftarProgramActivity').modal('hide');
-            }, 200);
-
-        });
-
         $(document).on('click', '.remove-staff-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);

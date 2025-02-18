@@ -70,13 +70,6 @@
                 $(this).summernote({
                     height: 120,
                     width: '100%',
-                    // toolbar: [
-                    //     ['font', ['bold', 'italic', 'underline', 'clear']],
-                    //     ['table', ['table']],
-                    //     ['color', ['color']],
-                    //     ['paragraph', ['paragraph']],
-                    //     ['view', ['fullscreen', 'codeview']],
-                    // ],
                     inheritPlaceholder: true,
                     tabDisable: true,
                     codeviewFilter: false,
@@ -89,7 +82,28 @@
 
 <!-- javascript to push javascript to stack('basic_tab_js') -->
 <script>
-    // Next button
+    $('#clearStorageButton').on('click', function() {
+        clearStoredFormData();
+        $('#createKegiatan').each(function() {
+            inputFields = $(this).find('input, select, textarea').removeAttr('disabled');
+            inputFields.each(function() {
+                $(this).val('');
+            });
+        });
+    });
+
+    function clearStoredFormData() {
+        // localStorage.removeItem('pesertaFormData');
+        // localStorage.removeItem('participantsData');
+        localStorage.removeItem('kegiatanFormData');
+        localStorage.removeItem('KegiatanLokasi');
+        $('#createKegiatan')[0].reset();
+        $('#tableBody').empty();
+        $('.summernote').each(function() {
+            $(this).summernote('reset');
+        });
+        $('.select2').val(null).trigger('change');
+    }
     document.getElementById('next-button').addEventListener('click', function(e) {
         e.preventDefault();
         var tabs = document.querySelectorAll('#details-kegiatan-tab .nav-link');
@@ -105,14 +119,10 @@
 <!-- JS for Modal Program -->
 <script>
     $(document).ready(function() {
-        // Variable to hold the selected program ID
         let programId = null;
 
-        // Event handler when a program is selected in the modal
         $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
             e.preventDefault();
-
-            // Fetch the selected program details
             programId = $(this).data('program-id');
             const programKode = $(this).data('program-kode');
             const programNama = $(this).data('program-nama');
@@ -135,10 +145,27 @@
 
         });
 
-        // Handle opening the activities modal
+        $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
+            e.preventDefault();
+            var activity_Id = $(this).closest('tr').data('id');
+            var activityKode = $(this).closest('tr').data('kode');
+            var activityNama = $(this).closest('tr').data('nama');
+
+            $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
+            $('#kode_kegiatan').val(activityKode);
+            $('#nama_kegiatan').val(activityNama).prop('disabled', true);
+            $('#nama_kegiatan').focus();
+            setTimeout(function() {
+                $('#ModalDaftarProgramActivity').modal('hide');
+            }, 200);
+
+        });
+
         $('#kode_kegiatan').click(function(e) {
+            e.preventDefault();
+            let programId = $('#program_id').val();
             if (!programId) {
-                e.preventDefault(); // Prevent modal from opening
+                e.preventDefault();
                 Toast.fire({
                     icon: "warning",
                     title: "Opssss...",
@@ -155,8 +182,6 @@
             }
         });
 
-
-        // Function to fetch activities based on programId
         function fetchProgramActivities(programId) {
             const url = '{{ route('api.program.kegiatan', ':id') }}'.replace(':id', programId);
 
@@ -188,9 +213,8 @@
         }
 
         function populateModalWithActivities(data) {
-            const tbody = $('#list_program_out_activity tbody'); // Ensure tbody selector points to the correct table
-            tbody.empty(); // Clear existing rows
-            // Iterate over the activity data
+            const tbody = $('#list_program_out_activity tbody');
+            tbody.empty();
 
             if (data.length > 0) {
                 data.forEach(activity => {
@@ -208,20 +232,12 @@
                             </td>
                         </tr>
                     `;
-                    tbody.append(row); // Append the row to the table body
+                    tbody.append(row);
                 });
             } else {
-                const row = `
-                    <tr>
-                        <td colspan="6" class="dt-empty text-center">
-                            {{ __('global.no_results') }}
-                        </td>
-                    </tr>
-                `;
-                tbody.append(row); // Append the row to the table body
+                const row = `<tr><td colspan="6" class="dt-empty text-center">{{ __('global.no_results') }}</td></tr>`;
+                tbody.append(row);
             }
-
-            // Show the modal
             $('#ModalDaftarProgramActivity').modal('show');
         }
     });
@@ -229,10 +245,10 @@
 
 <!-- Script for Kegiatan Peserta -->
 <script>
-    // Function to save form data to localStorage
     function saveFormDataToStorage() {
         var formData = {
             program_id: $('#program_id').val(),
+            programoutcomeoutputactivity_id: $('#programoutcomeoutputactivity_id').val(),
             program_kode: $('#program_kode').val(),
             kode_program : $('#kode_program').val(),
             nama_program : $('#nama_program').val(),
@@ -265,23 +281,19 @@
 
         };
 
-        // Include Summernote content
         $('.summernote').each(function() {
             const id = $(this).attr('id');
             formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
         });
 
-        // Include select2 selected values
         $('.select2').each(function() {
             const id = $(this).attr('id');
-            formData[id] = $(this).val(); // Store the selected value(s)
+            formData[id] = $(this).val();
         });
 
-        // Save form data to localStorage
         localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
     }
 
-    // Function to initialize Select2 with dynamic URL
     function initializeSelect2WithDynamicUrl(fieldId) {
         var select2Field = $('#' + fieldId);
         var apiUrl = select2Field.data('api-url');
@@ -302,7 +314,6 @@
                 },
                 processResults: function(data, params) {
                     params.page = params.page || 1;
-
                     return {
                         results: data.data.map(function(item) {
                             return {
@@ -325,15 +336,14 @@
         var storedData = localStorage.getItem('kegiatanFormData');
         if (storedData) {
             var formData = JSON.parse(storedData);
-
-            // Populate basic form fields
             $('#program_id').val(formData.program_id || '');
+            $('#programoutcomeoutputactivity_id').val(formData.programoutcomeoutputactivity_id || '');
             $('#program_kode').val(formData.program_kode || '');
             $('#kode_program').val(formData.kode_program || '');
-            $('#nama_program').val(formData.nama_program || '');
+            $('#nama_program').val(formData.nama_program || '').attr('disabled', true);
 
             $('#kode_kegiatan').val(formData.kode_kegiatan || '');
-            $('#nama_kegiatan').val(formData.nama_kegiatan || '');
+            $('#nama_kegiatan').val(formData.nama_kegiatan || '').attr('disabled', true);
 
             $('#nama_desa').val(formData.nama_desa || '');
             $('#lokasi').val(formData.lokasi || '');
@@ -359,7 +369,6 @@
             $('#satuan').val(formData.satuan || '');
             $('#others').val(formData.others || '');
 
-            // Populate Summernote fields
             $('.summernote').each(function() {
                 const id = $(this).attr('id');
                 if (!id) {
@@ -390,18 +399,14 @@
                 });
             }
             var uniqueId = Date.now();
-            // exclude some select2 field id attribute
             $('.select2').not('#jeniskegiatan_id, #provinsi_id, #kabupaten_id, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]').each(function() {
-                $
                 var fieldId = $(this).attr('id');
                 var values = formData[fieldId];
                 var select2Field = $(this);
                 var apiUrl = $(this).data('api-url');
 
                 if (values) {
-                    // Handle both single value and array of values
                     var valueArray = Array.isArray(values) ? values : [values];
-
                     $.ajax({
                         url: apiUrl,
                         method: 'GET',
@@ -409,36 +414,25 @@
                             id: valueArray
                         },
                         success: function(data) {
-                            // Clear existing options
                             select2Field.empty();
-
-                            // Add options from API response
                             if (data.data && Array.isArray(data.data)) {
                                 data.data.forEach(function(item) {
                                     var newOption = new Option(item.nama, item.id, true, true);
                                     select2Field.append(newOption);
                                 });
                             }
-
-                            // Initialize Select2
                             initializeSelect2WithDynamicUrl(fieldId);
-
-                            // Set the values and trigger change
                             select2Field.val(valueArray).trigger('change');
                         },
                         error: function(error) {
-                            console.error('Error fetching Select2 data:', error);
-                            // Still initialize Select2 even if there's an error
                             initializeSelect2WithDynamicUrl(fieldId);
                         }
                     });
                 } else {
-                    // Initialize Select2 even if no values are stored
                     initializeSelect2WithDynamicUrl(fieldId);
                 }
             });
         } else {
-            // Initialize select2 fields even if there's no data in localStorage
             $('.select2').each(function() {
                 var fieldId = $(this).attr('id');
                 initializeSelect2WithDynamicUrl(fieldId);
@@ -447,330 +441,30 @@
     }
 
     $(document).ready(function() {
-        loadParticipantsFromStorage();
+        // loadParticipantsFromStorage();
         loadFormDataFromStorage();
 
         $('#createKegiatan').on('change', 'input, select, textarea', function() {
             saveFormDataToStorage();
         });
 
-        // Specifically handle Select2 events
         $(document).on('select2:select select2:unselect', '.select2', function() {
             saveFormDataToStorage();
         });
 
-        // Specifically handle Summernote changes
         $(document).on('summernote.change', '.summernote', function() {
             saveFormDataToStorage();
         });
 
-        // Attach change event listeners to input, select, date, select2, and summernote fields
         $('#createKegiatan').on('change', 'input, select, textarea, .select2, .summernote', function() {
             saveFormDataToStorage();
-            // this works
         });
 
-        // Additionally, capture changes from select2 and summernote
         $('.select2').on('select2:select select2:unselect', function() {
             saveFormDataToStorage();
         });
         $('.summernote').on('summernote.change', function() {
             saveFormDataToStorage();
-        });
-
-        $('#saveModalData').click(function() {
-            // Collect form values (existing code remains the same)
-            var identitas = $('#identitas').val() || '';
-            var nama = $('#nama').val() || '';
-
-            // Jenis Kelamin mapping
-            var jenis_kelamin = $('#jenis_kelamin').val();
-            var jenis_kelamin_label = {
-                'pria': 'Laki-laki',
-                'wanita': 'Perempuan'
-            } [jenis_kelamin] || 'Tidak Diketahui';
-
-            var tanggal_lahir = $('#tanggal_lahir').val() ? formatDate($('#tanggal_lahir').val()) : '';
-
-            // Disabilitas dan Hamil (sesuai sebelumnya)
-            var disabilitasValue = $('#disabilitas').val();
-            var disabilitasIcon = disabilitasValue === '1' ?
-                '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
-                '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
-
-            var hamilValue = $('#hamil').val();
-            var hamilIcon = hamilValue === '1' ?
-                '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
-                '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
-
-            // Status Kawin mapping
-            var status_kawin = $('#status_kawin').val();
-            var status_kawin_label = {
-                'belum_menikah': 'Belum Menikah',
-                'menikah': 'Menikah',
-                'cerai': 'Cerai',
-                'cerai_mati': 'Cerai Mati'
-            } [status_kawin] || 'Tidak Diketahui';
-
-            var no_kk = $('#no_kk').val() || '';
-            var jenis_peserta = $('#jenis_peserta').val() || '';
-            var nama_kk = $('#nama_kk').val() || '';
-
-            // Get the current number of rows to determine the next row number
-            var rowCount = $('#list_peserta_kegiatan tbody tr').length + 1;
-
-            // Create new table row with collected values
-            var newRow = `
-                <tr data-identitas="${identitas}" data-jenis-kelamin="${jenis_kelamin}" data-status-kawin="${status_kawin}" data-no-kk="${no_kk}" data-disabilitas="${disabilitasValue}" data-hamil="${hamilValue}">
-                    <td class="text-center self-center text-nowrap py-2 rounded-start-3">${rowCount}</td>
-                    <td class="text-nowrap py-2 border-start text-start">${identitas}</td>
-                    <td class="text-nowrap py-2 border-start text-start">${nama}</td>
-                    <td class="text-nowrap py-2 border-start text-start">${jenis_kelamin_label}</td>
-                    <td class="text-nowrap py-2 border-start text-start">${tanggal_lahir}</td>
-                    <td class="text-center self-center" data-disabilitas="${disabilitasValue}">
-                        ${disabilitasIcon}
-                    </td>
-                    <td class="text-center self-center" data-hamil="${hamilValue}">
-                        ${hamilIcon}
-                    </td>
-                    <td class="text-center text-nowrap py-2 border-start text-start">${status_kawin_label}</td>
-                    <td class="bg-silver text-nowrap py-2 border-start text-start">${no_kk}</td>
-                    <td class="text-center text-nowrap py-2 border-start text-start">${jenis_peserta}</td>
-                    <td class="bg-silver text-nowrap py-2 px-4 border-start">${nama_kk}</td>
-                    <td class="text-center text-nowrap py-0 border-start rounded-end-3">
-                        <div class="button-container pt-1 self-center">
-                            <button class="btn btn-sm btn-info edit-row"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-danger delete-row"><i class="bi bi-trash-fill"></i></button>
-                        </div>
-                    </td>
-                </tr>`;
-
-            // Append the new row to the table body
-            $('#tableBody').append(newRow);
-
-            // Save participants to localStorage
-            saveParticipantsToStorage();
-
-            // Clear form inputs
-            $('#identitas').val('');
-            $('#nama').val('');
-            $('#jenis_kelamin').val('pria');
-            $('#tanggal_lahir').val('');
-            $('#disabilitas').val('0');
-            $('#hamil').val('0');
-            $('#status_kawin').val('belum_menikah');
-            $('#no_kk').val('');
-            $('#jenis_peserta').val('');
-            $('#nama_kk').val('');
-
-            // Close the modal
-            $('#ModalTambahPeserta').modal('hide');
-            saveFormDataToStorage();
-        });
-
-        // Delete row functionality
-        $(document).on('click', '.delete-row', function() {
-            $(this).closest('tr').remove();
-            // Renumber the rows
-            $('#list_peserta_kegiatan tbody tr').each(function(index) {
-                $(this).find('td:first').text(index + 1);
-            });
-
-            // Update localStorage after deletion
-            saveParticipantsToStorage();
-        });
-
-        // Update edit functionality to match new structure
-        $(document).on('click', '.edit-row', function() {
-            var row = $(this).closest('tr');
-
-            // Populate modal with row data
-            $('#identitas').val(row.data('identitas'));
-            $('#nama').val(row.find('td:eq(2)').text());
-            $('#jenis_kelamin').val(row.data('jenis-kelamin'));
-
-            // Convert formatted date back to input date format
-            var formattedDate = row.find('td:eq(4)').text();
-            var parsedDate = parseFormattedDate(formattedDate);
-            $('#tanggal_lahir').val(parsedDate);
-
-            // Set disabilitas and hamil values
-            $('#disabilitas').val(row.data('disabilitas'));
-            $('#hamil').val(row.data('hamil'));
-
-            $('#status_kawin').val(row.data('status-kawin'));
-            $('#no_kk').val(row.data('no-kk'));
-            $('#jenis_peserta').val(row.find('td:eq(9)').text());
-            $('#nama_kk').val(row.find('td:eq(10)').text());
-
-            // Open the modal
-            $('#ModalTambahPeserta').modal('show');
-
-            // Remove the original row
-            row.remove();
-
-            // Renumber the rows
-            $('#list_peserta_kegiatan tbody tr').each(function(index) {
-                $(this).find('td:first').text(index + 1);
-            });
-
-            // Update localStorage after editing
-            saveParticipantsToStorage();
-        });
-
-        // Function to save participants to localStorage
-        function saveParticipantsToStorage() {
-            var participants = [];
-            $('#list_peserta_kegiatan tbody tr').each(function() {
-                participants.push({
-                    identitas: $(this).data('identitas'),
-                    nama: $(this).find('td:eq(2)').text(),
-                    jenis_kelamin: $(this).data('jenis-kelamin'),
-                    tanggal_lahir: $(this).find('td:eq(4)').text(),
-                    disabilitas: $(this).data('disabilitas'),
-                    hamil: $(this).data('hamil'),
-                    status_kawin: $(this).data('status-kawin'),
-                    no_kk: $(this).data('no-kk'),
-                    jenis_peserta: $(this).find('td:eq(9)').text(),
-                    nama_kk: $(this).find('td:eq(10)').text()
-                });
-            });
-
-            localStorage.setItem('participantsData', JSON.stringify(participants));
-        }
-
-        // Function to load participants from localStorage
-        function loadParticipantsFromStorage() {
-            var savedParticipants = localStorage.getItem('participantsData');
-            if (savedParticipants) {
-                var participants = JSON.parse(savedParticipants);
-
-                // Clear existing table body
-                $('#tableBody').empty();
-
-                // Recreate rows from saved data
-                participants.forEach(function(participant, index) {
-                    var jenis_kelamin_label = {
-                        'pria': 'Laki-laki',
-                        'wanita': 'Perempuan'
-                    } [participant.jenis_kelamin] || 'Tidak Diketahui';
-
-                    var disabilitasIcon = participant.disabilitas === '1' ?
-                        '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
-                        '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
-
-                    var hamilIcon = participant.hamil === '1' ?
-                        '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
-                        '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
-
-                    var status_kawin_label = {
-                        'belum_menikah': 'Belum Menikah',
-                        'menikah': 'Menikah',
-                        'cerai': 'Cerai',
-                        'cerai_mati': 'Cerai Mati'
-                    } [participant.status_kawin] || 'Tidak Diketahui';
-
-                    var newRow = `
-                    <tr data-identitas="${participant.identitas}" data-jenis-kelamin="${participant.jenis_kelamin}" data-status-kawin="${participant.status_kawin}" data-no-kk="${participant.no_kk}" data-disabilitas="${participant.disabilitas}" data-hamil="${participant.hamil}">
-                        <td class="text-center self-center text-nowrap py-2 rounded-start-3">${index + 1}</td>
-                        <td class="text-nowrap py-2 border-start text-start">${participant.identitas}</td>
-                        <td class="text-nowrap py-2 border-start text-start">${participant.nama}</td>
-                        <td class="text-nowrap py-2 border-start text-start">${jenis_kelamin_label}</td>
-                        <td class="text-nowrap py-2 border-start text-start">${participant.tanggal_lahir}</td>
-                        <td class="text-center self-center" data-disabilitas="${participant.disabilitas}">
-                            ${disabilitasIcon}
-                        </td>
-                        <td class="text-center self-center" data-hamil="${participant.hamil}">
-                            ${hamilIcon}
-                        </td>
-                        <td class="text-center text-nowrap py-2 border-start text-start">${status_kawin_label}</td>
-                        <td class="bg-silver text-nowrap py-2 border-start text-start">${participant.no_kk}</td>
-                        <td class="text-center text-nowrap py-2 border-start text-start">${participant.jenis_peserta}</td>
-                        <td class="bg-silver text-nowrap py-2 px-4 border-start">${participant.nama_kk}</td>
-                        <td class="text-center text-nowrap py-0 border-start rounded-end-3">
-                            <div class="button-container pt-1 self-center">
-                                <button class="btn btn-sm btn-info edit-row"><i class="bi bi-pencil-square"></i></button>
-                                <button class="btn btn-sm btn-danger delete-row"><i class="bi bi-trash-fill"></i></button>
-                            </div>
-                        </td>
-                    </tr>`;
-
-                    $('#tableBody').append(newRow);
-                });
-            }
-        }
-
-        // Function to clear localStorage (optional, can be added to a clear/reset button)
-        function clearParticipantsStorage() {
-            localStorage.removeItem('participantsData');
-            $('#tableBody').empty();
-        }
-
-        // Existing formatDate and parseFormattedDate functions remain the same
-        function parseFormattedDate(formattedDate) {
-            const months = {
-                'Januari': '01',
-                'Februari': '02',
-                'Maret': '03',
-                'April': '04',
-                'Mei': '05',
-                'Juni': '06',
-                'Juli': '07',
-                'Agustus': '08',
-                'September': '09',
-                'Oktober': '10',
-                'November': '11',
-                'Desember': '12',
-            };
-
-            const parts = formattedDate.split(' ');
-            const day = parts[0].padStart(2, '0');
-            const month = months[parts[1]];
-            const year = parts[2];
-
-            return `${year}-${month}-${day}`;
-        }
-
-        function formatDate(dateString) {
-            const months = [
-                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
-            ];
-
-            const date = new Date(dateString);
-            const day = date.getDate();
-            const month = months[date.getMonth()];
-            const year = date.getFullYear();
-
-            return `${day} ${month} ${year}`;
-        }
-
-        function clearStoredFormData() {
-            localStorage.removeItem('pesertaFormData');
-            localStorage.removeItem('participantsData');
-            localStorage.removeItem('kegiatanFormData');
-            localStorage.removeItem('KegiatanLokasi');
-
-            // Reset the form and clear Summernote content
-            $('#createKegiatan')[0].reset();
-            $('#tableBody').empty();
-
-            // Clear Summernote content
-            $('.summernote').each(function() {
-                $(this).summernote('reset');
-                // console.info($(this), 'summernote removed')
-            });
-            $('.select2').val(null).trigger('change');
-        }
-
-        // Optional: Add a clear button or method to reset stored data
-        $('#clearStorageButton').on('click', function() {
-            clearStoredFormData();
-            $('#createKegiatan').each(function() {
-                inputFields = $(this).find('input, select, textarea').removeAttr('disabled');
-                inputFields.each(function() {
-                    $(this).val('');
-                });
-            });
         });
     });
 </script>
@@ -779,15 +473,12 @@
 <script>
     $(document).ready(function() {
         function calculateTotals() {
-            // Calculate row totals and update respective fields
             $('tr').each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
                 let total = pria + wanita;
                 $(this).find('input[id$="total"]').val(total);
             });
-
-            // Calculate overall totals
             let totalPerempuan = 0;
             let totalLakilaki = 0;
             let totalAll = 0;
@@ -834,8 +525,6 @@
             $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
 
         }
-
-
         // Trigger calculateTotals on input change
         $('.calculate').on('input', function() {
             calculateTotals();

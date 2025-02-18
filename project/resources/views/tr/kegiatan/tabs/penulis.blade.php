@@ -49,7 +49,7 @@
 
         selectElement.select2({
             width: '100%',
-            allowClear: true,
+            // allowClear: true,
             ajax: {
                 url: data_penulis,
                 method: 'GET',
@@ -79,7 +79,7 @@
 
         selectElement.select2({
             width: '100%',
-            allowClear: true,
+            // allowClear: true,
             ajax: {
                 url: data_jabatan,
                 method: 'GET',
