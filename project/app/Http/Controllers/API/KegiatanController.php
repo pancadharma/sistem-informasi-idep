@@ -422,8 +422,6 @@ class KegiatanController extends Controller
 
     public function storePenulisKegiatan(Request $request, Kegiatan $kegiatan)
     {
-        // how do I populate kegiatan_id for testing since I am not creating a kegiatan in table yet, need hardcode it
-
         $penulis = $request->input('penulis', []);
         $jabatan = $request->input('jabatan', []);
 
@@ -432,14 +430,37 @@ class KegiatanController extends Controller
             throw new Exception('Penulis and Jabatan count mismatch.');
         }
 
-        // Prepare the data for syncing
         $dataPenulisJabatan = [];
         foreach ($penulis as $index => $penulisID) {
             $dataPenulisJabatan[$penulisID] = ['peran_id' => $jabatan[$index]];
         }
 
-        // Sync the penulis with the jabatan data
         $kegiatan->penulis()->sync($dataPenulisJabatan);
+    }
+
+    public function updatePenulisKegiatan(Request $request, Kegiatan $kegiatan)
+    {
+        try {
+            $penulis = $request->input('penulis', []);
+            $jabatan = $request->input('jabatan', []);
+
+            if (count($penulis) !== count($jabatan)) {
+                throw new Exception('Mismatched penulis and jabatan arrays length');
+            }
+
+            $penulisData = [];
+            foreach ($penulis as $index => $penulisId) {
+                if (!isset($jabatan[$index])) {
+                    throw new Exception("Missing jabatan value for penulis ID $penulisId at index $index");
+                }
+                $penulisData[$penulisId] = ['peran_id' => $jabatan[$index]];
+            }
+
+            $kegiatan->penulis()->sync($penulisData); // sync handles adds, updates, and deletes
+        } catch (Exception $e) {
+            \Log::error('Error updating penulis: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function storeLokasiKegiatan(Request $request, Kegiatan $kegiatan)
@@ -450,7 +471,8 @@ class KegiatanController extends Controller
             throw new \Exception("Invalid location data");
         }
         try {
-            Kegiatan_Lokasi::insert($locationData);
+            // Kegiatan_Lokasi::insert($locationData);
+            $kegiatan->lokasi()->createMany($locationData); // Use createMany for efficiency
         } catch (\Exception $e) {
             Log::error('Failed to store locations: ' . $e->getMessage());
             throw new Exception("Failed to store location data: " . $e->getMessage());
@@ -507,7 +529,7 @@ class KegiatanController extends Controller
     // }
     protected function updateLocations(Request $request, Kegiatan $kegiatan)
     {
-        $newLocationData = $this->prepareLocationData($request, $kegiatan); // Pass $kegiatan here
+        $newLocationData = $this->prepareLocationData($request, $kegiatan);
 
         if ($newLocationData === false) {
             throw new \Exception("Invalid location data");
@@ -550,4 +572,53 @@ class KegiatanController extends Controller
             ], 500);
         }
     }
+
+
+    public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    {
+        try {
+            $data = $request->validated();
+
+            DB::beginTransaction();
+            $kegiatan->update($data);
+            $kegiatan->mitra()->sync($request->input('mitra_id', []));
+            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+            // Update hasil kegiatan jika diperlukan
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Kegiatan berhasil diperbarui',
+                'data' => $kegiatan,
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui kegiatan',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getKegiatan(Request $request)
+    {
+        $query = Kegiatan::query();
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        if ($request->filled('jeniskegiatan_id')) {
+            $query->where('jeniskegiatan_id', $request->input('jeniskegiatan_id'));
+        }
+
+        $perPage = $request->input('per_page', 10);
+        $results = $query->paginate($perPage);
+
+        return response()->json($results);
+    }
+
+
 }
