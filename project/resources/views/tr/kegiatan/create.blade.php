@@ -1,17 +1,9 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.kegiatan.add'))
-@section('content_header_title')
-    <strong>{{ __('cruds.kegiatan.add') }}</strong>
-@endsection
-@section('sub_breadcumb')
-    <a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}">
-        {{ __('cruds.kegiatan.list') }}
-    </a>
-@endsection
-@section('sub_sub_breadcumb')
-    / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span>
-@endsection
+@section('content_header_title') <strong>{{ __('cruds.kegiatan.add') }}</strong>@endsection
+@section('sub_breadcumb')<a href="{{ route('kegiatan.index') }}" title="{{ __('cruds.kegiatan.list') }}"> {{ __('cruds.kegiatan.list') }}</a>@endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.kegiatan.add') }}">{{ __('cruds.kegiatan.add') }}</span>@endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -19,8 +11,7 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
-        enctype="multipart/form-data">
+    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="row">
@@ -41,18 +32,10 @@
 
         .select2-selection.is-invalid-select2 {
             border-color: #dc3545 !important;
-            /* Bootstrap's error color */
-            /* box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important; */
-            /* Optional: Add a shadow */
         }
         .select2-selection.is-valid-select2 {
             border-color: #28a745 !important;
-            /* Bootstrap's error color */
-            /* box-shadow: 0 0 0 0.2rem rgba(53, 220, 75, 0.322) !important; */
-            /* Optional: Add a shadow */
         }
-
-        /* Optional styling for the dropdown (if needed) */
         .select2-container--default.select2-container--open .select2-selection--single.is-invalid-select2 {
             border-color: #a7dc35 !important;
         }
@@ -79,6 +62,8 @@
 
     @include('tr.kegiatan.js.create')
     @stack('basic_tab_js')
+
+    {{-- script to validate forms and store kegiatan data via ajax --}}
     <script>
         $(document).ready(function() {
             function validasiProgramIDActivityID() {
@@ -414,4 +399,5 @@
 
         });
     </script>
+
 @endpush

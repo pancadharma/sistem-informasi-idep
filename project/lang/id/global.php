@@ -352,7 +352,8 @@ return [
         'save_failed'               => 'Gagal menyimpan Data',
         'update_success'            => 'Berhasil memperbarui Data',
         'update_failed'             => 'Gagal memperbarui Data',
-        
+        'delete_success'            => 'Berhasil menghapus Data',
+        'delete_failed'             => 'Gagal menghapus Data',
     ],
 
 ];
