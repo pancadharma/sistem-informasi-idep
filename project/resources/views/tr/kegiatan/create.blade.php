@@ -374,8 +374,8 @@
                             cache: false,
                             success: function(data) {
                                 Swal.fire({
-                                    title: '{{ __('global.success') }}',
-                                    text: '{{ __('global.save_success') }}',
+                                    title: '{{ __('global.response.success') }}',
+                                    text: '{{ __('global.response.save_success') }}',
                                     icon: 'success'
                                 }).then((result) => {
                                     if (result.isConfirmed) {

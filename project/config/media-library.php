@@ -3,6 +3,7 @@
 use App\Models\Program;
 use App\Models\User;
 use App\Services\MediaLibrary\CustomPathGenerator;
+use App\Services\MediaLibrary\KegiatanPathGenerator;
 use App\Services\MediaLibrary\ProfilePathGenerator;
 use App\Services\MediaLibrary\ProgramPathGenerator;
 
@@ -15,6 +16,22 @@ return [
     // 'disk_name' => env('MEDIA_DISK', 'public'),
     'disk_name' => 'program_uploads',
     'disk_name' => 'userprofile',
+    // 'disk_name' => 'dokumen_kegiatan',
+    // 'disk_name' => 'media_kegiatan',
+
+    // 'media_collections' => [
+    //     'dokumen_pendukung' => [
+    //         'disk' => 'dokumen_uploads',
+    //         'allowed_extensions' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx'],
+    //         'max_file_size' => 1024 * 1024 * 50 // 50MB
+    //     ],
+    //     'media_pendukung' => [
+    //         'disk' => 'media_uploads',
+    //         'allowed_extensions' => ['jpg', 'png', 'jpeg'],
+    //         'max_file_size' => 1024 * 1024 * 50 // 50MB
+    //     ]
+    // ],
+
 
     /*
      * The maximum file size of an item in bytes.
@@ -94,6 +111,7 @@ return [
     'custom_path_generators' => [
         User::class => ProfilePathGenerator::class,
         Program::class => ProgramPathGenerator::class,
+        Kegiatan::class => KegiatanPathGenerator::class,
         // or
         // 'model_morph_alias' => PathGenerator::class
     ],

@@ -42,6 +42,25 @@ return [
             'url' => '/uploads/program',
             'visibility' => 'public',
         ],
+        // 'dokumen_kegiatan' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('uploads/kegiatan/dokumen'),
+        //     'url' => '/uploads/kegiatan/dokumen',
+        //     'visibility' => 'public',
+        // ],
+        // 'media_kegiatan' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('uploads/kegiatan/media'),
+        //     'url' => '/uploads/kegiatan/media',
+        //     'visibility' => 'public',
+        // ],
+
+        'kegiatan_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan'),
+            'url' => '/uploads/kegiatan',
+            'visibility' => 'public',
+        ],
         'userprofile' => [
             'driver' => 'local',
             'root' => public_path('uploads/userprofile'),

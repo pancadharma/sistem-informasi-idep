@@ -340,6 +340,8 @@ class KegiatanController extends Controller
             $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
 
+
+
             DB::commit();
             return response()->json([
                 'success' => true,
@@ -357,6 +359,58 @@ class KegiatanController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function storeMediaDokumen(Request $request, Kegiatan $kegiatan){
+
+
+        $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {
+            $timestamp = now()->format('Ymd_His');
+            $fileCount = 1;
+
+            foreach ($files as $index => $file) {
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $kegiatanName = str_replace(' ', '_', $kegiatan->nama);
+                $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
+                $keterangan = $captions[$index] ?? $fileName;
+
+                \Log::info("Uploading {$collectionName}: " . $fileName .
+                    ' Original Name: ' . $originalName .
+                    ' User ID: ' . auth()->user()->nama);
+
+                $kegiatan->addMedia($file)
+                    ->withCustomProperties([
+                        'keterangan' => $keterangan,
+                        'user_id' => auth()->user()->id,
+                        'original_name' => $originalName,
+                        'extension' => $extension
+                    ])
+                    ->usingName("{$kegiatanName}_{$originalName}_{$fileCount}")
+                    ->usingFileName($fileName)
+                    ->toMediaCollection($collectionName, 'kegiatan_uploads');
+
+                $fileCount++;
+            }
+        };
+
+        // Handle document uploads
+        if ($request->hasFile('dokumen_pendukung')) {
+            $handleFileUploads(
+                $request->file('dokumen_pendukung'),
+                $request->input('keterangan') ?? [],
+                'dokumen_pendukung'
+            );
+        }
+
+        // Handle media uploads
+        if ($request->hasFile('media_pendukung')) {
+            $handleFileUploads(
+                $request->file('media_pendukung'),
+                $request->input('keterangan') ?? [],
+                'media_pendukung'
+            );
         }
     }
     public function storeHasilKegiatan(StoreKegiatanRequest $request, Kegiatan $kegiatan)
@@ -471,7 +525,6 @@ class KegiatanController extends Controller
             throw new \Exception("Invalid location data");
         }
         try {
-            // Kegiatan_Lokasi::insert($locationData);
             $kegiatan->lokasi()->createMany($locationData); // Use createMany for efficiency
         } catch (\Exception $e) {
             Log::error('Failed to store locations: ' . $e->getMessage());
@@ -515,18 +568,6 @@ class KegiatanController extends Controller
         return $locationData;
     }
 
-    // protected function storeLocations(Request $request, Kegiatan $kegiatan)
-    // {
-    //     $locationData = $this->prepareLocationData($request, $kegiatan);
-
-    //     if ($locationData === false) {
-    //         throw new \Exception("Invalid location data");
-    //     }
-
-    //     foreach ($locationData as $location) {
-    //         Kegiatan_Lokasi::create($location);
-    //     }
-    // }
     protected function updateLocations(Request $request, Kegiatan $kegiatan)
     {
         $newLocationData = $this->prepareLocationData($request, $kegiatan);
@@ -534,17 +575,12 @@ class KegiatanController extends Controller
         if ($newLocationData === false) {
             throw new \Exception("Invalid location data");
         }
-
-        // Delete existing locations
         $kegiatan->lokasi()->delete();
-
-        // Insert new locations
-        foreach ($newLocationData as $location) {
+            foreach ($newLocationData as $location) {
             $kegiatan->lokasi()->create($location);
         }
     }
 
-    // public function updateApi(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     public function updateApi(Request $request, Kegiatan $kegiatan)
     {
         try {
