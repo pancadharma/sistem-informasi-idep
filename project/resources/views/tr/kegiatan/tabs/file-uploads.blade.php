@@ -66,18 +66,22 @@
                 initialPreviewConfig: []
             }).on('fileloaded', function(event, file, previewId, index, reader) {
                 var uniqueId = fileInputId + '-' + (new Date().getTime());
+
                 fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
-                $('#' + captionContainerId).append(
-                    `<div class="form-group" id="caption-group-${uniqueId}">
-                        <label for="caption-${uniqueId}"> {{ __('cruds.program.ket_file') }} ${file.name}</label>
-                        <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
-                    </div>`
-                );
+                // $('#' + captionContainerId).append(
+                //     `<div class="form-group" id="caption-group-${uniqueId}">
+                //         <label for="caption-${uniqueId}"> {{ __('cruds.program.ket_file') }} ${file.name}</label>
+                //         <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
+                //     </div>`
+                // );
                 // Store the unique identifier in the file preview element
-                $(`#${previewId}`).attr('data-unique-id', uniqueId);
+                // $(`#${previewId}`).attr('data-unique-id', uniqueId);
+                $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+
             }).on('fileremoved', function(event, id) {
                 // Remove the corresponding caption input
-                var uniqueId = $(`#${id}`).attr('data-unique-id');
+                // var uniqueId = $(`#${id}`).attr('data-unique-id');
+                var uniqueId = $(`#${$.escapeSelector(id)}`).attr('data-unique-id');
                 delete fileCaptions[uniqueId]; // Remove the file from the tracking object
                 $(`#caption-group-${uniqueId}`).remove();
             }).on('fileclear', function(event) {
