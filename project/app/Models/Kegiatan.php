@@ -129,17 +129,75 @@ class Kegiatan extends Model implements HasMedia
         return $file;
     }
 
+    // media files
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('dokumen_pendukung')
+        ->useDisk('kegiatan_uploads')
+        ->acceptsFile(function (File $file) {
+            return in_array($file->mimeType, [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ]);
+        });
+
+        $this->addMediaCollection('media_pendukung')
+        ->useDisk('kegiatan_uploads')
+        ->acceptsFile(function (File $file) {
+            return in_array($file->mimeType, [
+                'image/jpeg',
+                'image/png'
+            ]);
+        });
+    }
+
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        // If you need image conversions for media_pendukung
+        $this->addMediaConversion('thumb')
+        ->width(200)
+            ->height(200)
+            ->performOnCollections('media_pendukung');
+
+        $this->addMediaConversion('preview')
+        ->width(800)
+            ->height(600)
+            ->performOnCollections('media_pendukung');
+    }
+
+
+    public function getDokumenPendukung()
+    {
+        return $this->getMedia('dokumen_pendukung');
+    }
+
+    public function getMediaPendukung()
+    {
+        return $this->getMedia('media_pendukung');
+    }
+
+
+
+// end media files
+
+
     public function getDurationInDays()
     {
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
 
-    public function registerMediaConversions(Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
-        $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
-    }
+    // public function registerMediaConversions(Media $media = null): void
+    // {
+    //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
+    //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
+    // }
 
     public function users()
     {

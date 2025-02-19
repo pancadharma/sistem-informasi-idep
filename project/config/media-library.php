@@ -16,21 +16,21 @@ return [
     // 'disk_name' => env('MEDIA_DISK', 'public'),
     'disk_name' => 'program_uploads',
     'disk_name' => 'userprofile',
+    'disk_name' => 'kegiatan_uploads',
+
     // 'disk_name' => 'dokumen_kegiatan',
     // 'disk_name' => 'media_kegiatan',
 
-    // 'media_collections' => [
-    //     'dokumen_pendukung' => [
-    //         'disk' => 'dokumen_uploads',
-    //         'allowed_extensions' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx'],
-    //         'max_file_size' => 1024 * 1024 * 50 // 50MB
-    //     ],
-    //     'media_pendukung' => [
-    //         'disk' => 'media_uploads',
-    //         'allowed_extensions' => ['jpg', 'png', 'jpeg'],
-    //         'max_file_size' => 1024 * 1024 * 50 // 50MB
-    //     ]
-    // ],
+   'media_collections' => [
+        'dokumen_pendukung' => [
+            'disk' => 'kegiatan_uploads',
+            'max_file_size' => 1024 * 1024 * 50
+        ],
+        'media_pendukung' => [
+            'disk' => 'kegiatan_uploads',
+            'max_file_size' => 1024 * 1024 * 50
+        ]
+    ],
 
 
     /*

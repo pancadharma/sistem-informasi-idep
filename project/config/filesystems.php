@@ -61,6 +61,7 @@ return [
             'url' => '/uploads/kegiatan',
             'visibility' => 'public',
         ],
+
         'userprofile' => [
             'driver' => 'local',
             'root' => public_path('uploads/userprofile'),
