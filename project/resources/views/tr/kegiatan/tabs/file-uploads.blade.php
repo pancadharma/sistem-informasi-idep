@@ -59,6 +59,7 @@
                 uploadAsync: false,
                 browseOnZoneClick: true,
                 maxFileSize: maxSize,
+                maxFilePreviewSize: 10240,
                 allowedFileExtensions: allowedExtensions,
                 overwriteInitial: false,
                 initialPreview: [], // Initialize with empty preview
