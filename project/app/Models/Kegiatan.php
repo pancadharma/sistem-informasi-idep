@@ -17,13 +17,16 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\Conversions\Manipulations;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\MediaCollection;
+
 
 
 
 class Kegiatan extends Model implements HasMedia
 {
-    use Auditable, HasFactory, InteractsWithMedia, HasRoles, LogsActivity;
+    use InteractsWithMedia, Auditable, HasFactory, HasRoles, LogsActivity;
 
     protected $table = 'trkegiatan';
 
@@ -119,7 +122,7 @@ class Kegiatan extends Model implements HasMedia
 
     public function getImageAttribute()
     {
-        $file = $this->getMedia('file_pendukung_kegiatan')->last();
+        $file = $this->getMedia('media_pendukung')->last();
         if ($file) {
             $file->url       = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');
@@ -142,19 +145,10 @@ class Kegiatan extends Model implements HasMedia
 
     public function registerMediaConversions(Media $media = null): void
     {
-        // If you need image conversions for media_pendukung
-        // $this->addMediaConversion('thumb')
-        // ->width(200)
-        //     ->height(200)
-        //     ->performOnCollections('media_pendukung');
         $this->addMediaConversion('thumb')->fit(Fit::Crop, 320, 320)->performOnCollections('media_pendukung');
-
-        // $this->addMediaConversion('preview')
-        // ->width(800)
-        //     ->height(600)
-        //     ->performOnCollections('media_pendukung');
         $this->addMediaConversion('preview')->fit(Fit::Crop, 600, 800)->performOnCollections('media_pendukung');
     }
+
 
 
     public function getDokumenPendukung()
@@ -166,10 +160,7 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->getMedia('media_pendukung');
     }
-
-
-
-// end media files
+    // end media files
 
 
     public function getDurationInDays()
@@ -177,12 +168,6 @@ class Kegiatan extends Model implements HasMedia
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
-
-    // public function registerMediaConversions(Media $media = null): void
-    // {
-    //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
-    //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
-    // }
 
     public function users()
     {

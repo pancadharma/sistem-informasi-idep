@@ -42,18 +42,19 @@ return [
             'url' => '/uploads/program',
             'visibility' => 'public',
         ],
-        // 'dokumen_kegiatan' => [
-        //     'driver' => 'local',
-        //     'root' => public_path('uploads/kegiatan/dokumen'),
-        //     'url' => '/uploads/kegiatan/dokumen',
-        //     'visibility' => 'public',
-        // ],
-        // 'media_kegiatan' => [
-        //     'driver' => 'local',
-        //     'root' => public_path('uploads/kegiatan/media'),
-        //     'url' => '/uploads/kegiatan/media',
-        //     'visibility' => 'public',
-        // ],
+
+        'dokumen_pendukung' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan/dokumen_pendukung'),
+            'url' => '/uploads/kegiatan/dokumen_pendukung',
+            'visibility' => 'public',
+        ],
+        'media_pendukung' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan/media_pendukung'),
+            'url' => '/uploads/kegiatan/media_pendukung',
+            'visibility' => 'public',
+        ],
 
         'kegiatan_uploads' => [
             'driver' => 'local',

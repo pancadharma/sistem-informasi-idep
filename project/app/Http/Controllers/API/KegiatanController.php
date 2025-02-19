@@ -363,9 +363,8 @@ class KegiatanController extends Controller
         }
     }
 
-    public function storeMediaDokumen(Request $request, Kegiatan $kegiatan){
-
-
+    public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
+    {
         $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {
             $timestamp = now()->format('Ymd_His');
             $fileCount = 1;
@@ -377,11 +376,8 @@ class KegiatanController extends Controller
                 $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
                 $keterangan = $captions[$index] ?? $fileName;
 
-                \Log::info("Uploading {$collectionName}: " . $fileName .
-                    ' Original Name: ' . $originalName .
-                    ' User ID: ' . auth()->user()->nama);
-
-                $kegiatan->addMedia($file)
+                $media = $kegiatan
+                    ->addMedia($file)
                     ->withCustomProperties([
                         'keterangan' => $keterangan,
                         'user_id' => auth()->user()->id,
@@ -390,30 +386,29 @@ class KegiatanController extends Controller
                     ])
                     ->usingName("{$kegiatanName}_{$originalName}_{$fileCount}")
                     ->usingFileName($fileName)
-                    ->toMediaCollection($collectionName, 'kegiatan_uploads');
+                    ->toMediaCollection($collectionName);
 
                 $fileCount++;
             }
         };
 
-        // Handle document uploads
         if ($request->hasFile('dokumen_pendukung')) {
             $handleFileUploads(
                 $request->file('dokumen_pendukung'),
-                $request->input('keterangan') ?? [],
+                $request->input('keterangan', []),
                 'dokumen_pendukung'
             );
         }
 
-        // Handle media uploads
         if ($request->hasFile('media_pendukung')) {
             $handleFileUploads(
                 $request->file('media_pendukung'),
-                $request->input('keterangan') ?? [],
+                $request->input('keterangan', []),
                 'media_pendukung'
             );
         }
     }
+
     public function storeHasilKegiatan(StoreKegiatanRequest $request, Kegiatan $kegiatan)
     {
         $jenisKegiatan = (int)$request->input('jeniskegiatan_id');
