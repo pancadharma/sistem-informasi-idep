@@ -339,6 +339,7 @@ class KegiatanController extends Controller
             $this->storeHasilKegiatan($request, $kegiatan);
             $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
+            $this->storeMediaDokumen($request, $kegiatan);
 
 
 

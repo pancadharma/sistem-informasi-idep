@@ -133,42 +133,27 @@ class Kegiatan extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('dokumen_pendukung')
-        ->useDisk('kegiatan_uploads')
-        ->acceptsFile(function (File $file) {
-            return in_array($file->mimeType, [
-                'application/pdf',
-                'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'application/vnd.ms-powerpoint',
-                'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-            ]);
-        });
+        ->useDisk('kegiatan_uploads');
 
         $this->addMediaCollection('media_pendukung')
-        ->useDisk('kegiatan_uploads')
-        ->acceptsFile(function (File $file) {
-            return in_array($file->mimeType, [
-                'image/jpeg',
-                'image/png'
-            ]);
-        });
+        ->useDisk('kegiatan_uploads');
     }
 
 
     public function registerMediaConversions(Media $media = null): void
     {
         // If you need image conversions for media_pendukung
-        $this->addMediaConversion('thumb')
-        ->width(200)
-            ->height(200)
-            ->performOnCollections('media_pendukung');
+        // $this->addMediaConversion('thumb')
+        // ->width(200)
+        //     ->height(200)
+        //     ->performOnCollections('media_pendukung');
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 320, 320)->performOnCollections('media_pendukung');
 
-        $this->addMediaConversion('preview')
-        ->width(800)
-            ->height(600)
-            ->performOnCollections('media_pendukung');
+        // $this->addMediaConversion('preview')
+        // ->width(800)
+        //     ->height(600)
+        //     ->performOnCollections('media_pendukung');
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 600, 800)->performOnCollections('media_pendukung');
     }
 
 
@@ -195,7 +180,7 @@ class Kegiatan extends Model implements HasMedia
 
     // public function registerMediaConversions(Media $media = null): void
     // {
-    //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
+    //     $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, 240);
     //     $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     // }
 
