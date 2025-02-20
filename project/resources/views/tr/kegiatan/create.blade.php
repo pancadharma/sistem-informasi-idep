@@ -90,15 +90,15 @@
             function validateForm() {
                 let isValid = true;
                 const programValidation = validasiProgramIDActivityID();
-                
+
                 errorMessage = '';
                 if (!programValidation.isValid) {
                     isValid = false;
                     errorMessage += programValidation.message + '<br>';
                 }
-                
+
                 const jenisKegiatanValidation = validasiSingleSelect2('#jeniskegiatan_id', 'Please select a Jenis Kegiatan.');
-                
+
                 if (!jenisKegiatanValidation.isValid) {
                     isValid = false;
                     errorMessage += jenisKegiatanValidation.message + '<br>';
@@ -380,6 +380,8 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         // Optionally redirect or reset form here
+                                        // redirect to route kegiatan index
+                                        window.location.href = "{{ route('kegiatan.index') }}";
                                         // location.reload(); // Example to reload page
                                         // $('#createKegiatan')[0].reset(); // Reset form
                                     }
