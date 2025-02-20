@@ -101,8 +101,8 @@
                 { data: 'kegiatan_kode', name: 'kegiatan_kode', title: '{{ __('cruds.kegiatan.kode') }}', orderable: true, searchable: true }, // Corrected
                 { data: 'activity.nama', name: 'activity.nama', title: '{{ __('cruds.kegiatan.nama') }}', orderable: true, searchable: true },  // Corrected
                 { data: 'program_name', name: 'program_name', title: '{{ __('cruds.program.nama') }}', orderable: true, searchable: true }, // Corrected
-                { data: 'sektor_names', name: 'sektor_names', title: '{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}', orderable: true, searchable: true, className: 'overflow-auto' }, // New column
-                { data: 'jenis_kegiatan', name: 'jenis_kegiatan', title: '{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}', orderable: true, searchable: true, className: 'overflow-auto' }, // New column
+                { data: 'sektor_names', name: 'sektor_names', title: '{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}', orderable: true, searchable: true, className: 'ellipsis-cell' }, // New column
+                { data: 'jenis_kegiatan', name: 'jenis_kegiatan', title: '{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}', orderable: true, searchable: true, className: 'ellipsis-cell' }, // New column
                 { data: 'total_beneficiaries', name: 'total_beneficiaries', title: '{{ __('Total Beneficiaries') }}', orderable: true, searchable: true },
                 { data: 'tanggalmulai', name: 'tanggalmulai', title: '{{ __('cruds.kegiatan.tanggalmulai') }}', orderable: true, searchable: true },
                 { data: 'tanggalselesai', name: 'tanggalselesai', title: '{{ __('cruds.kegiatan.tanggalselesai') }}', orderable: true, searchable: true },
