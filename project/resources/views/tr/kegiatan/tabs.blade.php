@@ -1,8 +1,8 @@
 <div class="col-12 col-sm-12">
     <div class="card card-primary card-tabs">
         <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-            <button type="button" class="btn btn-danger float-right" id="simpan_kegiatan">{{ __('global.save') }}</button>
-            <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
+            <button type="button" class="btn btn-danger float-right mr-2 mt-1" id="simpan_kegiatan">{{ __('global.save') }}</button>
+            <ul class="nav nav-tabs border-bottom-1 border-primary kegiatan-border pt-2" id="details-kegiatan-tab" role="tablist">
                 <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
                     <i class="bi bi-arrows-collapse"></i>
                 </button>

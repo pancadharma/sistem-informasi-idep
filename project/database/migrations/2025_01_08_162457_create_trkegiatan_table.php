@@ -18,9 +18,6 @@ return new class extends Migration
             $table->foreignId('jeniskegiatan_id')->constrained('mjeniskegiatan')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('kelurahan')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // $table->text('lokasi')->nullable();
-            // $table->double('long')->nullable();
-            // $table->double('lat')->nullable();
             $table->dateTime('tanggalmulai');
             $table->dateTime('tanggalselesai');
             $table->string('status', 50);

@@ -20,7 +20,7 @@ class Jenis_Kegiatan extends Model
     }
 
     protected $table = 'mjeniskegiatan';
-    
+
     protected $fillable = [
         'nama',
         'aktif',
@@ -37,5 +37,10 @@ class Jenis_Kegiatan extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-    
+
+    public function trkegiatan()
+    {
+        return $this->hasMany(Kegiatan::class, 'jeniskegiatan_id');
+    }
+
 }

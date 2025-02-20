@@ -45,6 +45,12 @@ class Partner extends Model
 
     public function kegiatan()
     {
-        return $this->belongsToMany(Kegiatan::class, 'kegiatan_mitra', 'mitra_id', 'kegiatan_id');
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_mitra', 'mitra_id', 'kegiatan_id');
+    }
+    public function trkegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_mitra', 'mitra_id', 'kegiatan_id');
+
+
     }
 }
