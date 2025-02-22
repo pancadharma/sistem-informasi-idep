@@ -79,7 +79,7 @@
         },
 
         clearLayer: function(layer) {
-             if (layer) {
+            if (layer) {
                 if (Array.isArray(layer)) {
                     layer.forEach(polygon => polygon.setMap(null));
                 } else {
@@ -89,7 +89,7 @@
             return null;
         },
 
-       displayGeoJSON: function(geojson, color) {
+        displayGeoJSON: function(geojson, color) {
             if (!geojson) return null;
 
             const geometry = geojson.geometry;
@@ -126,7 +126,8 @@
                         strokeWeight: 2,
                         fillColor: color,
                         fillOpacity: 0.3,
-                        map: map // Set the map here
+                        map: map, // Set the map here
+                        clickable: false // Add this line
                     });
 
                     polygons.push(googlePolygon); // Store the polygon instance
@@ -154,7 +155,8 @@
                     strokeWeight: 2,
                     fillColor: color,
                     fillOpacity: 0.3,
-                    map: map
+                    map: map,
+                    clickable: false // Add this line
                 });
 
                 return googlePolygon;
@@ -249,7 +251,7 @@
             }
         }
         // Validate Longitude
-         else if (type === 'longitude') {
+        else if (type === 'longitude') {
             const long = parseFloat(value);
             if (!isNaN(long) && long >= -180 && long <= 180) {
                 isValid = true;
@@ -258,8 +260,8 @@
         }
 
         return {
-             valid: isValid,
-             value: validatedValue
+            valid: isValid,
+            value: validatedValue
         };
 
     }
@@ -270,7 +272,7 @@
                 MapHandler.clearLayer(provinsiLayer);
                 provinsiLayer = null;
             } else if (type === 'kabupaten') {
-                 MapHandler.clearLayer(kabupatenLayer);
+                MapHandler.clearLayer(kabupatenLayer);
                 kabupatenLayer = null;
             }
             return;
@@ -330,44 +332,184 @@
         }
     }
 
-    function initMap() {
+        // Function to generate a random hex color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+    // function initMap() {
+    //     map = new google.maps.Map(document.getElementById('map'), {
+    //         center: {lat: -2.5489, lng: 118.0149},
+    //         zoom: 5,
+    //         scrollwheel: true,
+    //         mapID: 'DEMO_MAP_ID'
+    //     });
+
+    //     // Add a click listener to the map
+    //     map.addListener('click', function(mapsMouseEvent) {
+    //         // alert("Map clicked!");
+    //         // Close any open infowindows
+    //         //if (map.infowindow) {
+    //         //    map.infowindow.close();
+    //         //}
+
+    //         // Get the clicked location
+    //         const lat = mapsMouseEvent.latLng.lat();
+    //         const lng = mapsMouseEvent.latLng.lng();
+
+    //         // Get a random color
+    //         const markerColor = getRandomColor();
+
+    //         const marker = new google.maps.Marker({
+    //             map: map,
+    //             position: { lat: lat, lng: lng },
+    //             title: 'Clicked Location',
+    //             // Styling options for the marker (optional)
+    //             // appearance: 'ICON', // or 'OUTLINE'
+    //             // glyph: '📍', // Or a custom SVG path
+    //             // icon: {
+    //             //     path: google.maps.SymbolPath.CIRCLE,
+    //             //     scale: 7,
+    //             //     fillColor: markerColor,
+    //             //     fillOpacity: 0.8,
+    //             //     strokeWeight: 1,
+    //             //     strokeColor: markerColor
+    //             // }
+    //         });
+
+    //         // Create an infowindow
+    //         const infowindow = new google.maps.InfoWindow({
+    //             content: `
+    //                 <div>
+    //                     <strong>Location Details</strong><br>
+    //                     Latitude: ${lat}<br>
+    //                     Longitude: ${lng}<br>
+    //                 </div>
+    //             `
+    //         });
+
+    //         // Open the infowindow on the marker
+    //         infowindow.open(map, marker);
+
+    //         // Optional: Close the infowindow when the marker is clicked again
+    //         marker.addListener('click', function() {
+    //             infowindow.open(map, marker);
+    //         });
+
+    //         //Reverse Geocoding
+    //         const geocoder = new google.maps.Geocoder();
+    //         geocoder.geocode({ location: { lat: lat, lng: lng } }, (results, status) => {
+    //             if (status === "OK") {
+    //                 if (results[0]) {
+    //                     infowindow.setContent(`
+    //                         <div>
+    //                             <strong>Location Details</strong><br>
+    //                             Address: ${results[0].formatted_address}<br>
+    //                             Latitude: ${lat}<br>
+    //                             Longitude: ${lng}<br>
+    //                         </div>
+    //                     `);
+    //                 } else {
+    //                     infowindow.setContent(`
+    //                         <div>
+    //                             <strong>Location Details</strong><br>
+    //                             No address found<br>
+    //                             Latitude: ${lat}<br>
+    //                             Longitude: ${lng}<br>
+    //                         </div>
+    //                     `);
+    //                 }
+    //             } else {
+    //                 console.error("Geocoder failed due to: " + status);
+    //             }
+    //         });
+    //     });
+    // }
+
+        function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: -2.5489, lng: 118.0149},
-            zoom: 5
+            zoom: 5,
+            scrollwheel: true,
+            gestureHandling: 'auto',
+            mapId: 'YOUR_MAP_ID' // Add your Map ID here
         });
 
         // Add a click listener to the map
-        map.addListener('click', function(mapsMouseEvent) {
-            // Close any open infowindows
-            if (map.infowindow) {
-                map.infowindow.close();
-            }
-
+        map.addListener('click', async function(mapsMouseEvent) {
             // Get the clicked location
             const lat = mapsMouseEvent.latLng.lat();
             const lng = mapsMouseEvent.latLng.lng();
 
-            // Create a marker
-            const marker = new google.maps.Marker({
-                position: {lat: lat, lng: lng},
+            // Get a random color
+            const markerColor = getRandomColor();
+
+            // Create an AdvancedMarkerElement
+            const marker = new google.maps.marker.AdvancedMarkerElement({
                 map: map,
-                title: 'Clicked Location'
+                position: { lat: lat, lng: lng },
+                title: 'Clicked Location',
             });
 
             // Create an infowindow
-            map.infowindow = new google.maps.InfoWindow({
-                content: `Latitude: ${lat}<br>Longitude: ${lng}`
+            const infowindow = new google.maps.InfoWindow({
+                content: `
+                    <div>
+                        <strong>Location Details</strong><br>
+                        Latitude: ${lat}<br>
+                        Longitude: ${lng}<br>
+                    </div>
+                `
             });
 
             // Open the infowindow on the marker
-            map.infowindow.open(map, marker);
+            infowindow.open(map, marker);
+
+            // Optional: Close the infowindow when the marker is clicked again
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+
+            //Reverse Geocoding
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat: lat, lng: lng } }, (results, status) => {
+                if (status === "OK") {
+                    if (results[0]) {
+                        infowindow.setContent(`
+                            <div>
+                                <strong>Location Details</strong><br>
+                                Address: ${results[0].formatted_address}<br>
+                                Latitude: ${lat}<br>
+                                Longitude: ${lng}<br>
+                            </div>
+                        `);
+                    } else {
+                        infowindow.setContent(`
+                            <div>
+                                <strong>Location Details</strong><br>
+                                No address found<br>
+                                Latitude: ${lat}<br>
+                                Longitude: ${lng}<br>
+                            </div>
+                        `);
+                    }
+                } else {
+                    console.error("Geocoder failed due to: " + status);
+                }
+            });
         });
     }
 
     function loadGoogleMapsAPI(apiKey) {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`; // Add libraries if needed
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry,marker`; // Add libraries if needed
             script.async = true;
             script.defer = true;
             script.onload = resolve;
@@ -386,6 +528,8 @@
         .catch(error => {
             console.error("Error loading Google Maps API:", error);
         });
+
+
 
         $('#provinsi_id').on('change', function() {
             $('#kabupaten_id').val(null).trigger('change');
@@ -670,7 +814,7 @@
             }
             if (!idKabupaten) {
                 Swal.fire({
-                    icon: 'waring',
+                    icon: 'warning',
                     title: '',
                     text: 'Please select a kabupaten after selecting a province.',
                     position: 'center',
