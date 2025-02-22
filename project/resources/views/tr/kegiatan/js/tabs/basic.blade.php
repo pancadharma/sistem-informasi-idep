@@ -242,6 +242,7 @@
     }
 
     $(document).ready(function() {
+
         map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
 
         $('#provinsi_id').on('change', function() {
@@ -296,8 +297,6 @@
                 delay: 250,
                 data: function(params) {
                     const provinsiId = $(`#provinsi_id`).val();
-                    console.log("data : ", provinsiId);
-
                     return {
                         search: params.term,
                         provinsi_id: provinsiId,
@@ -313,7 +312,46 @@
                         }
                     };
                 },
-                cache: true
+                cache: true,
+                error: function(jqXHR, textStatus, errorThrown) {
+                    const provinsiId = $(`#provinsi_id`).val();
+                    let errorMessage = "";
+                    if (jqXHR.responseText) {
+                        try {
+                            const response = JSON.parse(jqXHR.responseText);
+                            if (response.message) {
+                                errorMessage = response.message; // Use message from the server if available
+                            }
+                        } catch (e) {
+                            console.warn("Could not parse JSON response:", jqXHR.responseText);
+                        }
+                    }
+                    if(provinsiId === null || provinsiId === undefined || provinsiId === ''){
+                        Swal.fire({
+                            icon: 'warning' ?? textStatus,
+                            title: 'Failed to load Kabupaten data',
+                            text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
+                            timer: 1500,
+                            showConfirmButton: false, // Hide confirm button
+                            timerProgressBar: true,// Show progress bar
+                        })
+                        setTimeout(() => {
+                            $(`#provinsi_id`).focus();
+                        }, 1000);
+                    }
+                    else{
+                        // Handle other AJAX errors
+                        let errorMessage = '{{ __("Failed to fetch kabupaten data.  Please check your internet connection or try again later.") }}'; // Default, localized message
+                        Swal.fire({
+                            icon: 'error', // Always use 'error' for AJAX failures
+                            title: errorThrown || 'Error', // Use errorThrown if available, otherwise generic 'Error'
+                            text: errorMessage,
+                            timer: 2500, // Slightly longer timer for general errors
+                            showConfirmButton: false // Hide confirm button
+                        });
+
+                    }
+                }
             }
         }).on('select2:open', function (e) {
             $('.select2-container').css('z-index', 1051);
@@ -495,7 +533,7 @@
             }
             if (!idKabupaten) {
                 Swal.fire({
-                    icon: 'success',
+                    icon: 'waring',
                     title: '',
                     text: 'Please select a kabupaten after selecting a province.',
                     position: 'center',
@@ -551,13 +589,13 @@
                     }
                     const convertedRing = ring.map(coord => {
                         if (!Array.isArray(coord)) {
-                             console.error("Coordinate is not an array:", coord);
-                             return null;
+                            console.error("Coordinate is not an array:", coord);
+                            return null;
                         }
 
                         if (coord.length < 2) {
-                           console.error("Coordinate is missing values:", coord);
-                           return null;
+                            console.error("Coordinate is missing values:", coord);
+                            return null;
                         }
 
                         let lng = parseFloat(coord[1]);
@@ -588,8 +626,8 @@
             }).filter(polygon => polygon !== null && polygon.length > 0);  // Remove invalid polygons
 
             if(convertedCoordinates.length === 0){
-                 console.error("No valid convertedCoordinates:", convertedCoordinates)
-                 return null;
+                console.error("No valid convertedCoordinates:", convertedCoordinates)
+                return null;
             }
             return {
                 type: "Feature",
