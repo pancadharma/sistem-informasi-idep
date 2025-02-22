@@ -56,9 +56,6 @@
     <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
     <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
     <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyl1M3DUZB5CZ3LARYxNqKiUQ8COBrI0Y&callback=initMap">
-    </script>
 
 
 
