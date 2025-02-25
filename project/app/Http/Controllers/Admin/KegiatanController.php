@@ -131,6 +131,7 @@ class KegiatanController extends Controller
             // Add calculated values
             $program = $item->activity->program_outcome_output->program_outcome->program;
             $item->total_beneficiaries = $item->penerimamanfaattotal;
+            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
             return $item;
         });
@@ -146,9 +147,9 @@ class KegiatanController extends Controller
             ->addColumn('duration_in_days', function ($kegiatan) {
                 return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
             })
-            ->addColumn('sektor_names', function ($kegiatan) {
-                return $kegiatan->sektor->pluck('nama')->implode(', ') ?? 'N/A';
-            })
+            // ->addColumn('sektor_names', function ($kegiatan) {
+            //     return $kegiatan->sektor->pluck('nama')->implode(', ') ?? 'N/A';
+            // })
             ->addColumn('jenis_kegiatan', function ($kegiatan) {
                 return $kegiatan->jenisKegiatan->nama ?? 'N/A';
             })
