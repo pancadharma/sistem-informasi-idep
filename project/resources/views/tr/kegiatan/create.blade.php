@@ -57,8 +57,8 @@
     <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
     <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
-
-
+    {{-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&callback=initMap&libraries=places,geometry,marker"></script> --}}
+    {{-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeuCmSi7ptH-8Sk6n6wR2K6EaCa2arfH0&callback=initMap&libraries=places,geometry,marker"></script> --}}
 
     @include('tr.kegiatan.js.create')
     @stack('basic_tab_js')
