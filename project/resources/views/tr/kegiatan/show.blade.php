@@ -16,6 +16,10 @@ Tgl Mulai : {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') }
 <hr>
 Tgl Selesai : {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') }}
 <hr>
+<hr>
+Durasi : {{ $durationInDays ?? '' }}  Days
+<hr>
+<hr>
 Created on : {{ $kegiatan->created_at->diffForHumans() }}
 <hr>
 Created by : {{ $kegiatan->user->nama ?? '' }}

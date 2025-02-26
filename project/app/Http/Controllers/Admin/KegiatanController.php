@@ -267,6 +267,8 @@ class KegiatanController extends Controller
         // Get all the media collections
         $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
         $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+        $durationInDays = $kegiatan->getDurationInDays();
+
 
         // Get specific relation based on jenis kegiatan
         $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
@@ -286,7 +288,8 @@ class KegiatanController extends Controller
             'kegiatan',
             'dokumenPendukung',
             'mediaPendukung',
-            'kegiatanRelation'
+            'kegiatanRelation',
+            'durationInDays'
         ));
     }
 
