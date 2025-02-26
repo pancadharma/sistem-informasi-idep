@@ -216,12 +216,19 @@ class Kegiatan extends Model implements HasMedia
 
     public function lokasi_kegiatan()
     {
-        return $this->hasMany(Kegiatan_Lokasi::class, 'kegiatan_id');
+        return $this->belongsToMany(Kelurahan::class, 'trkegiatan_lokasi', 'kegiatan_id', 'desa_id');
     }
 
     public function penulis()
     {
         return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
+    }
+
+    public function laporan()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
+        ->using(Kegiatan_Penulis::class)
+        ->withTimestamps();
     }
 
 
@@ -261,11 +268,6 @@ class Kegiatan extends Model implements HasMedia
         return $this->hasOne(Kegiatan_Lainnya::class, 'kegiatan_id');
     }
 
-    public function mitra()
-    {
-        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
-    }
-
     public function monitoring(){
         return $this->hasOne(Kegiatan_Monitoring::class, 'kegiatan_id');
     }
@@ -285,6 +287,10 @@ class Kegiatan extends Model implements HasMedia
         return $this->hasOne(Kegiatan_Sosialisasi::class, 'kegiatan_id');
     }
 
+    public function mitra()
+    {
+        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
+    }
 
     public function kegiatan_penulis()
     {
@@ -307,5 +313,63 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsTo(Kelurahan::class, 'desa_id');
     }
+
+    // jenis  kegiatan based form input / show
+    public static function getJenisKegiatanModelMap(): array
+    {
+        return [
+            1 => Kegiatan_Assessment::class,
+            2 => Kegiatan_Sosialisasi::class,
+            3 => Kegiatan_Pelatihan::class,
+            4 => Kegiatan_Pembelanjaan::class,
+            5 => Kegiatan_Pengembangan::class,
+            6 => Kegiatan_Kampanye::class,
+            7 => Kegiatan_Pemetaan::class,
+            8 => Kegiatan_Monitoring::class,
+            9 => Kegiatan_Kunjungan::class,
+            10 => Kegiatan_Konsultasi::class,
+            11 => Kegiatan_Lainnya::class,
+        ];
+    }
+
+    public static function getJenisKegiatanRelationMap(): array
+    {
+        return [
+            1 => 'assessment',
+            2 => 'sosialisasi',
+            3 => 'pelatihan',
+            4 => 'pembelanjaan',
+            5 => 'pengembangan',
+            6 => 'kampanye',
+            7 => 'pemetaan',
+            8 => 'monitoring',
+            9 => 'kunjungan',
+            10 => 'konsultasi',
+            11 => 'lainnya',
+        ];
+    }
+
+    public function getKegiatanHasilAttribute()
+    {
+        $jenisKegiatan = (int) $this->jeniskegiatan_id;
+        $modelMapping = self::getJenisKegiatanModelMap();
+
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            return null; // Or throw an exception
+        }
+
+        $modelClass = $modelMapping[$jenisKegiatan];
+        return $modelClass::where('kegiatan_id', $this->id)->get();
+    }
+
+
+    public function getAllMediaAttribute()
+    {
+        return [
+            'dokumen_pendukung' => $this->getMedia('dokumen_pendukung'),
+            'media_pendukung' => $this->getMedia('media_pendukung'),
+        ];
+    }
+
 
 }

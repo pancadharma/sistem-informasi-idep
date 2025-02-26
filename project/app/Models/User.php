@@ -175,13 +175,12 @@ class User extends Authenticatable implements HasMedia
         return route('profile.show', ['identifier' => $identifier]); // Generate route
     }
 
-    public function kegiatan()
+    public function perankegiatan()
     {
         return $this->belongsToMany(Kegiatan::class, 'trkegiatanpenulis', 'penulis_id', 'kegiatan_id')
-        ->withPivot('peran_id')
+        ->withPivot('kegiatan_id')
         ->withTimestamps();
     }
-
     public function activities()
     {
         return $this->belongsToMany(Kegiatan::class)

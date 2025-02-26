@@ -326,12 +326,6 @@ class KegiatanController extends Controller
             $user = User::findOrFail($request->user_id);
             $data = $request->validated();
             DB::beginTransaction();
-            // $kegiatan = Kegiatan::create([
-            //     'user_id' => $request->user_id,
-            //     'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
-            //     'fasepelaporan' => $request->fasepelaporan,
-            //     'jeniskegiatan_id' => $request->jeniskegiatan_id,
-            // ]);
             $kegiatan = Kegiatan::create($data);
             $kegiatan->mitra()->sync($request->input('mitra_id', []));
             $kegiatan->sektor()->sync($request->input('sektor_id', []));

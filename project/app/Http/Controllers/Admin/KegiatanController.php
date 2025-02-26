@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
 use Carbon\Carbon;
 use App\Models\Program;
 use App\Models\Kegiatan;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreKegiatanRequest;
 use App\Models\Jenis_Kegiatan;
 use App\Models\Kegiatan_Assessment;
 use App\Models\Kegiatan_Kampanye;
@@ -24,6 +26,7 @@ use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
 use App\Models\mSektor;
 use App\Models\Partner;
+use App\Models\Peran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Program_Outcome_Output;
@@ -162,7 +165,7 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
                     $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
@@ -236,186 +239,85 @@ class KegiatanController extends Controller
         ], Response::HTTP_FORBIDDEN);
     }
 
-
-
-    public function store(Request $request)
+    public function store(StoreKegiatanRequest $request)
     {
-        try {
-            DB::beginTransaction();
-            // 1. Create the main Trkegiatan record
-            $kegiatan = Kegiatan::create($request->except([
-                // Fields from trkegiatanassessment
-                'assessmentyangterlibat',
-                'assessmenttemuan',
-                'assessmenttambahan',
-                'assessmenttambahan_ket',
-                'assessmentkendala',
-                'assessmentisu',
-                'assessmentpembelajaran',
+        $kegiatanController = new APIKegiatanController();
 
-                // Fields from trkegiatansosialisasi
-                'sosialisasiyangterlibat',
-                'sosialisasitemuan',
-                'sosialisasitambahan',
-                'sosialisasitambahan_ket',
-                'sosialisasikendala',
-                'sosialisasiisu',
-                'sosialisasipembelajaran',
+        $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
+        $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
 
-                // Fields from trkegiatanpelatihan
-                'pelatihanpelatih',
-                'pelatihanhasil',
-                'pelatihandistribusi',
-                'pelatihandistribusi_ket',
-                'pelatihanrencana',
-                'pelatihanunggahan',
-                'pelatihanisu',
-                'pelatihanpembelajaran',
-
-                // Fields from trkegiatanpembelanjaan
-                'pembelanjaandetailbarang',
-                'pembelanjaanmulai',
-                'pembelanjaanselesai',
-                'pembelanjaandistribusimulai',
-                'pembelanjaandistribusiselesai',
-                'pembelanjaanterdistribusi',
-                'pembelanjaanakandistribusi',
-                'pembelanjaanakandistribusi_ket',
-                'pembelanjaankendala',
-                'pembelanjaanisu',
-                'pembelanjaanpembelajaran',
-
-                // Fields from trkegiatanpengembangan
-                'pengembanganjeniskomponen',
-                'pengembanganberapakomponen',
-                'pengembanganlokasikomponen',
-                'pengembanganyangterlibat',
-                'pengembanganrencana',
-                'pengembangankendala',
-                'pengembanganisu',
-                'pengembanganpembelajaran',
-
-                // Fields from trkegiatankampanye
-                'kampanyeyangdikampanyekan',
-                'kampanyejenis',
-                'kampanyebentukkegiatan',
-                'kampanyeyangterlibat',
-                'kampanyeyangdisasar',
-                'kampanyejangkauan',
-                'kampanyerencana',
-                'kampanyekendala',
-                'kampanyeisu',
-                'kampanyepembelajaran',
-
-                // Fields from trkegiatanpemetaan
-                'pemetaanyangdihasilkan',
-                'pemetaanluasan',
-                'pemetaanunit',
-                'pemetaanyangterlibat',
-                'pemetaanrencana',
-                'pemetaanisu',
-                'pemetaanpembelajaran',
-
-                // Fields from trkegiatanmonitoring
-                'monitoringyangdipantau',
-                'monitoringdata',
-                'monitoringyangterlibat',
-                'monitoringmetode',
-                'monitoringhasil',
-                'monitoringkegiatanselanjutnya',
-                'monitoringkegiatanselanjutnya_ket',
-                'monitoringkendala',
-                'monitoringisu',
-                'monitoringpembelajaran',
-
-                // Fields from trkegiatankunjungan
-                'kunjunganlembaga',
-                'kunjunganpeserta',
-                'kunjunganyangdilakukan',
-                'kunjunganhasil',
-                'kunjunganpotensipendapatan',
-                'kunjunganrencana',
-                'kunjungankendala',
-                'kunjunganisu',
-                'kunjunganpembelajaran',
-
-                // Fields from trkegiatankonsultasi
-                'konsultasilembaga',
-                'konsultasikomponen',
-                'konsultasiyangdilakukan',
-                'konsultasihasil',
-                'konsultasipotensipendapatan',
-                'konsultasirencana',
-                'konsultasikendala',
-                'konsultasiisu',
-                'konsultasipembelajaran',
-
-                // Fields from trkegiatanlainnya
-                'lainnyamengapadilakukan',
-                'lainnyadampak',
-                'lainnyasumberpendanaan',
-                'lainnyasumberpendanaan_ket',
-                'lainnyayangterlibat',
-                'lainnyarencana',
-                'lainnyakendala',
-                'lainnyaisu',
-                'lainnyapembelajaran',
-
-                //If you have file inputs
-                'dokumen'
-            ]));
-            $this->storeKegiatanHasil($request, $kegiatan);
-
-
-
-
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Kegiatan created successfully',
-                "message" => __('cruds.data.data') . ' ' . __('cruds.kegiatan.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
-                'data' => $kegiatan,
-            ], 201);
-
-            //end of try
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create kegiatan: ' . $e->getMessage(),
-                'errors'  => $e->errors(),
-                'request_data' => $request->all(),
-            ], 500);
-        } catch (ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'errors'  => $e->errors(),
-            ], 422);
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Resource not found.',
-            ], 404);
-        } catch (HttpException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
-        }
+        // Optionally return a response or redirect
+        return response()->json(['message' => 'Kegiatan processed by storeApi']);
     }
 
     public function show($id)
     {
-        return view('tr.kegiatan.show');
+        // Fetch the Kegiatan with all its relationships
+        $kegiatan = Kegiatan::with([
+            'programOutcomeOutputActivity',
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+        ])->findOrFail($id);
+
+        // Get all the media collections
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+
+        // Get specific relation based on jenis kegiatan
+        $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+        $relationMap = Kegiatan::getJenisKegiatanRelationMap();
+
+        $kegiatanRelation = null;
+        if (isset($relationMap[$jenisKegiatanId])) {
+            $relationName = $relationMap[$jenisKegiatanId];
+            $kegiatanRelation = $kegiatan->$relationName;
+        }
+
+        foreach ($kegiatan->kegiatan_penulis as $penulis) {
+            $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
+        }
+
+        return view('tr.kegiatan.show', compact(
+            'kegiatan',
+            'dokumenPendukung',
+            'mediaPendukung',
+            'kegiatanRelation'
+        ));
     }
+
+    private function getSpecificRelation($id)
+    {
+        $kegiatan = Kegiatan::select('jeniskegiatan_id')->find($id);
+        if (!$kegiatan) return null;
+
+        return Kegiatan::getJenisKegiatanRelationMap()[$kegiatan->jeniskegiatan_id] ?? null;
+    }
+
+    private function getKegiatanHasil($kegiatan)
+    {
+        $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+        $modelMapping = Kegiatan::getJenisKegiatanModelMap();
+
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
+        }
+
+        $modelClass = $modelMapping[$jenisKegiatan];
+        return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
+    }
+
+
+
+
+
+
+
+
 
     public function edit(Kegiatan $kegiatan)
     {

@@ -42,5 +42,9 @@ class Jenis_Kegiatan extends Model
     {
         return $this->hasMany(Kegiatan::class, 'jeniskegiatan_id');
     }
+    public function kegiatan()
+    {
+        return $this->hasMany(Kegiatan::class, 'jeniskegiatan_id');
+    }
 
 }
