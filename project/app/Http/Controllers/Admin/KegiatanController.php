@@ -12,10 +12,13 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
 use App\Models\Jenis_Kegiatan;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
 use App\Models\Kegiatan_Assessment;
 use App\Models\Kegiatan_Kampanye;
 use App\Models\Kegiatan_Kunjungan;
 use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Lokasi;
 use App\Models\Kegiatan_Monitoring;
 use App\Models\Kegiatan_Pelatihan;
 use App\Models\Kegiatan_Pembelanjaan;
@@ -32,6 +35,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Program_Outcome_Output;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
+use App\Models\Provinsi;
 use App\Models\Satuan;
 use Dotenv\Exception\ValidationException;
 use Exception;
@@ -283,6 +287,9 @@ class KegiatanController extends Controller
         foreach ($kegiatan->kegiatan_penulis as $penulis) {
             $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
         }
+
+        // $lokasi = $kegiatan->lokasi;
+        // return $lokasi;
 
         return view('tr.kegiatan.show', compact(
             'kegiatan',
