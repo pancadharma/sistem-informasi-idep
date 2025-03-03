@@ -612,8 +612,6 @@ entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     id_user : int <<fk>>
     nama : varchar (200)
     jeniskelamin : varchar (50)
-    disabilitas : varchar (50)
-    id_kelompokmarjinal : int <<fk>> null
     rt : varchar(200)
     rw : varchar(200)
     id_dusun: int <<fk>>
@@ -628,6 +626,26 @@ entity "trmealspenerimamanfaatactivity" as trmealspenerimamanfaatactivity {
     id_mealspenerimamanfaat : int <<fk>>
     id_programoutcomeoutputactivity : int <<fk>>
     checked : bit
+}
+
+entity "trmealspenerimamanfaatkelompokmarjinal" as trmealspenerimamanfaatkelompokmarjinal {
+    *id : int <<auto>>
+    --
+    id_mealspenerimamanfaat : int <<fk>>
+    id_kelompokmarjinal : int <<fk>>    
+}
+
+entity "trmealspenerimamanfaatdisabilitas" as trmealspenerimamanfaatdisabilitas {
+    *id : int <<auto>>
+    --
+    id_mealspenerimamanfaat : int <<fk>>
+    id_disabilitas : int <<fk>>    
+}
+
+entity "mdisabilitas" as mdisabilitas {
+    *id : int <<auto>>
+    --
+    nama : varchar (200)
 }
 
 entity "mjeniskelompok" as mjeniskelompok {
