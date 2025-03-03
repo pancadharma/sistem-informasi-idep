@@ -307,10 +307,21 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('meals/store',                  [MealsController::class, 'store'])->name('meals.store');
     });
 
+       
+
 
 
 
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
+
+     // MEALS Komponen Model
+     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
+    });
+    Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
+        Route::get('datatable', [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
+    });
 });
