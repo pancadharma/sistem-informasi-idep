@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Auditable;
+use App\Models\TargetReinstra;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kegiatan_Sektor extends Model
 {
