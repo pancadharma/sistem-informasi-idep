@@ -49,6 +49,6 @@ class Kegiatan_Sektor extends Model
     }
     public function sektor()
     {
-        return $this->belongsTo(mSektor::class, 'sektor_id');
+        return $this->belongsTo(TargetReinstra::class, 'sektor_id');
     }
 }

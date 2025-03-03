@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
 use App\Models\Provinsi;
 use App\Models\Satuan;
+use App\Models\TargetReinstra;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -523,7 +524,8 @@ class KegiatanController extends Controller
             $ids = [$ids];
         }
 
-        $data = mSektor::when(!empty($ids), function ($query) use ($ids) {
+        // $data = mSektor::when(!empty($ids), function ($query) use ($ids) {
+        $data = TargetReinstra::when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
             return $query->where('nama', 'like', "%{$search}%");
