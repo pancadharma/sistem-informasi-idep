@@ -405,6 +405,18 @@ class ProvinsiSeeder extends Seeder
             ],
         ];
 
-        Provinsi::insert($data);
+        // Provinsi::insert($data);
+        $limit = 5000;
+        $chunks = array_chunk($data, $limit);
+        $startTime = microtime(true);
+        foreach ($chunks as $chunk) {
+            Provinsi::upsert($chunk, 'id', array_keys($chunk[0]));
+            gc_collect_cycles();
+            unset($chunk);
+            sleep(1);
+        }
+        $endTime = microtime(true);
+        $upsertTime = $endTime - $startTime;
+        echo "Provinsi done in: $upsertTime seconds\n";
     }
 }

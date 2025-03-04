@@ -26,15 +26,20 @@ class AlwaysSeedDev extends Seeder
             PendonorSeeder::class,
             JenisBantuanSeeder::class,
             KelompokMarjinalSeeder::class,
-            // SatuanFakerSeeder::class,
-            // FakerKategoriLokasiKegiatan::class,
-            // CountryTableSeeder::class,
-            // ProvinsiSeeder::class,
-            // KabupatenSeeder::class,
-            // KecamatanSeeder::class,
-            // KelurahanSeeder::class,
-            // KaitanSdgSeeder::class,
-            // PeranSeeder::class,
+
+            //uncomment if fresh table
+            CountryTableSeeder::class,
+            ProvinsiSeeder::class,
+            KabupatenSeeder::class,
+            KecamatanSeeder::class,
+            KelurahanSeeder::class,
+            KaitanSdgSeeder::class,
+            PeranSeeder::class,
+
+
+            DusunSeederFaker::class,
+            SatuanFakerSeeder::class,
+            FakerKategoriLokasiKegiatan::class,
         ]);
     }
 }

@@ -358,6 +358,7 @@ class UpdateProvinsiSeeder extends Seeder
         DB::beginTransaction(); // Start the transaction
 
         try {
+            $startTime = microtime(true);
             foreach ($provinsi as $prov) {
                 $coordinate = [$prov['longitude'], $prov['latitude']]; // [longitude, latitude]
 
@@ -375,7 +376,10 @@ class UpdateProvinsiSeeder extends Seeder
             }
 
             DB::commit(); // Commit the transaction if everything is successful
+            $endTime = microtime(true);
+            $updateOrInsert = $endTime - $startTime;
             $this->command->info('Provinsi data seeded successfully.');
+            $this->command->info("in: $updateOrInsert seconds");
         } catch (\Exception $e) {
             DB::rollback(); // Rollback the transaction if any exception occurs
             $this->command->error('Seeding failed. Transaction rolled back.');
