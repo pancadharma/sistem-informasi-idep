@@ -1,4 +1,3 @@
-
 <h1>{{ $kegiatan->activity->nama ?? '-' }}</h1>
 <hr>
 Kode Kegiatan : {{ $kegiatan->activity->kode }}
@@ -9,7 +8,7 @@ Jenis Kegiatan : {{ $kegiatan->jenisKegiatan->nama ?? '' }}
 <hr>
 Sektor Kegiatan :
 @foreach($kegiatan->sektor as $key => $value)
-    {{ $value->nama.','  }}
+{{ $value->nama.',' }}
 @endforeach
 <hr>
 Tgl Mulai : {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') }}
@@ -17,14 +16,14 @@ Tgl Mulai : {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') }
 Tgl Selesai : {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') }}
 <hr>
 <hr>
-Durasi : {{ $durationInDays ?? '' }}  Days
+Durasi : {{ $durationInDays ?? '' }} Days
 <hr>
 <hr>
 Created on : {{ $kegiatan->created_at->diffForHumans() }}
 <hr>
 Created by : {{ $kegiatan->user->nama ?? '' }}
 <hr>
-Status : {{ $kegiatan->status   }}
+Status : {{ $kegiatan->status }}
 <hr>
 <hr>
 
@@ -33,7 +32,7 @@ Status : {{ $kegiatan->status   }}
 </h1>
 
 @foreach($kegiatan->kegiatan_penulis as $penulis)
-    <li>{{ $penulis->nama }} - {{ $penulis->kegiatanPeran->nama }}</li>
+<li>{{ $penulis->nama }} - {{ $penulis->kegiatanPeran->nama }}</li>
 @endforeach
 
 <hr>
@@ -49,12 +48,12 @@ Status : {{ $kegiatan->status   }}
 <hr>
 <h1> Deskripsi </h1>
 
-   {!! $kegiatan->deskripsilatarbelakang ?? '-' !!}
-    <hr>
+{!! $kegiatan->deskripsilatarbelakang ?? '-' !!}
+<hr>
 
-    {!! $kegiatan->deskripsitujuan ?? '-' !!}
-    <hr>
-    {!! $kegiatan->deskripsikeluaran ?? '-' !!}
+{!! $kegiatan->deskripsitujuan ?? '-' !!}
+<hr>
+{!! $kegiatan->deskripsikeluaran ?? '-' !!}
 
 <hr>
 <hr>
@@ -68,36 +67,36 @@ Status : {{ $kegiatan->status   }}
 <h1>
     Lokasi
 </h1>
-    @foreach($kegiatan->lokasi as $data)
-        <li>
-            {!! $data->desa->nama ?? '-' !!}
-        </li>
-        <li>
-            {!! $data->desa->kecamatan->nama ?? '-'!!}
-        </li>
-        <li>
-            {!! $data->desa->kecamatan->kabupaten->nama ?? '-' !!}
-        </li>
-        <li>
-            {!! $data->desa->kecamatan->kabupaten->provinsi->nama ?? '-' !!}
-        </li>
-        <li>
-            {!! $data->desa->kecamatan->kabupaten->provinsi->country->nama ?? '-' !!}
-        </li>
-        <hr>
-        <hr>
+@foreach($kegiatan->lokasi as $data)
+<li>
+    {!! $data->desa->nama ?? '-' !!}
+</li>
+<li>
+    {!! $data->desa->kecamatan->nama ?? '-'!!}
+</li>
+<li>
+    {!! $data->desa->kecamatan->kabupaten->nama ?? '-' !!}
+</li>
+<li>
+    {!! $data->desa->kecamatan->kabupaten->provinsi->nama ?? '-' !!}
+</li>
+<li>
+    {!! $data->desa->kecamatan->kabupaten->provinsi->country->nama ?? '-' !!}
+</li>
+<hr>
+<hr>
 
-        <li>
-            {{ $data->lat }},
-            {{ $data->long }},
-            {{ $data->lokasi }},
-            {{ $data->desa->nama }},
-            {{ $data->desa->kecamatan->nama }},
-            {{ $data->desa->kecamatan->kabupaten->nama }},
-            {{ $data->desa->kecamatan->kabupaten->provinsi->nama }},
-            {{ $data->desa->kecamatan->kabupaten->provinsi->country->nama }}
-         </li>
-    @endforeach
+<li>
+    {{ $data->lat }},
+    {{ $data->long }},
+    {{ $data->lokasi }},
+    {{ $data->desa->nama }},
+    {{ $data->desa->kecamatan->nama }},
+    {{ $data->desa->kecamatan->kabupaten->nama }},
+    {{ $data->desa->kecamatan->kabupaten->provinsi->nama }},
+    {{ $data->desa->kecamatan->kabupaten->provinsi->country->nama }}
+</li>
+@endforeach
 <hr>
 <hr>
 
@@ -107,7 +106,9 @@ Status : {{ $kegiatan->status   }}
 
 
 {{-- @push('scripts') --}}
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&libraries=places,geometry,marker&callback=initMap"></script>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&libraries=places,geometry,marker&callback=initMap">
+</script>
 <script>
     function initMap() {
         const map = new google.maps.Map(document.getElementById("map"), {

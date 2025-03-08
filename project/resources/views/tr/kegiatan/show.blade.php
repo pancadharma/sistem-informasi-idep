@@ -233,10 +233,10 @@
                     <table id="peserta_kegiatan_summary" class="table table-sm table-borderless table-info mb-0 table-custom" width="100%">
                         <thead style="background-color: #11bd7e !important">
                             <tr class="align-middle text-center text-nowrap">
-                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary"><label>{{ __('cruds.kegiatan.peserta.peserta') }}</label></th>
-                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary"><label>{{ __('cruds.kegiatan.peserta.wanita') }}</label></th>
-                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary"><label>{{ __('cruds.kegiatan.peserta.pria') }}</label></th>
-                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary"><label>{{ __('cruds.kegiatan.peserta.total') }}</label></th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -320,6 +320,162 @@
 
             </div>
         </div>
+
+        <!--jumlah peserta disabilitas -->
+        <div class="form-group row">
+            <div class="col-sm col-md col-lg self-center">
+                <div class="card-body table-responsive p-0">
+                    <table id="penerima_manfaat_difabel" class="table table-sm table-borderless table-warning mb-0 table-custom" width="100%">
+                        <thead style="background-color: #6111bd !important">
+                            <tr class="align-middle text-center text-nowrap">
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.total') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--disabilitas row-->
+                            <tr>
+                                <td class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.disabilitas') }}</label>
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatdisabilitasperempuan" name="penerimamanfaatdisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatdisabilitasperempuan ?? 0}}" >
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatdisabilitaslakilaki" name="penerimamanfaatdisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0}}" >
+                                </td>
+                                <td class="pl-1 pr-1">
+                                    <input type="number" readonly id="penerimamanfaatdisabilitastotal" name="penerimamanfaatdisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatdisabilitastotal ?? 0}}" >
+                                </td>
+                            </tr>
+                            <!--non disabilitias  row-->
+                            <tr>
+                                <td class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.non_disabilitas') }}</label>
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatnondisabilitasperempuan" name="penerimamanfaatnondisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0}}" >
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatnondisabilitaslakilaki" name="penerimamanfaatnondisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0}}" >
+                                </td>
+                                <td class="pl-1 pr-1">
+                                    <input type="number" readonly id="penerimamanfaatnondisabilitastotal" name="penerimamanfaatnondisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatnondisabilitastotal ?? 0}}" >
+                                </td>
+                            </tr>
+                            <!--marjinal row-->
+                            <tr>
+                                <td class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</label>
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatmarjinalperempuan" name="penerimamanfaatmarjinalperempuan" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatmarjinalperempuan ?? 0}}" >
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatmarjinallakilaki" name="penerimamanfaatmarjinallakilaki" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatmarjinallakilaki ?? 0}}" >
+                                </td>
+                                <td class="pl-1 pr-1">
+                                    <input type="number" readonly id="penerimamanfaatperempuantotal" name="penerimamanfaatperempuantotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatremajatotal ?? 0 }}" >
+                                </td>
+                            </tr>
+                             <!--total beneficiaries difabel-->
+                            <tr>
+                                <td class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.total') }}</label>
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="total_beneficiaries_perempuan" name="total_beneficiaries_perempuan" class="calculate form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->total_beneficiaries_perempuan ?? 0}}" >
+                                </td>
+                                <td class="pl-1">
+                                    <input type="number" readonly id="total_beneficiaries_lakilaki" name="total_beneficiaries_lakilaki" class="calculate form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->total_beneficiaries_lakilaki ?? 0}}">
+                                </td>
+                                <td class="pl-1 pr-1">
+                                    <input type="number" readonly id="beneficiaries_difable_total" name="beneficiaries_difable_total" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->beneficiaries_difable_total ?? 0}}">
+                                </td>
+                            </tr>
+                            <tr class="align-middle text-center text-nowrap">
+                                <th class="pl-1 text-left">{{ __('cruds.kegiatan.peserta.total') }}</th>
+                                <th class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatperempuantotal" name="penerimamanfaatperempuantotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatperempuantotal ?? 0}}" >
+                                </th>
+                                <th class="pl-1">
+                                    <input type="number" readonly id="penerimamanfaatlakilakitotal" name="penerimamanfaatlakilakitotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaatlakilakitotal ?? 0}}" >
+                                </th>
+                                <th class="pl-1 pr-1">
+                                    <input type="number" readonly id="penerimamanfaattotal" name="penerimamanfaattotal" class="form-control-border border-width-2 form-control form-control-sm text-center" value="{{ $kegiatan->penerimamanfaattotal ?? 0}}" >
+                                </th>
+                            </tr>
+                        </tbody>
+                        {{-- <tbody>
+                            <!--disabilitas row-->
+                            <tr>
+                                <td colspan="1" width="30%" class="pl-1">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="number" id="penerimamanfaatdisabilitasperempuan" name="penerimamanfaatdisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="text" id="penerimamanfaatdisabilitaslakilaki" name="penerimamanfaatdisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1 pr-1">
+                                    <input type="text" id="penerimamanfaatdisabilitastotal" name="penerimamanfaatdisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                                </td>
+                            </tr>
+                            <!--non_disabilitas row-->
+                            <tr>
+                                <td colspan="1" width="30%" class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.non_disabilitas') }}</label>
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="number" id="penerimamanfaatnondisabilitasperempuan" name="penerimamanfaatnondisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="text" id="penerimamanfaatnondisabilitaslakilaki" name="penerimamanfaatnondisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1 pr-1">
+                                    <input type="text" id="penerimamanfaatnondisabilitastotal" name="penerimamanfaatnondisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                                </td>
+                            </tr>
+                            <!--marjinal row-->
+                            <tr>
+                                <td colspan="1" width="30%" class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</label>
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="number" id="penerimamanfaatmarjinalperempuan" name="penerimamanfaatmarjinalperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="text" id="penerimamanfaatmarjinallakilaki" name="penerimamanfaatmarjinallakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1 pr-1">
+                                    <input type="text" id="penerimamanfaatmarjinaltotal" name="penerimamanfaatmarjinaltotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                                </td>
+                            </tr>
+                            <!--total beneficiaries difabel-->
+                            <tr>
+                                <td colspan="1" width="30%" class="pl-1">
+                                    <label class="text-sm">{{ __('cruds.kegiatan.peserta.total') }}</label>
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="number" id="total_beneficiaries_perempuan" name="total_beneficiaries_perempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" readonly placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1">
+                                    <input type="text" id="total_beneficiaries_lakilaki" name="total_beneficiaries_lakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" readonly placeholder="0">
+                                </td>
+                                <td colspan="1" width="10%" class="pl-1 pr-1">
+                                    <input type="text" id="beneficiaries_difable_total" name="beneficiaries_difable_total" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                                </td>
+                            </tr>
+
+                        </tbody> --}}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 
