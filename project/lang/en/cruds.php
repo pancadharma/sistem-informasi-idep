@@ -857,7 +857,6 @@ return [
             'jenis_kelamin'                      => 'Gender',
             'select_jenis_kelamin'               => 'Select Gender',
             'tanggal_lahir'                      => 'Birthday',
-            'disabilitas'                        => 'Disability',
             'hamil'                              => 'Pregnant',
             'status_kawin'                       => 'Marriage Status',
             'pilih_status_kawin'                 => 'Select Marriage Status',

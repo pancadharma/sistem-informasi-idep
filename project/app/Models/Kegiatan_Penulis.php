@@ -54,7 +54,7 @@ class Kegiatan_Penulis extends Model
 
     public function peran()
     {
-        return $this->belongsTo(Role::class, 'peran_id');
+        return $this->belongsTo(Peran::class, 'peran_id');
     }
 
 }

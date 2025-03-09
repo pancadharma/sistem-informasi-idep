@@ -36,4 +36,14 @@ class Peran extends Model
     {
         return $this->belongsToMany(Program::class, 'trprogramuser', 'peran_id', 'program_id');
     }
+    public function kegiatan()
+    {
+        return $this->belongsToMany(Kegiatan_Penulis::class, 'trkegiatanpenulis', 'peran_id', 'kegiatan_id');
+    }
+
+    //confuse wich model I should user above or this bellow
+    public function kegiatan_peran()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatanpenulis', 'peran_id', 'kegiatan_id');
+    }
 }

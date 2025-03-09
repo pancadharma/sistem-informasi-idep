@@ -29,9 +29,13 @@ class Country extends Model
         ->logOnly(['*']);  // Pastikan log yang diinginkan
 
     }
-    
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function provinsi(){
+        return $this->hasMany(Provinsi::class, 'negara_id');
     }
 }

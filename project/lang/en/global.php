@@ -356,5 +356,6 @@ return [
         'delete_success'             => 'Berhasil menghapus Data',
         'delete_failed'              => 'Gagal menghapus Data',
     ],
+    'print'                         => 'Print'
 
 ];
