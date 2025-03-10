@@ -265,7 +265,10 @@ class CountryTableSeeder extends Seeder
             ['id' => 249, 'nama' => 'Zambia', 'iso1' => 'ZMB', 'iso2' => 'ZM', 'flag' => 'ZM.png'],
             ['id' => 250, 'nama' => 'Zimbabwe', 'iso1' => 'ZWE', 'iso2' => 'ZW', 'flag' => 'ZW.png'],
         ];
-        Country::insert($countries);
+        // Country::insert($countries);
+        foreach ($countries as $country) {
+            Country::updateOrCreate(['id' => $country['id']], $country);
+        }
     }
 
 }

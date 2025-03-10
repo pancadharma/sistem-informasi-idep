@@ -59,17 +59,4 @@ class Kegiatan_Lokasi extends Model
     {
         return $this->belongsTo(Kelurahan::class, 'desa_id');
     }
-
-
-
-
-    // $kegiatan = kegiatan::find(1);
-
-    // if ($kegiatan) {
-    //     foreach ($kegiatan->lokasi as $lokasi) {
-    //         echo $lokasi->lokasi . ' (Long: ' . $lokasi->long . ', Lat: ' . $lokasi->lat . ')<br>';
-    //     }
-    // } else {
-    //     echo 'Kegiatan not found';
-    // }
 }

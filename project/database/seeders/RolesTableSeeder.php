@@ -28,11 +28,20 @@ class RolesTableSeeder extends Seeder
             [
                 'id'    => 4,
                 'nama' => 'Reader',
-            ],
+            ]
         ];
 
-        foreach ($roles as $role) {
-            Role::updateOrCreate(['id' => $role['id']], $role);
+        $limit = 5000;
+        $chunks = array_chunk($roles, $limit);
+        $startTime = microtime(true);
+        foreach ($chunks as $chunk) {
+            Role::upsert($chunk, 'id', array_keys($chunk[0]));
+            gc_collect_cycles();
+            unset($chunk);
+            sleep(1);
         }
+        $endTime = microtime(true);
+        $upsertTime = $endTime - $startTime;
+        echo "Roles done in: $upsertTime seconds\n";
     }
 }

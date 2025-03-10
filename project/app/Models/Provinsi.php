@@ -45,7 +45,7 @@ class Provinsi extends Model
 
     public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class, 'negara_id');
     }
 
     public function kabupaten_kota()

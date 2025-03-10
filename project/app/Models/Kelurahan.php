@@ -15,7 +15,7 @@ class Kelurahan extends Model
     public $table = "kelurahan";
     protected $fillable = [
         'id','kode', 'nama', 'aktif', 'kecamatan_id', 'created_at','updated_at'
-    ];  
+    ];
     protected $casts = [
         'updated_at',
         'created_at'
@@ -49,5 +49,10 @@ class Kelurahan extends Model
     public function dusun()
     {
         return $this->hasMany(Dusun::class, 'desa_id');
+    }
+    public function kegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_lokasi', 'desa_id', 'kegiatan_id')
+        ->withPivot('program_id');
     }
 }
