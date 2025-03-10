@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<!-- Modal Edit & Tambah Peserta Penerima Manfaat-->
+<!-- Modal Edit -->
 <x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop>
     <form id="editDataForm" class="big">
         <input type="hidden" id="editRowId">
@@ -167,78 +167,54 @@
     </x-slot>
 </x-adminlte-modal>
 
-
-<x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop >
+{{-- Modal tambah --}}
+<x-adminlte-modal id="ModalTambah" title="{{ __('global.add') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop >
     <form id="dataForm" class="big">
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="nama" required>
-            </div>
-        </div>
 
         <div class="row mb-3">
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.no_telp') }}</label>
-                <input type="text" class="form-control" id="no_telp" name="no_telp" pattern="^0[0-9]*$" placeholder="081XXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="15">
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.age') }} <span class="text-danger">*</span></label>
-                <input type="number" class="form-control usia-input" name="usia" required>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
-                <select class="form-control" name="gender" required>
-                    <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
-                    <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
-                    <option value="lainnya">{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.disability') }}</label>
-                <div class="select2-red">
-                    <select class="form-control" id="disabilitas" name="disabilitas" multiple>
-                        <option value="Fisik">Fisik</option>
-                        <option value="Sensorik">Sensorik</option>
-                        <option value="Intelektual">Intelektual</option>
-                        <option value="Mental">Mental</option>
-                        <option value="Ganda">Ganda</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.marjinal') }}</label>
-                <div class="select2-green">
-                    <select class="form-control select2-multiple select2" name="kelompok_rentan" multiple id="kelompok_rentan">
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.jenis_kelompok') }}</label>
-                {{-- <input type="text" class="form-control" name="jenis_kelompok"> --}}
-                <div class="select2-cyan">
-                    <select class="form-control select2-multiple select2" name="jenis_kelompok" id="jenis_kelompok">
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            {{-- desa --}}
+            {{-- Prov --}}
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
                 <div class="form-input">
-                    <label class="form-label mb-0"><strong>{{ __('cruds.desa.title') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.provinsi.title') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-control select2" name="desa_id" id="desa_id" required>
                     </select>
                 </div>
             </div>
-            {{-- dusun --}}
+            {{-- Kab/kota --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center">
+                <div class="col-11">
+                    <div class="row">
+                        <label class="form-label mb-0">{{ __('cruds.kabupaten.title') }} <span class="text-danger">*</span></label>
+                        <div class="col-12 pl-0">
+                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            {{-- Kecamatan --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.kecamatan.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="desa_id" id="desa_id" required>
+                    </select>
+                </div>
+            </div>
+            {{-- Desa --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center">
+                <div class="col-11">
+                    <div class="row">
+                        <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
+                        <div class="col-12 pl-0">
+                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            {{-- Dusun --}}
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center">
                 <div class="col-11">
                     <div class="row">
@@ -256,26 +232,28 @@
                 </div>
             </div>
         </div>
-
+        {{-- longtitude --}}
         <div class="row mb-3">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rw') }} / <small> {{ __('cruds.beneficiary.penerima.banjar') }} </small> <span class="text-danger">*</span></label>
+                <label class="form-label mb-0">{{ __('cruds.kegiatan.long') }}  <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="rw_banjar">
             </div>
+        {{-- latitude --}}
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
+                <label class="form-label mb-0">{{ __('cruds.kegiatan.lat') }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="rt" required>
             </div>
         </div>
-        {{-- select activity --}}
+        {{-- Jumlah --}}
         <div class="row mb-3">
-            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivity">
-                <div class="select2-green">
-                    <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-select select2 select2-multiple" name="activitySelect" multiple id="activitySelect" >
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                </div>
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
+                <label class="form-label mb-0">{{ __('cruds.komponenmodel.jumlah') }}  <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="rw_banjar">
+            </div>
+        {{-- Satuan --}}
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
+                <label class="form-label mb-0">{{ __('cruds.satuan.title') }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="rt" required>
             </div>
         </div>
     </form>

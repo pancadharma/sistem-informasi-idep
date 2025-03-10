@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
@@ -317,6 +318,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
 
      // MEALS Komponen Model
+     Route::get('komodel/api/sektor', [KomponenModelController::class, 'getSektor'])->name('api.komodel.sektor');
+     Route::get('komodel/api/model', [KomponenModelController::class, 'getModel'])->name('api.komodel.model');
      Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');

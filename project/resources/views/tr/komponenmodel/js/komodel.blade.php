@@ -45,7 +45,7 @@
             $("#disabilitas").select2({
                 data: disabilitasOptions,
                 placeholder: '{{ __('global.select') . ' ' . __('cruds.beneficiary.penerima.disability') }} ...',
-                dropdownParent: $("#ModalTambahPeserta"),
+                dropdownParent: $("#ModalTambah"),
                 width: "100%",
             });
 
@@ -66,7 +66,7 @@
         function initializeSelect2ForKelompokRentan() {
             $("#kelompok_rentan").select2({
                 placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
-                dropdownParent: $("#ModalTambahPeserta"),
+                dropdownParent: $("#ModalTambah"),
                 width: "100%",
                 allowClear: true,
                 ajax: {
@@ -145,7 +145,7 @@
                     },
                     cache: true,
                 },
-                dropdownParent: $("#ModalTambahPeserta"),
+                dropdownParent: $("#ModalTambah"),
                 width: "100%",
             });
 
@@ -199,7 +199,7 @@
                     },
                     cache: true,
                 },
-                dropdownParent: $("#ModalTambahPeserta"),
+                dropdownParent: $("#ModalTambah"),
                 width: "100%",
                 // minimumInputLength: 2,
             });
@@ -269,7 +269,7 @@
                     // },
                     cache: true,
                 },
-                dropdownParent: $("#ModalTambahPeserta"),
+                dropdownParent: $("#ModalTambah"),
                 width: "100%",
             });
             $("#editJenisKelompok").select2({
@@ -337,7 +337,7 @@
             const jenisKelompokText = $("#jenis_kelompok option:selected").text();
 
             const disabilitasText = disabilitasArray.map((value) => {
-                const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
+                const option = $('#ModalTambah select[name="disabilitas"] option[value="' + value + '"]');
                 const text = option.length ? option.text() : "";
                 const randomColor = getRandomColor();
                 return `<span class="badge badge-${randomColor}">${text}</span>`;
@@ -359,7 +359,7 @@
                 return `<span class="badge badge-${randomColor}">${item.text}</span>`;
             });
 
-            const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
+            const genderText = $('#ModalTambah select[name="gender"] option[value="' + data.gender + '"]').text();
 
             const selectedActivities = $("#activitySelect").val() || [];
             const activityHeaders = $('#activityHeaders th.activity-header');
@@ -444,7 +444,7 @@
             $("#activitySelect").val(null).trigger("change");
             $("#desa_id").val(null).trigger("change");
             $("#dusun_id").val(null).trigger("change");
-            $("#ModalTambahPeserta").modal("hide");
+            $("#ModalTambah").modal("hide");
         }
 
         function resetFormEdit() {
@@ -716,7 +716,7 @@
                     return false;
                 }
 
-                $("#ModalTambahPeserta").modal("show");
+                $("#ModalTambah").modal("show");
             });
 
             $("#saveDataBtn").on("click", function(e) {
@@ -798,11 +798,11 @@
             });
         }
 
-        $("#ModalTambahPeserta, #editDataModal").on("shown.bs.modal", function() {
+        $("#ModalTambah, #editDataModal").on("shown.bs.modal", function() {
             $(this).removeAttr("inert");
         });
 
-        $("#ModalTambahPeserta, #editDataModal").on("hide.bs.modal", function(e) {
+        $("#ModalTambah, #editDataModal").on("hide.bs.modal", function(e) {
             $(this).attr("inert", "");
             $(document.activeElement).blur();
         });

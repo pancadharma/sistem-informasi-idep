@@ -60,7 +60,7 @@
 {{-- @include('tr.komponenmodel.js.create')  --}}
 
 @stack('basic_tab_js')
-@include('tr.komponenmodel.js.beneficiaries')
+@include('tr.komponenmodel.js.komodel')
 @include('tr.komponenmodel.js.program')
 @include('tr.komponenmodel.tabs.program')
 

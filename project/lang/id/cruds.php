@@ -1003,6 +1003,7 @@ return [
         'label_komponen'                => 'Komponen',
         'label_sektor'                  => 'Sektor',
         'label_lokasi'                  => 'Lokasi',
+        'jumlah'                        => 'Jumlah',
     ],
 
 
