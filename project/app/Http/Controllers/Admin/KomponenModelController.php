@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use App\Models\TargetReinstra;
 use Illuminate\Support\Facades\Gate;
 
 class KomponenModelController extends Controller

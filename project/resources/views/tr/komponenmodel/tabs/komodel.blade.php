@@ -9,12 +9,12 @@
         data-toggle="modal" data-target="#ModalDaftarProgram">
     </div>
     <!-- nama program-->
-    {{-- <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
+    <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
         <label for="nama_program" class="input-group col-form-label">
             {{ __('cruds.kegiatan.basic.program_nama') }}
         </label>
         <input type="text" class="form-control" id="nama_program" placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
-    </div> --}}
+    </div>
 </div>
 
 <div class="row">
