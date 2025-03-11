@@ -36,7 +36,7 @@
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label class="invisible">Tombol</label> <!-- Label tetap ada tetapi disembunyikan -->
         <div class="input-group-append">
-            <button type="button" class="btn btn-primary" id="addModelBtn" data-toggle="modal" data-target="#ModalTambahModel">
+            <button type="button" class="btn btn-primary" id="addKomponenBtn" data-toggle="modal" data-target="#ModalTambahKomponen">
                 <i class="fas fa-plus"></i>
             </button>
         </div>

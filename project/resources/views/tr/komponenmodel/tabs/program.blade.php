@@ -21,7 +21,10 @@
                                     <th>{{ __('global.actions') }}</th>
                                 </tr>
                             </thead>
-                            <tbody id="list_program_kegiatan">
+                            {{-- <tbody id="list_program_kegiatan">
+
+                            </tbody> --}}
+                            <tbody >
 
                             </tbody>
                         </table>

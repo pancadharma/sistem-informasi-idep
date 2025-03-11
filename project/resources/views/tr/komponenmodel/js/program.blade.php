@@ -72,15 +72,15 @@
             $(this).attr('inert', '');
         });
 
-        $("#activitySelect").select2({
-            width: "100%",
-            dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
-        });
+        // $("#activitySelect").select2({
+        //     width: "100%",
+        //     dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
+        // });
 
-        $("#activitySelectEdit").select2({
-            width: "100%",
-            dropdownParent: $("#editDataModal"),
-        });
+        // $("#activitySelectEdit").select2({
+        //     width: "100%",
+        //     dropdownParent: $("#editDataModal"),
+        // });
 
         $(document).on('click', '.select-program', function() {
             const id = $(this).data('id');
@@ -93,14 +93,14 @@
             $('#nama_program').val(nama).prop('disabled', true);
 
             // Fetch activities based on the selected program
-            fetch(url)
-                .then(response => response.json())
-                .then(activities => {
-                    populateActivitySelect(activities, $("#activitySelect"));
-                    populateActivitySelect(activities, $("#activitySelectEdit"));
-                    updateActivityHeaders(activities);
-                })
-                .catch(error => console.error('Error fetching activities:', error));
+            // fetch(url)
+            //     .then(response => response.json())
+            //     .then(activities => {
+            //         populateActivitySelect(activities, $("#activitySelect"));
+            //         populateActivitySelect(activities, $("#activitySelectEdit"));
+            //         updateActivityHeaders(activities);
+            //     })
+                // .catch(error => console.error('Error fetching activities:', error));
 
             $('#ModalDaftarProgram').modal('hide');
         });

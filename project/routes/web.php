@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
+use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -325,6 +326,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
     });
     Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
-        Route::get('datatable', [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
+        Route::get('datatable',         [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
+        Route::post('komponen',         [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
+        Route::get('prov',              [APIKomponenModelController::class, 'getProv'])->name('prov');
+        Route::get('kab',               [APIKomponenModelController::class, 'getKabupatens'])->name('kab');
+        Route::get('kec',               [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
+        Route::get('desa',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
+        Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
+
     });
 });
