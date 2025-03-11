@@ -333,6 +333,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('kec',               [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
         Route::get('desa',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
+        Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
 
     });
 });

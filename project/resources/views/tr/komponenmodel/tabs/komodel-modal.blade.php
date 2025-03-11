@@ -186,7 +186,7 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.kabupaten.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="kabupaten_id" id="kabupaten_id"></select>
+                            <select class="form-control select2 flex-grow-1" name="kabupaten_id" id="kabupaten_id" required></select>
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="desa_id" id="desa_id"></select>
+                            <select class="form-control select2 flex-grow-1" name="desa_id" id="desa_id" required></select>
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id"></select>
+                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id" required></select>
                         </div>
                     </div>
                 </div>
@@ -235,25 +235,25 @@
         {{-- longtitude --}}
         <div class="row mb-3">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
-                <label class="form-label mb-0">{{ __('cruds.kegiatan.long') }}  <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rw_banjar">
+                <label class="form-label mb-0">{{ __('cruds.kegiatan.lat') }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="lat" pattern="^-?([1-8]?[0-9](\.\d+)?|90(\.0+)?)$" required>
             </div>
         {{-- latitude --}}
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
-                <label class="form-label mb-0">{{ __('cruds.kegiatan.lat') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rt" required>
+                <label class="form-label mb-0">{{ __('cruds.kegiatan.long') }}  <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="long" pattern="^-?((1[0-7][0-9]|[1-9]?[0-9])(\.\d+)?|180(\.0+)?)$" required>
             </div>
         </div>
         {{-- Jumlah --}}
         <div class="row mb-3">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
                 <label class="form-label mb-0">{{ __('cruds.komponenmodel.jumlah') }}  <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rw_banjar">
+                <input type="text" class="form-control" name="jumlah" required pattern="[0-9]*" inputmode="numeric">
             </div>
         {{-- Satuan --}}
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
                 <label class="form-label mb-0">{{ __('cruds.satuan.title') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rt" required>
+                <select class="form-control select2 flex-grow-1" name="satuan_id" id="satuan_id" required></select>
             </div>
         </div>
     </form>

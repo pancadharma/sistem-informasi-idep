@@ -27,7 +27,7 @@
         data-toggle="modal" data-target="#ModalKomponenModel"> --}}
         
         <div class="select2-purple">
-            <select class="form-control select2" name="model_id[]" id="model_id" multiple data-api-url="{{ route('api.komodel.model') }}">
+            <select class="form-control select2" name="model_id[]" id="model_id" multiple data-api-url="{{ route('api.komodel.model') }}" required>
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
@@ -53,7 +53,7 @@
         data-toggle="modal" data-target="#ModalDaftarSektor"> --}}
 
         <div class="select2-purple">
-            <select class="form-control select2" name="sektor_id[]" id="sektor_id" multiple data-api-url="{{ route('api.komodel.sektor') }}">
+            <select class="form-control select2" name="sektor_id[]" id="sektor_id" multiple data-api-url="{{ route('api.komodel.sektor') }}" required>
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
@@ -118,7 +118,7 @@
                 };
             },
             processResults: function(response) {
-                console.log("Data dari API:", response); // Debugging
+                // console.log("Data dari API:", response); // Debugging
 
                 return {
                     results: response.results.map(function(item) {
@@ -151,7 +151,7 @@ $(document).ready(function() {
                 };
             },
             processResults: function(response) {
-                console.log("Data Model dari API:", response); // Debugging
+                // console.log("Data Model dari API:", response); // Debugging
 
                 return {
                     results: response.results.map(function(item) {

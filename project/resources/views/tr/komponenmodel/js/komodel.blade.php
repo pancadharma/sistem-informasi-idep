@@ -68,41 +68,6 @@
         let rowCount = 0;
 
         function loadSelect2Option() {
-            const disabilitasOptions = [{
-                    id: "Fisik",
-                    text: "Fisik"
-                },
-                {
-                    id: "Sensorik",
-                    text: "Sensorik"
-                },
-                {
-                    id: "Intelektual",
-                    text: "Intelektual"
-                },
-                {
-                    id: "Mental",
-                    text: "Mental"
-                },
-                {
-                    id: "Ganda",
-                    text: "Ganda"
-                },
-            ];
-
-            $("#disabilitas").select2({
-                data: disabilitasOptions,
-                placeholder: '{{ __('global.select') . ' ' . __('cruds.beneficiary.penerima.disability') }} ...',
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-            });
-
-            $("#editDisabilitas").select2({
-                data: disabilitasOptions,
-                placeholder: '{{ __('global.select') . ' ' . __('cruds.beneficiary.penerima.disability') }} ...',
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-            });
 
             // initializeSelect2ForKelompokRentan();
             initializeSelect2ForProvinsi();
@@ -110,68 +75,11 @@
             initializeSelect2ForKecamatan();
             initializeSelect2ForDesa();
             initializeSelect2ForDusun();
+            initializeSatuan();
             
             // initalizeJenisKelompok(); // initialize the select for jenis kelompok
         }
 
-
-        function initializeSelect2ForKelompokRentan() {
-            $("#kelompok_rentan").select2({
-                placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route('api.beneficiary.kelompok.rentan') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
-                },
-            });
-
-            $("#editKelompokRentan").select2({
-                placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-                allowClear: true,
-                ajax: {
-                    url: '{{ route('api.beneficiary.kelompok.rentan') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
-                },
-            });
-        }
 
         function initializeSelect2ForProvinsi() {
             $("#provinsi_id").select2({
@@ -449,145 +357,63 @@
             });
         }
 
-
-        // function initalizeJenisKelompok(){
-        //     let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
-        //     $("#jenis_kelompok").select2({
-        //         placeholder: placeholder,
-        //         ajax: {
-        //             url: '{{ route('api.jenis.kelompok') }}',
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data) {
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: {
-        //                         more: data.pagination.more,
-        //                     },
-        //                 };
-        //             },
-        //             // data: function(params) {
-        //             //     return {
-        //             //         search: params.term,
-        //             //         page: params.page || 1,
-        //             //     };
-        //             // },
-        //             // processResults: function(data, params) {
-        //             //     params.page = params.page || 1;
-        //             //     return {
-        //             //         results: data.results,
-        //             //         pagination: {
-        //             //             more: data.pagination.more,
-        //             //         },
-        //             //     };
-        //             // },
-        //             cache: true,
-        //         },
-        //         dropdownParent: $("#ModalTambah"),
-        //         width: "100%",
-        //     });
-        //     $("#editJenisKelompok").select2({
-        //         placeholder: placeholder,
-        //         ajax: {
-        //             url: '{{ route('api.jenis.kelompok') }}',
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data) {
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: {
-        //                         more: data.pagination.more,
-        //                     },
-        //                 };
-        //             },
-        //             cache: true,
-        //         },
-        //         dropdownParent: $("#editDataModal"),
-        //         width: "100%",
-        //     });
-
-
-        // }
+        function initializeSatuan() 
+        {
+            let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.satuan.title') }}';
+            
+            $("#satuan_id").select2({
+                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.satuan.title') }}',
+                ajax: {
+                    url: '{{ route('api.komodel.satuan') }}',
+                    dataType: "json",
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1,
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more,
+                            },
+                        };
+                    },
+                    cache: true,
+                },
+                dropdownParent: $("#ModalTambah"),
+                width: "100%",
+            });
+        }
 
 
         function addRow(data) {
             rowCount++;
 
-            const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
-            const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
-
+            const provinsiText = $("#provinsi_id option:selected").text();
+            const kabupatenText = $("#kabupaten_id option:selected").text();
+            const kecamatanText = $("#kecamatan_id option:selected").text();
             const desaText = $("#desa_id option:selected").text();
             const dusunText = $("#dusun_id option:selected").text();
-            const jenisKelompokText = $("#jenis_kelompok option:selected").text();
-
-            const disabilitasText = disabilitasArray.map((value) => {
-                const option = $('#ModalTambah select[name="disabilitas"] option[value="' + value + '"]');
-                const text = option.length ? option.text() : "";
-                const randomColor = getRandomColor();
-                return `<span class="badge badge-${randomColor}">${text}</span>`;
-            });
-
-            const kelompokRentanData = kelompokRentanArray.map((value) => {
-                const option = $("#kelompok_rentan").select2("data").find((opt) => opt.id === value) || {
-                    id: value,
-                    text: value
-                };
-                return {
-                    id: option.id,
-                    text: option.text,
-                };
-            });
-
-            const kelompokRentanText = kelompokRentanData.map((item) => {
-                const randomColor = getRandomColor();
-                return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-            });
-
-            const genderText = $('#ModalTambah select[name="gender"] option[value="' + data.gender + '"]').text();
-
-            const selectedActivities = $("#activitySelect").val() || [];
-            const activityHeaders = $('#activityHeaders th.activity-header');
-
-            const activityCells = activityHeaders.map((index, header) => {
-                const activityId = $(header).data('activity-id');
-                const isChecked = selectedActivities.includes(activityId.toString());
-                const checkmark = isChecked ? '✔️' : '';
-                return `<td class="text-center align-middle" data-program-activity-id="${activityId}">${checkmark}</td>`;
-            }).get().join('');
+            const satuanText = $("#satuan_id option:selected").text();
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
                 <td class="text-center align-middle d-none">${rowCount}</td>
-                <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
-                <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
-                <td data-disabilitas="${disabilitasArray.join(",")}" class="text-left align-middle text-wrap">${disabilitasText.join(", ")}</td>
-                <td data-kelompok_rentan="${kelompokRentanArray.join(",")}" data-kelompok_rentan_full='${JSON.stringify(kelompokRentanData)}' class="text-left align-middle text-wrap">${kelompokRentanText.join(" ")}</td>
-                <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
-                <td data-rw_banjar="${data.rw_banjar}" class="text-center align-middle">${data.rw_banjar}</td>
-                <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
+                <td data-provinsi-id="${data.provinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
+                <td data-kabupaten-id="${data.kabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
+                <td data-kecamatan-id="${data.kecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
                 <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-                <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
-                <td data-jenis_kelompok="${data.jenis_kelompok}" data-jenis_kelompok-text="${jenisKelompokText}" class="text-center align-middle">${jenisKelompokText}</td>
-                <td data-usia="${data.usia}" class="text-center align-middle usia-cell">${data.usia}</td>
-                <td class="text-center align-middle age-0-17"></td>
-                <td class="text-center align-middle age-18-24"></td>
-                <td class="text-center align-middle age-25-59"></td>
-                <td class="text-center align-middle age-60-plus"></td>
-                ${activityCells}
+                <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
+                <td data-no_telp="${data.long}" class="text-center align-middle">${data.long}</td>
+                <td data-no_telp="${data.lat}" class="text-center align-middle">${data.lat}</td>
+                <td data-no_telp="${data.jumlah}" class="text-center align-middle">${data.jumlah}</td>
+                <td data-satuan-id="${data.satuan_id}" data-satuan-nama="${satuanText}" class="text-center align-middle">${satuanText}</td>
                 <td class="text-center align-middle">
-                    <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}" hidden><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
                 </td>
             </tr>
@@ -598,8 +424,10 @@
         }
 
 
+
         function saveRow() {
             const form = $("#dataForm")[0];
+
             if (form.checkValidity()) {
                 const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
                     if (obj[item.name]) {
@@ -634,11 +462,21 @@
 
         function resetFormAdd() {
             $("#dataForm")[0].reset();
-            $("#kelompok_rentan").val(null).trigger("change");
-            $("#disabilitas").val(null).trigger("change");
-            $("#activitySelect").val(null).trigger("change");
+
+            // Reset Select2 dropdowns
+            $("#provinsi_id").val(null).trigger("change");
+            $("#kabupaten_id").val(null).trigger("change");
+            $("#kecamatan_id").val(null).trigger("change");
             $("#desa_id").val(null).trigger("change");
             $("#dusun_id").val(null).trigger("change");
+            $("#satuan_id").val(null).trigger("change");
+
+            // Reset input text dan angka
+            $("input[name='long']").val("");
+            $("input[name='lat']").val("");
+            $("input[name='jumlah']").val("");
+
+            // Sembunyikan modal setelah reset
             $("#ModalTambah").modal("hide");
         }
 

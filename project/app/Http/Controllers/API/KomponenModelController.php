@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StoreKomponenRequest;
+use App\Models\Satuan;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -104,7 +105,7 @@ class KomponenModelController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     public function getProv(Request $request)
     {
         $request->validate([
@@ -314,6 +315,45 @@ class KomponenModelController extends Controller
                 ],
             ]);
         });
+    }
+
+    public function getSatuan(Request $request)
+    {
+        $request->validate([
+            'search'    => 'nullable|string|max:255',
+            'page'      => 'nullable|integer|min:1',
+            'id'        => 'nullable|array|min:1',
+            'id.*'      => 'integer',
+        ]);
+
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+
+        if (!is_array($ids) && $ids !== null) {
+            $ids = [$ids];
+        }
+
+        $data = Satuan::when(!empty($ids), function ($query) use ($ids) {
+            return $query->whereIn('id', $ids);
+        }, function ($query) use ($search) {
+            return $query->where('nama', 'like', "%{$search}%");
+        });
+
+        $perPage = 20; // or whatever pagination size you want
+        $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
+
+        return response()->json([
+            'results' => $results->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'text' => $item->nama,
+                ];
+            })->all(),
+            'pagination' => [
+                'more' => $results->hasMorePages(),
+            ],
+        ]);
     }
 
 
