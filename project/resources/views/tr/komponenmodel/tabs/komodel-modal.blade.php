@@ -226,7 +226,7 @@
                 </div>
                 <div class="form-input">
                     <label class="form-label mb-0">&nbsp;</label>
-                    <button type="button" class="form-control btn btn-success btn-sm ml-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru">
+                    <button type="button" class="form-control btn btn-success btn-sm ml-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru" hidden>
                         <i class="bi bi-plus"></i>
                     </button>
                 </div>

@@ -64,7 +64,7 @@
 <!-- List -->
 <div class="row tambah_komodel" id="tambah_komodel">
     <div class="col mb-1 mt-2">
-        <button type="button" class="btn btn-warning" id="addDataBtn" data-toggle="modal" data-target="#ModalTambah" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
+        <button type="button" class="btn btn-warning" id="addDataBtn" data-toggle="modal" data-target="#ModalTambah" title="{{ __('global.add') }}">
             {{ __('global.add') .' '. '' }}
             {{-- <i class="bi bi-person-plus"></i> --}}
         </button>

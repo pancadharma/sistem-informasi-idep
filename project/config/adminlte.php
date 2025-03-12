@@ -352,11 +352,11 @@ return [
                 ],
                 [
                     'text'      => 'komponenmodel',
-                    // 'icon'      => 'nav-icon material-symbols-outlined',
+                    'icon'      => 'nav-icon bi bi-puzzle', 
                     'icon_text' => 'monitoring',
                     'route'     => 'komodel.index',
                     'can'       => ['komponenmodel_access'],
-                    'active'    => ['komponenmodel', 'komponenmodel*', 'regex:@^komponenmodel/[0-9]+$@'],
+                    'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
                     'url' => '#',
