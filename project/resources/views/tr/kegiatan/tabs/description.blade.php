@@ -160,13 +160,13 @@
                             <label class="text-sm">{{ __('cruds.kegiatan.peserta.disabilitas') }}</label>
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="number" id="penerimamanfaatdisabilitasperempuan" name="penerimamanfaatdisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatdisabilitasperempuan" name="penerimamanfaatdisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="text" id="penerimamanfaatdisabilitaslakilaki" name="penerimamanfaatdisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatdisabilitaslakilaki" name="penerimamanfaatdisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
-                            <input type="text" id="penerimamanfaatdisabilitastotal" name="penerimamanfaatdisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                            <input type="number" id="penerimamanfaatdisabilitastotal" name="penerimamanfaatdisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
                     </tr>
                     <!--non_disabilitas row-->
@@ -175,13 +175,13 @@
                             <label class="text-sm">{{ __('cruds.kegiatan.peserta.non_disabilitas') }}</label>
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="number" id="penerimamanfaatnondisabilitasperempuan" name="penerimamanfaatnondisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatnondisabilitasperempuan" name="penerimamanfaatnondisabilitasperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="text" id="penerimamanfaatnondisabilitaslakilaki" name="penerimamanfaatnondisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatnondisabilitaslakilaki" name="penerimamanfaatnondisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
-                            <input type="text" id="penerimamanfaatnondisabilitastotal" name="penerimamanfaatnondisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                            <input type="number" id="penerimamanfaatnondisabilitastotal" name="penerimamanfaatnondisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
                     </tr>
                     <!--marjinal row-->
@@ -190,13 +190,13 @@
                             <label class="text-sm">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</label>
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="number" id="penerimamanfaatmarjinalperempuan" name="penerimamanfaatmarjinalperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatmarjinalperempuan" name="penerimamanfaatmarjinalperempuan" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="text" id="penerimamanfaatmarjinallakilaki" name="penerimamanfaatmarjinallakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" placeholder="0">
+                            <input type="number" id="penerimamanfaatmarjinallakilaki" name="penerimamanfaatmarjinallakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
-                            <input type="text" id="penerimamanfaatmarjinaltotal" name="penerimamanfaatmarjinaltotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                            <input type="number" id="penerimamanfaatmarjinaltotal" name="penerimamanfaatmarjinaltotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
                     </tr>
                     <!--total beneficiaries difabel-->
@@ -205,13 +205,13 @@
                             <label class="text-sm">{{ __('cruds.kegiatan.peserta.total') }}</label>
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="number" id="total_beneficiaries_perempuan" name="total_beneficiaries_perempuan" class="form-control-border border-width-2 form-control form-control-sm hitung" readonly placeholder="0">
+                            <input type="number" id="total_beneficiaries_perempuan" name="total_beneficiaries_perempuan" class="form-control-border border-width-2 form-control form-control-sm" readonly placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
-                            <input type="text" id="total_beneficiaries_lakilaki" name="total_beneficiaries_lakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung" readonly placeholder="0">
+                            <input type="number" id="total_beneficiaries_lakilaki" name="total_beneficiaries_lakilaki" class="form-control-border border-width-2 form-control form-control-sm" readonly placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
-                            <input type="text" id="beneficiaries_difable_total" name="beneficiaries_difable_total" class="form-control-border border-width-2 form-control form-control-sm" readonly>
+                            <input type="number" id="beneficiaries_difable_total" name="beneficiaries_difable_total" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
                     </tr>
 

@@ -473,12 +473,15 @@
 <script>
     $(document).ready(function() {
         function calculateTotals() {
+            // Calculate totals for each row in the first table
             $('tr').each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
                 let total = pria + wanita;
                 $(this).find('input[id$="total"]').val(total);
             });
+
+            // Calculate overall totals for the first table
             let totalPerempuan = 0;
             let totalLakilaki = 0;
             let totalAll = 0;
@@ -498,41 +501,90 @@
             totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
             totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
 
-            // Update overall total fields
+            // Update overall total fields for the first table
             $('#penerimamanfaatperempuantotal').val(totalPerempuan);
             $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
             $('#penerimamanfaattotal').val(totalAll);
 
-            let totalBeneficiariesPerempuan = 0;
-            let totalBeneficiariesLakilaki = 0;
-            let totalBeneficiariesTotal = 0;
+            // Calculate totals for each row in the second table (difabel table)
+            $('tr', $('#penerima_manfaat_difabel')).each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
 
+            // Calculate totals for each row in the second table (difabel table)
+            let totalBeneficiariesPerempuan = 0;
             totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
             totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
             totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+            $('#total_beneficiaries_perempuan').val(totalBeneficiariesPerempuan);
 
+            let totalBeneficiariesLakilaki = 0;
             totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
             totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
             totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+            $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
 
+            let totalBeneficiariesTotal = 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
-
-            // Update overall total fields
-            $('#total_beneficiaries_perempuan').val(totalBeneficiariesPerempuan);
-            $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
             $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
 
+
         }
-        // Trigger calculateTotals on input change
+
+        // Validation for second table inputs
+        $('.hitung-difabel').on('input', function() {
+            let maxPerempuan = parseInt($('#penerimamanfaatperempuantotal').val()) || 0;
+            let maxLakilaki = parseInt($('#penerimamanfaatlakilakitotal').val()) || 0;
+            let maxTotal = parseInt($('#penerimamanfaattotal').val()) || 0;
+
+            let totalPerempuanSoFar = 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+
+            let totalLakilakiSoFar = 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            let totalAllSoFar = 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+
+            let id = this.id;
+            let value = parseInt($(this).val()) || 0;
+
+            if (id.includes('perempuan')) {
+                if (totalPerempuanSoFar > maxPerempuan) {
+                    $(this).val(value - (totalPerempuanSoFar - maxPerempuan));
+                }
+            } else if (id.includes('lakilaki')) {
+                if (totalLakilakiSoFar > maxLakilaki) {
+                    $(this).val(value - (totalLakilakiSoFar - maxLakilaki));
+                }
+            } else if (id.includes('total')) {
+                if (totalAllSoFar > maxTotal) {
+                    $(this).val(value - (totalAllSoFar - maxTotal));
+                }
+            }
+
+
+            calculateTotals(); // Recalculate totals after validation
+
+        });
+
+        // Trigger calculateTotals on input change for first table
         $('.calculate').on('input', function() {
             calculateTotals();
         });
 
-        $('.hitung').on('input', function() {
-            calculateTotals();
-        });
+        // Trigger calculateTotals on input change for second table
 
         // Initial calculation
         calculateTotals();
@@ -659,6 +711,7 @@
 
     });
 </script>
+
 
 <!-- JS for drop down jenis kegiatan -->
 
