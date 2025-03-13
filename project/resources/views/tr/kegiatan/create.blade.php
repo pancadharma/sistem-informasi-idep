@@ -97,20 +97,21 @@
                     errorMessage += programValidation.message + '<br>';
                 }
 
-                const jenisKegiatanValidation = validasiSingleSelect2('#jeniskegiatan_id', 'Please select a Jenis Kegiatan.');
+                const jenisKegiatanValidation = validasiSingleSelect2('#jeniskegiatan_id', '{{ __('cruds.kegiatan.validate.jenis_kegiatan') }}');
 
                 if (!jenisKegiatanValidation.isValid) {
                     isValid = false;
                     errorMessage += jenisKegiatanValidation.message + '<br>';
                 }
 
-                const sektorValidation = validasiMultipleSelect2('#sektor_id', 'Please select at least one sector.');
+                const sektorValidation = validasiMultipleSelect2('#sektor_id', '{{ __('cruds.kegiatan.validate.sektor') }}');
                 if (!sektorValidation.isValid) {
                     isValid = false;
                     errorMessage += sektorValidation.message + '<br>';
                 }
 
-                const mitraValidation = validasiMultipleSelect2('#mitra_id', 'Please select at least one Mitra.');
+                const mitraValidation = validasiMultipleSelect2('#mitra_id', '{{ __('cruds.kegiatan.validate.mitra') }}');
+                // const mitraValidation = validasiMultipleSelect2('#mitra_id', '{!! __('cruds.kegiatan.validate.mitra', ['icon' => '<i class="bi bi-exclamation-lg text-danger"></i>']) !!}');
                 if (!mitraValidation.isValid) {
                     isValid = false;
                     errorMessage += mitraValidation.message + '<br>';
@@ -130,7 +131,7 @@
 
                 if (!isValid) {
                     Swal.fire({
-                        title: 'Validation Error',
+                        title: '',
                         html: errorMessage,
                         icon: 'warning'
                     });
@@ -211,13 +212,13 @@
                     }
                 }
                 if (kecamatanKelurahanError) {
-                    longLatErrorMessage += 'Please select Kecamatan and Kelurahan for all locations.<br>';
+                    longLatErrorMessage += '{{ __('cruds.kegiatan.validate.kec_kel') }} <br>';
                 }
                 if (longLatError) {
-                    longLatErrorMessage += 'Please fill in all latitude and longitude fields with valid values.<br>';
+                    longLatErrorMessage += '{{ __('cruds.kegiatan.validate.longlat') }} <br>';
                 }
                 if (lokasiError) {
-                    longLatErrorMessage += 'Please fill in the required Location field.<br>';
+                    longLatErrorMessage += '{{ __('cruds.kegiatan.validate.tempat_kegiatan') }} <br>';
                 }
 
                 return {
@@ -236,7 +237,7 @@
 
                     if (!penulisValue) {
                         isValid = false;
-                        message = 'Please select a Penulis for each entry.';
+                        message = "{{ __('global.pleaseSelect') .' '. __('cruds.kegiatan.penulis.nama') }}";
                         applySelect2ErrorStyling($(this).find('.penulis-select'));
                     } else {
                         removeSelect2ErrorStyling($(this).find('.penulis-select'));
@@ -244,7 +245,7 @@
 
                     if (!jabatanValue) {
                         isValid = false;
-                        message = 'Please select a Jabatan for each entry.';
+                        message = "{{ __('global.pleaseSelect') .' '. __('cruds.kegiatan.penulis.jabatan') }}";
                         applySelect2ErrorStyling($(this).find('.jabatan-select'));
                     } else {
                         removeSelect2ErrorStyling($(this).find('.jabatan-select'));
@@ -327,11 +328,11 @@
                 }
 
                 if (programError && activityError) {
-                    message = 'Please select a Program and Activity.';
+                    message = '{{ __('cruds.kegiatan.validate.program_activity') }}';
                 } else if (programError) {
-                    message = 'Please select a Program.';
+                    message = '{{ __('cruds.kegiatan.validate.program') }}';
                 } else if (activityError) {
-                    message = 'Please select an Activity.';
+                    message = '{{ __('cruds.kegiatan.validate.activity') }}';
                 }
 
                 return {
@@ -365,6 +366,16 @@
                     confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + ' ! '
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Processing...',
+                            html: 'Please wait while we save your data.',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
                         $.ajax({
                             url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
                             type: 'POST',
@@ -372,6 +383,15 @@
                             processData: false,
                             contentType: false,
                             cache: false,
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Processing...',
+                                    text: 'Please wait while we save your data.',
+                                    allowOutsideClick: false,
+                                    timer: 10000,
+                                    showLoading: true
+                                });
+                            },
                             success: function(data) {
                                 Swal.fire({
                                     title: '{{ __('global.response.success') }}',

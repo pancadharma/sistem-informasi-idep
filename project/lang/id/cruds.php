@@ -910,6 +910,17 @@ return [
             'sel_jabatan'                        => 'Pilih Jabatan',
             'sel_penulis'                        => 'Pilih Penulis',
         ],
+        'validate'                               => [
+            'sektor'                             => 'Silahkan pilih minimal 1 sektor.',
+            'mitra'                              => 'Silahkan pilih minimal 1 mitra.',
+            'jenis_kegiatan'                     => 'Silahkan pilih Jenis Kegiatan.',
+            'tempat_kegiatan'                    => 'Silahkan masukan Lokasi.',
+            'longlat'                            => 'Silahkan masukan Koordinat.',
+            'kec_kel'                            => 'Silahkan pilih Kecamatan dan Kelurahan untuk semua input lokasi.',
+            'program_activity'                   => 'Silahkan pilih Program dan Kegiatan.',
+            'program'                            => 'Silahkan pilih Program.',
+            'activity'                           => 'Silahkan pilih Kegiatan.',
+        ],
     ],
 
 

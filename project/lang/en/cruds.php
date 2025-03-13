@@ -911,6 +911,17 @@ return [
             'sel_jabatan'                        => 'Select Position',
             'sel_penulis'                        => 'Select Writer',
         ],
+        'validate'                               => [
+            'sektor'                             => 'Please select at least 1 activity sector.',
+            'mitra'                              => 'Please select at least 1 mitra.',
+            'jenis_kegiatan'                     => 'Please select Type of Activity.',
+            'tempat_kegiatan'                    => 'Please fill in the required Location field.',
+            'longlat'                            => 'Please fill in all latitude and longitude fields with valid values.',
+            'kec_kel'                            => 'Please select Kecamatan and Kelurahan for all locations.',
+            'program_activity'                   => 'Please select a Program and Activity.',
+            'program'                            => 'Please select a Program.',
+            'activity'                           => 'Please select an Activity.',
+        ],
 
     ],
 
