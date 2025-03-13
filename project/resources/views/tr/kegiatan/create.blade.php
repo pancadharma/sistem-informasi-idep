@@ -365,6 +365,16 @@
                     confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + ' ! '
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Processing...',
+                            html: 'Please wait while we save your data.',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        
                         $.ajax({
                             url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
                             type: 'POST',
@@ -372,6 +382,15 @@
                             processData: false,
                             contentType: false,
                             cache: false,
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Processing...',
+                                    text: 'Please wait while we save your data.',
+                                    allowOutsideClick: false,
+                                    timer: 10000,
+                                    showLoading: true
+                                });
+                            },
                             success: function(data) {
                                 Swal.fire({
                                     title: '{{ __('global.response.success') }}',
