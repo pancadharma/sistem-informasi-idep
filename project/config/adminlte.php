@@ -351,6 +351,14 @@ return [
                     'active'    => ['beneficiary', 'beneficiary*', 'regex:@^beneficiary/[0-9]+$@', 'regex:@^penerima_manfaat/[0-9]+$@'],
                 ],
                 [
+                    'text'      => 'komponenmodel',
+                    'icon'      => 'nav-icon bi bi-puzzle', 
+                    'icon_text' => 'monitoring',
+                    'route'     => 'komodel.index',
+                    'can'       => ['komponenmodel_access'],
+                    'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
+                ],
+                [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],
