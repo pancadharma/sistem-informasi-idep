@@ -125,6 +125,11 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 102, 'nama' => 'beneficiary_create'],
                 ['id' => 103, 'nama' => 'beneficiary_edit'],
                 ['id' => 104, 'nama' => 'beneficiary_show'],
+                ['id' => 105, 'nama' => 'komponenmodel_access'],
+                ['id' => 106, 'nama' => 'komponenmodel_create'],
+                ['id' => 107, 'nama' => 'komponenmodel_index'],
+                ['id' => 108, 'nama' => 'komponenmodel_show'],
+                ['id' => 109, 'nama' => 'komponenmodel_edit'],
 
             ];
             foreach ($permissions as $data) {

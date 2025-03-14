@@ -15,6 +15,15 @@ return new class extends Migration
             $table->renameColumn('user_id', 'penulis_id')->change();
         });
     }
+    // USE CODE THIS FOR alternatif
+    // public function up(): void
+    // {
+    //     Schema::table('trkegiatanpenulis', function (Blueprint $table) {
+    //         $table->foreignId('penulis_id')->constrained('users')->onDelete('cascade')->after('user_id');
+    //         $table->dropForeign(['user_id']);
+    //         $table->dropColumn('user_id');
+    //     });
+    // }
 
     /**
      * Reverse the migrations.

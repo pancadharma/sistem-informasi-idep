@@ -52,4 +52,5 @@ return [
     'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Responsibility',
+    'komponenmodel'     => 'Componen/Model'
 ];
