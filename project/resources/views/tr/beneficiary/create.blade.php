@@ -36,6 +36,11 @@
             align-items: center;
             justify-items: stretch;
         }
+
+        .select2-container--open .select2-dropdown {
+            top: 100% !important; /* Force dropdown to appear below */
+            bottom: auto !important;
+        }
     </style>
 @endpush
 

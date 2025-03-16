@@ -145,7 +145,7 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivityEdit">
                 <div class="select2-info">
-                    <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-select select2" name="activitySelectEdit" id="activitySelectEdit" multiple>
                         <!-- Options will be populated dynamically -->
                     </select>
@@ -256,7 +256,7 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivity">
                 <div class="select2-green">
-                    <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-select select2 select2-multiple" name="activitySelect" multiple id="activitySelect" >
                         <!-- Options will be populated dynamically -->
                     </select>

@@ -88,6 +88,8 @@
         function initializeSelect2ForDesa() {
             $("#desa_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
+                dropdownParent: $("#ModalTambahPeserta"),
+                width: "100%",
                 ajax: {
                     url: '{{ route('api.beneficiary.desa') }}',
                     dataType: "json",
@@ -109,8 +111,7 @@
                     },
                     cache: true,
                 },
-                dropdownParent: $("#ModalTambahPeserta"),
-                width: "100%",
+                dropdownPosition: 'below',
             });
 
             $("#editDesa").select2({
@@ -165,7 +166,7 @@
                 },
                 dropdownParent: $("#ModalTambahPeserta"),
                 width: "100%",
-                // minimumInputLength: 2,
+                dropdownPosition: 'below',
             });
 
             $("#editDusun").select2({
@@ -321,7 +322,7 @@
                 const checkmark = isChecked ? '✔️' : '';
                 return `<td class="text-center align-middle" data-program-activity-id="${activityId}">${checkmark}</td>`;
             }).get().join('');
-            
+
             const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '✔️' : ''}</td>`;
 
             const newRow = `
@@ -431,7 +432,7 @@
             const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok");
             const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text");
             const isNonActivity = currentRow.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true";
-           
+
             // console.log("jenis_kelompk:", jenisKelompokId, jenisKelompokNama);
 
             $("#editKelompokRentan").select2({
@@ -512,7 +513,7 @@
             $("#editUsia").val(currentRow.find("td[data-usia]").attr("data-usia"));
 
             $("#edit_is_non_activity").prop("checked", isNonActivity);
-            
+
             $("#editDataModal").modal("show");
         }
 

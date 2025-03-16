@@ -18,6 +18,7 @@
                                 <tr>
                                     <th>{{ __('cruds.kegiatan.basic.program_kode') }}</th>
                                     <th>{{ __('cruds.kegiatan.basic.program_nama') }}</th>
+                                    <th>{{ __('cruds.beneficiary.activity_code') }}</th>
                                     <th>{{ __('global.actions') }}</th>
                                 </tr>
                             </thead>
