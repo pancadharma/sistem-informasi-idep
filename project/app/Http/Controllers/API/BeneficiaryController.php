@@ -78,18 +78,43 @@ class BeneficiaryController extends Controller
             </button>';
     }
 
-
     public function getPrograms(Request $request)
     {
         if ($request->ajax()) {
-            $query = Program::query();
+            $query = Program::with(['outcome.output.activities' => function ($query) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }])->get();
 
             return DataTables::of($query)
-                ->addColumn('action', function($row) {
-                    return '<button type="button" class="btn btn-sm btn-danger select-program" data-id="' . $row->id . '" data-kode="' . $row->kode . '" data-nama="' . $row->nama . '">
-                    <i class="bi bi-plus"></i> </button>';
+                ->addColumn('activities', function ($row) {
+                    $activities = [];
+                    foreach ($row->outcome as $out) {
+                        foreach ($out->output as $come_output) {
+                            foreach ($come_output->activities as $activity) {
+                                $activities[] = $activity->kode;
+                            }
+                        }
+                    }
+                    return implode(', ', $activities);
                 })
-                ->rawColumns(['action'])
+                ->addColumn('action', function ($row) {
+                    $hasActivities = false;
+                    foreach ($row->outcome as $out) {
+                        foreach ($out->output as $come_output) {
+                            if ($come_output->activities->isNotEmpty()) {
+                                $hasActivities = true;
+                                break 2; // Break out of both foreach loops
+                            }
+                        }
+                    }
+
+                    $button = '<button type="button" class="btn btn-sm btn-danger select-program" data-id="' . $row->id . '" data-kode="' . $row->kode . '" data-nama="' . $row->nama . '"';
+                    $button .= $hasActivities ? '' : ' disabled';
+                    $button .= '><i class="bi bi-plus"></i></button>';
+
+                    return $button;
+                })
+                ->rawColumns(['action', 'activities'])
                 ->make(true);
         }
     }
