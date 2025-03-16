@@ -953,6 +953,7 @@ return [
         'action_plan_status'            => 'Action Plan Status',
         'action_plan_date'              => 'Action Plan Date',
         'activity_code'                 => 'Activity Code',
+        'select_activity'               => 'Select Activity',
         'penerima'                    => [
             'label'                     => 'Beneficiaries',
             'sel_rentan'                => 'Select Marjinal Groups',

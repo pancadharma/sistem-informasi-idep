@@ -952,6 +952,7 @@ return [
         'action_plan_status'                     => 'Status Rencana Tindakan',
         'action_plan_date'                       => 'Tanggal Rencana Tindakan',
         'activity_code'                          => 'Kode Kegiatan',
+        'select_activity'                        => 'Pilih Kegiatan',
         'penerima'                               => [
             'label'                              => 'Penerima Manfaat',
             'sel_rentan'                         => 'Pilih Kelompok Marjinal',
