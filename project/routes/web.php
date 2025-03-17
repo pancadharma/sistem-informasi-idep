@@ -274,6 +274,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
         Route::get('/create',                       [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
+        Route::get('/wilayah',                      [App\Http\Controllers\Admin\BeneficiaryController::class, 'wilayah'])->name('wilayah');
     });
 
     //penerima manfaat api router
