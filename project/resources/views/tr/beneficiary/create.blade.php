@@ -76,14 +76,14 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 <script>
     // Fix dropdown position when modal is shown
-    $('.modal').on('shown.bs.modal', function() {
-        $(this).find('.select2-container').each(function() {
-            const $select = $(this).prev('select'); // Get the associated select element
-            $select.select2('close'); // Close any open dropdown
-            $select.select2('open');  // Reopen to recalculate position
-            $select.select2('close'); // Close again to avoid flicker (optional)
-        });
-    });
+    // $('.modal').on('shown.bs.modal', function() {
+    //     $(this).find('.select2-container').each(function() {
+    //         const $select = $(this).prev('select'); // Get the associated select element
+    //         $select.select2('close'); // Close any open dropdown
+    //         $select.select2('open');  // Reopen to recalculate position
+    //         $select.select2('close'); // Close again to avoid flicker (optional)
+    //     });
+    // });
 
     // Recalculate position on window resize (e.g., Inspect Element)
     $(window).on('resize', function() {

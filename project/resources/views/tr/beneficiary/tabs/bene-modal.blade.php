@@ -135,7 +135,7 @@
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
                 <div class="select2-info">
-                    <select class="form-control select2" id="editDesa" name="desa_id_edit" required>
+                    <select class="form-control select2" id="desa_id_edit" name="desa_id" required>
                         <option value="">Select Desa</option>
                     </select>
                 </div>
@@ -144,7 +144,7 @@
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-5 order-md-5 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                 <div class="select2-info">
-                    <select class="form-control select2" id="editDusun" name="dusun_id">
+                    <select class="form-control select2" id="dusun_id_edit" name="dusun_id">
                         <option value="">Select Dusun</option>
                     </select>
                 </div>
@@ -153,7 +153,7 @@
         <!-- Edit RT and RW fields -->
         <div class='row'>
             <div class='col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1 mb-3'>
-                <label class='form-label mb=0'>{{ __('cruds.beneficiary.penerima.rw') }}<span	class='text-danger'>*</span></label>
+                <label class='form-label mb-0'>{{ __('cruds.beneficiary.penerima.rw') }}<span	class='text-danger'>*</span></label>
                 <input type='text' 	class='form-control' id='editRwBanjar' name='rw' required />
             </div>
             <div class='col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2 mb-3'>
