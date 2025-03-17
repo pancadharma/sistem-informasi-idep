@@ -384,8 +384,7 @@
                                         '" data-id="' + value.kode + '">' + value.text +
                                         '</option>'); // Assuming API returns id and text
                                 });
-                                $('#kecamatan_id').trigger(
-                                    'change'); // Trigger change event to re-initialize Select2
+                                $('#kecamatan_id').trigger('change'); // Trigger change event to re-initialize Select2
                             },
                             error: function(xhr, status, error) {
                                 handleAjaxError(xhr);
@@ -418,7 +417,7 @@
                             success: function(data) {
                                 $('#desa_id_dusun').empty();
                                 $('#desa_id_dusun').append(
-                                    '<option value="" selected>{{ trans('global.pleaseSelect') }} {{ trans('cruds.desa.title') }}</option>'
+                                    '<option value="" selected>{{ __('global.pleaseSelect') }} {{ __('cruds.desa.title') }}</option>'
                                 ); // Add default option
                                 $.each(data, function(key, value) {
                                     $('#desa_id_dusun').append('<option value="' + value
@@ -426,11 +425,12 @@
                                         .text + '</option>'
                                     ); // Assuming API returns id and text
                                 });
-                                $('#desa_id_dusun').trigger(
-                                    'change'); // Trigger change event to re-initialize Select2
+                                $('#desa_id_dusun').trigger('change'); // Trigger change event to re-initialize Select2
                             },
                             error: function(xhr, status, error) {
                                 handleAjaxError(xhr);
+                                // show info data not found or not added 
+                                console.log('data not found or not added');
                             }
                         });
                     } else {

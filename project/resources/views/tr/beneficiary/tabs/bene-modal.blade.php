@@ -105,16 +105,43 @@
                 </div>
             </div>
         </div>
+        {{-- Edit Data Provinsi, Kabupaten, Kecamatan, Desa, Dusun --}}
         <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1 mb-3">
-                <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
-                <div class="select2-info">
-                <select class="form-control select2" id="editDesa" name="desa_id" required>
-                    <option value="">Select Desa</option>
-                </select>
+            {{-- edit provinsi --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1 mb-3" id="PilihDataProvinsiEdit">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.provinsi.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="provinsi_id" id="provinsi_id_edit" required>
+                    </select>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2 mb-3">
+            {{-- edit kabupaten  --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 mb-3" id="PilihDataKabupatenEdit">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.kabupaten.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="kabupaten_id" id="kabupaten_id_edit" required>
+                    </select>
+                </div>
+            </div>
+            {{-- edit kecamatan  --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-3 order-md-3 mb-3" id="PilihDataKecamatanEdit">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.kecamatan.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="kecamatan_id" id="kecamatan_id_edit" required>
+                    </select>
+                </div>
+            </div>
+            {{-- edit desa  --}}
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
+                <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
+                <div class="select2-info">
+                    <select class="form-control select2" id="editDesa" name="desa_id_edit" required>
+                        <option value="">Select Desa</option>
+                    </select>
+                </div>
+            </div>
+            {{-- edit dusun  --}}
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-5 order-md-5 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                 <div class="select2-info">
                     <select class="form-control select2" id="editDusun" name="dusun_id">
@@ -207,22 +234,47 @@
                 </div>
             </div>
         </div>
+        {{-- Select Data Start From Provinsi until Dusun and RT RW--}}
         <div class="row">
+            {{-- provinsi --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1 mb-3" id="PilihDataProvinsi">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.provinsi.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="provinsi_id" id="provinsi_id_tambah" required>
+                    </select>
+                </div>
+            </div>
+            {{-- kabupaten --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 mb-3" id="PilihDataKabupaten">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.kabupaten.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="kabupaten_id" id="kabupaten_id_tambah" required>
+                    </select>
+                </div>
+            </div>
+            {{-- kecamatan --}}
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-3 order-md-3 mb-3" id="PilihDataKecamatan">
+                <div class="form-input">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.kecamatan.title') }}</strong> <span class="text-danger">*</span></label>
+                    <select class="form-control select2" name="kecamatan_id" id="kecamatan_id_tambah" required>
+                    </select>
+                </div>
+            </div>
             {{-- desa --}}
-            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1 mb-3" id="PilihDataDesa">
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-4 order-md-4 mb-3" id="PilihDataDesa">
                 <div class="form-input">
                     <label class="form-label mb-0"><strong>{{ __('cruds.desa.title') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-control select2" name="desa_id" id="desa_id" required>
+                    <select class="form-control select2" name="desa_id" id="desa_id_tambah" required>
                     </select>
                 </div>
             </div>
             {{-- dusun --}}
-            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-5 order-md-5 d-flex align-items-center mb-3">
                 <div class="col-11">
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id"></select>
+                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id_tambah"></select>
                         </div>
                     </div>
                 </div>

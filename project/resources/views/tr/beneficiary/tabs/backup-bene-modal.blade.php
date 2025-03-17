@@ -56,7 +56,7 @@
 </div>
 
 <!-- Modal Edit & Tambah Peserta Penerima Manfaat-->
-<x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="info" icon="bi bi-person-plus" size='lg' static-backdrop>
+<x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="info" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
     <form id="editDataForm" class="big">
         <input type="hidden" id="editRowId">
 
@@ -67,16 +67,16 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.no_telp') }}</label>
                 <input type="text" class="form-control" id="editNoTelp" name="no_telp" pattern="^0[0-9]*$" placeholder="081XXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="15">
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.age') }}<span class="text-danger">*</span></label>
                 <input type="number" class="form-control usia-input" id="editUsia" name="usia" required>
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
                 <select class="form-control" id="editGender" name="gender" required>
                     <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
@@ -105,8 +105,8 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
                 <div class="select2-info">
                 <select class="form-control select2" id="editDesa" name="desa_id" required>
@@ -114,7 +114,7 @@
                 </select>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2">
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                 <div class="select2-info">
                     <select class="form-control select2" id="editDusun" name="dusun_id">
@@ -123,13 +123,13 @@
                 </div>
             </div>
         </div>
-        <!-- RT and RW fields -->
-        <div class='row mb-3'>
-            <div class='col-sm-6 col-md-6 col-lg-6 self-center order=1 order-md=1'>
+        <!-- Edit RT and RW fields -->
+        <div class='row'>
+            <div class='col-sm-6 col-md-6 col-lg-6 self-center order-1 order-md-1 mb-3'>
                 <label class='form-label mb=0'>{{ __('cruds.beneficiary.penerima.rw') }}<span	class='text-danger'>*</span></label>
                 <input type='text' 	class='form-control' id='editRwBanjar' name='rw' required />
             </div>
-            <div class='col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2'>
+            <div class='col-sm-6 col-md-6 col-lg-6 self-center order-2 order-md-2 mb-3'>
                 <label class='form-label mb-0'>{{ __('cruds.beneficiary.penerima.rt') }}<span class='text-danger'>*</span></label>
                 <input type='text' class='form-control' id='editRt' name='rt' required />
             </div>
@@ -141,11 +141,11 @@
                 <label class="form-label" for="edit_is_non_activity">{{ __('Non-AC Kode') }}</label>
             </div>
         </div>
-        <!-- Activity Select -->
+        <!-- Edit Activity Select -->
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivityEdit">
                 <div class="select2-info">
-                    <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-select select2" name="activitySelectEdit" id="activitySelectEdit" multiple>
                         <!-- Options will be populated dynamically -->
                     </select>
@@ -160,7 +160,7 @@
 </x-adminlte-modal>
 
 
-<x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop >
+<x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
     <form id="dataForm" class="big">
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
@@ -169,16 +169,16 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.no_telp') }}</label>
                 <input type="text" class="form-control" id="no_telp" name="no_telp" pattern="^0[0-9]*$" placeholder="081XXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="15">
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.age') }} <span class="text-danger">*</span></label>
                 <input type="number" class="form-control usia-input" name="usia" required>
             </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2">
+            <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
                 <select class="form-control" name="gender" required>
                     <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
@@ -207,9 +207,9 @@
                 </div>
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row">
             {{-- desa --}}
-            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1 mb-3" id="PilihDataDesa">
                 <div class="form-input">
                     <label class="form-label mb-0"><strong>{{ __('cruds.desa.title') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-control select2" name="desa_id" id="desa_id" required>
@@ -217,7 +217,7 @@
                 </div>
             </div>
             {{-- dusun --}}
-            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2 d-flex align-items-center mb-3">
                 <div class="col-11">
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
@@ -228,19 +228,19 @@
                 </div>
                 <div class="form-input">
                     <label class="form-label mb-0">&nbsp;</label>
-                    <button type="button" class="form-control btn btn-success btn-sm ml-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru">
+                    <button type="button" class="form-control btn btn-success btn-sm mr-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru">
                         <i class="bi bi-plus"></i>
                     </button>
                 </div>
             </div>
         </div>
         {{-- RT RW --}}
-        <div class="row mb-3">
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rw') }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="rw">
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
+            <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="rt" required>
             </div>
@@ -256,7 +256,7 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivity">
                 <div class="select2-green">
-                    <label class="form-label mb-0"><strong>{{ __('Select Activities') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
                     <select class="form-select select2 select2-multiple" name="activitySelect" multiple id="activitySelect" >
                         <!-- Options will be populated dynamically -->
                     </select>
