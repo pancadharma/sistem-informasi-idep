@@ -701,7 +701,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         deleteRow(row);
-                        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                        Swal.fire("Deleted!", "Data has been deleted.", "success");
                     }
                 });
             });

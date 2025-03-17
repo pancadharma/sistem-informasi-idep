@@ -481,6 +481,7 @@ class BeneficiaryController extends Controller
         $search = $request->input('search', '');
         $page = $request->input('page', 1);
         $ids = (array) $request->input('id', []);
+        $id = $request->input('id', []);
         $perPage = 20;
 
         $query = $model::query();
