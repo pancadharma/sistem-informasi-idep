@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="ModalDaftarProgram" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgram" theme="danger">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
                 <h5 class="modal-title" id="TitleModalDaftarProgram">

@@ -1,8 +1,8 @@
 <div class="modal fade" id="ModalDusunBaru" tabindex="-1" role="dialog" aria-labelledby="ModalDusunBaruLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    aria-hidden="true" >
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header bg-teal">
                 <h5 class="modal-title" id="ModalDusunBaruLabel">
                     {{ __('global.create') . ' ' . __('cruds.dusun.title') }}
                 </h5>
