@@ -24,6 +24,8 @@
             </div>
         </div>
 
+
+
         <form id="dataForm">
             <div class="card-body">
                 <div class="row">
@@ -155,17 +157,6 @@
         $('.select2').select2();
         let rowCount = 0;
 
-        // Initialize DataTable
-        var table = $('#dataTable').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-
         function addRow(data) {
             rowCount++;
             const provinsiText = $("#provinsi option:selected").text() || "-";
@@ -180,24 +171,24 @@
             const desaId = $("#desa").val() || 0;
             const dusunId = $("#dusun").val() || 0;
 
-            // Add row to DataTable with data attributes
-            const newRow = `
-                <tr data-row-id="${rowCount}" data-provinsi-id="${provinsiId}" data-kabupaten-id="${kabupatenId}" data-kecamatan-id="${kecamatanId}" data-desa-id="${desaId}" data-dusun-id="${dusunId}">
-                    <td class="text-center align-middle">${rowCount}</td>
-                    <td class="text-center align-middle">${provinsiText}</td>
-                    <td class="text-center align-middle">${kabupatenText}</td>
-                    <td class="text-center align-middle">${kecamatanText}</td>
-                    <td class="text-center align-middle">${desaText}</td>
-                    <td class="text-center align-middle">${dusunText}</td>
-                    <td class="text-center align-middle">
-                        <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
-                    </td>
-                </tr>
-            `;
 
-            // Add the row to the DataTable
-            table.row.add($(newRow)).draw(false);
+            const newRow = `
+            <tr data-row-id="${rowCount}">
+                <td class="text-center align-middle" data-provinsi-id="${provinsiId}" data-kabupaten-id="${kabupatenId}" data-kecamatan-id="${kecamatanId}" data-desa-id="${desaId}" data-dusun-id="${dusunId}" data-provinsi-text="${provinsiText}" data-kabupaten-text="${kabupatenText}" data-kecamatan-text="${kecamatanText}" data-desa-text="${desaText}" data-dusun-text="${dusunText}" data-row-id="${rowCount}">${rowCount}</td>
+                <td class="text-center align-middle" data-provinsi-text="${provinsiText}" data-provinsi-id="${provinsiId}">${provinsiText}</td>
+                <td class="text-center align-middle" data-kabupaten-text="${kabupatenText}" data-kabupaten-id="${kabupatenId}">${kabupatenText}</td>
+                <td class="text-center align-middle" data-kecamatan-text="${kecamatanText}" data-kecamatan-id="${kecamatanId}">${kecamatanText}</td>
+                <td class="text-center align-middle" data-desa-text="${desaText}" data-desa-id="${desaId}">${desaText}</td>
+                <td class="text-center align-middle" data-dusun-text="${dusunText}" data-dusun-id="${dusunId}">${dusunText}</td>
+                <td class="text-center align-middle">
+                    <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
+                </td>
+            </tr>
+            `;
+            $("#tableBody").append(newRow);
+
+
         }
 
         function saveRow() {
@@ -216,7 +207,7 @@
                 }, {});
 
                 addRow(formData);
-                resetFormAdd();
+                // resetFormAdd();
             } else {
                 form.reportValidity();
             }
@@ -226,12 +217,15 @@
             const currentRow = $(row).closest("tr");
             const rowId = currentRow.data("row-id");
 
-            // Get the data attributes from the row
-            const provinsiId = currentRow.data("provinsi-id");
-            const kabupatenId = currentRow.data("kabupaten-id");
-            const kecamatanId = currentRow.data("kecamatan-id");
-            const desaId = currentRow.data("desa-id");
-            const dusunId = currentRow.data("dusun-id");
+            // Get the first cell which contains all the data attributes
+            const firstCell = currentRow.find("td:first");
+
+            // Get the data attributes from the first cell
+            const provinsiId = firstCell.data("provinsi-id");
+            const kabupatenId = firstCell.data("kabupaten-id");
+            const kecamatanId = firstCell.data("kecamatan-id");
+            const desaId = firstCell.data("desa-id");
+            const dusunId = firstCell.data("dusun-id");
 
             // Get the text values from the respective cells
             const provinsiText = currentRow.find("td:eq(1)").text().trim();
@@ -244,12 +238,18 @@
             const rowIndex = currentRow.index();
             $("#editRowId").val(rowId);
 
+            // For debugging
+            console.log("Editing row with data:", {rowId,
+                provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
+                provinsiText, kabupatenText, kecamatanText, desaText, dusunText
+            });
+
             // Clear all dropdowns first
-            // $("#provinsi_id_edit").empty();
-            // $("#kabupaten_id_edit").empty();
-            // $("#kecamatan_id_edit").empty();
-            // $("#desa_id_edit").empty();
-            // $("#dusun_id_edit").empty();
+            $("#provinsi_id_edit").empty();
+            $("#kabupaten_id_edit").empty();
+            $("#kecamatan_id_edit").empty();
+            $("#desa_id_edit").empty();
+            $("#dusun_id_edit").empty();
 
             // Create a function to add an option and handle the change event
             function addOptionAndTriggerChange(selector, text, value) {
@@ -272,76 +272,9 @@
                 .catch(error => console.error("Error setting dropdown values:", error));
 
             // Show the edit form if it's hidden
-            // $("#editDataForm").reset();
-            // resetFormEdit();
+            $("#editDataForm").show();
         }
 
-        // function updateRow() {
-        //     const rowId = $("#editRowId").val();
-        //     const form = $("#editDataForm")[0];
-
-        //     const provinsiId = $("#provinsi_id_edit").val() || 0;
-        //     const kabupatenId = $("#kabupaten_id_edit").val() || 0;
-        //     const kecamatanId = $("#kecamatan_id_edit").val() || 0;
-        //     const desaId = $("#desa_id_edit").val() || 0;
-        //     const dusunId = $("#dusun_id_edit").val() || 0;
-
-        //     const provinsiText = $("#provinsi_id_edit option:selected").text() || "-";
-        //     const kabupatenText = $("#kabupaten_id_edit option:selected").text() || "-";
-        //     const kecamatanText = $("#kecamatan_id_edit option:selected").text() || "-";
-        //     const desaText = $("#desa_id_edit option:selected").text() || "-";
-        //     const dusunText = $("#dusun_id_edit option:selected").text() || "-";
-
-        //     if (!form) {
-        //         console.error("Edit form not found");
-        //         return;
-        //     }
-
-        //     if (form.checkValidity()) {
-        //         const formData = $("#editDataForm").serializeArray();
-
-        //         console.log("Updating row with data:", {
-        //             provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
-        //             provinsiText, kabupatenText, kecamatanText, desaText, dusunText
-        //         });
-
-        //         const currentRow = $("#dataTable tbody").find(`tr[data-row-id="${rowId}"]`);
-        //         if (currentRow.length === 0) {
-        //             console.error("Row not found");
-        //             return;
-        //         }
-
-        //         // Update the row data attributes
-        //         currentRow.attr("data-provinsi-id", provinsiId)
-        //                 .attr("data-kabupaten-id", kabupatenId)
-        //                 .attr("data-kecamatan-id", kecamatanId)
-        //                 .attr("data-desa-id", desaId)
-        //                 .attr("data-dusun-id", dusunId);
-
-        //         // Update the row text
-        //         currentRow.find("td:eq(1)").text(provinsiText);
-        //         currentRow.find("td:eq(2)").text(kabupatenText);
-        //         currentRow.find("td:eq(3)").text(kecamatanText);
-        //         currentRow.find("td:eq(4)").text(desaText);
-        //         currentRow.find("td:eq(5)").text(dusunText);
-
-        //         resetFormEdit();
-        //         Swal.fire({
-        //             title: "Success",
-        //             text: "Data updated successfully",
-        //             icon: "success"
-        //         });
-        //         form.reset();
-
-        //     } else {
-        //         Swal.fire({
-        //             title: "Error",
-        //             text: "Failed to update data",
-        //             icon: "error"
-        //         });
-        //         form.reportValidity();
-        //     }
-        // }
         function updateRow() {
             const rowId = $("#editRowId").val();
             const form = $("#editDataForm")[0];
@@ -377,35 +310,12 @@
                     return;
                 }
 
-                // Update the row data attributes
-                currentRow.attr("data-provinsi-id", provinsiId)
-                        .attr("data-kabupaten-id", kabupatenId)
-                        .attr("data-kecamatan-id", kecamatanId)
-                        .attr("data-desa-id", desaId)
-                        .attr("data-dusun-id", dusunId);
-
-                // // Update the row text
-                // currentRow.find("td:eq(1)").text(provinsiText);
-                // currentRow.find("td:eq(2)").text(kabupatenText);
-                // currentRow.find("td:eq(3)").text(kecamatanText);
-                // currentRow.find("td:eq(4)").text(desaText);
-                // currentRow.find("td:eq(5)").text(dusunText);
-
-                currentRow.find("td[data-provinsi-id]").text(provinsiText || "");
-                currentRow.find("td[data-kabupaten-id]").text(kabupatenText || "");
-                currentRow.find("td[data-kecamatan-id]").text(kecamatanText || "");
-                currentRow.find("td[data-desa-id]").text(desaText || "");
-                currentRow.find("td[data-dusun-id]").text(dusunText || "");
-
-                // Update the DataTable's internal cache
-                const rowIndex = table.row(currentRow).index(); // Get the row index
-                const rowData = table.row(rowIndex).data(); // Get the row data
-                rowData[1] = provinsiText; // Update the data in the cache
-                rowData[2] = kabupatenText;
-                rowData[3] = kecamatanText;
-                rowData[4] = desaText;
-                rowData[5] = dusunText;
-                table.row(rowIndex).data(rowData).draw(); // Update the row in the DataTable
+                currentRow.find("td[data-provinsi-id]").attr("data-provinsi-id", provinsiId).attr("data-provinsi-nama", provinsiText).text(provinsiText);
+                currentRow.find("td[data-kabupaten-id]").attr("data-kabupaten-id", kabupatenId).attr("data-kabupaten-nama", kabupatenText).text(kabupatenText);
+                currentRow.find("td[data-kecamatan-id]").attr("data-kecamatan-id", kecamatanId).attr("data-kecamatan-nama", kecamatanText).text(kecamatanText);
+                currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
+                currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
+                currentRow.find("td[data-row-id]").attr("data-row-id", rowId).text(rowId);
 
                 resetFormEdit();
                 Swal.fire({
@@ -425,11 +335,8 @@
             }
         }
 
-
         function resetFormAdd() {
-            $('#dataForm')[0].reset(); // Reset Select2
-            $('#dataForm').trigger('reset');
-            // $('#dataForm select').val(null).trigger('change').empty(); // Reset Select2
+            $("#dataForm")[0].reset();
             $("#provinsi").val(null).trigger("change");
             $("#kabupaten").val(null).trigger("change");
             $("#kecamatan").val(null).trigger("change");
@@ -439,9 +346,6 @@
 
         function resetFormEdit() {
             $("#editDataForm")[0].reset();
-            $('#editDataForm').trigger('reset');
-            $('#editDataForm select').val(null).trigger('change'); // Reset Select2
-            // $('#editDataForm select').empty();
             $("#provinsi_id_edit").val(null).trigger("change");
             $("#kabupaten_id_edit").val(null).trigger("change");
             $("#kecamatan_id_edit").val(null).trigger("change");
@@ -464,19 +368,19 @@
         });
 
         $("#dataTable tbody").on("click", ".delete-btn", function(e) {
-            e.preventDefault();
-            const row = this;
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteRow(row);
+                e.preventDefault();
+                const row = this;
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteRow(row);
                     Swal.fire("Deleted!", "Your data been deleted.", "success");
                 }
             });
@@ -486,6 +390,9 @@
             e.preventDefault();
             editRow(this);
         });
+
+
+
 
         function initializeLocationSelects(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
             // Initialize Provinsi dropdown
@@ -542,105 +449,104 @@
                             search: params.term,
                             page: params.page || 1
                         };
-                        },
-                        processResults: function(data) {
-                            return { results: data.results, pagination: data.pagination };
-                        }
                     },
-                    dropdownParent: dropdownParent
-                });
+                    processResults: function(data) {
+                        return { results: data.results, pagination: data.pagination };
+                    }
+                },
+                dropdownParent: dropdownParent
+            });
 
-                // Initialize Desa (depends on Kecamatan)
-                $(desaSelector).select2({
-                    ajax: {
-                        url: function() {
-                            return "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val());
-                        },
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                search: params.term,
-                                kecamatan_id: $(kecamatanSelector).val(),
-                                page: params.page || 1
-                            };
-                        },
-                        processResults: function(data) {
-                            return { results: data.results, pagination: data.pagination };
-                        }
+            // Initialize Desa (depends on Kecamatan)
+            $(desaSelector).select2({
+                ajax: {
+                    url: function() {
+                        return "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val());
                     },
-                    dropdownParent: dropdownParent
-                });
-                // Initialize Desa (depends on Kecamatan)
-                $(dusunSelector).select2({
-                    ajax: {
-                        url: function() {
-                            return "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val());
-                        },
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                search: params.term,
-                                desa_id: $(desaSelector).val(),
-                                // desa_id: $("#desa_id").val() || $("#editDesa").val(),
-                                page: params.page || 1
-                            };
-                        },
-                        processResults: function(data) {
-                            return { results: data.results, pagination: data.pagination };
-                        }
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kecamatan_id: $(kecamatanSelector).val(),
+                            page: params.page || 1
+                        };
                     },
-                    cache: false,
-                    dropdownParent: dropdownParent
-                });
+                    processResults: function(data) {
+                        return { results: data.results, pagination: data.pagination };
+                    }
+                },
+                dropdownParent: dropdownParent
+            });
+            // Initialize Desa (depends on Kecamatan)
+            $(dusunSelector).select2({
+                ajax: {
+                    url: function() {
+                        return "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val());
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            desa_id: $(desaSelector).val(),
+                            // desa_id: $("#desa_id").val() || $("#editDesa").val(),
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data) {
+                        return { results: data.results, pagination: data.pagination };
+                    }
+                },
+                dropdownParent: dropdownParent
+            });
 
-                // Clear dependent dropdowns when parent changes
-                $(provinsiSelector).on('change', function() {
-                    $(kabupatenSelector).val(null).trigger('change');
-                    $(kecamatanSelector).val(null).trigger('change');
-                    $(desaSelector).val(null).trigger('change');
-                    $(dusunSelector).val(null).trigger('change');
-                });
+            // Clear dependent dropdowns when parent changes
+            $(provinsiSelector).on('change', function() {
+                $(kabupatenSelector).val(null).trigger('change');
+                $(kecamatanSelector).val(null).trigger('change');
+                $(desaSelector).val(null).trigger('change');
+                $(dusunSelector).val(null).trigger('change');
+            });
 
-                $(kabupatenSelector).on('change', function() {
-                    $(kecamatanSelector).val(null).trigger('change');
-                    $(desaSelector).val(null).trigger('change');
-                    $(dusunSelector).val(null).trigger('change');
-                });
+            $(kabupatenSelector).on('change', function() {
+                $(kecamatanSelector).val(null).trigger('change');
+                $(desaSelector).val(null).trigger('change');
+                $(dusunSelector).val(null).trigger('change');
+            });
 
-                $(kecamatanSelector).on('change', function() {
-                    $(desaSelector).val(null).trigger('change');
-                    $(dusunSelector).val(null).trigger('change');
-                });
+            $(kecamatanSelector).on('change', function() {
+                $(desaSelector).val(null).trigger('change');
+                $(dusunSelector).val(null).trigger('change');
+            });
 
-                $(desaSelector).on('change', function() {
-                    $(dusunSelector).val(null).trigger('change');
-                });
-            }
+            $(desaSelector).on('change', function() {
+                $(dusunSelector).val(null).trigger('change');
+            });
+        }
 
-            initializeLocationSelects(
-                '#provinsi',
-                '#kabupaten',
-                '#kecamatan',
-                '#desa',
-                '#dusun',
-                $('#ModalTambahPeserta')
-            );
+        initializeLocationSelects(
+            '#provinsi',
+            '#kabupaten',
+            '#kecamatan',
+            '#desa',
+            '#dusun',
+            $('#ModalTambahPeserta')
+        );
 
-            // Initialize for #editDataModal
-            initializeLocationSelects(
-                '#provinsi_id_edit',
-                '#kabupaten_id_edit',
-                '#kecamatan_id_edit',
-                '#desa_id_edit',
-                '#dusun_id_edit',
-                $('#editDataModal')
-            );
+        // Initialize for #editDataModal
+        initializeLocationSelects(
+            '#provinsi_id_edit',
+            '#kabupaten_id_edit',
+            '#kecamatan_id_edit',
+            '#desa_id_edit',
+            '#dusun_id_edit',
+            $('#editDataModal')
+        );
 
-        });
-
+    });
 </script>
 
-
 @endpush
+
+
