@@ -435,14 +435,14 @@
                 // currentRow.find("td[data-desa-text]").text(desaText);
                 // currentRow.find("td[data-dusun-text]").text(dusunText);
 
-                    Swal.fire({
-                        title: "Success",
-                        text: "Data updated successfully",
-                        icon: "success"
-                    });
+                resetFormEdit();
+                Swal.fire({
+                    title: "Success",
+                    text: "Data updated successfully",
+                    icon: "success"
+                });
+                form.reset();
 
-                    resetFormEdit();
-                    form.reset();
             } else {
                 Swal.fire({
                     title: "Error",
