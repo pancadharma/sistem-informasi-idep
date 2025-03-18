@@ -35,7 +35,7 @@
                     <th rowspan="2" class="text-center align-middle d-none">#</th>
                     <th rowspan="2" class="align-middle text-nowrap">{{ __("cruds.beneficiary.penerima.nama") }}</th>
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.gender") }}</th>
-                    <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.disability") }}</th>
+                    <th rowspan="2" class="align-middle text-wrap d-none">{{ __("cruds.beneficiary.penerima.disability") }}</th>
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.marjinal") }}</th>
                     <th colspan="4" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.address") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.beneficiary.penerima.no_telp") }}</th>
@@ -43,12 +43,13 @@
                     <th rowspan="2" class="align-middle">{{ __("cruds.beneficiary.penerima.age") }}</th>
                     <th colspan="4" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.age_group") }}</th>
                     <th rowspan="2" class="text-center align-middle text-nowrap" id="headerActivityProgram">Activity</th>
+                    <th rowspan="2" class="text-center align-middle text-nowrap" id="header_is_non_activity">Non-AC</th>
                     <th rowspan="2" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
                 <tr id="activityHeaders" class="text-sm">
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
+                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} </th>
+                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <small><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></small></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
                     <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
                     <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>

@@ -20,4 +20,10 @@ class BeneficiaryController extends Controller
         abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('tr.beneficiary.create');
     }
+
+    public function wilayah()
+    {
+        abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return view('tr.beneficiary.wilayah');
+    }
 }

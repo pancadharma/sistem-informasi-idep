@@ -36,6 +36,27 @@
             align-items: center;
             justify-items: stretch;
         }
+
+        .select2-container--open .select2-dropdown {
+            top: 100% !important; /* Force dropdown to appear below */
+            bottom: auto !important;
+        }
+
+        .modal {
+            overflow: visible !important; /* Ensure modal doesn’t clip content */
+        }
+
+        .modal-dialog {
+            overflow: visible !important; /* Allow dropdown to extend outside dialog */
+        }
+
+        .modal-content {
+            overflow: visible !important; /* Prevent content from hiding dropdown */
+        }
+
+        .select2-container--open .select2-dropdown {
+            z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
+        }
     </style>
 @endpush
 
@@ -53,7 +74,26 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
+<script>
+    // Fix dropdown position when modal is shown
+    // $('.modal').on('shown.bs.modal', function() {
+    //     $(this).find('.select2-container').each(function() {
+    //         const $select = $(this).prev('select'); // Get the associated select element
+    //         $select.select2('close'); // Close any open dropdown
+    //         $select.select2('open');  // Reopen to recalculate position
+    //         $select.select2('close'); // Close again to avoid flicker (optional)
+    //     });
+    // });
 
+    // Recalculate position on window resize (e.g., Inspect Element)
+    $(window).on('resize', function() {
+        $('.select2-container--open').each(function() {
+            const $select = $(this).prev('select');
+            $select.select2('close');
+            $select.select2('open');
+        });
+    });
+</script>
 
 
 

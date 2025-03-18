@@ -47,7 +47,8 @@
                             },
                             columns: [
                                 { data: 'kode', name: 'kode', className: "align-self text-left", width: "20%", },
-                                { data: 'nama', name: 'nama', className: "align-self text-left", width: "70%" },
+                                { data: 'nama', name: 'nama', className: "align-self text-left", width: "50%" },
+                                { data: 'activities', name: 'activities', className: "align-self text-left", width: "30%" },
                                 { data: 'action', name: 'action', width: "10%", className: "align-self text-center", orderable: false, searchable: false }
                             ],
                             responsive: true,

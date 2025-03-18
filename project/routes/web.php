@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
+use Monolog\Handler\RotatingFileHandler;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -273,14 +274,24 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
         Route::get('/create',                       [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
+        Route::get('/wilayah',                      [App\Http\Controllers\Admin\BeneficiaryController::class, 'wilayah'])->name('wilayah');
     });
 
     //penerima manfaat api router
     Route::group(['prefix' => 'beneficiary/api/', 'as' => 'api.beneficiary.'], function () {
         Route::get('datatable',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getMealsDatatable'])->name('datatable');
         Route::get('program',                       [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('program');
-        Route::get('desa',                          [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
-        Route::get('dusun',                         [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
+
+        // Route::get('provinsi',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
+        // Route::get('kabupaten',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kabupaten');
+        // Route::get('kecamatan',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kecamatan');
+        // Route::get('desa',                          [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
+        // Route::get('dusun',                         [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
+        Route::get('provinsi',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('kab/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kab');
+        Route::get('kec/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kec');
+        Route::get('desa/{id}',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
+        Route::get('dusun/{id}',                    [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
         Route::get('kelompok-rentan',               [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
         Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
         Route::GET('activity/{id}',                 [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
@@ -309,7 +320,7 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('meals/store',                  [MealsController::class, 'store'])->name('meals.store');
     });
 
-       
+
 
 
 
@@ -318,10 +329,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
 
-     // MEALS Komponen Model
-     Route::get('komodel/api/sektor', [KomponenModelController::class, 'getSektor'])->name('api.komodel.sektor');
-     Route::get('komodel/api/model', [KomponenModelController::class, 'getModel'])->name('api.komodel.model');
-     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
+    // MEALS Komponen Model
+    Route::get('komodel/api/sektor', [KomponenModelController::class, 'getSektor'])->name('api.komodel.sektor');
+    Route::get('komodel/api/model', [KomponenModelController::class, 'getModel'])->name('api.komodel.model');
+    Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
     });
@@ -334,6 +345,5 @@ Route::middleware(['auth'])->group(function () {
         Route::get('desa',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
-
     });
 });

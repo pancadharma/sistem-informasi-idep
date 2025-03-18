@@ -22,7 +22,7 @@ class SeedMasterJenisKelompok extends Seeder
             ['id' => 6, 'nama' => "Stakeholder Provinsi"],
             ['id' => 7, 'nama' => "Stakeholder Nasional"],
             ['id' => 8, 'nama' => "NGO/CSO"],
-
+            ['id' => 9, 'nama' => "Others / Lainnya"],
         ];
 
 
