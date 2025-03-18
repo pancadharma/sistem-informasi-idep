@@ -127,33 +127,56 @@
                     <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
                 `).join('');
                 $('#activityHeaders').html(`
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                    <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                    <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                    <th class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                    <th class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                    <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                    <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                    <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                    <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
                     ${activityHeaders}
                 `);
 
                 $('#headerActivityProgram').attr('rowspan', 1);
                 $('#headerActivityProgram').attr('colspan', activities.length);
 
+                // $('#dataTable').DataTable().destroy(); // Destroy existing instance
+                // $('#dataTable').DataTable({
+                //     "paging": true,
+                //     "lengthChange": true,
+                //     "searching": true,
+                //     "ordering": true,
+                //     "info": true,
+                //     "autoWidth": false,
+                //     "responsive": true,
+                // });
+
             } else {
                 $('#activityHeaders').html(`
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                    <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                    <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                    <th class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                    <th class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                    <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                    <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                    <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                    <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                    <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
                 `);
 
                 $('#headerActivityProgram').attr('rowspan', 2);
+
+                $('#dataTable').DataTable().destroy(); // Destroy existing instance
+                $('#dataTable').DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
+
             }
         }
 

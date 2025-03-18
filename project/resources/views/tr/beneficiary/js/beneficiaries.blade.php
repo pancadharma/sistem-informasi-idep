@@ -19,6 +19,21 @@
 
         let rowCount = 0;
 
+        // Initialize DataTable
+        new DataTable('#dataTable');
+        // var table = new $('#dataTable').DataTable({
+        //     "paging": true,
+        //     "lengthChange": true,
+        //     "searching": true,
+        //     "ordering": true,
+        //     "info": true,
+        //     "autoWidth": false,
+        //     "responsive": true,
+        //     "autoAttributes": false, // Disable automatic attribute generation
+        //     "autoClasses": false, // Disable automatic class generation
+        // });
+
+
         function loadSelect2Option() {
             initializeSelect2ForKelompokRentan();
             initalizeJenisKelompok();
@@ -538,13 +553,13 @@
             $("#kelompok_rentan").val(null).trigger("change");
             $("#jenis_kelompok").val(null).trigger("change");
             $("#activitySelect").val(null).trigger("change");
-            
+
             $("#provinsi_id_tambah").val(null).trigger("change");
             $("#kabupaten_id_tambah").val(null).trigger("change");
             $("#kecamatan_id_tambah").val(null).trigger("change");
             $("#desa_id_tambah").val(null).trigger("change");
             $("#dusun_id_tambah").val(null).trigger("change");
-            
+
             $("#ModalTambahPeserta").modal("hide");
         }
 
@@ -554,7 +569,7 @@
             $("#editKelompokRentan").val(null).trigger("change");
             $("#editJenisKelompok").val(null).trigger("change");
             $("#activitySelectEdit").val(null).trigger("change");
-            
+
             $("#provinsi_id_edit").val(null).trigger("change");
             $("#kabupaten_id_edit").val(null).trigger("change");
             $("#kecamatan_id_edit").val(null).trigger("change");
@@ -778,7 +793,7 @@
                     console.error("Row not found");
                     return;
                 }
-                
+
                 activityHeaders.each(function(index) {
                     const activityId = $(this).data('activity-id');
                     const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
@@ -811,7 +826,7 @@
                 currentRow.find("td[data-rt]").text(formData.rt).attr("data-rt", formData.rt);
                 currentRow.find("td[data-rw]").text(formData.rw).attr("data-rw", formData.rw);
                 currentRow.find("td[data-usia]").text(formData.usia).attr("data-usia", formData.usia);
-                
+
                 // currentRow.find("td[data-jenis_kelompok]").text(formData.jenis_kelompok.join(", ")).attr("data-jenis_kelompok", formData.jenis_kelompok.join(","));
                 currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok", jenisKelompokId).attr("data-jenis_kelompok-text", jenisKelompokText).text(jenisKelompokText);
 
