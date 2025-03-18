@@ -49,7 +49,7 @@
                 <tr id="activityHeaders" class="text-sm">
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} </th>
-                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <small><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></small></th>
+                    <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <small><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></small></th>
                     <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
                     <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
                     <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>

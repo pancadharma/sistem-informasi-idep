@@ -36,7 +36,7 @@
 </div>
 
 <div class="modal fade" id="previewModalsData" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="previewModalsData" >
-    <div class="modal-dialog modal-dialog-scrollable modal modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="previewModalsDataTitle">Preview Data</h5>

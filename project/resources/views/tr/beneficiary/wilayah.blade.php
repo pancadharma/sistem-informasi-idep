@@ -155,32 +155,31 @@
 <script>
     $(document).ready(function() {
         $('.select2').select2();
-
+        let rowCount = 0;
 
         function addRow(data) {
-            let rowCount = $("#tableBody tr").length;
             rowCount++;
-            const provinsiText = $("#provinsi option:selected").text();
-            const kabupatenText = $("#kabupaten option:selected").text();
-            const kecamatanText = $("#kecamatan option:selected").text();
-            const desaText = $("#desa option:selected").text();
-            const dusunText = $("#dusun option:selected").text();
+            const provinsiText = $("#provinsi option:selected").text() || "-";
+            const kabupatenText = $("#kabupaten option:selected").text() || "-";
+            const kecamatanText = $("#kecamatan option:selected").text() || "-";
+            const desaText = $("#desa option:selected").text() || "-";
+            const dusunText = $("#dusun option:selected").text() || "-";
 
-            const provinsiId = $("#provinsi").val();
-            const kabupatenId = $("#kabupaten").val();
-            const kecamatanId = $("#kecamatan").val();
-            const desaId = $("#desa").val();
-            const dusunId = $("#dusun").val();
+            const provinsiId = $("#provinsi").val() || 0;
+            const kabupatenId = $("#kabupaten").val() || 0;
+            const kecamatanId = $("#kecamatan").val() || 0;
+            const desaId = $("#desa").val() || 0;
+            const dusunId = $("#dusun").val() || 0;
 
 
             const newRow = `
-            <tr>
-                <td class="text-center align-middle" data-provinsi-id="${provinsiId}" data-kabupaten-id="${kabupatenId}" data-kecamatan-id="${kecamatanId}" data-desa-id="${desaId}" data-dusun-id="${dusunId}" data-provinsi-text="${provinsiText}" data-kabupaten-text="${kabupatenText}" data-kecamatan-text="${kecamatanText}" data-desa-text="${desaText}" data-dusun-text="${dusunText}">${rowCount}</td>
-                <td class="text-center align-middle">${provinsiText}</td>
-                <td class="text-center align-middle">${kabupatenText}</td>
-                <td class="text-center align-middle">${kecamatanText}</td>
-                <td class="text-center align-middle">${desaText}</td>
-                <td class="text-center align-middle">${dusunText}</td>
+            <tr data-row-id="${rowCount}">
+                <td class="text-center align-middle" data-provinsi-id="${provinsiId}" data-kabupaten-id="${kabupatenId}" data-kecamatan-id="${kecamatanId}" data-desa-id="${desaId}" data-dusun-id="${dusunId}" data-provinsi-text="${provinsiText}" data-kabupaten-text="${kabupatenText}" data-kecamatan-text="${kecamatanText}" data-desa-text="${desaText}" data-dusun-text="${dusunText}" data-row-id="${rowCount}">${rowCount}</td>
+                <td class="text-center align-middle" data-provinsi-text="${provinsiText}" data-provinsi-id="${provinsiId}">${provinsiText}</td>
+                <td class="text-center align-middle" data-kabupaten-text="${kabupatenText}" data-kabupaten-id="${kabupatenId}">${kabupatenText}</td>
+                <td class="text-center align-middle" data-kecamatan-text="${kecamatanText}" data-kecamatan-id="${kecamatanId}">${kecamatanText}</td>
+                <td class="text-center align-middle" data-desa-text="${desaText}" data-desa-id="${desaId}">${desaText}</td>
+                <td class="text-center align-middle" data-dusun-text="${dusunText}" data-dusun-id="${dusunId}">${dusunText}</td>
                 <td class="text-center align-middle">
                     <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
@@ -208,7 +207,7 @@
                 }, {});
 
                 addRow(formData);
-                resetFormAdd();
+                // resetFormAdd();
             } else {
                 form.reportValidity();
             }
@@ -216,6 +215,7 @@
 
         function editRow(row) {
             const currentRow = $(row).closest("tr");
+            const rowId = currentRow.data("row-id");
 
             // Get the first cell which contains all the data attributes
             const firstCell = currentRow.find("td:first");
@@ -236,10 +236,10 @@
 
             // Store the row index for reference
             const rowIndex = currentRow.index();
-            $("#editRowId").val(rowIndex);
+            $("#editRowId").val(rowId);
 
             // For debugging
-            console.log("Editing row with data:", {
+            console.log("Editing row with data:", {rowId,
                 provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
                 provinsiText, kabupatenText, kecamatanText, desaText, dusunText
             });
@@ -381,6 +381,78 @@
         //     $("#editDataForm").show();
         // }
 
+        function updateRow() {
+            const rowId = $("#editRowId").val();
+            const form = $("#editDataForm")[0];
+
+            const provinsiId = $("#provinsi_id_edit").val() || 0;
+            const kabupatenId = $("#kabupaten_id_edit").val() || 0;
+            const kecamatanId = $("#kecamatan_id_edit").val() || 0;
+            const desaId = $("#desa_id_edit").val() || 0;
+            const dusunId = $("#dusun_id_edit").val() || 0;
+
+            const provinsiText = $("#provinsi_id_edit option:selected").text() || "-";
+            const kabupatenText = $("#kabupaten_id_edit option:selected").text() || "-";
+            const kecamatanText = $("#kecamatan_id_edit option:selected").text() || "-";
+            const desaText = $("#desa_id_edit option:selected").text() || "-";
+            const dusunText = $("#dusun_id_edit option:selected").text() || "-";
+
+            if (!form) {
+                console.error("Edit form not found");
+                return;
+            }
+
+            if (form.checkValidity()) {
+                const formData = $("#editDataForm").serializeArray();
+
+                console.log("Updating row with data:", {
+                    provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
+                    provinsiText, kabupatenText, kecamatanText, desaText, dusunText
+                });
+
+                const currentRow = $("#dataTable tbody").find(`tr[data-row-id="${rowId}"]`);
+                if (currentRow.length === 0) {
+                    console.error("Row not found");
+                    return;
+                }
+
+                currentRow.find("td[data-provinsi-id]").attr("data-provinsi-id", provinsiId).attr("data-provinsi-nama", provinsiText).text(provinsiText);
+                currentRow.find("td[data-kabupaten-id]").attr("data-kabupaten-id", kabupatenId).attr("data-kabupaten-nama", kabupatenText).text(kabupatenText);
+                currentRow.find("td[data-kecamatan-id]").attr("data-kecamatan-id", kecamatanId).attr("data-kecamatan-nama", kecamatanText).text(kecamatanText);
+                currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
+                currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
+                currentRow.find("td[data-row-id]").attr("data-row-id", rowId).text(rowId);
+
+                // currentRow.find("td[data-provinsi-id]").text(provinsiId);
+                // currentRow.find("td[data-kabupaten-id]").text(kabupatenId);
+                // currentRow.find("td[data-kecamatan-id]").text(kecamatanId);
+                // currentRow.find("td[data-desa-id]").text(desaId);
+                // currentRow.find("td[data-dusun-id]").text(dusunId);
+
+                // currentRow.find("td[data-provinsi-text]").text(provinsiText);
+                // currentRow.find("td[data-kabupaten-text]").text(kabupatenText);
+                // currentRow.find("td[data-kecamatan-text]").text(kecamatanText);
+                // currentRow.find("td[data-desa-text]").text(desaText);
+                // currentRow.find("td[data-dusun-text]").text(dusunText);
+
+                    Swal.fire({
+                        title: "Success",
+                        text: "Data updated successfully",
+                        icon: "success"
+                    });
+
+                    resetFormEdit();
+                    form.reset();
+            } else {
+                Swal.fire({
+                    title: "Error",
+                    text: "Failed to update data",
+                    icon: "error"
+                });
+                form.reportValidity();
+            }
+        }
+
         function resetFormAdd() {
             $("#dataForm")[0].reset();
             $("#provinsi").val(null).trigger("change");
@@ -390,6 +462,15 @@
             $("#dusun").val(null).trigger("change");
         }
 
+        function resetFormEdit() {
+            $("#editDataForm")[0].reset();
+            $("#provinsi_id_edit").val(null).trigger("change");
+            $("#kabupaten_id_edit").val(null).trigger("change");
+            $("#kecamatan_id_edit").val(null).trigger("change");
+            $("#desa_id_edit").val(null).trigger("change");
+            $("#dusun_id_edit").val(null).trigger("change");
+        }
+
         function deleteRow(row) {
             $(row).closest("tr").remove();
         }
@@ -397,6 +478,11 @@
         $("#btnTambahWilayah").on("click", function(e) {
             e.preventDefault();
             saveRow();
+        });
+
+        $("#btnUpdateWilayah").on("click", function(e) {
+            e.preventDefault();
+            updateRow();
         });
 
         $("#dataTable tbody").on("click", ".delete-btn", function(e) {

@@ -55,7 +55,7 @@ class KegiatanController extends Controller
         $data = Provinsi::when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
 
         $perPage = 20; // or whatever pagination size you want
@@ -98,7 +98,7 @@ class KegiatanController extends Controller
             ->when(!empty($ids), function ($query) use ($ids) {
                 return $query->whereIn('id', $ids);
             }, function ($query) use ($search) {
-                return $query->where('nama', 'like', "%{$search}%");
+                return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
             });
 
         $perPage = 20; // or whatever pagination size you want
@@ -140,7 +140,7 @@ class KegiatanController extends Controller
         $data = Kecamatan::where('kabupaten_id', $kabupatenId)->when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
 
         $perPage = 20; // or whatever pagination size you want
@@ -181,7 +181,7 @@ class KegiatanController extends Controller
         $data = Kelurahan::where('kecamatan_id', $kecamatanId)->when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
         $perPage = 20; // or whatever pagination size you want
         $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
@@ -221,7 +221,7 @@ class KegiatanController extends Controller
         $data = Dusun::where('desa_id', $kecamatanId)->when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
         $perPage = 20; // or whatever pagination size you want
         $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
@@ -469,8 +469,7 @@ class KegiatanController extends Controller
         $penulis = $request->input('penulis', []);
         $jabatan = $request->input('jabatan', []);
 
-        if (count($penulis) !== count($jabatan))
-        {
+        if (count($penulis) !== count($jabatan)) {
             throw new Exception('Penulis and Jabatan count mismatch.');
         }
 
@@ -566,7 +565,7 @@ class KegiatanController extends Controller
             throw new \Exception("Invalid location data");
         }
         $kegiatan->lokasi()->delete();
-            foreach ($newLocationData as $location) {
+        foreach ($newLocationData as $location) {
             $kegiatan->lokasi()->create($location);
         }
     }
@@ -645,6 +644,4 @@ class KegiatanController extends Controller
 
         return response()->json($results);
     }
-
-
 }

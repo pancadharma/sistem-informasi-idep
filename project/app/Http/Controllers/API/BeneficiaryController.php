@@ -30,9 +30,10 @@ class BeneficiaryController extends Controller
         // if (!$request->ajax() && !$request->isJson()) {
         //     return "Not an Ajax Request & JSON REQUEST";
         // }
-
+        // sort by created_at desc
         $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
             ->select('trkegiatan.*')
+            ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($item) {
                 $item->duration_in_days = $item->getDurationInDays();
@@ -85,7 +86,7 @@ class BeneficiaryController extends Controller
     {
         if ($request->ajax()) {
             $query = Program::with(['outcome.output.activities' => function ($query) {
-                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id', 'created_at');
             }])->get();
 
             return DataTables::of($query)
@@ -384,7 +385,7 @@ class BeneficiaryController extends Controller
         $data = Kelompok_Marjinal::when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
 
         $perPage = 20; // or whatever pagination size you want
@@ -418,10 +419,11 @@ class BeneficiaryController extends Controller
             $ids = [$ids];
         }
 
+        // sort by nama
         $data = Master_Jenis_Kelompok::when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
-            return $query->where('nama', 'like', "%{$search}%");
+            return $query->where('nama', 'like', "%{$search}%")->orderBy('nama', 'asc');
         });
 
         $perPage = 20; // or whatever pagination size you want
@@ -445,7 +447,7 @@ class BeneficiaryController extends Controller
     {
         $program = Program::with([
             'outcome.output.activities' => function ($query) {
-                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id', 'created_at');
             }
         ])->where('id', $programId)->first();
 

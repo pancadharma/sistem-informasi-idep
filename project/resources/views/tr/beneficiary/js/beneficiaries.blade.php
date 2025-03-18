@@ -422,20 +422,17 @@
 
             const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
             const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
+            const provinsiText = $("#provinsi_id_tambah option:selected").text() || "-";
+            const kabupatenText = $("#kabupaten_id_tambah option:selected").text() || "-";
+            const kecamatanText = $("#kecamatan_id_tambah option:selected").text() || "-";
+            const desaText = $("#desa_id_tambah option:selected").text() || "-";
+            const dusunText = $("#dusun_id_tambah option:selected").text() || "-";
 
-            // const desaText = $("#desa_id option:selected").text();
-            // const dusunText = $("#dusun_id option:selected").text();
-            const provinsiText = $("#provinsi_id_tambah option:selected").text();
-            const kabupatenText = $("#kabupaten_id_tambah option:selected").text();
-            const kecamatanText = $("#kecamatan_id_tambah option:selected").text();
-            const desaText = $("#desa_id_tambah option:selected").text();
-            const dusunText = $("#dusun_id_tambah option:selected").text();
-
-            const provinsiId = $("#provinsi_id_tambah").val();
-            const kabupatenId = $("#kabupaten_id_tambah").val();
-            const kecamatanId = $("#kecamatan_id_tambah").val();
-            const desaId = $("#desa_id_tambah").val();
-            const dusunId = $("#dusun_id_tambah").val();
+            const provinsiId = $("#provinsi_id_tambah").val() || 0;
+            const kabupatenId = $("#kabupaten_id_tambah").val() || 0;
+            const kecamatanId = $("#kecamatan_id_tambah").val() || 0;
+            const desaId = $("#desa_id_tambah").val() || 0;
+            const dusunId = $("#dusun_id_tambah").val() || 0;
 
             const jenisKelompokText = $("#jenis_kelompok option:selected").text();
             const disabilitasText = disabilitasArray.map((value) => {
@@ -541,18 +538,24 @@
             $("#kelompok_rentan").val(null).trigger("change");
             $("#disabilitas").val(null).trigger("change");
             $("#activitySelect").val(null).trigger("change");
-            $("#desa_id").val(null).trigger("change");
-            $("#dusun_id").val(null).trigger("change");
+            $("#provinsi_id_tambah").val(null).trigger("change");
+            $("#kabupaten_id_tambah").val(null).trigger("change");
+            $("#kecamatan_id_tambah").val(null).trigger("change");
+            $("#desa_id_tambah").val(null).trigger("change");
+            $("#dusun_id_tambah").val(null).trigger("change");
             $("#ModalTambahPeserta").modal("hide");
         }
 
         function resetFormEdit() {
             $("#editDataForm")[0].reset();
-            $("#kelompok_rentan").val(null).trigger("change");
+            $("#editKelompokRentan").val(null).trigger("change");
             $("#editDisabilitas").val(null).trigger("change");
             $("#activitySelectEdit").val(null).trigger("change");
-            $("#editDesa").val(null).trigger("change");
-            $("#editDusun").val(null).trigger("change");
+            $("#provinsi_id_edit").val(null).trigger("change");
+            $("#kabupaten_id_edit").val(null).trigger("change");
+            $("#kecamatan_id_edit").val(null).trigger("change");
+            $("#desa_id_edit").val(null).trigger("change");
+            $("#dusun_id_edit").val(null).trigger("change");
             $("#editDataModal").modal("hide");
         }
 
@@ -567,14 +570,11 @@
             const desaId = firstCell.data("desa-id");
             const dusunId = firstCell.data("dusun-id");
 
-            const provinsiText = firstCell.data("provinsi-nama");
-            const kabupatenText = firstCell.data("kabupaten-nama");
-            const kecamatanText = firstCell.data("kecamatan-nama");
-            const desaText = firstCell.data("desa-nama");
-            const dusunText = firstCell.data("dusun-nama");
-            // const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
-            // const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
-
+            const provinsiText = firstCell.data("provinsi-nama") || "-";
+            const kabupatenText = firstCell.data("kabupaten-nama") || "-";
+            const kecamatanText = firstCell.data("kecamatan-nama") || "-";
+            const desaText = firstCell.data("desa-nama") || "-";
+            const dusunText = firstCell.data("dusun-nama") || "-";
             // Store the row index for reference
             const rowIndex = currentRow.index();
             $("#editRowId").val(rowIndex);
@@ -613,11 +613,8 @@
             const kelompokRentanFullData = JSON.parse(currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan_full") || "[]");
 
 
-            // const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
-            // const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
-
-            const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok");
-            const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text");
+            const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok") || 0;
+            const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text") || "-";
             const isNonActivity = currentRow.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true";
 
             // console.log("jenis_kelompk:", jenisKelompokId, jenisKelompokNama);
@@ -671,7 +668,7 @@
             // Ensure Select2 is initialized
             if (!$('#activitySelectEdit').data('select2')) {
                 $('#activitySelectEdit').select2({
-                    placeholder: "Select Activities",
+                    placeholder: "{{ __('cruds.beneficiary.select_activity') }}",
                     allowClear: true
                 });
             }
@@ -681,14 +678,11 @@
 
 
             // Kemudian set nilai dan trigger change
-            $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
-            // $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
-            // $("#editJenisKelompok").val(jenisKelompokId).trigger("change");
-
             $("#editRowId").val(rowId);
             $("#editNama").val(currentRow.find("td[data-nama]").attr("data-nama"));
-            $("#editGender").val(currentRow.find("td[data-gender]").attr("data-gender")).trigger("change");
             $("#editDisabilitas").val(disabilitasValues).trigger("change");
+            $("#editGender").val(currentRow.find("td[data-gender]").attr("data-gender")).trigger("change");
+            $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
             $("#editRt").val(currentRow.find("td[data-rt]").attr("data-rt"));
             $("#editRwBanjar").val(currentRow.find("td[data-rw]").attr("data-rw"));
             // $("#editDesa").append(new Option(desaText, desaId, true, true)).trigger("change");
