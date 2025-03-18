@@ -3,21 +3,31 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\User;
 use DateTimeInterface;
 use App\Traits\Auditable;
 use Spatie\Image\Enums\Fit;
-use Spatie\MediaLibrary\HasMedia;
 
+use App\Models\Jenis_Kegiatan;
+use App\Models\TargetReinstra;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
+use Spatie\MediaLibrary\Conversions\Manipulations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\MediaCollections\Models\MediaCollection;
+
+
+
 
 class Kegiatan extends Model implements HasMedia
 {
-    use Auditable, HasFactory, InteractsWithMedia, HasRoles;
+    use InteractsWithMedia, Auditable, HasFactory, HasRoles, LogsActivity;
 
     protected $table = 'trkegiatan';
 
@@ -30,14 +40,12 @@ class Kegiatan extends Model implements HasMedia
 
     protected $fillable = [
         'programoutcomeoutputactivity_id',
-        'fasepelaporan',
         'jeniskegiatan_id',
-        'desa_id',
         'user_id',
+        'fasepelaporan',
         'tanggalmulai',
         'tanggalselesai',
         'status',
-        'mitra_id',
         'deskripsilatarbelakang',
         'deskripsitujuan',
         'deskripsikeluaran',
@@ -74,10 +82,29 @@ class Kegiatan extends Model implements HasMedia
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
+
     public function getTglMulaiAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
     }
+
+    public function setPenulisAttribute($value)
+    {
+        // Set the penulis_id attribute to the ID of the user associated with the penulis input
+        $this->attributes['penulis_id'] = $value;
+    }
+
+    public function getPenulisAttribute()
+    {
+        return isset($this->attributes['penulis_id']) ? User::find($this->attributes['penulis_id']) : null;
+    }
+
 
     public function setTglMulaiAttribute($value)
     {
@@ -96,7 +123,7 @@ class Kegiatan extends Model implements HasMedia
 
     public function getImageAttribute()
     {
-        $file = $this->getMedia('file_pendukung_kegiatan')->last();
+        $file = $this->getMedia('media_pendukung')->last();
         if ($file) {
             $file->url       = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');
@@ -106,16 +133,41 @@ class Kegiatan extends Model implements HasMedia
         return $file;
     }
 
+    // media files
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('dokumen_pendukung')
+        ->useDisk('kegiatan_uploads');
+
+        $this->addMediaCollection('media_pendukung')
+        ->useDisk('kegiatan_uploads');
+    }
+
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')->fit(Fit::Crop, 320, 320)->performOnCollections('media_pendukung');
+        $this->addMediaConversion('preview')->fit(Fit::Crop, 600, 800)->performOnCollections('media_pendukung');
+    }
+
+
+
+    public function getDokumenPendukung()
+    {
+        return $this->getMedia('dokumen_pendukung');
+    }
+
+    public function getMediaPendukung()
+    {
+        return $this->getMedia('media_pendukung');
+    }
+    // end media files
+
+
     public function getDurationInDays()
     {
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
-    }
-
-    public function registerMediaConversions(Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')->fit(Fit::Crop, 240, desiredHeight: 240);
-        $this->addMediaConversion('preview')->fit(Fit::Crop, 320, 320);
     }
 
     public function users()
@@ -148,9 +200,14 @@ class Kegiatan extends Model implements HasMedia
         return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
-    public function jenis_kegiatan()
+    public function jenisKegiatan()
     {
-        return $this->belongsTo(Jenis_Kegiatan::class, 'jenis_kegiatan_id');
+        return $this->belongsTo(Jenis_Kegiatan::class, 'jeniskegiatan_id');
+    }
+
+    public function programOutcomeOutputActivity()
+    {
+        return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 
     public function lokasi()
@@ -158,51 +215,162 @@ class Kegiatan extends Model implements HasMedia
         return $this->hasMany(Kegiatan_Lokasi::class, 'kegiatan_id');
     }
 
-    public function mitra()
+    public function lokasi_kegiatan()
     {
-        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
+        return $this->belongsToMany(Kelurahan::class, 'trkegiatan_lokasi', 'kegiatan_id', 'desa_id');
     }
+
     public function penulis()
     {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'user_id', 'peran_id');
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
     }
 
-    public function sektor()
+    public function laporan()
     {
-        return $this->belongsToMany(mSektor::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
+        ->using(Kegiatan_Penulis::class)
+        ->withTimestamps();
     }
-
 
 
     public const STATUS_SELECT = [
         'draft'    => 'Draft',
         'ongoing'  => 'Ongoing',
         'completed' => 'Completed',
-        'cancelled ' => 'Cancelled',
+        'cancelled' => 'Cancelled',
     ];
-
 
     public static function getJenisKegiatan(): array
     {
+        return Jenis_Kegiatan::select('id', 'nama')->get()->mapWithKeys(function ($item) {
+            return [$item->id => $item->nama];
+        })->toArray();
+    }
+
+    // relation with other model in dynamic input kegiatan
+
+    public function assessment()
+    {
+        return $this->hasOne(Kegiatan_Assessment::class, 'kegiatan_id');
+    }
+
+    public function kampanye(){
+        return $this->hasOne(Kegiatan_Kampanye::class, 'kegiatan_id');
+    }
+
+    public function konsultasi(){
+        return $this->hasMany(Kegiatan_Konsultasi::class, 'kegiatan_id');
+    }
+
+    public function kunjungan(){
+        return $this->hasOne(Kegiatan_Kunjungan::class, 'kegiatan_id');
+    }
+    public function lainnya(){
+        return $this->hasOne(Kegiatan_Lainnya::class, 'kegiatan_id');
+    }
+
+    public function monitoring(){
+        return $this->hasOne(Kegiatan_Monitoring::class, 'kegiatan_id');
+    }
+    public function pelatihan(){
+        return $this->hasOne(Kegiatan_Pelatihan::class, 'kegiatan_id');
+    }
+    public function pembelanjaan(){
+        return $this->hasOne(Kegiatan_Pembelanjaan::class, 'kegiatan_id');
+    }
+    public function pemetaan(){
+        return $this->hasOne(Kegiatan_Pemetaan::class, 'kegiatan_id');
+    }
+    public function pengembangan(){
+        return $this->hasOne(Kegiatan_Pengembangan::class, 'kegiatan_id');
+    }
+    public function sosialisasi(){
+        return $this->hasOne(Kegiatan_Sosialisasi::class, 'kegiatan_id');
+    }
+
+    public function mitra()
+    {
+        return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
+    }
+
+    public function kegiatan_penulis()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
+        ->withPivot('peran_id')
+        ->withTimestamps();
+    }
+    public function sektor()
+    {
+        return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+    }
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function desa()
+    {
+        return $this->belongsTo(Kelurahan::class, 'desa_id');
+    }
+
+    // jenis  kegiatan based form input / show
+    public static function getJenisKegiatanModelMap(): array
+    {
         return [
-            1  => __('cruds.kegiatan.basic.data_jenis_kegiatan.1'),
-            2  => __('cruds.kegiatan.basic.data_jenis_kegiatan.2'),
-            3  => __('cruds.kegiatan.basic.data_jenis_kegiatan.3'),
-            4  => __('cruds.kegiatan.basic.data_jenis_kegiatan.4'),
-            5  => __('cruds.kegiatan.basic.data_jenis_kegiatan.5'),
-            6  => __('cruds.kegiatan.basic.data_jenis_kegiatan.6'),
-            7  => __('cruds.kegiatan.basic.data_jenis_kegiatan.7'),
-            8  => __('cruds.kegiatan.basic.data_jenis_kegiatan.8'),
-            9  => __('cruds.kegiatan.basic.data_jenis_kegiatan.9'),
-            10 => __('cruds.kegiatan.basic.data_jenis_kegiatan.10'),
-            11 => __('cruds.kegiatan.basic.data_jenis_kegiatan.11'),
-            12 => __('cruds.kegiatan.basic.data_jenis_kegiatan.12'),
-            13 => __('cruds.kegiatan.basic.data_jenis_kegiatan.13'),
-            14 => __('cruds.kegiatan.basic.data_jenis_kegiatan.14'),
-            15 => __('cruds.kegiatan.basic.data_jenis_kegiatan.15'),
-            16 => __('cruds.kegiatan.basic.data_jenis_kegiatan.16'),
-            17 => __('cruds.kegiatan.basic.data_jenis_kegiatan.17'),
+            1 => Kegiatan_Assessment::class,
+            2 => Kegiatan_Sosialisasi::class,
+            3 => Kegiatan_Pelatihan::class,
+            4 => Kegiatan_Pembelanjaan::class,
+            5 => Kegiatan_Pengembangan::class,
+            6 => Kegiatan_Kampanye::class,
+            7 => Kegiatan_Pemetaan::class,
+            8 => Kegiatan_Monitoring::class,
+            9 => Kegiatan_Kunjungan::class,
+            10 => Kegiatan_Konsultasi::class,
+            11 => Kegiatan_Lainnya::class,
         ];
     }
+
+    public static function getJenisKegiatanRelationMap(): array
+    {
+        return [
+            1 => 'assessment',
+            2 => 'sosialisasi',
+            3 => 'pelatihan',
+            4 => 'pembelanjaan',
+            5 => 'pengembangan',
+            6 => 'kampanye',
+            7 => 'pemetaan',
+            8 => 'monitoring',
+            9 => 'kunjungan',
+            10 => 'konsultasi',
+            11 => 'lainnya',
+        ];
+    }
+
+    public function getKegiatanHasilAttribute()
+    {
+        $jenisKegiatan = (int) $this->jeniskegiatan_id;
+        $modelMapping = self::getJenisKegiatanModelMap();
+
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            return null; // Or throw an exception
+        }
+
+        $modelClass = $modelMapping[$jenisKegiatan];
+        return $modelClass::where('kegiatan_id', $this->id)->get();
+    }
+
+
+    public function getAllMediaAttribute()
+    {
+        return [
+            'dokumen_pendukung' => $this->getMedia('dokumen_pendukung'),
+            'media_pendukung' => $this->getMedia('media_pendukung'),
+        ];
+    }
+
 
 }

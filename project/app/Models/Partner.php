@@ -2,16 +2,18 @@
 
 namespace App\Models;
 
-use App\Traits\Auditable;
 use DateTimeInterface;
+use App\Traits\Auditable;
+use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Partner extends Model
 {
-    use HasFactory, Auditable, SoftDeletes, HasRoles;
+    use HasFactory, Auditable, SoftDeletes, HasRoles, LogsActivity;
     protected $table = 'mpartner';
 
     protected $fillable = [
@@ -35,8 +37,20 @@ class Partner extends Model
         'deleted_at',
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);  // Pastikan log yang diinginkan
+    }
+
     public function kegiatan()
     {
-        return $this->belongsToMany(Kegiatan::class, 'kegiatan_mitra', 'mitra_id', 'kegiatan_id');
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_mitra', 'mitra_id', 'kegiatan_id');
+    }
+    public function trkegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_mitra', 'mitra_id', 'kegiatan_id');
+
+
     }
 }

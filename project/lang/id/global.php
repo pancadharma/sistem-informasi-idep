@@ -6,6 +6,9 @@ return [
     'actions'                        => 'Opsi',
     'add'                            => 'Tambah',
     'success'                        => 'Sukses',
+    'error'                          => 'Gagal',
+    'warning'                        => 'Peringatan',
+    'info'                           => 'Info',
     'allRightsReserved'              => 'All rights reserved.',
     'areYouSure'                     => 'Apakah Anda yakin?',
     'clickHereToVerify'              => 'Klik di sini untuk memverifikasi',
@@ -332,5 +335,26 @@ return [
     'leave'                          => 'Keluar',
     'calendar'                       => 'Kalender',
     'messenger'                      => 'Pesan',
+
+    'response'                      => [
+        'success'                   => 'Berhasil',
+        'error'                     => 'Gagal',
+        'validation'                => 'Validasi',
+        'created'                   => 'Dibuat',
+        'data_created'              => 'Data dibuat',
+        'updated'                   => 'Diperbarui',
+        'data_updated'              => 'Data diperbarui',
+        'deleted'                   => 'Dihapus',
+        'data_deleted'              => 'Data dihapus',
+        'not_approved_p'            => 'Akun anda masih belum disetujui oleh administrator, mohon bersabar dan coba lagi nanti.',
+        'not_approved_title'        => 'Anda tidak disetujui',
+        'save_success'              => 'Berhasil menyimpan Data',
+        'save_failed'               => 'Gagal menyimpan Data',
+        'update_success'            => 'Berhasil memperbarui Data',
+        'update_failed'             => 'Gagal memperbarui Data',
+        'delete_success'            => 'Berhasil menghapus Data',
+        'delete_failed'             => 'Gagal menghapus Data',
+    ],
+    'print'                         => 'Cetak'
 
 ];

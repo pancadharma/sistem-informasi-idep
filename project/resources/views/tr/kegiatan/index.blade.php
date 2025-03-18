@@ -28,21 +28,27 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table id="kegiatan-list" class="table responsive-table table-bordered datatable-kegiatan" width="100%">
-                <thead class="text-nowrap">
+            <table id="kegiatan-list" class="table table-sm table-hover responsive-table table-bordered datatable-kegiatan" width="100%">
+                <thead class="text-wrap text-center align-top">
                     <tr>
-                        <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
-                        {{--
-                        <th>{{ __('cruds.program.nama') }}</th>
-                        <th>{{ __('cruds.kegiatan.nama') }}</th>
-                        <th>{{ __('cruds.desa.form.nama') }}</th>
-                        <th>{{ __('cruds.kegiatan.tanggalmulai') }}</th>
-                        <th>{{ __('cruds.kegiatan.tanggalselesai') }}</th>
-                        <th>{{ __('cruds.kegiatan.tempat') }}</th>
-                        <th>{{ __('cruds.kegiatan.status') }}</th>
-                        <th>{{ __('global.actions') }}</th> --}}
+                        <th class="text-center align-top" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.program.nama') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.nama') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.desa.form.nama') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.tanggalmulai') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.tanggalselesai') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.tempat') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.status') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.status') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.status') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.status') }}</th>
+                        <th class="text-center align-middle">{{ __('cruds.kegiatan.status') }}</th>
+                        <th class="text-center align-middle">{{ __('global.actions') }}</th>
                     </tr>
                 </thead>
+                <tbody class="text-nowrap overflow-auto">
+
+                </tbody>
             </table>
         </div>
     </div>
@@ -51,6 +57,20 @@
 
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+<style>
+    .responsive-table {
+        overflow-x: visible;
+        overflow-y: visible;
+    }
+
+    .ellipsis-cell {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust as needed */
+        /* display: block; Or display: block */
+    }
+</style>
 @endpush
 
 @push('js')

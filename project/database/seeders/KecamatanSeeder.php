@@ -13,7 +13,7 @@ class KecamatanSeeder extends Seeder
      */
     public function run(): void
     {
-        $kecamatan = 
+        $kecamatan =
         [
                 [
                     "id" => 110101,
@@ -50956,6 +50956,20 @@ class KecamatanSeeder extends Seeder
                 ],
             ];
 
-        Kecamatan::insert($kecamatan);
+        // Kecamatan::insert($kecamatan);
+
+        $limit = 5000;
+        $chunks = array_chunk($kecamatan, $limit);
+
+        $startTime = microtime(true);
+        foreach ($chunks as $chunk) {
+            Kecamatan::upsert($chunk, 'id', array_keys($chunk[0]));
+            gc_collect_cycles();
+            sleep(1);
+            unset($chunk);
+        }
+        $endTime = microtime(true);
+        $upsertTime = $endTime - $startTime;
+        echo "Kecamatan  done in: $upsertTime seconds\n";
     }
 }

@@ -174,4 +174,22 @@ class User extends Authenticatable implements HasMedia
         $identifier = $this->username ?? $this->id; // Get username or id
         return route('profile.show', ['identifier' => $identifier]); // Generate route
     }
+
+    public function perankegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatanpenulis', 'penulis_id', 'kegiatan_id')
+        ->withPivot('kegiatan_id')
+        ->withTimestamps();
+    }
+    public function activities()
+    {
+        return $this->belongsToMany(Kegiatan::class)
+            ->using(Kegiatan_Penulis::class); // Assuming you have a pivot table
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Mjabatan::class, 'jabatan_id');
+    }
+
 }

@@ -338,19 +338,25 @@ return [
             ],
         ],
         [
-            'text' => 'evaluasi',
-            'icon' => 'fas fa-tachometer-alt',
-            // 'url' => '#',
-            'active' => ['evaluasi', 'evaluasi*', 'regex:@^meals/[0-9]+$@'],
-            'submenu' => [
+            'text'      => 'meals',
+            'icon'      => 'nav-icon bi bi-graph-up',
+            'active'    => ['evaluasi', 'evaluasi*', 'regex:@^meals/[0-9]+$@'],
+            'submenu'   => [
                 [
-                    'text'      => 'meals',
-                    // 'icon'      => 'nav-icon material-symbols-outlined',
-                    'icon'      => 'nav-icon bi bi-graph-up',
+                    'text'      => 'beneficiary',
+                    'icon'      => 'nav-icon bi bi-person-raised-hand',
                     'icon_text' => 'monitoring',
-                    'route'     => 'meals.index',
-                    'can'       => ['meals_access'],
-                    'active'    => ['meals', 'meals*', 'regex:@^meals/[0-9]+$@'],
+                    'route'     => 'beneficiary.index',
+                    'can'       => ['beneficiary_access'],
+                    'active'    => ['beneficiary', 'beneficiary*', 'regex:@^beneficiary/[0-9]+$@', 'regex:@^penerima_manfaat/[0-9]+$@'],
+                ],
+                [
+                    'text'      => 'komponenmodel',
+                    'icon'      => 'nav-icon bi bi-puzzle', 
+                    'icon_text' => 'monitoring',
+                    'route'     => 'komodel.index',
+                    'can'       => ['komponenmodel_access'],
+                    'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
                     'url' => '#',

@@ -272,6 +272,7 @@ entity "trprogramoutcomeoutputactivity" as trprogramoutcomeoutputactivity {
     deskrispsi : varchar(500)
     indikator : varchar(500)
     target : varchar(500)
+    tipe : varhcar (200)
 }
 
 entity "trprogramlokasi" as trprogramlokasi {
@@ -559,41 +560,12 @@ entity "trmealstargetprogress" as trmealstargetprogress {
     tanggal : datetime
 }
 
-entity "trmealstargetprogressactivity" as trmealstargetprogressactivity {
+entity "trmealstargetprogressdetail" as trmealstargetprogressdetail {
     *id : int <<auto>>
     --
     id_mealstargetprogress : int <<fk>>
-    id_programoutcomeoutputactivity : int <<fk>>
-    achievments : varchar (500) null
-    progress : int null
-    persentasecomplete : decimal null
-    status : varchar (50)
-    challenges : text null
-    mitigation : text null
-    risk : varchar (50) null
-    notes : text null
-}
-
-entity "trmealstargetprogressoutput" as trmealstargetprogressoutput {
-    *id : int <<auto>>
-    --
-    id_mealstargetprogress : int <<fk>>
-    id_programoutcomeoutput : int <<fk>>
-    achievments : varchar (500) null
-    progress : int null
-    persentasecomplete : decimal null
-    status : varchar (50)
-    challenges : text null
-    mitigation : text null
-    risk : varchar (50) null
-    notes : text null
-}
-
-entity "trmealstargetprogressoutcome" as trmealstargetprogressoutcome {
-    *id : int <<auto>>
-    --
-    id_mealstargetprogress : int <<fk>>
-    id_programoutcome : int <<fk>>
+    id_target : int
+    tipe : varchar (50)
     achievments : varchar (500) null
     progress : int null
     persentasecomplete : decimal null
@@ -611,8 +583,6 @@ entity "trmealspenerimamanfaat" as trmealspenerimamanfaat {
     id_user : int <<fk>>
     nama : varchar (200)
     jeniskelamin : varchar (50)
-    disabilitas : varchar (50)
-    id_kelompokmarjinal : int <<fk>> null
     rt : varchar(200)
     rw : varchar(200)
     id_dusun: int <<fk>>
@@ -627,6 +597,26 @@ entity "trmealspenerimamanfaatactivity" as trmealspenerimamanfaatactivity {
     id_mealspenerimamanfaat : int <<fk>>
     id_programoutcomeoutputactivity : int <<fk>>
     checked : bit
+}
+
+entity "trmealspenerimamanfaatkelompokmarjinal" as trmealspenerimamanfaatkelompokmarjinal {
+    *id : int <<auto>>
+    --
+    id_mealspenerimamanfaat : int <<fk>>
+    id_kelompokmarjinal : int <<fk>>    
+}
+
+entity "trmealspenerimamanfaatdisabilitas" as trmealspenerimamanfaatdisabilitas {
+    *id : int <<auto>>
+    --
+    id_mealspenerimamanfaat : int <<fk>>
+    id_disabilitas : int <<fk>>    
+}
+
+entity "mdisabilitas" as mdisabilitas {
+    *id : int <<auto>>
+    --
+    nama : varchar (200)
 }
 
 entity "mjeniskelompok" as mjeniskelompok {
@@ -669,25 +659,31 @@ entity "trmealsfrm" as trmealsfrm {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
+    id_userpenerima : int <<fk>> null
+    id_jabatanpenerima : int <<fk>> null
+    id_userhandler : int <<fk>> null
+    id_jabatanhandler : int <<fk>> null
+    id_sortofcomplains : int <<fk>> null
     tanggalregistrasi : datetime
-    umur : int
-    jeniskelamin : varchar (50)
-    statuskomplain : varchar (50)
-    notelp : varchar (20)
-    alamat : varchar (500)
-    hide : bit
-    id_userpenerima : int <<fk>>
-    id_jabatanpenerima : int <<fk>>
-    notelppenerima : varchar (20)
-    channels : varchar (100)
-    channelslainnya : varchar (100)
-    kategorikomplain : varchar (100)
-    deskripsikomplain : varchar (500)
-    tanggalselesai : datetime
-    id_userhandler : int <<fk>>
-    id_jabatanhandler : int <<fk>>
-    notelphandler : varchar (20)
-    deskripsi : varchar (500)
+    umur : int null
+    jeniskelamin : varchar (50) null
+    statuskomplain : varchar (50) null
+    notelp : varchar (20) null
+    alamat : varchar (500) null
+    notelppenerima : varchar (20) null
+    channels : varchar (100) null
+    channelslainnya : varchar (100) null
+    kategorikomplain : varchar (100) null
+    deskripsikomplain : text null
+    tanggalselesai : datetime null
+    notelphandler : varchar (20) null
+    deskripsi : text null
+}
+
+entity "msortofcomplaints" as msortofcomplaints {
+    *id : int <<auto>>
+    --
+    nama : varchar (500)
 }
 
 entity "trmealsqb" as trmealsqb {
@@ -715,7 +711,7 @@ entity "trmealspreposttest" as trmealspreposttest {
     *id : int <<auto>>
     --
     id_programoutcomeoutputactivity : int <<fk>>
-    id_dusun: int <<fk>>
+    id_desa: int <<fk>>
     id_user : int <<fk>>
     nama : varchar (200)
     jeniskelamin : varchar (50)

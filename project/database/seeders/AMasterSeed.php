@@ -15,11 +15,8 @@ class AMasterSeed extends Seeder
     public function run(): void
     {
         $this->call([
-            // CountryTableSeeder::class,
-            // ProvinsiSeeder::class,
-            // KabupatenSeeder::class,
-            // KecamatanSeeder::class,
-            // KelurahanSeeder::class,
+
+            DatabaseSeeder::class,
             // Update KabupatenSeeder to include this seeder
             UpdateNegaraIdInProvinsiSeeder::class,
             UpdateKabupatenSeeder::class,
@@ -37,7 +34,7 @@ class AMasterSeed extends Seeder
             SektorSeederData::class,
             JenisBantuanSeeder::class,
             KategoriPendonorSeeder::class, //data masih dummy
-
+            MjabatanSeeder::class, //data masih
 
 
         ]);

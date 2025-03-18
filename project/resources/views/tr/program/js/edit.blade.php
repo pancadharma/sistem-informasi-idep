@@ -382,8 +382,8 @@
                 return $(this).val();
             }).get();
 
-            console.log('Staff Values:', staffValues);
-            console.log('Peran Values:', peranValues);
+            // console.log('Staff Values:', staffValues);
+            // console.log('Peran Values:', peranValues);
 
             $.each(staffValues, function(index, value) {
                 formData.append('staff[]', value);
@@ -421,6 +421,18 @@
                 }
             });
 
+                // Collect and unmask totalnilaiprogram
+            const totalNilaiInput = document.querySelector('#totalnilai');
+            if (totalNilaiInput) {
+                const totalNilaiAutoNumeric = AutoNumeric.getAutoNumericElement(totalNilaiInput);
+                if (totalNilaiAutoNumeric) {
+                    const totalNilaiUnmasked = totalNilaiAutoNumeric.getNumericString(); // Get unmasked value
+                    formData.append('totalnilai', totalNilaiUnmasked); // Append to FormData
+                } else {
+                    console.error('AutoNumeric not initialized for #totalnilai');
+                }
+            }
+
             // Log arrays for debugging
             var pendonorIds = formData.getAll('pendonor_id[]');
             console.log('pendonor_id[]:', pendonorIds);
@@ -442,27 +454,6 @@
                 console.log(`${pair[0]}: ${pair[1]}`);
             }
 
-            // Collect staff and peran data
-            // $('.staff-row').each(function () {
-            //     const staffId = $(this).find('.staff-select').val(); // Get selected staff ID
-            //     const peranId = $(this).find('.peran-select').val(); // Get selected peran ID
-            //     if (staffId && peranId) {
-            //         formData.append('staff_peran[' + staffId + ']', peranId); // Append as key-value pairs
-            //     }
-            // });
-
-            // let staffPeran = [];
-            // $('input[name="staff[]"]').each(function(index) {
-            //     let staffId = $(this).val();
-            //     let peranId = $('input[name="peran[]"]').eq(index).val();
-            //     staffPeran.push({ staff_id: staffId, peran_id: peranId });
-            // });
-
-            // console.log('hasil log staff dan peran', staffPeran);
-
-            // formData.append('staff_peran', JSON.stringify(staffPeran));
-
-
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -475,8 +466,8 @@
                 beforeSend: function() {
                     Toast.fire({
                         icon: "info",
-                        title: "Uploading...",
-                        timer: 2000,
+                        title: "Updating ...",
+                        timer: 3000,
                         timerProgressBar: true,
                     });
                 },

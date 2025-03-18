@@ -79,30 +79,116 @@
         },
 
         clearLayer: function(layer) {
-            if (layer && map.hasLayer(layer)) {
-                map.removeLayer(layer);
-                return null;
+            if (layer) {
+                if (Array.isArray(layer)) {
+                    layer.forEach(polygon => polygon.setMap(null));
+                } else {
+                    layer.setMap(null); // Remove the layer from the map
+                }
             }
-            return layer;
+            return null;
         },
 
         displayGeoJSON: function(geojson, color) {
             if (!geojson) return null;
 
-            return L.geoJSON(geojson, {
-                style: {
-                    color: color,
-                    weight: 2,
-                    fillOpacity: 0.3
+            const geometry = geojson.geometry;
+            if (!geometry) {
+                console.error("No geometry found in GeoJSON.");
+                return null;
+            }
+
+            if (geometry.type === "MultiPolygon") {
+                const coordinates = geometry.coordinates;
+                if (!coordinates || coordinates.length === 0) {
+                    console.error("No coordinates found in MultiPolygon GeoJSON.");
+                    return null;
                 }
-            }).addTo(map);
+
+                // Create an array to hold all the polygon instances
+                const polygons = [];
+
+                // Iterate through each polygon in the MultiPolygon
+                coordinates.forEach(polygon => {
+                    // Each polygon is an array of rings (exterior and interior)
+                    const paths = polygon.map(ring => {
+                        // Each ring is an array of coordinates
+                        return ring.map(coord => {
+                            return { lat: coord[1], lng: coord[0] }; // Google Maps uses {lat, lng}
+                        });
+                    });
+
+                    // Create a new polygon for each set of paths
+                    const googlePolygon = new google.maps.Polygon({
+                        paths: paths,
+                        strokeColor: color,
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: color,
+                        fillOpacity: 0.3,
+                        map: map, // Set the map here
+                        clickable: false // Add this line
+                    });
+
+                    polygons.push(googlePolygon); // Store the polygon instance
+                });
+
+                return polygons; // Return the array of polygons
+            } else if (geometry.type === "Polygon") {
+                // Handle a single Polygon
+                const coordinates = geometry.coordinates;
+                if (!coordinates || coordinates.length === 0) {
+                    console.error("No coordinates found in Polygon GeoJSON.");
+                    return null;
+                }
+
+                const paths = coordinates.map(ring => {
+                    return ring.map(coord => {
+                        return { lat: coord[1], lng: coord[0] };
+                    });
+                });
+
+                const googlePolygon = new google.maps.Polygon({
+                    paths: paths,
+                    strokeColor: color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: color,
+                    fillOpacity: 0.3,
+                    map: map,
+                    clickable: false // Add this line
+                });
+
+                return googlePolygon;
+            } else {
+                console.warn("Unsupported GeoJSON geometry type:", geometry.type);
+                return null;
+            }
         },
 
-        updateMapBounds: function(layer, parentLayer) {
-            if (parentLayer && map.hasLayer(parentLayer)) {
-                map.fitBounds(parentLayer.getBounds());
-            } else if (layer && map.hasLayer(layer)) {
-                map.fitBounds(layer.getBounds());
+        updateMapBounds: function(layer) {
+            if (layer) {
+                let bounds = new google.maps.LatLngBounds();
+
+                if (Array.isArray(layer)) {
+                    // If layer is an array of polygons (from MultiPolygon)
+                    layer.forEach(polygon => {
+                        polygon.getPaths().forEach(path => {
+                            path.forEach(point => {
+                                bounds.extend(point);
+                            });
+                        });
+                    });
+                } else {
+                    // If layer is a single polygon
+                    layer.getPaths().forEach(path => {
+                        path.forEach(point => {
+                            bounds.extend(point);
+                        });
+                    });
+                }
+
+                map.fitBounds(bounds); // Adjust the map to fit the bounds
             }
         }
     };
@@ -142,7 +228,7 @@
                 timer: 300,
                 position: 'top-end',
             });
-        }
+        },
     };
 
     function validateCoordinate(value, type) {
@@ -165,7 +251,7 @@
             }
         }
         // Validate Longitude
-         else if (type === 'longitude') {
+        else if (type === 'longitude') {
             const long = parseFloat(value);
             if (!isNaN(long) && long >= -180 && long <= 180) {
                 isValid = true;
@@ -174,58 +260,63 @@
         }
 
         return {
-             valid: isValid,
-             value: validatedValue
+            valid: isValid,
+            value: validatedValue
         };
 
     }
 
     function fetchAndDisplayGeoJSON(id, type, color, parentLayer) {
-    if (!id) {
-        if (type === 'provinsi') {
-            provinsiLayer = MapHandler.clearLayer(provinsiLayer);
-        } else if (type === 'kabupaten') {
-            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
+        if (!id) {
+            if (type === 'provinsi') {
+                MapHandler.clearLayer(provinsiLayer);
+                provinsiLayer = null;
+            } else if (type === 'kabupaten') {
+                MapHandler.clearLayer(kabupatenLayer);
+                kabupatenLayer = null;
+            }
+            return;
         }
-        return;
-    }
 
-    fetch(`/api/geojson/${type}/${id}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            return response.json();
-        })
-        .then(data => {
-            // Clear existing layer
-            if (type === 'provinsi') {
-                provinsiLayer = MapHandler.clearLayer(provinsiLayer);
-            } else if (type === 'kabupaten') {
-                kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
-            }
+        fetch(`/api/geojson/${type}/${id}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                // Clear existing layer
+                if (type === 'provinsi') {
+                    MapHandler.clearLayer(provinsiLayer);
+                    provinsiLayer = null;
 
-            // Convert and display new data
-            const geojson = MapHandler.convertToGeoJSON(data.path);
-            if (!geojson) {
-                console.error(`Invalid GeoJSON data for ${type}:`, data.path);
-                return;
-            }
+                } else if (type === 'kabupaten') {
+                    MapHandler.clearLayer(kabupatenLayer);
+                    kabupatenLayer = null;
+                }
 
-            const newLayer = MapHandler.displayGeoJSON(geojson, color);
+                // Convert and display new data
+                const geojson = MapHandler.convertToGeoJSON(data.path);
+                if (!geojson) {
+                    console.error(`Invalid GeoJSON data for ${type}:`, data.path);
+                    return;
+                }
 
-            // Store new layer reference
-            if (type === 'provinsi') {
-                provinsiLayer = newLayer;
-            } else if (type === 'kabupaten') {
-                kabupatenLayer = newLayer;
-            }
+                const newLayer = MapHandler.displayGeoJSON(geojson, color);
 
-            // Update map bounds
-            MapHandler.updateMapBounds(newLayer, parentLayer);
-        })
-        .catch(error => {
-            console.error(`Error loading ${type} data:`, error);
-            ErrorHandler.handleGeojsonError(error);
-        });
+                // Store new layer reference
+                if (type === 'provinsi') {
+                    provinsiLayer = newLayer;
+                } else if (type === 'kabupaten') {
+                    kabupatenLayer = newLayer;
+                }
+
+                // Update map bounds
+                MapHandler.updateMapBounds(newLayer);
+            })
+            .catch(error => {
+                console.error(`Error loading ${type} data:`, error);
+                ErrorHandler.handleGeojsonError(error);
+            });
     }
 
     function updateMap() {
@@ -241,21 +332,213 @@
         }
     }
 
+        // Function to generate a random hex color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+
+    // function initMap() {
+    //     map = new google.maps.Map(document.getElementById('map'), {
+    //         center: {lat: -2.5489, lng: 118.0149},
+    //         zoom: 5,
+    //         scrollwheel: true,
+    //         mapID: 'DEMO_MAP_ID'
+    //     });
+
+    //     // Add a click listener to the map
+    //     map.addListener('click', function(mapsMouseEvent) {
+    //         // alert("Map clicked!");
+    //         // Close any open infowindows
+    //         //if (map.infowindow) {
+    //         //    map.infowindow.close();
+    //         //}
+
+    //         // Get the clicked location
+    //         const lat = mapsMouseEvent.latLng.lat();
+    //         const lng = mapsMouseEvent.latLng.lng();
+
+    //         // Get a random color
+    //         const markerColor = getRandomColor();
+
+    //         const marker = new google.maps.Marker({
+    //             map: map,
+    //             position: { lat: lat, lng: lng },
+    //             title: 'Clicked Location',
+    //             // Styling options for the marker (optional)
+    //             // appearance: 'ICON', // or 'OUTLINE'
+    //             // glyph: '📍', // Or a custom SVG path
+    //             // icon: {
+    //             //     path: google.maps.SymbolPath.CIRCLE,
+    //             //     scale: 7,
+    //             //     fillColor: markerColor,
+    //             //     fillOpacity: 0.8,
+    //             //     strokeWeight: 1,
+    //             //     strokeColor: markerColor
+    //             // }
+    //         });
+
+    //         // Create an infowindow
+    //         const infowindow = new google.maps.InfoWindow({
+    //             content: `
+    //                 <div>
+    //                     <strong>Location Details</strong><br>
+    //                     Latitude: ${lat}<br>
+    //                     Longitude: ${lng}<br>
+    //                 </div>
+    //             `
+    //         });
+
+    //         // Open the infowindow on the marker
+    //         infowindow.open(map, marker);
+
+    //         // Optional: Close the infowindow when the marker is clicked again
+    //         marker.addListener('click', function() {
+    //             infowindow.open(map, marker);
+    //         });
+
+    //         //Reverse Geocoding
+    //         const geocoder = new google.maps.Geocoder();
+    //         geocoder.geocode({ location: { lat: lat, lng: lng } }, (results, status) => {
+    //             if (status === "OK") {
+    //                 if (results[0]) {
+    //                     infowindow.setContent(`
+    //                         <div>
+    //                             <strong>Location Details</strong><br>
+    //                             Address: ${results[0].formatted_address}<br>
+    //                             Latitude: ${lat}<br>
+    //                             Longitude: ${lng}<br>
+    //                         </div>
+    //                     `);
+    //                 } else {
+    //                     infowindow.setContent(`
+    //                         <div>
+    //                             <strong>Location Details</strong><br>
+    //                             No address found<br>
+    //                             Latitude: ${lat}<br>
+    //                             Longitude: ${lng}<br>
+    //                         </div>
+    //                     `);
+    //                 }
+    //             } else {
+    //                 console.error("Geocoder failed due to: " + status);
+    //             }
+    //         });
+    //     });
+    // }
+
+        function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -2.5489, lng: 118.0149},
+            zoom: 5,
+            scrollwheel: true,
+            gestureHandling: 'auto',
+            mapId: 'YOUR_MAP_ID' // Add your Map ID here
+        });
+
+        // Add a click listener to the map
+        map.addListener('click', async function(mapsMouseEvent) {
+            // Get the clicked location
+            const lat = mapsMouseEvent.latLng.lat();
+            const lng = mapsMouseEvent.latLng.lng();
+
+            // Get a random color
+            const markerColor = getRandomColor();
+
+            // Create an AdvancedMarkerElement
+            const marker = new google.maps.marker.AdvancedMarkerElement({
+                map: map,
+                position: { lat: lat, lng: lng },
+                title: 'Clicked Location',
+            });
+
+            // Create an infowindow
+            const infowindow = new google.maps.InfoWindow({
+                content: `
+                    <div>
+                        <strong>Location Details</strong><br>
+                        Latitude: ${lat}<br>
+                        Longitude: ${lng}<br>
+                    </div>
+                `
+            });
+
+            // Open the infowindow on the marker
+            infowindow.open(map, marker);
+
+            // Optional: Close the infowindow when the marker is clicked again
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+
+            //Reverse Geocoding
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat: lat, lng: lng } }, (results, status) => {
+                if (status === "OK") {
+                    if (results[0]) {
+                        infowindow.setContent(`
+                            <div>
+                                <strong>Location Details</strong><br>
+                                Address: ${results[0].formatted_address}<br>
+                                Latitude: ${lat}<br>
+                                Longitude: ${lng}<br>
+                            </div>
+                        `);
+                    } else {
+                        infowindow.setContent(`
+                            <div>
+                                <strong>Location Details</strong><br>
+                                No address found<br>
+                                Latitude: ${lat}<br>
+                                Longitude: ${lng}<br>
+                            </div>
+                        `);
+                    }
+                } else {
+                    console.error("Geocoder failed due to: " + status);
+                }
+            });
+        });
+    }
+
+    function loadGoogleMapsAPI(apiKey) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry,marker`; // Add libraries if needed
+            script.async = true;
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
     $(document).ready(function() {
-        map = L.map('map').setView([ -2.5489, 118.0149 ], 5);
+        // Initialize Google Maps
+        // loadGoogleMapsAPI('AIzaSyDyl1M3DUZB5CZ3LARYxNqKiUQ8COBrI0Y') //dev api
+        loadGoogleMapsAPI('AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ') //live api
+        .then(() => {
+            initMap(); // Call initMap after the API is loaded
+        })
+        .catch(error => {
+            console.error("Error loading Google Maps API:", error);
+        });
+
+
 
         $('#provinsi_id').on('change', function() {
             $('#kabupaten_id').val(null).trigger('change');
-            kabupatenLayer = MapHandler.clearLayer(kabupatenLayer);
             updateMap();
         });
 
         $('#kabupaten_id').on('change', function() {
             updateMap();
         });
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 
         $(`#provinsi_id`).select2({
             placeholder: '{{ __("cruds.kegiatan.basic.select_provinsi") }}',
@@ -296,8 +579,6 @@
                 delay: 250,
                 data: function(params) {
                     const provinsiId = $(`#provinsi_id`).val();
-                    console.log("data : ", provinsiId);
-
                     return {
                         search: params.term,
                         provinsi_id: provinsiId,
@@ -313,7 +594,45 @@
                         }
                     };
                 },
-                cache: true
+                cache: true,
+                error: function(jqXHR, textStatus, errorThrown) {
+                    const provinsiId = $(`#provinsi_id`).val();
+                    let errorMessage = "";
+                    if (jqXHR.responseText) {
+                        try {
+                            const response = JSON.parse(jqXHR.responseText);
+                            if (response.message) {
+                                errorMessage = response.message; // Use message from the server if available
+                            }
+                        } catch (e) {
+                            console.warn("Could not parse JSON response:", jqXHR.responseText);
+                        }
+                    }
+                    if(provinsiId === null || provinsiId === undefined || provinsiId === ''){
+                        Swal.fire({
+                            icon: 'warning' ?? textStatus,
+                            title: 'Failed to load Kabupaten data',
+                            text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
+                            timer: 1500,
+                        })
+                        setTimeout(() => {
+                            $(`#provinsi_id`).focus();
+                        }, 1000);
+                        return;
+                    }
+                    else{
+                        // Handle other AJAX errors
+                        let errorMessage = '{{ __("Failed to fetch kabupaten data.  Please check your internet connection or try again later.") }}'; // Default, localized message
+                        Swal.fire({
+                            icon: 'error', // Always use 'error' for AJAX failures
+                            title: errorThrown || 'Error', // Use errorThrown if available, otherwise generic 'Error'
+                            text: errorMessage,
+                            timer: 2500, // Slightly longer timer for general errors
+                            showConfirmButton: false // Hide confirm button
+                        });
+
+                    }
+                }
             }
         }).on('select2:open', function (e) {
             $('.select2-container').css('z-index', 1051);
@@ -495,7 +814,7 @@
             }
             if (!idKabupaten) {
                 Swal.fire({
-                    icon: 'success',
+                    icon: 'warning',
                     title: '',
                     text: 'Please select a kabupaten after selecting a province.',
                     position: 'center',
@@ -524,25 +843,6 @@
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
         });
-
-
-        $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
-            e.preventDefault();
-            var activity_Id = $(this).closest('tr').data('id');
-            var activityKode = $(this).closest('tr').data('kode');
-            var activityNama = $(this).closest('tr').data('nama');
-
-            $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
-            $('#kode_kegiatan').val(activityKode);
-            $('#nama_kegiatan').val(activityNama).prop('disabled', true);
-            $('#kode_program').prop('disabled', true);
-            $('#nama_kegiatan').focus();
-            setTimeout(function() {
-                $('#ModalDaftarProgramActivity').modal('hide');
-            }, 200);
-
-        });
-
         $(document).on('click', '.remove-staff-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
@@ -570,13 +870,13 @@
                     }
                     const convertedRing = ring.map(coord => {
                         if (!Array.isArray(coord)) {
-                             console.error("Coordinate is not an array:", coord);
-                             return null;
+                            console.error("Coordinate is not an array:", coord);
+                            return null;
                         }
 
                         if (coord.length < 2) {
-                           console.error("Coordinate is missing values:", coord);
-                           return null;
+                            console.error("Coordinate is missing values:", coord);
+                            return null;
                         }
 
                         let lng = parseFloat(coord[1]);
@@ -607,8 +907,8 @@
             }).filter(polygon => polygon !== null && polygon.length > 0);  // Remove invalid polygons
 
             if(convertedCoordinates.length === 0){
-                 console.error("No valid convertedCoordinates:", convertedCoordinates)
-                 return null;
+                console.error("No valid convertedCoordinates:", convertedCoordinates)
+                return null;
             }
             return {
                 type: "Feature",
@@ -621,215 +921,5 @@
             console.error("Error parsing or converting path to geojson:", e);
             return null;
         }
-    }
-
-    // additional to add click on maps
-    $(document).ready(function() {
-        var clickMarker = null;
-        var reverseGeocodeMarker = null;
-
-        function reverseGeocode(lat, lng) {
-            return fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`)
-                .then(response => response.json())
-                .catch(error => {
-                    console.error('Reverse geocoding error:', error);
-                    return null;
-                });
-        }
-
-
-        map.on('click', function(e) {
-            if (clickMarker) {
-                map.removeLayer(clickMarker);
-            }
-            if (reverseGeocodeMarker) {
-                map.removeLayer(reverseGeocodeMarker);
-            }
-
-            const lat = e.latlng.lat.toFixed(6);
-            const lng = e.latlng.lng.toFixed(6);
-
-            // Create marker
-            clickMarker = L.marker(e.latlng).addTo(map);
-
-            // Perform reverse geocoding
-            reverseGeocode(lat, lng)
-                .then(data => {
-                    let locationName = 'Unknown Location';
-                    let address = {};
-
-                    if (data && data.display_name) {
-                        locationName = data.display_name || data.name;
-
-                        // Extract address components
-                        address = {
-                            road: data.address.road || '',
-                            suburb: data.address.suburb || data.address.city_district || '',
-                            city: data.address.city || data.address.town || data.address.village || '',
-                            county: data.address.county || '',
-                            state: data.address.state || '',
-                            country: data.address.country || ''
-                        };
-                    }
-
-                    // Create popup content
-                    const popupContent = `
-                        <div>
-                            <strong>Location Details</strong><br>
-                            <b>Name:</b> ${locationName}<br>
-                            <b>Coordinates:</b><br>
-                            <li>Latitude: ${lat}</li>
-                            <li>Longitude: ${lng}</li>
-                            <br>
-                            <strong>Address Components:</strong><br>
-                            Road: ${address.road}<br>
-                            Suburb: ${address.suburb}<br>
-                            City: ${address.city}<br>
-                            County: ${address.county}<br>
-                            State: ${address.state}<br>
-                            Country: ${address.country}<br>
-                            <br>
-                        </div>
-                    `;
-                    // <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
-                    //                 data-lat="${lat}"
-                    //                 data-lng="${lng}">
-                    //             Use These Coordinates
-                    // </button>
-
-                    // Bind popup
-                    clickMarker.bindPopup(popupContent).openPopup();
-                })
-                .catch(error => {
-                    console.error('Reverse geocoding error:', error);
-
-                    // Fallback popup if geocoding fails
-                    const popupContent = `
-                        <div>
-                            <strong>Coordinates:</strong><br>
-                            Latitude: ${lat}<br>
-                            Longitude: ${lng}<br>
-                            <br>
-                            <button type="button" class="btn btn-primary btn-sm mt-2 use-coordinates"
-                                    data-lat="${lat}"
-                                    data-lng="${lng}">
-                                Use These Coordinates
-                            </button>
-                        </div>
-                    `;
-
-                    clickMarker.bindPopup(popupContent).openPopup();
-                });
-        });
-
-        $(document).on('click', '.leaflet-popup .use-coordinates', function(e) {
-            e.preventDefault(); // Prevent any default form submission
-
-            const lat = $(this).data('lat');
-            const lng = $(this).data('lng');
-
-            // Debugging logs
-            console.log('Coordinates selected:', lat, lng);
-
-            // Find the last empty coordinate input pair
-            const locationRows = $('.lokasi-kegiatan');
-            let targetRow = null;
-
-            locationRows.each(function() {
-                // const latInput = $(this).find('.lat-input');
-                // const longInput = $(this).find('.lang-input');
-                const latInput = $(this).find(`#lat-${uniqueId}`);
-                const longInput = $(this).find(`#long-${uniqueId}`);
-
-                if (!latInput.val() && !longInput.val()) {
-                    targetRow = $(this);
-                    return false; // Break the loop
-                }
-            });
-
-            // Add this block here
-            if (!targetRow || targetRow.length === 0) {
-                // Manually create a new location row
-                const newUniqueId = addNewLocationInputs();
-                targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
-            }
-
-            // Fill in the coordinates
-            if (targetRow) {
-                const latInput = targetRow.find(`#lat-${uniqueId}`);
-                const longInput = targetRow.find(`#long-${uniqueId}`);
-                // const latInput = targetRow.find('.lat-input');
-                // const longInput = targetRow.find('.lang-input');
-
-                // Debugging logs
-                console.log('Target row found:', targetRow);
-                console.log('Lat input:', latInput);
-                console.log('Long input:', longInput);
-
-                // Use .val() and trigger change event
-                latInput.val(lat).trigger('change');
-                longInput.val(lng).trigger('change');
-
-                // Additional validation trigger
-                latInput.trigger('blur');
-                longInput.trigger('blur');
-            }
-
-            // Close the popup
-            if (clickMarker) {
-                clickMarker.closePopup();
-            }
-        });
-    });
-
-    // Function to use coordinates in the form
-    function useCoordinates(lat, lng, e) {
-        // Find the last empty coordinate input pair
-        e.preventDefault();
-        const locationRows = $('.lokasi-kegiatan');
-        let targetRow = null;
-
-        locationRows.each(function() {
-            const latInput = $(this).find('.lat-input');
-            const longInput = $(this).find('.lang-input');
-
-            if (!latInput.val() && !longInput.val()) {
-                targetRow = $(this);
-                return false; // Break the loop
-            }
-        });
-
-        // If no empty inputs found, create new location row
-        if (!targetRow) {
-            const uniqueId = addNewLocationInputs();
-            targetRow = $(`.lokasi-kegiatan[data-unique-id="${uniqueId}"]`);
-        }
-
-        // Fill in the coordinates
-        if (targetRow) {
-            targetRow.find('.lat-input').val(lat).trigger('change');
-            targetRow.find('.lang-input').val(lng).trigger('change');
-        }
-    }
-
-    // Add this helper function to format coordinates
-    function formatCoordinate(value, type) {
-        const val = parseFloat(value);
-        if (isNaN(val)) return '';
-
-        // Validate range
-        if (type === 'latitude' && (val < -90 || val > 90)) return '';
-        if (type === 'longitude' && (val < -180 || val > 180)) return '';
-
-        return val.toFixed(6);
-    }
-
-    // Enhance the existing validateCoordinate function
-    function validateCoordinate(value, type) {
-        const formattedValue = formatCoordinate(value, type);
-        return {
-            valid: formattedValue !== '',
-            value: formattedValue
-        };
     }
 </script>

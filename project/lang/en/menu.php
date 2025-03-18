@@ -1,3 +1,4 @@
+
 <?php
 
 return [
@@ -44,10 +45,12 @@ return [
     'kegiatan'          => 'Activity',
     'evaluasi'          => 'Evaluation',
     'meals'             => 'MEALS',
+    'beneficiary'       => 'Beneficiary',
     'log'               => 'Log',
     'laporan'           => 'Report',
     'cari'              => 'Search',
     'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Responsibility',
+    'komponenmodel'     => 'Componen/Model'
 ];

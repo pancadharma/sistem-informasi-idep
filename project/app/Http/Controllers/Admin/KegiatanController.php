@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
 use Carbon\Carbon;
 use App\Models\Program;
 use App\Models\Kegiatan;
@@ -9,21 +10,39 @@ use Illuminate\Http\Request;
 use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreKegiatanRequest;
+use App\Models\Jenis_Kegiatan;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kegiatan_Assessment;
+use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Kunjungan;
+use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Lokasi;
+use App\Models\Kegiatan_Monitoring;
+use App\Models\Kegiatan_Pelatihan;
+use App\Models\Kegiatan_Pembelanjaan;
+use App\Models\Kegiatan_Pemetaan;
+use App\Models\Kegiatan_Pengembangan;
+use App\Models\Kegiatan_Penulis;
+use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
 use App\Models\mSektor;
 use App\Models\Partner;
+use App\Models\Peran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Program_Outcome_Output;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
+use App\Models\Provinsi;
 use App\Models\Satuan;
+use App\Models\TargetReinstra;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
 class KegiatanController extends Controller
 {
     public function index()
@@ -32,37 +51,115 @@ class KegiatanController extends Controller
         return view('tr.kegiatan.index');
     }
 
+    // public function list_kegiatan(Request $request)
+    // {
+    //     if (!$request->ajax() && !$request->isJson()) {
+    //         return "Not an Ajax Request & JSON REQUEST";
+    //     }
+
+    //     $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
+    //         ->select('trkegiatan.*')
+    //         ->get()
+    //         ->map(function ($item) {
+    //             // Calculate duration before formatting
+    //             $item->duration_in_days = $item->getDurationInDays();
+
+    //             // Format dates after calculating duration
+    //             $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+    //             $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+
+    //             // Add calculated values
+    //             $program = $item->activity->program_outcome_output->program_outcome->program;
+    //             $item->total_beneficiaries = $program->getTotalBeneficiaries();
+
+    //             return $item;
+    //         });
+
+    //     $data = DataTables::of($kegiatan)
+    //         ->addIndexColumn()
+    //         ->addColumn('program_name', function ($kegiatan) {
+    //             return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+    //         })
+    //         ->addColumn('duration_in_days', function ($kegiatan) {
+    //             return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
+    //         })
+    //         ->addColumn('action', function ($kegiatan) {
+    //             $buttons = [];
+
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+    //             }
+    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+    //         })
+    //         ->rawColumns(['action'])
+    //         ->make(true);
+
+    //     return $data;
+    // }
+
+
+    // private function generateButton($action, $class, $icon, $title, $kegiatanId)
+    // {
+    //     return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
+    //             data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
+    //                 <i class="bi bi-' . $icon . '"></i>
+    //                 <span class="d-none d-sm-inline"></span>
+    //             </button>';
+    // }
+
     public function list_kegiatan(Request $request)
     {
         if (!$request->ajax() && !$request->isJson()) {
             return "Not an Ajax Request & JSON REQUEST";
         }
 
-        $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-            ->select('trkegiatan.*')
-            ->get()
-            ->map(function ($item) {
-                // Calculate duration before formatting
-                $item->duration_in_days = $item->getDurationInDays();
+        $kegiatan = Kegiatan::with([
+            'users',
+            'activity.program_outcome_output.program_outcome.program',
+            'jenisKegiatan',
+            'kategori_lokasi',
+            'sektor'
+        ])
+        ->select('trkegiatan.*')
+        ->get()
+        ->map(function ($item) {
+            // Calculate duration before formatting
+            $item->duration_in_days = $item->getDurationInDays();
 
-                // Format dates after calculating duration
-                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+            // Format dates after calculating duration
+            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-                // Add calculated values
-                $program = $item->activity->program_outcome_output->program_outcome->program;
-                $item->total_beneficiaries = $program->getTotalBeneficiaries();
+            // Add calculated values
+            $program = $item->activity->program_outcome_output->program_outcome->program;
+            $item->total_beneficiaries = $item->penerimamanfaattotal;
+            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-                return $item;
-            });
+            return $item;
+        });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
             ->addColumn('program_name', function ($kegiatan) {
                 return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
             })
+            ->addColumn('kegiatan_kode', function ($kegiatan) {
+                return $kegiatan->activity->kode ?? 'N/A';
+            })
             ->addColumn('duration_in_days', function ($kegiatan) {
                 return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
+            })
+            // ->addColumn('sektor_names', function ($kegiatan) {
+            //     return $kegiatan->sektor->pluck('nama')->implode(', ') ?? 'N/A';
+            // })
+            ->addColumn('jenis_kegiatan', function ($kegiatan) {
+                return $kegiatan->jenisKegiatan->nama ?? 'N/A';
             })
             ->addColumn('action', function ($kegiatan) {
                 $buttons = [];
@@ -73,7 +170,7 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
                     $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
@@ -84,13 +181,48 @@ class KegiatanController extends Controller
         return $data;
     }
 
-    private function generateButton($action, $class, $icon, $title, $kegiatanId)
+    public function getActivityProgram($programId)
     {
-        return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-                data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
-                    <i class="bi bi-' . $icon . '"></i>
-                    <span class="d-none d-sm-inline"></span>
-                </button>';
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $programId)->first();
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found'], 404);
+        }
+
+        $activities = [];
+        if ($program) {
+            foreach ($program->outcome as $out) {
+                foreach ($out->output as $come_output) {
+                    foreach ($come_output->activities as $activity) {
+                        $activities[] = $activity;
+                    }
+                }
+            }
+        }
+
+        return response()->json($activities);
+    }
+
+    private function generateButton($type, $color, $icon, $label, $id)
+    {
+        $url = '';
+        switch ($type) {
+            case 'edit':
+                $url = route('kegiatan.edit', $id);
+                break;
+            case 'view':
+                $url = route('kegiatan.show', $id);
+                break;
+            case 'details':
+                $url = route('kegiatan.show', $id);
+                break;
+        }
+
+        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
     }
 
     public function create()
@@ -98,7 +230,8 @@ class KegiatanController extends Controller
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
             $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
-            $kegiatan = new Kegiatan();
+            $kegiatan = new Kegiatan(); // Empty instance
+            $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
 
             $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
 
@@ -111,188 +244,107 @@ class KegiatanController extends Controller
         ], Response::HTTP_FORBIDDEN);
     }
 
-    public function store(Request $request)
+    public function store(StoreKegiatanRequest $request)
     {
-        try {
-            DB::beginTransaction();
-            // 1. Create the main Trkegiatan record
-            $kegiatan = Kegiatan::create($request->except([
-                // Fields from trkegiatanassessment
-                'assessmentyangterlibat',
-                'assessmenttemuan',
-                'assessmenttambahan',
-                'assessmenttambahan_ket',
-                'assessmentkendala',
-                'assessmentisu',
-                'assessmentpembelajaran',
+        $kegiatanController = new APIKegiatanController();
 
-                // Fields from trkegiatansosialisasi
-                'sosialisasiyangterlibat',
-                'sosialisasitemuan',
-                'sosialisasitambahan',
-                'sosialisasitambahan_ket',
-                'sosialisasikendala',
-                'sosialisasiisu',
-                'sosialisasipembelajaran',
+        $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
+        $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
 
-                // Fields from trkegiatanpelatihan
-                'pelatihanpelatih',
-                'pelatihanhasil',
-                'pelatihandistribusi',
-                'pelatihandistribusi_ket',
-                'pelatihanrencana',
-                'pelatihanunggahan',
-                'pelatihanisu',
-                'pelatihanpembelajaran',
-
-                // Fields from trkegiatanpembelanjaan
-                'pembelanjaandetailbarang',
-                'pembelanjaanmulai',
-                'pembelanjaanselesai',
-                'pembelanjaandistribusimulai',
-                'pembelanjaandistribusiselesai',
-                'pembelanjaanterdistribusi',
-                'pembelanjaanakandistribusi',
-                'pembelanjaanakandistribusi_ket',
-                'pembelanjaankendala',
-                'pembelanjaanisu',
-                'pembelanjaanpembelajaran',
-
-                // Fields from trkegiatanpengembangan
-                'pengembanganjeniskomponen',
-                'pengembanganberapakomponen',
-                'pengembanganlokasikomponen',
-                'pengembanganyangterlibat',
-                'pengembanganrencana',
-                'pengembangankendala',
-                'pengembanganisu',
-                'pengembanganpembelajaran',
-
-                // Fields from trkegiatankampanye
-                'kampanyeyangdikampanyekan',
-                'kampanyejenis',
-                'kampanyebentukkegiatan',
-                'kampanyeyangterlibat',
-                'kampanyeyangdisasar',
-                'kampanyejangkauan',
-                'kampanyerencana',
-                'kampanyekendala',
-                'kampanyeisu',
-                'kampanyepembelajaran',
-
-                // Fields from trkegiatanpemetaan
-                'pemetaanyangdihasilkan',
-                'pemetaanluasan',
-                'pemetaanunit',
-                'pemetaanyangterlibat',
-                'pemetaanrencana',
-                'pemetaanisu',
-                'pemetaanpembelajaran',
-
-                // Fields from trkegiatanmonitoring
-                'monitoringyangdipantau',
-                'monitoringdata',
-                'monitoringyangterlibat',
-                'monitoringmetode',
-                'monitoringhasil',
-                'monitoringkegiatanselanjutnya',
-                'monitoringkegiatanselanjutnya_ket',
-                'monitoringkendala',
-                'monitoringisu',
-                'monitoringpembelajaran',
-
-                // Fields from trkegiatankunjungan
-                'kunjunganlembaga',
-                'kunjunganpeserta',
-                'kunjunganyangdilakukan',
-                'kunjunganhasil',
-                'kunjunganpotensipendapatan',
-                'kunjunganrencana',
-                'kunjungankendala',
-                'kunjunganisu',
-                'kunjunganpembelajaran',
-
-                // Fields from trkegiatankonsultasi
-                'konsultasilembaga',
-                'konsultasikomponen',
-                'konsultasiyangdilakukan',
-                'konsultasihasil',
-                'konsultasipotensipendapatan',
-                'konsultasirencana',
-                'konsultasikendala',
-                'konsultasiisu',
-                'konsultasipembelajaran',
-
-                // Fields from trkegiatanlainnya
-                'lainnyamengapadilakukan',
-                'lainnyadampak',
-                'lainnyasumberpendanaan',
-                'lainnyasumberpendanaan_ket',
-                'lainnyayangterlibat',
-                'lainnyarencana',
-                'lainnyakendala',
-                'lainnyaisu',
-                'lainnyapembelajaran',
-
-                //If you have file inputs
-                'dokumen'
-            ]));
-            $this->storeKegiatanHasil($request, $kegiatan);
-
-
-
-
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Kegiatan created successfully',
-                "message" => __('cruds.data.data') . ' ' . __('cruds.kegiatan.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
-                'data' => $kegiatan,
-            ], 201);
-
-            //end of try
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to create kegiatan: ' . $e->getMessage(),
-                'errors'  => $e->errors(),
-                'request_data' => $request->all(),
-            ], 500);
-        } catch (ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'errors'  => $e->errors(),
-            ], 422);
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Resource not found.',
-            ], 404);
-        } catch (HttpException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
-        }
+        // Optionally return a response or redirect
+        return response()->json(['message' => 'Kegiatan processed by storeApi']);
     }
 
     public function show($id)
     {
-        return view('tr.kegiatan.show');
+        // Fetch the Kegiatan with all its relationships
+        $kegiatan = Kegiatan::with([
+            'programOutcomeOutputActivity',
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+        ])->findOrFail($id);
+
+        // Get all the media collections
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+        $durationInDays = $kegiatan->getDurationInDays();
+
+
+        // Get specific relation based on jenis kegiatan
+        $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+        $relationMap = Kegiatan::getJenisKegiatanRelationMap();
+
+        $kegiatanRelation = null;
+        if (isset($relationMap[$jenisKegiatanId])) {
+            $relationName = $relationMap[$jenisKegiatanId];
+            $kegiatanRelation = $kegiatan->$relationName;
+        }
+
+        foreach ($kegiatan->kegiatan_penulis as $penulis) {
+            $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
+        }
+
+        // $lokasi = $kegiatan->lokasi;
+        // return $lokasi;
+
+        return view('tr.kegiatan.show', compact(
+            'kegiatan',
+            'dokumenPendukung',
+            'mediaPendukung',
+            'kegiatanRelation',
+            'durationInDays'
+        ));
     }
 
-    public function edit($id)
+    private function getSpecificRelation($id)
     {
-        return view('tr.kegiatan.edit');
+        $kegiatan = Kegiatan::select('jeniskegiatan_id')->find($id);
+        if (!$kegiatan) return null;
+
+        return Kegiatan::getJenisKegiatanRelationMap()[$kegiatan->jeniskegiatan_id] ?? null;
+    }
+
+    private function getKegiatanHasil($kegiatan)
+    {
+        $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+        $modelMapping = Kegiatan::getJenisKegiatanModelMap();
+
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
+        }
+
+        $modelClass = $modelMapping[$jenisKegiatan];
+        return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
+    }
+
+
+
+
+
+
+
+
+
+    public function edit(Kegiatan $kegiatan)
+    {
+        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+            $program = Program::all();
+            $statusOptions = Kegiatan::STATUS_SELECT;
+            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+            $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+
+            return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+        }
+        return response()->json([
+            'success' => false,
+            'status' => 'error',
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
+        ], Response::HTTP_FORBIDDEN);
     }
 
     public function update(Request $request, $id)
@@ -305,7 +357,7 @@ class KegiatanController extends Controller
         return false;
     }
 
-    public function getActivityProgram($programId)
+    public function getActivityProgram2($programId)
     {
         $program = Program::with([
             'outcome.output.activities' => function ($query) {
@@ -358,7 +410,11 @@ class KegiatanController extends Controller
 
     public function getJenisKegiatan(Request $request)
     {
-        $jenisKegiatan = Kegiatan::getJenisKegiatan();
+        // $jenisKegiatan = Kegiatan::getJenisKegiatan();
+
+        $jenisKegiatan = Jenis_Kegiatan::select('id', 'nama')->get()->mapWithKeys(function ($item) {
+            return [$item->id => $item->nama];
+        })->toArray();
 
         if ($request->has('id')) {
             // If requesting specific ID(s)
@@ -468,7 +524,8 @@ class KegiatanController extends Controller
             $ids = [$ids];
         }
 
-        $data = mSektor::when(!empty($ids), function ($query) use ($ids) {
+        // $data = mSektor::when(!empty($ids), function ($query) use ($ids) {
+        $data = TargetReinstra::when(!empty($ids), function ($query) use ($ids) {
             return $query->whereIn('id', $ids);
         }, function ($query) use ($search) {
             return $query->where('nama', 'like', "%{$search}%");
@@ -505,12 +562,12 @@ class KegiatanController extends Controller
 
     public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
     {
-        $jenisKegiatan = $request->input('jenis_kegiatan');
+        $jenisKegiatan = $request->input('jeniskegiatan_id');
         $idKegiatan = $kegiatan->id;
 
         switch ($jenisKegiatan) {
             case 1: // Assessment
-                TrkegiatanAssessment::create(array_merge($request->only([
+                Kegiatan_Assessment::create(array_merge($request->only([
                     'assessmentyangterlibat',
                     'assessmenttemuan',
                     'assessmenttambahan',
@@ -518,10 +575,10 @@ class KegiatanController extends Controller
                     'assessmentkendala',
                     'assessmentisu',
                     'assessmentpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 2: // Sosialisasi
-                TrkegiatanSosialisasi::create(array_merge($request->only([
+                Kegiatan_Sosialisasi::create(array_merge($request->only([
                     'sosialisasiyangterlibat',
                     'sosialisasitemuan',
                     'sosialisasitambahan',
@@ -529,10 +586,10 @@ class KegiatanController extends Controller
                     'sosialisasikendala',
                     'sosialisasiisu',
                     'sosialisasipembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 3: // Pelatihan
-                TrkegiatanPelatihan::create(array_merge($request->only([
+                Kegiatan_Pelatihan::create(array_merge($request->only([
                     'pelatihanpelatih',
                     'pelatihanhasil',
                     'pelatihandistribusi',
@@ -541,10 +598,10 @@ class KegiatanController extends Controller
                     'pelatihanunggahan',
                     'pelatihanisu',
                     'pelatihanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 4: // Pembelanjaan
-                TrkegiatanPembelanjaan::create(array_merge($request->only([
+                Kegiatan_Pembelanjaan::create(array_merge($request->only([
                     'pembelanjaandetailbarang',
                     'pembelanjaanmulai',
                     'pembelanjaanselesai',
@@ -556,10 +613,10 @@ class KegiatanController extends Controller
                     'pembelanjaankendala',
                     'pembelanjaanisu',
                     'pembelanjaanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 5: // Pengembangan
-                TrkegiatanPengembangan::create(array_merge($request->only([
+                Kegiatan_Pengembangan::create(array_merge($request->only([
                     'pengembanganjeniskomponen',
                     'pengembanganberapakomponen',
                     'pengembanganlokasikomponen',
@@ -568,10 +625,10 @@ class KegiatanController extends Controller
                     'pengembangankendala',
                     'pengembanganisu',
                     'pengembanganpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 6: // Kampanye
-                TrkegiatanKampanye::create(array_merge($request->only([
+                Kegiatan_Kampanye::create(array_merge($request->only([
                     'kampanyeyangdikampanyekan',
                     'kampanyejenis',
                     'kampanyebentukkegiatan',
@@ -582,10 +639,10 @@ class KegiatanController extends Controller
                     'kampanyekendala',
                     'kampanyeisu',
                     'kampanyepembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 7: // Pemetaan
-                TrkegiatanPemetaan::create(array_merge($request->only([
+                Kegiatan_Pemetaan::create(array_merge($request->only([
                     'pemetaanyangdihasilkan',
                     'pemetaanluasan',
                     'pemetaanunit',
@@ -593,10 +650,10 @@ class KegiatanController extends Controller
                     'pemetaanrencana',
                     'pemetaanisu',
                     'pemetaanpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 8: // Monitoring
-                TrkegiatanMonitoring::create(array_merge($request->only([
+                Kegiatan_Monitoring::create(array_merge($request->only([
                     'monitoringyangdipantau',
                     'monitoringdata',
                     'monitoringyangterlibat',
@@ -607,23 +664,24 @@ class KegiatanController extends Controller
                     'monitoringkendala',
                     'monitoringisu',
                     'monitoringpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 9: // Kunjungan
-                TrkegiatanKunjungan::create(array_merge($request->only([
+                Kegiatan_Kunjungan::create(array_merge($request->only([
                     'kunjunganlembaga',
                     'kunjunganpeserta',
-                    'kunjunganyangdilakukan',
+
+                   'kunjunganyangdilakukan',
                     'kunjunganhasil',
                     'kunjunganpotensipendapatan',
                     'kunjunganrencana',
                     'kunjungankendala',
                     'kunjunganisu',
                     'kunjunganpembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 10: // Konsultasi
-                TrkegiatanKonsultasi::create(array_merge($request->only([
+                Kegiatana_Konsultasi::create(array_merge($request->only([
                     'konsultasilembaga',
                     'konsultasikomponen',
                     'konsultasiyangdilakukan',
@@ -633,10 +691,10 @@ class KegiatanController extends Controller
                     'konsultasikendala',
                     'konsultasiisu',
                     'konsultasipembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             case 11: // Lainnya
-                TrkegiatanLainnya::create(array_merge($request->only([
+                Kegiatan_Lainnya::create(array_merge($request->only([
                     'lainnyamengapadilakukan',
                     'lainnyadampak',
                     'lainnyasumberpendanaan',
@@ -646,7 +704,7 @@ class KegiatanController extends Controller
                     'lainnyakendala',
                     'lainnyaisu',
                     'lainnyapembelajaran'
-                ]), ['id_kegiatan' => $idKegiatan]));
+                ]), ['kegiatan_id' => $idKegiatan]));
                 break;
             default:
                 // Handle invalid jenisKegiatan (e.g., throw an exception)

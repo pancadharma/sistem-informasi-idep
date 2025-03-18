@@ -286,7 +286,7 @@
             $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
             $('#kode_kegiatan').val(activityKode);
             $('#nama_kegiatan').val(activityNama).prop('disabled', true);
-            $('#kode_program').prop('disabled', true);
+            //$('#kode_program').prop('disabled', true);
 
             MapManager.updateAllMarkers();
             $('#nama_kegiatan').focus();
@@ -621,3 +621,269 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {{-- 
+        // un used script function 
+        $('#saveModalData').click(function() {
+            var identitas = $('#identitas').val() || '';
+            var nama = $('#nama').val() || '';
+
+            var jenis_kelamin = $('#jenis_kelamin').val();
+            var jenis_kelamin_label = {
+                'pria': 'Laki-laki',
+                'wanita': 'Perempuan'
+            } [jenis_kelamin] || 'Tidak Diketahui';
+
+            var tanggal_lahir = $('#tanggal_lahir').val() ? formatDate($('#tanggal_lahir').val()) : '';
+            var disabilitasValue = $('#disabilitas').val();
+            var disabilitasIcon = disabilitasValue === '1' ?
+                '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
+                '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
+
+            var hamilValue = $('#hamil').val();
+            var hamilIcon = hamilValue === '1' ?
+                '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
+                '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
+
+            var status_kawin = $('#status_kawin').val();
+            var status_kawin_label = {
+                'belum_menikah': 'Belum Menikah',
+                'menikah': 'Menikah',
+                'cerai': 'Cerai',
+                'cerai_mati': 'Cerai Mati'
+            } [status_kawin] || 'Tidak Diketahui';
+
+            var no_kk = $('#no_kk').val() || '';
+            var jenis_peserta = $('#jenis_peserta').val() || '';
+            var nama_kk = $('#nama_kk').val() || '';
+            var rowCount = $('#list_peserta_kegiatan tbody tr').length + 1;
+            var newRow = `
+                <tr data-identitas="${identitas}" data-jenis-kelamin="${jenis_kelamin}" data-status-kawin="${status_kawin}" data-no-kk="${no_kk}" data-disabilitas="${disabilitasValue}" data-hamil="${hamilValue}">
+                    <td class="text-center self-center text-nowrap py-2 rounded-start-3">${rowCount}</td>
+                    <td class="text-nowrap py-2 border-start text-start">${identitas}</td>
+                    <td class="text-nowrap py-2 border-start text-start">${nama}</td>
+                    <td class="text-nowrap py-2 border-start text-start">${jenis_kelamin_label}</td>
+                    <td class="text-nowrap py-2 border-start text-start">${tanggal_lahir}</td>
+                    <td class="text-center self-center" data-disabilitas="${disabilitasValue}">
+                        ${disabilitasIcon}
+                    </td>
+                    <td class="text-center self-center" data-hamil="${hamilValue}">
+                        ${hamilIcon}
+                    </td>
+                    <td class="text-center text-nowrap py-2 border-start text-start">${status_kawin_label}</td>
+                    <td class="bg-silver text-nowrap py-2 border-start text-start">${no_kk}</td>
+                    <td class="text-center text-nowrap py-2 border-start text-start">${jenis_peserta}</td>
+                    <td class="bg-silver text-nowrap py-2 px-4 border-start">${nama_kk}</td>
+                    <td class="text-center text-nowrap py-0 border-start rounded-end-3">
+                        <div class="button-container pt-1 self-center">
+                            <button class="btn btn-sm btn-info edit-row"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-sm btn-danger delete-row"><i class="bi bi-trash-fill"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
+            $('#tableBody').append(newRow);
+            saveParticipantsToStorage();
+            $('#identitas').val('');
+            $('#nama').val('');
+            $('#jenis_kelamin').val('pria');
+            $('#tanggal_lahir').val('');
+            $('#disabilitas').val('0');
+            $('#hamil').val('0');
+            $('#status_kawin').val('belum_menikah');
+            $('#no_kk').val('');
+            $('#jenis_peserta').val('');
+            $('#nama_kk').val('');
+            $('#ModalTambahPeserta').modal('hide');
+            saveFormDataToStorage();
+        });
+        $('#clearStorageButton').on('click', function() {
+            clearStoredFormData();
+            $('#createKegiatan').each(function() {
+                inputFields = $(this).find('input, select, textarea').removeAttr('disabled');
+                inputFields.each(function() {
+                    $(this).val('');
+                });
+            });
+        });
+
+        $(document).on('click', '.delete-row', function() {
+            $(this).closest('tr').remove();
+            $('#list_peserta_kegiatan tbody tr').each(function(index) {
+                $(this).find('td:first').text(index + 1);
+            });
+            saveParticipantsToStorage();
+        });
+
+        $(document).on('click', '.edit-row', function() {
+            var row = $(this).closest('tr');
+            var formattedDate = row.find('td:eq(4)').text();
+            var parsedDate = parseFormattedDate(formattedDate);
+
+            $('#identitas').val(row.data('identitas'));
+            $('#nama').val(row.find('td:eq(2)').text());
+            $('#jenis_kelamin').val(row.data('jenis-kelamin'));
+            $('#tanggal_lahir').val(parsedDate);
+
+            $('#disabilitas').val(row.data('disabilitas'));
+            $('#hamil').val(row.data('hamil'));
+
+            $('#status_kawin').val(row.data('status-kawin'));
+            $('#no_kk').val(row.data('no-kk'));
+            $('#jenis_peserta').val(row.find('td:eq(9)').text());
+            $('#nama_kk').val(row.find('td:eq(10)').text());
+
+            $('#ModalTambahPeserta').modal('show');
+            row.remove();
+            $('#list_peserta_kegiatan tbody tr').each(function(index) {
+                $(this).find('td:first').text(index + 1);
+            });
+            saveParticipantsToStorage();
+        });
+
+        function saveParticipantsToStorage() {
+            var participants = [];
+            $('#list_peserta_kegiatan tbody tr').each(function() {
+                participants.push({
+                    identitas: $(this).data('identitas'),
+                    nama: $(this).find('td:eq(2)').text(),
+                    jenis_kelamin: $(this).data('jenis-kelamin'),
+                    tanggal_lahir: $(this).find('td:eq(4)').text(),
+                    disabilitas: $(this).data('disabilitas'),
+                    hamil: $(this).data('hamil'),
+                    status_kawin: $(this).data('status-kawin'),
+                    no_kk: $(this).data('no-kk'),
+                    jenis_peserta: $(this).find('td:eq(9)').text(),
+                    nama_kk: $(this).find('td:eq(10)').text()
+                });
+            });
+
+            localStorage.setItem('participantsData', JSON.stringify(participants));
+        }
+
+        function loadParticipantsFromStorage() {
+            var savedParticipants = localStorage.getItem('participantsData');
+            if (savedParticipants) {
+                var participants = JSON.parse(savedParticipants);
+                $('#tableBody').empty();
+
+                participants.forEach(function(participant, index) {
+                    var jenis_kelamin_label = {
+                        'pria': 'Laki-laki',
+                        'wanita': 'Perempuan'
+                    } [participant.jenis_kelamin] || 'Tidak Diketahui';
+
+                    var disabilitasIcon = participant.disabilitas === '1' ?
+                        '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
+                        '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
+
+                    var hamilIcon = participant.hamil === '1' ?
+                        '<i class="bi bi-check-lg btn-success p-1 text-center self-center"></i>' :
+                        '<i class="bi bi-x-lg btn-warning p-1 text-center self-center"></i>';
+
+                    var status_kawin_label = {
+                        'belum_menikah': 'Belum Menikah',
+                        'menikah': 'Menikah',
+                        'cerai': 'Cerai',
+                        'cerai_mati': 'Cerai Mati'
+                    } [participant.status_kawin] || 'Tidak Diketahui';
+
+                    var newRow = `
+                    <tr data-identitas="${participant.identitas}" data-jenis-kelamin="${participant.jenis_kelamin}" data-status-kawin="${participant.status_kawin}" data-no-kk="${participant.no_kk}" data-disabilitas="${participant.disabilitas}" data-hamil="${participant.hamil}">
+                        <td class="text-center self-center text-nowrap py-2 rounded-start-3">${index + 1}</td>
+                        <td class="text-nowrap py-2 border-start text-start">${participant.identitas}</td>
+                        <td class="text-nowrap py-2 border-start text-start">${participant.nama}</td>
+                        <td class="text-nowrap py-2 border-start text-start">${jenis_kelamin_label}</td>
+                        <td class="text-nowrap py-2 border-start text-start">${participant.tanggal_lahir}</td>
+                        <td class="text-center self-center" data-disabilitas="${participant.disabilitas}">
+                            ${disabilitasIcon}
+                        </td>
+                        <td class="text-center self-center" data-hamil="${participant.hamil}">
+                            ${hamilIcon}
+                        </td>
+                        <td class="text-center text-nowrap py-2 border-start text-start">${status_kawin_label}</td>
+                        <td class="bg-silver text-nowrap py-2 border-start text-start">${participant.no_kk}</td>
+                        <td class="text-center text-nowrap py-2 border-start text-start">${participant.jenis_peserta}</td>
+                        <td class="bg-silver text-nowrap py-2 px-4 border-start">${participant.nama_kk}</td>
+                        <td class="text-center text-nowrap py-0 border-start rounded-end-3">
+                            <div class="button-container pt-1 self-center">
+                                <button class="btn btn-sm btn-info edit-row"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-danger delete-row"><i class="bi bi-trash-fill"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+
+                    $('#tableBody').append(newRow);
+                });
+            }
+        }
+        function clearParticipantsStorage() {
+            localStorage.removeItem('participantsData');
+            $('#tableBody').empty();
+        }
+        function parseFormattedDate(formattedDate) {
+            const months = {
+                'Januari': '01',
+                'Februari': '02',
+                'Maret': '03',
+                'April': '04',
+                'Mei': '05',
+                'Juni': '06',
+                'Juli': '07',
+                'Agustus': '08',
+                'September': '09',
+                'Oktober': '10',
+                'November': '11',
+                'Desember': '12',
+            };
+
+            const parts = formattedDate.split(' ');
+            const day = parts[0].padStart(2, '0');
+            const month = months[parts[1]];
+            const year = parts[2];
+
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatDate(dateString) {
+            const months = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+            ];
+
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+
+            return `${day} ${month} ${year}`;
+        }
+
+        function clearStoredFormData() {
+            localStorage.removeItem('pesertaFormData');
+            localStorage.removeItem('participantsData');
+            localStorage.removeItem('kegiatanFormData');
+            localStorage.removeItem('KegiatanLokasi');
+            $('#createKegiatan')[0].reset();
+            $('#tableBody').empty();
+            $('.summernote').each(function() {
+                $(this).summernote('reset');
+            });
+            $('.select2').val(null).trigger('change');
+        }
+ --}}

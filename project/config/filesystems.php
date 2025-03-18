@@ -42,6 +42,27 @@ return [
             'url' => '/uploads/program',
             'visibility' => 'public',
         ],
+
+        'dokumen_pendukung' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan/dokumen_pendukung'),
+            'url' => '/uploads/kegiatan/dokumen_pendukung',
+            'visibility' => 'public',
+        ],
+        'media_pendukung' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan/media_pendukung'),
+            'url' => '/uploads/kegiatan/media_pendukung',
+            'visibility' => 'public',
+        ],
+
+        'kegiatan_uploads' => [
+            'driver' => 'local',
+            'root' => public_path('uploads/kegiatan'),
+            'url' => '/uploads/kegiatan',
+            'visibility' => 'public',
+        ],
+
         'userprofile' => [
             'driver' => 'local',
             'root' => public_path('uploads/userprofile'),

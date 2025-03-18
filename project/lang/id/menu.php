@@ -43,10 +43,12 @@ return [
     'kegiatan'          => 'Kegiatan',
     'evaluasi'          => 'Evaluasi',
     'meals'             => 'MEALS',
+    'beneficiary'       => 'Penerima Manfaat',
     'log'               => 'Log',
     'laporan'           => 'Laporan',
     'cari'              => 'Pencarian',
     'satuan'            => 'Satuan',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Peran',
+    'komponenmodel'     => 'Komponen/Model'
 ];

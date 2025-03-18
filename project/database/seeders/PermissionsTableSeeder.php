@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
+use Carbon\Carbon;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -119,12 +120,41 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 96, 'nama' => 'meals_index'],
                 ['id' => 97, 'nama' => 'meals_show'],
                 ['id' => 98, 'nama' => 'meals_edit'],
-
-
+                ['id' => 99, 'nama' => 'beneficiary'],
+                ['id' => 100, 'nama' => 'beneficiary_access'],
+                ['id' => 101, 'nama' => 'beneficiary_index'],
+                ['id' => 102, 'nama' => 'beneficiary_create'],
+                ['id' => 103, 'nama' => 'beneficiary_edit'],
+                ['id' => 104, 'nama' => 'beneficiary_show'],
+                ['id' => 105, 'nama' => 'komponenmodel_access'],
+                ['id' => 106, 'nama' => 'komponenmodel_create'],
+                ['id' => 107, 'nama' => 'komponenmodel_index'],
+                ['id' => 108, 'nama' => 'komponenmodel_show'],
+                ['id' => 109, 'nama' => 'komponenmodel_edit'],
+                ['id' => 110, 'nama' => 'komponenmodel_delete'],
             ];
-            foreach ($permissions as $data) {
-                Permission::updateOrCreate(['id' => $data['id']], $data);
+
+            $now = Carbon::now();
+            $permissions = array_map(function ($permission) use ($now) {
+                return array_merge($permission, [
+                    'created_at' => $now,
+                    'aktif' => 1,
+                    'updated_at' => $now
+                ]);
+            }, $permissions);
+
+            $limit = 5000;
+            $chunks = array_chunk($permissions, $limit);
+            $startTime = microtime(true);
+            foreach ($chunks as $chunk) {
+                Permission::upsert($chunk, 'id', ['nama', 'updated_at']);
+                gc_collect_cycles();
+                unset($chunk);
+                sleep(1);
             }
+            $endTime = microtime(true);
+            $upsertTime = $endTime - $startTime;
+            echo "Permission Seeder done in: $upsertTime seconds\n";
         });
     }
 }
