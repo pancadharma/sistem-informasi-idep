@@ -35,7 +35,7 @@
                     <th rowspan="2" class="text-center align-middle d-none">#</th>
                     <th rowspan="2" class="align-middle text-nowrap">{{ __("cruds.beneficiary.penerima.nama") }}</th>
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.gender") }}</th>
-                    <th rowspan="2" class="align-middle text-wrap d-none">{{ __("cruds.beneficiary.penerima.disability") }}</th>
+                    {{-- <th rowspan="2" class="align-middle text-wrap d-none">{{ __("cruds.beneficiary.penerima.disability") }}</th> --}}
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.marjinal") }}</th>
                     <th colspan="4" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.address") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.beneficiary.penerima.no_telp") }}</th>

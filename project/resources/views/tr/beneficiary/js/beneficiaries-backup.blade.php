@@ -664,6 +664,112 @@
             $("#editDataModal").modal("show");
         }
 
+        // // working script
+        // function editRow(row) {
+        //     const currentRow = $(row).closest("tr");
+        //     const firstCell = currentRow.find("td:first");
+
+        //     // Get the data attributes from the first cell
+        //     const provinsiId = firstCell.data("provinsi-id");
+        //     const kabupatenId = firstCell.data("kabupaten-id");
+        //     const kecamatanId = firstCell.data("kecamatan-id");
+        //     const desaId = firstCell.data("desa-id");
+        //     const dusunId = firstCell.data("dusun-id");
+
+        //     // Store the row index for reference
+        //     const rowIndex = currentRow.index();
+        //     $("#editRowId").val(rowIndex);
+
+        //     // For debugging
+        //     console.log("Editing row with data:", {
+        //         provinsiId, kabupatenId, kecamatanId, desaId, dusunId
+        //     });
+
+        //     // Reset the edit form dropdowns
+        //     $("#provinsi_id_edit").empty().trigger('change');
+        //     $("#kabupaten_id_edit").empty().trigger('change');
+        //     $("#kecamatan_id_edit").empty().trigger('change');
+        //     $("#desa_id_edit").empty().trigger('change');
+        //     $("#dusun_id_edit").empty().trigger('change');
+
+        //     // Function to load a Select2 option and set it as selected
+        //     function loadAndSelectOption(selectElement, url, id, additionalParams = {}) {
+        //         return new Promise((resolve) => {
+        //             const params = {
+        //                 id: [id],  // Send as array as your controller expects
+        //                 ...additionalParams
+        //             };
+
+        //             console.log(`Loading ${selectElement} with params:`, params);
+
+        //             $.ajax({
+        //                 url: url,
+        //                 data: params,
+        //                 dataType: 'json',
+        //                 success: function(data) {
+        //                     if (data.results && data.results.length > 0) {
+        //                         // Create the option and append it
+        //                         const option = new Option(data.results[0].text, data.results[0].id, true, true);
+        //                         $(selectElement).append(option).trigger('change');
+        //                         resolve(data.results[0].id);
+        //                     } else {
+        //                         console.error(`No data found for ID ${id}`);
+        //                         resolve(null);
+        //                     }
+        //                 },
+        //                 error: function(error) {
+        //                     console.error(`Error loading option for ${selectElement}:`, error);
+        //                     resolve(null);
+        //                 }
+        //             });
+        //         });
+        //     }
+
+        //     // Load and set provinsi
+        //     loadAndSelectOption(
+        //         "#provinsi_id_edit",
+        //         "{{ route('api.beneficiary.provinsi') }}",
+        //         provinsiId
+        //     ).then((loadedProvinsiId) => {
+        //         // After provinsi is loaded, load kabupaten with provinsi_id parameter
+        //         return loadAndSelectOption(
+        //             "#kabupaten_id_edit",
+        //             "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', provinsiId),
+        //             kabupatenId,
+        //             { provinsi_id: loadedProvinsiId || provinsiId }
+        //         );
+        //     }).then((loadedKabupatenId) => {
+        //         // After kabupaten is loaded, load kecamatan with kabupaten_id parameter
+        //         return loadAndSelectOption(
+        //             "#kecamatan_id_edit",
+        //             "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', kabupatenId),
+        //             kecamatanId,
+        //             { kabupaten_id: loadedKabupatenId || kabupatenId }
+        //         );
+        //     }).then((loadedKecamatanId) => {
+        //         // After kecamatan is loaded, load desa with kecamatan_id parameter
+        //         return loadAndSelectOption(
+        //             "#desa_id_edit",
+        //             "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', kecamatanId),
+        //             desaId,
+        //             { kecamatan_id: loadedKecamatanId || kecamatanId }
+        //         );
+        //     }).then((loadedDesaId) => {
+        //         // After desa is loaded, load dusun with desa_id parameter
+        //         return loadAndSelectOption(
+        //             "#dusun_id_edit",
+        //             "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', desaId),
+        //             dusunId,
+        //             { desa_id: loadedDesaId || desaId }
+        //         );
+        //     }).catch(error => {
+        //         console.error("Error in cascade loading:", error);
+        //     });
+
+        //     // Show the edit form if it's hidden
+        //     $("#editDataForm").show();
+        // }
+
         function updateRow() {
             const rowId = $("#editRowId").val();
             const form = document.getElementById("editDataForm");
