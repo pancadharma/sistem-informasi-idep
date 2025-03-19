@@ -984,6 +984,7 @@ return [
             'laki'                               => 'Laki-Laki',
             'perempuan'                          => 'Perempuan',
             'lainnya'                            => 'Lainnya',
+            'ket'                                => 'Keterangan'
         ],
     ],
 

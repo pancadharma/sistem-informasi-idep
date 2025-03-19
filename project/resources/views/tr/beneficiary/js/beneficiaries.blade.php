@@ -19,21 +19,6 @@
 
         let rowCount = 0;
 
-        // Initialize DataTable
-        new DataTable('#dataTable');
-        // var table = new $('#dataTable').DataTable({
-        //     "paging": true,
-        //     "lengthChange": true,
-        //     "searching": true,
-        //     "ordering": true,
-        //     "info": true,
-        //     "autoWidth": false,
-        //     "responsive": true,
-        //     "autoAttributes": false, // Disable automatic attribute generation
-        //     "autoClasses": false, // Disable automatic class generation
-        // });
-
-
         function loadSelect2Option() {
             initializeSelect2ForKelompokRentan();
             initalizeJenisKelompok();
@@ -435,7 +420,7 @@
         function addRow(data) {
             rowCount++;
 
-            // const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
+            // const jenisKelompokArray = Array.isArray(data.jenis_kelompok) ? data.disabilitas : [];
             const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
             const provinsiText = $("#provinsi_id_tambah option:selected").text() || "-";
             const kabupatenText = $("#kabupaten_id_tambah option:selected").text() || "-";
@@ -993,4 +978,5 @@
         loadSelect2Option();
         bindEvents();
     });
+
 </script>
