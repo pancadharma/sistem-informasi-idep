@@ -57,6 +57,17 @@
         .select2-container--open .select2-dropdown {
             z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
         }
+
+                /* Sorting indicators */
+        th.asc::after {
+            content: ' ↑';
+            color: #333;
+        }
+
+        th.desc::after {
+            content: ' ↓';
+            color: #333;
+        }
     </style>
 @endpush
 
@@ -98,6 +109,7 @@
 
 
 @include('tr.beneficiary.js.create')
+@include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
 @include('tr.beneficiary.js.beneficiaries')

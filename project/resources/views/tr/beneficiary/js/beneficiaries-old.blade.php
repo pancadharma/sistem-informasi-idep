@@ -420,7 +420,7 @@
         function addRow(data) {
             rowCount++;
 
-            // const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
+            // const jenisKelompokArray = Array.isArray(data.jenis_kelompok) ? data.disabilitas : [];
             const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
             const provinsiText = $("#provinsi_id_tambah option:selected").text() || "-";
             const kabupatenText = $("#kabupaten_id_tambah option:selected").text() || "-";
@@ -978,4 +978,5 @@
         loadSelect2Option();
         bindEvents();
     });
+
 </script>
