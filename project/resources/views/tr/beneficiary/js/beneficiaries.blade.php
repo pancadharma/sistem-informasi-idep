@@ -429,6 +429,7 @@
             const kecamatanText = $("#kecamatan_id_tambah option:selected").text() || "-";
             const desaText = $("#desa_id_tambah option:selected").text() || "-";
             const dusunText = $("#dusun_id_tambah option:selected").text() || "-";
+            const keteranganText = $("#keterangan").val() || "";
 
             const provinsiId = $("#provinsi_id_tambah").val() || 0;
             const kabupatenId = $("#kabupaten_id_tambah").val() || 0;
@@ -496,6 +497,7 @@
             }).get().join('');
 
             const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '✔️' : ''}</td>`;
+            const KetCell = `<td class="text-left align-middle" data-keterangan="${keteranganText}">${keteranganText}</td>`;
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
@@ -522,6 +524,7 @@
                 <td class="text-center align-middle age-60-plus"></td>
                 ${activityCells}
                 ${nonAcCell}
+                ${KetCell}
                 <td class="text-center align-middle">
                     <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
@@ -661,7 +664,8 @@
 
 
             const isNonActivity = currentRow.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true";
-
+            // const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan");
+            const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan");
 
             $("#editKelompokRentan").select2({
                 multiple: true,
@@ -773,6 +777,8 @@
             $("#editRwBanjar").val(currentRow.find("td[data-rw]").attr("data-rw"));
 
             $("#edit_is_non_activity").prop("checked", isNonActivity);
+
+            $("#keterangan_edit").val(keteranganText)
 
             $("#editDataModal").modal("show");
         }
@@ -899,6 +905,8 @@
                 currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
 
                 currentRow.find("td[data-is_non_activity]").text(formData.is_non_activity ? '✔️' : '').attr("data-is_non_activity", formData.is_non_activity ? 'true' : 'false');
+                currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", formData.keterangan);
+                
                 updateAgeCheckmarks(currentRow.find(".usia-cell"));
 
                 resetFormEdit();
@@ -1019,6 +1027,7 @@
                         jenis_kelompok: row.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"),
                         usia: row.find("td[data-usia]").attr("data-usia"),
                         is_non_activity: row.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true",
+                        keterangan: row.find("td[data-keterangan]").attr("data-keterangan"),
                     };
                     tableData.push(rowData);
                 });

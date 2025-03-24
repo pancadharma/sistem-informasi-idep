@@ -971,7 +971,7 @@ return [
             'desa'                      => 'Villages',
             'no_telp'                   => 'Phone No.',
             'no_telp_placholder'        => 'Input Phone No',
-            'jenis_kelompok'            => 'Type of Group',
+            'jenis_kelompok'            => 'Group / Agencies',
             'age'                       => 'Age',
             'age_group'                 => 'Age Group',
             'child'                     => 'Child',
@@ -985,7 +985,8 @@ return [
             'laki'                      => 'Male',
             'perempuan'                 => 'Female',
             'lainnya'                   => 'Other',
-            'ket'                       => 'Information'
+            'ket'                       => 'Information',
+            'non_act'                   => 'Non-AC',
 
 
         ],

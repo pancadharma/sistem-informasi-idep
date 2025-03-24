@@ -70,8 +70,9 @@
                     <th rowspan="2" class="align-middle text-wrap">{{ __("cruds.beneficiary.penerima.jenis_kelompok") }}</th>
                     <th rowspan="2" class="align-middle">{{ __("cruds.beneficiary.penerima.age") }}</th>
                     <th colspan="4" data-dt-order="disable" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.age_group") }}</th>
-                    <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="headerActivityProgram">Activity</th>
+                    <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="headerActivityProgram">{{ __('cruds.beneficiary.activity_code')}}</th>
                     <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="header_is_non_activity">Non-AC</th>
+                    <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="header_keterangan">{{ __('cruds.beneficiary.penerima.ket')}}</th>
                     <th rowspan="2" data-dt-order="disable" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
                 <tr id="activityHeaders" class="text-sm">

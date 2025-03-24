@@ -57,7 +57,7 @@
 
 <!-- Modal Edit & Tambah Peserta Penerima Manfaat-->
 <x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="info" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="editDataForm" class="big">
+    <form id="editDataForm" class="big" autocomplete="off">
         <input type="hidden" id="editRowId">
 
         <div class="row mb-3">
@@ -200,7 +200,7 @@
 
 
 <x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="dataForm" class="big">
+    <form id="dataForm" class="big" autocomplete="off">
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
