@@ -57,7 +57,7 @@
 
 <!-- Modal Edit & Tambah Peserta Penerima Manfaat-->
 <x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="info" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="editDataForm" class="big">
+    <form id="editDataForm" class="big" autocomplete="off">
         <input type="hidden" id="editRowId">
 
         <div class="row mb-3">
@@ -99,8 +99,8 @@
         <div class='row mb-3'>
             <div class='col'>
                 <label class='form-label'>{{ __('cruds.beneficiary.penerima.jenis_kelompok') }}</label>
-                <div class="select2-cyan">
-                    <select class="form-control select2-multiple select2" name="jenis_kelompok" id="editJenisKelompok">
+                <div class="select2-info">
+                    <select class="form-control select2-multiple select2" name="jenis_kelompok" id="editJenisKelompok" multiple>
                     </select>
                 </div>
             </div>
@@ -175,10 +175,19 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivityEdit">
                 <div class="select2-info">
-                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger"></span></label>
                     <select class="form-select select2" name="activitySelectEdit" id="activitySelectEdit" multiple>
                         <!-- Options will be populated dynamically -->
                     </select>
+                </div>
+            </div>
+        </div>
+        {{-- edit keterangan peserta --}}
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
+                <div class="select2-teal">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.penerima.ket') }}</strong> <span class="text-danger"></span></label>
+                    <textarea name="keterangan" id="keterangan_edit" rows="5" class="form-control"></textarea>
                 </div>
             </div>
         </div>
@@ -191,7 +200,7 @@
 
 
 <x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="dataForm" class="big">
+    <form id="dataForm" class="big" autocomplete="off">
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
@@ -220,7 +229,7 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.marjinal') }}</label>
-                <div class="select2-green">
+                <div class="select2-teal">
                     <select class="form-control select2-multiple select2" name="kelompok_rentan" multiple id="kelompok_rentan">
                     </select>
                 </div>
@@ -231,8 +240,8 @@
             <div class="col">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.jenis_kelompok') }}</label>
                 {{-- <input type="text" class="form-control" name="jenis_kelompok"> --}}
-                <div class="select2-cyan">
-                    <select class="form-control select2-multiple select2" name="jenis_kelompok" id="jenis_kelompok">
+                <div class="select2-teal">
+                    <select class="form-control select2-multiple select2" name="jenis_kelompok" multiple id="jenis_kelompok">
                     </select>
                 </div>
             </div>
@@ -317,10 +326,19 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1" id="pilihActivity">
                 <div class="select2-teal">
-                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger">*</span></label>
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.select_activity') }}</strong> <span class="text-danger"></span></label>
                     <select class="form-select select2 select2-multiple" name="activitySelect" multiple id="activitySelect" >
                         <!-- Options will be populated dynamically -->
                     </select>
+                </div>
+            </div>
+        </div>
+        {{-- keterangan peserta --}}
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
+                <div class="select2-teal">
+                    <label class="form-label mb-0"><strong>{{ __('cruds.beneficiary.penerima.ket') }}</strong> <span class="text-danger"></span></label>
+                    <textarea name="keterangan" id="keterangan" rows="5" class="form-control"></textarea>
                 </div>
             </div>
         </div>

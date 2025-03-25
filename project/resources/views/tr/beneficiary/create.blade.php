@@ -57,6 +57,30 @@
         .select2-container--open .select2-dropdown {
             z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
         }
+
+                /* Sorting indicators */
+        th.asc::after {
+            content: ' ↑';
+            color: #333;
+        }
+
+        th.desc::after {
+            content: ' ↓';
+            color: #333;
+        }
+
+        .responsive-table {
+            overflow-x: visible;
+            overflow-y: visible;
+        }
+
+        .ellipsis-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust as needed */
+            /* display: block; Or display: block */
+        }
     </style>
 @endpush
 
@@ -98,6 +122,7 @@
 
 
 @include('tr.beneficiary.js.create')
+@include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
 @include('tr.beneficiary.js.beneficiaries')

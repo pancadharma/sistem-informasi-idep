@@ -970,7 +970,7 @@ return [
             'desa'                               => 'Desa',
             'no_telp'                            => 'No. HP',
             'no_telp_placholder'                 => 'Isi No. Handphone',
-            'jenis_kelompok'                     => 'Jenis Kelompok',
+            'jenis_kelompok'                     => 'Jenis Kelompok/Instansi',
             'age'                                => 'Usia',
             'age_group'                          => 'Kelompok Usia',
             'child'                              => 'Anak',
@@ -984,6 +984,9 @@ return [
             'laki'                               => 'Laki-Laki',
             'perempuan'                          => 'Perempuan',
             'lainnya'                            => 'Lainnya',
+            'ket'                                => 'Keterangan',
+            'non_act'                            => 'Non-AC',
+            
         ],
     ],
 

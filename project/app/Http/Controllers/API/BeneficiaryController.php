@@ -581,8 +581,8 @@ class BeneficiaryController extends Controller
 
         $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}_ids_" . implode(',', $ids);
 
-        return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
-            $query = Dusun::where('desa_id', $desaId)
+        // return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
+        $query = Dusun::where('desa_id', $desaId)
                 ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
                 ->when($search, fn($q) => $q->where('nama', 'like', "%{$search}%"));
 
@@ -597,6 +597,6 @@ class BeneficiaryController extends Controller
                     'more' => $results->hasMorePages(),
                 ],
             ]);
-        });
+        // });
     }
 }
