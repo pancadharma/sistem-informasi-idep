@@ -57,7 +57,15 @@
                 return aValue.localeCompare(bValue) * sortDirection;
             });
 
-            // Reorder rows in the table
+            // Reorder rows in the table            $('#tableBody').empty().append(rows);
+
+            // Check if there are any rows
+            if ($('#tableBody tr').length === 0) {
+                // If no rows, add a "no data found" row
+                const noDataRow = `<tr><td colspan="${$('#dataTable thead th').length}" class="text-center">No data found</td></tr>`;
+                $('#tableBody').append(noDataRow);
+            }
+
             $('#tableBody').append(rows);
         });
     });

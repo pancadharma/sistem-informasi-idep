@@ -497,7 +497,7 @@
             }).get().join('');
 
             const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '✔️' : ''}</td>`;
-            const KetCell = `<td class="text-left align-middle" data-keterangan="${keteranganText}">${keteranganText}</td>`;
+            const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${keteranganText}" title="${keteranganText}">${keteranganText}</td>`;
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
@@ -905,8 +905,8 @@
                 currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
 
                 currentRow.find("td[data-is_non_activity]").text(formData.is_non_activity ? '✔️' : '').attr("data-is_non_activity", formData.is_non_activity ? 'true' : 'false');
-                currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", formData.keterangan);
-                
+                currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", formData.keterangan).addClass("ellipsis-cell").attr("title", formData.keterangan);
+
                 updateAgeCheckmarks(currentRow.find(".usia-cell"));
 
                 resetFormEdit();

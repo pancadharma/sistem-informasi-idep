@@ -68,6 +68,19 @@
             content: ' ↓';
             color: #333;
         }
+
+        .responsive-table {
+            overflow-x: visible;
+            overflow-y: visible;
+        }
+
+        .ellipsis-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust as needed */
+            /* display: block; Or display: block */
+        }
     </style>
 @endpush
 

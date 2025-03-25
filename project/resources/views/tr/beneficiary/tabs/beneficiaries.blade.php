@@ -86,7 +86,7 @@
                     <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
                 </tr>
             </thead>
-            <tbody id="tableBody" class="display nowrap">
+            <tbody id="tableBody" class="display nowrap overflow-auto">
             </tbody>
         </table>
     </div>
