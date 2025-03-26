@@ -63,11 +63,26 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="btnTambahWilayah" class="form-control btn btn-primary">Tambah Wilayah</button>
+                        <div class="form-group">
+                            <button id="btnTambahWilayah" class="form-control btn btn-primary">Tambah Wilayah</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" name="custom-search-input" id="custom-search-input" placeholder="Search ..." class="form-control">
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-primary">Search</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="card-body">
             <div class="row">
@@ -149,13 +164,21 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-
+@include('api.master.dynamic-table')
 <script>
-    $(function() {
-        $("#dataTable").tablesorter({ sortList: [[0,0], [1,0]] });
-    });
     $(document).ready(function() {
         $('.select2').select2();
+
+
+        $('#dataTable').dynamicTableHandler({
+            searchInputSelector: '#custom-search-input',
+            noResultsMessage: 'No matching records found',
+            excludeLastColumn: false,
+            onNoResults: function() {
+                console.log('No results found');
+            }
+        });
+
         let rowCount = 0;
 
         function addRow(data) {

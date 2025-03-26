@@ -1,4 +1,15 @@
 <script>
+    // Utility function to escape HTML special characters
+    function escapeHtml(str) {
+        if (!str) return ""; // Handle null/undefined cases
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
     $(document).ready(function() {
         if (typeof $ === "undefined") {
             console.error("jQuery is not included. Please include jQuery in your HTML file.");
@@ -234,114 +245,7 @@
             });
         }
 
-        // function initializeSelect2ForDesa() {
-        //     $("#desa_id").select2({
-        //         placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
-        //         dropdownParent: $("#ModalTambahPeserta"),
-        //         width: "100%",
-        //         ajax: {
 
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data, params) {
-        //                 params.page = params.page || 1;
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: {
-        //                         more: data.pagination.more,
-        //                     },
-        //                 };
-        //             },
-        //             cache: true,
-        //         },
-        //         dropdownPosition: 'below',
-        //     });
-
-        //     $("#editDesa").select2({
-        //         placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
-        //         ajax: {
-
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data, params) {
-        //                 params.page = params.page || 1;
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: {
-        //                         more: data.pagination.more,
-        //                     },
-        //                 };
-        //             },
-        //             cache: true,
-        //         },
-        //         dropdownParent: $("#editDataModal"),
-        //         width: "100%",
-        //     });
-        // }
-
-        // function initializeSelect2ForDusun() {
-        //     $("#dusun_id").select2({
-        //         placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.dusun.title') }}',
-        //         ajax: {
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     desa_id: $("#desa_id").val() || $("#editDesa").val(),
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data) {
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: data.pagination,
-        //                 };
-        //             },
-        //             cache: true,
-        //         },
-        //         dropdownParent: $("#ModalTambahPeserta"),
-        //         width: "100%",
-        //         dropdownPosition: 'below',
-        //     });
-
-        //     $("#editDusun").select2({
-        //         placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.dusun.title') }}',
-        //         ajax: {
-
-        //             dataType: "json",
-        //             delay: 250,
-        //             data: function(params) {
-        //                 return {
-        //                     search: params.term,
-        //                     desa_id: $("#desa_id").val() || $("#editDesa").val(),
-        //                     page: params.page || 1,
-        //                 };
-        //             },
-        //             processResults: function(data) {
-        //                 return {
-        //                     results: data.results,
-        //                     pagination: data.pagination,
-        //                 };
-        //             },
-        //             cache: true,
-        //         },
-        //         dropdownParent: $("#editDataModal"),
-        //         width: "100%",
-        //     });
-        // }
 
         function initalizeJenisKelompok(){
             let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
@@ -437,13 +341,6 @@
             const desaId = $("#desa_id_tambah").val() || 0;
             const dusunId = $("#dusun_id_tambah").val() || 0;
 
-            // const disabilitasText = disabilitasArray.map((value) => {
-            //     const option = $('#ModalTambahPeserta select[name="disabilitas"] option[value="' + value + '"]');
-            //     const text = option.length ? option.text() : "";
-            //     const randomColor = getRandomColor();
-            //     return `<span class="badge badge-${randomColor}">${text}</span>`;
-            // });
-
             const jenis_kelompok_data = jenis_kelompok_array.map((value) => {
                 const option = $("#jenis_kelompok").select2("data").find((opt) => opt.id === value) || {
                     id: value,
@@ -459,14 +356,6 @@
                 const randomColor = getRandomColor();
                 return `<span class="badge badge-${randomColor}">${item.text}</span>`;
             });
-            // const jenisKelompokText = $("#jenis_kelompok option:selected").text();
-            // const jenis_kelompok_text = jenis_kelompok_array.map((value) => {
-            //     const option = $('#ModalTambahPeserta select[name="jenis_kelompok"] option[value="' + value + '"]');
-            //     const text = option.length ? option.text() : "";
-            //     const randomColor = getRandomColor();
-            //     return `<span class="badge badge-${randomColor}">${text}</span>`;
-            // });
-
             const kelompokRentanData = kelompokRentanArray.map((value) => {
                 const option = $("#kelompok_rentan").select2("data").find((opt) => opt.id === value) || {
                     id: value,
@@ -478,12 +367,10 @@
                 };
             });
 
-
             const kelompokRentanText = kelompokRentanData.map((item) => {
                 const randomColor = getRandomColor();
                 return `<span class="badge badge-${randomColor}">${item.text}</span>`;
             });
-
 
             const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
             const selectedActivities = $("#activitySelect").val() || [];
@@ -497,7 +384,10 @@
             }).get().join('');
 
             const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '✔️' : ''}</td>`;
-            const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${keteranganText}" title="${keteranganText}">${keteranganText}</td>`;
+
+            const KetValue = escapeHtml(keteranganText);
+            const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${KetValue}" title="${KetValue}">${keteranganText}</td>`;
+
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
@@ -664,8 +554,8 @@
 
 
             const isNonActivity = currentRow.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true";
-            // const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan");
-            const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan");
+            const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan") || "";
+
 
             $("#editKelompokRentan").select2({
                 multiple: true,
@@ -850,7 +740,7 @@
                     text: item.text
                 }));
 
-                console.log("Update Jenis Kelompok Value: ", jenis_kelompok_data);
+                // console.log("Update Jenis Kelompok Value: ", jenis_kelompok_data);
 
                 const kelompokRentanHtml = kelompokRentanData.map((item) => {
                     const randomColor = getRandomColor();
@@ -880,6 +770,7 @@
                     }
                 });
 
+                const KetValue = escapeHtml(formData.keterangan || "");
 
                 currentRow.find("td[data-provinsi-id]").attr("data-provinsi-id", provinsiId).attr("data-provinsi-nama", provinsiText).text(provinsiText);
                 currentRow.find("td[data-kabupaten-id]").attr("data-kabupaten-id", kabupatenId).attr("data-kabupaten-nama", kabupatenText).text(kabupatenText);
@@ -905,7 +796,7 @@
                 currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
 
                 currentRow.find("td[data-is_non_activity]").text(formData.is_non_activity ? '✔️' : '').attr("data-is_non_activity", formData.is_non_activity ? 'true' : 'false');
-                currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", formData.keterangan).addClass("ellipsis-cell").attr("title", formData.keterangan);
+                currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", KetValue).addClass("ellipsis-cell").attr("title", KetValue);
 
                 updateAgeCheckmarks(currentRow.find(".usia-cell"));
 
