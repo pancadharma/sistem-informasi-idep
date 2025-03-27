@@ -316,9 +316,9 @@ Route::middleware(['auth'])->group(function () {
         // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
         Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
+        // route for api create master jenis kelompok
 
-        // using api to store / create meals
-        // Route::post('meals/store',                  [MealsController::class, 'store'])->name('meals.store');
+        Route::POST('jenis-kelompok/save',          [BeneficiaryController::class, 'apiStoreJenisKelompok'])->name('jenis_kelompok.simpan');
     });
 
 

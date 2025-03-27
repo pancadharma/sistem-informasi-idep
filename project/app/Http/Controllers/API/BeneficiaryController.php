@@ -123,202 +123,6 @@ class BeneficiaryController extends Controller
         }
     }
 
-    // public function getProvinsi(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Provinsi::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getKabupaten(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kabupaten::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getKecamatan(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kecamatan::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getDesa(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kelurahan::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-
-    // public function getDusuns(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //         'desa_id'   => 'required|exists:kelurahan,id'
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-    //     $desaId = $request->input('desa_id');
-    //     $perPage = 20;
-
-    //     $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}_ids_" . implode(',', $ids);
-
-    //     return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
-    //         $query = Dusun::where('desa_id', $desaId);
-
-    //         if (!empty($ids)) {
-    //             $query->whereIn('id', $ids);
-    //         } elseif ($search !== '') {
-    //             $query->where('nama', 'like', "%{$search}%");
-    //         }
-
-    //         $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //         return response()->json([
-    //             'results' => $results->map(function ($item) {
-    //                 return [
-    //                     'id' => $item->id,
-    //                     'text' => $item->nama,
-    //                 ];
-    //             })->all(),
-    //             'pagination' => [
-    //                 'more' => $results->hasMorePages(),
-    //             ],
-    //         ]);
-    //     });
-    // }
-
     public function storeDusun(StoreDusunRequest $request)
     {
         try {
@@ -583,20 +387,41 @@ class BeneficiaryController extends Controller
 
         // return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
         $query = Dusun::where('desa_id', $desaId)
-                ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
-                ->when($search, fn($q) => $q->where('nama', 'like', "%{$search}%"));
+            ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
+            ->when($search, fn($q) => $q->where('nama', 'like', "%{$search}%"));
 
-            $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
+        $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
 
-            return response()->json([
-                'results' => $results->map(fn($item) => [
-                    'id' => $item->id,
-                    'text' => $item->nama,
-                ])->all(),
-                'pagination' => [
-                    'more' => $results->hasMorePages(),
-                ],
-            ]);
+        return response()->json([
+            'results' => $results->map(fn($item) => [
+                'id' => $item->id,
+                'text' => $item->nama,
+            ])->all(),
+            'pagination' => [
+                'more' => $results->hasMorePages(),
+            ],
+        ]);
         // });
+    }
+
+    public function apiStoreJenisKelompok(Request $request)
+    {
+        $request->validate([
+            'nama_jenis_kelompok' => 'required|string|max:255',
+        ]);
+
+        $jeniskelompok = Master_Jenis_Kelompok::create([
+            'nama' => $request->input('nama_jenis_kelompok'),
+            'aktif' => $request->has('aktif') ? 1 : 0
+        ]);
+        return response()->json(
+            [
+                'success'   => true,
+                'status'    => 'success',
+                'message'   => 'Jenis Kelompok created successfully',
+                'data'      => $jeniskelompok
+            ],
+            201
+        );
     }
 }
