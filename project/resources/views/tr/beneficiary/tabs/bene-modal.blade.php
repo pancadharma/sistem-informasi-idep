@@ -236,13 +236,24 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col">
-                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.jenis_kelompok') }}</label>
-                {{-- <input type="text" class="form-control" name="jenis_kelompok"> --}}
-                <div class="select2-teal">
-                    <select class="form-control select2-multiple select2" name="jenis_kelompok" multiple id="jenis_kelompok">
-                    </select>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center d-flex align-items-center mb-3">
+                <div class="col-11">
+                    <div class="row">
+                        <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.jenis_kelompok') }}</label>
+                        <div class="col-12 pl-0">
+                            <div class="select2-teal">
+                                <select class="form-control select2-multiple select2 flex-grow-1" name="jenis_kelompok" multiple id="jenis_kelompok">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-input">
+                    <label class="form-label mb-0">&nbsp;</label>
+                    <button type="button" class="form-control btn bg-teal btn-sm mr-1" id="addJenisKelompok" data-toggle="modal" data-target="#ModalAddJenisKelompok">
+                        <i class="bi bi-plus"></i>
+                    </button>
                 </div>
             </div>
         </div>

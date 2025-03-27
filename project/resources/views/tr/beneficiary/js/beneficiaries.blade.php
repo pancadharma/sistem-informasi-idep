@@ -315,10 +315,10 @@
                 row.querySelector(".age-60-plus").innerHTML = "";
                 return;
             }
-            row.querySelector(".age-0-17").innerHTML = age >= 0 && age <= 17 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
-            row.querySelector(".age-18-24").innerHTML = age > 17 && age <= 24 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
-            row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
-            row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="✔️"></i></span>' : "";
+            row.querySelector(".age-0-17").innerHTML = age >= 0 && age <= 17 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
+            row.querySelector(".age-18-24").innerHTML = age > 17 && age <= 24 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
+            row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
+            row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
         }
 
         function addRow(data) {
@@ -379,11 +379,11 @@
             const activityCells = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
                 const isChecked = selectedActivities.includes(activityId.toString());
-                const checkmark = isChecked ? '✔️' : '';
+                const checkmark = isChecked ? '√' : '';
                 return `<td class="text-center align-middle" data-program-activity-id="${activityId}">${checkmark}</td>`;
             }).get().join('');
 
-            const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '✔️' : ''}</td>`;
+            const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '√' : ''}</td>`;
 
             const KetValue = escapeHtml(keteranganText);
             const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${KetValue}" title="${KetValue}">${keteranganText}</td>`;
@@ -637,7 +637,7 @@
             const selectedActivities = activityHeaders.map((index, header) => {
                 const activityId = $(header).data('activity-id');
                 const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
-                const isChecked = cell.text().trim() === '✔️'; // Assuming checkmark still indicates selection
+                const isChecked = cell.text().trim() === '√'; // Assuming checkmark still indicates selection
                 return isChecked ? activityId.toString() : null;
             }).get().filter(Boolean);
 
@@ -764,7 +764,7 @@
                     const activityId = $(this).data('activity-id');
                     const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
                     if (updatedActivities.includes(activityId.toString())) {
-                        cell.text('✔️'); // Set checkmark if activity is in updated list
+                        cell.text('√'); // Set checkmark if activity is in updated list
                     } else {
                         cell.text(''); // Clear checkmark if activity is not in updated list
                     }
@@ -795,7 +795,7 @@
 
                 currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
 
-                currentRow.find("td[data-is_non_activity]").text(formData.is_non_activity ? '✔️' : '').attr("data-is_non_activity", formData.is_non_activity ? 'true' : 'false');
+                currentRow.find("td[data-is_non_activity]").text(formData.is_non_activity ? '√' : '').attr("data-is_non_activity", formData.is_non_activity ? 'true' : 'false');
                 currentRow.find("td[data-keterangan]").text(formData.keterangan).attr("data-keterangan", KetValue).addClass("ellipsis-cell").attr("title", KetValue);
 
                 updateAgeCheckmarks(currentRow.find(".usia-cell"));

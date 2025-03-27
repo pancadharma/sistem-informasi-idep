@@ -130,4 +130,6 @@
 @include('tr.beneficiary.tabs.program')
 @include('api.master.dusun')
 
+@include('api.master.jenis-kelompok-instansi')
+
 @endpush
