@@ -4,6 +4,7 @@
         <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
         <!-- id program -->
         <input type="hidden" name="program_id" id="program_id">
+        <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
         <!-- kode program -->
         <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
         data-toggle="modal" data-target="#ModalDaftarProgram">
