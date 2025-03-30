@@ -11,6 +11,7 @@ use App\Models\Kegiatan;
 use App\Models\Kelompok_Marjinal;
 use App\Models\Kelurahan;
 use App\Models\Master_Jenis_Kelompok;
+use App\Models\Meals_Penerima_Manfaat;
 use App\Models\Program;
 use App\Models\Provinsi;
 use Exception;
@@ -31,39 +32,39 @@ class BeneficiaryController extends Controller
         //     return "Not an Ajax Request & JSON REQUEST";
         // }
         // sort by created_at desc
-        $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-            ->select('trkegiatan.*')
+        $meals = Meals_Penerima_Manfaat::with('dusun', 'users', 'program.nama', 'kelompokMarjinal', 'jenisKelompok')
+            ->select('trmeasls_penerima_manfaat.*')
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($item) {
-                $item->duration_in_days = $item->getDurationInDays();
-                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
-                $program = $item->activity->program_outcome_output->program_outcome->program;
-                $item->total_beneficiaries = $program->getTotalBeneficiaries();
+            ->get();
+        // ->map(function ($item) {
+        //     $item->duration_in_days = $item->getDurationInDays();
+        //     $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+        //     $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+        //     $program = $item->activity->program_outcome_output->program_outcome->program;
+        //     $item->total_beneficiaries = $program->getTotalBeneficiaries();
 
-                return $item;
-            });
+        //     return $item;
+        // });
 
-        $data = DataTables::of($kegiatan)
+        $data = DataTables::of($meals)
             ->addIndexColumn()
-            ->addColumn('program_name', function ($kegiatan) {
-                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+            ->addColumn('program_name', function ($meals) {
+                return $meals->program->nama ?? 'N/A';
             })
-            ->addColumn('duration_in_days', function ($kegiatan) {
-                return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
-            })
-            ->addColumn('action', function ($kegiatan) {
+            // ->addColumn('duration_in_days', function ($kegiatan) {
+            //     return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
+            // })
+            ->addColumn('action', function ($meals) {
                 $buttons = [];
 
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
                 }
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
                 }
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
                 }
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
@@ -73,10 +74,10 @@ class BeneficiaryController extends Controller
         return $data;
     }
 
-    private function generateButton($action, $class, $icon, $title, $kegiatanId)
+    private function generateButton($action, $class, $icon, $title, $mealsId)
     {
         return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-            data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
+            data-kegiatan-id="' . $mealsId . '" data-toggle="tooltip" data-placement="top">
                 <i class="bi bi-' . $icon . '"></i>
                 <span class="d-none d-sm-inline"></span>
             </button>';
