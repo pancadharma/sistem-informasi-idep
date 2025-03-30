@@ -58,9 +58,33 @@ class Meals_Penerima_Manfaat extends Model
     {
         return $this->belongsTo(Dusun::class, 'dusun_id');
     }
-    public function jeniskelompok()
+    public function jenisKelompok()
     {
-        return $this->belongsToMany(Jenis_Kelompok::class, 'trmeals_penerima_manfaat', 'jenis_kelompok_id', 'id');
+        return $this->belongsToMany(
+            Master_Jenis_Kelompok::class,
+            'trmeals_penerima_manfaat_jenis_kelompok',
+            'trmeals_penerima_manfaat_id',
+            'jenis_kelompok_id'
+        );
+    }
+
+    public function kelompokMarjinal()
+    {
+        return $this->belongsToMany(
+            Kelompok_Marjinal::class, // Model yang berelasi
+            'trmeals_penerima_manfaat_kelompok_marjinal', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal 
+            'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
+            'kelompok_marjinal_id' // Foreign key di tabel pivot untuk model yang berelasi
+        );
+    }
+    public function penerimaActivity()
+    {
+        return $this->belongsToMany(
+            Program_Outcome_Output_Activity::class, // Model yang berelasi
+            'trmeals_penerima_manfaat_activity', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal 
+            'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
+            'programoutcomeoutput_id' // Foreign key di tabel pivot untuk model yang berelasi
+        );
     }
 
     public function meal()
@@ -70,5 +94,10 @@ class Meals_Penerima_Manfaat extends Model
     public function programoutcomeoutputactivity()
     {
         return $this->belongsTo(Program_Outcome_Output_Activity::class);
+    }
+
+    public function activity()
+    {
+        return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
     }
 }
