@@ -11,9 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // check if the table is already exists and ask the user confirmation
+        if (Schema::hasTable('trmeals_penerima_manfaat')) {
+            echo "Table 'trmeals_penerima_manfaat' already exists. Do you want to drop it and create a new one? \n type 'yes' to proceed : ";
+
+            $confirmation = strtolower(trim(fgets(STDIN)));
+            if ($confirmation !== 'yes') {
+                return;
+            }
+        }
+        Schema::dropIfExists('trmeals_penerima_manfaat');
+
         Schema::create('trmeals_penerima_manfaat', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained('trpgrogram')->onDelete('cascade');
+            $table->foreignId('program_id')->constrained('trprogram')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('dusun_id')->references('id')->on('dusun')->onDelete('cascade');
             $table->string('nama', 255);
@@ -23,9 +34,9 @@ return new class extends Migration
             $table->string('rw', 10);
             $table->integer('umur');
             $table->longText('keterangan')->nullable();
-            $table->string('kelompok_marjinal', 255);
             $table->boolean('is_non_activity')->default(false);
             $table->timestamps();
+            $table->softDeletes();
 
             // beneficiary has many kelompok_marjinal and jenis_kelompok
 
@@ -37,6 +48,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('trmeals_penerima_manfaat');
+        Schema::enableForeignKeyConstraints();
     }
 };
