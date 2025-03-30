@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dynamic Table Example</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      th.asc::after {
+        content: " ↑";
+        color: #333;
+      }
+      th.desc::after {
+        content: " ↓";
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <input
+            type="text"
+            id="search_input"
+            class="form-control"
+            placeholder="Search..."
+          />
+        </div>
+      </div>
+
+      <table class="table table-bordered dynamic-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>City</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-nama="John Doe">John Doe</td>
+            <td data-usia="30">30</td>
+            <td>New York</td>
+            <td>
+              <button class="btn btn-sm btn-primary">Edit</button>
+            </td>
+          </tr>
+          <tr>
+            <td data-nama="Jane Smith">Jane Smith</td>
+            <td data-usia="25">25</td>
+            <td>San Francisco</td>
+            <td>
+              <button class="btn btn-sm btn-primary">Edit</button>
+            </td>
+          </tr>
+          <!-- More rows can be added -->
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Dynamic Table Search and Sort Functionality
+      (function ($) {
+        $.fn.dynamicTableHandler = function (options) {
+          // Default settings
+          const defaults = {
+            searchInputSelector: "#search_input",
+            noResultsMessage: "No data found",
+            excludeLastColumn: true,
+            onNoResults: null,
+          };
+
+          // Merge default settings with user-provided options
+          const settings = $.extend({}, defaults, options);
+
+          // Return this for each table to allow chaining
+          return this.each(function () {
+            const $table = $(this);
+            const $tbody = $table.find("tbody");
+            const $searchInput = $(settings.searchInputSelector);
+
+            // Add no results row if it doesn't exist
+            function ensureNoResultsRow() {
+              if ($tbody.find(".no-results-row").length === 0) {
+                const columnCount = $tbody.find("tr:first-child td").length;
+                const noResultsRow = `<tr class="no-results-row" style="display:none;">
+                        <td colspan="${columnCount}" class="text-center text-muted">
+                            ${settings.noResultsMessage}
+                        </td>
+                    </tr>`;
+                $tbody.append(noResultsRow);
+              }
+            }
+
+            // Search functionality
+            function performSearch() {
+              const searchTerm = $searchInput.val().toLowerCase().trim();
+              const $rows = $tbody.find("tr").not(".no-results-row");
+
+              let visibleRowsCount = 0;
+              $rows.each(function () {
+                const $row = $(this);
+                const rowText = settings.excludeLastColumn
+                  ? $row.find("td").not(":last").text().toLowerCase()
+                  : $row.text().toLowerCase();
+
+                const isMatch =
+                  searchTerm === "" || rowText.includes(searchTerm);
+                $row.toggle(isMatch);
+
+                if (isMatch) visibleRowsCount++;
+              });
+
+              // Handle no results scenario
+              const $noResultsRow = $tbody.find(".no-results-row");
+              if (visibleRowsCount === 0) {
+                $noResultsRow.show();
+                if (typeof settings.onNoResults === "function") {
+                  settings.onNoResults();
+                }
+              } else {
+                $noResultsRow.hide();
+              }
+            }
+
+            // Sorting functionality
+            function setupSorting() {
+              let sortDirection = 1;
+              let lastSortedTh = null;
+
+              $table
+                .find("th")
+                .not("[data-dt-order]")
+                .css("cursor", "pointer")
+                .click(function () {
+                  const $th = $(this);
+                  const index = $th.index();
+                  const $rows = $tbody.find("tr").not(".no-results-row").get();
+
+                  // Update sort direction
+                  if (lastSortedTh && lastSortedTh[0] === $th[0]) {
+                    sortDirection *= -1;
+                  } else {
+                    sortDirection = 1;
+                    $table.find("th").removeClass("asc desc");
+                  }
+                  lastSortedTh = $th;
+
+                  // Update sort indicator
+                  $th
+                    .removeClass("asc desc")
+                    .addClass(sortDirection === 1 ? "asc" : "desc");
+
+                  // Sort rows
+                  $rows.sort(function (a, b) {
+                    const $aCell = $(a).find("td").eq(index);
+                    const $bCell = $(b).find("td").eq(index);
+
+                    // Try to get value from data attributes or text
+                    const sortAttributes = ["nama", "usia", "rt", "rw"];
+                    let aValue, bValue;
+
+                    for (let attr of sortAttributes) {
+                      if (!aValue) aValue = $aCell.data(attr);
+                      if (!bValue) bValue = $bCell.data(attr);
+                    }
+
+                    // Fallback to text if no data attributes found
+                    aValue = aValue || $aCell.text().trim();
+                    bValue = bValue || $bCell.text().trim();
+
+                    // Handle numeric values
+                    if (!isNaN(aValue) && !isNaN(bValue)) {
+                      return (Number(aValue) - Number(bValue)) * sortDirection;
+                    }
+
+                    // Handle text values
+                    return aValue.localeCompare(bValue) * sortDirection;
+                  });
+
+                  // Reorder rows in the table
+                  $tbody.empty().append($rows);
+                });
+            }
+
+            // Initialize
+            function init() {
+              ensureNoResultsRow();
+
+              // Attach search event
+              $searchInput.on("input", performSearch);
+
+              // Setup sorting
+              setupSorting();
+            }
+
+            // Run initialization
+            init();
+          });
+        };
+
+        // Optional: Auto-initialize tables with a specific class
+        $(document).ready(function () {
+          $(".dynamic-table").each(function () {
+            $(this).dynamicTableHandler({
+              searchInputSelector: "#search_input",
+            });
+          });
+        });
+      })(jQuery);
+    </script>
+  </body>
+</html>
