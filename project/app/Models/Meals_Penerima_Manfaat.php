@@ -2,50 +2,65 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\Auditable;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meals_Penerima_Manfaat extends Model
 {
-    use HasFactory, Auditable, LogsActivity;
+    use HasFactory, Auditable, LogsActivity, SoftDeletes;
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly(['*']);
     }
 
-    protected $table = "tr_meals_penerima_manfaat";
+    protected $table = "trmeals_penerima_manfaat";
 
     protected $fillable = [
         'program_id',
         'user_id',
         'dusun_id',
-        // 'desa_id',
-        'jenis_kelompok_id',
         'nama',
-        'notelp',
-        'jeniskelamin',
-        'umur',
-        'disabilitas',
-        // id_kelompokmarjinal : int <<fk>> null
-        'rw',
+        'no_telp',
+        'jenis_kelamin',
         'rt',
+        'rw',
+        'umur',
+        'keterangan',
+        'is_non_activity',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
 
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function program(){
-        return $this->belongsTo(Program::class);
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'program_id');
     }
-    public function dusun(){
-        return $this->belongsTo(Dusun::class);
+    public function dusun()
+    {
+        return $this->belongsTo(Dusun::class, 'dusun_id');
+    }
+    public function jeniskelompok()
+    {
+        return $this->belongsToMany(Jenis_Kelompok::class, 'trmeals_penerima_manfaat', 'jenis_kelompok_id', 'id');
     }
 
     public function meal()
