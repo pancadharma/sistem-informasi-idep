@@ -54,6 +54,12 @@ class Meals_Penerima_Manfaat extends Model
     {
         return $this->belongsTo(Program::class, 'program_id');
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function dusun()
     {
         return $this->belongsTo(Dusun::class, 'dusun_id');
@@ -72,7 +78,7 @@ class Meals_Penerima_Manfaat extends Model
     {
         return $this->belongsToMany(
             Kelompok_Marjinal::class, // Model yang berelasi
-            'trmeals_penerima_manfaat_kelompok_marjinal', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal 
+            'trmeals_penerima_manfaat_kelompok_marjinal', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal
             'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
             'kelompok_marjinal_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
@@ -81,23 +87,28 @@ class Meals_Penerima_Manfaat extends Model
     {
         return $this->belongsToMany(
             Program_Outcome_Output_Activity::class, // Model yang berelasi
-            'trmeals_penerima_manfaat_activity', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal 
+            'trmeals_penerima_manfaat_activity', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal
             'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
-            'programoutcomeoutput_id' // Foreign key di tabel pivot untuk model yang berelasi
+            'programoutcomeoutputactivity_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
     }
+    // public function penerima_activity_details()
+    // {
+    //     return $this->belongsToMany(
+    //         Program_Outcome_Output_Activity::class, // Model yang berelasi
+    //         'trmeals_penerima_manfaat_activity', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal
+    //         'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
+    //         'programoutcomeoutputactivity_id' // Foreign key di tabel pivot untuk model yang berelasi
+    //     );
+    // }
 
-    public function meal()
-    {
-        return $this->belongsTo(Meals::class);
-    }
-    public function programoutcomeoutputactivity()
-    {
-        return $this->belongsTo(Program_Outcome_Output_Activity::class);
-    }
+    // public function meal()
+    // {
+    //     return $this->belongsTo(Meals::class);
+    // }
 
-    public function activity()
-    {
-        return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
-    }
+    // public function program_outcome_output_activity()
+    // {
+    //     return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
+    // }
 }

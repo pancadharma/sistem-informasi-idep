@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Meals_Penerima_Manfaat_Jenis_Kelompok extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'trmeals_penerima_manfaat_kelompok_marjinal';
+    protected $table = 'trmeals_penerima_manfaat_jenis_kelompok';
     protected $fillable = [
         'trmeals_penerima_manfaat_id',
-        'master_jenis_kelompok_id',
+        'jenis_kelompok_id',
         'created_at',
         'updated_at',
         'deleted_at'

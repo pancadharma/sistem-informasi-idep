@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meals_Penerima_Manfaat_Kelompok_Marjinal extends Model
 {
@@ -12,7 +13,7 @@ class Meals_Penerima_Manfaat_Kelompok_Marjinal extends Model
     protected $table = 'trmeals_penerima_manfaat_kelompok_marjinal';
     protected $fillable = [
         'trmeals_penerima_manfaat_id',
-        'master_jenis_kelompok_id',
+        'kelompok_marjinal_id',
         'created_at',
         'updated_at',
         'deleted_at'
