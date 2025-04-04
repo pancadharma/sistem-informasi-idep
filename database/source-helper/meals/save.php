@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Meals_Penerima_Manfaat;
-use App\Models\Meals_Penerima_Manfaat_Activity;
-use App\Models\Meals_Penerima_Manfaat_Jenis_Kelompok;
-use App\Models\Meals_Penerima_Manfaat_Kelompok_Marjinal;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Gate;
 
@@ -30,26 +27,27 @@ class BeneficiaryController extends Controller
         abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('tr.beneficiary.wilayah');
     }
+
     public function store(Request $request)
     {
         abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         // Validate the incoming request data
         $validated = $request->validate([
-            'program_id'             => 'required|integer',
-            'data'                   => 'required|array',
-            'data.*.nama'            => 'required|string|max:255',
-            'data.*.no_telp'         => 'nullable|string|max:15',
-            'data.*.gender'          => 'required|in:laki,perempuan,lainnya',
-            'data.*.rt'              => 'required|string|max:10',
-            'data.*.rw'              => 'required|string|max:10',
-            'data.*.dusun_id'        => 'required|integer',
-            'data.*.usia'            => 'required|integer|min:0',
+            'program_id' => 'required|integer',
+            'data' => 'required|array',
+            'data.*.nama' => 'required|string|max:255',
+            'data.*.no_telp' => 'nullable|string|max:15',
+            'data.*.gender' => 'required|in:laki,perempuan,lainnya',
+            'data.*.rt' => 'required|string|max:10',
+            'data.*.rw' => 'required|string|max:10',
+            'data.*.dusun_id' => 'required|integer',
+            'data.*.usia' => 'required|integer|min:0',
             'data.*.is_non_activity' => 'boolean',
-            'data.*.keterangan'      => 'nullable|string',
-            'data.*.jenis_kelompok'  => 'nullable|array',
+            'data.*.keterangan' => 'nullable|string',
+            'data.*.jenis_kelompok' => 'nullable|array',
             'data.*.kelompok_rentan' => 'nullable|array',
-            'data.*.activitySelect'  => 'nullable|array',
+            'data.*.activitySelect' => 'nullable|array',
         ]);
 
         $programId = $request->input('program_id');
@@ -57,37 +55,75 @@ class BeneficiaryController extends Controller
         $beneficiaries = $request->input('data');
 
         // Loop through each beneficiary and save it
-        // foreach ($beneficiaries as $beneficiary) {
-        //     // Create the Meals_Penerima_Manfaat record
-        //     $penerima = Meals_Penerima_Manfaat::create([
-        //         'program_id' => $programId,
-        //         'user_id' => $userId,
-        //         'dusun_id' => $beneficiary['dusun_id'],
-        //         'nama' => $beneficiary['nama'],
-        //         'no_telp' => $beneficiary['no_telp'] ?? null,
-        //         'jenis_kelamin' => $beneficiary['gender'], // Adjusted to match column name
-        //         'rt' => $beneficiary['rt'],
-        //         'rw' => $beneficiary['rw'],
-        //         'umur' => $beneficiary['usia'], // Adjusted to match column name
-        //         'keterangan' => $beneficiary['keterangan'] ?? null,
-        //         'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
-        //     ]);
+        foreach ($beneficiaries as $beneficiary) {
+            // Create the Meals_Penerima_Manfaat record
+            $penerima = Meals_Penerima_Manfaat::create([
+                'program_id' => $programId,
+                'user_id' => $userId,
+                'dusun_id' => $beneficiary['dusun_id'],
+                'nama' => $beneficiary['nama'],
+                'no_telp' => $beneficiary['no_telp'] ?? null,
+                'jenis_kelamin' => $beneficiary['gender'], // Adjusted to match column name
+                'rt' => $beneficiary['rt'],
+                'rw' => $beneficiary['rw'],
+                'umur' => $beneficiary['usia'], // Adjusted to match column name
+                'keterangan' => $beneficiary['keterangan'] ?? null,
+                'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
+            ]);
 
-        //     // Sync jenis_kelompok (Master_Jenis_Kelompok)
-        //     if (!empty($beneficiary['jenis_kelompok'])) {
-        //         $penerima->jenisKelompok()->sync($beneficiary['jenis_kelompok']);
-        //     }
+            // Sync jenis_kelompok (Master_Jenis_Kelompok)
+            if (!empty($beneficiary['jenis_kelompok'])) {
+                $penerima->jenisKelompok()->sync($beneficiary['jenis_kelompok']);
+            }
 
-        //     // Sync kelompok_marjinal (Kelompok_Marjinal)
-        //     if (!empty($beneficiary['kelompok_rentan'])) {
-        //         $penerima->kelompokMarjinal()->sync($beneficiary['kelompok_rentan']);
-        //     }
+            // Sync kelompok_marjinal (Kelompok_Marjinal)
+            if (!empty($beneficiary['kelompok_rentan'])) {
+                $penerima->kelompokMarjinal()->sync($beneficiary['kelompok_rentan']);
+            }
 
-        //     // Sync activities (Program_Outcome_Output_Activity)
-        //     if (!empty($beneficiary['activitySelect'])) {
-        //         $penerima->penerimaActivity()->sync($beneficiary['activitySelect']);
-        //     }
-        // }
+            // Sync activities (Program_Outcome_Output_Activity)
+            if (!empty($beneficiary['activitySelect'])) {
+                $penerima->penerimaActivity()->sync($beneficiary['activitySelect']);
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Beneficiaries created successfully!',
+        ], Response::HTTP_CREATED);
+    }
+
+
+
+
+
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    //
+
+
+
+    use App\Models\Meals_Penerima_Manfaat_Activity;
+    use App\Models\Meals_Penerima_Manfaat_Kelompok_Marjinal;
+    use App\Models\Meals_Penerima_Manfaat_Jenis_Kelompok;
+
+    public function stores(Request $request)
+    {
+        // ... (validation and initial setup remain the same)
 
         foreach ($beneficiaries as $beneficiary) {
             $penerima = Meals_Penerima_Manfaat::create([

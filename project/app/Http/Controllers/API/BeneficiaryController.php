@@ -11,6 +11,7 @@ use App\Models\Kegiatan;
 use App\Models\Kelompok_Marjinal;
 use App\Models\Kelurahan;
 use App\Models\Master_Jenis_Kelompok;
+use App\Models\Meals_Penerima_Manfaat;
 use App\Models\Program;
 use App\Models\Provinsi;
 use Exception;
@@ -25,60 +26,129 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BeneficiaryController extends Controller
 {
-    public function getMealsDatatable(Request $request)
+    // public function getPenerimaManfaat(Request $request)
+    // {
+    //     $meals = Meals_Penerima_Manfaat::with('dusun', 'users', 'penerimaActivity.program_outcome_output.program_outcome.program', 'kelompokMarjinal', 'jenisKelompok')
+    //         ->select('trmeals_penerima_manfaat.*')
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     $data = DataTables::of($meals)
+    //         ->addIndexColumn()
+    //         ->addColumn('program_name', function ($meals) {
+    //         $programNames = $meals->penerimaActivity->map(function ($activity) {
+    //             // Check if $activity is not null and then traverse the relationships
+    //             if ($activity && $activity->program_outcome_output && $activity->program_outcome_output->program_outcome && $activity->program_outcome_output->program_outcome->program) {
+    //                 return $activity->program_outcome_output->program_outcome->program->nama ?? null;
+    //             }
+    //             return null; // Or some other default value if the relationship is missing
+    //         })->filter()->unique()->values()->toArray();
+
+    //         return implode(', ', $programNames) ?: 'N/A';
+    //     })
+    //         ->addColumn('action', function ($meals) {
+    //         $buttons = [];
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
+    //             }
+    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
+    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
+    //             }
+    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+    //         })
+    //         ->rawColumns(['action'])
+    //         ->make(true);
+
+    //     return $data;
+    // }
+
+
+    public function getPenerimaManfaat(Request $request)
     {
-        // if (!$request->ajax() && !$request->isJson()) {
-        //     return "Not an Ajax Request & JSON REQUEST";
-        // }
-        // sort by created_at desc
-        $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-            ->select('trkegiatan.*')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($item) {
-                $item->duration_in_days = $item->getDurationInDays();
-                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
-                $program = $item->activity->program_outcome_output->program_outcome->program;
-                $item->total_beneficiaries = $program->getTotalBeneficiaries();
+        try {
+            if ($request->ajax()) {
+                // Query with eager loading all related models
+                $query = Meals_Penerima_Manfaat::with([
+                    'program',
+                    'users',
+                    'dusun',
+                    'jenisKelompok',
+                    'kelompokMarjinal',
+                    // 'penerimaActivity',
+                    // 'penerimaActivity.program_outcome_output', // Nested relationship
+                ]);
 
-                return $item;
-            });
+                return DataTables::of($query)
+                    ->addIndexColumn()
+                    ->addColumn('kode', function ($row) {
+                        return $row->program ? $row->program->kode : '-';
+                    })
+                    ->addColumn('program_name', function ($row) {
+                        return $row->program ? $row->program->nama : '-';
+                    })
+                    ->addColumn('user_name', function ($row) {
+                        return $row->user ? $row->user->name : '-';
+                    })
+                    ->addColumn('dusun_name', function ($row) {
+                        return $row->dusun ? $row->dusun->nama : '-';
+                    })
+                    ->addColumn('jenis_kelompok', function ($row) {
+                        try {
+                            return $row->jenisKelompok->pluck('nama')->implode(', ');
+                        } catch (Exception $e) {
+                            \Log::error('Error fetching jenis_kelompok: ' . $e->getMessage());
+                            return '-'; // Or some other default value
+                        }
+                    })
+                    ->addColumn('kelompok_marjinal', function ($row) {
+                        try {
+                            return $row->kelompokMarjinal->pluck('nama')->implode(', ');
+                        } catch (Exception $e) {
+                            \Log::error('Error fetching kelompok_marjinal: ' . $e->getMessage());
+                            return '-'; // Or some other default value
+                        }
+                    })
+                    ->addColumn('activities', function ($row) {
+                        try {
+                            return $row->penerimaActivity->pluck('nama')->implode(', ');
+                        } catch (Exception $e) {
+                            \Log::error('Error fetching activities: ' . $e->getMessage());
+                            return '-'; // Or some other default value
+                        }
+                    })
+                    ->addColumn('action', function ($row) {
+                        $btn = '<a href="' . route('beneficiary.show', $row->id) . '" class="btn btn-sm btn-info">View</a> ';
+                        $btn .= '<a href="' . route('beneficiary.edit', $row->id) . '" class="btn btn-sm btn-primary">Edit</a> ';
+                        $btn .= '<button type="button" data-id="' . $row->id . '" class="btn btn-sm btn-danger delete-btn">Delete</button>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+            return view('meals-penerima-manfaat.index');
+        } catch (Exception $e) {
+            // Log the error
+            \Log::error('Error in MealsPenerimaManfaatController@index: ' . $e->getMessage());
 
-        $data = DataTables::of($kegiatan)
-            ->addIndexColumn()
-            ->addColumn('program_name', function ($kegiatan) {
-                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
-            })
-            ->addColumn('duration_in_days', function ($kegiatan) {
-                return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
-            })
-            ->addColumn('action', function ($kegiatan) {
-                $buttons = [];
-
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-
-        return $data;
+            // You might want to return an error view or a JSON response indicating the error
+            // For example:
+            if ($request->ajax()) {
+                return response()->json(['error' => 'An error occurred while processing the request.'], 500);
+            } else {
+                return view('error', ['message' => 'An error occurred. Please check the logs.']);  // Create an error view
+            }
+        }
     }
 
-    private function generateButton($action, $class, $icon, $title, $kegiatanId)
+    private function generateButton($action, $class, $icon, $title, $mealsId)
     {
         return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-            data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
-                <i class="bi bi-' . $icon . '"></i>
-                <span class="d-none d-sm-inline"></span>
+            data-kegiatan-id="' . $mealsId . '" data-toggle="tooltip" data-placement="top">
+            <i class="bi bi-' . $icon . '"></i>
+            <span class="d-none d-sm-inline"></span>
             </button>';
     }
 
@@ -122,202 +192,6 @@ class BeneficiaryController extends Controller
                 ->make(true);
         }
     }
-
-    // public function getProvinsi(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Provinsi::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getKabupaten(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kabupaten::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getKecamatan(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kecamatan::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->id . ' - ' . $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-    // public function getDesa(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-
-    //     if (!is_array($ids) && $ids !== null) {
-    //         $ids = [$ids];
-    //     }
-
-    //     $data = Kelurahan::when(!empty($ids), function ($query) use ($ids) {
-    //         return $query->whereIn('id', $ids);
-    //     }, function ($query) use ($search) {
-    //         return $query->where('nama', 'like', "%{$search}%");
-    //     });
-
-    //     $perPage = 20; // or whatever pagination size you want
-    //     $results = $data->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //     return response()->json([
-    //         'results' => $results->map(function ($item) {
-    //             return [
-    //                 'id' => $item->id,
-    //                 'text' => $item->nama,
-    //             ];
-    //         })->all(),
-    //         'pagination' => [
-    //             'more' => $results->hasMorePages(),
-    //         ],
-    //     ]);
-    // }
-
-    // public function getDusuns(Request $request)
-    // {
-    //     $request->validate([
-    //         'search'    => 'nullable|string|max:255',
-    //         'page'      => 'nullable|integer|min:1',
-    //         'id'        => 'nullable|array|min:1',
-    //         'id.*'      => 'integer',
-    //         'desa_id'   => 'required|exists:kelurahan,id'
-    //     ]);
-
-    //     $search = $request->input('search', '');
-    //     $page = $request->input('page', 1);
-    //     $ids = $request->input('id', []);
-    //     $desaId = $request->input('desa_id');
-    //     $perPage = 20;
-
-    //     $cacheKey = "dusuns_desa_{$desaId}_search_{$search}_page_{$page}_ids_" . implode(',', $ids);
-
-    //     return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
-    //         $query = Dusun::where('desa_id', $desaId);
-
-    //         if (!empty($ids)) {
-    //             $query->whereIn('id', $ids);
-    //         } elseif ($search !== '') {
-    //             $query->where('nama', 'like', "%{$search}%");
-    //         }
-
-    //         $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
-
-    //         return response()->json([
-    //             'results' => $results->map(function ($item) {
-    //                 return [
-    //                     'id' => $item->id,
-    //                     'text' => $item->nama,
-    //                 ];
-    //             })->all(),
-    //             'pagination' => [
-    //                 'more' => $results->hasMorePages(),
-    //             ],
-    //         ]);
-    //     });
-    // }
 
     public function storeDusun(StoreDusunRequest $request)
     {
@@ -583,20 +457,41 @@ class BeneficiaryController extends Controller
 
         // return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($search, $page, $ids, $desaId, $perPage) {
         $query = Dusun::where('desa_id', $desaId)
-                ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
-                ->when($search, fn($q) => $q->where('nama', 'like', "%{$search}%"));
+            ->when(!empty($ids), fn($q) => $q->whereIn('id', $ids))
+            ->when($search, fn($q) => $q->where('nama', 'like', "%{$search}%"));
 
-            $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
+        $results = $query->paginate($perPage, ['id', 'nama'], 'page', $page);
 
-            return response()->json([
-                'results' => $results->map(fn($item) => [
-                    'id' => $item->id,
-                    'text' => $item->nama,
-                ])->all(),
-                'pagination' => [
-                    'more' => $results->hasMorePages(),
-                ],
-            ]);
+        return response()->json([
+            'results' => $results->map(fn($item) => [
+                'id' => $item->id,
+                'text' => $item->nama,
+            ])->all(),
+            'pagination' => [
+                'more' => $results->hasMorePages(),
+            ],
+        ]);
         // });
+    }
+
+    public function apiStoreJenisKelompok(Request $request)
+    {
+        $request->validate([
+            'nama_jenis_kelompok' => 'required|string|max:255',
+        ]);
+
+        $jeniskelompok = Master_Jenis_Kelompok::create([
+            'nama' => $request->input('nama_jenis_kelompok'),
+            'aktif' => $request->has('aktif') ? 1 : 0
+        ]);
+        return response()->json(
+            [
+                'success'   => true,
+                'status'    => 'success',
+                'message'   => 'Jenis Kelompok created successfully',
+                'data'      => $jeniskelompok
+            ],
+            201
+        );
     }
 }

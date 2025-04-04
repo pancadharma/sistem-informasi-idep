@@ -1,6 +1,6 @@
 <script>
-        $(document).ready(function () {
-        $('#mealsTable').DataTable({
+    $(document).ready(function () {
+        $('#penerimaManfaat').DataTable({
             serverSide: true,
             processing: true,
             // responsive: true,
@@ -16,15 +16,28 @@
                     searchable: true,
                 },
                 {data: 'kode', name: 'kode', title: '{{ __('cruds.kegiatan.kode') }}'},
+                // {data: 'activities.program_outcome_output.program_outcome.program.nama', name: 'activity.program_outcome_output.program_outcome.program.nama', title: '{{ __('cruds.program.nama') }}'},
                 {data: 'nama', name: 'nama', title: '{{ __('cruds.kegiatan.nama') }}'},
-                {data: 'activity.program_outcome_output.program_outcome.program.nama', name: 'activity.program_outcome_output.program_outcome.program.nama', title: '{{ __('cruds.program.nama') }}'},
                 {data: 'dusun.nama', name: 'dusun.nama', title: '{{ __('cruds.desa.form.nama') }}'},
-                {data: 'tanggalmulai', name: 'tanggalmulai', title: '{{ __('cruds.kegiatan.tanggalmulai') }}'},
-                {data: 'tanggalselesai', name: 'tanggalselesai', title: '{{ __('cruds.kegiatan.tanggalselesai') }}'},
-                {data: 'duration_in_days', name: 'duration_in_days', title: '{{ __('cruds.kegiatan.durasi') }}'},
-                {data: 'tempat', name: 'tempat', title: '{{ __('cruds.kegiatan.tempat') }}'},
-                {data: 'fase', name: 'tempat', title: '{{ __('cruds.kegiatan.fase') }}'},
-                {data: 'status', name: 'status', title: '{{ __('cruds.kegiatan.status') }}'},
+                // {data: 'dusun.desa.nama', name: 'dusun.desa.nama', title: '{{ __('cruds.beneficiary.penerima.desa') }}'},
+                {data: 'jenis_kelamin', name: 'jenis_kelamin', title: '{{ __('cruds.beneficiary.penerima.gender') }}'},
+                {data: 'jenis_kelamin', name: 'jenis_kelamin', title: '{{ __('cruds.beneficiary.penerima.marjinal') }}'},
+                {
+                    data: 'kelompok_marjinal',
+                    name: 'kelompok_marjinal',
+                    title: '{{ __('cruds.kegiatan.kelompok_marjinal') }}',
+                    render: function (data, type, row) {
+                        // Check if data is an array and map it to names
+                        if (Array.isArray(data)) {
+                            return data.map(function (item) {
+                                return item.nama; // Assuming each item has a 'nama' property
+                            }).join(', ');
+                        }
+                        return data; // If not an array, return the original data
+                    }
+                },
+
+                // {data: 'status', name: 'status', title: '{{ __('cruds.kegiatan.status') }}'},
                 {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center'},
             ],
             layout: {

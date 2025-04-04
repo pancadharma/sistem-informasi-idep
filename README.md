@@ -1,24 +1,31 @@
 ## About IDEP-Training
 
-# Teknologi yang Digunakan dalam Pengembangan Sistem Informasi IDEP
+Fitur utama dari Sistem Informasi IDEP meliputi:
 
-## 1. Framework
-- **Laravel**: Framework PHP yang digunakan untuk membangun aplikasi web dengan struktur yang rapi dan kemudahan dalam pengembangan.
+### 1. **Manajemen Data Pelatihan**
+   - Mengelola informasi tentang berbagai program pelatihan yang ditawarkan.
+   - Menyimpan rincian peserta, jadwal, dan lokasi pelatihan.
 
-## 2. Basis Data
-- **MySQL**: Sistem manajemen basis data relasional yang digunakan untuk menyimpan data aplikasi.
+### 2. **Pemantauan Kemajuan Peserta**
+   - Memungkinkan pemantauan kemajuan peserta selama pelatihan.
+   - Menyediakan laporan tentang kehadiran dan pencapaian peserta.
 
-## 3. Antarmuka Pengguna
-- **AdminLTE**: Template dashboard berbasis HTML yang digunakan untuk membangun antarmuka pengguna yang responsif dan menarik.
+### 3. **Laporan Kegiatan**
+   - Menghasilkan laporan berkala mengenai kegiatan pelatihan.
+   - Menyediakan analisis dan statistik untuk evaluasi program.
 
-## 4. Bahasa Pemrograman
-- **PHP**: Bahasa pemrograman yang digunakan dalam pengembangan backend aplikasi.
+### 4. **Antarmuka Pengguna yang Ramah**
+   - Menggunakan antarmuka berbasis AdminLTE yang intuitif dan responsif.
+   - Memudahkan pengguna dalam navigasi dan akses informasi.
 
-## 5. Frontend
-- **HTML, CSS, dan JavaScript**: Digunakan untuk membangun tampilan dan interaktivitas di sisi klien.
+### 5. **Keamanan Data**
+   - Mengimplementasikan sistem autentikasi untuk melindungi data pengguna.
+   - Menjamin bahwa hanya pengguna yang berwenang yang dapat mengakses informasi sensitif.
 
-## 6. Tools dan Library Tambahan
-- Berbagai alat dan pustaka tambahan yang mendukung pengembangan, seperti Composer untuk manajemen dependensi.
+### 6. **Integrasi dengan Sistem Lain**
+   - Kemampuan untuk terintegrasi dengan aplikasi atau sistem lain untuk memperluas fungsionalitas.
+
+Fitur-fitur ini dirancang untuk mendukung organisasi nirlaba dalam meningkatkan efisiensi dan efektivitas program pelatihan mereka.
 
 
 
@@ -27,7 +34,7 @@
 - **[Siva](https://www.instagram.com/agus.maharta/)**
 - **[Panca Dharma](https://www.instagram.com/panca_dharma/)**
 - **[Wirawan Wira](https://www.instagram.com/wirawan.wira/)**
-- **[Gede Adi](https://www.instagram.com/gedeadisurya)**
+- **[Gede Adi Surya](https://www.instagram.com/gedeadisurya)**
 
 ## License
 
@@ -86,3 +93,24 @@ cp .env.example .env
 - **Spesifik**: Semakin spesifik Anda dalam permintaan, semakin baik hasilnya.
 - **Contoh**: Sertakan contoh data atau struktur yang Anda inginkan untuk mendapatkan hasil yang lebih relevan.
 - **Iterasi**: Jika hasil pertama tidak memuaskan, coba ubah prompt Anda sedikit untuk mendapatkan hasil yang lebih baik.
+
+
+# Teknologi yang Digunakan dalam Pengembangan Sistem Informasi IDEP
+
+## 1. Framework
+- **Laravel**: Framework PHP yang digunakan untuk membangun aplikasi web dengan struktur yang rapi dan kemudahan dalam pengembangan.
+
+## 2. Basis Data
+- **MySQL**: Sistem manajemen basis data relasional yang digunakan untuk menyimpan data aplikasi.
+
+## 3. Antarmuka Pengguna
+- **AdminLTE**: Template dashboard berbasis HTML yang digunakan untuk membangun antarmuka pengguna yang responsif dan menarik.
+
+## 4. Bahasa Pemrograman
+- **PHP**: Bahasa pemrograman yang digunakan dalam pengembangan backend aplikasi.
+
+## 5. Frontend
+- **HTML, CSS, dan JavaScript**: Digunakan untuk membangun tampilan dan interaktivitas di sisi klien.
+
+## 6. Tools dan Library Tambahan
+- Berbagai alat dan pustaka tambahan yang mendukung pengembangan, seperti Composer untuk manajemen dependensi.
