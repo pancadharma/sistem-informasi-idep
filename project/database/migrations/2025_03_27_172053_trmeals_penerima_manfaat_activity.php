@@ -25,7 +25,7 @@ return new class extends Migration
         Schema::create('trmeals_penerima_manfaat_activity', function (Blueprint $table) {
             $table->id();
             $table->foreignId('trmeals_penerima_manfaat_id')->constrained('trmeals_penerima_manfaat')->index('trmeals_pm_fk');
-            $table->foreignId('trprogramoutcomeoutputactivity_id')->nullable()->constrained('trprogramoutcomeoutputactivity')->onDelete('cascade')->index('trmeals_pm_activity_id_fk');
+            $table->foreignId('programoutcomeoutputactivity_id')->nullable()->constrained('trprogramoutcomeoutputactivity')->onDelete('cascade')->index('trmeals_pm_activity_id_fk');
 
             $table->timestamps();
             $table->softDeletes();
