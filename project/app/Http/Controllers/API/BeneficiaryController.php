@@ -65,87 +65,51 @@ class BeneficiaryController extends Controller
     //     return $data;
     // }
 
-
     public function getPenerimaManfaat(Request $request)
     {
         try {
             if ($request->ajax()) {
-                // Query with eager loading all related models
-                $query = Meals_Penerima_Manfaat::with([
-                    'program',
-                    'users',
-                    'dusun',
-                    'jenisKelompok',
-                    'kelompokMarjinal',
-                    // 'penerimaActivity',
-                    // 'penerimaActivity.program_outcome_output', // Nested relationship
-                ]);
-
+                $query = Program::select(['id', 'kode', 'nama'])
+                    ->has('penerimaManfaat')
+                    ->withCount([
+                        'penerimaManfaat as total_beneficiaries' // Alias the count
+                    ]);
                 return DataTables::of($query)
                     ->addIndexColumn()
                     ->addColumn('kode', function ($row) {
-                        return $row->program ? $row->program->kode : '-';
+                        return $row->kode ?? '-';
                     })
                     ->addColumn('program_name', function ($row) {
-                        return $row->program ? $row->program->nama : '-';
+                        return $row->nama ?? '-';
                     })
-                    ->addColumn('user_name', function ($row) {
-                        return $row->user ? $row->user->name : '-';
-                    })
-                    ->addColumn('dusun_name', function ($row) {
-                        return $row->dusun ? $row->dusun->nama : '-';
-                    })
-                    ->addColumn('jenis_kelompok', function ($row) {
-                        try {
-                            return $row->jenisKelompok->pluck('nama')->implode(', ');
-                        } catch (Exception $e) {
-                            \Log::error('Error fetching jenis_kelompok: ' . $e->getMessage());
-                            return '-'; // Or some other default value
-                        }
-                    })
-                    ->addColumn('kelompok_marjinal', function ($row) {
-                        try {
-                            return $row->kelompokMarjinal->pluck('nama')->implode(', ');
-                        } catch (Exception $e) {
-                            \Log::error('Error fetching kelompok_marjinal: ' . $e->getMessage());
-                            return '-'; // Or some other default value
-                        }
-                    })
-                    ->addColumn('activities', function ($row) {
-                        try {
-                            return $row->penerimaActivity->pluck('nama')->implode(', ');
-                        } catch (Exception $e) {
-                            \Log::error('Error fetching activities: ' . $e->getMessage());
-                            return '-'; // Or some other default value
-                        }
+                    ->addColumn('total_beneficiaries', function ($row) {
+                        return $row->total_beneficiaries ?? 0; // Use the count from withCount
                     })
                     ->addColumn('action', function ($row) {
-                        $btn = '<a href="' . route('beneficiary.show', $row->id) . '" class="btn btn-sm btn-info">View</a> ';
-                        $btn .= '<a href="' . route('beneficiary.edit', $row->id) . '" class="btn btn-sm btn-primary">Edit</a> ';
-                        $btn .= '<button type="button" data-id="' . $row->id . '" class="btn btn-sm btn-danger delete-btn">Delete</button>';
-                        return $btn;
+                        $buttons = [];
+                        if (auth()->user()->id === 1 || auth()->user()->can('beneficiary_edit')) {
+                            $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . ' ' . __('cruds.beneficiary.label') . ' ' . $row->nama, $row->id);
+                        }
+                    if (auth()->user()->id === 1 || auth()->user()->can('beneficiary_view') || auth()->user()->can('beneficiary_access')) {
+                        $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . ' ' . __('cruds.beneficiary.label') . ' ' . $row->nama, $row->id);
+                        }
+                    if (auth()->user()->id === 1 || auth()->user()->can('beneficiary_details_edit') || auth()->user()->can('beneficiary_edit')) {
+                        $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . ' ' . __('cruds.beneficiary.label') . ' ' . $row->nama, $row->id);
+                        }
+                        return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
                     })
                     ->rawColumns(['action'])
                     ->make(true);
             }
-            return view('meals-penerima-manfaat.index');
         } catch (Exception $e) {
-            // Log the error
-            \Log::error('Error in MealsPenerimaManfaatController@index: ' . $e->getMessage());
-
-            // You might want to return an error view or a JSON response indicating the error
-            // For example:
-            if ($request->ajax()) {
-                return response()->json(['error' => 'An error occurred while processing the request.'], 500);
-            } else {
-                return view('error', ['message' => 'An error occurred. Please check the logs.']);  // Create an error view
-            }
+            \Log::error('Error in BeneficiaryController: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while processing the request.'], 500);
         }
     }
 
     private function generateButton($action, $class, $icon, $title, $mealsId)
     {
-        return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
+        return '<button type="button" title="' . $title . ' " class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
             data-kegiatan-id="' . $mealsId . '" data-toggle="tooltip" data-placement="top">
             <i class="bi bi-' . $icon . '"></i>
             <span class="d-none d-sm-inline"></span>
