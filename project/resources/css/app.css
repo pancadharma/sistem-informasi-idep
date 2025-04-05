@@ -1,0 +1,29 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Tambahkan custom CSS Anda di sini */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column; /* Atur ini jika perlu */
+}
+
+.main-content {
+    margin-left: 260px; /* Sesuaikan dengan lebar sidebar + sedikit margin */
+    padding: 20px;
+    width: calc(100% - 260px); /* Lebar konten utama */
+    flex-grow: 1;
+}
+
+/* Style untuk Accordion Sidebar */
+.sidebar .nav-link {
+    color: #333;
+}
+ .sidebar .nav-link.active {
+    font-weight: bold;
+    /* color: #0d6efd; */
+ }
+ .sidebar .nav .nav-link { /* Submenu items */
+    padding-left: 2.5rem;
+    font-size: 0.9em;
+ }

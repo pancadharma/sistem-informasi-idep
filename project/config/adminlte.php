@@ -362,6 +362,13 @@ return [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],
+                [
+                    'text'      => 'FRM',
+                    'icon'      => 'nav-icon bi bi-chat-quote', 
+                    'icon_text' => 'feedback',
+                    'route'     => 'feedback.index',
+                    'active'    => ['feedback', 'feedback*', 'regex:@^feedback/[0-9]+$@'],
+                ],
             ],
         ],
         [
