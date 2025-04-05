@@ -114,7 +114,7 @@ class Program extends Model implements HasMedia
     {
         return $this->hasOne(ProgramGoal::class, 'program_id');
     }
-    
+
     public function jadwalreport()
     {
         return $this->hasMany(Program_Report_Schedule::class, 'program_id');
@@ -179,5 +179,10 @@ class Program extends Model implements HasMedia
     {
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
+    }
+
+    public function penerimaManfaat()
+    {
+        return $this->hasMany(Meals_Penerima_Manfaat::class, 'program_id')->whereNull('deleted_at');
     }
 }
