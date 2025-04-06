@@ -274,7 +274,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
         Route::POST('/',                            [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
-        Route::get('/{beneficiary}/edit',           [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
+        Route::get('/{program}/edit',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
         Route::PUT('/{beneficiary}/update',         [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
         Route::get('/{beneficiary}/show',           [App\Http\Controllers\Admin\BeneficiaryController::class, 'show'])->name('show');
         Route::get('/create',                       [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
