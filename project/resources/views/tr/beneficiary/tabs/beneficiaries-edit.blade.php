@@ -98,7 +98,7 @@
             <input type="hidden" name="program_id" id="program_id" value="{{ $program->id }}">
             <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
             <!-- kode program -->
-            <input type="text" class="form-control" id="kode_program" name="kode_program" value="{{ $program->kode }}" readonly>
+            <input type="text" class="form-control" id="kode_program" name="kode_program" value="{{ $program->kode }}" disabled>
         </div>
         <!-- nama program -->
         <div class="col-sm-12 col-md-12 col-lg-8 self-center order-2 order-md-2">
@@ -113,7 +113,7 @@
             <button type="button" class="btn btn-warning" id="addDataBtn" data-toggle="modal" data-target="#ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}">
                 {{ __('global.add') .' '. '' }} <i class="bi bi-person-plus"></i>
             </button>
-            <button type="button" class="btn btn-danger" id="submitDataBtn">{{ __('global.save') }} <i class="bi bi-save"></i></button>
+            <button type="button" class="btn btn-success" id="submitDataBtn">{{ __('global.update') }} <i class="bi bi-save"></i></button>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-2 mb-2 mt-2">
             <div class="input-group ml-auto">
