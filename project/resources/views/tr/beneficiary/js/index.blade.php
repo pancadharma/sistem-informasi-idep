@@ -16,7 +16,7 @@
                 },
                 { data: 'kode', name: 'kode', title: '{{ __('cruds.beneficiary.program_code') }}' },
                 { data: 'program_name', name: 'program_name', title: '{{ __('cruds.beneficiary.program_name') }}' },
-                { data: 'total_beneficiaries', name: 'total_beneficiaries', title: '{{ __('cruds.beneficiary.label') }}' }, // Updated to match withCount
+                { data: 'total_beneficiaries', name: 'total_beneficiaries', title: '{{ __('cruds.kegiatan.peserta.total') }}' }, // Updated to match withCount
                 { data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center' },
             ],
             layout: {
@@ -69,6 +69,14 @@
             },
             order: [1, 'asc'],
             lengthMenu: [10, 25, 50, 100],
+        });
+    });
+
+    $(document).ready(function () {
+        $('#penerimaManfaat tbody').on('click', '.edit-beneficiary-program-btn', function () {
+            var id = $(this).data('beneficiary-program-id');
+            window.location.href = '{{ route('beneficiary.edit', ['program' => ':id']) }}'
+                .replace(':id', id);
         });
     });
 </script>

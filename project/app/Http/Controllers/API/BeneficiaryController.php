@@ -109,8 +109,8 @@ class BeneficiaryController extends Controller
 
     private function generateButton($action, $class, $icon, $title, $mealsId)
     {
-        return '<button type="button" title="' . $title . ' " class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-            data-kegiatan-id="' . $mealsId . '" data-toggle="tooltip" data-placement="top">
+        return '<button type="button" title="' . $title . ' " class="btn btn-sm btn-' . $class . ' ' . $action . '-beneficiary-program-btn" data-action="' . $action . '"
+            data-beneficiary-program-id="' . $mealsId . '" data-toggle="tooltip" data-placement="top">
             <i class="bi bi-' . $icon . '"></i>
             <span class="d-none d-sm-inline"></span>
             </button>';

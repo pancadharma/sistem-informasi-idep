@@ -8,6 +8,7 @@ use App\Models\Meals_Penerima_Manfaat;
 use App\Models\Meals_Penerima_Manfaat_Activity;
 use App\Models\Meals_Penerima_Manfaat_Jenis_Kelompok;
 use App\Models\Meals_Penerima_Manfaat_Kelompok_Marjinal;
+use App\Models\Program;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Gate;
@@ -30,6 +31,16 @@ class BeneficiaryController extends Controller
     {
         abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('tr.beneficiary.wilayah');
+    }
+    public function edit(Program $program)
+    {
+        abort_if(Gate::denies('beneficiary_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $beneficiaries = $program->penerimaManfaat;
+        $data = Meals_Penerima_Manfaat::where('program_id', $program->id)->with(['penerimaActivity', 'jenisKelompok', 'kelompokMarjinal'])->get();
+        // return $data;
+
+        // return $beneficiaries;
+        return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'data'));
     }
     // public function store(Request $request)
     // {
