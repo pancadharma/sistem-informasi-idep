@@ -92,23 +92,5 @@ class Meals_Penerima_Manfaat extends Model
             'programoutcomeoutputactivity_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
     }
-    // public function penerima_activity_details()
-    // {
-    //     return $this->belongsToMany(
-    //         Program_Outcome_Output_Activity::class, // Model yang berelasi
-    //         'trmeals_penerima_manfaat_activity', // nama table untuk menampung relasi many-to-many (pivot) trmeasls_penerima_manfaat dan (master) kelompok_marjinal
-    //         'trmeals_penerima_manfaat_id', // Foreign key di tabel pivot untuk model ini
-    //         'programoutcomeoutputactivity_id' // Foreign key di tabel pivot untuk model yang berelasi
-    //     );
-    // }
 
-    // public function meal()
-    // {
-    //     return $this->belongsTo(Meals::class);
-    // }
-
-    // public function program_outcome_output_activity()
-    // {
-    //     return $this->belongsTo(Program_Outcome_Output_Activity::class, 'programoutcomeoutputactivity_id');
-    // }
 }

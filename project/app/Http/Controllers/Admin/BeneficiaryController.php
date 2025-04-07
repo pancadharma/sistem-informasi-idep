@@ -35,123 +35,22 @@ class BeneficiaryController extends Controller
     public function edit(Program $program)
     {
         abort_if(Gate::denies('beneficiary_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $beneficiaries = $program->penerimaManfaat;
-        $data = Meals_Penerima_Manfaat::where('program_id', $program->id)->with(['penerimaActivity', 'jenisKelompok', 'kelompokMarjinal'])->get();
-        // return $data;
 
-        // return $beneficiaries;
-        return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'data'));
+        // $data = Meals_Penerima_Manfaat::where('program_id', $program->id)->with(['penerimaActivity', 'jenisKelompok', 'kelompokMarjinal'])->get();
+        $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+        ->where('program_id', $program->id)
+        ->with([
+            'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id','nama'),
+            'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id','nama'),
+            'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+            'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama') // Eager load desa through dusun
+        ])
+        ->get();
+
+        $activities = $program->programOutputActivities()->get(['id', 'kode', 'nama']);
+
+        return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'activities'));
     }
-    // public function store(Request $request)
-    // {
-    //     abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-    //     // Validate the incoming request data
-    //     $validated = $request->validate([
-    //         'program_id'             => 'required|integer',
-    //         'data'                   => 'required|array',
-    //         'data.*.nama'            => 'required|string|max:255',
-    //         'data.*.no_telp'         => 'nullable|string|max:15',
-    //         'data.*.gender'          => 'required|in:laki,perempuan,lainnya',
-    //         'data.*.rt'              => 'required|string|max:10',
-    //         'data.*.rw'              => 'required|string|max:10',
-    //         'data.*.dusun_id'        => 'required|integer',
-    //         'data.*.usia'            => 'required|integer|min:0',
-    //         'data.*.is_non_activity' => 'boolean',
-    //         'data.*.keterangan'      => 'nullable|string',
-    //         'data.*.jenis_kelompok'  => 'nullable|array',
-    //         'data.*.kelompok_rentan' => 'nullable|array',
-    //         'data.*.activitySelect'  => 'nullable|array',
-    //     ]);
-
-    //     $programId = $request->input('program_id');
-    //     $userId = auth()->id(); // Get the authenticated user's ID
-    //     $beneficiaries = $request->input('data');
-
-    //     // Loop through each beneficiary and save it
-    //     // foreach ($beneficiaries as $beneficiary) {
-    //     //     // Create the Meals_Penerima_Manfaat record
-    //     //     $penerima = Meals_Penerima_Manfaat::create([
-    //     //         'program_id' => $programId,
-    //     //         'user_id' => $userId,
-    //     //         'dusun_id' => $beneficiary['dusun_id'],
-    //     //         'nama' => $beneficiary['nama'],
-    //     //         'no_telp' => $beneficiary['no_telp'] ?? null,
-    //     //         'jenis_kelamin' => $beneficiary['gender'], // Adjusted to match column name
-    //     //         'rt' => $beneficiary['rt'],
-    //     //         'rw' => $beneficiary['rw'],
-    //     //         'umur' => $beneficiary['usia'], // Adjusted to match column name
-    //     //         'keterangan' => $beneficiary['keterangan'] ?? null,
-    //     //         'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
-    //     //     ]);
-
-    //     //     // Sync jenis_kelompok (Master_Jenis_Kelompok)
-    //     //     if (!empty($beneficiary['jenis_kelompok'])) {
-    //     //         $penerima->jenisKelompok()->sync($beneficiary['jenis_kelompok']);
-    //     //     }
-
-    //     //     // Sync kelompok_marjinal (Kelompok_Marjinal)
-    //     //     if (!empty($beneficiary['kelompok_rentan'])) {
-    //     //         $penerima->kelompokMarjinal()->sync($beneficiary['kelompok_rentan']);
-    //     //     }
-
-    //     //     // Sync activities (Program_Outcome_Output_Activity)
-    //     //     if (!empty($beneficiary['activitySelect'])) {
-    //     //         $penerima->penerimaActivity()->sync($beneficiary['activitySelect']);
-    //     //     }
-    //     // }
-
-    //     foreach ($beneficiaries as $beneficiary) {
-    //         $penerima = Meals_Penerima_Manfaat::create([
-    //             'program_id' => $programId,
-    //             'user_id' => $userId,
-    //             'dusun_id' => $beneficiary['dusun_id'],
-    //             'nama' => $beneficiary['nama'],
-    //             'no_telp' => $beneficiary['no_telp'] ?? null,
-    //             'jenis_kelamin' => $beneficiary['gender'],
-    //             'rt' => $beneficiary['rt'],
-    //             'rw' => $beneficiary['rw'],
-    //             'umur' => $beneficiary['usia'],
-    //             'keterangan' => $beneficiary['keterangan'] ?? null,
-    //             'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
-    //         ]);
-
-    //         // Manually create pivot records for jenis_kelompok
-    //         if (!empty($beneficiary['jenis_kelompok'])) {
-    //             foreach ($beneficiary['jenis_kelompok'] as $jenisKelompokId) {
-    //                 Meals_Penerima_Manfaat_Jenis_Kelompok::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'jenis_kelompok_id' => $jenisKelompokId,
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Manually create pivot records for kelompok_marjinal
-    //         if (!empty($beneficiary['kelompok_rentan'])) {
-    //             foreach ($beneficiary['kelompok_rentan'] as $kelompokMarjinalId) {
-    //                 Meals_Penerima_Manfaat_Kelompok_Marjinal::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'kelompok_marjinal_id' => $kelompokMarjinalId,
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Manually create pivot records for activities
-    //         if (!empty($beneficiary['activitySelect'])) {
-    //             foreach ($beneficiary['activitySelect'] as $activityId) {
-    //                 Meals_Penerima_Manfaat_Activity::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'programoutcomeoutputactivity_id' => $activityId,
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Beneficiaries created successfully!',
-    //     ], Response::HTTP_CREATED);
-    // }
 
     public function store(Request $request)
     {
@@ -229,9 +128,6 @@ class BeneficiaryController extends Controller
     public function show($id)
     {
         abort_if(Gate::denies('beneficiary_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        // $beneficiaries = Meals_Penerima_Manfaat::where('program_id', $id)
-        //     ->get(['nama', 'jenis_kelamin', 'rt', 'rw', 'umur']);
 
         if (!empty($id)) {
 

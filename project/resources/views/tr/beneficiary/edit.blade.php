@@ -579,13 +579,19 @@
         });
     }
 
-
-
-
-
-
     // load function on document ready
     $(document).ready(function() {
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
+        if (!csrfToken) {
+            console.error("CSRF token not found.");
+            return;
+        }
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
+        });
+
         loadJenisKelompok();
         loadKelompokMarjinal();
         setLocationForm();
@@ -630,6 +636,146 @@
         });
     });
 
+    $(document).ready(function() {
+        $(document).on('click', '.edit-btn', function(e) {
+            e.preventDefault();
+            editRow(this);
+            // const beneficiaryId = $(this).data('id');
+            // const row = $(`#dataTable tbody tr[data-id="${beneficiaryId}"]`);
+
+            // $('#editRowId').val(beneficiaryId);
+            // $('#editNama').val(row.find('td[data-nama]').attr('data-nama'));
+            // $('#editNoTelp').val(row.find('td[data-no_telp]').attr('data-no_telp'));
+            // $('#editUsia').val(row.find('td[data-usia]').attr('data-usia'));
+            // $('#editGender').val(row.find('td[data-gender]').attr('data-gender'));
+            // $('#editKelompokRentan').val(row.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan') ? row.find('td[data-kelompok_rentan]').attr('data-kelompok_rentan').split(',') : []);
+            // $('#editJenisKelompok').val(row.find('td[data-jenis_kelompok]').attr('data-jenis_kelompok') ? row.find('td[data-jenis_kelompok]').attr('data-jenis_kelompok').split(',') : []);
+            // $('#editRt').val(row.find('td[data-rt]').attr('data-rt'));
+            // $('#editRwBanjar').val(row.find('td[data-rw]').attr('data-rw'));
+            // $('#dusun_id_edit').val(row.find('td[data-dusun-id]').attr('data-dusun-id'));
+            // $('#edit_is_non_activity').prop('checked', row.find('td[data-is_non_activity]').attr('data-is_non_activity') === 'true');
+            // const activityIds = [];
+            // row.find('td[data-program-activity-id]').each(function() {
+            //     if ($(this).text().trim() === '√') {
+            //         activityIds.push($(this).attr('data-program-activity-id'));
+            //     }
+            // });
+            // $('#activitySelectEdit').val(activityIds).trigger('change');
+            // $('#keterangan_edit').val(row.find('td[data-keterangan]').attr('data-keterangan'));
+
+            // $('#editDataModal').modal('show');
+        });
+
+        const activities = @json($activities);
+        const beneficiaries = @json($beneficiaries);
+
+        function editRow(row) {
+            const beneficiaryId = $(row).data('id');
+            const beneficiary = beneficiaries.find(b => b.id === beneficiaryId);
+            if (!beneficiary) {
+                console.error("Beneficiary not found:", beneficiaryId);
+                return;
+            }
+
+            // Set basic fields
+            $("#editRowId").val(beneficiaryId);
+            $("#editNama").val(beneficiary.nama);
+            $("#editNoTelp").val(beneficiary.no_telp);
+            $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
+            $("#editUsia").val(beneficiary.umur);
+            $("#editRt").val(beneficiary.rt);
+            $("#editRwBanjar").val(beneficiary.rw);
+            $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+            $("#keterangan_edit").val(beneficiary.keterangan);
+
+            // Pre-populate location fields (assuming these are stored in the database)
+            const addOptionAndTriggerChange = (selector, text, value) => {
+                return new Promise(resolve => {
+                    const option = new Option(text || '-', value || '', true, true);
+                    $(selector).append(option).trigger('change');
+                    setTimeout(resolve, 100);
+                });
+            };
+            addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.provinsi_nama || '-', beneficiary.provinsi_id || '')
+                .then(() => addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.kabupaten_nama || '-', beneficiary.kabupaten_id || ''))
+                .then(() => addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.kecamatan_nama || '-', beneficiary.kecamatan_id || ''))
+                .then(() => addOptionAndTriggerChange("#desa_id_edit", beneficiary.desa_id || '-', beneficiary.desa_id || ''))
+                .then(() => addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun_id || '-', beneficiary.dusun_id || ''));
+
+            // Pre-populate kelompokMarjinal
+            $("#editKelompokRentan").empty();
+            const kelompokMarjinalData = beneficiary.kelompok_marjinal.map(k => ({ id: k.id, text: k.nama }));
+            kelompokMarjinalData.forEach(item => {
+                const option = new Option(item.text, item.id, true, true);
+                $("#editKelompokRentan").append(option);
+            });
+            $("#editKelompokRentan").val(kelompokMarjinalData.map(k => k.id)).trigger("change");
+
+            // Pre-populate jenisKelompok
+            $("#editJenisKelompok").empty();
+            const jenisKelompokData = beneficiary.jenis_kelompok.map(j => ({ id: j.id, text: j.nama }));
+            jenisKelompokData.forEach(item => {
+                const option = new Option(item.text, item.id, true, true);
+                $("#editJenisKelompok").append(option);
+            });
+            $("#editJenisKelompok").val(jenisKelompokData.map(j => j.id)).trigger("change");
+
+            // Pre-populate activities
+            const selectedActivityIds = beneficiary.penerima_activity.map(a => a.id.toString());
+            $("#activitySelectEdit").val(selectedActivityIds).trigger("change");
+
+            $("#editDataModal").modal("show");
+        }
+
+        function updateRow() {
+            const form = document.getElementById("editDataForm");
+            const beneficiaryId = $("#editRowId").val();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
+                if (obj[item.name]) {
+                    if (!Array.isArray(obj[item.name])) obj[item.name] = [obj[item.name]];
+                    obj[item.name].push(item.value);
+                } else {
+                    obj[item.name] = item.value;
+                }
+                return obj;
+            }, {});
+            formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+            formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
+            formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
+            formData.activity_ids = $("#activitySelectEdit").val() || [];
+
+            $.ajax({
+                url: `{{ route('beneficiary.update', '') }}/${beneficiaryId}`,
+                method: "PUT",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
+                success: function(response) {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Beneficiary updated successfully!",
+                        icon: "success",
+                        timer: 1500,
+                    }).then(() => {
+                        location.reload(); // Reload to reflect changes
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: "Error",
+                        text: xhr.responseJSON?.message || "Failed to update beneficiary.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                },
+            });
+        }
+
+    });
 
 </script>
 
