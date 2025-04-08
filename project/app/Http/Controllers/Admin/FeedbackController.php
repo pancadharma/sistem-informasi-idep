@@ -34,7 +34,7 @@ class FeedbackController extends Controller
         $feedbackItems = $query->latest()->paginate(10); // Tampilkan 10 item per halaman
 
         // Kirim data ke view index
-        return view('tr.feedback.index', compact('feedbackItems'));
+        return view('tr.feedback.index');
     }
 
     /**
@@ -45,7 +45,7 @@ class FeedbackController extends Controller
     {
         // Biasanya hanya return view('feedback.create');
         // Tapi karena pakai modal, logika tambah ada di index/store
-         return redirect()->route('feedback.index')->with('info', 'Gunakan tombol "Tambah FRM" untuk menambahkan data baru.');
+        return view('tr.feedback.create');
     }
 
     /**
@@ -167,10 +167,19 @@ class FeedbackController extends Controller
     {
         try {
              $feedback->delete();
+             // Jika request datang dari AJAX (seperti delete DataTables kita), return JSON
+             if (request()->ajax() || request()->wantsJson()) {
+                 return response()->json(['success' => true, 'message' => 'Data berhasil dihapus.']);
+             }
+             // Jika request biasa (jarang terjadi untuk delete sekarang)
              return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil dihapus!');
-         } catch (\Exception $e) {
-              // Jika terjadi error saat hapus (misal karena relasi/foreign key)
-               return redirect()->route('feedback.index')->with('error', 'Gagal menghapus data: ' . $e->getMessage());
-         }
+        } catch (\Exception $e) {
+             // Jika request AJAX
+             if (request()->ajax() || request()->wantsJson()) {
+                 return response()->json(['success' => false, 'message' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+             }
+             // Jika request biasa
+              return redirect()->route('feedback.index')->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 }

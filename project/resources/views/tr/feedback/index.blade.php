@@ -1,126 +1,103 @@
+{{-- @php --}}
+{{-- Variabel $perPage dan $perPageOptions tidak lagi diperlukan untuk DataTables --}}
+{{-- $perPage = request()->input('per_page', 10); --}}
+{{-- $perPageOptions = [10, 25, 50, 100]; --}}
+{{-- @endphp --}}
+
 @extends('layouts.app') {{-- Menggunakan layout utama --}}
 
-@section('title', 'Daftar Feedback & Response') {{-- Judul Halaman --}}
+{{-- Mengadopsi section dari template tim --}}
+@section('subtitle', __('Daftar Feedback & Response')) {{-- Judul Halaman / Subtitle --}}
 
-@section('content')
-<div class="container-fluid px-4">
-    <h1 class="mt-4">Feedback & Response Management</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{{ route('feedback.index') }}">MEALS</a></li>
-        <li class="breadcrumb-item active">Feedback & Response</li>
-    </ol>
-
-    {{-- Pesan Sukses --}}
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <div class="card mb-4">
-    <div class="card-header d-flex align-items-center"> {{-- Hapus justify-content-between --}}
-    <span><i class="fas fa-table me-1"></i> Daftar Feedback</span>
-
-    <div class="ms-auto"> {{-- Tambahkan ms-auto di sini --}}
-        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFeedbackModal">
-            <i class="fas fa-plus me-1"></i> Tambah FRM
-        </button>
-        <button class="btn btn-secondary btn-sm ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
-            <i class="fas fa-filter me-1"></i> Filter Program
-        </button>
-    </div>
-</div>
-         {{-- Area Filter (Collapse) --}}
-         <div class="collapse" id="filterCollapse">
-             <div class="card-body bg-light">
-                 <form action="{{ route('feedback.index') }}" method="GET">
-                     <div class="row g-2">
-                         <div class="col-md-4">
-                             <input type="text" name="program" class="form-control form-control-sm" placeholder="Filter berdasarkan Program..." value="{{ request('program') }}">
-                         </div>
-                         <div class="col-md-auto">
-                             <button type="submit" class="btn btn-secondary btn-sm">Filter</button>
-                             <a href="{{ route('feedback.index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
-                         </div>
-                     </div>
-                 </form>
-             </div>
-         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Program</th>
-                            <th>Tgl Registrasi</th>
-                            <th>Jenis Keluhan</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($feedbackItems as $index => $item)
-                            <tr>
-                                <td>{{ $feedbackItems->firstItem() + $index }}</td> {{-- Penomoran untuk pagination --}}
-                                <td>{{ $item->program ?? '-' }}</td>
-                                <td>{{ $item->tanggal_registrasi->format('d M Y') }}</td> {{-- Format tanggal --}}
-                                <td>{{ $item->sort_of_complaint }}</td>
-                                <td>
-                                    <span class="badge
-                                        @if($item->status_complaint == 'Baru') bg-info
-                                        @elseif($item->status_complaint == 'Diproses') bg-warning text-dark
-                                        @elseif($item->status_complaint == 'Selesai') bg-success
-                                        @elseif($item->status_complaint == 'Ditolak') bg-danger
-                                        @else bg-secondary @endif">
-                                        {{ $item->status_complaint }}
-                                    </span>
-                                </td>
-                                <td>
-                                    {{-- Tombol View (arah ke halaman show) --}}
-                                    <a href="{{ route('feedback.show', $item->id) }}" class="btn btn-info btn-sm" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i> View
-                                    </a>
-
-                                    {{-- Tombol Edit (arah ke halaman edit) --}}
-                                    <a href="{{ route('feedback.edit', $item->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-
-                                    {{-- Tombol Hapus (menggunakan form) --}}
-                                    <form action="{{ route('feedback.destroy', $item->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Belum ada data feedback.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-             {{-- Pagination Links --}}
-             <div class="d-flex justify-content-center">
-                  {{ $feedbackItems->appends(request()->query())->links() }}  {{-- Tampilkan link pagination & pertahankan query filter --}}
-             </div>
-        </div>
-    </div>
-</div>
-
-{{-- Modal Tambah Feedback --}}
-@include('tr.feedback._add_modal')
-
+@section('content_header_title')
+    {{-- Tombol Tambah FRM - Diubah menjadi Link ke Halaman Create --}}
+    {{-- Hapus atribut data-bs-toggle & data-bs-target --}}
+    <a href="{{ route('feedback.create') }}" class="btn btn-success" title="{{ __('Tambah Feedback Baru') }}">
+         {{-- <i class="fas fa-plus me-1"></i> --}}
+        {{ __('Tambah FRM') }}
+    </a>
 @endsection
 
-@push('scripts')
-{{-- Tambahkan Font Awesome jika belum ada di layout utama (atau gunakan ikon Bootstrap) --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-{{-- Script JS spesifik untuk halaman ini jika diperlukan --}}
+@section('sub_breadcumb')
+    {{ __('Feedback & Response') }}
+@endsection
+
+@section('preloader') {{-- Menambahkan preloader seperti contoh tim --}}
+    <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
+    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
+@endsection
+
+@section('content_body') {{-- Konten utama masuk ke section ini --}}
+    <div class="card card-outline card-primary"> {{-- Menggunakan gaya card tim --}}
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-table me-1"></i> {{-- Menggunakan ikon seperti template tim --}}
+                {{ __('Daftar Feedback') }}
+            </h3>
+            <div class="card-tools">
+                {{-- Tombol Filter (opsional): Jika ingin tetap ada, fungsinya diubah di JS --}}
+                {{-- <button class="btn btn-tool" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse" title="{{ __('Filter Program') }}">
+                    <i class="fas fa-filter"></i>
+                </button> --}}
+                {{-- Tombol Refresh DataTables (opsional) --}}
+                 <button type="button" class="btn btn-tool" onclick="$('#feedbackTable').DataTable().ajax.reload();" title="{{ __('Refresh Data') }}">
+                     <i class="fas fa-sync-alt"></i>
+                 </button>
+            </div>
+        </div>
+
+        {{-- Area Filter (Collapse) - DIHAPUS atau DIMODIFIKASI --}}
+        {{-- Jika dipertahankan, form action dihapus, tombol submit trigger JS table.draw() --}}
+        {{-- <div class="collapse" id="filterCollapse"> ... form filter lama ... </div> --}}
+
+        <div class="card-body table-responsive"> {{-- Tambahkan kelas table-responsive di sini --}}
+            {{-- Pesan Sukses --}}
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            {{-- Tabel Data - Sekarang hanya kerangka --}}
+            <table class="table table-bordered table-hover" id="feedbackTable"> {{-- Tambahkan ID unik --}}
+                {{-- THEAD dan TBODY akan di-generate oleh JavaScript DataTables --}}
+            </table>
+
+            {{-- Kontrol Pagination Bawah Laravel - DIHAPUS --}}
+            {{-- <div class="d-flex ..."> ... form perPage dan links() ... </div> --}}
+
+        </div> {{-- End card-body --}}
+    </div> {{-- End card --}}
+
+
+@stop {{-- Menggunakan @stop seperti template tim --}}
+
+{{-- Menggunakan @push untuk JS dan CSS seperti template tim --}}
+@push('css')
+{{-- Jika layout/plugin system tidak otomatis load CSS DataTables, tambahkan di sini --}}
+{{-- Contoh: <link rel="stylesheet" href="path/to/datatables.bootstrap5.min.css"> --}}
+@endpush
+
+{{-- resources/views/tr/feedback/index.blade.php --}}
+
+{{-- ... (bagian atas file sampai @stop) ... --}}
+
+@push('css')
+{{-- Jika layout/plugin system tidak otomatis load CSS DataTables Buttons, tambahkan di sini --}}
+{{-- Contoh: <link rel="stylesheet" href="path/to/buttons.bootstrap5.min.css"> --}}
+@endpush
+
+@push('js')
+{{-- Aktifkan plugin via @section jika layout mendukungnya --}}
+{{-- PASTIKAN plugin ini memuat DataTables core + Buttons extension + Adapters --}}
+@section('plugins.DatatablesNew', true)
+@section('plugins.Sweetalert2', true)
+
+{{-- Jika tidak pakai sistem plugin, pastikan SEMUA file JS yang diperlukan sudah di-load SEBELUM @include ini --}}
+{{-- Termasuk: jQuery, DataTables core, DT Bootstrap adapter, DT Buttons, Buttons Bootstrap adapter, JSZip, pdfmake, Buttons HTML5, Buttons Print, Buttons ColVis, SweetAlert2 --}}
+
+{{-- Include file JavaScript DataTables yang baru dibuat --}}
+@include('tr.feedback.js.index')
+
 @endpush
