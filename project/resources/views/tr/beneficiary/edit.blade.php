@@ -131,7 +131,7 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 
-<script>
+{{-- <script>
     $(window).on('resize', function() {
         $('.select2-container--open').each(function() {
             const $select = $(this).prev('select');
@@ -777,8 +777,492 @@
 
     });
 
-</script>
+</script> --}}
 
+<script>
+    $(window).on('resize', function() {
+        $('.select2-container--open').each(function() {
+            const $select = $(this).prev('select');
+            $select.select2('close');
+            $select.select2('open');
+        });
+    });
+
+    function escapeHtml(str) {
+        if (!str) return ""; // Handle null/undefined cases
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function updateActivityHeaders(activities) {
+        if (activities.length > 0) {
+            const activityHeaders = activities.map(activity => `
+                <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
+            `).join('');
+            $('#activityHeaders').html(`
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                ${activityHeaders}
+            `);
+            $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
+        } else {
+            $('#activityHeaders').html(`
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+            `);
+            $('#headerActivityProgram').attr('rowspan', 2);
+        }
+    }
+
+    function updateActivityHeaders(activities) {
+        if (activities.length > 0) {
+            const activityHeaders = activities.map(activity => `
+                <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
+            `).join('');
+            $('#activityHeaders').html(`
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                ${activityHeaders}
+            `);
+            $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
+        } else {
+            $('#activityHeaders').html(`
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+            `);
+            $('#headerActivityProgram').attr('rowspan', 2);
+        }
+    }
+
+    function populateActivitySelect(activities, selectElement) {
+        selectElement.empty().append('<option value="">Pilih Activity</option>');
+        activities.forEach(activity => {
+            const option = new Option(activity.kode, activity.id, false, false);
+            option.setAttribute('title', activity.nama);
+            selectElement.append(option);
+        });
+        selectElement.select2();
+    }
+
+    function loadJenisKelompok() {
+        const placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
+        $("#jenis_kelompok").select2({
+            placeholder: placeholder,
+            ajax: { url: '{{ route('api.jenis.kelompok') }}', dataType: "json", delay: 250, data: params => ({ search: params.term, page: params.page || 1 }), processResults: data => ({ results: data.results, pagination: { more: data.pagination.more } }), cache: true },
+            dropdownParent: $("#ModalTambahPeserta"),
+            width: "100%",
+            multiple: true,
+            allowClear: true
+        });
+        $("#editJenisKelompok").select2({
+            placeholder: placeholder,
+            ajax: { url: '{{ route('api.jenis.kelompok') }}', dataType: "json", delay: 250, data: params => ({ search: params.term, page: params.page || 1 }), processResults: data => ({ results: data.results, pagination: { more: data.pagination.more } }), cache: true },
+            dropdownParent: $("#editDataModal"),
+            width: "100%",
+            multiple: true,
+            allowClear: true
+        });
+    }
+
+    function loadKelompokMarjinal() {
+        $("#kelompok_rentan").select2({
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+            dropdownParent: $("#ModalTambahPeserta"),
+            width: "100%",
+            allowClear: true,
+            multiple: true,
+            ajax: { url: '{{ route('api.beneficiary.kelompok.rentan') }}', dataType: "json", delay: 250, data: params => ({ search: params.term, page: params.page || 1 }), processResults: data => ({ results: data.results, pagination: { more: data.pagination.more } }), cache: true }
+        });
+        $("#editKelompokRentan").select2({
+            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+            dropdownParent: $("#editDataModal"),
+            width: "100%",
+            allowClear: true,
+            multiple: true,
+            ajax: { url: '{{ route('api.beneficiary.kelompok.rentan') }}', dataType: "json", delay: 250, data: params => ({ search: params.term, page: params.page || 1 }), processResults: data => ({ results: data.results, pagination: { more: data.pagination.more } }), cache: true }
+        });
+    }
+
+    function setLocationForm(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
+        if (!$(provinsiSelector).val()) {
+            $(kabupatenSelector).prop('disabled', true);
+            $(kecamatanSelector).prop('disabled', true);
+            $(desaSelector).prop('disabled', true);
+            $(dusunSelector).prop('disabled', true);
+        }
+        $(provinsiSelector).select2({
+            ajax: {
+                url: "{{ route('api.beneficiary.provinsi') }}",
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                }),
+                cache: true
+            },
+            dropdownParent: dropdownParent,
+            placeholder: "{{ __('global.selectProv') }}"
+        }).on('change', function() {
+            $(kabupatenSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(kecamatanSelector).val(null).trigger('change').prop('disabled', true);
+            $(desaSelector).val(null).trigger('change').prop('disabled', true);
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
+        });
+
+        $(kabupatenSelector).select2({
+            ajax: {
+                url: () => "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val()),
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    provinsi_id: $(provinsiSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
+            },
+            dropdownParent: dropdownParent
+        }).on('change', function() {
+            $(kecamatanSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(desaSelector).val(null).trigger('change').prop('disabled', true);
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
+        });
+
+        $(kecamatanSelector).select2({
+            ajax: {
+                url: () => "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val()),
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    kabupaten_id: $(kabupatenSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
+            },
+            dropdownParent: dropdownParent
+        }).on('change', function() {
+            $(desaSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
+        });
+
+        $(desaSelector).select2({
+            ajax: {
+                url: () => "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val()),
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    kecamatan_id: $(kecamatanSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
+            },
+            dropdownParent: dropdownParent
+        }).on('change', function() {
+            $(dusunSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+        });
+
+        $(dusunSelector).select2({
+            ajax: {
+                url: () => "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val()),
+                dataType: 'json',
+                delay: 250,
+                data: params => ({
+                    desa_id: $(desaSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
+            },
+            dropdownParent: dropdownParent
+        });
+    }
+
+    $(document).ready(function() {
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
+        $.ajaxSetup({ headers: { "X-CSRF-TOKEN": csrfToken } });
+
+        const activities = @json($activities);
+        const beneficiaries = @json($beneficiaries);
+        let rowCount = beneficiaries.length;
+        // Fetch activities for the selected program on edit pages
+        const id = {{ $program->id }};
+        const url = "{{ route('api.program.activity', ':id') }}".replace(':id', id);
+
+
+        loadJenisKelompok();
+        loadKelompokMarjinal();
+        setLocationForm();
+
+        setLocationForm(
+            '#provinsi_id_tambah',
+            '#kabupaten_id_tambah',
+            '#kecamatan_id_tambah',
+            '#desa_id_tambah',
+            '#dusun_id_tambah',
+            $('#ModalTambahPeserta')
+        );
+        setLocationForm(
+            '#provinsi_id_edit',
+            '#kabupaten_id_edit',
+            '#kecamatan_id_edit',
+            '#desa_id_edit',
+            '#dusun_id_edit',
+            $('#editDataModal')
+        );
+        fetch(url).then(response => response.json()).then(activities => {
+        // fetch("{{ route('api.program.activity', $program->id) }}").then(response => response.json()).then(activities => {
+            populateActivitySelect(activities, $("#activitySelect"));
+            populateActivitySelect(activities, $("#activitySelectEdit"));
+            updateActivityHeaders(activities);
+        }).catch(error => console.error('Error fetching activities:', error));
+        $("#activitySelect").select2({ width: "100%", dropdownParent: $("#ModalTambahPeserta"), multiple: true, allowClear: true });
+        $("#activitySelectEdit").select2({ width: "100%", dropdownParent: $("#editDataModal"), multiple: true, allowClear: true });
+
+        function addRow() {
+            const form = document.getElementById("dataForm");
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            formData.program_id = '{{ $program->id }}';
+            formData.user_id = '{{ Auth::user()->id }}';
+            formData.dusun_id = $("#dusun_id_tambah").val();
+            formData.desa_id = $("#desa_id_tambah").val();
+
+            formData.nama = $("#nama_beneficiary").val();
+            formData.umur = $("#umur").val();
+            formData.no_telp = $("#no_telp").val();
+            formData.jenis_kelamin = $("#jenis_kelamin").val();
+            formData.rt = $("#rt").val();
+            formData.rw = $("#rw").val();
+            formData.kelompok_rentan = $("#kelompok_rentan").val() || [];
+            formData.jenis_kelompok = $("#jenis_kelompok").val() || [];
+            formData.keterangan = $("#keterangan").val();
+
+            formData.activity_ids = $("#activitySelect").val() || [];
+            formData.is_non_activity = $("#is_non_activity").is(":checked");
+
+            $.ajax({
+                url: '{{ route('beneficiary.store.individual') }}',
+                method: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function(response) {
+                    $("#ModalTambahPeserta").modal("hide");
+                    Swal.fire("Success", "Beneficiary added!", "success").then(() => {
+                        redrawTable(); // Redraw the table after success
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", xhr.responseJSON?.message || "Failed to add beneficiary.", "error");
+                }
+            });
+        }
+
+        function redrawTable() {
+            $.ajax({
+                url: '{{ route('beneficiary.edit', $program->id) }}', // Assumes this returns the edit view with updated table
+                method: 'GET',
+                success: function(response) {
+                    const newTableBody = $(response).find('#tableBody').html(); // Extract the updated table body
+                    $('#tableBody').html(newTableBody); // Replace the existing table body
+                    rowCount = $('#tableBody tr').length; // Update row count
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", "Failed to reload table data.", "error");
+                }
+            });
+        }
+        function editRow(row) {
+            const beneficiaryId = $(row).data('id');
+            const beneficiary = beneficiaries.find(b => b.id === beneficiaryId);
+            if (!beneficiary) {
+                console.error("Beneficiary not found:", beneficiaryId);
+                return;
+            }
+
+            $("#editRowId").val(beneficiaryId);
+            $("#editNama").val(beneficiary.nama);
+            $("#editNoTelp").val(beneficiary.no_telp);
+            $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
+            $("#editUsia").val(beneficiary.umur);
+            $("#editRt").val(beneficiary.rt);
+            $("#editRwBanjar").val(beneficiary.rw);
+            $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+            $("#keterangan_edit").val(beneficiary.keterangan);
+
+            const addOptionAndTriggerChange = (selector, text, value) => {
+                const option = new Option(text || '-', value || '', true, true);
+                $(selector).empty().append(option).trigger('change');
+            };
+            addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.provinsi_nama || '-', beneficiary.provinsi_id || '');
+            addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.kabupaten_nama || '-', beneficiary.kabupaten_id || '');
+            addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.kecamatan_nama || '-', beneficiary.kecamatan_id || '');
+            addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
+            addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+
+            $("#editKelompokRentan").empty();
+            beneficiary.kelompok_marjinal.forEach(k => {
+                $("#editKelompokRentan").append(new Option(k.nama, k.id, true, true));
+            });
+            $("#editKelompokRentan").val(beneficiary.kelompok_marjinal.map(k => k.id)).trigger("change");
+
+            $("#editJenisKelompok").empty();
+            beneficiary.jenis_kelompok.forEach(j => {
+                $("#editJenisKelompok").append(new Option(j.nama, j.id, true, true));
+            });
+            $("#editJenisKelompok").val(beneficiary.jenis_kelompok.map(j => j.id)).trigger("change");
+
+            $("#activitySelectEdit").val(beneficiary.penerima_activity.map(a => a.id.toString())).trigger("change");
+
+            $("#editDataModal").modal("show");
+        }
+
+        function updateRow() {
+            const form = document.getElementById("editDataForm");
+            const beneficiaryId = $("#editRowId").val();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
+                if (obj[item.name]) {
+                    if (!Array.isArray(obj[item.name])) obj[item.name] = [obj[item.name]];
+                    obj[item.name].push(item.value);
+                } else {
+                    obj[item.name] = item.value;
+                }
+                return obj;
+            }, {});
+            formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+            formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
+            formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
+            formData.activity_ids = $("#activitySelectEdit").val() || [];
+            formData.program_id = '{{ $program->id }}';
+
+            const id = beneficiaryId;
+            const url = "{{ route('beneficiary.edit.individual', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: "PUT",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
+                success: function(response) {
+                    $("#editDataModal").modal("hide");
+                    Swal.fire("Success", "Beneficiary updated!", "success").then(() => {
+                        redrawTable();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", xhr.responseJSON?.message || "Failed to update beneficiary.", "error");
+                }
+            });
+        }
+
+        function deleteRow(row) {
+            const beneficiaryId = $(row).data('id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `{{ route('beneficiary.delete.individual', '') }}/${beneficiaryId}`,
+                        method: "DELETE",
+                        success: function() {
+                            Swal.fire("Deleted!", "Beneficiary removed.", "success").then(() => {
+                                redrawTable();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire("Error", xhr.responseJSON?.message || "Failed to delete.", "error");
+                        }
+                    });
+                }
+            });
+        }
+
+        $("#saveDataBtn").on("click", function(e) {
+            e.preventDefault();
+            // alert("saveDataBtn clicked");
+            addRow();
+        });
+
+        $("#dataTable tbody").on("click", ".edit-btn", function(e) {
+            e.preventDefault();
+            // editRow(this);
+        });
+
+        $("#updateDataBtn").on("click", function(e) {
+            e.preventDefault();
+            updateRow();
+        });
+
+        $("#dataTable tbody").on("click", ".delete-btn", function(e) {
+            e.preventDefault();
+            deleteRow(this);
+        });
+    });
+
+
+</script>
 
 
 {{-- @include('tr.beneficiary.js.create') --}}
@@ -789,7 +1273,7 @@
 {{-- @include('tr.beneficiary.js.beneficiaries') --}}
 {{-- @include('tr.beneficiary.js.program') --}}
 
-@include('tr.beneficiary.tabs.program')
+{{-- @include('tr.beneficiary.tabs.program') --}}
 @include('tr.beneficiary.tabs.bene-modal')
 
 @include('api.master.dusun')
