@@ -145,4 +145,60 @@ class BeneficiaryController extends Controller
             'message' => 'Beneficiaries not found.',
         ], Response::HTTP_NOT_FOUND);
     }
+
+
+    public function deleteBeneficiary($id)
+    {
+        abort_if(Gate::denies('beneficiary_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+        if (!$beneficiary) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Beneficiary not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+        $beneficiary->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Beneficiary deleted successfully.',
+        ], Response::HTTP_OK);
+    }
+
+    public function destroy($id)
+    {
+        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+        $beneficiary->delete();
+        return response()->json(['message' => 'Beneficiary deleted'], 204);
+    }
+
+    public function storeBeneficiary(Request $request){
+
+        DB::beginTransaction();
+        try {
+            $beneficiary = Meals_Penerima_Manfaat::create($request->only('program_id', 'user_id','nama', 'no_telp', 'jenis_kelamin', 'umur', 'rt', 'rw', 'dusun_id', 'is_non_activity', 'keterangan'));
+            $beneficiary->kelompokMarjinal()->sync($request->kelompok_rentan);
+            $beneficiary->jenisKelompok()->sync($request->jenis_kelompok);
+            $beneficiary->penerimaActivity()->sync($request->activity_ids);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Beneficiary created',
+                'data' => $beneficiary
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create beneficiary',
+                'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function editBeneficiary(Request $request, $id){
+        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+        $beneficiary->fill($request->all());
+        $beneficiary->save();
+        return response()->json(['message' => 'Beneficiary updated'], 200);
+    }
 }
