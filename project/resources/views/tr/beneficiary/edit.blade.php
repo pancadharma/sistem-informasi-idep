@@ -243,7 +243,7 @@
     }
 
     function loadJenisKelompok() {
-        const placeholder = "{{ __('cruds.beneficiary.penerima.sel_jenis_kelompok') }}";
+        let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
         const apiRoute = '{{ route('api.jenis.kelompok') }}';
         buatSelect2('#jenis_kelompok', '#ModalTambahPeserta', placeholder, apiRoute);
         buatSelect2('#editJenisKelompok', '#editDataModal', placeholder, apiRoute);
