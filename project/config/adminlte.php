@@ -359,6 +359,14 @@ return [
                     'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
+                    'text'      => 'benchmark',
+                    'icon'      => 'nav-icon bi bi-person-raised-hand',
+                    // 'icon_text' => 'monitoring',
+                    'route'     => 'benchmark.index',
+                    // 'can'       => ['benchmark_access'],
+                    'active'    => ['benchmark', 'benchmark*', 'regex:@^benchmark/[0-9]+$@'],
+                ],
+                [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],

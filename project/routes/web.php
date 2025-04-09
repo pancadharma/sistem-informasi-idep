@@ -349,4 +349,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
+<<<<<<< HEAD
 });
+=======
+
+    Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
+    });
+});
+>>>>>>> 1bc4a9ca (Benchmark/IndexPage)
