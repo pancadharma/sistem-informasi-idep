@@ -18,7 +18,6 @@
             <div class="col-12 col-sm-12">
                 <div class="card card-primary card-tabs">
                     <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-                        {{-- <button type="button" class="btn btn-danger float-right" id="SimpanFormMeals">{{ __('global.save') }}</button> --}}
                         <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
                             <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
                                 <i class="bi bi-arrows-collapse"></i>
@@ -35,19 +34,6 @@
                             <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
                                 @include('tr.beneficiary.tabs.beneficiaries-edit')
                             </div>
-                            <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                                {{-- @include('tr.kegiatan.tabs.description') --}}
-                            </div>
-                            <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
-                                {{-- @include('tr.kegiatan.tabs.hasil') --}}
-                            </div>
-
-                            <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                                {{-- @include('tr.kegiatan.tabs.file-uploads') --}}
-                            </div>
-                            <div class="tab-pane fade" id="tab-penulis" role="tabpanel" aria-labelledby="tab-penulis">
-                                {{-- @include('tr.kegiatan.tabs.penulis') --}}
-                            </div>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -62,7 +48,6 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
@@ -98,7 +83,7 @@
             z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
         }
 
-                /* Sorting indicators */
+        /* Sorting indicators */
         th.asc::after {
             content: ' ↑';
             color: #333;
@@ -120,6 +105,13 @@
             text-overflow: ellipsis;
             max-width: 200px; /* Adjust as needed */
             /* display: block; Or display: block */
+        }
+
+        @media screen and (max-width: 768px) {
+            .ellipsis-cell {
+                max-width: 100px; /* Adjust for smaller screens */
+            }
+
         }
     </style>
 @endpush
@@ -159,12 +151,12 @@
             $('#activityHeaders').html(`
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
                 ${activityHeaders}
             `);
             $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
@@ -172,12 +164,12 @@
             $('#activityHeaders').html(`
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle" title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
             `);
             $('#headerActivityProgram').attr('rowspan', 2);
         }
@@ -363,6 +355,37 @@
         });
     }
 
+
+    function resetFormAdd() {
+        $("#dataForm")[0].reset();
+        $("#kelompok_rentan").val(null).trigger("change");
+        $("#jenis_kelompok").val(null).trigger("change");
+        $("#activitySelect").val(null).trigger("change");
+
+        $("#provinsi_id_tambah").val(null).trigger("change");
+        $("#kabupaten_id_tambah").val(null).trigger("change");
+        $("#kecamatan_id_tambah").val(null).trigger("change");
+        $("#desa_id_tambah").val(null).trigger("change");
+        $("#dusun_id_tambah").val(null).trigger("change");
+
+        $("#ModalTambahPeserta").modal("hide");
+    }
+
+    function resetFormEdit() {
+        $("#editDataForm")[0].reset();
+        $("#editKelompokRentan").val(null).trigger("change");
+        $("#editJenisKelompok").val(null).trigger("change");
+        $("#activitySelectEdit").val(null).trigger("change");
+
+        $("#provinsi_id_edit").val(null).trigger("change");
+        $("#kabupaten_id_edit").val(null).trigger("change");
+        $("#kecamatan_id_edit").val(null).trigger("change");
+        $("#desa_id_edit").val(null).trigger("change");
+        $("#dusun_id_edit").val(null).trigger("change");
+
+        $("#editDataModal").modal("hide");
+    }
+
     $(document).ready(function() {
         // $('#dataTable').DataTable({
         //     "paging": true,
@@ -380,7 +403,7 @@
         loadJenisKelompok();
         loadKelompokMarjinal();
         setLocationForm();
-        // loadActivity();
+        loadActivity();
 
         setLocationForm(
             '#provinsi_id_tambah',
@@ -423,7 +446,7 @@
             formData.rw = $("#rw").val();
             formData.kelompok_rentan = $("#kelompok_rentan").val() || [];
             formData.jenis_kelompok = $("#jenis_kelompok").val() || [];
-            formData.keterangan = $("#keterangan").val();
+            formData.keterangan = escapeHtml($("#keterangan").val());
 
             formData.activity_ids = $("#activitySelect").val() || [];
             formData.is_non_activity = $("#is_non_activity").is(":checked");
@@ -435,7 +458,7 @@
                 contentType: 'application/json',
                 success: function(response) {
                     redrawTable();
-                    $("dataForm")[0].reset();
+                    $("#dataForm")[0].reset();
                     $("#ModalTambahPeserta").modal("hide");
                     Swal.fire({
                         title: "Success",
@@ -445,6 +468,7 @@
                         showConfirmButton: false,
                         timerProgressBar: true,
                     });
+                    resetFormAdd();
                 },
                 error: function(xhr) {
                     Swal.fire("Error", xhr.responseJSON?.message || "Failed to add beneficiary.", "error");
@@ -588,7 +612,7 @@
 
         $("#dataTable tbody").on("click", ".edit-btn", function(e) {
             e.preventDefault();
-            // editRow(this);
+            editRow(this);
         });
 
         $("#updateDataBtn").on("click", function(e) {
@@ -606,15 +630,10 @@
 </script>
 
 
-{{-- @include('tr.beneficiary.js.create') --}}
 @include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
 
-{{-- @include('tr.beneficiary.js.beneficiaries') --}}
-{{-- @include('tr.beneficiary.js.program') --}}
-
-{{-- @include('tr.beneficiary.tabs.program') --}}
 @include('tr.beneficiary.tabs.bene-modal')
 
 @include('api.master.dusun')

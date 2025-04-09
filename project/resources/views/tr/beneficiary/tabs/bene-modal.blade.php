@@ -194,7 +194,7 @@
     </form>
     <x-slot name="footerSlot">
         <button	type='button' class='btn btn-secondary' data-dismiss='modal'>{{ __('global.close') }}</button>
-        <button	type='button' class='btn btn-primary' id='updateDataBtn'>{{ __('global.update') }}</button>
+        <button	type='submit' class='btn btn-primary' id='updateDataBtn'>{{ __('global.update') }}</button>
     </x-slot>
 </x-adminlte-modal>
 
