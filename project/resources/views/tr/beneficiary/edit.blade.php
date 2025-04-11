@@ -192,7 +192,7 @@
     function loadActivity() {
         populateActivitySelect(activities, $("#activitySelect"));
         populateActivitySelect(activities, $("#activitySelectEdit"));
-        updateActivityHeaders(activities);
+        // updateActivityHeaders(activities);
     }
     function buatSelect2(elementId, dropdownParentId, placeholder, url) {
         $(elementId).select2({
@@ -354,8 +354,6 @@
             dropdownParent: dropdownParent
         });
     }
-
-
     function resetFormAdd() {
         $("#dataForm")[0].reset();
         $("#kelompok_rentan").val(null).trigger("change");
@@ -387,14 +385,73 @@
     }
 
     $(document).ready(function() {
-        // $('#dataTable').DataTable({
-        //     "paging": true,
-        //     "lengthChange": false,
-        //     "searching": true,
-        //     "ordering": true,
-        //     "info": true,
-        //     "autoWidth": false,
-        // });
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            layout: {
+                topStart: {
+                    buttons: [{
+                        text: '<i class="fas fa-print"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-secondary',
+                        extend: 'print',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3] // Ensure these indices match your visible columns
+                        }
+                    },
+                    {
+                        text: '<i class="fas fa-file-excel"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-success',
+                        extend: 'excel',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        text: '<i class="fas fa-file-pdf"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-danger',
+                        extend: 'pdf',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        text: '<i class="bi bi-filetype-csv"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-success',
+                        extend: 'csv',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'copy',
+                        text: '<i class="fas fa-copy"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-info',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-warning',
+                        exportOptions: {
+                            // columns: [0, 1, 2, 3]
+                        }
+                    },
+                ],
+                },
+                bottomStart: {
+                    pageLength: 10,
+                }
+            },
+            order: [2, 'asc'],
+            lengthMenu: [10, 25, 50, 100],
+        });
+
         const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajaxSetup({ headers: { "X-CSRF-TOKEN": csrfToken } });
         const beneficiaries = @json($beneficiaries);
@@ -456,6 +513,19 @@
                 method: 'POST',
                 data: JSON.stringify(formData),
                 contentType: 'application/json',
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Saving...",
+                        position: "bottom-end",
+                        timer: 3000,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
                 success: function(response) {
                     redrawTable();
                     $("#dataForm")[0].reset();
@@ -467,6 +537,10 @@
                         timer: 1500,
                         showConfirmButton: false,
                         timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
                     });
                     resetFormAdd();
                 },
@@ -490,49 +564,62 @@
                 }
             });
         }
+
         function editRow(row) {
             const beneficiaryId = $(row).data('id');
-            const beneficiary = beneficiaries.find(b => b.id === beneficiaryId);
-            if (!beneficiary) {
-                console.error("Beneficiary not found:", beneficiaryId);
-                return;
-            }
+            const url = "{{ route('beneficiary.get.individual', ':id') }}".replace(':id', beneficiaryId);
+            console.log("beneficiaryId", beneficiaryId, url);
+            // Fetch the latest data for the selected beneficiary
+            $.ajax({
+                url: url, // Replace with your endpoint to fetch a single beneficiary
+                method: "GET",
+                success: function(response) {
+                    const beneficiary = response[0]; // Assuming the server returns the beneficiary in response.data
 
-            $("#editRowId").val(beneficiaryId);
-            $("#editNama").val(beneficiary.nama);
-            $("#editNoTelp").val(beneficiary.no_telp);
-            $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
-            $("#editUsia").val(beneficiary.umur);
-            $("#editRt").val(beneficiary.rt);
-            $("#editRwBanjar").val(beneficiary.rw);
-            $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
-            $("#keterangan_edit").val(beneficiary.keterangan);
+                    // console.log("isi data dari", beneficiary);
 
-            const addOptionAndTriggerChange = (selector, text, value) => {
-                const option = new Option(text || '-', value || '', true, true);
-                $(selector).empty().append(option).trigger('change');
-            };
-            addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.provinsi_nama || '-', beneficiary.provinsi_id || '');
-            addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.kabupaten_nama || '-', beneficiary.kabupaten_id || '');
-            addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.kecamatan_nama || '-', beneficiary.kecamatan_id || '');
-            addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
-            addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+                    // Populate the modal with the latest data
+                    $("#editRowId").val(beneficiaryId);
+                    $("#editNama").val(beneficiary.nama);
+                    $("#editNoTelp").val(beneficiary.no_telp);
+                    $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
+                    $("#editUsia").val(beneficiary.umur);
+                    $("#editRt").val(beneficiary.rt);
+                    $("#editRwBanjar").val(beneficiary.rw);
+                    $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+                    $("#keterangan_edit").val(beneficiary.keterangan);
 
-            $("#editKelompokRentan").empty();
-            beneficiary.kelompok_marjinal.forEach(k => {
-                $("#editKelompokRentan").append(new Option(k.nama, k.id, true, true));
+                    const addOptionAndTriggerChange = (selector, text, value) => {
+                        const option = new Option(text || '-', value || '', true, true);
+                        $(selector).empty().append(option).trigger('change');
+                    };
+
+                    addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.provinsi.id || '');
+                    addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.id || '');
+                    addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.dusun?.desa?.kecamatan?.nama || '-', beneficiary.dusun.desa.kecamatan.id || '');
+                    addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
+                    addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+
+                    $("#editKelompokRentan").empty();
+                    beneficiary.kelompok_marjinal.forEach(k => {
+                        $("#editKelompokRentan").append(new Option(k.nama, k.id, true, true));
+                    });
+                    $("#editKelompokRentan").val(beneficiary.kelompok_marjinal.map(k => k.id)).trigger("change");
+
+                    $("#editJenisKelompok").empty();
+                    beneficiary.jenis_kelompok.forEach(j => {
+                        $("#editJenisKelompok").append(new Option(j.nama, j.id, true, true));
+                    });
+                    $("#editJenisKelompok").val(beneficiary.jenis_kelompok.map(j => j.id)).trigger("change");
+
+                    $("#activitySelectEdit").val(beneficiary.penerima_activity.map(a => a.id.toString())).trigger("change");
+
+                    $("#editDataModal").modal("show");
+                },
+                error: function(xhr) {
+                    console.error("Failed to fetch beneficiary data:", xhr.responseText);
+                }
             });
-            $("#editKelompokRentan").val(beneficiary.kelompok_marjinal.map(k => k.id)).trigger("change");
-
-            $("#editJenisKelompok").empty();
-            beneficiary.jenis_kelompok.forEach(j => {
-                $("#editJenisKelompok").append(new Option(j.nama, j.id, true, true));
-            });
-            $("#editJenisKelompok").val(beneficiary.jenis_kelompok.map(j => j.id)).trigger("change");
-
-            $("#activitySelectEdit").val(beneficiary.penerima_activity.map(a => a.id.toString())).trigger("change");
-
-            $("#editDataModal").modal("show");
         }
 
         function updateRow() {
@@ -543,40 +630,109 @@
                 return;
             }
 
+            // Start with data from serializeArray (gets standard inputs like nama, usia, rt, rw, etc.)
             const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
+                // Handle potential duplicate names (though less likely in an edit form)
                 if (obj[item.name]) {
-                    if (!Array.isArray(obj[item.name])) obj[item.name] = [obj[item.name]];
+                    if (!Array.isArray(obj[item.name])) {
+                        obj[item.name] = [obj[item.name]];
+                    }
                     obj[item.name].push(item.value);
                 } else {
                     obj[item.name] = item.value;
                 }
                 return obj;
             }, {});
+
+            // --- Manually Add Fields Not Reliably Caught by serializeArray ---
+
+            // 1. Checkbox
             formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+
+            // 2. Select2 Multi-Select Values
+            formData.id = $("#editRowId").val() || [];
+            formData.nama = $("#editNama").val() || [];
+            formData.umur = $("#editUsia").val() || [];
             formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
             formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
-            formData.activity_ids = $("#activitySelectEdit").val() || [];
-            formData.program_id = '{{ $program->id }}';
 
-            const id = beneficiaryId;
+            formData.no_telp = $("#editNoTelp").val() || '';
+            formData.jenis_kelamin = $("#editGender").val() || 'lainnya';
+            formData.keterangan = escapeHtml($("#keterangan_edit").val()) || '';
+            formData.rt = $("#editRt").val() || '';
+            formData.rw = $("#editRwBanjar").val() || '';
+
+            formData.activity_ids = $("#activitySelectEdit").val() || [];
+
+            // 3. Location Select2 Values (Crucial Addition!)
+            formData.provinsi_id = $("#provinsi_id_edit").val() || null; // Send null if empty
+            formData.kabupaten_id = $("#kabupaten_id_edit").val() || null;
+            formData.kecamatan_id = $("#kecamatan_id_edit").val() || null;
+            formData.desa_id = $("#desa_id_edit").val() || null;
+            formData.dusun_id = $("#dusun_id_edit").val() || null;
+            formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+
+            // 4. Other Required IDs (like program_id, user_id if needed)
+            formData.program_id = '{{ $program->id }}';
+            formData.user_id = '{{ Auth::id() }}'; // Uncomment if needed
+
+            // --- AJAX Call ---
+            const id = beneficiaryId; // Use the beneficiaryId directly
+            if (!id) {
+                 Swal.fire("Error", "Beneficiary ID is missing.", "error");
+                 return; // Prevent AJAX call if ID is missing
+            }
             const url = "{{ route('beneficiary.edit.individual', ':id') }}".replace(':id', id);
 
             $.ajax({
                 url: url,
-                method: "PUT",
-                data: JSON.stringify(formData),
-                contentType: "application/json",
-                success: function(response) {
-                    $("#editDataModal").modal("hide");
-                    Swal.fire("Success", "Beneficiary updated!", "success").then(() => {
-                        redrawTable();
+                method: "PUT", // Use PUT for updates
+                data: JSON.stringify(formData), // Send the manually constructed object as JSON
+                contentType: "application/json", // Tell the server we're sending JSON
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Updating...",
+                        position: "bottom-end",
+                        timer: 3000,
+                        timerProgressBar: true,
                     });
                 },
+                success: function(response) {
+                    const index = beneficiaries.findIndex(b => b.id === beneficiaryId);
+                    if (index !== -1) {
+                        beneficiaries[index] = response.data; // Assuming the server returns the updated beneficiary in response.data
+                    }
+                    Swal.fire({
+                        title: "Success",
+                        text: response.message || "Beneficiary updated!",
+                        icon: "success",
+                        timer: 1500,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
+                    redrawTable(); // Function to refresh table data
+                    resetFormEdit();
+                    $("#editDataModal").modal("hide");
+                },
                 error: function(xhr) {
-                    Swal.fire("Error", xhr.responseJSON?.message || "Failed to update beneficiary.", "error");
+                    // Improved error handling
+                    let errorMsg = "Failed to update beneficiary.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                        // Optional: Append validation errors
+                        if (xhr.responseJSON.errors) {
+                            errorMsg += "<br><br>Details:<br>" + Object.values(xhr.responseJSON.errors).flat().join("<br>");
+                        }
+                    }
+                    Swal.fire("Error", errorMsg, "error");
                 }
             });
         }
+
 
         function deleteRow(row) {
             const beneficiaryId = $(row).data('id');
@@ -591,10 +747,34 @@
                     $.ajax({
                         url: `{{ route('beneficiary.delete.individual', '') }}/${beneficiaryId}`,
                         method: "DELETE",
+                        beforeSend: function() {
+                            Toast.fire({
+                                icon: "info",
+                                title: "Deleting...",
+                                position: "bottom-end",
+                                timer: 3000,
+                                timerProgressBar: true,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
                         success: function() {
-                            Swal.fire("Deleted!", "Beneficiary removed.", "success").then(() => {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Beneficiary removed.",
+                                icon: "success",
+                                timer: 1500,
+                                timerProgressBar: true,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            }).then(() => {
                                 redrawTable();
                             });
+
                         },
                         error: function(xhr) {
                             Swal.fire("Error", xhr.responseJSON?.message || "Failed to delete.", "error");
@@ -612,7 +792,10 @@
 
         $("#dataTable tbody").on("click", ".edit-btn", function(e) {
             e.preventDefault();
-            editRow(this);
+            // console.info("form reset, now opening edit modal")
+            setTimeout(() => {
+                editRow(this);
+            }, 250);
         });
 
         $("#updateDataBtn").on("click", function(e) {

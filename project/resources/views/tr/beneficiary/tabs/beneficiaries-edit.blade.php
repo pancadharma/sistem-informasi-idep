@@ -23,14 +23,14 @@
             </button>
             {{-- <button type="button" class="btn btn-success" id="submitDataBtn">{{ __('global.update') }} <i class="bi bi-save"></i></button> --}}
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2 mb-2 mt-2">
+        {{-- <div class="col-sm-12 col-md-12 col-lg-2 mb-2 mt-2">
             <div class="input-group ml-auto">
                 <input type="text" class="form-control" id="search_peserta" placeholder="Cari..." name="search_peserta">
                 <span class="input-group-append">
                     <span type="button" class="btn btn-primary"><i class="fas fa-fw fa-search"></i></span>
                 </span>
             </div>
-        </div>
+        </div> --}}
     </div>
     <!-- Beneficiary Table -->
     <div class="row responsive list_peserta">
@@ -49,7 +49,7 @@
                         <th colspan="4" data-dt-order="disable" class="text-center align-middle">{{ __("cruds.beneficiary.penerima.age_group") }}</th>
                         <th colspan="{{ $activities->count() }}" data-dt-order="disable" class="text-center align-middle" id="headerActivityProgram">{{ __('cruds.beneficiary.activity_code') }}</th>
                         <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="header_is_non_activity">Non-AC</th>
-                        <th rowspan="2" data-dt-order="disable" class="text-center align-middle text-nowrap" id="header_keterangan">{{ __('cruds.beneficiary.penerima.ket') }}</th>
+                        <th rowspan="2" class="text-center align-middle text-nowrap" id="header_keterangan">{{ __('cruds.beneficiary.penerima.ket') }}</th>
                         <th rowspan="2" data-dt-order="disable" class="text-center align-middle">{{ __("global.actions") }}</th>
                     </tr>
                     <tr id="activityHeaders" class="text-sm">
@@ -57,18 +57,29 @@
                         <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
                         <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                         <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.desa") }}">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                        <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
-                        <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
-                        <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
-                        <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
+                        <th colspan="1" data-dt-order="disable" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
+                        <th colspan="1" data-dt-order="disable" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
+                        <th colspan="1" data-dt-order="disable" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
+                        <th colspan="1" data-dt-order="disable" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}">>60</th>
                         @foreach ($activities as $activity)
-                            <th class="align-middle text-center activity-header" data-activity-id="{{ $activity->id }}">{{ $activity->kode }}</th>
+                            <th class="align-middle text-center activity-header" data-dt-order="disable" data-activity-id="{{ $activity->id }}">{{ $activity->kode }}</th>
                         @endforeach
                     </tr>
                 </thead>
                 <tbody id="tableBody" class="display overflow-auto">
                     @foreach ($beneficiaries as $beneficiary)
-                        <tr data-id="{{ $beneficiary->id }}" class="text-sm ">
+                        <tr data-id="{{ $beneficiary->id }}" class="text-sm"
+                            data-provinsi-id="{{ $beneficiary->dusun->desa->kecamatan->kabupaten->provinsi_id ?? '' }}"
+                            data-provinsi-nama="{{ $beneficiary->dusun->desa->kecamatan->kabupaten->provinsi->nama ?? '' }}"
+                            data-kabupaten-id="{{ $beneficiary->dusun->desa->kecamatan->kabupaten_id ?? ''  }}"
+                            data-kabupaten-nama="{{ $beneficiary->dusun->desa->kecamatan->kabupaten->nama  ?? '' }}"
+                            data-kecamatan-id="{{ $beneficiary->dusun->desa->kecamatan_id ?? '' }}"
+                            data-kecamatan-nama="{{ $beneficiary->dusun->desa->kecamatan->nama ?? '' }}"
+                            data-desa-id="{{ $beneficiary->dusun->desa_id ?? '' }}"
+                            data-desa-nama="{{ $beneficiary->dusun->desa->nama ?? '' }}"
+                            data-dusun-id="{{ $beneficiary->dusun_id ?? '' }}"
+                            data-dusun-nama="{{ $beneficiary->dusun->nama ?? ''  }}">
+
                             <td class="text-center d-none">{{ $loop->iteration }}</td>
                             <td data-nama="{{ $beneficiary->nama }}" title="{{ $beneficiary->nama ?? '' }}" class="text-nowrap">{{ $beneficiary->nama ?? '' }}</td>
                             <td data-gender="{{ $beneficiary->jenis_kelamin ?? '' }}" class="text-nowrap">
