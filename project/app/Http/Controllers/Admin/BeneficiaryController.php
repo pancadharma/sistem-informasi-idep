@@ -12,6 +12,7 @@ use App\Models\Program;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class BeneficiaryController extends Controller
 {
@@ -36,19 +37,21 @@ class BeneficiaryController extends Controller
     {
         abort_if(Gate::denies('beneficiary_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // $data = Meals_Penerima_Manfaat::where('program_id', $program->id)->with(['penerimaActivity', 'jenisKelompok', 'kelompokMarjinal'])->get();
         $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
-        ->where('program_id', $program->id)
-        ->with([
-            'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id','nama'),
-            'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id','nama'),
-            'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
-            'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama') // Eager load desa through dusun
-        ])
-        ->get();
-
+            ->where('program_id', $program->id)
+            ->with([
+                'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+                'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+                'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+                'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+                'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+                'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+                'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+                'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+            ])
+            ->get();
         $activities = $program->programOutputActivities()->get(['id', 'kode', 'nama']);
-
+        // return $beneficiaries;
         return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'activities'));
     }
 
@@ -149,7 +152,7 @@ class BeneficiaryController extends Controller
 
     public function deleteBeneficiary($id)
     {
-        abort_if(Gate::denies('beneficiary_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_if(Gate::denies('beneficiary_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
         if (!$beneficiary) {
             return response()->json([
@@ -195,10 +198,83 @@ class BeneficiaryController extends Controller
         }
     }
 
+    public function getBeneficiaryData($id){
+        $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+        ->where('id', $id)
+        ->with([
+            'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+            'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+            'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+            'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+            'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+            'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+            'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+            'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+        ])
+        ->get();
+        return response()->json($beneficiaries);
+    }
+
     public function editBeneficiary(Request $request, $id){
-        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
-        $beneficiary->fill($request->all());
-        $beneficiary->save();
-        return response()->json(['message' => 'Beneficiary updated'], 200);
+        DB::beginTransaction();
+        try {
+            $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+            $beneficiary->nama = $request->input('nama');
+            $beneficiary->no_telp = $request->input('no_telp');
+            $beneficiary->jenis_kelamin = $request->input('jenis_kelamin');
+            $beneficiary->umur = $request->input('umur');
+            $beneficiary->rt = $request->input('rt');
+            $beneficiary->rw = $request->input('rw');
+            $beneficiary->dusun_id = $request->input('dusun_id');
+            $beneficiary->is_non_activity = $request->input('is_non_activity');
+            $beneficiary->keterangan = $request->input('keterangan');
+            $beneficiary->save();
+            $beneficiary->kelompokMarjinal()->sync($request->kelompok_rentan);
+            $beneficiary->jenisKelompok()->sync($request->jenis_kelompok);
+            $beneficiary->penerimaActivity()->sync($request->activity_ids);
+
+            DB::commit();
+
+            $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+            ->where('id', $id)
+            ->with([
+                'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+                'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+                'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+                'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+                'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+                'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+                'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+                'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+            ])
+            ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Beneficiary updated',
+                'data' => $beneficiaries
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $e->getMessage()], 500);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $th->getMessage()], 500);
+        } catch (\Error $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $e->getMessage()], 500);
+        }
     }
 }
