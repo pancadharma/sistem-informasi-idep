@@ -12,6 +12,7 @@ use App\Models\Program;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class BeneficiaryController extends Controller
 {
@@ -35,123 +36,24 @@ class BeneficiaryController extends Controller
     public function edit(Program $program)
     {
         abort_if(Gate::denies('beneficiary_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $beneficiaries = $program->penerimaManfaat;
-        $data = Meals_Penerima_Manfaat::where('program_id', $program->id)->with(['penerimaActivity', 'jenisKelompok', 'kelompokMarjinal'])->get();
-        // return $data;
 
+        $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+            ->where('program_id', $program->id)
+            ->with([
+                'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+                'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+                'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+                'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+                'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+                'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+                'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+                'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+            ])
+            ->get();
+        $activities = $program->programOutputActivities()->get(['id', 'kode', 'nama']);
         // return $beneficiaries;
-        return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'data'));
+        return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'activities'));
     }
-    // public function store(Request $request)
-    // {
-    //     abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-    //     // Validate the incoming request data
-    //     $validated = $request->validate([
-    //         'program_id'             => 'required|integer',
-    //         'data'                   => 'required|array',
-    //         'data.*.nama'            => 'required|string|max:255',
-    //         'data.*.no_telp'         => 'nullable|string|max:15',
-    //         'data.*.gender'          => 'required|in:laki,perempuan,lainnya',
-    //         'data.*.rt'              => 'required|string|max:10',
-    //         'data.*.rw'              => 'required|string|max:10',
-    //         'data.*.dusun_id'        => 'required|integer',
-    //         'data.*.usia'            => 'required|integer|min:0',
-    //         'data.*.is_non_activity' => 'boolean',
-    //         'data.*.keterangan'      => 'nullable|string',
-    //         'data.*.jenis_kelompok'  => 'nullable|array',
-    //         'data.*.kelompok_rentan' => 'nullable|array',
-    //         'data.*.activitySelect'  => 'nullable|array',
-    //     ]);
-
-    //     $programId = $request->input('program_id');
-    //     $userId = auth()->id(); // Get the authenticated user's ID
-    //     $beneficiaries = $request->input('data');
-
-    //     // Loop through each beneficiary and save it
-    //     // foreach ($beneficiaries as $beneficiary) {
-    //     //     // Create the Meals_Penerima_Manfaat record
-    //     //     $penerima = Meals_Penerima_Manfaat::create([
-    //     //         'program_id' => $programId,
-    //     //         'user_id' => $userId,
-    //     //         'dusun_id' => $beneficiary['dusun_id'],
-    //     //         'nama' => $beneficiary['nama'],
-    //     //         'no_telp' => $beneficiary['no_telp'] ?? null,
-    //     //         'jenis_kelamin' => $beneficiary['gender'], // Adjusted to match column name
-    //     //         'rt' => $beneficiary['rt'],
-    //     //         'rw' => $beneficiary['rw'],
-    //     //         'umur' => $beneficiary['usia'], // Adjusted to match column name
-    //     //         'keterangan' => $beneficiary['keterangan'] ?? null,
-    //     //         'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
-    //     //     ]);
-
-    //     //     // Sync jenis_kelompok (Master_Jenis_Kelompok)
-    //     //     if (!empty($beneficiary['jenis_kelompok'])) {
-    //     //         $penerima->jenisKelompok()->sync($beneficiary['jenis_kelompok']);
-    //     //     }
-
-    //     //     // Sync kelompok_marjinal (Kelompok_Marjinal)
-    //     //     if (!empty($beneficiary['kelompok_rentan'])) {
-    //     //         $penerima->kelompokMarjinal()->sync($beneficiary['kelompok_rentan']);
-    //     //     }
-
-    //     //     // Sync activities (Program_Outcome_Output_Activity)
-    //     //     if (!empty($beneficiary['activitySelect'])) {
-    //     //         $penerima->penerimaActivity()->sync($beneficiary['activitySelect']);
-    //     //     }
-    //     // }
-
-    //     foreach ($beneficiaries as $beneficiary) {
-    //         $penerima = Meals_Penerima_Manfaat::create([
-    //             'program_id' => $programId,
-    //             'user_id' => $userId,
-    //             'dusun_id' => $beneficiary['dusun_id'],
-    //             'nama' => $beneficiary['nama'],
-    //             'no_telp' => $beneficiary['no_telp'] ?? null,
-    //             'jenis_kelamin' => $beneficiary['gender'],
-    //             'rt' => $beneficiary['rt'],
-    //             'rw' => $beneficiary['rw'],
-    //             'umur' => $beneficiary['usia'],
-    //             'keterangan' => $beneficiary['keterangan'] ?? null,
-    //             'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
-    //         ]);
-
-    //         // Manually create pivot records for jenis_kelompok
-    //         if (!empty($beneficiary['jenis_kelompok'])) {
-    //             foreach ($beneficiary['jenis_kelompok'] as $jenisKelompokId) {
-    //                 Meals_Penerima_Manfaat_Jenis_Kelompok::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'jenis_kelompok_id' => $jenisKelompokId,
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Manually create pivot records for kelompok_marjinal
-    //         if (!empty($beneficiary['kelompok_rentan'])) {
-    //             foreach ($beneficiary['kelompok_rentan'] as $kelompokMarjinalId) {
-    //                 Meals_Penerima_Manfaat_Kelompok_Marjinal::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'kelompok_marjinal_id' => $kelompokMarjinalId,
-    //                 ]);
-    //             }
-    //         }
-
-    //         // Manually create pivot records for activities
-    //         if (!empty($beneficiary['activitySelect'])) {
-    //             foreach ($beneficiary['activitySelect'] as $activityId) {
-    //                 Meals_Penerima_Manfaat_Activity::create([
-    //                     'trmeals_penerima_manfaat_id' => $penerima->id,
-    //                     'programoutcomeoutputactivity_id' => $activityId,
-    //                 ]);
-    //             }
-    //         }
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Beneficiaries created successfully!',
-    //     ], Response::HTTP_CREATED);
-    // }
 
     public function store(Request $request)
     {
@@ -230,9 +132,6 @@ class BeneficiaryController extends Controller
     {
         abort_if(Gate::denies('beneficiary_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // $beneficiaries = Meals_Penerima_Manfaat::where('program_id', $id)
-        //     ->get(['nama', 'jenis_kelamin', 'rt', 'rw', 'umur']);
-
         if (!empty($id)) {
 
             $beneficiaries = Meals_Penerima_Manfaat::with('jenisKelompok', 'kelompokMarjinal', 'penerimaActivity')
@@ -248,5 +147,134 @@ class BeneficiaryController extends Controller
             'success' => false,
             'message' => 'Beneficiaries not found.',
         ], Response::HTTP_NOT_FOUND);
+    }
+
+
+    public function deleteBeneficiary($id)
+    {
+        // abort_if(Gate::denies('beneficiary_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+        if (!$beneficiary) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Beneficiary not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+        $beneficiary->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Beneficiary deleted successfully.',
+        ], Response::HTTP_OK);
+    }
+
+    public function destroy($id)
+    {
+        $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+        $beneficiary->delete();
+        return response()->json(['message' => 'Beneficiary deleted'], 204);
+    }
+
+    public function storeBeneficiary(Request $request){
+
+        DB::beginTransaction();
+        try {
+            $beneficiary = Meals_Penerima_Manfaat::create($request->only('program_id', 'user_id','nama', 'no_telp', 'jenis_kelamin', 'umur', 'rt', 'rw', 'dusun_id', 'is_non_activity', 'keterangan'));
+            $beneficiary->kelompokMarjinal()->sync($request->kelompok_rentan);
+            $beneficiary->jenisKelompok()->sync($request->jenis_kelompok);
+            $beneficiary->penerimaActivity()->sync($request->activity_ids);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Beneficiary created',
+                'data' => $beneficiary
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create beneficiary',
+                'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getBeneficiaryData($id){
+        $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+        ->where('id', $id)
+        ->with([
+            'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+            'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+            'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+            'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+            'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+            'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+            'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+            'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+        ])
+        ->get();
+        return response()->json($beneficiaries);
+    }
+
+    public function editBeneficiary(Request $request, $id){
+        DB::beginTransaction();
+        try {
+            $beneficiary = Meals_Penerima_Manfaat::findOrFail($id);
+            $beneficiary->nama = $request->input('nama');
+            $beneficiary->no_telp = $request->input('no_telp');
+            $beneficiary->jenis_kelamin = $request->input('jenis_kelamin');
+            $beneficiary->umur = $request->input('umur');
+            $beneficiary->rt = $request->input('rt');
+            $beneficiary->rw = $request->input('rw');
+            $beneficiary->dusun_id = $request->input('dusun_id');
+            $beneficiary->is_non_activity = $request->input('is_non_activity');
+            $beneficiary->keterangan = $request->input('keterangan');
+            $beneficiary->save();
+            $beneficiary->kelompokMarjinal()->sync($request->kelompok_rentan);
+            $beneficiary->jenisKelompok()->sync($request->jenis_kelompok);
+            $beneficiary->penerimaActivity()->sync($request->activity_ids);
+
+            DB::commit();
+
+            $beneficiaries = Meals_Penerima_Manfaat::select('trmeals_penerima_manfaat.*')
+            ->where('id', $id)
+            ->with([
+                'jenisKelompok'     => fn($query) => $query->select('master_jenis_kelompok.id', 'nama'),
+                'kelompokMarjinal'  => fn($query) => $query->select('mkelompokmarjinal.id', 'nama'),
+                'penerimaActivity'  => fn($query) => $query->select('trprogramoutcomeoutputactivity.id', 'nama', 'kode'),
+                'dusun'             => fn($query) => $query->select('dusun.id', 'nama', 'desa_id'),
+                'dusun.desa'        => fn($query) => $query->select('kelurahan.id', 'nama', 'kecamatan_id'),
+                'dusun.desa.kecamatan' => fn($query) => $query->select('kecamatan.id', 'nama', 'kabupaten_id'),
+                'dusun.desa.kecamatan.kabupaten' => fn($query) => $query->select('kabupaten.id', 'nama', 'provinsi_id'),
+                'dusun.desa.kecamatan.kabupaten.provinsi' => fn($query) => $query->select('provinsi.id', 'nama')
+            ])
+            ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Beneficiary updated',
+                'data' => $beneficiaries
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $e->getMessage()], 500);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $th->getMessage()], 500);
+        } catch (\Error $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'data' => $request->all(),
+                'message' => 'Failed to update beneficiary',
+                'error' => $e->getMessage()], 500);
+        }
     }
 }

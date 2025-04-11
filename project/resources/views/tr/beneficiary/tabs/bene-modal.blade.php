@@ -58,8 +58,9 @@
 <!-- Modal Edit & Tambah Peserta Penerima Manfaat-->
 <x-adminlte-modal id="editDataModal" title="{{ __('global.edit') .' '. __('cruds.kegiatan.peserta.label') }}" theme="info" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
     <form id="editDataForm" class="big" autocomplete="off">
-        <input type="hidden" id="editRowId">
-
+        <input type="hidden" id="editRowId" name="id">
+        @method('PUT')
+        @csrf
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
@@ -194,7 +195,7 @@
     </form>
     <x-slot name="footerSlot">
         <button	type='button' class='btn btn-secondary' data-dismiss='modal'>{{ __('global.close') }}</button>
-        <button	type='button' class='btn btn-primary' id='updateDataBtn'>{{ __('global.update') }}</button>
+        <button	type='submit' class='btn btn-primary' id='updateDataBtn'>{{ __('global.update') }}</button>
     </x-slot>
 </x-adminlte-modal>
 
@@ -204,7 +205,7 @@
         <div class="row mb-3">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="nama" required>
+                <input type="text" class="form-control" name="nama" required id="nama_beneficiary">
             </div>
         </div>
 
@@ -215,11 +216,11 @@
             </div>
             <div class="col-sm-12 col-md-4 col-lg-4 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.age') }} <span class="text-danger">*</span></label>
-                <input type="number" class="form-control usia-input" name="usia" required>
+                <input type="number" class="form-control usia-input" name="usia" required id="umur">
             </div>
             <div class="col-sm-12 col-md-4 col-lg-4 self-center order-2 order-md-2 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
-                <select class="form-control" name="gender" required>
+                <select class="form-control" name="gender" required id="jenis_kelamin">
                     <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
                     <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
                     <option value="lainnya">{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
@@ -319,11 +320,11 @@
         <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rw') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rw">
+                <input type="text" class="form-control" name="rw" id="rw">
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rt" required>
+                <input type="text" class="form-control" name="rt" id="rt">
             </div>
         </div>
         {{-- Non-AC Kode --}}

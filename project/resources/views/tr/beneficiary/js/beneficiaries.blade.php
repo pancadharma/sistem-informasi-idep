@@ -36,134 +36,247 @@
             initializeLocationSelects();
         }
 
+        // function initializeLocationSelects(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
+        //     // Initialize Provinsi dropdown
+        //     $(provinsiSelector).select2({
+        //         ajax: {
+        //             placeholder: "{{ __('global.selectProv') }}",
+        //             url: "{{ route('api.beneficiary.provinsi') }}",
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function(params) {
+        //                 return { search: params.term, page: params.page || 1 };
+        //             },
+        //             processResults: function(data) {
+        //                 return { results: data.results, pagination: data.pagination };
+        //             }
+        //         },
+        //         cache: true,
+        //         dropdownParent: dropdownParent
+        //     });
+
+        //     // Initialize Kabupaten (depends on Provinsi)
+        //     $(kabupatenSelector).select2({
+        //         ajax: {
+        //             url: function() {
+        //                 return "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val());
+        //             },
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function(params) {
+        //                 return {
+        //                     provinsi_id: $(provinsiSelector).val(),
+        //                     search: params.term,
+        //                     page: params.page || 1
+        //                 };
+        //             },
+        //             processResults: function(data) {
+        //                 return { results: data.results, pagination: data.pagination };
+        //             }
+        //         },
+        //         dropdownParent: dropdownParent
+        //     });
+
+        //     // Initialize Kecamatan (depends on Kabupaten)
+        //     $(kecamatanSelector).select2({
+        //         ajax: {
+        //             url: function() {
+        //                 return "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val());
+        //             },
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function(params) {
+        //                 return {
+        //                     kabupaten_id: $(kabupatenSelector).val(),
+        //                     search: params.term,
+        //                     page: params.page || 1
+        //                 };
+        //             },
+        //             processResults: function(data) {
+        //                 return { results: data.results, pagination: data.pagination };
+        //             }
+        //         },
+        //         dropdownParent: dropdownParent
+        //     });
+
+        //     // Initialize Desa (depends on Kecamatan)
+        //     $(desaSelector).select2({
+        //         ajax: {
+        //             url: function() {
+        //                 return "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val());
+        //             },
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function(params) {
+        //                 return {
+        //                     search: params.term,
+        //                     kecamatan_id: $(kecamatanSelector).val(),
+        //                     page: params.page || 1
+        //                 };
+        //             },
+        //             processResults: function(data) {
+        //                 return { results: data.results, pagination: data.pagination };
+        //             }
+        //         },
+        //         dropdownParent: dropdownParent
+        //     });
+        //     // Initialize Desa (depends on Kecamatan)
+        //     $(dusunSelector).select2({
+        //         ajax: {
+        //             url: function() {
+        //                 return "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val());
+        //             },
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function(params) {
+        //                 return {
+        //                     search: params.term,
+        //                     desa_id: $(desaSelector).val(),
+        //                     // desa_id: $("#desa_id").val() || $("#editDesa").val(),
+        //                     page: params.page || 1
+        //                 };
+        //             },
+        //             processResults: function(data) {
+        //                 return { results: data.results, pagination: data.pagination };
+        //             }
+        //         },
+        //         dropdownParent: dropdownParent
+        //     });
+
+        //     // Clear dependent dropdowns when parent changes
+        //     $(provinsiSelector).on('change', function() {
+        //         $(kabupatenSelector).val(null).trigger('change');
+        //         $(kecamatanSelector).val(null).trigger('change');
+        //         $(desaSelector).val(null).trigger('change');
+        //         $(dusunSelector).val(null).trigger('change');
+        //     });
+
+        //     $(kabupatenSelector).on('change', function() {
+        //         $(kecamatanSelector).val(null).trigger('change');
+        //         $(desaSelector).val(null).trigger('change');
+        //         $(dusunSelector).val(null).trigger('change');
+        //     });
+
+        //     $(kecamatanSelector).on('change', function() {
+        //         $(desaSelector).val(null).trigger('change');
+        //         $(dusunSelector).val(null).trigger('change');
+        //     });
+
+        //     $(desaSelector).on('change', function() {
+        //         $(dusunSelector).val(null).trigger('change');
+        //     });
+        // }
+
         function initializeLocationSelects(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
-            // Initialize Provinsi dropdown
+            if (!$(provinsiSelector).val()) {
+                $(kabupatenSelector).prop('disabled', true);
+                $(kecamatanSelector).prop('disabled', true);
+                $(desaSelector).prop('disabled', true);
+                $(dusunSelector).prop('disabled', true);
+            }
             $(provinsiSelector).select2({
                 ajax: {
-                    placeholder: "{{ __('global.selectProv') }}",
                     url: "{{ route('api.beneficiary.provinsi') }}",
                     dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return { search: params.term, page: params.page || 1 };
-                    },
-                    processResults: function(data) {
-                        return { results: data.results, pagination: data.pagination };
-                    }
+                    data: params => ({
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
+                    cache: true
                 },
-                cache: true,
-                dropdownParent: dropdownParent
+                dropdownParent: dropdownParent,
+                placeholder: "{{ __('global.selectProv') }}"
+            }).on('change', function() {
+                $(kabupatenSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+                $(kecamatanSelector).val(null).trigger('change').prop('disabled', true);
+                $(desaSelector).val(null).trigger('change').prop('disabled', true);
+                $(dusunSelector).val(null).trigger('change').prop('disabled', true);
             });
 
-            // Initialize Kabupaten (depends on Provinsi)
             $(kabupatenSelector).select2({
                 ajax: {
-                    url: function() {
-                        return "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val());
-                    },
+                    url: () => "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val()),
                     dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            provinsi_id: $(provinsiSelector).val(),
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data) {
-                        return { results: data.results, pagination: data.pagination };
-                    }
+                    data: params => ({
+                        provinsi_id: $(provinsiSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    })
                 },
                 dropdownParent: dropdownParent
+            }).on('change', function() {
+                $(kecamatanSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+                $(desaSelector).val(null).trigger('change').prop('disabled', true);
+                $(dusunSelector).val(null).trigger('change').prop('disabled', true);
             });
 
-            // Initialize Kecamatan (depends on Kabupaten)
             $(kecamatanSelector).select2({
                 ajax: {
-                    url: function() {
-                        return "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val());
-                    },
+                    url: () => "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val()),
                     dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            kabupaten_id: $(kabupatenSelector).val(),
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data) {
-                        return { results: data.results, pagination: data.pagination };
-                    }
+                    data: params => ({
+                        kabupaten_id: $(kabupatenSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    })
                 },
                 dropdownParent: dropdownParent
+            }).on('change', function() {
+                $(desaSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+                $(dusunSelector).val(null).trigger('change').prop('disabled', true);
             });
 
-            // Initialize Desa (depends on Kecamatan)
             $(desaSelector).select2({
                 ajax: {
-                    url: function() {
-                        return "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val());
-                    },
+                    url: () => "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val()),
                     dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            kecamatan_id: $(kecamatanSelector).val(),
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data) {
-                        return { results: data.results, pagination: data.pagination };
-                    }
+                    data: params => ({
+                        kecamatan_id: $(kecamatanSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    })
                 },
                 dropdownParent: dropdownParent
+            }).on('change', function() {
+                $(dusunSelector).val(null).trigger('change').prop('disabled', !$(this).val());
             });
-            // Initialize Desa (depends on Kecamatan)
+
             $(dusunSelector).select2({
                 ajax: {
-                    url: function() {
-                        return "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val());
-                    },
+                    url: () => "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val()),
                     dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            desa_id: $(desaSelector).val(),
-                            // desa_id: $("#desa_id").val() || $("#editDesa").val(),
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data) {
-                        return { results: data.results, pagination: data.pagination };
-                    }
+                    data: params => ({
+                        desa_id: $(desaSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    })
                 },
                 dropdownParent: dropdownParent
-            });
-
-            // Clear dependent dropdowns when parent changes
-            $(provinsiSelector).on('change', function() {
-                $(kabupatenSelector).val(null).trigger('change');
-                $(kecamatanSelector).val(null).trigger('change');
-                $(desaSelector).val(null).trigger('change');
-                $(dusunSelector).val(null).trigger('change');
-            });
-
-            $(kabupatenSelector).on('change', function() {
-                $(kecamatanSelector).val(null).trigger('change');
-                $(desaSelector).val(null).trigger('change');
-                $(dusunSelector).val(null).trigger('change');
-            });
-
-            $(kecamatanSelector).on('change', function() {
-                $(desaSelector).val(null).trigger('change');
-                $(dusunSelector).val(null).trigger('change');
-            });
-
-            $(desaSelector).on('change', function() {
-                $(dusunSelector).val(null).trigger('change');
             });
         }
 
@@ -528,6 +641,14 @@
 
         function saveRow() {
             const form = $("#dataForm")[0];
+
+            // Remove 'required' from hidden elements to avoid focus error
+            $("#dataForm [required]").each(function () {
+                if (!$(this).is(":visible")) {
+                    $(this).removeAttr("required").data("was-required", true);
+                }
+            });
+
             if (form.checkValidity()) {
                 const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
                     if (obj[item.name]) {
@@ -554,10 +675,18 @@
 
                 addRow(formData);
                 resetFormAdd();
-            } else {
-                form.reportValidity();
+
+                // Re-add previously removed 'required' attributes
+                $("#dataForm [data-was-required]").each(function () {
+                    $(this).attr("required", true).removeData("was-required");
+                });
+            }
+            else
+            {
+
             }
         }
+
 
         function resetFormAdd() {
             $("#dataForm")[0].reset();
@@ -915,14 +1044,7 @@
                 form.reset();
 
             } else {
-                Swal.fire({
-                    title: "Error",
-                    text: "Failed to update data",
-                    icon: "error",
-                    timer: 500,
-                    timerProgressBar: true,
-                });
-                form.reportValidity();
+
             }
         }
 
@@ -1427,6 +1549,8 @@
             $(this).attr("inert", "");
             $(document.activeElement).blur();
         });
+
+
 
         loadSelect2Option();
         bindEvents();

@@ -18,7 +18,6 @@
             <div class="col-12 col-sm-12">
                 <div class="card card-primary card-tabs">
                     <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-                        {{-- <button type="button" class="btn btn-danger float-right" id="SimpanFormMeals">{{ __('global.save') }}</button> --}}
                         <ul class="nav nav-tabs" id="details-kegiatan-tab" role="tablist">
                             <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse" title="Minimize">
                                 <i class="bi bi-arrows-collapse"></i>
@@ -35,19 +34,6 @@
                             <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
                                 @include('tr.beneficiary.tabs.beneficiaries-edit')
                             </div>
-                            <div class="tab-pane fade" id="description-tab" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                                {{-- @include('tr.kegiatan.tabs.description') --}}
-                            </div>
-                            <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
-                                {{-- @include('tr.kegiatan.tabs.hasil') --}}
-                            </div>
-
-                            <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                                {{-- @include('tr.kegiatan.tabs.file-uploads') --}}
-                            </div>
-                            <div class="tab-pane fade" id="tab-penulis" role="tabpanel" aria-labelledby="tab-penulis">
-                                {{-- @include('tr.kegiatan.tabs.penulis') --}}
-                            </div>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -62,7 +48,6 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
@@ -98,7 +83,7 @@
             z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
         }
 
-                /* Sorting indicators */
+        /* Sorting indicators */
         th.asc::after {
             content: ' ↑';
             color: #333;
@@ -121,6 +106,13 @@
             max-width: 200px; /* Adjust as needed */
             /* display: block; Or display: block */
         }
+
+        @media screen and (max-width: 768px) {
+            .ellipsis-cell {
+                max-width: 100px; /* Adjust for smaller screens */
+            }
+
+        }
     </style>
 @endpush
 
@@ -132,6 +124,7 @@
 @section('plugins.Validation', true)
 
 <script>
+    const activities = @json($activities);
     $(window).on('resize', function() {
         $('.select2-container--open').each(function() {
             const $select = $(this).prev('select');
@@ -139,6 +132,7 @@
             $select.select2('open');
         });
     });
+
     function escapeHtml(str) {
         if (!str) return ""; // Handle null/undefined cases
         return str
@@ -148,6 +142,7 @@
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+
     function updateActivityHeaders(activities) {
         if (activities.length > 0) {
             const activityHeaders = activities.map(activity => `
@@ -156,181 +151,99 @@
             $('#activityHeaders').html(`
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}  <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
                 ${activityHeaders}
             `);
-
-            $('#headerActivityProgram').attr('rowspan', 1);
-            $('#headerActivityProgram').attr('colspan', activities.length);
-
-            // $('#dataTable').DataTable().destroy(); // Destroy existing instance
-            // $('#dataTable').DataTable({
-            //     "paging": true,
-            //     "lengthChange": true,
-            //     "searching": true,
-            //     "ordering": true,
-            //     "info": true,
-            //     "autoWidth": false,
-            //     "responsive": true,
-            // });
-
+            $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
         } else {
             $('#activityHeaders').html(`
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
+                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
                 <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
+                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
             `);
-
             $('#headerActivityProgram').attr('rowspan', 2);
-
-            $('#dataTable').DataTable().destroy(); // Destroy existing instance
-            $('#dataTable').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
-
         }
     }
+
     function populateActivitySelect(activities, selectElement) {
-        selectElement.empty().append('Pilih Activity');
         activities.forEach(activity => {
             const option = new Option(activity.kode, activity.id, false, false);
             option.setAttribute('title', activity.nama);
+            option.setAttribute('data-nama', activity.nama);
             selectElement.append(option);
         });
-        selectElement.select2();
-    }
-    function loadJenisKelompok(){
-        let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
-        $("#jenis_kelompok").select2({
-            placeholder: placeholder,
-            ajax: {
-                url: '{{ route('api.jenis.kelompok') }}',
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        page: params.page || 1,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more,
-                        },
-                    };
-                },
-                cache: true,
-            },
-            dropdownParent: $("#ModalTambahPeserta"),
+        selectElement.select2({
+            placeholder: "{{ __('cruds.beneficiary.select_activity') }}",
             width: "100%",
+            allowClear: true
         });
-        $("#editJenisKelompok").select2({
-            placeholder: placeholder,
-            ajax: {
-                url: '{{ route('api.jenis.kelompok') }}',
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        page: params.page || 1,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more,
-                        },
-                    };
-                },
-                cache: true,
-            },
-            dropdownParent: $("#editDataModal"),
-            width: "100%",
-        });
-
-
     }
+
+    function loadActivity() {
+        populateActivitySelect(activities, $("#activitySelect"));
+        populateActivitySelect(activities, $("#activitySelectEdit"));
+        // updateActivityHeaders(activities);
+    }
+    function buatSelect2(elementId, dropdownParentId, placeholder, url) {
+        $(elementId).select2({
+            placeholder: placeholder,
+            dropdownParent: $(dropdownParentId),
+            width: "100%",
+            allowClear: true,
+            multiple: true,
+            ajax: {
+                url: url, // Use the dynamic URL passed as a parameter
+                dataType: 'json',
+                delay: 250,
+                data: (params) => ({
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: (data) => ({
+                    results: data.results,
+                    pagination: { more: data.pagination.more }
+                }),
+                cache: true,
+                error: (xhr, status, error) => {
+                    console.error(`Error fetching data for ${elementId}:`, error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to fetch data. Please try again later.'
+                    });
+                    return [];
+                }
+            }
+        });
+    }
+
     function loadKelompokMarjinal() {
-        $("#kelompok_rentan").select2({
-            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
-            dropdownParent: $("#ModalTambahPeserta"),
-            width: "100%",
-            allowClear: true,
-            ajax: {
-                url: '{{ route('api.beneficiary.kelompok.rentan') }}',
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        page: params.page || 1,
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more,
-                        },
-                    };
-                },
-                cache: true,
-            },
-        });
-
-        $("#editKelompokRentan").select2({
-            placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
-            dropdownParent: $("#editDataModal"),
-            width: "100%",
-            allowClear: true,
-            ajax: {
-                url: '{{ route('api.beneficiary.kelompok.rentan') }}',
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        page: params.page || 1,
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more,
-                        },
-                    };
-                },
-                cache: true,
-            },
-        });
+        const placeholder = "{{ __('cruds.beneficiary.penerima.sel_rentan') }}";
+        const apiRoute = '{{ route('api.beneficiary.kelompok.rentan') }}';
+        buatSelect2('#kelompok_rentan', '#ModalTambahPeserta', placeholder, apiRoute);
+        buatSelect2('#editKelompokRentan', '#editDataModal', placeholder, apiRoute);
     }
+
+    function loadJenisKelompok() {
+        let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.beneficiary.penerima.jenis_kelompok') }}';
+        const apiRoute = '{{ route('api.jenis.kelompok') }}';
+        buatSelect2('#jenis_kelompok', '#ModalTambahPeserta', placeholder, apiRoute);
+        buatSelect2('#editJenisKelompok', '#editDataModal', placeholder, apiRoute);
+    }
+
 
     function setLocationForm(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
-        // Initialize Provinsi dropdown
-        if($(provinsiSelector).val() == null || $(provinsiSelector).val() == ''){
+        if (!$(provinsiSelector).val()) {
             $(kabupatenSelector).prop('disabled', true);
             $(kecamatanSelector).prop('disabled', true);
             $(desaSelector).prop('disabled', true);
@@ -338,257 +251,502 @@
         }
         $(provinsiSelector).select2({
             ajax: {
-                placeholder: "{{ __('global.selectProv') }}",
                 url: "{{ route('api.beneficiary.provinsi') }}",
                 dataType: 'json',
                 delay: 250,
-                beforeSend: function() {
-                   Toast.fire({
-                        icon: "info",
-                        position: "top-right",
-                        title: "{{ __('global.loading') }} " + "{{ __('cruds.data.data') }} " + "{{ __('cruds.provinsi.title') }}",
-                        timer: 500,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                },
-                complete: function() {
-                    // $(kabupatenSelector).prop('disabled', false);
-                    Toast.close();
-                },
-                data: function(params) {
-                    return { search: params.term, page: params.page || 1 };
-                },
-                processResults: function(data) {
-                    return { results: data.results, pagination: data.pagination };
-                }
+                data: params => ({
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                }),
+                cache: true
             },
-            cache: true,
-            dropdownParent: dropdownParent
+            dropdownParent: dropdownParent,
+            placeholder: "{{ __('global.selectProv') }}"
         }).on('change', function() {
-            if ($(this).val()) {
-                // If a province is selected (value exists), enable kabupatenSelector
-                $(kabupatenSelector).prop('disabled', false);
-                $(kecamatanSelector).prop('disabled', true).val(null).trigger('change');
-                $(desaSelector).prop('disabled', true).val(null).trigger('change');
-                $(dusunSelector).prop('disabled', true).val(null).trigger('change');
-            } else {
-                // If no province is selected (value is null/undefined/empty), disable kabupatenSelector
-                $(kabupatenSelector).prop('disabled', true).val(null).trigger('change');
-            }
+            $(kabupatenSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(kecamatanSelector).val(null).trigger('change').prop('disabled', true);
+            $(desaSelector).val(null).trigger('change').prop('disabled', true);
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
         });
 
         $(kabupatenSelector).select2({
             ajax: {
-                url: function() {
-                    return "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val());
-                },
+                url: () => "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val()),
                 dataType: 'json',
                 delay: 250,
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        position: "top-right",
-                        title: "{{ __('global.loading') }} " + "{{ __('cruds.data.data') }} " + "{{ __('cruds.kabupaten.title') }}",
-                        timer: 500,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                },
-                complete: function() {
-                    Toast.close();
-                },
-                data: function(params) {
-                    return {
-                        provinsi_id: $(provinsiSelector).val(),
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data) {
-                    return { results: data.results, pagination: data.pagination };
-                }
+                data: params => ({
+                    provinsi_id: $(provinsiSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
             },
             dropdownParent: dropdownParent
         }).on('change', function() {
-            if ($(this).val()) {
-                $(kecamatanSelector).prop('disabled', false);
-                $(desaSelector).prop('disabled', true).val(null).trigger('change');
-                $(dusunSelector).prop('disabled', true).val(null).trigger('change');
-            } else {
-                $(kecamatanSelector).prop('disabled', true).val(null).trigger('change');
-            }
+            $(kecamatanSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(desaSelector).val(null).trigger('change').prop('disabled', true);
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
         });
 
         $(kecamatanSelector).select2({
             ajax: {
-                url: function() {
-                    return "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val());
-                },
+                url: () => "{{ route('api.beneficiary.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val()),
                 dataType: 'json',
                 delay: 250,
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        position: "top-right",
-                        title: "{{ __('global.loading') }} " + "{{ __('cruds.data.data') }} " + "{{ __('cruds.kecamatan.title') }}",
-                        timer: 500,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                },
-                complete: function() {
-                    Toast.close();
-                },
-                data: function(params) {
-                    return {
-                        kabupaten_id: $(kabupatenSelector).val(),
-                        search: params.term,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data) {
-                    return { results: data.results, pagination: data.pagination };
-                }
+                data: params => ({
+                    kabupaten_id: $(kabupatenSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
             },
             dropdownParent: dropdownParent
         }).on('change', function() {
-            if ($(this).val()) {
-                $(desaSelector).prop('disabled', false).val(null).trigger('change');
-                $(dusunSelector).prop('disabled', true).val(null).trigger('change');
-            } else {
-                $(desaSelector).prop('disabled', true).val(null).trigger('change');
-            }
+            $(desaSelector).val(null).trigger('change').prop('disabled', !$(this).val());
+            $(dusunSelector).val(null).trigger('change').prop('disabled', true);
         });
 
         $(desaSelector).select2({
             ajax: {
-                url: function() {
-                    return "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val());
-                },
+                url: () => "{{ route('api.beneficiary.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val()),
                 dataType: 'json',
                 delay: 250,
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        position: "top-right",
-                        title: "{{ __('global.loading') }} " + "{{ __('cruds.data.data') }} " + "{{ __('cruds.desa.title') }}",
-                        timer: 500,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                },
-                complete: function() {
-                    Toast.close();
-                },
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        kecamatan_id: $(kecamatanSelector).val(),
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data) {
-                    return { results: data.results, pagination: data.pagination };
-                }
+                data: params => ({
+                    kecamatan_id: $(kecamatanSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
             },
             dropdownParent: dropdownParent
         }).on('change', function() {
-            if ($(this).val()) {
-                $(dusunSelector).prop('disabled', false);
-            } else {
-                $(dusunSelector).prop('disabled', true).val(null).trigger('change');
-            }
+            $(dusunSelector).val(null).trigger('change').prop('disabled', !$(this).val());
         });
 
         $(dusunSelector).select2({
             ajax: {
-                url: function() {
-                    return "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val());
-                },
+                url: () => "{{ route('api.beneficiary.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val()),
                 dataType: 'json',
                 delay: 250,
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        position: "top-right",
-                        title: "{{ __('global.loading') }} " + "{{ __('cruds.data.data') }} " + "{{ __('cruds.desa.title') }}",
-                        timer: 500,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    });
-                },
-                complete: function() {
-                    Toast.close();
-                },
-                data: function(params) {
-                    return {
-                        search: params.term,
-                        desa_id: $(desaSelector).val(),
-                        // desa_id: $("#desa_id").val() || $("#editDesa").val(),
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data) {
-                    return { results: data.results, pagination: data.pagination };
-                }
+                data: params => ({
+                    desa_id: $(desaSelector).val(),
+                    search: params.term,
+                    page: params.page || 1
+                }),
+                processResults: data => ({
+                    results: data.results,
+                    pagination: data.pagination
+                })
             },
             dropdownParent: dropdownParent
-        }).on('change', function() {
-            if ($(this).val()) {
-                $(dusunSelector).prop('disabled', false);
-            }
-        });
-
-        // Clear dependent dropdowns when parent changes
-        $(provinsiSelector).on('change', function() {
-            $(kabupatenSelector).val(null).trigger('change');
-            $(kecamatanSelector).val(null).trigger('change');
-            $(desaSelector).val(null).trigger('change');
-            $(dusunSelector).val(null).trigger('change');
-        });
-
-        $(kabupatenSelector).on('change', function() {
-            $(kecamatanSelector).val(null).trigger('change');
-            $(desaSelector).val(null).trigger('change');
-            $(dusunSelector).val(null).trigger('change');
-        });
-
-        $(kecamatanSelector).on('change', function() {
-            $(desaSelector).val(null).trigger('change');
-            $(dusunSelector).val(null).trigger('change');
-        });
-
-        $(desaSelector).on('change', function() {
-            $(dusunSelector).val(null).trigger('change');
         });
     }
+    function resetFormAdd() {
+        $("#dataForm")[0].reset();
+        $("#kelompok_rentan").val(null).trigger("change");
+        $("#jenis_kelompok").val(null).trigger("change");
+        $("#activitySelect").val(null).trigger("change");
 
+        $("#provinsi_id_tambah").val(null).trigger("change");
+        $("#kabupaten_id_tambah").val(null).trigger("change");
+        $("#kecamatan_id_tambah").val(null).trigger("change");
+        $("#desa_id_tambah").val(null).trigger("change");
+        $("#dusun_id_tambah").val(null).trigger("change");
 
+        $("#ModalTambahPeserta").modal("hide");
+    }
 
+    function resetFormEdit() {
+        $("#editDataForm")[0].reset();
+        $("#editKelompokRentan").val(null).trigger("change");
+        $("#editJenisKelompok").val(null).trigger("change");
+        $("#activitySelectEdit").val(null).trigger("change");
 
+        $("#provinsi_id_edit").val(null).trigger("change");
+        $("#kabupaten_id_edit").val(null).trigger("change");
+        $("#kecamatan_id_edit").val(null).trigger("change");
+        $("#desa_id_edit").val(null).trigger("change");
+        $("#dusun_id_edit").val(null).trigger("change");
 
+        $("#editDataModal").modal("hide");
+    }
 
-    // load function on document ready
     $(document).ready(function() {
+        // $('#dataTable').DataTable({
+        //     "paging": true,
+        //     "lengthChange": false,
+        //     "searching": true,
+        //     "ordering": true,
+        //     "info": true,
+        //     "autoWidth": false,
+        //     layout: {
+        //         topStart: {
+        //             buttons: [
+        //                 {
+        //                     text: '<i class="fas fa-print" title="Print Table Data"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-secondary',
+        //                     extend: 'print',
+        //                     exportOptions: {
+        //                         columns: ':not(:last-child)' // Exclude the last column
+        //                     }
+        //                 },
+        //                 {
+        //                     text: '<i class="fas fa-file-excel" title="Export to EXCEL"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-success',
+        //                     extend: 'excel',
+        //                     exportOptions: {
+        //                         columns: ':not(:last-child)' // Exclude the last column
+        //                     }
+        //                 },
+        //                 // {
+        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
+        //                 //     className: 'btn btn-danger',
+        //                 //     extend: 'pdfHtml5',
+        //                 //     exportOptions: {
+        //                 //         columns: ':not(:last-child)', // Exclude the last column
+        //                 //         stripHTML: false,
+        //                 //         format: {
+        //                 //             body: function (data, row, column, node) {
+        //                 //                 if (column === 10) {
+        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
+        //                 //                 }
+        //                 //                 return data;
+        //                 //             }
+        //                 //         },
+        //                 //         header: true,
+        //                 //         footer: true
+
+        //                 //     },
+        //                 //     orientation: 'landscape', // Landscape orientation
+        //                 //     pageSize: 'A3', // A4 page size
+        //                 //     customize: function (doc) {
+
+        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+        //                 //     }
+        //                 // },
+        //                 // {
+        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
+        //                 //     className: 'btn btn-danger',
+        //                 //     extend: 'pdfHtml5',
+        //                 //     exportOptions: {
+        //                 //         columns: ':not(:last-child)', // Exclude the last column
+        //                 //         stripHTML: false,
+        //                 //         format: {
+        //                 //             body: function (data, row, column, node) {
+        //                 //                 if (column === 10) { // Example: Checkbox column
+        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
+        //                 //                 }
+        //                 //                 return data;
+        //                 //             }
+        //                 //         }
+        //                 //     },
+        //                 //     orientation: 'landscape', // Landscape orientation
+        //                 //     pageSize: 'A4', // A4 page size
+        //                 //     customize: function (doc) {
+        //                 //         // Set font size for the entire document
+        //                 //         doc.defaultStyle.fontSize = 10; // Adjust font size (default is 10)
+
+        //                 //         // Set font style for the table header
+        //                 //         doc.styles.tableHeader = {
+        //                 //             fontSize: 12, // Header font size
+        //                 //             bold: true, // Make header bold
+        //                 //             alignment: 'center' // Center-align header text
+        //                 //         };
+
+        //                 //         // Set font style for the table body
+        //                 //         doc.styles.tableBodyEven = {
+        //                 //             fontSize: 10, // Font size for even rows
+        //                 //             alignment: 'left' // Left-align text
+        //                 //         };
+        //                 //         doc.styles.tableBodyOdd = {
+        //                 //             fontSize: 10, // Font size for odd rows
+        //                 //             alignment: 'left' // Left-align text
+        //                 //         };
+
+        //                 //         // Add padding to cells for better readability
+        //                 //         doc.content[1].table.body.forEach(function (row) {
+        //                 //             row.forEach(function (cell) {
+        //                 //                 // cell.margin = [5, 5, 5, 5]; // Add padding to each cell
+        //                 //             });
+        //                 //         });
+
+        //                 //         // Adjust column widths to fit content
+        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+        //                 //     }
+        //                 // },
+        //                 {
+        //                     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-danger',
+        //                     extend: 'pdfHtml5',
+        //                     exportOptions: {
+        //                         columns: ':not(:last-child)', // Exclude the last column
+        //                         rows: null, // Include all rows, not just visible ones
+        //                         stripHTML: false,
+        //                         format: {
+        //                             body: function (data, row, column, node) {
+        //                                 if (column === 10) { // Example: Checkbox column
+        //                                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
+        //                                 }
+        //                                 return data;
+        //                             }
+        //                         }
+        //                     },
+        //                     orientation: 'landscape', // Landscape orientation
+        //                     pageSize: 'A3', // A3 page size
+        //                     customize: function (doc) {
+        //                         // Adjust cell height
+        //                         doc.styles.tableBodyEven = { lineHeight: 1.5 }; // Adjust line height for even rows
+        //                         doc.styles.tableBodyOdd = { lineHeight: 1.5 }; // Adjust line height for odd rows
+
+        //                         // Use the layout property to add padding to cells
+        //                         doc.content[1].layout = {
+        //                             paddingLeft: function (i, node) { return 5; },
+        //                             paddingRight: function (i, node) { return 5; },
+        //                             paddingTop: function (i, node) { return 5; },
+        //                             paddingBottom: function (i, node) { return 5; }
+        //                         };
+
+        //                         // Adjust column widths to fit content
+        //                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+        //                     }
+        //                 },
+        //                 {
+        //                     // text: '<i class="bi bi-filetype-csv text-light" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
+        //                     text: '<i class="fas fa-file-csv" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-info',
+        //                     extend: 'csv',
+        //                     exportOptions: {
+        //                         columns: ':not(:last-child)' // Exclude the last column
+        //                     },
+        //                     bom: true, // Add UTF-8 BOM
+        //                     customize: function (csv) {
+        //                         // Replace unsupported characters
+        //                         return csv.replace(/√/g, '✔️'); // Replace '√' with 'Checked'
+        //                     }
+        //                 },
+        //                 {
+        //                     extend: 'copy',
+        //                     text: '<i class="fas fa-copy" title="Copy Table Data"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-primary',
+        //                     exportOptions: {
+        //                         columns: ':not(:last-child)' // Exclude the last column
+        //                     }
+        //                 },
+        //                 {
+        //                     extend: 'colvis',
+        //                     text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
+        //                     className: 'btn btn-warning',
+        //                 },
+        //             ],
+        //         },
+        //         bottomStart: {
+        //             pageLength: 10,
+        //         }
+        //     },
+        //     order: [2, 'asc'],
+        //     lengthMenu: [10, 25, 50, 100],
+        // });
+
+        $('#dataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            layout: {
+                topStart: {
+                    buttons: [
+                        {
+                            text: '<i class="fas fa-print" title="Print Table Data"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-secondary',
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Exclude the last column
+                            }
+                        },
+                        {
+                            text: '<i class="fas fa-file-excel" title="Export to EXCEL"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-success',
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Exclude the last column
+                            }
+                        },
+                        {
+                            text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-danger',
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                columns: ':not(:last-child)', // Exclude the last column
+                                rows: function (idx, data, node) {
+                                    return true; // Include all rows
+                                },
+                                stripHtml: false,
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        // Handle checkboxes safely without using jQuery find
+                                        if (data.indexOf('type="checkbox"') > -1) {
+                                            // Simple string-based check for checked attribute
+                                            return data.indexOf('checked') > -1 ? '✓' : '☐';
+                                        }
+                                        // Clean HTML but preserve important formatting
+                                        return data.replace(/<(?!\s*br\s*\/?)[^>]+>/gi, '');
+                                    },
+                                    header: function (data, columnIdx) {
+                                        // Clean HTML from headers but preserve text
+                                        return data.replace(/<(?!\s*br\s*\/?)[^>]+>/gi, '');
+                                    }
+                                }
+                            },
+                            orientation: 'landscape',
+                            pageSize: 'A3',
+                            title: 'Table Export',
+                            customize: function (doc) {
+                                // Define available fonts - using standard pdf fonts for better compatibility
+                                // Available built-in fonts in pdfmake: helvetica/times/courier
+                                pdfMake.fonts = {
+                                    Roboto: {
+                                        normal: 'Roboto-Regular.ttf',
+                                        bold: 'Roboto-Medium.ttf',
+                                        italics: 'Roboto-Italic.ttf',
+                                        bolditalics: 'Roboto-MediumItalic.ttf'
+                                    },
+                                    // Fallback to standard PDF fonts if custom ones not available
+                                    times: {
+                                        normal: 'Times-Roman',
+                                        bold: 'Times-Bold',
+                                        italics: 'Times-Italic',
+                                        bolditalics: 'Times-BoldItalic'
+                                    },
+                                    courier: {
+                                        normal: 'Courier',
+                                        bold: 'Courier-Bold',
+                                        italics: 'Courier-Oblique',
+                                        bolditalics: 'Courier-BoldOblique'
+                                    }
+                                };
+
+                                // Set basic styling with alternative font
+                                // doc.defaultStyle = {
+                                //     font: 'helvetica', // Using Helvetica for better compatibility
+                                //     fontSize: 10
+                                // };
+
+                                // Style headers like Bootstrap tables
+                                doc.styles.tableHeader = {
+                                    // font: 'helvetica',
+                                    fontSize: 11,
+                                    bold: true,
+                                    color: '#212529',
+                                    fillColor: '#f8f9fa',
+                                    alignment: 'left'
+                                };
+
+                                // Style even rows
+                                doc.styles.tableBodyEven = {
+                                    // font: 'helvetica',
+                                    fontSize: 10,
+                                    color: '#212529',
+                                    alignment: 'left'
+                                };
+
+                                // Style odd rows for zebra striping
+                                doc.styles.tableBodyOdd = {
+                                    // font: 'helvetica',
+                                    fontSize: 10,
+                                    color: '#212529',
+                                    fillColor: '#f2f2f2',
+                                    alignment: 'left'
+                                };
+
+                                // Set auto column widths
+                                let tableColumnCount = doc.content[1].table.body[0].length;
+                                let columnWidths = Array(tableColumnCount).fill('auto');
+                                doc.content[1].table.widths = columnWidths;
+
+                                // Add table borders and padding using layout
+                                doc.content[1].layout = {
+                                    hLineWidth: function(i, node) { return 1; },
+                                    vLineWidth: function(i, node) { return 1; },
+                                    hLineColor: function(i, node) { return '#dee2e6'; },
+                                    vLineColor: function(i, node) { return '#dee2e6'; },
+                                    paddingLeft: function(i, node) { return 8; },
+                                    paddingRight: function(i, node) { return 8; },
+                                    paddingTop: function(i, node) { return 6; },
+                                    paddingBottom: function(i, node) { return 6; }
+                                };
+
+                                // Add page footer with page numbers
+                                doc.footer = function(currentPage, pageCount) {
+                                    return {
+                                        text: 'Page ' + currentPage.toString() + ' of ' + pageCount,
+                                        alignment: 'right',
+                                        margin: [0, 10, 20, 0],
+                                        fontSize: 8,
+                                        // font: 'helvetica'
+                                    };
+                                };
+                            }
+                        },
+                        {
+                            text: '<i class="fas fa-file-csv" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-info',
+                            extend: 'csv',
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Exclude the last column
+                            },
+                            bom: true, // Add UTF-8 BOM
+                            customize: function (csv) {
+                                // Replace unsupported characters
+                                return csv.replace(/√/g, '✔️'); // Replace '√' with 'Checked'
+                            }
+                        },
+                        {
+                            extend: 'copy',
+                            text: '<i class="fas fa-copy" title="Copy Table Data"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-primary',
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Exclude the last column
+                            }
+                        },
+                        {
+                            extend: 'colvis',
+                            text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
+                            className: 'btn btn-warning',
+                        }
+                    ],
+                },
+                bottomStart: {
+                    pageLength: 10,
+                }
+            },
+            order: [2, 'asc'],
+            lengthMenu: [10, 25, 50, 100],
+        });
+
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
+        $.ajaxSetup({ headers: { "X-CSRF-TOKEN": csrfToken } });
+        const beneficiaries = @json($beneficiaries);
+        let rowCount = beneficiaries.length;
+
         loadJenisKelompok();
         loadKelompokMarjinal();
         setLocationForm();
+        loadActivity();
 
         setLocationForm(
             '#provinsi_id_tambah',
@@ -607,26 +765,333 @@
             $('#editDataModal')
         );
 
-        // Fetch activities for the selected program on edit pages
-        const id = {{ $program->id }};
-        const url = "{{ route('api.program.activity', ':id') }}".replace(':id', id);
+        function addRow() {
+            const form = document.getElementById("dataForm");
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
 
-        fetch(url).then(response => response.json()).then(activities => {
-            populateActivitySelect(activities, $("#activitySelect"));
-            populateActivitySelect(activities, $("#activitySelectEdit"));
-            updateActivityHeaders(activities);
+            const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            formData.program_id = '{{ $program->id }}';
+            formData.user_id = '{{ Auth::user()->id }}';
+            formData.dusun_id = $("#dusun_id_tambah").val();
+            formData.desa_id = $("#desa_id_tambah").val();
 
-        }).catch(error => console.error('Error fetching activities:', error));
+            formData.nama = $("#nama_beneficiary").val();
+            formData.umur = $("#umur").val();
+            formData.no_telp = $("#no_telp").val();
+            formData.jenis_kelamin = $("#jenis_kelamin").val();
+            formData.rt = $("#rt").val();
+            formData.rw = $("#rw").val();
+            formData.kelompok_rentan = $("#kelompok_rentan").val() || [];
+            formData.jenis_kelompok = $("#jenis_kelompok").val() || [];
+            formData.keterangan = escapeHtml($("#keterangan").val());
+
+            formData.activity_ids = $("#activitySelect").val() || [];
+            formData.is_non_activity = $("#is_non_activity").is(":checked");
+
+            $.ajax({
+                url: '{{ route('beneficiary.store.individual') }}',
+                method: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Saving...",
+                        position: "bottom-end",
+                        timer: 3000,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function(response) {
+                    redrawTable();
+                    $("#dataForm")[0].reset();
+                    $("#ModalTambahPeserta").modal("hide");
+                    Swal.fire({
+                        title: "Success",
+                        text: "Beneficiary added!",
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                    resetFormAdd();
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", xhr.responseJSON?.message || "Failed to add beneficiary.", "error");
+                }
+            });
+        }
+
+        function redrawTable() {
+            $.ajax({
+                url: '{{ route('beneficiary.edit', $program->id) }}', // Assumes this returns the edit view with updated table
+                method: 'GET',
+                success: function(response) {
+                    const newTableBody = $(response).find('#tableBody').html(); // Extract the updated table body
+                    $('#tableBody').html(newTableBody); // Replace the existing table body
+                    rowCount = $('#tableBody tr').length; // Update row count
+                },
+                error: function(xhr) {
+                    Swal.fire("Error", "Failed to reload table data.", "error");
+                }
+            });
+        }
+
+        function editRow(row) {
+            const beneficiaryId = $(row).data('id');
+            const url = "{{ route('beneficiary.get.individual', ':id') }}".replace(':id', beneficiaryId);
+            console.log("beneficiaryId", beneficiaryId, url);
+            // Fetch the latest data for the selected beneficiary
+            $.ajax({
+                url: url, // Replace with your endpoint to fetch a single beneficiary
+                method: "GET",
+                success: function(response) {
+                    const beneficiary = response[0]; // Assuming the server returns the beneficiary in response.data
+
+                    // console.log("isi data dari", beneficiary);
+
+                    // Populate the modal with the latest data
+                    $("#editRowId").val(beneficiaryId);
+                    $("#editNama").val(beneficiary.nama);
+                    $("#editNoTelp").val(beneficiary.no_telp);
+                    $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
+                    $("#editUsia").val(beneficiary.umur);
+                    $("#editRt").val(beneficiary.rt);
+                    $("#editRwBanjar").val(beneficiary.rw);
+                    $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+                    $("#keterangan_edit").val(beneficiary.keterangan);
+
+                    const addOptionAndTriggerChange = (selector, text, value) => {
+                        const option = new Option(text || '-', value || '', true, true);
+                        $(selector).empty().append(option).trigger('change');
+                    };
+
+                    addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.provinsi.id || '');
+                    addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.id || '');
+                    addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.dusun?.desa?.kecamatan?.nama || '-', beneficiary.dusun.desa.kecamatan.id || '');
+                    addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
+                    addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+
+                    $("#editKelompokRentan").empty();
+                    beneficiary.kelompok_marjinal.forEach(k => {
+                        $("#editKelompokRentan").append(new Option(k.nama, k.id, true, true));
+                    });
+                    $("#editKelompokRentan").val(beneficiary.kelompok_marjinal.map(k => k.id)).trigger("change");
+
+                    $("#editJenisKelompok").empty();
+                    beneficiary.jenis_kelompok.forEach(j => {
+                        $("#editJenisKelompok").append(new Option(j.nama, j.id, true, true));
+                    });
+                    $("#editJenisKelompok").val(beneficiary.jenis_kelompok.map(j => j.id)).trigger("change");
+
+                    $("#activitySelectEdit").val(beneficiary.penerima_activity.map(a => a.id.toString())).trigger("change");
+
+                    $("#editDataModal").modal("show");
+                },
+                error: function(xhr) {
+                    console.error("Failed to fetch beneficiary data:", xhr.responseText);
+                }
+            });
+        }
+
+        function updateRow() {
+            const form = document.getElementById("editDataForm");
+            const beneficiaryId = $("#editRowId").val();
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Start with data from serializeArray (gets standard inputs like nama, usia, rt, rw, etc.)
+            const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
+                // Handle potential duplicate names (though less likely in an edit form)
+                if (obj[item.name]) {
+                    if (!Array.isArray(obj[item.name])) {
+                        obj[item.name] = [obj[item.name]];
+                    }
+                    obj[item.name].push(item.value);
+                } else {
+                    obj[item.name] = item.value;
+                }
+                return obj;
+            }, {});
+
+            // --- Manually Add Fields Not Reliably Caught by serializeArray ---
+
+            // 1. Checkbox
+            formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+
+            // 2. Select2 Multi-Select Values
+            formData.id = $("#editRowId").val() || [];
+            formData.nama = $("#editNama").val() || [];
+            formData.umur = $("#editUsia").val() || [];
+            formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
+            formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
+
+            formData.no_telp = $("#editNoTelp").val() || '';
+            formData.jenis_kelamin = $("#editGender").val() || 'lainnya';
+            formData.keterangan = escapeHtml($("#keterangan_edit").val()) || '';
+            formData.rt = $("#editRt").val() || '';
+            formData.rw = $("#editRwBanjar").val() || '';
+
+            formData.activity_ids = $("#activitySelectEdit").val() || [];
+
+            // 3. Location Select2 Values (Crucial Addition!)
+            formData.provinsi_id = $("#provinsi_id_edit").val() || null; // Send null if empty
+            formData.kabupaten_id = $("#kabupaten_id_edit").val() || null;
+            formData.kecamatan_id = $("#kecamatan_id_edit").val() || null;
+            formData.desa_id = $("#desa_id_edit").val() || null;
+            formData.dusun_id = $("#dusun_id_edit").val() || null;
+            formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+
+            // 4. Other Required IDs (like program_id, user_id if needed)
+            formData.program_id = '{{ $program->id }}';
+            formData.user_id = '{{ Auth::id() }}'; // Uncomment if needed
+
+            // --- AJAX Call ---
+            const id = beneficiaryId; // Use the beneficiaryId directly
+            if (!id) {
+                 Swal.fire("Error", "Beneficiary ID is missing.", "error");
+                 return; // Prevent AJAX call if ID is missing
+            }
+            const url = "{{ route('beneficiary.edit.individual', ':id') }}".replace(':id', id);
+
+            $.ajax({
+                url: url,
+                method: "PUT", // Use PUT for updates
+                data: JSON.stringify(formData), // Send the manually constructed object as JSON
+                contentType: "application/json", // Tell the server we're sending JSON
+                beforeSend: function() {
+                    Toast.fire({
+                        icon: "info",
+                        title: "Updating...",
+                        position: "bottom-end",
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+                },
+                success: function(response) {
+                    const index = beneficiaries.findIndex(b => b.id === beneficiaryId);
+                    if (index !== -1) {
+                        beneficiaries[index] = response.data; // Assuming the server returns the updated beneficiary in response.data
+                    }
+                    Swal.fire({
+                        title: "Success",
+                        text: response.message || "Beneficiary updated!",
+                        icon: "success",
+                        timer: 1500,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
+                    redrawTable(); // Function to refresh table data
+                    resetFormEdit();
+                    $("#editDataModal").modal("hide");
+                },
+                error: function(xhr) {
+                    // Improved error handling
+                    let errorMsg = "Failed to update beneficiary.";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                        // Optional: Append validation errors
+                        if (xhr.responseJSON.errors) {
+                            errorMsg += "<br><br>Details:<br>" + Object.values(xhr.responseJSON.errors).flat().join("<br>");
+                        }
+                    }
+                    Swal.fire("Error", errorMsg, "error");
+                }
+            });
+        }
 
 
-        $("#activitySelect").select2({
-            width: "100%",
-            dropdownParent: $("#ModalTambahPeserta"),
+        function deleteRow(row) {
+            const beneficiaryId = $(row).data('id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `{{ route('beneficiary.delete.individual', '') }}/${beneficiaryId}`,
+                        method: "DELETE",
+                        beforeSend: function() {
+                            Toast.fire({
+                                icon: "info",
+                                title: "Deleting...",
+                                position: "bottom-end",
+                                timer: 3000,
+                                timerProgressBar: true,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            });
+                        },
+                        success: function() {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Beneficiary removed.",
+                                icon: "success",
+                                timer: 1500,
+                                timerProgressBar: true,
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                },
+                            }).then(() => {
+                                redrawTable();
+                            });
+
+                        },
+                        error: function(xhr) {
+                            Swal.fire("Error", xhr.responseJSON?.message || "Failed to delete.", "error");
+                        }
+                    });
+                }
+            });
+        }
+
+        $("#saveDataBtn").on("click", function(e) {
+            e.preventDefault();
+            // alert("saveDataBtn clicked");
+            addRow();
         });
 
-        $("#activitySelectEdit").select2({
-            width: "100%",
-            dropdownParent: $("#editDataModal"),
+        $("#dataTable tbody").on("click", ".edit-btn", function(e) {
+            e.preventDefault();
+            // console.info("form reset, now opening edit modal")
+            setTimeout(() => {
+                editRow(this);
+            }, 250);
+        });
+
+        $("#updateDataBtn").on("click", function(e) {
+            e.preventDefault();
+            updateRow();
+        });
+
+        $("#dataTable tbody").on("click", ".delete-btn", function(e) {
+            e.preventDefault();
+            deleteRow(this);
         });
     });
 
@@ -634,16 +1099,10 @@
 </script>
 
 
-
-{{-- @include('tr.beneficiary.js.create') --}}
 @include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
 
-{{-- @include('tr.beneficiary.js.beneficiaries') --}}
-{{-- @include('tr.beneficiary.js.program') --}}
-
-@include('tr.beneficiary.tabs.program')
 @include('tr.beneficiary.tabs.bene-modal')
 
 @include('api.master.dusun')
