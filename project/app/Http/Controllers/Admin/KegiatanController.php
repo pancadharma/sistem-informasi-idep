@@ -51,68 +51,6 @@ class KegiatanController extends Controller
         return view('tr.kegiatan.index');
     }
 
-    // public function list_kegiatan(Request $request)
-    // {
-    //     if (!$request->ajax() && !$request->isJson()) {
-    //         return "Not an Ajax Request & JSON REQUEST";
-    //     }
-
-    //     $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-    //         ->select('trkegiatan.*')
-    //         ->get()
-    //         ->map(function ($item) {
-    //             // Calculate duration before formatting
-    //             $item->duration_in_days = $item->getDurationInDays();
-
-    //             // Format dates after calculating duration
-    //             $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-    //             $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
-
-    //             // Add calculated values
-    //             $program = $item->activity->program_outcome_output->program_outcome->program;
-    //             $item->total_beneficiaries = $program->getTotalBeneficiaries();
-
-    //             return $item;
-    //         });
-
-    //     $data = DataTables::of($kegiatan)
-    //         ->addIndexColumn()
-    //         ->addColumn('program_name', function ($kegiatan) {
-    //             return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
-    //         })
-    //         ->addColumn('duration_in_days', function ($kegiatan) {
-    //             return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
-    //         })
-    //         ->addColumn('action', function ($kegiatan) {
-    //             $buttons = [];
-
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
-    //         })
-    //         ->rawColumns(['action'])
-    //         ->make(true);
-
-    //     return $data;
-    // }
-
-
-    // private function generateButton($action, $class, $icon, $title, $kegiatanId)
-    // {
-    //     return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-    //             data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
-    //                 <i class="bi bi-' . $icon . '"></i>
-    //                 <span class="d-none d-sm-inline"></span>
-    //             </button>';
-    // }
-
     public function list_kegiatan(Request $request)
     {
         if (!$request->ajax() && !$request->isJson()) {
@@ -246,13 +184,39 @@ class KegiatanController extends Controller
 
     public function store(StoreKegiatanRequest $request)
     {
-        $kegiatanController = new APIKegiatanController();
-
-        $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
-        $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
-
-        // Optionally return a response or redirect
-        return response()->json(['message' => 'Kegiatan processed by storeApi']);
+        // $kegiatanController = new APIKegiatanController();
+        // $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
+        // $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
+        // // Optionally return a response or redirect
+        // return response()->json(['message' => 'Kegiatan processed by storeApi']);
+        try {
+            $kegiatanController = new APIKegiatanController();
+            $response = $kegiatanController->storeApi($request, new Kegiatan());
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $response['data'],
+                'message' => 'Kegiatan processed by storeApi'
+            ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        }
     }
 
     public function show($id)
@@ -327,25 +291,60 @@ class KegiatanController extends Controller
 
 
 
-
-
-
-    public function edit(Kegiatan $kegiatan)
+    public function edit($id)
     {
-        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-            $program = Program::all();
-            $statusOptions = Kegiatan::STATUS_SELECT;
-            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-            $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
+            }
+        ])->where('id', $id)->get();
 
-            return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+        return $program;
+
+        $kegiatan = Kegiatan::with([
+            'activity',
+            'program',
+            'lokasi',
+            'penulis',
+            'media',
+            'sektor',
+            'mitra',
+        ])->find($id);
+
+        if (!$kegiatan) {
+            abort(404, 'Kegiatan not found'); // Or handle the case where the Kegiatan doesn't exist
         }
-        return response()->json([
-            'success' => false,
-            'status' => 'error',
-            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-        ], Response::HTTP_FORBIDDEN);
+
+        // Dynamically load the specific Kegiatan detail model
+        $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+        $modelMapping = Kegiatan::getJenisKegiatanModelMap();
+        $relatedData = null;
+
+        if (isset($modelMapping[$jenisKegiatan])) {
+            $modelClass = $modelMapping[$jenisKegiatan];
+            $relatedData = $modelClass::where('kegiatan_id', $id)->first();
+        }
+
+        return view('kegiatan.edit', compact('kegiatan', 'relatedData'));
     }
+
+
+    // public function edit(Kegiatan $kegiatan)
+    // {
+    //     if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+    //         $program = Program::all();
+    //         $statusOptions = Kegiatan::STATUS_SELECT;
+    //         $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+    //         $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+
+    //         return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+    //     }
+    //     return response()->json([
+    //         'success' => false,
+    //         'status' => 'error',
+    //         'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
+    //     ], Response::HTTP_FORBIDDEN);
+    // }
 
     public function update(Request $request, $id)
     {
