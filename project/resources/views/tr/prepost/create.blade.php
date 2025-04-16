@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.komponenmodel.add'))
-@section('content_header_title') <strong>{{ __('cruds.komponenmodel.add') }}</strong>  @endsection
-@section('sub_breadcumb')<a href="{{ route('komodel.index') }}" title="{{ __('cruds.komponenmodel.list') }}"> {{ __('cruds.komponenmodel.list') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.komponenmodel.add') }}">{{ __('cruds.komponenmodel.add') }}</span> @endsection
+@section('subtitle', __('cruds.prepost.add'))
+@section('content_header_title') <strong>{{ __('cruds.prepost.add') }}</strong>  @endsection
+@section('sub_breadcumb')<a href="{{ route('komodel.index') }}" title="{{ __('cruds.prepost.list') }}"> {{ __('cruds.prepost.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.prepost.add') }}">{{ __('cruds.prepost.add') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -11,11 +11,11 @@
 @endsection
 
 @section('content_body')
-    <form id="createKOMODEL" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
+    <form id="createPREPOST" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="row">
-            @include('tr.komponenmodel.tabs') 
+            @include('tr.prepost.tabs') 
         </div>
     </form>
 @stop
@@ -57,14 +57,15 @@
 
 
 
-{{-- @include('tr.komponenmodel.js.create')  --}}
+
 
 @stack('basic_tab_js')
-@include('tr.komponenmodel.js.komodel')
-@include('tr.komponenmodel.js.program')
-@include('tr.komponenmodel.tabs.program')
-@include('tr.komponenmodel.tabs.tambahkomponen-modal')
-@include('api.master.dusun')
+@include('tr.prepost.js.create-main')
+@include('tr.prepost.js.create') 
+@include('tr.prepost.tabs.program')
+@include('tr.prepost.tabs.program-act')
+@include('tr.prepost.tabs.modal-tambah-main')
+{{-- @include('api.master.dusun') --}}
 
 
 
