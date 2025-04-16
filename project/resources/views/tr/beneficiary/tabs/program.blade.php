@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="ModalDaftarProgram" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgram" theme="danger">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
                 <h5 class="modal-title" id="TitleModalDaftarProgram">
@@ -18,6 +18,7 @@
                                 <tr>
                                     <th>{{ __('cruds.kegiatan.basic.program_kode') }}</th>
                                     <th>{{ __('cruds.kegiatan.basic.program_nama') }}</th>
+                                    <th>{{ __('cruds.beneficiary.activity_code') }}</th>
                                     <th>{{ __('global.actions') }}</th>
                                 </tr>
                             </thead>

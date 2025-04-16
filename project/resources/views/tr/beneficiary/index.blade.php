@@ -31,7 +31,7 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table id="mealsTable" class="table responsive-table table-bordered datatable-beneficiary" width="100%">
+            <table id="penerimaManfaat" class="table responsive-table table-bordered datatable-beneficiary" width="100%">
                 {{-- <thead class="text-nowrap">
                     <tr>
                         <th class="text-center align-middle" style="width: 5%;" data-orderable="false">{{ __('global.no') }}</th>

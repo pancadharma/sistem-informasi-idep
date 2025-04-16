@@ -30,3 +30,4 @@ project/public/uploads
 /node_modules
 .prettierrc
 .prettierignore
+*.windsurfrules

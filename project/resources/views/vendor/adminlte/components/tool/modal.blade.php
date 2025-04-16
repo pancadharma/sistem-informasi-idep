@@ -1,7 +1,7 @@
 <div {{ $attributes->merge(['class' => $makeModalClass(), 'id' => $id]) }}
      @isset($staticBackdrop) data-backdrop="static" data-keyboard="false" @endisset>
 
-    <div class="{{ $makeModalDialogClass() }}">
+    <div class="{{ $makeModalDialogClass() }}" role="document">
     <div class="modal-content">
 
         {{--Modal header --}}
