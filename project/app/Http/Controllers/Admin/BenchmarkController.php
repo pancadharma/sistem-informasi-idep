@@ -14,4 +14,8 @@ class BenchmarkController extends Controller
         return view('tr.benchmark.index');
     }
 
+    public function create()
+    {
+        return view('tr.benchmark.create');
+    }
 }

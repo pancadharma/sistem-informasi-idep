@@ -4,7 +4,7 @@
 
 @section('content_header_title')
 <div class="d-flex align-items-center">
-    <a class="btn btn-success mr-3 w-25" href="#" id="btnTambahBenchmark">
+    <a class="btn btn-success mr-3 w-25" href="{{ route('benchmark.create') }}" id="btnTambahBenchmark">
         Tambah Benchmark
     </a>
     <select class="form-control w-auto" id="filterProgram">
@@ -18,7 +18,7 @@
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
-    <h4 class="mt-4 text-dark">Memuat data...</h4>
+    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
 @endsection
 
 @section('content_body')
