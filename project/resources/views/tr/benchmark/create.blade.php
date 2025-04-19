@@ -12,21 +12,37 @@
 @section('content_body')
 <div class="card card-outline card-primary">
     <div class="card-body">
-        <form id="formBenchmark">
+        <form id="benchmarkForm">
+            @csrf
             <div class="row">
                 {{-- Kiri --}}
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Program</label>
-                        <select id="program_id" name="program_id" class="form-control select2"></select>
+                        <select id="program_id" name="program_id" class="form-control" required>
+                            <option value="">-- Pilih Program --</option>
+                            @foreach ($programs as $program)
+                                <option value="{{ $program->id }}">{{ $program->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Jenis Kegiatan</label>
-                        <input type="text" class="form-control" name="jenis_kegiatan">
+                        <label for="jenis_kegiatan_id">Jenis Kegiatan</label>
+                        <select id="jenis_kegiatan_id" name="jenis_kegiatan_id" class="form-control" required>
+                            <option value="">-- Pilih Jenis Kegiatan --</option>
+                            @foreach ($kegiatan as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Kegiatan</label>
-                        <input type="text" class="form-control" name="nama_kegiatan">
+                        <label for="outcome_activity_id">Kegiatan</label>
+                        <select id="outcome_activity_id" name="outcome_activity_id" class="form-control" required>
+                            <option value="">-- Pilih Kegiatan --</option>
+                            @foreach ($outcomes as $outcome)
+                                <option value="{{ $outcome->id }}">{{ $outcome->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Provinsi</label>
@@ -41,32 +57,47 @@
                         <input type="text" class="form-control" name="kecamatan">
                     </div>
                     <div class="form-group">
-                        <label>Desa</label>
-                        <input type="text" class="form-control" name="desa">
+                        <label for="dusun_id">Desa</label>
+                        <select id="dusun_id" name="dusun_id" class="form-control" required>
+                            <option value="">-- Pilih Desa --</option>
+                            @foreach ($dusun as $item)
+                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
                 {{-- Kanan --}}
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Tanggal Implementasi</label>
-                        <input type="date" class="form-control" name="tanggal_implementasi">
+                        <label for="tanggal_implementasi">Tanggal Implementasi</label>
+                        <input type="date" id="tanggal_implementasi" name="tanggal_implementasi" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Handler</label>
-                        <input type="text" class="form-control" name="handler">
+                        <label for="user_handler_id">Handler</label>
+                        <select id="user_handler_id" name="user_handler_id" class="form-control" required>
+                            <option value="">-- Pilih Handler --</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Compiler</label>
-                        <input type="text" class="form-control" name="compiler">
+                        <label for="user_compiler_id">Compiler</label>
+                        <select id="user_compiler_id" name="user_compiler_id" class="form-control" required>
+                            <option value="">-- Pilih Compiler --</option>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Score</label>
                         <input type="number" step="0.01" class="form-control" name="score">
                     </div>
                     <div class="form-group">
-                        <label>Catatan Evaluasi</label>
-                        <textarea class="form-control" name="catatan_evaluasi" rows="3"></textarea>
+                        <label for="catatan_evaluasi">Catatan Evaluasi</label>
+                        <textarea id="catatan_evaluasi" name="catatan_evaluasi" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Area Peningkatan</label>
@@ -89,4 +120,5 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+<script src="{{ asset('tr/benchmark/js/create.blade.js') }}"></script>
 @endpush

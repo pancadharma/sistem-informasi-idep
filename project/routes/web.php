@@ -358,4 +358,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
     });
 
+    Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
+        Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getData'])->name('datatable');
+        Route::post('store',    [App\Http\Controllers\API\BenchmarkController::class, 'store'])->name('store');
+        Route::get('show/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'show'])->name('show');
+        Route::put('update/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'destroy'])->name('delete');
+    
+        // Optional untuk dropdown / lookup
+        Route::get('programs',   [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
+        Route::get('kegiatan',   [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
+        Route::get('outcomes',   [App\Http\Controllers\API\BenchmarkController::class, 'getOutcomes'])->name('outcomes');
+        Route::get('dusuns',     [App\Http\Controllers\API\BenchmarkController::class, 'getDusuns'])->name('dusuns');
+    });
+    
 });
