@@ -11,6 +11,8 @@ use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
+use App\Models\Dusun;
+use App\Models\Jenis_Bantuan;
 use App\Models\Jenis_Kegiatan;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
@@ -38,6 +40,7 @@ use App\Models\Program_Outcome_Output_Activity;
 use App\Models\Provinsi;
 use App\Models\Satuan;
 use App\Models\TargetReinstra;
+use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -287,63 +290,132 @@ class KegiatanController extends Controller
     }
 
 
-
-
-
-
-    public function edit($id)
+    public function edit(Kegiatan $kegiatan)
     {
-        $program = Program::with([
-            'outcome.output.activities' => function ($query) {
-                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id');
-            }
-        ])->where('id', $id)->get();
+        abort_if(
+            !(auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')),
+            Response::HTTP_FORBIDDEN,
+            'Unauthorized Permission'
+        );
 
-        return $program;
+        // Fetch all programs for dropdown
+        $program = Program::all();
 
+        // Status options for dropdown
+        $statusOptions = Kegiatan::STATUS_SELECT;
+
+        // Fetch all activities for dropdown
+        $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+
+        // Load Kegiatan with all necessary relationships
         $kegiatan = Kegiatan::with([
-            'activity',
-            'program',
-            'lokasi',
-            'penulis',
-            'media',
+            'activity.program_outcome_output.program_outcome.program',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'penulis.peran', // Pivot relationship for penulis with peran
             'sektor',
             'mitra',
-        ])->find($id);
+            'jenisKegiatan',
+            'media' // Spatie Media Library
+        ])->findOrFail($kegiatan->id);
 
-        if (!$kegiatan) {
-            abort(404, 'Kegiatan not found'); // Or handle the case where the Kegiatan doesn't exist
-        }
-
-        // Dynamically load the specific Kegiatan detail model
+        // Load type-specific related data (e.g., Kegiatan_Assessment)
         $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
         $modelMapping = Kegiatan::getJenisKegiatanModelMap();
         $relatedData = null;
-
         if (isset($modelMapping[$jenisKegiatan])) {
             $modelClass = $modelMapping[$jenisKegiatan];
-            $relatedData = $modelClass::where('kegiatan_id', $id)->first();
+            $relatedData = $modelClass::where('kegiatan_id', $kegiatan->id)->first();
         }
 
-        return view('kegiatan.edit', compact('kegiatan', 'relatedData'));
-    }
+        // Prepare penulis data for Select2
+        $kegiatanPenulis = $kegiatan->datapenulis->map(function ($penulis) {
+            return [
+                'id' => $penulis->id,
+                'text' => $penulis->nama,
+                'peran_id' => $penulis->pivot->peran_id,
+                'peran_nama' => $penulis->peran ? $penulis->peran->nama : null
+            ];
+        });
 
+        // Fetch media collections
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+
+        // return response()->json($kegiatan);
+
+        return view('tr.kegiatan.edit', compact(
+            'program',
+            'statusOptions',
+            'programoutcomeoutputactivities',
+            'kegiatan',
+            'kegiatanPenulis',
+            'relatedData',
+            'dokumenPendukung',
+            'mediaPendukung'
+        ));
+    }
 
     // public function edit(Kegiatan $kegiatan)
     // {
-    //     if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-    //         $program = Program::all();
-    //         $statusOptions = Kegiatan::STATUS_SELECT;
-    //         $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-    //         $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+    //     abort_if(
+    //         !(auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')),
+    //         Response::HTTP_FORBIDDEN,
+    //         'Unauthorized Permission'
+    //     );
 
-    //         return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+    //     // Fetch all programs for dropdown
+    //     $program = Program::all();
+
+    //     // Status options for dropdown
+    //     $statusOptions = Kegiatan::STATUS_SELECT;
+
+    //     // Fetch all activities for dropdown
+    //     $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+
+    //     // Load Kegiatan with all necessary relationships
+    //     $kegiatan = Kegiatan::with([
+    //         'activity.program_outcome_output.program_outcome.program',
+    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
+    //         'penulis.peran', // Pivot relationship for penulis with peran
+    //         'sektor',
+    //         'mitra',
+    //         'jenisKegiatan',
+    //         'media' // Spatie Media Library
+    //     ])->findOrFail($kegiatan->id);
+
+    //     // Load type-specific related data (e.g., Kegiatan_Assessment)
+    //     $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+    //     $modelMapping = Kegiatan::getJenisKegiatanModelMap();
+    //     $relatedData = null;
+    //     if (isset($modelMapping[$jenisKegiatan])) {
+    //         $modelClass = $modelMapping[$jenisKegiatan];
+    //         $relatedData = $modelClass::where('kegiatan_id', $kegiatan->id)->first();
     //     }
-    //     return response()->json([
-    //         'success' => false,
-    //         'status' => 'error',
-    //         'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-    //     ], Response::HTTP_FORBIDDEN);
+
+    //     // Prepare penulis data for Select2
+    //     $kegiatanPenulis = $kegiatan->datapenulis->map(function ($penulis) {
+    //         return [
+    //             'id' => $penulis->id,
+    //             'text' => $penulis->nama,
+    //             'peran_id' => $penulis->pivot->peran_id,
+    //             'peran_nama' => $penulis->peran ? $penulis->peran->nama : null
+    //         ];
+    //     });
+
+    //     // Fetch media collections
+    //     $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+    //     $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+
+    //     return view('tr.kegiatan.edit', compact(
+    //         'program',
+    //         'statusOptions',
+    //         'programoutcomeoutputactivities',
+    //         'kegiatan',
+    //         'kegiatanPenulis',
+    //         'relatedData',
+    //         'dokumenPendukung',
+    //         'mediaPendukung'
+    //     ));
     // }
 
     public function update(Request $request, $id)
