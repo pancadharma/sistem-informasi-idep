@@ -349,4 +349,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
+
+    // MEALS Pre Post
+    Route::group(['prefix' => 'prepost', 'as' => 'prepost.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'create'])->name('create');
+    });
 });
