@@ -47,12 +47,20 @@ class Provinsi extends Model
     {
         return $this->belongsTo(Country::class, 'negara_id');
     }
+    public function negara()
+    {
+        return $this->belongsTo(Country::class, 'negara_id');
+    }
 
     public function kabupaten_kota()
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }
     public function kab()
+    {
+        return $this->hasMany(Kabupaten::class, 'provinsi_id');
+    }
+    public function kabupaten()
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }

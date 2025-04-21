@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama', 255)->unique();
             $table->boolean('aktif')->default(1)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -28,5 +29,4 @@ return new class extends Migration
         Schema::dropIfExists('master_jenis_kelompok');
         Schema::enableForeignKeyConstraints();
     }
-
 };

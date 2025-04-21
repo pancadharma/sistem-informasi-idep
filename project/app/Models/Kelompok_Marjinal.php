@@ -29,7 +29,7 @@ class Kelompok_Marjinal extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -42,9 +42,15 @@ class Kelompok_Marjinal extends Model
     // instead of defining the relationship manually in each of one to many model / pivot models
     // only defining pivot table since it's manually defined in migration (non standard laravel with underscore like program_kelompok_marjinal
     // ----------------------------------------------------------------
-    public function program() {
+    public function program()
+    {
         //this relation will be called using eager loading in controller
         return $this->belongsToMany(Program::class, 'trprogramkelompokmarjinal', 'targetreinstra_id', 'program_id');
+    }
 
+    public function penerimaManfaat()
+    {
+        //this relation will be called using eager loading in controller
+        return $this->belongsToMany(Meals_Penerima_Manfaat::class, 'trmeals_penerimamanfaat_kelompok_marjinal', 'kelompok_marjinal_id', 'trmeals_penerima_manfaat_id');
     }
 }

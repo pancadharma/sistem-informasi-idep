@@ -50,6 +50,10 @@ class Kelurahan extends Model
     {
         return $this->hasMany(Dusun::class, 'desa_id');
     }
+    public function dusun_beneficiary()
+    {
+        return $this->hasMany(Dusun::class, 'desa_id');
+    }
     public function kegiatan()
     {
         return $this->belongsToMany(Kegiatan::class, 'trkegiatan_lokasi', 'desa_id', 'kegiatan_id')

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Peserta</title>
+    <!-- Add jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* Sorting indicators */
+        th.asc::after {
+            content: ' ▲';
+            color: #333;
+        }
+
+        th.desc::after {
+            content: ' ▼';
+            color: #333;
+        }
+
+        /* Search input styling */
+        .search_peserta .form-control {
+            border-radius: 4px;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .search_peserta .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Table header styling for sortable columns */
+        th:not([colspan]):not([data-dt-order]) {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:not([colspan]):not([data-dt-order]):hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Additional styles for better table appearance */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            vertical-align: middle;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .badge {
+            padding: 0.25em 0.4em;
+            border-radius: 0.25rem;
+            display: inline-block;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            margin: 0.2rem;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+            cursor: pointer;
+            margin: 0 0.2rem;
+        }
+
+        .btn-info {
+            color: #fff;
+            background-color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row search_peserta" id="">
+        <div class="col mb-1 mt-2">
+            <input type="text" class="form-control" id="search_peserta" placeholder="Cari..." name="search_peserta">
+        </div>
+    </div>
+    <div class="row responsive list_peserta">
+        <div class="col-12 table-responsive">
+            <table id="peserta" class="table table-sm table-bordered table-hover display">
+                <thead style="background-color: rgba(255, 255, 255, 0) !important" class="text-sm">
+                    <tr class="align-middle text-center display nowrap">
+                        <th rowspan="2" class="text-center align-middle d-none">#</th>
+                        <th rowspan="2" class="align-middle text-nowrap">Nama Lengkap</th>
+                        <th rowspan="2" class="align-middle text-wrap">Jenis Kelamin</th>
+                        <th rowspan="2" class="align-middle text-wrap">Kelompok Marjinal</th>
+                        <th colspan="4" class="text-center align-middle">Alamat</th>
+                        <th rowspan="2" class="align-middle">No. HP</th>
+                        <th rowspan="2" class="align-middle text-wrap">Jenis Kelompok</th>
+                        <th rowspan="2" class="align-middle">Usia</th>
+                        <th colspan="4" data-dt-order="disable" class="text-center align-middle">Kelompok Usia</th>
+                        <th rowspan="1" class="text-center align-middle text-nowrap" id="headerActivityProgram"
+                            colspan="2">Activity</th>
+                        <th rowspan="2" class="text-center align-middle text-nowrap" id="header_is_non_activity">Non-AC
+                        </th>
+                        <th rowspan="2" class="text-center align-middle">Opsi</th>
+                    </tr>
+                    <tr id="activityHeaders" class="text-sm">
+                        <th class="align-middle text-center">RT</th>
+                        <th class="align-middle text-center">RW</th>
+                        <th class="align-middle text-center">Dusun</th>
+                        <th class="align-middle text-center">Desa</th>
+                        <th colspan="1" class="align-middle text-center bg-cyan" title="Anak (Umur <18 tahun kebawah)">
+                            0-17</th>
+                        <th colspan="1" class="align-middle text-center bg-teal" title="Remaja (Umur 18 - 24 tahun)">
+                            18-24</th>
+                        <th colspan="1" class="align-middle text-center bg-yellow" title="Dewasa (Umur 25 - 59 tahun)">
+                            25-59</th>
+                        <th colspan="1" class="align-middle text-center bg-pink"
+                            title="Lansia (Umur > 60 tahun keatas)"> &gt; 60 </th>
+                        <th class="align-middle text-center activity-header" data-activity-id="18">#1.1.1</th>
+                        <th class="align-middle text-center activity-header" data-activity-id="19">#1.1.2</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="display nowrap">
+                    <!-- Table body content will be dynamically populated -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Search functionality
+            $('#search_peserta').on('input', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#tableBody tr').each(function () {
+                    const rowText = $(this).find('td').not(':last').text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchTerm));
+                });
+            });
+
+            // Sorting functionality
+            let sortDirection = 1;
+            let lastSortedTh = null;
+
+            $('th').not('[colspan], [data-dt-order]').css('cursor', 'pointer').click(function () {
+                const th = $(this);
+                const index = th.index();
+                const rows = $('#tableBody tr').get();
+
+                // Update sort direction
+                if (lastSortedTh && lastSortedTh[0] === th[0]) {
+                    sortDirection *= -1;
+                } else {
+                    sortDirection = 1;
+                    if (lastSortedTh) {
+                        lastSortedTh.removeClass('asc desc');
+                    }
+                }
+                lastSortedTh = th;
+
+                // Update sort indicator
+                th.removeClass('asc desc').addClass(sortDirection === 1 ? 'asc' : 'desc');
+
+                // Sort rows
+                rows.sort(function (a, b) {
+                    const aCell = $(a).find('td').eq(index);
+                    const bCell = $(b).find('td').eq(index);
+
+                    let aValue = aCell.data('nama') ||
+                        aCell.data('usia') ||
+                        aCell.data('rt') ||
+                        aCell.data('rw') ||
+                        aCell.text().trim();
+                    let bValue = bCell.data('nama') ||
+                        bCell.data('usia') ||
+                        bCell.data('rt') ||
+                        bCell.data('rw') ||
+                        bCell.text().trim();
+
+                    // Handle numeric values
+                    if (!isNaN(aValue) && !isNaN(bValue)) {
+                        return (Number(aValue) - Number(bValue)) * sortDirection;
+                    }
+
+                    // Handle text values
+                    return aValue.localeCompare(bValue) * sortDirection;
+                });
+
+                // Reorder rows in the table
+                $('#tableBody').append(rows);
+            });
+
+            // Sample data
+            const sampleData = [
+                {
+                    id: 1,
+                    nama: "I Gede Adi Surya",
+                    gender: "Laki-Laki",
+                    kelompok_rentan: [{ id: "12", text: "Disabilitas" }, { id: "10", text: "Anak-anak di Zona Konflik" }],
+                    rt: "123",
+                    rw: "123",
+                    dusun: "Naruto",
+                    desa: "Gianyar",
+                    no_telp: "0813337325",
+                    jenis_kelompok: "KMPB, Kelompok Usaha, Stakeholder Nasional",
+                    usia: 12
+                },
+                {
+                    id: 2,
+                    nama: "Made Pramanana",
+                    gender: "Laki-Laki",
+                    kelompok_rentan: [{ id: "11", text: "Lansia" }, { id: "13", text: "Masyarakat Adat" }],
+                    rt: "456",
+                    rw: "456",
+                    dusun: "Sasuke",
+                    desa: "Ubud",
+                    no_telp: "0812345678",
+                    jenis_kelompok: "Kelompok Usaha, KMPB",
+                    usia: 65
+                },
+                {
+                    id: 3,
+                    nama: "Ni Kadek Sekar",
+                    gender: "Perempuan",
+                    kelompok_rentan: [{ id: "14", text: "Perempuan Kepala Keluarga" }],
+                    rt: "789",
+                    rw: "789",
+                    dusun: "Sakura",
+                    desa: "Sukawati",
+                    no_telp: "0898765432",
+                    jenis_kelompok: "Stakeholder Nasional",
+                    usia: 45
+                },
+                {
+                    id: 4,
+                    nama: "I Wayan Putra",
+                    gender: "Laki-Laki",
+                    kelompok_rentan: [{ id: "15", text: "Pemuda" }, { id: "16", text: "Mahasiswa" }],
+                    rt: "321",
+                    rw: "321",
+                    dusun: "Kakashi",
+                    desa: "Tegalalang",
+                    no_telp: "0876543210",
+                    jenis_kelompok: "KMPB",
+                    usia: 22
+                }
+            ];
+
+            // Populate table with sample data
+            sampleData.forEach(data => {
+                const row = $('<tr>').html(`
+                    <td class="text-center align-middle d-none">${data.id}</td>
+                    <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
+                    <td data-gender="${data.gender.toLowerCase()}" class="text-center align-middle text-nowrap">${data.gender}</td>
+                    <td class="text-left align-middle text-wrap">
+                        ${data.kelompok_rentan.map(k => `<span class="badge badge-primary">${k.text}</span>`).join(' ')}
+                    </td>
+                    <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
+                    <td data-rw="${data.rw}" class="text-center align-middle">${data.rw}</td>
+                    <td class="text-center align-middle">${data.dusun}</td>
+                    <td class="text-center align-middle">${data.desa}</td>
+                    <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+                    <td class="text-center align-middle">${data.jenis_kelompok}</td>
+                    <td data-usia="${data.usia}" class="text-center align-middle">${data.usia}</td>
+                    <td class="text-center align-middle">${data.usia < 18 ? '✔️' : ''}</td>
+                    <td class="text-center align-middle">${data.usia >= 18 && data.usia <= 24 ? '✔️' : ''}</td>
+                    <td class="text-center align-middle">${data.usia >= 25 && data.usia <= 59 ? '✔️' : ''}</td>
+                    <td class="text-center align-middle">${data.usia >= 60 ? '✔️' : ''}</td>
+                    <td class="text-center align-middle">✔️</td>
+                    <td class="text-center align-middle">✔️</td>
+                    <td class="text-center align-middle">✔️</td>
+                    <td class="text-center align-middle">
+                        <button class="btn btn-info edit-btn"><i class="bi bi-pencil-square"></i>Edit</button>
+                        <button class="btn btn-danger delete-btn"><i class="bi bi-trash3"></i>Delete</button>
+                    </td>
+                `);
+                $('#tableBody').append(row);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -359,6 +359,14 @@ return [
                     'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
+                    'text'      => 'prepost',
+                    'icon'      => 'nav-icon bi bi-clipboard-check', 
+                    'icon_text' => 'prepost',
+                    'route'     => 'prepost.index',
+                    // 'can'       => ['komponenmodel_access'],
+                    'active'    => ['prepost', 'prepost*', 'regex:@^komodel/[0-9]+$@'],
+                ],
+                [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],

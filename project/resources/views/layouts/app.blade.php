@@ -162,15 +162,16 @@ $.fn.dataTable.ext.errMode = 'throw';
 
 @push('css')
     <style type="text/css">
-    .select2 {
-        width:100%!important;
-    }
-    </style>
-    <style>
+        .select2 {
+            width:100%!important;
+        }
         .form-control:focus {
             border-color: #d9edf7;
             -webkit-box-shadow: 0 0 0px 2px rgb(87 204 193 / 72%);
             box-shadow: 0 0 0px 2px rgb(87 204 193 / 72%);
+        }
+        .modal-dialog-scrollable .modal-body{
+            overflow-x: clip!important;
         }
     </style>
 @endpush

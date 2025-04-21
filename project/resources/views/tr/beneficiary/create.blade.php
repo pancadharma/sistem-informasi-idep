@@ -57,6 +57,30 @@
         .select2-container--open .select2-dropdown {
             z-index: 1056; /* Match or exceed modal z-index (Bootstrap default is 1050) */
         }
+
+                /* Sorting indicators */
+        th.asc::after {
+            content: ' ↑';
+            color: #333;
+        }
+
+        th.desc::after {
+            content: ' ↓';
+            color: #333;
+        }
+
+        .responsive-table {
+            overflow-x: visible;
+            overflow-y: visible;
+        }
+
+        .ellipsis-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Adjust as needed */
+            /* display: block; Or display: block */
+        }
     </style>
 @endpush
 
@@ -75,17 +99,6 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 <script>
-    // Fix dropdown position when modal is shown
-    // $('.modal').on('shown.bs.modal', function() {
-    //     $(this).find('.select2-container').each(function() {
-    //         const $select = $(this).prev('select'); // Get the associated select element
-    //         $select.select2('close'); // Close any open dropdown
-    //         $select.select2('open');  // Reopen to recalculate position
-    //         $select.select2('close'); // Close again to avoid flicker (optional)
-    //     });
-    // });
-
-    // Recalculate position on window resize (e.g., Inspect Element)
     $(window).on('resize', function() {
         $('.select2-container--open').each(function() {
             const $select = $(this).prev('select');
@@ -98,11 +111,14 @@
 
 
 @include('tr.beneficiary.js.create')
+@include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
 @include('tr.beneficiary.js.beneficiaries')
 @include('tr.beneficiary.js.program')
 @include('tr.beneficiary.tabs.program')
 @include('api.master.dusun')
+
+@include('api.master.jenis-kelompok-instansi')
 
 @endpush

@@ -274,28 +274,31 @@ Route::middleware(['auth'])->group(function () {
     // penerima manfaat
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
+        Route::POST('/',                            [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
+        Route::get('/{program}/edit',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
+        Route::get('/{id}/data',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'getBeneficiaryData'])->name('get.individual');
+        Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'editBeneficiary'])->name('edit.individual');
+        Route::post('/add',                         [App\Http\Controllers\Admin\BeneficiaryController::class, 'storeBeneficiary'])->name('store.individual');
+        Route::delete('/delete/{id}',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'deleteBeneficiary'])->name('delete.individual');
+        Route::PUT('/{beneficiary}/update',         [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
+        Route::get('/{beneficiary}/show',           [App\Http\Controllers\Admin\BeneficiaryController::class, 'show'])->name('show');
         Route::get('/create',                       [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
         Route::get('/wilayah',                      [App\Http\Controllers\Admin\BeneficiaryController::class, 'wilayah'])->name('wilayah');
     });
 
     //penerima manfaat api router
     Route::group(['prefix' => 'beneficiary/api/', 'as' => 'api.beneficiary.'], function () {
-        Route::get('datatable',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getMealsDatatable'])->name('datatable');
+        Route::get('datatable',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getPenerimaManfaat'])->name('datatable');
         Route::get('program',                       [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('program');
-
-        // Route::get('provinsi',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
-        // Route::get('kabupaten',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kabupaten');
-        // Route::get('kecamatan',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kecamatan');
-        // Route::get('desa',                          [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
-        // Route::get('dusun',                         [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
         Route::get('provinsi',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
         Route::get('kab/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kab');
         Route::get('kec/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kec');
         Route::get('desa/{id}',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
         Route::get('dusun/{id}',                    [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
         Route::get('kelompok-rentan',               [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
+        Route::get('kelompok-jenis',                [App\Http\Controllers\API\BeneficiaryController::class, 'getJenisKelompok'])->name('kelompok.jenis');
+        Route::get('activity/{id}',                 [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
         Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
-        Route::GET('activity/{id}',                 [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
     });
 
 
@@ -316,9 +319,9 @@ Route::middleware(['auth'])->group(function () {
         // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
         Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
+        // route for api create master jenis kelompok
 
-        // using api to store / create meals
-        // Route::post('meals/store',                  [MealsController::class, 'store'])->name('meals.store');
+        Route::POST('jenis-kelompok/save',          [BeneficiaryController::class, 'apiStoreJenisKelompok'])->name('jenis_kelompok.simpan');
     });
 
 
@@ -348,6 +351,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
 
+    // MEALS Pre Post
+    Route::group(['prefix' => 'prepost', 'as' => 'prepost.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'create'])->name('create');
+    });
     // Feedback & Response Model
     // Route::group(['prefix' => 'feedback', 'as' => 'feedback.'], function () {
     //     Route::get('/',                             [App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('index');
