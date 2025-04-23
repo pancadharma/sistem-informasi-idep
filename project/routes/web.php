@@ -351,8 +351,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
 
-
-    //Benchmarks
     Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
@@ -371,5 +369,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('outcomes',   [App\Http\Controllers\API\BenchmarkController::class, 'getOutcomes'])->name('outcomes');
         Route::get('dusuns',     [App\Http\Controllers\API\BenchmarkController::class, 'getDusuns'])->name('dusuns');
     });
-    
 });
