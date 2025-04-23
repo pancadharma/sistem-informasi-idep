@@ -1064,5 +1064,39 @@ return [
         'tidak'                         => 'Tidak',
     ],
 
+    'target_progress' => [
+        'title'                         => 'Target & Progress',
+        'add'                           => 'Add Target & Progress',
+        'edit'                          => 'Edit Target & Progress',
+        'show'                          => 'Tampilkan Target & Progress',
+        'delete'                        => 'Hapus Target & Progress',
+
+        'list'                          => 'Daftar Target & Progress',
+        'label'                         => 'Target & Progress',
+        'level'                         => 'Level',
+        'deskripsi'                     => 'Deskripsi',
+        'indikator'                     => 'Indikator',
+        'target'                        => 'Target',
+        'achievements'                  => 'Achievements',
+        'progress'                      => 'Progress',
+        'persentase_complete'           => '% to complete',
+        'status'                        => 'Status',
+        'challenges'                    => 'Challenges',
+        'mitigation'                    => 'Mitigation / action plan',
+        'risk'                          => 'Risk',
+        'notes'                         => 'Notes',
+        'tipe'                          => 'Tipe',
+
+        'program'                       => "Program",
+        'tanggal'                       => "Tanggal",
+
+        'basic'             => [
+            'tanggal'           => 'Tanggal',
+            'program_select'    => 'Pilih Program',
+            'kode_program'      => 'Kode Program',
+            'nama_program'      => 'Name Program',
+            'jumlah_target'     => 'Jumlah Target',
+        ],
+    ],
 
 ];
