@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
+use App\Http\Controllers\API\FeedbackController;
 use Monolog\Handler\RotatingFileHandler;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
@@ -346,4 +347,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
+    // Route resource untuk semua operasi CRUD feedback
+    Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
+});
+
+
+
+Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
+    Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
+    // Tambahkan route API lain untuk feedback jika perlu
 });
