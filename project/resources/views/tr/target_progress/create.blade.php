@@ -40,7 +40,7 @@
     </div>
 
     {{-- Modals --}}
-    @include('tr.target_progress.modals.program')
+    @include('tr.target_progress.modals._program')
 @stop
 
 @push('css')
