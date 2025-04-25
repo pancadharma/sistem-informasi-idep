@@ -26,7 +26,7 @@
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
-            z-index: 1045;
+            z-index: 1030;
             top: 0;
         }
         .wah {

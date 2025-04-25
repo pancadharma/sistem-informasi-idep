@@ -51,7 +51,7 @@
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
-            z-index: 1045;
+            z-index: 1030;
             top: 0;
         }
         .wah {
@@ -385,181 +385,6 @@
     }
 
     $(document).ready(function() {
-        // $('#dataTable').DataTable({
-        //     "paging": true,
-        //     "lengthChange": false,
-        //     "searching": true,
-        //     "ordering": true,
-        //     "info": true,
-        //     "autoWidth": false,
-        //     layout: {
-        //         topStart: {
-        //             buttons: [
-        //                 {
-        //                     text: '<i class="fas fa-print" title="Print Table Data"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-secondary',
-        //                     extend: 'print',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 {
-        //                     text: '<i class="fas fa-file-excel" title="Export to EXCEL"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-success',
-        //                     extend: 'excel',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 // {
-        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                 //     className: 'btn btn-danger',
-        //                 //     extend: 'pdfHtml5',
-        //                 //     exportOptions: {
-        //                 //         columns: ':not(:last-child)', // Exclude the last column
-        //                 //         stripHTML: false,
-        //                 //         format: {
-        //                 //             body: function (data, row, column, node) {
-        //                 //                 if (column === 10) {
-        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-        //                 //                 }
-        //                 //                 return data;
-        //                 //             }
-        //                 //         },
-        //                 //         header: true,
-        //                 //         footer: true
-
-        //                 //     },
-        //                 //     orientation: 'landscape', // Landscape orientation
-        //                 //     pageSize: 'A3', // A4 page size
-        //                 //     customize: function (doc) {
-
-        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                 //     }
-        //                 // },
-        //                 // {
-        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                 //     className: 'btn btn-danger',
-        //                 //     extend: 'pdfHtml5',
-        //                 //     exportOptions: {
-        //                 //         columns: ':not(:last-child)', // Exclude the last column
-        //                 //         stripHTML: false,
-        //                 //         format: {
-        //                 //             body: function (data, row, column, node) {
-        //                 //                 if (column === 10) { // Example: Checkbox column
-        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
-        //                 //                 }
-        //                 //                 return data;
-        //                 //             }
-        //                 //         }
-        //                 //     },
-        //                 //     orientation: 'landscape', // Landscape orientation
-        //                 //     pageSize: 'A4', // A4 page size
-        //                 //     customize: function (doc) {
-        //                 //         // Set font size for the entire document
-        //                 //         doc.defaultStyle.fontSize = 10; // Adjust font size (default is 10)
-
-        //                 //         // Set font style for the table header
-        //                 //         doc.styles.tableHeader = {
-        //                 //             fontSize: 12, // Header font size
-        //                 //             bold: true, // Make header bold
-        //                 //             alignment: 'center' // Center-align header text
-        //                 //         };
-
-        //                 //         // Set font style for the table body
-        //                 //         doc.styles.tableBodyEven = {
-        //                 //             fontSize: 10, // Font size for even rows
-        //                 //             alignment: 'left' // Left-align text
-        //                 //         };
-        //                 //         doc.styles.tableBodyOdd = {
-        //                 //             fontSize: 10, // Font size for odd rows
-        //                 //             alignment: 'left' // Left-align text
-        //                 //         };
-
-        //                 //         // Add padding to cells for better readability
-        //                 //         doc.content[1].table.body.forEach(function (row) {
-        //                 //             row.forEach(function (cell) {
-        //                 //                 // cell.margin = [5, 5, 5, 5]; // Add padding to each cell
-        //                 //             });
-        //                 //         });
-
-        //                 //         // Adjust column widths to fit content
-        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                 //     }
-        //                 // },
-        //                 {
-        //                     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-danger',
-        //                     extend: 'pdfHtml5',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)', // Exclude the last column
-        //                         rows: null, // Include all rows, not just visible ones
-        //                         stripHTML: false,
-        //                         format: {
-        //                             body: function (data, row, column, node) {
-        //                                 if (column === 10) { // Example: Checkbox column
-        //                                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
-        //                                 }
-        //                                 return data;
-        //                             }
-        //                         }
-        //                     },
-        //                     orientation: 'landscape', // Landscape orientation
-        //                     pageSize: 'A3', // A3 page size
-        //                     customize: function (doc) {
-        //                         // Adjust cell height
-        //                         doc.styles.tableBodyEven = { lineHeight: 1.5 }; // Adjust line height for even rows
-        //                         doc.styles.tableBodyOdd = { lineHeight: 1.5 }; // Adjust line height for odd rows
-
-        //                         // Use the layout property to add padding to cells
-        //                         doc.content[1].layout = {
-        //                             paddingLeft: function (i, node) { return 5; },
-        //                             paddingRight: function (i, node) { return 5; },
-        //                             paddingTop: function (i, node) { return 5; },
-        //                             paddingBottom: function (i, node) { return 5; }
-        //                         };
-
-        //                         // Adjust column widths to fit content
-        //                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                     }
-        //                 },
-        //                 {
-        //                     // text: '<i class="bi bi-filetype-csv text-light" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
-        //                     text: '<i class="fas fa-file-csv" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-info',
-        //                     extend: 'csv',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     },
-        //                     bom: true, // Add UTF-8 BOM
-        //                     customize: function (csv) {
-        //                         // Replace unsupported characters
-        //                         return csv.replace(/√/g, '✔️'); // Replace '√' with 'Checked'
-        //                     }
-        //                 },
-        //                 {
-        //                     extend: 'copy',
-        //                     text: '<i class="fas fa-copy" title="Copy Table Data"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-primary',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 {
-        //                     extend: 'colvis',
-        //                     text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-warning',
-        //                 },
-        //             ],
-        //         },
-        //         bottomStart: {
-        //             pageLength: 10,
-        //         }
-        //     },
-        //     order: [2, 'asc'],
-        //     lengthMenu: [10, 25, 50, 100],
-        // });
-
         $('#dataTable').DataTable({
             "paging": true,
             "lengthChange": false,
@@ -639,26 +464,16 @@
                                         bolditalics: 'Courier-BoldOblique'
                                     }
                                 };
-
-                                // Set basic styling with alternative font
-                                // doc.defaultStyle = {
-                                //     font: 'helvetica', // Using Helvetica for better compatibility
-                                //     fontSize: 10
-                                // };
-
                                 // Style headers like Bootstrap tables
                                 doc.styles.tableHeader = {
-                                    // font: 'helvetica',
                                     fontSize: 11,
                                     bold: true,
                                     color: '#212529',
                                     fillColor: '#f8f9fa',
                                     alignment: 'left'
                                 };
-
-                                // Style even rows
                                 doc.styles.tableBodyEven = {
-                                    // font: 'helvetica',
+
                                     fontSize: 10,
                                     color: '#212529',
                                     alignment: 'left'
@@ -666,7 +481,6 @@
 
                                 // Style odd rows for zebra striping
                                 doc.styles.tableBodyOdd = {
-                                    // font: 'helvetica',
                                     fontSize: 10,
                                     color: '#212529',
                                     fillColor: '#f2f2f2',
@@ -697,7 +511,6 @@
                                         alignment: 'right',
                                         margin: [0, 10, 20, 0],
                                         fontSize: 8,
-                                        // font: 'helvetica'
                                     };
                                 };
                             }
