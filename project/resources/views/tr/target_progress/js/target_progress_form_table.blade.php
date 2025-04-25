@@ -1,4 +1,26 @@
 <script>
+	  const modalTemplate = $(`
+				<div class="modal fade" id="modal-template" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog modal-lg modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">
+									<label>Achievement</label>
+								</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="{{ __('global.close') }}">
+									<span>&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<textarea rows="10" class="form-control w-100"></textarea>
+							</div>
+							<div class="modal-footer">
+							</div>
+						</div>
+					</div>
+				</div>
+			`);
+
 	$(document).ready(function () {
 		let targetDataTable = undefined,
 			getInputField	= function($row, attribute) {
@@ -52,11 +74,11 @@
 						className: 'bg-25-warning bg-opacity-50'
 					},
 					{
-						targets: Array.from({ length: 9 }, (_, i) => i+5),
+						targets: Array.from({ length: 8 }, (_, i) => i+5),
 						className: 'bg-25-success bg-opacity-50 text-nowrap'
 					},
 					{
-						targets: [13],
+						targets: [12],
 						className: 'bg-25-success bg-opacity-50 mw-200-px'
 					},
 				],
@@ -82,7 +104,7 @@
 					{data: 'mitigation',						name: 'mitigation',							title: '{{ __('cruds.target_progress.mitigation') }}'},
 					{data: 'risk',                  name: 'risk',                   title: '{{ __('cruds.target_progress.risk') }}'},
 					{data: 'notes',                 name: 'notes',                  title: '{{ __('cruds.target_progress.notes') }}'},
-					{data: 'tipe',                  name: 'tipe',                   title: '{{ __('cruds.target_progress.tipe') }}'},
+					// {data: 'tipe',                  name: 'tipe',                   title: '{{ __('cruds.target_progress.tipe') }}'},
 				],
 				initComplete: function(settings, json) {
 					let table	= this.get(0),
@@ -110,8 +132,13 @@
 							'mitigation',
 							'risk',
 							'notes',
-							'tipe',
-						]);
+							// 'tipe',
+						]),
+						textsAreas	= jQuery()
+										.add(inputs.achievements)
+										.add(inputs.challenges)
+										.add(inputs.mitigation)
+										.add(inputs.notes);
 
 
 					// SETUP STATUS
@@ -136,6 +163,7 @@
 						inputs.risk.append($('<option></option>').val(item.value).text(item.label));
 					});
 					
+					// Hidden fields shadowing - simpan value jika pindah pagination
 					Object.values(inputs).forEach(function($input) {
 						let $this		= $input,
 							name		= $this.prop("name"),
@@ -145,7 +173,7 @@
 							$this.val(hiddenInput.val());
 						}
 
-						$input.off("change.dynamicRowEvents")
+						$input.off("change")
 						.on("change.setHiddenFields", function(event){
 							if(!hiddenInput.length){
 								hiddenInput = $(`<input type='hidden' name='${name}'>`).appendTo(table.hiddenFields);
@@ -155,9 +183,77 @@
 						});
 					});
 
-					inputs.achievements.on("change.dynamicRowEvents", function(event) {
+					// Text Area Modals
+					textsAreas.each(function() {
+						$(this).off("focus.dynamicRowEvents")
+						.on("focus.dynamicRowEvents", function(event) {
+							let $realInput		= $(this),
+								$modal			= modalTemplate.clone(),
+								$modalInput		= $modal.find("textarea"),
+								$titleLabel		= $modal.find(".modal-title label"),
+								colIndex		= $realInput.closest("td").index(),
+								headerText		= $realInput.closest("table").find("thead th .dt-column-title").get(colIndex).innerText,
+								unixTimestamp	= new Date().getTime(),
+								input_id		= `input-${unixTimestamp}`;
+							
+							$modal.prop("id", unixTimestamp);
+							$modalInput.prop("id", input_id);
+							$titleLabel.prop("for", input_id);
+							$titleLabel.text(headerText);
+
+							$modal.on("show.bs.modal", function(event) {
+								$modalInput.val($realInput.val());
+							});
+							$modal.on("shown.bs.modal", function(event) {
+								$modalInput.focus();
+							});
+							$modal.on("hide.bs.modal", function(event) {
+								$realInput.val($modalInput.val())
+									.trigger("change.setHiddenFields");
+							});
+							$modal.on("hidden.bs.modal", function(event) {
+								$modal.remove();
+							});
+
+							$modal.modal("show");
+						});
 					});
 
+					// Auto calculation `Progress` & `% to complete`
+					inputs.progress.on("change.dynamicRowEvents", function(){
+						let $this					= $(this),
+							$persentase_complete	= inputs.persentase_complete,
+							progress				= $this.val(),
+							persentase_complete		= $persentase_complete.val();
+							
+						if(progress > 100){
+							progress = 100;
+						}else if(progress < 0){
+							progress = 0;
+						}
+						persentase_complete = 100 - progress;
+
+						$this.val(progress).trigger("change.setHiddenFields");
+						$persentase_complete.val(persentase_complete).trigger("change.setHiddenFields");
+					});
+					inputs.persentase_complete.on("change.dynamicRowEvents", function(){
+						let $this				= $(this),
+							$progress			= inputs.progress,
+							persentase_complete	= $this.val(),
+							progress			= $progress.val();
+							
+						if(persentase_complete > 100){
+							persentase_complete = 100;
+						}else if(persentase_complete < 0){
+							persentase_complete = 0;
+						}
+						progress = 100 - persentase_complete;
+
+						$this.val(persentase_complete).trigger("change.setHiddenFields");
+						$progress.val(progress).trigger("change.setHiddenFields");
+					});
+					
+					// SETUP SELECT2 - untuk status & risk input
 					inputs.status.select2({
 						placeholder: "Select Status",
 						width: '100%',

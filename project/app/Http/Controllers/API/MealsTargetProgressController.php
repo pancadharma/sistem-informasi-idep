@@ -143,15 +143,15 @@ class MealsTargetProgressController extends Controller
                     'tipe'                  => $this->getPramName('tipe', $form_idx),
                 ];
 
-                $target->achievements          = "<div class='input-group'><input class='form-control mw-100-px' type='number' name='{$params->achievements}'><div class='input-group-append'><div class='input-group-text'>%</div></div></div>";
-                $target->progress              = "<div class='input-group'><input class='form-control mw-100-px' type='number' name='{$params->progress}'><div class='input-group-append'><div class='input-group-text'>%</div></div></div>";
-                $target->persentase_complete   = "<div class='input-group'><input class='form-control mw-100-px' type='number' name='{$params->persentase_complete}'><div class='input-group-append'><div class='input-group-text'>%</div></div></div>";
+                $target->achievements          = "<textarea class='form-control' name='{$params->achievements}' rows='3' style='min-width:200px; height:100%;'></textarea>";
+                $target->progress              = "<div class='input-group'><input class='form-control mw-100-px' type='number' step='5' min='0' max='100' name='{$params->progress}'><div class='input-group-append'><div class='input-group-text'>%</div></div></div>";
+                $target->persentase_complete   = "<div class='input-group'><input class='form-control mw-100-px' type='number' step='5' min='0' max='100' name='{$params->persentase_complete}'><div class='input-group-append'><div class='input-group-text'>%</div></div></div>";
                 $target->status                = "<select name='{$params->status}'></select>";
-                $target->challenges            = "<input class='form-control' type='text' name='{$params->challenges}'>";
-                $target->mitigation            = "<input class='form-control' type='text' name='{$params->mitigation}'>";
+                $target->challenges            = "<textarea class='form-control' name='{$params->challenges}' rows='3' style='min-width:200px; height:100%;'></textarea>";
+                $target->mitigation            = "<textarea class='form-control' name='{$params->mitigation}' rows='3' style='min-width:200px; height:100%;'></textarea>";
                 $target->risk                  = "<select name='{$params->risk}'></select>";
-                $target->notes                 = "<textarea class='form-control' name='{$params->notes}' row='3' style='min-width:200px; height:100%;'></textarea>";
-                $target->tipe                  = "<input class='form-control' type='text' name='{$params->tipe}' value='{$target->tipe}'>";
+                $target->notes                 = "<textarea class='form-control' name='{$params->notes}' rows='3' style='min-width:200px; height:100%;'></textarea>";
+                // $target->tipe                  = "<input class='form-control' type='text' name='{$params->tipe}' value='{$target->tipe}'>";
 
                 return $target;
             }, $targets, array_keys($targets));
@@ -194,9 +194,9 @@ class MealsTargetProgressController extends Controller
                 ->addColumn('notes', function ($target) {
                     return $target->notes;
                 })
-                ->addColumn('tipe', function ($target) {
-                    return $target->tipe;
-                })
+                // ->addColumn('tipe', function ($target) {
+                //     return $target->tipe;
+                // })
                 ->rawColumns([
                     'level',
                     'achievements',
@@ -207,7 +207,7 @@ class MealsTargetProgressController extends Controller
                     'mitigation',
                     'risk',
                     'notes',
-                    'tipe',
+                    // 'tipe',
                 ])
                 ->make(true);
         }
