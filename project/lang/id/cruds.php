@@ -1096,7 +1096,13 @@ return [
             'kode_program'      => 'Kode Program',
             'nama_program'      => 'Name Program',
             'jumlah_target'     => 'Jumlah Target',
+			'created_at'		=> 'Waktu Dibuat',
+			'updated_at'		=> 'Diupdate Pada',
         ],
+    ],
+
+    'history' => [
+        'title' => "Histoty"
     ],
 
 ];

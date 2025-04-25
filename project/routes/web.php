@@ -365,5 +365,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('datatable',                 [App\Http\Controllers\API\MealsTargetProgressController::class, 'getDataTable'])->name('datatable');
         Route::get('programs',                  [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
         Route::get('program/{id}/targets',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
     });
 });

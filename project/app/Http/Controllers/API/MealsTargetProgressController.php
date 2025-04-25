@@ -99,6 +99,56 @@ class MealsTargetProgressController extends Controller
         }
     }
 
+    public function getHistories(Request $request)
+    {
+        if ($request->ajax()) {
+            $query = $this->programsWithTargets()->get();
+
+            return DataTables::of(source: $query)
+                ->addColumn('target', function ($row) {
+                    $goal_targets       = $this->splitupTargets($row->goal?->target);
+                    $objektif_targets   = $this->splitupTargets($row->objektif?->target);
+                    $outcome_targets    = [];
+                    $output_targets     = [];
+                    $activity_targets   = [];
+
+                    foreach ($row->outcome as $outcome) {
+                        $outcome_targets = array_merge($outcome_targets, $this->splitupTargets($outcome?->target));
+                        foreach ($outcome->output as $output) {
+                            $output_targets = array_merge($output_targets, $this->splitupTargets($output?->target));
+                            foreach ($output->activities as $activity) {
+                                $activity_targets = array_merge($activity_targets, $this->splitupTargets($activity?->target));
+                            }
+                        }
+                    }
+
+                    $targets = [
+                        ...$goal_targets,
+                        ...$objektif_targets,
+                        ...$outcome_targets,
+                        ...$output_targets,
+                        ...$activity_targets,
+                    ];
+
+                    return count($targets);
+                })
+                ->addColumn('action', function ($row) {
+                    $button = "
+                        <button
+                            type='button'
+                            class='btn btn-sm btn-primary'
+                        >
+                            <i class='bi bi-eye'></i>
+                        </button>
+                    ";
+
+                    return $button;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
     public function getTargets(Request $request)
     {
         if ($request->ajax()) {

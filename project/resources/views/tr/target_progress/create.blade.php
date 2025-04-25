@@ -41,6 +41,7 @@
 
     {{-- Modals --}}
     @include('tr.target_progress.modals._program')
+    @include('tr.target_progress.modals._history')
 @stop
 
 @push('css')
@@ -138,6 +139,8 @@
 
 
     @stack('basic_tab_js')
+    <script>const $doc = $(document);</script>
+    @include('tr.target_progress.js.history_list_table')
     @include('tr.target_progress.js.target_progress_form_table')
     @include('tr.target_progress.js.program')
 @endpush

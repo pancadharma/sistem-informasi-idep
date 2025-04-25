@@ -1,6 +1,4 @@
 <script>
-    const $doc = $(document);
-
     $doc.ready(function() {
         // Initialize Functions & Variables
         let targetProgressDataTable = undefined,

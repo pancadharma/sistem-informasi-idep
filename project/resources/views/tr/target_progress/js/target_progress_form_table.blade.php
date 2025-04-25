@@ -39,7 +39,20 @@
 			targetDataTable = $(this).DataTable({
 				serverSide: true,
 				processing: true,
-				buttons: [],
+				buttons: [
+					{
+						text: '<i class="fas fa-history"></i> <span class="d-none d-md-inline"></span>',
+						className: 'btn btn-success my-custom-class',
+						attr: {
+							id: 'googleBtn',
+							target: '_blank',
+							title: 'Click to check history'
+						},
+						action: function (e, dt, node, config) {
+							$('#ModalHistoryTargetProgress').modal("show");
+						},
+					},
+				],
 				dom: (
 					"<'row mt-2 justify-content-between'" +
 						"<'col-md-auto me-auto'B>" +                // Buttons left
