@@ -110,7 +110,7 @@
 
 
 
-@include('tr.beneficiary.js.create')
+{{-- @include('tr.beneficiary.js.create') --}}
 @include('tr.beneficiary.js.search')
 
 @stack('basic_tab_js')
