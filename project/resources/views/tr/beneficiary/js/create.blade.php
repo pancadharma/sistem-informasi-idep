@@ -424,8 +424,12 @@
             rowCount++;
 
             // const disabilitasArray = Array.isArray(data.disabilitas) ? data.disabilitas : [];
-            const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
-            const jenis_kelompok_array = Array.isArray(data.jenis_kelompok) ? data.jenis_kelompok : [];
+            // const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
+            // const jenis_kelompok_array = Array.isArray(data.jenis_kelompok) ? data.jenis_kelompok : [];
+
+            const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan.filter(Boolean) : [];
+            const jenis_kelompok_array = Array.isArray(data.jenis_kelompok) ? data.jenis_kelompok.filter(Boolean) : [];
+
 
             const provinsiText = $("#provinsi_id_tambah option:selected").text() || "-";
             const kabupatenText = $("#kabupaten_id_tambah option:selected").text() || "-";
@@ -451,10 +455,10 @@
                 };
             });
 
-            const jenisKelompokText = jenis_kelompok_data.map((item) => {
-                const randomColor = getRandomColor();
-                return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-            });
+            // const jenisKelompokText = jenis_kelompok_data.map((item) => {
+            //     const randomColor = getRandomColor();
+            //     return `<span class="badge badge-${randomColor}">${item.text}</span>`;
+            // });
             const kelompokRentanData = kelompokRentanArray.map((value) => {
                 const option = $("#kelompok_rentan").select2("data").find((opt) => opt.id === value) || {
                     id: value,
@@ -466,10 +470,20 @@
                 };
             });
 
-            const kelompokRentanText = kelompokRentanData.map((item) => {
+            // const kelompokRentanText = kelompokRentanData.map((item) => {
+            //     const randomColor = getRandomColor();
+            //     return `<span class="badge badge-${randomColor}">${item.text}</span>`;
+            // });
+
+            const kelompokRentanText = (kelompokRentanData || []).map(item => {
                 const randomColor = getRandomColor();
-                return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-            });
+                return `<span class="badge bg-${randomColor} me-1">${item.text}</span>`;
+            }).join('');
+
+            const jenisKelompokText = (jenisKelompokData || []).map(item => {
+                const randomColor = getRandomColor();
+                return `<span class="badge bg-${randomColor} me-1">${item.text}</span>`;
+            }).join('');
 
             const genderText = $('#ModalTambahPeserta select[name="gender"] option[value="' + data.gender + '"]').text();
             const selectedActivities = $("#activitySelect").val() || [];
@@ -487,11 +501,16 @@
             const KetValue = escapeHtml(keteranganText);
             const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${KetValue}" title="${KetValue}">${keteranganText}</td>`;
 
+            const headFamilyName = escapeHtml(data.head_family_name || '');
+            const familyNameCell = `<td class="text-left align-middle ellipsis-cell" data-head_family_name="${headFamilyName}" title="${headFamilyName}">${headFamilyName || '-'}</td>`;
+
+            const isHeadFamily = `<td class="text-center align-middle" data-is_non_activity="${data.is_head_family ? 'true' : 'false'}">${data.is_head_family ? '√' : ''}</td>`;
+
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
                 <td class="text-center align-middle d-none" data-provinsi-id="${provinsiId}" data-provinsi-nama="${provinsiText}" data-kabupaten-id="${kabupatenId}" data-kabupaten-nama="${kabupatenText}" data-kecamatan-id="${kecamatanId}" data-kecamatan-nama="${kecamatanText}" data-desa-id="${desaId}" data-desa-nama="${desaText}" data-dusun-id="${dusunId}" data-dusun-nama="${dusunText}">${rowCount}</td>
-                <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
+                <td data-nama="${data.nama || ''}" data-is_head_family="${data.is_head_family ? 'true' : 'false'}" data-head_family_name="${headFamilyName}" class="text-left align-middle">${data.nama || ''}</td>
                 <td data-gender="${data.gender}" class="text-center align-middle text-nowrap">${genderText}</td>
 
                 <td data-kelompok_rentan="${kelompokRentanArray.join(",")}" data-kelompok_rentan_full='${JSON.stringify(kelompokRentanData)}' class="text-left align-middle text-wrap">${kelompokRentanText.join(" ")}</td>
@@ -500,7 +519,7 @@
                 <td data-rw="${data.rw}" class="text-center align-middle">${data.rw}</td>
                 <td data-dusun-id="${data.dusun_id_tambah}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
                 <td data-desa-id="${data.desa_id_tambah}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-                <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+                <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp || '-'}</td>
 
 
                 <td data-jenis_kelompok="${jenis_kelompok_array.join(",")}" data-jenis_kelompok_full='${JSON.stringify(jenis_kelompok_data)}' class="text-left align-middle text-wrap">${jenisKelompokText.join(" ")}</td>
@@ -541,19 +560,34 @@
                     return obj;
                 }, {});
 
+                // if (!Array.isArray(formData.jenis_kelompok)) {
+                //     formData.jenis_kelompok = [formData.jenis_kelompok];
+                // }
+
+                // if (!Array.isArray(formData.kelompok_rentan)) {
+                //     formData.kelompok_rentan = [formData.kelompok_rentan];
+                // }
+
+                // formData.kelompok_rentan = formData.kelompok_rentan ? (Array.isArray(formData.kelompok_rentan) ? formData.kelompok_rentan : [formData.kelompok_rentan]) : [];
+                // formData.jenis_kelompok = formData.jenis_kelompok ? (Array.isArray(formData.jenis_kelompok) ? formData.jenis_kelompok : [formData.jenis_kelompok]) : [];
+
                 if (!Array.isArray(formData.jenis_kelompok)) {
-                    formData.jenis_kelompok = [formData.jenis_kelompok];
+                    formData.jenis_kelompok = formData.jenis_kelompok ? [formData.jenis_kelompok] : [];
                 }
 
                 if (!Array.isArray(formData.kelompok_rentan)) {
-                    formData.kelompok_rentan = [formData.kelompok_rentan];
+                    formData.kelompok_rentan = formData.kelompok_rentan ? [formData.kelompok_rentan] : [];
                 }
+
+                formData.is_head_family = $("#is_head_family").is(":checked")
+                formData.head_family_name = $("#head_family_name").val() || "";
 
                 formData.is_non_activity = $("#is_non_activity").is(":checked");
                 formData.activitySelect = $("#activitySelect").val();
 
                 addRow(formData);
                 resetFormAdd();
+                
             } else {
                 form.reportValidity();
             }
@@ -561,7 +595,7 @@
 
         function resetFormAdd() {
             $("#dataForm")[0].reset();
-            // $("#disabilitas").val(null).trigger("change");
+            $("#head_family_name").prop('readonly', false);
             $("#kelompok_rentan").val(null).trigger("change");
             $("#jenis_kelompok").val(null).trigger("change");
             $("#activitySelect").val(null).trigger("change");
@@ -577,7 +611,7 @@
 
         function resetFormEdit() {
             $("#editDataForm")[0].reset();
-            // $("#editDisabilitas").val(null).trigger("change");
+            $("#edit_head_family_name").prop('readonly', false);
             $("#editKelompokRentan").val(null).trigger("change");
             $("#editJenisKelompok").val(null).trigger("change");
             $("#activitySelectEdit").val(null).trigger("change");
@@ -1006,132 +1040,6 @@
                 });
             });
 
-            // $("#submitDataBtn").on("click", function() {
-            //     const programId = $("#program_id").val();
-            //     if (!programId) {
-            //         Swal.fire({
-            //             title: "Error",
-            //             text: "Please select a program before submitting!",
-            //             icon: "error",
-            //             timer: 1500,
-            //             timerProgressBar: true,
-            //         });
-            //         $("#kode_program").click();
-            //         return;
-            //     }
-
-            //     Swal.fire({
-            //         title: "Are you sure?",
-            //                 text: "You are about to submit the data!",
-            //                 icon: "warning",
-            //                 showCancelButton: true,
-            //                 confirmButtonText: "Yes, submit!",
-            //                 cancelButtonText: "No, cancel!",
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             const tableData = [];
-            //             $("#dataTable tbody tr").each(function() {
-            //                 const row = $(this);
-            //                 const activityHeaders = $('#activityHeaders th.activity-header');
-            //                 const selectedActivities = activityHeaders.map((index, header) => {
-            //                     const activityId = $(header).data('activity-id');
-            //                     const cell = row.find(`td[data-program-activity-id="${activityId}"]`);
-            //                     return cell.text().trim() === '√' ? activityId.toString() : null;
-            //                 }).get().filter(Boolean);
-
-            //                 const rowData = {
-            //                     nama: row.find("td[data-nama]").attr("data-nama"),
-            //                     gender: row.find("td[data-gender]").attr("data-gender"),
-            //                     kelompok_rentan: row.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan").split(",").filter(Boolean),
-            //                     rt: row.find("td[data-rt]").attr("data-rt"),
-            //                     rw: row.find("td[data-rw]").attr("data-rw"),
-            //                     dusun_id: row.find("td[data-dusun-id]").attr("data-dusun-id"),
-            //                     desa_id: row.find("td[data-desa-id]").attr("data-desa-id"),
-            //                     no_telp: row.find("td[data-no_telp]").attr("data-no_telp"),
-            //                     jenis_kelompok: row.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok").split(",").filter(Boolean),
-            //                     usia: row.find("td[data-usia]").attr("data-usia"),
-            //                     is_non_activity: row.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true",
-            //                     keterangan: row.find("td[data-keterangan]").attr("data-keterangan"),
-            //                     activitySelect: selectedActivities,
-            //                 };
-            //                 tableData.push(rowData);
-            //             });
-
-            //             if (tableData.length === 0) {
-            //                 Swal.fire({
-            //                     title: "Error",
-            //                     text: "No data to submit! Please add at least one beneficiary.",
-            //                     icon: "error",
-            //                     timer: 1500,
-            //                     timerProgressBar: true,
-            //                 });
-            //                 return;
-            //             }
-
-            //             // Prepare the data to send
-            //             const submitData = {
-            //                 program_id: programId,
-            //                 data: tableData,
-            //             };
-
-            //                     // Submit directly via AJAX
-            //             $.ajax({
-            //                 url: "{{ route('beneficiary.store') }}",
-            //                 method: "POST",
-            //                 data: JSON.stringify(submitData),
-            //                 contentType: "application/json",
-            //                 headers: {
-            //                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            //                 },
-            //                 beforeSend: function() {
-            //                     Swal.fire({
-            //                         title: "Submitting...",
-            //                         text: "Please wait while the data is being processed.",
-            //                         allowOutsideClick: false,
-            //                         didOpen: () => {
-            //                             Swal.showLoading();
-            //                         },
-            //                     });
-            //                 },
-            //                 success: function(response) {
-            //                     Swal.fire({
-            //                         title: "Success",
-            //                         text: response.message || "Beneficiaries created successfully!",
-            //                         icon: "success",
-            //                         timer: 1500,
-            //                         timerProgressBar: true,
-            //                     }).then(() => {
-            //                         $("#dataTable tbody").empty();
-            //                         $("#program_id").val("");
-            //                         $("#kode_program").val("");
-            //                         $("#nama_program").val("").prop("disabled", false);
-            //                         window.location.href = "{{ route('beneficiary.index') }}"; // Redirect to index
-            //                     });
-            //                 },
-            //                 error: function(xhr) {
-            //                     let errorMessage = "An error occurred while submitting the data.";
-            //                     if (xhr.responseJSON && xhr.responseJSON.message) {
-            //                         errorMessage = xhr.responseJSON.message;
-            //                         if (xhr.responseJSON.errors) {
-            //                             const errors = Object.values(xhr.responseJSON.errors).flat().join("\n");
-            //                             errorMessage += "\n" + errors;
-            //                         }
-            //                     }
-            //                     Swal.fire({
-            //                         title: "Error",
-            //                         text: errorMessage,
-            //                         icon: "error",
-            //                         timer: 3000,
-            //                         timerProgressBar: true,
-            //                     });
-            //             },
-            //             });
-            //         }
-            //     });
-            // });
-
-            // alternative submit using function call
-
             $("#submitDataBtn").on("click", function() {
                 const programId = $("#program_id").val();
                 if (!programId) {
@@ -1160,275 +1068,16 @@
                 });
             });
 
-            // $("#submitDataBtn").on("click", function() {
-            //     const programId = $("#program_id").val();
-            //     if (!programId) {
-            //         Swal.fire({
-            //             title: "Error",
-            //             text: "Please select a program before submitting!",
-            //             icon: "error",
-            //             timer: 1500,
-            //             timerProgressBar: true,
-            //         });
-            //         $("#kode_program").click();
-            //         return;
-            //     }
+            $("#ModalTambahPeserta, #editDataModal").on("shown.bs.modal", function() {
+                $(this).removeAttr("inert");
+            });
 
-            //     const tableData = [];
-            //     $("#dataTable tbody tr").each(function() {
-            //         const row = $(this);
-            //         const activityHeaders = $('#activityHeaders th.activity-header');
-            //         const selectedActivities = activityHeaders.map((index, header) => {
-            //             const activityId = $(header).data('activity-id');
-            //             const cell = row.find(`td[data-program-activity-id="${activityId}"]`);
-            //             return cell.text().trim() === '√' ? activityId.toString() : null;
-            //         }).get().filter(Boolean);
+            $("#ModalTambahPeserta, #editDataModal").on("hide.bs.modal", function(e) {
+                $(this).attr("inert", "");
+                $(document.activeElement).blur();
+            });
 
-            //         const rowData = {
-            //             nama: row.find("td[data-nama]").attr("data-nama"),
-            //             gender: row.find("td[data-gender]").attr("data-gender"), // Maps to jenis_kelamin
-            //             kelompok_rentan: row.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan").split(",").filter(Boolean),
-            //             rt: row.find("td[data-rt]").attr("data-rt"),
-            //             rw: row.find("td[data-rw]").attr("data-rw"),
-            //             dusun_id: row.find("td[data-dusun-id]").attr("data-dusun-id"),
-            //             desa_id: row.find("td[data-desa-id]").attr("data-desa-id"), // Optional, not directly used in model but included for completeness
-            //             no_telp: row.find("td[data-no_telp]").attr("data-no_telp"),
-            //             jenis_kelompok: row.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok").split(",").filter(Boolean),
-            //             usia: row.find("td[data-usia]").attr("data-usia"), // Maps to umur
-            //             is_non_activity: row.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true",
-            //             keterangan: row.find("td[data-keterangan]").attr("data-keterangan"),
-            //             activitySelect: selectedActivities, // Maps to penerimaActivity relationship
-            //         };
-            //         tableData.push(rowData);
-            //     });
-
-            //     if (tableData.length === 0) {
-            //         Swal.fire({
-            //             title: "Error",
-            //             text: "No data to submit! Please add at least one beneficiary.",
-            //             icon: "error",
-            //             timer: 1500,
-            //             timerProgressBar: true,
-            //         });
-            //         return;
-            //     }
-
-            //     // Prepare the data to send
-            //     const submitData = {
-            //         program_id: programId,
-            //         data: tableData,
-            //     };
-
-            //     // Show preview modal with the data
-            //     const jsonData = JSON.stringify(submitData, null, 2);
-            //     $("#modalData").text(jsonData);
-            //     $("#previewModalsData").modal("show");
-            // });
-
-            // $("#sendDataBtn").on("click", function() {
-            //     const finalData = JSON.parse($("#modalData").text());
-
-            //     $.ajax({
-            //         url: "{{ route('beneficiary.store') }}", // Laravel route to the store method
-            //         method: "POST",
-            //         data: JSON.stringify(finalData),
-            //         contentType: "application/json",
-            //         headers: {
-            //             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // CSRF token for Laravel
-            //         },
-            //         beforeSend: function() {
-            //             // Optional: Show a loading indicator
-            //             Swal.fire({
-            //                 title: "Submitting...",
-            //                 text: "Please wait while the data is being processed.",
-            //                 allowOutsideClick: false,
-            //                 didOpen: () => {
-            //                     Swal.showLoading();
-            //                 },
-            //             });
-            //         },
-            //         success: function(response) {
-            //             Swal.fire({
-            //                 title: "Success",
-            //                 text: response.message || "Beneficiaries created successfully!",
-            //                 icon: "success",
-            //                 timer: 1500,
-            //                 timerProgressBar: true,
-            //             });
-            //             $("#previewModalsData").modal("hide");
-            //             $("#dataTable tbody").empty(); // Clear the table
-            //             $("#program_id").val(""); // Reset program selection
-            //             $("#kode_program").val("");
-            //             $("#nama_program").val("").prop("disabled", false);
-            //         },
-            //         error: function(xhr, status, error) {
-            //             let errorMessage = "An error occurred while submitting the data.";
-            //             if (xhr.responseJSON && xhr.responseJSON.message) {
-            //                 errorMessage = xhr.responseJSON.message;
-            //                 if (xhr.responseJSON.errors) {
-            //                     // Display validation errors if present
-            //                     const errors = Object.values(xhr.responseJSON.errors).flat().join("\n");
-            //                     errorMessage += "\n" + errors;
-            //                 }
-            //             }
-            //             Swal.fire({
-            //                 title: "Error",
-            //                 text: errorMessage || "Failed to create beneficiaries.",
-            //                 icon: "error",
-            //                 timer: 3000,
-            //                 timerProgressBar: true,
-            //             });
-            //         },
-            //     });
-            // });
-
-            // $("#submitDataBtn").on("click", function() {
-            //     const programId = $("#program_id").val();
-            //     if (!programId) {
-            //         Swal.fire({
-            //             title: "Error",
-            //             text: "Please select a program before submitting!",
-            //             icon: "error",
-            //             timer: 1500,
-            //             timerProgressBar: true,
-            //         });
-            //         $("#kode_program").click();
-            //         return;
-            //     }
-
-            //     Swal.fire({
-            //         title: "Are you sure?",
-            //         text: "You are about to submit the data!",
-            //         icon: "warning",
-            //         showCancelButton: true,
-            //         confirmButtonText: "Yes, proceed!",
-            //         cancelButtonText: "No, cancel!",
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             const tableData = [];
-            //             $("#dataTable tbody tr").each(function() {
-            //                 const row = $(this);
-            //                 const activityHeaders = $('#activityHeaders th.activity-header');
-            //                 const selectedActivities = activityHeaders.map((index, header) => {
-            //                     const activityId = $(header).data('activity-id');
-            //                     const cell = row.find(`td[data-program-activity-id="${activityId}"]`);
-            //                     return cell.text().trim() === '√' ? activityId.toString() : null;
-            //                 }).get().filter(Boolean);
-
-            //                 const rowData = {
-            //                     nama: row.find("td[data-nama]").attr("data-nama"),
-            //                     gender: row.find("td[data-gender]").attr("data-gender"),
-            //                     kelompok_rentan: row.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan").split(",").filter(Boolean),
-            //                     rt: row.find("td[data-rt]").attr("data-rt"),
-            //                     rw: row.find("td[data-rw]").attr("data-rw"),
-            //                     dusun_id: row.find("td[data-dusun-id]").attr("data-dusun-id"),
-            //                     desa_id: row.find("td[data-desa-id]").attr("data-desa-id"),
-            //                     no_telp: row.find("td[data-no_telp]").attr("data-no_telp"),
-            //                     jenis_kelompok: row.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok").split(",").filter(Boolean),
-            //                     usia: row.find("td[data-usia]").attr("data-usia"),
-            //                     is_non_activity: row.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true",
-            //                     keterangan: row.find("td[data-keterangan]").attr("data-keterangan"),
-            //                     activitySelect: selectedActivities,
-            //                 };
-            //                 tableData.push(rowData);
-            //             });
-
-            //             if (tableData.length === 0) {
-            //                 Swal.fire({
-            //                     title: "Error",
-            //                     text: "No data to submit! Please add at least one beneficiary.",
-            //                     icon: "error",
-            //                     timer: 1500,
-            //                     timerProgressBar: true,
-            //                 });
-            //                 return;
-            //             }
-
-            //             // Prepare the data to send
-            //             const submitData = {
-            //                 program_id: programId,
-            //                 data: tableData,
-            //             };
-
-            //             // Show preview modal with the data
-            //             const jsonData = JSON.stringify(submitData, null, 2);
-            //             $("#modalData").text(jsonData);
-            //             $("#previewModalsData").modal("show");
-            //         }
-            //     });
-            // });
-
-            // $("#sendDataBtn").on("click", function() {
-            //     const finalData = JSON.parse($("#modalData").text());
-
-            //     $.ajax({
-            //         url: "{{ route('beneficiary.store') }}",
-            //         method: "POST",
-            //         data: JSON.stringify(finalData),
-            //         contentType: "application/json",
-            //         headers: {
-            //             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            //         },
-            //         beforeSend: function() {
-            //             Swal.fire({
-            //                 title: "Submitting...",
-            //                 text: "Please wait while the data is being processed.",
-            //                 allowOutsideClick: false,
-            //                 didOpen: () => {
-            //                     Swal.showLoading();
-            //                 },
-            //             });
-            //         },
-            //         success: function(response) {
-            //             Swal.fire({
-            //                 title: "Success",
-            //                 text: response.message || "Beneficiaries created successfully!",
-            //                 icon: "success",
-            //                 timer: 1500,
-            //                 timerProgressBar: true,
-            //             }).then(() => {
-            //                 $("#previewModalsData").modal("hide");
-            //                 $("#dataTable tbody").empty();
-            //                 $("#program_id").val("");
-            //                 $("#kode_program").val("");
-            //                 $("#nama_program").val("").prop("disabled", false);
-            //                 window.location.href = "{{ route('beneficiary.index') }}"; // Redirect to index
-            //             });
-            //         },
-            //         error: function(xhr) {
-            //             let errorMessage = "An error occurred while submitting the data.";
-            //             if (xhr.responseJSON && xhr.responseJSON.message) {
-            //                 errorMessage = xhr.responseJSON.message;
-            //                 if (xhr.responseJSON.errors) {
-            //                     const errors = Object.values(xhr.responseJSON.errors).flat().join("\n");
-            //                     errorMessage += "\n" + errors;
-            //                 }
-            //             }
-            //             Swal.fire({
-            //                 title: "Error",
-            //                 text: errorMessage,
-            //                 icon: "error",
-            //                 timer: 3000,
-            //                 timerProgressBar: true,
-            //             });
-            //         },
-            //     });
-            // });
-
-        }
-
-        // ... (keep the rest of your bindEvents function, e.g., edit, delete, etc.)
-
-        $("#ModalTambahPeserta, #editDataModal").on("shown.bs.modal", function() {
-            $(this).removeAttr("inert");
-        });
-
-        $("#ModalTambahPeserta, #editDataModal").on("hide.bs.modal", function(e) {
-            $(this).attr("inert", "");
-            $(document.activeElement).blur();
-        });
-
-        loadSelect2Option();
-        bindEvents();
-    });
+            loadSelect2Option();
+            bindEvents();
+        };
 </script>
