@@ -55,24 +55,102 @@ class BeneficiaryController extends Controller
         return view('tr.beneficiary.edit', compact('program', 'beneficiaries', 'activities'));
     }
 
+    // public function store(Request $request)
+    // {
+    //     abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    //     $validated = $request->validate([
+    //         'program_id'             => 'required|integer',
+    //         'data'                   => 'required|array',
+    //         'data.*.nama'            => 'required|string|max:255',
+    //         'data.*.is_head_family'  => 'nullable|boolean',
+    //         'data.*.head_family_name'=> 'nullable|string|max:255',
+    //         'data.*.no_telp'         => 'nullable|string|max:15',
+    //         'data.*.gender'          => 'required|in:laki,perempuan,lainnya',
+    //         'data.*.rt'              => 'required|string|max:10',
+    //         'data.*.rw'              => 'required|string|max:10',
+    //         'data.*.dusun_id'        => 'required|integer',
+    //         'data.*.usia'            => 'required|integer|min:0',
+    //         'data.*.is_non_activity' => 'boolean',
+    //         'data.*.keterangan'      => 'nullable|string',
+    //         'data.*.jenis_kelompok'  => 'nullable|array',
+    //         'data.*.kelompok_rentan' => 'nullable|array',
+    //         'data.*.activitySelect'  => 'nullable|array',
+    //     ]);
+
+
+    //     $programId = $request->input('program_id');
+    //     $userId = auth()->id();
+    //     $beneficiaries = $request->input('data');
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         foreach ($beneficiaries as $beneficiary) {
+    //             $penerima = Meals_Penerima_Manfaat::create([
+    //                 'program_id' => $programId,
+    //                 'user_id' => $userId,
+    //                 'dusun_id' => $beneficiary['dusun_id'],
+    //                 'nama' => $beneficiary['nama'],
+    //                 'no_telp' => $beneficiary['no_telp'] ?? null,
+    //                 'jenis_kelamin' => $beneficiary['gender'],
+    //                 'rt' => $beneficiary['rt'],
+    //                 'rw' => $beneficiary['rw'],
+    //                 'umur' => $beneficiary['usia'],
+    //                 'keterangan' => $beneficiary['keterangan'] ?? null,
+    //                 'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
+    //             ]);
+
+    //             // Sync pivot table relationships
+    //             if (!empty($beneficiary['jenis_kelompok'])) {
+    //                 $penerima->jenisKelompok()->sync($beneficiary['jenis_kelompok']);
+    //             }
+
+    //             if (!empty($beneficiary['kelompok_rentan'])) {
+    //                 $penerima->kelompokMarjinal()->sync($beneficiary['kelompok_rentan']);
+    //             }
+
+    //             if (!empty($beneficiary['activitySelect'])) {
+    //                 $penerima->penerimaActivity()->sync($beneficiary['activitySelect']);
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Beneficiaries created successfully!',
+    //         ], Response::HTTP_CREATED);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred while creating beneficiaries.',
+    //             'error' => $e->getMessage(),
+    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+
     public function store(Request $request)
     {
         abort_if(Gate::denies('beneficiary_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validated = $request->validate([
-            'program_id'             => 'required|integer',
-            'data'                   => 'required|array',
-            'data.*.nama'            => 'required|string|max:255',
-            'data.*.no_telp'         => 'nullable|string|max:15',
-            'data.*.gender'          => 'required|in:laki,perempuan,lainnya',
-            'data.*.rt'              => 'required|string|max:10',
-            'data.*.rw'              => 'required|string|max:10',
-            'data.*.dusun_id'        => 'required|integer',
-            'data.*.usia'            => 'required|integer|min:0',
-            'data.*.is_non_activity' => 'boolean',
-            'data.*.keterangan'      => 'nullable|string',
-            'data.*.jenis_kelompok'  => 'nullable|array',
-            'data.*.kelompok_rentan' => 'nullable|array',
-            'data.*.activitySelect'  => 'nullable|array',
+            'program_id'              => 'required|integer',
+            'data'                    => 'required|array',
+            'data.*.nama'             => 'required|string|max:255',
+            'data.*.is_head_family'   => 'nullable|boolean',
+            'data.*.head_family_name' => 'nullable|string|max:255',
+            'data.*.no_telp'          => 'nullable|string|max:15',
+            'data.*.gender'           => 'required|in:laki,perempuan,lainnya',
+            'data.*.rt'               => 'required|string|max:10',
+            'data.*.rw'               => 'required|string|max:10',
+            'data.*.dusun_id'         => 'required|integer',
+            'data.*.usia'             => 'required|integer|min:0',
+            'data.*.is_non_activity'  => 'boolean',
+            'data.*.keterangan'       => 'nullable|string',
+            'data.*.jenis_kelompok'   => 'nullable|array',
+            'data.*.kelompok_rentan'  => 'nullable|array',
+            'data.*.activitySelect'   => 'nullable|array',
         ]);
 
         $programId = $request->input('program_id');
@@ -84,17 +162,19 @@ class BeneficiaryController extends Controller
         try {
             foreach ($beneficiaries as $beneficiary) {
                 $penerima = Meals_Penerima_Manfaat::create([
-                    'program_id' => $programId,
-                    'user_id' => $userId,
-                    'dusun_id' => $beneficiary['dusun_id'],
-                    'nama' => $beneficiary['nama'],
-                    'no_telp' => $beneficiary['no_telp'] ?? null,
-                    'jenis_kelamin' => $beneficiary['gender'],
-                    'rt' => $beneficiary['rt'],
-                    'rw' => $beneficiary['rw'],
-                    'umur' => $beneficiary['usia'],
-                    'keterangan' => $beneficiary['keterangan'] ?? null,
-                    'is_non_activity' => $beneficiary['is_non_activity'] ?? false,
+                    'program_id'       => $programId,
+                    'user_id'          => $userId,
+                    'dusun_id'         => $beneficiary['dusun_id'],
+                    'nama'             => $beneficiary['nama'],
+                    'no_telp'          => $beneficiary['no_telp'] ?? null,
+                    'jenis_kelamin'    => $beneficiary['gender'],
+                    'rt'               => $beneficiary['rt'],
+                    'rw'               => $beneficiary['rw'],
+                    'umur'             => $beneficiary['usia'],
+                    'keterangan'       => $beneficiary['keterangan'] ?? null,
+                    'is_non_activity'  => $beneficiary['is_non_activity'] ?? false,
+                    'is_head_family'   => $beneficiary['is_head_family'] ?? false,
+                    'head_family_name' => $beneficiary['head_family_name'] ?? null,
                 ]);
 
                 // Sync pivot table relationships
@@ -113,10 +193,20 @@ class BeneficiaryController extends Controller
 
             DB::commit();
 
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Beneficiaries created successfully!',
+            // ], Response::HTTP_CREATED);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Beneficiaries created successfully!',
+                'data' => [
+                    'redirect_url' => route('beneficiary.index'), // contoh
+                ],
             ], Response::HTTP_CREATED);
+
+
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -127,6 +217,7 @@ class BeneficiaryController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 
     public function show($id)
     {

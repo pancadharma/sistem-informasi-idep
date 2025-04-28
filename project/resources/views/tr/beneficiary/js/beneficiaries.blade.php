@@ -276,6 +276,11 @@
                 data: tableData,
             };
 
+            const jsonData = JSON.stringify(tableData, null, 2);
+            // console.table(jsonData);
+            // // $("#modalData").text(jsonData);
+            // // $("#previewModalsData").modal("show");
+
             // Submit via AJAX
             $.ajax({
                 url: "{{ route('beneficiary.store') }}",
@@ -307,26 +312,38 @@
                         $("#program_id").val("");
                         $("#kode_program").val("");
                         $("#nama_program").val("").prop("disabled", false);
-                        window.location.href = "{{ route('beneficiary.index') }}"; // Redirect to index
+                        if (response.data && response.data.redirect_url) {
+                            window.location.href = response.data.redirect_url; // pakai dari response
+                        } else {
+                            window.location.href = "{{ route('beneficiary.index') }}"; // fallback ke default
+                        }
+                        // window.location.href = "{{ route('beneficiary.index') }}"; // Redirect to index
                     });
                 },
                 error: function(xhr) {
                     let errorMessage = "An error occurred while submitting the data.";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                        if (xhr.responseJSON.errors) {
-                            const errors = Object.values(xhr.responseJSON.errors).flat().join("\n");
-                            errorMessage += "\n" + errors;
+
+                    if (xhr.status === 422) {
+                        // Ini error validation dari Laravel
+                        const errors = xhr.responseJSON.errors;
+                        if (errors) {
+                            errorMessage = Object.keys(errors).map((key) => {
+                                return errors[key].join("\n");
+                            }).join("\n\n"); // Pisah antar field pakai double new line
                         }
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
                     }
+
                     Swal.fire({
-                        title: "Error",
+                        title: "Validation Error",
                         text: errorMessage,
                         icon: "error",
-                        timer: 3000,
+                        width: '40em',
+                        timer: 5000,
                         timerProgressBar: true,
                     });
-                },
+                }
             });
         }
 
@@ -403,12 +420,8 @@
             row.querySelector(".age-25-59").innerHTML = age >= 25 && age <= 59 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
             row.querySelector(".age-60-plus").innerHTML = age >= 60 ? '<span class="checkmark"><i class="bi bi-check2-square text-success" title="√"></i></span>' : "";
         }
-
         function addRow(data) {
             rowCount++;
-            // const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan : [];
-            // const jenis_kelompok_array = Array.isArray(data.jenis_kelompok) ? data.jenis_kelompok : [];
-
             const kelompokRentanArray = Array.isArray(data.kelompok_rentan) ? data.kelompok_rentan.filter(Boolean) : [];
             const jenis_kelompok_array = Array.isArray(data.jenis_kelompok) ? data.jenis_kelompok.filter(Boolean) : [];
 
@@ -435,11 +448,6 @@
                     text: option.text,
                 };
             });
-
-            // const jenisKelompokText = jenis_kelompok_data.map((item) => {
-            //     const randomColor = getRandomColor();
-            //     return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-            // });
             const kelompokRentanData = kelompokRentanArray.map((value) => {
                 const option = $("#kelompok_rentan").select2("data").find((opt) => opt.id === value) || {
                     id: value,
@@ -450,11 +458,6 @@
                     text: option.text,
                 };
             });
-
-            // const kelompokRentanText = kelompokRentanData.map((item) => {
-            //     const randomColor = getRandomColor();
-            //     return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-            // });
 
             const kelompokRentanText = (kelompokRentanData || []).map(item => {
                 const randomColor = getRandomColor();
@@ -478,11 +481,11 @@
             }).get().join('');
 
             const nonAcCell = `<td class="text-center align-middle" data-is_non_activity="${data.is_non_activity ? 'true' : 'false'}">${data.is_non_activity ? '√' : ''}</td>`;
-            
+
             const KetValue = escapeHtml(keteranganText);
             const KetCell = `<td class="text-left align-middle ellipsis-cell" data-keterangan="${KetValue}" title="${KetValue}">${keteranganText}</td>`;
 
-            
+
             const headFamilyName = escapeHtml(data.head_family_name || '');
             const familyNameCell = `<td class="text-left align-middle ellipsis-cell" data-head_family_name="${headFamilyName}" title="${headFamilyName}">${headFamilyName || '-'}</td>`;
 
@@ -514,7 +517,7 @@
                 <td class="text-center align-middle age-60-plus"></td>
                 ${activityCells}
                 ${nonAcCell}
-                
+
                 ${KetCell}
                 <td class="text-center align-middle">
                     <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>

@@ -1,4 +1,4 @@
-<script>
+{{-- <script>
     // Utility function to escape HTML special characters
     function escapeHtml(str) {
         if (!str) return ""; // Handle null/undefined cases
@@ -587,7 +587,7 @@
 
                 addRow(formData);
                 resetFormAdd();
-                
+
             } else {
                 form.reportValidity();
             }
@@ -1080,4 +1080,4 @@
             loadSelect2Option();
             bindEvents();
         };
-</script>
+</script> --}}

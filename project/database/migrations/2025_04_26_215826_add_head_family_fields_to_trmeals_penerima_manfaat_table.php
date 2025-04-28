@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('trmeals_penerima_manfaat', function (Blueprint $table) {
-            $table->boolean('is_head_family')->default(false)->after('keterangan');
+            $table->boolean('is_head_family')->default(false)->after('umur');
             $table->string('head_family_name')->nullable()->after('is_head_family');
         });
     }
