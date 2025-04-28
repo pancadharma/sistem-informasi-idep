@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Feedback; // Sesuaikan namespace jika berbeda
+use App\Models\Feedback; // Pastikan ini di-import
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Gate; // Jika perlu cek permission
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log; // Import Log facade
+use Illuminate\Support\Facades\DB; // Import DB facade
 
 class FeedbackController extends Controller
 {
@@ -15,54 +17,74 @@ class FeedbackController extends Controller
      */
     public function datatable(Request $request)
     {
-        // Mulai query Eloquent
-        $query = Feedback::query()->select('feedback.*'); // Pilih kolom dari tabel feedback
+        // ===========================================
+        // UBAH QUERY: Pilih kolom secara eksplisit
+        // ===========================================
+        $query = Feedback::query()
+            ->with('program') // Tetap eager load relasi
+            ->select([
+                'feedback.*', // Pilih semua kolom dari tabel feedback
+                // Pastikan ID feedback dipilih secara eksplisit
+                // Jika nama tabel Anda bukan 'feedback', sesuaikan di sini
+                DB::raw('feedback.id as feedback_id_explicit') // Ambil feedback.id dan beri alias
+            ]);
+        // ===========================================
 
-        // (Opsional) Handle filter kustom jika ada (misal dari tombol filter program Anda)
-        if ($request->filled('program')) {
-             $query->where('program', 'like', '%' . $request->input('program') . '%');
-        }
 
-        return DataTables::of($query) // Gunakan $query (bukan ->get())
-            ->addIndexColumn() // Tambah kolom nomor urut DT_RowIndex
+        return DataTables::of($query)
+            ->addIndexColumn()
             ->editColumn('tanggal_registrasi', function ($row) {
-                // Format tanggal langsung di sini
                 return $row->tanggal_registrasi ? $row->tanggal_registrasi->format('d M Y') : '-';
             })
+            ->addColumn('program_nama', function ($row) {
+                // Ganti 'nama' jika nama kolom di tabel 'trprogram' Anda berbeda
+                return $row->program?->nama ?? 'N/A';
+            })
             ->addColumn('status_badge', function ($row) {
-                // Buat HTML badge status
-                $status = $row->status_complaint ?? 'N/A';
-                $class = 'bg-secondary'; // Default
-                if ($status == 'Baru') $class = 'bg-info';
-                elseif ($status == 'Diproses') $class = 'bg-warning text-dark';
-                elseif ($status == 'Selesai') $class = 'bg-success';
-                elseif ($status == 'Ditolak') $class = 'bg-danger';
-                return '<span class="badge ' . $class . '">' . htmlspecialchars($status) . '</span>';
+                 $status = $row->status_complaint ?? 'N/A';
+                 $class = 'bg-secondary';
+                 if ($status == 'Baru') $class = 'bg-info';
+                 elseif ($status == 'Diproses') $class = 'bg-warning text-dark';
+                 elseif ($status == 'Selesai') $class = 'bg-success';
+                 elseif ($status == 'Ditolak') $class = 'bg-danger';
+                 return '<span class="badge ' . htmlspecialchars($class) . '">' . htmlspecialchars($status) . '</span>';
             })
             ->addColumn('action', function ($row) {
-                // Buat HTML tombol aksi (meniru logika view Anda)
+                // ===========================================
+                // GUNAKAN ID EKSPLISIT YANG SUDAH DI-ALIAS
+                // ===========================================
+                // Ambil ID feedback dari kolom yang sudah kita pilih secara eksplisit
+                $feedbackId = $row->feedback_id_explicit; // <-- Gunakan alias dari select()
+                // ===========================================
+
+                // Log ID yang digunakan (seharusnya sekarang benar)
+                Log::info('Generating action buttons for Feedback ID (explicit): ' . $feedbackId);
+                // Log::info('Row data for Feedback ID ' . $feedbackId . ':', $row->toArray()); // Log row jika masih perlu
+
                 $buttons = [];
-                $showUrl = route('feedback.show', $row->id); // Pastikan route web ada
-                $editUrl = route('feedback.edit', $row->id); // Pastikan route web ada
-                $deleteRoute = route('feedback.destroy', $row->id); // Route untuk form action delete
 
-                // Contoh check Gate/Permission (sesuaikan dengan nama permission Anda)
-                // if (Gate::allows('feedback_view', $row)) {
-                    $buttons[] = '<a href="' . $showUrl . '" class="btn btn-info btn-sm" title="' . __('Lihat Detail') . '"><i class="fas fa-eye"></i></a>';
-                // }
-                // if (Gate::allows('feedback_edit', $row)) {
-                    $buttons[] = '<a href="' . $editUrl . '" class="btn btn-warning btn-sm" title="' . __('Edit') . '"><i class="fas fa-edit"></i></a>';
-                // }
-                // if (Gate::allows('feedback_delete', $row)) {
-                    // Tombol delete ini akan ditangani oleh JS di frontend (lihat contoh JS sebelumnya)
-                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="'.$row->id.'" data-route="'.$deleteRoute.'" title="' . __('Hapus') . '"><i class="fas fa-trash"></i></button>';
-                // }
+                try {
+                    // Gunakan $feedbackId yang sudah benar
+                    $showUrl = route('feedback.show', ['feedback' => $feedbackId]);
+                    $editUrl = route('feedback.edit', ['feedback' => $feedbackId]);
+                    $deleteRoute = route('feedback.destroy', ['feedback' => $feedbackId]);
 
-                return implode(' ', $buttons); // Gabungkan tombol
+                    Log::info('Generated Show URL for Feedback ID ' . $feedbackId . ': ' . $showUrl);
+
+                    $buttons[] = '<a href="' . e($showUrl) . '" class="btn btn-info btn-sm" title="' . e(__('Lihat Detail')) . '"><i class="fas fa-eye"></i></a>';
+                    $buttons[] = '<a href="' . e($editUrl) . '" class="btn btn-warning btn-sm" title="' . e(__('Edit')) . '"><i class="fas fa-edit"></i></a>';
+                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="'.e($feedbackId).'" data-route="'.e($deleteRoute).'" title="' . e(__('Hapus')) . '"><i class="fas fa-trash"></i></button>';
+
+                } catch (\Exception $e) {
+                    Log::error('Error generating route for Feedback ID ' . $feedbackId . ': ' . $e->getMessage());
+                    return 'Error generating actions';
+                }
+
+                return implode(' ', $buttons);
             })
-            ->rawColumns(['status_badge', 'action']) // Beritahu DataTables kolom mana yg berisi HTML
-            ->make(true); // Generate JSON response
+            ->rawColumns(['status_badge', 'action'])
+            ->make(true);
     }
 
-    // Tambahkan metode API lain jika perlu (store, update, destroy via API, dll.)
+    // ... method lain ...
 }

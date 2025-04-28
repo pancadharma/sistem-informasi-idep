@@ -43,11 +43,31 @@
                 <div class="row g-3">
                     {{-- Kolom Kiri --}}
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="add_program" class="form-label">Program</label>
-                            <input type="text" class="form-control @error('program') is-invalid @enderror" id="add_program" name="program" value="{{ old('program') }}">
-                            @error('program') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>
+                    <div class="mb-3">
+                <label for="add_kode_program_display" class="form-label">Kode Program <span class="text-info">(Klik untuk memilih)</span></label>
+                <input type="text"
+                    class="form-control"
+                    id="add_kode_program_display"
+                    placeholder="Pilih Kode Program..."
+                    readonly
+                    data-bs-toggle="modal"
+                    data-bs-target="#programSelectionModal"
+                    style="cursor: pointer;">
+                {{-- Input Hidden untuk Menyimpan ID Program ke DB (HANYA SATU!) --}}
+                <input type="hidden" id="add_program_id" name="program_id" value="{{ old('program_id') }}">
+                {{-- Tampilkan error validasi untuk program_id di sini --}}
+                @error('program_id') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+            </div>
+            {{-- Input untuk Nama Program (Hanya Display) --}}
+            <div class="mb-3">
+                <label for="add_nama_program_display" class="form-label">Nama Program</label>
+                <input type="text"
+                    class="form-control"
+                    id="add_nama_program_display"
+                    placeholder="Nama program akan terisi otomatis"
+                    readonly>
+                {{-- Error tidak perlu ditampilkan lagi di sini --}}
+            </div>
                         <div class="mb-3">
                             <label for="add_tanggal_registrasi" class="form-label">Tanggal Registrasi <span class="text-danger">*</span></label>
                             <input type="date" class="form-control @error('tanggal_registrasi') is-invalid @enderror" id="add_tanggal_registrasi" name="tanggal_registrasi" value="{{ old('tanggal_registrasi') }}" required>
@@ -165,6 +185,43 @@
                 <a href="{{ route('feedback.index') }}" class="btn btn-secondary">{{ __('Batal') }}</a>
             </div>
         </form>
+        {{-- =========================================== --}}
+{{-- MODAL UNTUK PEMILIHAN PROGRAM --}}
+{{-- =========================================== --}}
+<div class="modal fade" id="programSelectionModal" tabindex="-1" aria-labelledby="programSelectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable "> {{-- Sesuaikan ukuran jika perlu (modal-xl, modal-lg, modal-sm) --}}
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title" id="programSelectionModalLabel">Daftar Program</h5>
+                <button type="button" class="btn  bg-danger" data-dismiss="modal" title="{{ __('global.close') }}">
+    <i class="fas fa-times text-dark"></i> {{-- Ikon 'X' dari Font Awesome --}}
+</button>
+            </div>
+            <div class="modal-body">
+                {{-- Tabel target untuk DataTables --}}
+                <table class="table table-hover table-bordered table-striped" id="programListTable" style="width:100%;">
+                    <thead>
+                        <tr>
+                            {{-- Sesuaikan header dengan data program --}}
+                            <th>Kode Program</th> {{-- Sesuaikan --}}
+                            <th>Nama Program</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- DataTables akan mengisi bagian ini --}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- =========================================== --}}
+{{-- AKHIR MODAL --}}
+{{-- =========================================== --}}
     </div>
 @endsection
 
@@ -175,4 +232,74 @@
 
 {{-- @push('js') --}}
     {{-- Contoh: Script untuk datepicker jika pakai library --}}
+    @push('js')
+<script>
+$(document).ready(function() {
+    let programDataTable = null;
+
+    // Trigger modal dari input Kode Program
+    $('#add_kode_program_display').on('click', function(e) {
+        e.preventDefault();
+        openProgramModalAndInitDataTable();
+    });
+
+    function openProgramModalAndInitDataTable() {
+        setTimeout(() => {
+            if (!programDataTable) {
+                programDataTable = $('#programListTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    ajax: {
+                        url: "{{ route('api.beneficiary.program') }}", // API Tim Anda
+                        type: "GET"
+                    },
+                    columns: [
+                        // Sesuaikan 'data:' & 'name:' dengan response API tim
+                        { data: 'kode', name: 'kode', width: '20%' }, // Contoh: Butuh KODE
+                        { data: 'nama', name: 'nama' }, // Contoh: Butuh NAMA
+                        {
+                            data: 'action', name: 'action', orderable: false,
+                            searchable: false, width: '15%', className: 'text-center'
+                        }
+                    ],
+                    language: { /* ... opsi bahasa ... */ },
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    pagingType: 'full_numbers',
+                    bDestroy: true
+                });
+            }
+        }, 50);
+        $('#programSelectionModal').modal('show');
+    }
+
+    $('#programSelectionModal').on('hidden.bs.modal', function (e) {
+        if (programDataTable) {
+            programDataTable.destroy();
+            programDataTable = null;
+        }
+    });
+
+    // Modifikasi Handler Tombol Pilih
+    $('#programListTable tbody').on('click', '.select-program', function() { // <-- Pastikan class '.select-program' sesuai
+        // ==================================================
+        // VERIFIKASI: Ambil ID, KODE, dan NAMA dari tombol API tim
+        // ==================================================
+        const programId   = $(this).data('id');   // Contoh: Jika tombol punya data-id="..."
+        const programKode = $(this).data('kode'); // Contoh: Jika tombol punya data-kode="..."
+        const programNama = $(this).data('nama'); // Contoh: Jika tombol punya data-nama="..."
+
+        // ==================================================
+        // Isi ketiga input di form utama
+        // ==================================================
+        $('#add_kode_program_display').val(programKode); // Isi display Kode
+        $('#add_nama_program_display').val(programNama); // Isi display Nama
+        $('#add_program_id').val(programId);             // Isi hidden ID (YANG DISIMPAN)
+
+        // Tutup modal
+        $('#programSelectionModal').modal('hide');
+    });
+});
+</script>
+@endpush
 {{-- @endpush --}}

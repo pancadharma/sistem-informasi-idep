@@ -3,48 +3,38 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Feedback;
-use Illuminate\Http\Request; // Import Request
-use Illuminate\Support\Facades\Validator; // Import Validator Facade (opsional untuk validasi custom)
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Validation\ValidationException;
-use Yajra\DataTables\Facades\DataTables;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+// Import facade lain jika diperlukan
+use Illuminate\Support\Facades\Log; // Contoh jika perlu logging
 
 class FeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) // Tambahkan Request $request
+    public function index(Request $request)
     {
-        // Ambil query builder
-        $query = Feedback::query();
+        $query = Feedback::query()->with('program'); // Eager load relasi
 
-        // Terapkan filter jika ada parameter 'program'
+        // Filter berdasarkan nama program via relasi
         if ($request->has('program') && $request->program != '') {
-            $query->where('program', 'like', '%' . $request->program . '%');
+            $searchTerm = $request->program;
+            $query->whereHas('program', function ($q) use ($searchTerm) {
+                // Ganti 'nama' jika nama kolom di tabel 'trprogram' Anda berbeda
+                $q->where('nama', 'like', '%' . $searchTerm . '%');
+            });
         }
 
-        // Urutkan berdasarkan data terbaru, lalu paginasi
-        $feedbackItems = $query->latest()->paginate(10); // Tampilkan 10 item per halaman
-
-        // Kirim data ke view index
-        return view('tr.feedback.index');
+        $feedbackItems = $query->latest()->paginate(10);
+        return view('tr.feedback.index', compact('feedbackItems'));
     }
 
     /**
      * Show the form for creating a new resource.
-     * (Tidak digunakan secara langsung karena kita pakai modal di index)
      */
     public function create()
     {
-        // Biasanya hanya return view('feedback.create');
-        // Tapi karena pakai modal, logika tambah ada di index/store
         return view('tr.feedback.create');
     }
 
@@ -53,9 +43,10 @@ class FeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi Input
+        // Validasi untuk store (sudah benar)
         $validatedData = $request->validate([
-            'program' => 'nullable|string|max:255',
+            'program_id' => 'required|integer|exists:trprogram,id', // Validasi ID program
+            // 'program' => 'nullable|string|max:255', // Validasi nama string (tidak dipakai)
             'tanggal_registrasi' => 'required|date',
             'umur' => 'nullable|integer|min:0',
             'penerima' => 'nullable|string|max:255',
@@ -74,112 +65,109 @@ class FeedbackController extends Controller
             'kontak_handler' => 'nullable|string|max:255',
             'kategori_komplain' => 'nullable|string|max:255',
             'deskripsi' => 'required|string',
-            'status_complaint' => 'nullable|in:Baru,Diproses,Selesai,Ditolak', // Sesuaikan jika perlu
+            'status_complaint' => 'nullable|in:Baru,Diproses,Selesai,Ditolak',
         ]);
 
-        // 2. Set status default jika tidak dikirim dari form
-         if (!isset($validatedData['status_complaint'])) {
-             $validatedData['status_complaint'] = 'Baru'; // Default status
-         }
+        // Set status default jika tidak dikirim
+        if (!isset($validatedData['status_complaint'])) {
+            $validatedData['status_complaint'] = 'Baru';
+        }
 
-        // 3. Simpan ke Database
         try {
             Feedback::create($validatedData);
-
-            // 4. Redirect ke halaman index dengan pesan sukses
             return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil ditambahkan!');
-
         } catch (\Exception $e) {
-             // Jika terjadi error saat menyimpan
-             // Log error jika perlu: Log::error($e->getMessage());
-             return redirect()->back()
-                        ->withInput() // Kembalikan input sebelumnya
-                        ->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()); // Tampilkan pesan error
+            Log::error('Error storing feedback: ' . $e->getMessage()); // Tambahkan log error
+            return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Terjadi kesalahan saat menyimpan data.'); // Pesan error generik
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Feedback $feedback) // Gunakan Route Model Binding
+    public function show(Feedback $feedback)
     {
-        // Data $feedback otomatis diambil berdasarkan ID di URL
+        $feedback->load('program'); // Load relasi program
         return view('tr.feedback.show', compact('feedback'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Feedback $feedback) // Gunakan Route Model Binding
+    public function edit(Feedback $feedback)
     {
-         // Data $feedback otomatis diambil berdasarkan ID di URL
+        $feedback->load('program'); // Load relasi program
         return view('tr.feedback.edit', compact('feedback'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Feedback $feedback) // Gunakan Route Model Binding
+    public function update(Request $request, Feedback $feedback)
     {
-        // 1. Validasi Input (mirip dengan store, sesuaikan jika perlu)
+        // ===========================================
+        // PERBAIKI VALIDASI DI SINI
+        // ===========================================
         $validatedData = $request->validate([
-             'program' => 'nullable|string|max:255',
-             'tanggal_registrasi' => 'required|date',
-             'umur' => 'nullable|integer|min:0',
-             'penerima' => 'nullable|string|max:255',
-             'sort_of_complaint' => 'required|string|max:255',
-             'age_group' => 'nullable|string|max:100',
-             'position' => 'nullable|string|max:255',
-             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_registrasi',
-             'sex' => 'nullable|in:Laki-laki,Perempuan,Lainnya',
-             'kontak_penerima' => 'nullable|string|max:255',
-             'handler' => 'nullable|string|max:255',
-             'phone_number' => 'nullable|string|max:20',
-             'channels' => 'nullable|string|max:255',
-             'position_handler' => 'nullable|string|max:255',
-             'address' => 'nullable|string',
-             'other_channel' => 'nullable|string|max:255',
-             'kontak_handler' => 'nullable|string|max:255',
-             'kategori_komplain' => 'nullable|string|max:255',
-             'deskripsi' => 'required|string',
-             'status_complaint' => 'required|in:Baru,Diproses,Selesai,Ditolak', // Status wajib diisi saat update
+            // Tambahkan validasi untuk program_id
+            'program_id' => 'required|integer|exists:trprogram,id',
+            // Hapus atau komentari validasi untuk 'program' (string)
+            // 'program' => 'nullable|string|max:255',
+            'tanggal_registrasi' => 'required|date',
+            'umur' => 'nullable|integer|min:0',
+            'penerima' => 'nullable|string|max:255',
+            'sort_of_complaint' => 'required|string|max:255',
+            'age_group' => 'nullable|string|max:100',
+            'position' => 'nullable|string|max:255',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_registrasi',
+            'sex' => 'nullable|in:Laki-laki,Perempuan,Lainnya',
+            'kontak_penerima' => 'nullable|string|max:255',
+            'handler' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'channels' => 'nullable|string|max:255',
+            'position_handler' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
+            'other_channel' => 'nullable|string|max:255',
+            'kontak_handler' => 'nullable|string|max:255',
+            'kategori_komplain' => 'nullable|string|max:255',
+            'deskripsi' => 'required|string',
+            'status_complaint' => 'required|in:Baru,Diproses,Selesai,Ditolak', // Status wajib saat update
         ]);
+        // ===========================================
+        // AKHIR PERBAIKAN VALIDASI
+        // ===========================================
 
-        // 2. Update data di Database
         try {
-             $feedback->update($validatedData);
-
-             // 3. Redirect ke halaman index (atau halaman detail) dengan pesan sukses
-             return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil diperbarui!');
-
-         } catch (\Exception $e) {
-              // Jika terjadi error saat update
-              return redirect()->back()
+            // Proses update sekarang akan menyertakan program_id dari $validatedData
+            $feedback->update($validatedData);
+            return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil diperbarui!');
+        } catch (\Exception $e) {
+            Log::error('Error updating feedback ID ' . $feedback->id . ': ' . $e->getMessage()); // Log error
+            return redirect()->back()
                          ->withInput()
-                         ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
-         }
+                         ->with('error', 'Terjadi kesalahan saat memperbarui data.'); // Pesan error generik
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Feedback $feedback) // Gunakan Route Model Binding
+    public function destroy(Feedback $feedback)
     {
         try {
-             $feedback->delete();
-             // Jika request datang dari AJAX (seperti delete DataTables kita), return JSON
-             if (request()->ajax() || request()->wantsJson()) {
-                 return response()->json(['success' => true, 'message' => 'Data berhasil dihapus.']);
-             }
-             // Jika request biasa (jarang terjadi untuk delete sekarang)
-             return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil dihapus!');
+            $feedback->delete();
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json(['success' => true, 'message' => 'Data berhasil dihapus.']);
+            }
+            return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil dihapus!');
         } catch (\Exception $e) {
-             // Jika request AJAX
-             if (request()->ajax() || request()->wantsJson()) {
-                 return response()->json(['success' => false, 'message' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
-             }
-             // Jika request biasa
-              return redirect()->route('feedback.index')->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+            Log::error('Error deleting feedback ID ' . $feedback->id . ': ' . $e->getMessage()); // Log error
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Gagal menghapus data.'], 500); // Pesan generik
+            }
+            return redirect()->route('feedback.index')->with('error', 'Gagal menghapus data.'); // Pesan generik
         }
     }
 }

@@ -14,7 +14,7 @@
             columns: [
                  // Sesuaikan 'data' & 'name' dengan response JSON dari API Controller Anda
                  { data: 'DT_RowIndex', name: 'DT_RowIndex', title: '{{ __("No") }}', orderable: false, searchable: false, className: 'text-center', width: '5%' },
-                 { data: 'program', name: 'program', title: '{{ __("Program") }}' },
+                 { data: 'program.nama', name: 'program.nama',  title: '{{ __("Program") }}' },
                  { data: 'tanggal_registrasi', name: 'tanggal_registrasi', title: '{{ __("Tgl Registrasi") }}' },
                  { data: 'sort_of_complaint', name: 'sort_of_complaint', title: '{{ __("Jenis Keluhan") }}' },
                  { data: 'status_badge', name: 'status_complaint', title: '{{ __("Status") }}', orderable: false, searchable: false }, // Kolom berisi HTML badge
