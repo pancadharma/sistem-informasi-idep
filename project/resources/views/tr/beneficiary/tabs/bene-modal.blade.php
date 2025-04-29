@@ -1,4 +1,4 @@
-<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" >
     <div class="modal-dialog    ">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,7 +16,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="previewModal2" tabindex="-1" aria-labelledby="previewModalLabel2" aria-hidden="true">
+<div class="modal fade" id="previewModal2" tabindex="-1" aria-labelledby="previewModalLabel2">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -71,7 +71,7 @@
         {{-- Head Family Section --}}
         <div class="row ml-0 mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center icheck-teal d-inline">
-                <input class="form-check-input" type="checkbox" id="edit_is_head_family" name="is_head_family" data-sync-nama="#edit_nama_beneficiary" 
+                <input class="form-check-input" type="checkbox" id="edit_is_head_family" name="is_head_family" data-sync-nama="#editNama"
                 data-sync-head-family="#edit_head_family_name">
                 <label class="form-label" for="edit_is_head_family">{{ __('Kepala Keluarga') }}</label>
             </div>
@@ -217,7 +217,7 @@
 
 
 <x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="dataForm" class="big" autocomplete="off">
+    <form id="dataForm" class="needs-validation" novalidate autocomplete="off" method="POST">
         <div class="row mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
@@ -227,7 +227,7 @@
         {{-- Head Family Section --}}
         <div class="row ml-0 mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center icheck-teal d-inline">
-                <input class="form-check-input" type="checkbox" id="is_head_family" name="is_head_family" data-sync-nama="#nama_beneficiary" 
+                <input class="form-check-input" type="checkbox" id="is_head_family" name="is_head_family" data-sync-nama="#nama_beneficiary"
                 data-sync-head-family="#head_family_name">
                 <label class="form-label" for="is_head_family">{{ __('Kepala Keluarga') }}</label>
             </div>
@@ -351,11 +351,11 @@
         <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rw') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rw" id="rw">
+                <input type="text" class="form-control" name="rw" id="rw" required>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rt" id="rt">
+                <input type="text" class="form-control" name="rt" id="rt" required>
             </div>
         </div>
         {{-- Non-AC Kode --}}
@@ -388,7 +388,7 @@
     </form>
     <x-slot name="footerSlot">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.close') }}</button>
-        <button type="submit" class="btn btn-primary" id="saveDataBtn">{{ __('global.save') }}</button>
+        <button type="submit" class="btn btn-primary" id="saveDataBtn" form="dataForm">{{ __('global.save') }}</button>
     </x-slot>
 </x-adminlte-modal>
 

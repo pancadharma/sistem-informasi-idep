@@ -621,56 +621,58 @@
             const rowId = currentRow.data("row-id");
             const firstCell = currentRow.find("td:first");
 
-            const provinsiId = firstCell.data("provinsi-id") || 0;
-            const kabupatenId = firstCell.data("kabupaten-id") || 0;
-            const kecamatanId = firstCell.data("kecamatan-id") || 0;
-            const desaId = firstCell.data("desa-id") || 0;
-            const dusunId = firstCell.data("dusun-id") || 0;
+            const locationFields = ["provinsi", "kabupaten", "kecamatan", "desa", "dusun"];
+            locationFields.forEach(field => {
+                const id = currentRow.find(`td[data-${field}-id]`).data(`${field}-id`) || 0;
+                const name = currentRow.find(`td[data-${field}-nama]`).data(`${field}-nama`) || "-";
+                const select = $(`#${field}_id_edit`);
+                select.empty().append(new Option(name, id, true, true)).trigger('change');
+            });
+            // const provinsiId = firstCell.data("provinsi-id") || 0;
+            // const kabupatenId = firstCell.data("kabupaten-id") || 0;
+            // const kecamatanId = firstCell.data("kecamatan-id") || 0;
+            // const desaId = firstCell.data("desa-id") || 0;
+            // const dusunId = firstCell.data("dusun-id") || 0;
 
-            const provinsiText = firstCell.data("provinsi-nama") || "-";
-            const kabupatenText = firstCell.data("kabupaten-nama") || "-";
-            const kecamatanText = firstCell.data("kecamatan-nama") || "-";
-            const desaText = firstCell.data("desa-nama") || "-";
-            const dusunText = firstCell.data("dusun-nama") || "-";
+            // const provinsiText = firstCell.data("provinsi-nama") || "-";
+            // const kabupatenText = firstCell.data("kabupaten-nama") || "-";
+            // const kecamatanText = firstCell.data("kecamatan-nama") || "-";
+            // const desaText = firstCell.data("desa-nama") || "-";
+            // const dusunText = firstCell.data("dusun-nama") || "-";
+
             // Store the row index for reference
             const rowIndex = currentRow.index();
             $("#editRowId").val(rowIndex);
 
-            // For debugging
-            console.log("Editing row with data:", {
-                provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
-                provinsiText, kabupatenText, kecamatanText, desaText, dusunText
-            });
+            // // For debugging
+            // console.log("Editing row with data:", {
+            //     provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
+            //     provinsiText, kabupatenText, kecamatanText, desaText, dusunText
+            // });
 
-            $("#provinsi_id_edit").empty();
-            $("#kabupaten_id_edit").empty();
-            $("#kecamatan_id_edit").empty();
-            $("#desa_id_edit").empty();
-            $("#dusun_id_edit").empty();
+            // $("#provinsi_id_edit").empty();
+            // $("#kabupaten_id_edit").empty();
+            // $("#kecamatan_id_edit").empty();
+            // $("#desa_id_edit").empty();
+            // $("#dusun_id_edit").empty();
 
-            function addOptionAndTriggerChange(selector, text, value) {
-                return new Promise(resolve => {
-                    const option = new Option(text, value, true, true);
-                    $(selector).append(option).trigger('change');
-                    setTimeout(resolve, 100);
-                });
-            }
+            // function addOptionAndTriggerChange(selector, text, value) {
+            //     return new Promise(resolve => {
+            //         const option = new Option(text, value, true, true);
+            //         $(selector).append(option).trigger('change');
+            //         setTimeout(resolve, 100);
+            //     });
+            // }
 
-            addOptionAndTriggerChange("#provinsi_id_edit", provinsiText, provinsiId)
-                .then(() => addOptionAndTriggerChange("#kabupaten_id_edit", kabupatenText, kabupatenId))
-                .then(() => addOptionAndTriggerChange("#kecamatan_id_edit", kecamatanText, kecamatanId))
-                .then(() => addOptionAndTriggerChange("#desa_id_edit", desaText, desaId))
-                .then(() => addOptionAndTriggerChange("#dusun_id_edit", dusunText, dusunId));
-
-            // const disabilitas = currentRow.find("td[data-disabilitas]").attr("data-disabilitas");
-            // const disabilitasValues = disabilitas ? disabilitas.split(",") : [];
+            // addOptionAndTriggerChange("#provinsi_id_edit", provinsiText, provinsiId)
+            //     .then(() => addOptionAndTriggerChange("#kabupaten_id_edit", kabupatenText, kabupatenId))
+            //     .then(() => addOptionAndTriggerChange("#kecamatan_id_edit", kecamatanText, kecamatanId))
+            //     .then(() => addOptionAndTriggerChange("#desa_id_edit", desaText, desaId))
+            //     .then(() => addOptionAndTriggerChange("#dusun_id_edit", dusunText, dusunId));
 
             const kelompok_rentan = currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan");
             const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(",") : [];
             const kelompokRentanFullData = JSON.parse(currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan_full") || "[]");
-
-            // const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok") || 0;
-            // const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text") || "-";
 
             const jenis_kelompok = currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok");
             const jenis_kelompok_val = jenis_kelompok ? jenis_kelompok.split(",") : [];
@@ -679,6 +681,9 @@
 
             const isNonActivity = currentRow.find("td[data-is_non_activity]").attr("data-is_non_activity") === "true";
             const keteranganText = currentRow.find("td[data-keterangan]").attr("data-keterangan") || "";
+            const isHeadFamily =  currentRow.find("td[data-is_head_family]").attr("data-is_head_family") === "true";
+            const familyHeadName = currentRow.find("td[data-head_family_name]").attr("data-head_family_name") || "";
+            // $('#edit_head_family_name').val(data.head_family_name || '');
 
 
             $("#editKelompokRentan").select2({
@@ -775,17 +780,17 @@
 
             $('#activitySelectEdit').val(selectedActivities).trigger('change');
 
-
-            // Kemudian set nilai dan trigger change
             $("#editRowId").val(rowId);
             $("#editNama").val(currentRow.find("td[data-nama]").attr("data-nama"));
+            $('#edit_is_head_family').prop('checked', isHeadFamily);
+            $('#edit_head_family_name').val(familyHeadName);
+
             $("#editNoTelp").val(currentRow.find("td[data-no_telp]").attr("data-no_telp"));
             $("#editGender").val(currentRow.find("td[data-gender]").attr("data-gender")).trigger("change");
             $("#editUsia").val(currentRow.find("td[data-usia]").attr("data-usia"));
 
             $("#editKelompokRentan").val(kelompokRentanValues).trigger("change"); // Kelompok Marjinal
             $("#editJenisKelompok").val(jenis_kelompok_val).trigger("change"); // Kelompok Marjinal
-            // $("#editJenisKelompok").append(new Option(jenisKelompokNama, jenisKelompokId, true, true)).trigger("change");
 
             $("#editRt").val(currentRow.find("td[data-rt]").attr("data-rt"));
             $("#editRwBanjar").val(currentRow.find("td[data-rw]").attr("data-rw"));
@@ -799,23 +804,29 @@
 
         function updateRow() {
             const rowId = $("#editRowId").val();
-            // const form = $("#editDataForm")[0];
-            const form = document.getElementById("editDataForm");
+            const form          = document.getElementById("editDataForm");
+            // const $provinsi     = $("#provinsi_id_edit");
+            // const $kabupaten    = $("#kabupaten_id_edit");
+            // const $kecamatan    = $("#kecamatan_id_edit");
+            // const $desa         = $("#desa_id_edit");
+            // const $dusun        = $("#desa_id_edit");
 
-            const provinsiId = $("#provinsi_id_edit").val() || 0;
-            const kabupatenId = $("#kabupaten_id_edit").val() || 0;
-            const kecamatanId = $("#kecamatan_id_edit").val() || 0;
-            const desaId = $("#desa_id_edit").val() || 0;
-            const dusunId = $("#dusun_id_edit").val() || 0;
+            // const provinsiId    = $provinsi.val() || 0;
+            // const kabupatenId   = $kabupaten.val() || 0;
+            // const kecamatanId   = $kabupaten.val() || 0;
+            // const desaId        = $desa.val() || 0;
+            // const dusunId       = $dusun.val() || 0;
 
-            const provinsiText = $("#provinsi_id_edit option:selected").text() || "-";
-            const kabupatenText = $("#kabupaten_id_edit option:selected").text() || "-";
-            const kecamatanText = $("#kecamatan_id_edit option:selected").text() || "-";
-            const desaText = $("#desa_id_edit option:selected").text() || "-";
-            const dusunText = $("#dusun_id_edit option:selected").text() || "-";
+            // const provinsiText  = $provinsi.find("option:selected").text() || "-";
+            // const kabupatenText = $kabupaten.find("option:selected").text() || "-";
+            // const kecamatanText = $kecamatan.find("option:selected").text() || "-";
+            // const desaText      = $desa.find("option:selected").text() || "-";
+            // const dusunText     = $dusun.find("option:selected").text() || "-";
 
-            // const jenisKelompokId = $("#editJenisKelompok").val();
-            // const jenisKelompokText = $("#editJenisKelompok option:selected").text();
+
+
+            const headFamily = $('#edit_head_family_name').val() || '';
+
 
             if (!form) {
                 console.error("Edit form not found");
@@ -835,19 +846,20 @@
                     return obj;
                 }, {});
 
-                console.log("Updating row with data:", {rowId,
-                    provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
-                    provinsiText, kabupatenText, kecamatanText, desaText, dusunText
-                });
+                // console.log("Updating row with data:", {rowId,
+                //     provinsiId, kabupatenId, kecamatanId, desaId, dusunId,
+                //     provinsiText, kabupatenText, kecamatanText, desaText, dusunText
+                // });
 
                 formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
+                formData.is_head_family = $('#edit_is_head_family').is(':checked');
 
                 // Ensure formData.kelompok_rentan & jenis_kelompok is an array
                 if (!Array.isArray(formData.kelompok_rentan)) {
-                    formData.kelompok_rentan = [formData.kelompok_rentan];
+                    formData.kelompok_rentan = formData.kelompok_rentan ? [formData.kelompok_rentan] : [];
                 }
                 if (!Array.isArray(formData.jenis_kelompok)) {
-                    formData.jenis_kelompok = [formData.jenis_kelompok];
+                    formData.jenis_kelompok = formData.jenis_kelompok ? [formData.jenis_kelompok] : [];
                 }
 
                 const updatedActivities = $("#activitySelectEdit").val() || [];
@@ -884,6 +896,14 @@
                     return;
                 }
 
+                // Update location fields
+                const locationFields = ["provinsi", "kabupaten", "kecamatan", "desa", "dusun"];
+                locationFields.forEach(field => {
+                    const id = $(`#${field}_id_edit`).val() || 0;
+                    const name = $(`#${field}_id_edit option:selected`).text() || "-";
+                    currentRow.find(`td[data-${field}-id]`).data(`${field}-id`, id).data(`${field}-nama`, name).text(name);
+                });
+
                 activityHeaders.each(function(index) {
                     const activityId = $(this).data('activity-id');
                     const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
@@ -896,14 +916,16 @@
 
                 const KetValue = escapeHtml(formData.keterangan || "");
 
-                currentRow.find("td[data-provinsi-id]").attr("data-provinsi-id", provinsiId).attr("data-provinsi-nama", provinsiText).text(provinsiText);
-                currentRow.find("td[data-kabupaten-id]").attr("data-kabupaten-id", kabupatenId).attr("data-kabupaten-nama", kabupatenText).text(kabupatenText);
-                currentRow.find("td[data-kecamatan-id]").attr("data-kecamatan-id", kecamatanId).attr("data-kecamatan-nama", kecamatanText).text(kecamatanText);
-                currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
-                currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
-                currentRow.find("td[data-row-id]").attr("data-row-id", rowId).text(rowId);
+                // currentRow.find("td[data-provinsi-id]").attr("data-provinsi-id", provinsiId).attr("data-provinsi-nama", provinsiText).text(provinsiText);
+                // currentRow.find("td[data-kabupaten-id]").attr("data-kabupaten-id", kabupatenId).attr("data-kabupaten-nama", kabupatenText).text(kabupatenText);
+                // currentRow.find("td[data-kecamatan-id]").attr("data-kecamatan-id", kecamatanId).attr("data-kecamatan-nama", kecamatanText).text(kecamatanText);
+                // currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
+                // currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
+                // currentRow.find("td[data-row-id]").attr("data-row-id", rowId).text(rowId);
 
                 currentRow.find("td[data-nama]").text(formData.nama).attr("data-nama", formData.nama);
+                currentRow.find("td[data-head_family_name]").attr("data-head_family_name", formData.head_family_name);
+                currentRow.find("td[data-is_head_family]").attr("data-is_head_family", formData.is_head_family ? 'true' : 'false');
                 currentRow.find("td[data-gender]").text(genderText).attr("data-gender", formData.gender);
 
                 currentRow.find("td[data-no_telp]").text(formData.no_telp).attr("data-no_telp", formData.no_telp);
@@ -911,9 +933,6 @@
                 currentRow.find("td[data-rt]").text(formData.rt).attr("data-rt", formData.rt);
                 currentRow.find("td[data-rw]").text(formData.rw).attr("data-rw", formData.rw);
                 currentRow.find("td[data-usia]").text(formData.usia).attr("data-usia", formData.usia);
-
-                // currentRow.find("td[data-jenis_kelompok]").text(formData.jenis_kelompok.join(", ")).attr("data-jenis_kelompok", formData.jenis_kelompok.join(","));
-                // currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok", jenisKelompokId).attr("data-jenis_kelompok-text", jenisKelompokText).text(jenisKelompokText);
 
                 currentRow.find("td[data-jenis_kelompok]").html(jenis_kelompok_html).attr("data-jenis_kelompok", jenis_kelompok_data.map((item) => item.id).join(",")).attr("data-jenis_kelompok_full", JSON.stringify(jenis_kelompok_data));
 
@@ -943,6 +962,8 @@
 
             }
         }
+
+
 
         function deleteRow(row) {
             $(row).closest("tr").remove();
@@ -985,12 +1006,16 @@
 
             $("#saveDataBtn").on("click", function(e) {
                 e.preventDefault();
+                const form = document.getElementById('dataForm');
+                if (!form.checkValidity()) {
+                    form.classList.add('was-validated');
+                    return;
+                }
                 saveRow();
             });
 
             $("#dataTable tbody").on("click", ".edit-btn", function(e) {
                 e.preventDefault();
-                // console.log(this);
                 editRow(this);
             });
 
