@@ -607,6 +607,9 @@
             formData.activity_ids = $("#activitySelect").val() || [];
             formData.is_non_activity = $("#is_non_activity").is(":checked");
 
+            formData.is_head_family    = $("#is_head_family").is(":checked") ? 1 : 0;
+            formData.head_family_name  = $("#head_family_name").val() || '';
+
             $.ajax({
                 url: '{{ route('beneficiary.store.individual') }}',
                 method: 'POST',
@@ -674,30 +677,54 @@
                 method: "GET",
                 success: function(response) {
                     const beneficiary = response[0]; // Assuming the server returns the beneficiary in response.data
-
                     // console.log("isi data dari", beneficiary);
-
                     // Populate the modal with the latest data
                     $("#editRowId").val(beneficiaryId);
                     $("#editNama").val(beneficiary.nama);
+
                     $("#editNoTelp").val(beneficiary.no_telp);
                     $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
                     $("#editUsia").val(beneficiary.umur);
                     $("#editRt").val(beneficiary.rt);
                     $("#editRwBanjar").val(beneficiary.rw);
                     $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+                    // $("#edit_is_head_family").prop("checked", beneficiary.is_head_family);
                     $("#keterangan_edit").val(beneficiary.keterangan);
 
-                    const addOptionAndTriggerChange = (selector, text, value) => {
-                        const option = new Option(text || '-', value || '', true, true);
-                        $(selector).empty().append(option).trigger('change');
-                    };
+                    // Populate checkbox + family name input
+                    const isFamilyHead = beneficiary.is_head_family == 1;
+                    $("#edit_is_head_family").prop("checked", isFamilyHead);
+                    $("#edit_head_family_name").val(beneficiary.head_family_name);
+                    $("#edit_head_family_name").prop("readonly", isFamilyHead);
 
-                    addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.provinsi.id || '');
-                    addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.id || '');
-                    addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.dusun?.desa?.kecamatan?.nama || '-', beneficiary.dusun.desa.kecamatan.id || '');
-                    addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
-                    addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+                    // Sync logic — checkbox toggle
+                    $("#edit_is_head_family").off("change").on("change", function () {
+                        const checked = $(this).is(":checked");
+                        const nameVal = $("#nama").val();
+                        $("#edit_head_family_name").prop("readonly", checked);
+                        $("#edit_head_family_name").val(checked ? nameVal : "");
+                    });
+
+                    // When typing in nama, update family head name
+                    $("#editNama").off("input").on("input", function () {
+                        if ($("#edit_is_head_family").is(":checked")) {
+                            $("#edit_head_family_name").val($(this).val());
+                        }
+                    });
+
+                    const locationFields = [
+                        { key: 'provinsi', name: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.id || '' },
+                        { key: 'kabupaten', name: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.id || '' },
+                        { key: 'kecamatan', name: beneficiary?.dusun?.desa?.kecamatan?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.id || '' },
+                        { key: 'desa', name: beneficiary?.dusun?.desa?.nama || '-', id: beneficiary?.dusun?.desa_id || '' },
+                        { key: 'dusun', name: beneficiary?.dusun?.nama || '-', id: beneficiary?.dusun_id || '' },
+                    ];
+
+                    locationFields.forEach(({ key, name, id }) => {
+                        const select = $(`#${key}_id_edit`);
+                        select.empty().append(new Option(name, id, true, true)).trigger('change');
+                    });
+
 
                     $("#editKelompokRentan").empty();
                     beneficiary.kelompok_marjinal.forEach(k => {
@@ -729,9 +756,7 @@
                 return;
             }
 
-            // Start with data from serializeArray (gets standard inputs like nama, usia, rt, rw, etc.)
             const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
-                // Handle potential duplicate names (though less likely in an edit form)
                 if (obj[item.name]) {
                     if (!Array.isArray(obj[item.name])) {
                         obj[item.name] = [obj[item.name]];
@@ -751,6 +776,12 @@
             // 2. Select2 Multi-Select Values
             formData.id = $("#editRowId").val() || [];
             formData.nama = $("#editNama").val() || [];
+
+            // 3. Family Head Checkbox + Family Head Name
+            formData.is_head_family    = $("#edit_is_head_family").is(":checked") ? 1 : 0;
+            formData.head_family_name  = $("#edit_head_family_name").val() || '';
+
+
             formData.umur = $("#editUsia").val() || [];
             formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
             formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
@@ -763,7 +794,7 @@
 
             formData.activity_ids = $("#activitySelectEdit").val() || [];
 
-            // 3. Location Select2 Values (Crucial Addition!)
+            // 4. Location Select2 Values (Crucial Addition!)
             formData.provinsi_id = $("#provinsi_id_edit").val() || null; // Send null if empty
             formData.kabupaten_id = $("#kabupaten_id_edit").val() || null;
             formData.kecamatan_id = $("#kecamatan_id_edit").val() || null;
@@ -771,12 +802,12 @@
             formData.dusun_id = $("#dusun_id_edit").val() || null;
             formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
 
-            // 4. Other Required IDs (like program_id, user_id if needed)
+            // 5. Other Required IDs (like program_id, user_id if needed)
             formData.program_id = '{{ $program->id }}';
             formData.user_id = '{{ Auth::id() }}'; // Uncomment if needed
 
-            // --- AJAX Call ---
-            const id = beneficiaryId; // Use the beneficiaryId directly
+
+            const id = beneficiaryId;
             if (!id) {
                  Swal.fire("Error", "Beneficiary ID is missing.", "error");
                  return; // Prevent AJAX call if ID is missing
@@ -785,9 +816,9 @@
 
             $.ajax({
                 url: url,
-                method: "PUT", // Use PUT for updates
-                data: JSON.stringify(formData), // Send the manually constructed object as JSON
-                contentType: "application/json", // Tell the server we're sending JSON
+                method: "PUT",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
                 beforeSend: function() {
                     Toast.fire({
                         icon: "info",
@@ -800,7 +831,7 @@
                 success: function(response) {
                     const index = beneficiaries.findIndex(b => b.id === beneficiaryId);
                     if (index !== -1) {
-                        beneficiaries[index] = response.data; // Assuming the server returns the updated beneficiary in response.data
+                        beneficiaries[index] = response.data;
                     }
                     Swal.fire({
                         title: "Success",
@@ -885,13 +916,11 @@
 
         $("#saveDataBtn").on("click", function(e) {
             e.preventDefault();
-            // alert("saveDataBtn clicked");
             addRow();
         });
 
         $("#dataTable tbody").on("click", ".edit-btn", function(e) {
             e.preventDefault();
-            // console.info("form reset, now opening edit modal")
             setTimeout(() => {
                 editRow(this);
             }, 250);
@@ -905,6 +934,33 @@
         $("#dataTable tbody").on("click", ".delete-btn", function(e) {
             e.preventDefault();
             deleteRow(this);
+        });
+
+        // $('#editDataModal').on('shown.bs.modal', initHeadFamilySync);
+        $('#editDataModal').on('shown.bs.modal', function () {
+            $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').off('change input').each(function () {
+                const $checkbox = $(this);
+                const $namaInput = $($checkbox.data('sync-nama'));
+                const $headFamilyInput = $($checkbox.data('sync-head-family'));
+
+                function toggleHeadFamilyInput() {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val()).prop('readonly', true);
+                    } else {
+                        $headFamilyInput.prop('readonly', false);
+                    }
+                }
+
+                $checkbox.on('change', toggleHeadFamilyInput);
+
+                $namaInput.on('input', function () {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val());
+                    }
+                });
+
+                toggleHeadFamilyInput(); // Initialize on modal load
+            });
         });
     });
 

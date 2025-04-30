@@ -422,7 +422,7 @@
     });
 </script> --}}
 
-{{-- <script>
+<script>
     $(document).ready(function () {
         $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').each(function () {
             const $checkbox = $(this);
@@ -436,9 +436,9 @@
 
             function toggleHeadFamilyInput() {
                 if ($checkbox.is(':checked')) {
-                    $headFamilyInput.val($namaInput.val()).prop('disabled', true);
+                    $headFamilyInput.val($namaInput.val()).prop('readonly', true);
                 } else {
-                    $headFamilyInput.prop('disabled', false).val('');
+                    $headFamilyInput.prop('readonly', false);
                 }
             }
 
@@ -453,10 +453,10 @@
             toggleHeadFamilyInput(); // Initialize on page load
         });
     });
-</script> --}}
+</script>
 
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const headFamilyCheckboxes = document.querySelectorAll('input[type="checkbox"][data-sync-nama][data-sync-head-family]');
 
@@ -475,7 +475,8 @@
                     headFamilyInput.readOnly    = true;
                 } else {
                     headFamilyInput.readOnly = false;
-                    headFamilyInput.value = '';
+                    // headFamilyInput.value = '';
+                    alert('test')
                 }
             }
 
@@ -490,6 +491,6 @@
             toggleHeadFamilyInput(); // Initialize
         });
     });
-</script>
+</script> --}}
 
 @endpush

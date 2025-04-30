@@ -48,6 +48,7 @@
                     url: "{{ route('api.beneficiary.provinsi') }}",
                     dataType: 'json',
                     delay: 250,
+                    cache: true,
                     data: params => ({
                         search: params.term,
                         page: params.page || 1
@@ -56,7 +57,6 @@
                         results: data.results,
                         pagination: data.pagination
                     }),
-                    cache: true
                 },
                 dropdownParent: dropdownParent,
                 placeholder: "{{ __('global.selectProv') }}"
@@ -72,6 +72,7 @@
                     url: () => "{{ route('api.beneficiary.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val()),
                     dataType: 'json',
                     delay: 250,
+                    cache: true,
                     data: params => ({
                         provinsi_id: $(provinsiSelector).val(),
                         search: params.term,
@@ -823,11 +824,7 @@
             // const desaText      = $desa.find("option:selected").text() || "-";
             // const dusunText     = $dusun.find("option:selected").text() || "-";
 
-
-
             const headFamily = $('#edit_head_family_name').val() || '';
-
-
             if (!form) {
                 console.error("Edit form not found");
                 return;
@@ -1074,7 +1071,35 @@
 
         $("#ModalTambahPeserta, #editDataModal").on("shown.bs.modal", function() {
             $(this).removeAttr("inert");
+
         });
+
+        $('#editDataModal').on('shown.bs.modal', function () {
+            $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').off('change input').each(function () {
+                const $checkbox = $(this);
+                const $namaInput = $($checkbox.data('sync-nama'));
+                const $headFamilyInput = $($checkbox.data('sync-head-family'));
+
+                function toggleHeadFamilyInput() {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val()).prop('readonly', true);
+                    } else {
+                        $headFamilyInput.prop('readonly', false);
+                    }
+                }
+
+                $checkbox.on('change', toggleHeadFamilyInput);
+
+                $namaInput.on('input', function () {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val());
+                    }
+                });
+
+                toggleHeadFamilyInput(); // Initialize on modal load
+            });
+        });
+
 
         $("#ModalTambahPeserta, #editDataModal").on("hide.bs.modal", function(e) {
             $(this).attr("inert", "");
