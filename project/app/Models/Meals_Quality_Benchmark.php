@@ -55,7 +55,7 @@ class Meals_Quality_Benchmark extends Model
 
     public function desa()
     {
-        return $this->belongsTo(Dusun::class, 'id_desa');
+        return $this->belongsTo(Kecamatan::class, 'id_desa');
     }
 
     public function handler()
