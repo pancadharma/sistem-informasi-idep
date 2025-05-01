@@ -82,7 +82,7 @@
 
 
         function initializeSelect2ForProvinsi() {
-            $("#provinsi_id").select2({
+            $("#pilihprovinsi_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}',
                 ajax: {
                     url: '{{ route('api.komodel.prov') }}',
@@ -138,7 +138,7 @@
         }
 
         function initializeSelect2ForKabupaten() {
-            $("#kabupaten_id").select2({
+            $("#pilihkabupaten_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}',
                 ajax: {
                     url: '{{ route('api.komodel.kab') }}',
@@ -147,7 +147,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            provinsi_id: $("#provinsi_id").val() || $("#editProvinsi").val(),
+                            provinsi_id: $("#pilihprovinsi_id").val() || $("#editProvinsi").val(),
                             page: params.page || 1,
                         };
                     },
@@ -193,7 +193,7 @@
         }
 
         function initializeSelect2ForKecamatan() {
-            $("#kecamatan_id").select2({
+            $("#pilihkecamatan_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kecamatan.title') }}',
                 ajax: {
                     url: '{{ route('api.komodel.kec') }}',
@@ -202,7 +202,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            kabupaten_id: $("#kabupaten_id").val() || $("#editKabupaten").val(),
+                            kabupaten_id: $("#pilihkabupaten_id").val() || $("#editKabupaten").val(),
                             page: params.page || 1,
                         };
                     },
@@ -248,7 +248,7 @@
         }
 
         function initializeSelect2ForDesa() {
-            $("#desa_id").select2({
+            $("#pilihdesa_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
                 ajax: {
                     url: '{{ route('api.komodel.desa') }}',
@@ -257,7 +257,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            kecamatan_id: $("#kecamatan_id").val() || $("#editKecamatan").val(),
+                            kecamatan_id: $("#pilihkecamatan_id").val() || $("#editKecamatan").val(),
                             page: params.page || 1,
                         };
                     },
@@ -303,7 +303,7 @@
         }
 
         function initializeSelect2ForDusun() {
-            $("#dusun_id").select2({
+            $("#pilihdusun_id").select2({
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.dusun.title') }}',
                 ajax: {
                     url: '{{ route('api.komodel.dusun') }}',
@@ -312,7 +312,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            desa_id: $("#desa_id").val() || $("#editDesa").val(),
+                            desa_id: $("#pilihdesa_id").val() || $("#editDesa").val(),
                             page: params.page || 1,
                         };
                     },
@@ -393,21 +393,21 @@
         function addRow(data) {
             rowCount++;
 
-            const provinsiText = $("#provinsi_id option:selected").text();
-            const kabupatenText = $("#kabupaten_id option:selected").text();
-            const kecamatanText = $("#kecamatan_id option:selected").text();
-            const desaText = $("#desa_id option:selected").text();
-            const dusunText = $("#dusun_id option:selected").text();
+            const provinsiText = $("#pilihprovinsi_id option:selected").text();
+            const kabupatenText = $("#pilihkabupaten_id option:selected").text();
+            const kecamatanText = $("#pilihkecamatan_id option:selected").text();
+            const desaText = $("#pilihdesa_id option:selected").text();
+            const dusunText = $("#pilihdusun_id option:selected").text();
             const satuanText = $("#satuan_id option:selected").text();
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
                 <td class="text-center align-middle d-none">${rowCount}</td>
-                <td data-provinsi-id="${data.provinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
-                <td data-kabupaten-id="${data.kabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
-                <td data-kecamatan-id="${data.kecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
-                <td data-desa-id="${data.desa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-                <td data-dusun-id="${data.dusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
+                <td data-provinsi-id="${data.pilihprovinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
+                <td data-kabupaten-id="${data.pilihkabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
+                <td data-kecamatan-id="${data.pilihkecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
+                <td data-desa-id="${data.pilihdesa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
+                <td data-dusun-id="${data.pilihdusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
                 <td data-no_telp="${data.long}" class="text-center align-middle">${data.long}</td>
                 <td data-no_telp="${data.lat}" class="text-center align-middle">${data.lat}</td>
                 <td data-no_telp="${data.jumlah}" class="text-center align-middle">${data.jumlah}</td>
@@ -464,11 +464,11 @@
             $("#dataForm")[0].reset();
 
             // Reset Select2 dropdowns
-            $("#provinsi_id").val(null).trigger("change");
-            $("#kabupaten_id").val(null).trigger("change");
-            $("#kecamatan_id").val(null).trigger("change");
-            $("#desa_id").val(null).trigger("change");
-            $("#dusun_id").val(null).trigger("change");
+            $("#pilihprovinsi_id").val(null).trigger("change");
+            $("#pilihkabupaten_id").val(null).trigger("change");
+            $("#pilihkecamatan_id").val(null).trigger("change");
+            $("#pilihdesa_id").val(null).trigger("change");
+            $("#pilihdusun_id").val(null).trigger("change");
             $("#satuan_id").val(null).trigger("change");
 
             // Reset input text dan angka

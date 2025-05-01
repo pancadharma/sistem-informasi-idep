@@ -63,8 +63,9 @@
 @include('tr.komponenmodel.js.komodel')
 @include('tr.komponenmodel.js.program')
 @include('tr.komponenmodel.tabs.program')
-{{-- @include('api.master.dusun') --}}
 @include('tr.komponenmodel.tabs.tambahkomponen-modal')
+@include('api.master.dusun')
+
 
 
 @endpush
