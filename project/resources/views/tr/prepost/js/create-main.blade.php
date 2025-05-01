@@ -1,52 +1,4 @@
 <script>
-    $(document).ready(function () {
-        $('#saveKomponenBtn').click(function (e) {
-            e.preventDefault(); // Mencegah refresh halaman
-
-            let formData = {
-                nama: $('#namaKomponen').val(),
-            };
-
-            $.ajax({
-                url: "{{ route('api.komodel.komponen.store') }}", // Sesuai dengan route API
-                type: "POST",
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                        });
-
-                        // Tutup modal setelah berhasil
-                        $('#ModalTambahKomponen').modal('hide');
-
-                        // Reset form
-                        $('#formTambahKomponen')[0].reset();
-
-                        // Reload data tabel (jika ada)
-                        // $('#yourDataTable').DataTable().ajax.reload();
-                    }
-                },
-                error: function (xhr) {
-                    let errorMessage = "Terjadi kesalahan!";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                    });
-                }
-            });
-        });
-    });
-
     $(document).ready(function() {
         if (typeof $ === "undefined") {
             console.error("jQuery is not included. Please include jQuery in your HTML file.");
@@ -69,15 +21,11 @@
 
         function loadSelect2Option() {
 
-            // initializeSelect2ForKelompokRentan();
             initializeSelect2ForProvinsi();
             initializeSelect2ForKabupaten();
             initializeSelect2ForKecamatan();
             initializeSelect2ForDesa();
             initializeSelect2ForDusun();
-            initializeSatuan();
-            
-            // initalizeJenisKelompok(); // initialize the select for jenis kelompok
         }
 
 
@@ -398,20 +346,28 @@
             const kecamatanText = $("#pilihkecamatan_id option:selected").text();
             const desaText = $("#pilihdesa_id option:selected").text();
             const dusunText = $("#pilihdusun_id option:selected").text();
-            const satuanText = $("#satuan_id option:selected").text();
+            const prefillText = $("#prefill option:selected").text();
+            const postfillText = $("#postfill option:selected").text();
+            const genderText = $("#gender option:selected").text();
+            const selisih = parseInt(data.posttest || 0) - parseInt(data.pretest || 0); // Hitung selisih
 
             const newRow = `
             <tr data-row-id="${rowCount}" class="nowrap">
                 <td class="text-center align-middle d-none">${rowCount}</td>
+                <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
+               <td data-gender="${data.gender}" data-gender="${genderText}" class="text-center align-middle">${genderText}</td>
+                <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
                 <td data-provinsi-id="${data.pilihprovinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
                 <td data-kabupaten-id="${data.pilihkabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
                 <td data-kecamatan-id="${data.pilihkecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
                 <td data-desa-id="${data.pilihdesa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
                 <td data-dusun-id="${data.pilihdusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
-                <td data-no_telp="${data.long}" class="text-center align-middle">${data.long}</td>
-                <td data-no_telp="${data.lat}" class="text-center align-middle">${data.lat}</td>
-                <td data-no_telp="${data.jumlah}" class="text-center align-middle">${data.jumlah}</td>
-                <td data-satuan-id="${data.satuan_id}" data-satuan-nama="${satuanText}" class="text-center align-middle">${satuanText}</td>
+                <td data-pretest="${data.pretest}" class="text-center align-middle">${data.pretest}</td>
+                <td data-prefill="${data.prefill}" data-satuan-nama="${prefillText}" class="text-center align-middle">${prefillText}</td>
+                <td data-posttest="${data.posttest}" class="text-center align-middle">${data.posttest}</td>
+                <td data-postfill="${data.postfill}" data-satuan-nama="${postfillText}" class="text-center align-middle">${postfillText}</td>
+                <td data-selisih="${selisih}" class="text-center align-middle">${selisih}</td>
+                <td data-notes="${data.notes}" class="text-center align-middle">${data.notes}</td>
                 <td class="text-center align-middle">
                     <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}" hidden><i class="bi bi-pencil-square"></i></button>
                     <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
@@ -469,12 +425,16 @@
             $("#pilihkecamatan_id").val(null).trigger("change");
             $("#pilihdesa_id").val(null).trigger("change");
             $("#pilihdusun_id").val(null).trigger("change");
-            $("#satuan_id").val(null).trigger("change");
+            $("#gender").val(null).trigger("change");
+            $("#prefill").val(null).trigger("change");
+            $("#postfill").val(null).trigger("change");
 
             // Reset input text dan angka
-            $("input[name='long']").val("");
-            $("input[name='lat']").val("");
-            $("input[name='jumlah']").val("");
+            $("input[name='nama']").val("");
+            $("input[name='no_telp']").val("");
+            $("input[name='pretest']").val("");
+            $("input[name='posttest']").val("");
+            $("input[name='notes']").val("");
 
             // Sembunyikan modal setelah reset
             $("#ModalTambah").modal("hide");

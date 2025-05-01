@@ -351,4 +351,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
+
+    // MEALS Pre Post
+    Route::group(['prefix' => 'prepost', 'as' => 'prepost.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'create'])->name('create');
+    });
+
+    // TARGET & PROGRESS
+    Route::group(['prefix' => 'target-progress', 'as' => 'target_progress.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+    });
+    Route::group(['prefix' => 'target-progress/api/', 'as' => 'api.target_progress.'], function () {
+        Route::get('datatable',                 [App\Http\Controllers\API\MealsTargetProgressController::class, 'getDataTable'])->name('datatable');
+        Route::get('programs',                  [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
+        Route::get('program/{id}/targets',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
+    });
 });
