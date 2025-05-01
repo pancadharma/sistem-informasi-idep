@@ -152,9 +152,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/satuan', [KegiatanController::class, 'getSatuan'])->name('api.kegiatan.satuan');
     Route::get('kegiatan/api/program/{id}/out/activity', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
     Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
+    Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
     Route::get('kegiatan/api/jenis_kegiatan', [KegiatanController::class, 'getJenisKegiatan'])->name('api.kegiatan.jenis_kegiatan');
     Route::get('kegiatan/api/mitra', [KegiatanController::class, 'getKegiatanMitra'])->name('api.kegiatan.mitra');
     Route::get('kegiatan/api/desa', [KegiatanController::class, 'getKegiatanDesa'])->name('api.kegiatan.desa');
+    Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
     Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
     //Master Jenis Bantuan
@@ -281,6 +283,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{program}/edit',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
         Route::get('/{id}/data',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'getBeneficiaryData'])->name('get.individual');
         Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
+        Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
         Route::post('/add',                         [App\Http\Controllers\Admin\BeneficiaryController::class, 'storeBeneficiary'])->name('store.individual');
         Route::delete('/delete/{id}',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'deleteBeneficiary'])->name('delete.individual');
         Route::PUT('/{beneficiary}/update',         [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
@@ -373,22 +376,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dusuns',     [App\Http\Controllers\API\BenchmarkController::class, 'getDusuns'])->name('dusuns');
     });
 
-    Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
-    });
-
-    Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
-        Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getData'])->name('datatable');
-        Route::post('store',    [App\Http\Controllers\API\BenchmarkController::class, 'store'])->name('store');
-        Route::get('show/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'show'])->name('show');
-        Route::put('update/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'destroy'])->name('delete');
-    
-        // Optional untuk dropdown / lookup
-        Route::get('programs',   [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
-        Route::get('kegiatan',   [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
-        Route::get('outcomes',   [App\Http\Controllers\API\BenchmarkController::class, 'getOutcomes'])->name('outcomes');
-        Route::get('dusuns',     [App\Http\Controllers\API\BenchmarkController::class, 'getDusuns'])->name('dusuns');
-    });
 });

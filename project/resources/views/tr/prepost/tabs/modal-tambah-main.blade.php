@@ -172,6 +172,28 @@
     <form id="dataForm" class="big">
 
         <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
+                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" name="nama" required>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1">
+                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.no_telp') }}</label>
+                <input type="text" class="form-control" id="no_telp" name="no_telp" pattern="^0[0-9]*$" placeholder="081XXXXXXXX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="15" required>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
+                <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.gender') }} <span class="text-danger">*</span></label>
+                <select class="form-control select2 flex-grow-1" name="gender" id="gender" requ ired>
+                    <option value="">-- Pilih --</option>
+                    <option value="laki">{{ __('cruds.beneficiary.penerima.laki') }}</option>
+                    <option value="perempuan">{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
+                    <option value="lainnya">{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
             {{-- Prov --}}
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
                 <div class="form-input">
@@ -232,28 +254,42 @@
                 </div>
             </div>
         </div>
-        {{-- longtitude --}}
+        {{-- pre --}}
         <div class="row mb-3">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
-                <label class="form-label mb-0">{{ __('cruds.kegiatan.lat') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="lat" pattern="^-?([1-8]?[0-9](\.\d+)?|90(\.0+)?)$" required>
+                <label class="form-label mb-0">{{ __('cruds.prepost.pre_score') }} <span class="text-danger"></span></label>
+                <input type="number" class="form-control" name="pretest" id="pretest" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')" >
             </div>
-        {{-- latitude --}}
+        {{-- filledby --}}
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
-                <label class="form-label mb-0">{{ __('cruds.kegiatan.long') }}  <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="long" pattern="^-?((1[0-7][0-9]|[1-9]?[0-9])(\.\d+)?|180(\.0+)?)$" required>
+                <label class="form-label mb-0">{{ __('cruds.prepost.filledby') }}  <span class="text-danger"></span></label>
+                <select class="form-control select2 flex-grow-1" name="prefill" id="prefill">
+                    <option value="">-- Pilih --</option>
+                    <option value="ya">{{ __('cruds.prepost.ya') }} </option>
+                    <option value="tidak">{{ __('cruds.prepost.tidak') }} </option>
+                </select>
             </div>
         </div>
-        {{-- Jumlah --}}
+        {{-- post --}}
         <div class="row mb-3">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3">
-                <label class="form-label mb-0">{{ __('cruds.komponenmodel.jumlah') }}  <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="jumlah" required pattern="[0-9]*" inputmode="numeric">
+                <label class="form-label mb-0">{{ __('cruds.prepost.post_score') }}  <span class="text-danger"></span></label>
+                <input type="number" class="form-control" name="posttest" id="posttest" min="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')" >
             </div>
-        {{-- Satuan --}}
+        {{-- filledby --}}
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4">
-                <label class="form-label mb-0">{{ __('cruds.satuan.title') }} <span class="text-danger">*</span></label>
-                <select class="form-control select2 flex-grow-1" name="satuan_id" id="satuan_id" required></select>
+                <label class="form-label mb-0">{{ __('cruds.prepost.filledby') }} <span class="text-danger"></span></label>
+                <select class="form-control select2 flex-grow-1" name="postfill" id="postfill">
+                    <option value="">-- Pilih --</option>
+                    <option value="ya">{{ __('cruds.prepost.ya') }} </option>
+                    <option value="tidak">{{ __('cruds.prepost.tidak') }} </option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-3 order-md-3">
+                <label class="form-label mb-0">{{ __('cruds.prepost.keterangan') }} <span class="text-danger">*</span></label>
+                <textarea class="form-control" name="notes" id="notes" cols="30" rows="5"></textarea>
             </div>
         </div>
     </form>
