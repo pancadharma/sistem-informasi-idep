@@ -46,6 +46,12 @@ class Meals_Penerima_Manfaat extends Model
         'deleted_at'
     ];
 
+    protected $casts = [
+        'is_non_activity' => 'boolean',
+        'is_head_family' => 'boolean',
+    ];
+    
+
 
     protected function serializeDate(DateTimeInterface $date)
     {

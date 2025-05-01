@@ -143,37 +143,37 @@
             .replace(/'/g, "&#039;");
     }
 
-    function updateActivityHeaders(activities) {
-        if (activities.length > 0) {
-            const activityHeaders = activities.map(activity => `
-                <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
-            `).join('');
-            $('#activityHeaders').html(`
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
-                ${activityHeaders}
-            `);
-            $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
-        } else {
-            $('#activityHeaders').html(`
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
-            `);
-            $('#headerActivityProgram').attr('rowspan', 2);
-        }
-    }
+    // function updateActivityHeaders(activities) {
+    //     if (activities.length > 0) {
+    //         const activityHeaders = activities.map(activity => `
+    //             <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
+    //         `).join('');
+    //         $('#activityHeaders').html(`
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+    //             <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+    //             <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+    //             <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+    //             <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+    //             <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
+    //             ${activityHeaders}
+    //         `);
+    //         $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
+    //     } else {
+    //         $('#activityHeaders').html(`
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+    //             <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+    //             <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+    //             <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+    //             <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+    //             <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
+    //         `);
+    //         $('#headerActivityProgram').attr('rowspan', 2);
+    //     }
+    // }
 
     function populateActivitySelect(activities, selectElement) {
         activities.forEach(activity => {
@@ -387,7 +387,7 @@
     $(document).ready(function() {
         $('#dataTable').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -544,7 +544,7 @@
                     ],
                 },
                 bottomStart: {
-                    pageLength: 10,
+                    pageLength: 25,
                 }
             },
             order: [2, 'asc'],
@@ -751,6 +751,7 @@
         function updateRow() {
             const form = document.getElementById("editDataForm");
             const beneficiaryId = $("#editRowId").val();
+
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
@@ -937,7 +938,7 @@
         });
 
         // $('#editDataModal').on('shown.bs.modal', initHeadFamilySync);
-        $('#editDataModal').on('shown.bs.modal', function () {
+        $('#ModalTambahPeserta, #editDataModal').on('shown.bs.modal', function () {
             $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').off('change input').each(function () {
                 const $checkbox = $(this);
                 const $namaInput = $($checkbox.data('sync-nama'));
@@ -948,6 +949,7 @@
                         $headFamilyInput.val($namaInput.val()).prop('readonly', true);
                     } else {
                         $headFamilyInput.prop('readonly', false);
+                        $headFamilyInput.prop('required', true);
                     }
                 }
 
@@ -968,7 +970,7 @@
 </script>
 
 
-@include('tr.beneficiary.js.search')
+{{-- @include('tr.beneficiary.js.search') --}}
 
 @stack('basic_tab_js')
 

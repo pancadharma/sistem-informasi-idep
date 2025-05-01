@@ -542,6 +542,11 @@
                 }
             });
 
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             if (form.checkValidity()) {
                 const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
                     if (obj[item.name]) {
@@ -830,6 +835,13 @@
                 return;
             }
 
+            // check if form requierd fields is empty show validation error
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+
             if (form.checkValidity()) {
                 const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
                     if (obj[item.name]) {
@@ -1074,7 +1086,7 @@
 
         });
 
-        $('#editDataModal').on('shown.bs.modal', function () {
+        $('#ModalTambahPeserta, #editDataModal').on('shown.bs.modal', function () {
             $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').off('change input').each(function () {
                 const $checkbox = $(this);
                 const $namaInput = $($checkbox.data('sync-nama'));
@@ -1085,6 +1097,7 @@
                         $headFamilyInput.val($namaInput.val()).prop('readonly', true);
                     } else {
                         $headFamilyInput.prop('readonly', false);
+                        $headFamilyInput.prop('required', true);
                     }
                 }
 
