@@ -81,7 +81,7 @@
                             data-dusun-nama="{{ $beneficiary->dusun->nama ?? ''  }}">
 
                             <td class="text-center d-none">{{ $loop->iteration }}</td>
-                            <td data-nama="{{ $beneficiary->nama }}" title="{{ $beneficiary->nama ?? '' }}" class="text-nowrap">{{ $beneficiary->nama ?? '' }}</td>
+                            <td data-nama="{{ $beneficiary->nama }}"  data-is_head_family="{{ $beneficiary->is_head_family }}"  data-head_family_name="{{ $beneficiary->head_family_name }}" title="{{ $beneficiary->nama ?? '' }}" class="text-nowrap">{{ $beneficiary->nama ?? '' }}</td>
                             <td data-gender="{{ $beneficiary->jenis_kelamin ?? '' }}" class="text-nowrap">
                                 {{ $beneficiary->jenis_kelamin === 'laki' ? __('cruds.beneficiary.penerima.laki') : ($beneficiary->jenis_kelamin === 'perempuan' ? __('cruds.beneficiary.penerima.perempuan') : __('cruds.beneficiary.penerima.lainnya')) }}
                             </td>

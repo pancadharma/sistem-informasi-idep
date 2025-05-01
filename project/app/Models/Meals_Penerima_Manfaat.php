@@ -32,6 +32,8 @@ class Meals_Penerima_Manfaat extends Model
         'rw',
         'umur',
         'keterangan',
+        'is_head_family',
+        'head_family_name',
         'is_non_activity',
         'created_at',
         'updated_at',
@@ -43,6 +45,12 @@ class Meals_Penerima_Manfaat extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    protected $casts = [
+        'is_non_activity' => 'boolean',
+        'is_head_family' => 'boolean',
+    ];
+    
 
 
     protected function serializeDate(DateTimeInterface $date)

@@ -26,45 +26,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BeneficiaryController extends Controller
 {
-    // public function getPenerimaManfaat(Request $request)
-    // {
-    //     $meals = Meals_Penerima_Manfaat::with('dusun', 'users', 'penerimaActivity.program_outcome_output.program_outcome.program', 'kelompokMarjinal', 'jenisKelompok')
-    //         ->select('trmeals_penerima_manfaat.*')
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     $data = DataTables::of($meals)
-    //         ->addIndexColumn()
-    //         ->addColumn('program_name', function ($meals) {
-    //         $programNames = $meals->penerimaActivity->map(function ($activity) {
-    //             // Check if $activity is not null and then traverse the relationships
-    //             if ($activity && $activity->program_outcome_output && $activity->program_outcome_output->program_outcome && $activity->program_outcome_output->program_outcome->program) {
-    //                 return $activity->program_outcome_output->program_outcome->program->nama ?? null;
-    //             }
-    //             return null; // Or some other default value if the relationship is missing
-    //         })->filter()->unique()->values()->toArray();
-
-    //         return implode(', ', $programNames) ?: 'N/A';
-    //     })
-    //         ->addColumn('action', function ($meals) {
-    //         $buttons = [];
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $meals->nama, $meals->id);
-    //             }
-    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
-    //         })
-    //         ->rawColumns(['action'])
-    //         ->make(true);
-
-    //     return $data;
-    // }
-
     public function getPenerimaManfaat(Request $request)
     {
         try {

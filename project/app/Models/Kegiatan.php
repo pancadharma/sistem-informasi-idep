@@ -224,6 +224,10 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
     }
+    public function datapenulis()
+    {
+        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')->withPivot('peran_id')->withTimestamps();
+    }
 
     public function laporan()
     {

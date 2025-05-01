@@ -370,6 +370,14 @@ return [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],
+                [
+                    'text'      => 'target_progress',
+                    'icon'      => 'nav-icon bi bi-bar-chart-steps', 
+                    'icon_text' => 'monitoring',
+                    'route'     => 'target_progress.index',
+                    // 'can'       => ['target_progress_access'],
+                    'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
+                ],
             ],
         ],
         [
