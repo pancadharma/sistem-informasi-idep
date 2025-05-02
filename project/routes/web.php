@@ -58,7 +58,10 @@ Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
     // Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/',                 [HomeController::class, 'index'])->name('home');
+    Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
+        Route::get('/data',   [HomeController::class, 'getDashboardData'])->name('data');
+    });
 
     // Permissions
     // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
