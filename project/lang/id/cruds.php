@@ -985,6 +985,9 @@ return [
             'lainnya'                            => 'Lainnya',
             'ket'                                => 'Keterangan',
             'non_act'                            => 'Non-AC',
+            'girl'                               => 'Anak Perempuan',
+            'boy'                                => 'Anak Laki-Laki',
+            'keluarga'                           => 'Keluarga',
 
         ],
     ],
@@ -1096,8 +1099,8 @@ return [
             'kode_program'      => 'Kode Program',
             'nama_program'      => 'Name Program',
             'jumlah_target'     => 'Jumlah Target',
-			'created_at'		=> 'Waktu Dibuat',
-			'updated_at'		=> 'Diupdate Pada',
+            'created_at'        => 'Waktu Dibuat',
+            'updated_at'        => 'Diupdate Pada',
         ],
     ],
 

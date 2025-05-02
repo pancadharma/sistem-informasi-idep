@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/',                 [HomeController::class, 'index'])->name('home');
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/data',   [HomeController::class, 'getDashboardData'])->name('data');
+        Route::get('/data/get-desa-chart-data',   [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
     });
 
     // Permissions
