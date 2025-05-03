@@ -57,8 +57,15 @@ Route::get('/home', function () {
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
-    // Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/',[HomeController::class, 'index'])->name('home');
+    Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
+        Route::get('/',                                     [HomeController::class, 'index'])->name('index');
+        Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
+        Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
+        Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+        // Route::get('/data/get-provinsi-koordinat', [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+    });
 
     // Permissions
     // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
