@@ -104,16 +104,102 @@ class HomeController extends Controller
         return response()->json($data);
     }
 
-    public function getFilteredProvinsi(Request $request)
+    // public function getFilteredProvinsi(Request $request)
+    // {
+    //     $query = Provinsi::query();
+
+    //     // Filter berdasarkan input pengguna
+    //     if ($request->filled('provinsi_id')) {
+    //         $query->where('id', $request->provinsi_id);
+    //     }
+
+    //     $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
+
+    //     return response()->json($provinsiList);
+    // }
+
+
+    // public function getFilteredProvinsi($id = null)
+    // {
+    //     // Query dasar ke tabel provinsi
+    //     $query = DB::table('provinsi as p')
+    //         ->select(
+    //             'p.id',
+    //             'p.nama',
+    //             'p.latitude',
+    //             'p.longitude',
+    //             // Subquery atau Join untuk menghitung desa unik
+    //             // CONTOH MENGGUNAKAN trkegiatan_lokasi: Hitung desa unik yang ada di trkegiatan_lokasi
+    //             // Sesuaikan join dan tabel ini sesuai struktur data 'penerima manfaat' Anda
+    //             DB::raw('(SELECT COUNT(DISTINCT tl.dusun_id)
+    //                     FROM kabupaten kab
+    //                     JOIN kecamatan kec ON kab.id = kec.kabupaten_id
+    //                     JOIN kelurahan kel ON kec.id = kel.kecamatan_id
+    //                     JOIN dusun     dus ON kel.id = dus.desa_id
+
+    //                     JOIN trmeals_penerima_manfaat tl ON dus.id = tl.dusun_id
+    //                     WHERE kab.provinsi_id = p.id
+    //                    ) as jumlah_desa') // Alias harus 'jumlah_desa' atau sesuai yg dipakai di JS
+    //         );
+
+
+    //     // Filter berdasarkan ID jika diberikan
+    //     if ($id) {
+    //         $query->where('p.id', $id);
+    //     }
+
+    //     // Hanya ambil provinsi yang punya data desa (opsional, tapi disarankan)
+    //     // Ini memastikan subquery tidak menghasilkan NULL jika tidak ada desa terkait
+    //      $query->whereExists(function ($subquery) {
+    //          $subquery->select(DB::raw(1))
+    //                   ->from('kabupaten as kab')
+    //                   ->join('kecamatan as kec', 'kab.id', '=', 'kec.kabupaten_id')
+    //                   ->join('kelurahan as kel', 'kec.id', '=', 'kel.kecamatan_id')
+    //                   ->join('dusun     as dus', 'kel.id', '=', 'dus.desa_id')
+    //                   ->join('trmeals_penerima_manfaat as tl', 'dus.id', '=', 'tl.dusun_id') // Sesuaikan tabel jika perlu
+    //                   ->whereColumn('kab.provinsi_id', 'p.id');
+    //      });
+
+
+    //     $provinsiData = $query->get();
+
+    //     // Pastikan latitude dan longitude adalah float
+    //     $provinsiData = $provinsiData->map(function ($item) {
+    //         $item->latitude = (float) $item->latitude;
+    //         $item->latitude = (float) $item->latitude;
+    //         $item->longitude = (float) $item->longitude;
+    //         $item->jumlah_desa = (int) $item->jumlah_desa; // Pastikan integer
+    //         return $item;
+    //     });
+
+
+    //     return response()->json($provinsiData);
+    // }
+
+    public function getFilteredProvinsi($id = null)
     {
         $query = Provinsi::query();
 
-        // Filter berdasarkan input pengguna
-        if ($request->filled('provinsi_id')) {
-            $query->where('id', $request->provinsi_id);
+        if ($id) {
+            $query->where('id', $id);
         }
 
         $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
+
+        // Hitung jumlah desa per provinsi
+        $desaCounts = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
+            ->whereNull('deleted_at')
+            ->get()
+            ->groupBy(function ($item) {
+                return optional($item->dusun?->desa?->kecamatan?->kabupaten?->provinsi)->id;
+            })
+            ->map(function ($group) {
+                return $group->pluck('dusun.desa.id')->unique()->count();
+            });
+
+        $provinsiList->each(function ($provinsi) use ($desaCounts) {
+            $provinsi->total_desa = $desaCounts[$provinsi->id] ?? 0;
+        });
 
         return response()->json($provinsiList);
     }

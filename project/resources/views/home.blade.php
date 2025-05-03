@@ -5,39 +5,6 @@
 @section('sub_breadcumb', '')
 
 @section('content_body')
-    <!-- Filter Section -->
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="programFilter">Program:</label>
-            <select id="programFilter" class="form-control">
-                <option value="">Semua Program</option>
-                @foreach ($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="tahunFilter">Periode (Tahun):</label>
-            <select id="tahunFilter" class="form-control">
-                <option value="">Semua Tahun</option>
-                @foreach ($years as $year)
-                    <option value="{{ $year }}">{{ $year }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <label for="provinsiFilter">Provinsi:</label>
-            <select id="provinsiFilter" class="form-control">
-                <option value="">Semua Provinsi</option>
-                @foreach ($provinsis as $provinsi)
-                    <option value="{{ $provinsi->id }}">{{ $provinsi->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <!-- End Filter Section -->
-
     <!-- Statistik Section -->
     <div class="row" id="dashboardCards">
         <div class="col-lg-3 col-6">
@@ -142,6 +109,40 @@
         <!-- ./col -->
     </div>
 
+    <!-- Filter Section -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="programFilter">Program:</label>
+            <select id="programFilter" class="form-control">
+                <option value="">Semua Program</option>
+                @foreach ($programs as $program)
+                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tahunFilter">Periode (Tahun):</label>
+            <select id="tahunFilter" class="form-control">
+                <option value="">Semua Tahun</option>
+                @foreach ($years as $year)
+                    <option value="{{ $year }}">{{ $year }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="provinsiFilter">Provinsi:</label>
+            <select id="provinsiFilter" class="form-control">
+                <option value="">Semua Provinsi</option>
+                @foreach ($provinsis as $provinsi)
+                    <option value="{{ $provinsi->id }}">{{ $provinsi->nama ?? 'Tanpa Nama' }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <!-- End Filter Section -->
+
+
     <!-- Chart Section -->
     <div class="row" id="dashboardCharts">
         <div class="col-6">
@@ -189,7 +190,7 @@
                 <!-- /.card-tools -->
                 </div>
                 <div class="card-body" style="display: block;">
-                    <div id="map" style="height: 300px; width: 100%;"></div>
+                    <div id="map" style="height: 500px; width: 100%;"></div>
                 </div>
                 <!-- /.card-body-->
             </div>
@@ -275,7 +276,6 @@
                             datasets: [{
                                 label: 'Jumlah Desa Penerima Manfaat',
                                 data: desaCounts,
-                                // backgroundColor: '#007bff',
                                 backgroundColor: generateColors(desaCounts.length),
                                 borderWidth: 2,
                                 hoverOffset: 4
@@ -284,10 +284,10 @@
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            indexAxis: 'x', // atau 'y' jika ingin horizontal
+                            indexAxis: 'x',
                             plugins: {
                                 legend: {
-                                    display: true
+                                    position: 'bottom'
                                 },
                                 tooltip: {
                                     callbacks: {
@@ -334,7 +334,6 @@
                             datasets: [{
                                 data: desaCounts,
                                 backgroundColor: generateColors(desaCounts.length),
-
                             }]
                         },
                         options: {
@@ -408,30 +407,24 @@
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
 
-    <script>
+
+
+    {{-- <script>
+        //GROK
         let map;
         let markers = [];
 
         async function initMap() {
-            // Request needed libraries.
+            // Request needed libraries
             const { Map } = await google.maps.importLibrary("maps");
-            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-            const map = new Map(document.getElementById("map"), {
+
+            // Inisialisasi map ke variabel global
+            map = new Map(document.getElementById("map"), {
                 center: { lat: -8.1961057, lng: 115.3231341 }, // Pusat Indonesia
                 zoom: 5,
                 mapId: "4504f8b37365c3d0",
             });
-            const priceTag = document.createElement("div");
-
-            priceTag.className = "price-tag";
-            priceTag.textContent = "$2.5M";
-
-            const marker = new AdvancedMarkerElement({
-                map,
-                position: { lat: -8.1961057, lng: 115.3231341 },
-                content: priceTag,
-            });
-            loadMapMarkers(); // Load marker saat awal
+            loadMapMarkers();
         }
 
         function clearMarkers() {
@@ -440,38 +433,235 @@
         }
 
         function loadMapMarkers() {
-            // const provinsiId = $('#provinsiFilter').val();
-            // let url = "{{ url('/dashboard/data/get-provinsi-koordinat') }}/" + provinsiId;
-            const url = "{{ route('dashboard.api.markers') }}";
+            const provinsiId = $('#provinsiFilter').val(); // Ambil nilai dari select filter
+            let url = "{{ route('dashboard.api.markers') }}";
 
-            // fetch(`/dashboard/data/get-provinsi-koordinat?provinsi_id=${provinsiId}`)
+            // Tambahkan parameter provinsi_id jika ada
+            if (provinsiId) {
+                url += `?provinsi_id=${provinsiId}`;
+            }
+
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
                     clearMarkers();
 
                     data.forEach(prov => {
+                        // Pastikan latitude dan longitude adalah angka yang valid
+                        const lat = parseFloat(prov.latitude);
+                        const lng = parseFloat(prov.longitude);
+                        if (isNaN(lat) || isNaN(lng)) {
+                            console.warn(`Koordinat tidak valid untuk ${prov.nama}`);
+                            return;
+                        }
+
+                        const marker = new google.maps.Marker({
+                            position: { lat: lat, lng: lng },
+                            map: map,
+                            title: prov.nama // Nama provinsi muncul saat hover
+                        });
+
+                        // Tambahkan info window untuk klik (opsional)
+                        const infowindow = new google.maps.InfoWindow({
+                            content: `<strong>${prov.nama}</strong>`
+                        });
+
+                        marker.addListener('click', () => {
+                            infowindow.open(map, marker);
+                        });
+
+                        markers.push(marker);
+                    });
+                })
+                .catch(error => console.error('Error fetching markers:', error));
+        }
+
+        // Event listener untuk perubahan filter
+        $('#provinsiFilter').on('change', function () {
+            loadMapMarkers();
+        });
+
+        // Inisialisasi map saat dokumen siap
+        $(document).ready(function () {
+            initMap();
+        });
+    </script> --}}
+
+    <script>
+        let map;
+        let markers = [];
+        let infoWindow;
+        let AdvancedMarkerElement; // <-- DEKLARASIKAN DI SINI (scope global script)
+
+        async function initMap() {
+            // Request needed libraries.
+            const { Map } = await google.maps.importLibrary("maps");
+
+            // --- PERUBAHAN DI SINI ---
+            // Import dan assign ke variabel global yang sudah dideklarasi
+            // Perhatikan tanda kurung () saat destructuring assignment ke variabel yang sudah ada
+            ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+            // -------------------------
+
+            // Inisialisasi Peta
+            map = new Map(document.getElementById("map"), {
+                center: { lat: -2.548926, lng: 118.0148634 },
+                zoom: 5,
+                mapId: "YOUR_MAP_ID" // GANTI DENGAN MAP ID ANDA
+            });
+
+            // Inisialisasi InfoWindow
+            infoWindow = new google.maps.InfoWindow();
+
+            // Pastikan AdvancedMarkerElement sudah terdefinisi sebelum load marker
+            if (typeof AdvancedMarkerElement === 'undefined') {
+                 console.error("Gagal mengimpor AdvancedMarkerElement dari Google Maps Library.");
+                 alert("Terjadi masalah saat memuat komponen peta. Silakan refresh halaman.");
+                 return; // Hentikan eksekusi jika library gagal dimuat
+            }
+
+
+            // Load marker saat peta pertama kali dimuat
+            loadMapMarkers();
+        }
+
+        // Fungsi untuk menghapus semua marker dari peta
+        // function clearMarkers() {
+        //     markers.forEach(marker => {
+        //         marker.map = null; // Hapus dari peta
+        //     });
+        //     markers = [];
+        // }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        // Fungsi untuk memuat dan menampilkan marker dari API
+        // function loadMapMarkers(provinsiId = null) {
+        //     // Pastikan AdvancedMarkerElement sudah siap digunakan
+        //     if (typeof AdvancedMarkerElement === 'undefined') {
+        //          console.error("AdvancedMarkerElement belum siap saat loadMapMarkers dipanggil.");
+        //          return; // Jangan lanjutkan jika library belum ada
+        //     }
+
+        //     let url = "{{ route('dashboard.api.markers') }}";
+        //     if (provinsiId) {
+        //         url = "{{ url('dashboard/data/get-provinsi-koordinat') }}/" + provinsiId;
+        //     }
+
+        //     fetch(url)
+        //         .then(res => {
+        //             if (!res.ok) {
+        //                 throw new Error(`HTTP error! status: ${res.status}`);
+        //             }
+        //             return res.json();
+        //         })
+        //         .then(data => {
+        //             clearMarkers();
+
+        //             if (!data || data.length === 0) {
+        //                 console.log("Tidak ada data marker yang diterima dari API.");
+        //                 return;
+        //             }
+
+        //             data.forEach(prov => {
+        //                 const lat = parseFloat(prov.latitude);
+        //                 const lng = parseFloat(prov.longitude);
+
+        //                 if (isNaN(lat) || isNaN(lng)) {
+        //                     console.warn(`Koordinat tidak valid untuk provinsi ${prov.nama}:`, prov.latitude, prov.longitude);
+        //                     return;
+        //                 }
+
+        //                 const position = { lat: lat, lng: lng };
+        //                 const jumlahDesa = prov.jumlah_desa ?? 0;
+        //                 const contentString = `
+        //                     <div style="font-family: sans-serif; font-size: 14px;">
+        //                         <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
+        //                         <p style="margin: 0;">Jumlah Desa Terdaftar: ${jumlahDesa}</p>
+        //                     </div>`;
+
+        //                 // SEKARANG AdvancedMarkerElement sudah terdefinisi di scope ini
+        //                 const marker = new AdvancedMarkerElement({
+        //                     map: map,
+        //                     position: position,
+        //                     title: prov.nama
+        //                 });
+
+        //                 marker.addListener('click', () => {
+        //                     infoWindow.close();
+        //                     infoWindow.setContent(contentString);
+        //                     infoWindow.open(map, marker);
+        //                 });
+
+        //                 markers.push(marker);
+        //             });
+        //         })
+        //         .catch(error => {
+        //             console.error("Gagal memuat data marker:", error);
+        //             alert("Terjadi kesalahan saat memuat data peta. Silakan coba lagi.");
+        //         });
+        // }
+
+        function loadMapMarkers() {
+            const provinsiId = $('#provinsiFilter').val();
+            let url = "{{ route('dashboard.api.markers', ['id' => ':id']) }}".replace(':id', provinsiId || '');
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    clearMarkers(); // Fungsi untuk menghapus marker sebelumnya
+                    data.forEach(prov => {
                         const marker = new google.maps.Marker({
                             position: {
                                 lat: parseFloat(prov.latitude),
                                 lng: parseFloat(prov.longitude)
                             },
-                            map: map,
+                            map: map, // Variabel map harus sudah didefinisikan sebelumnya
                             title: prov.nama
                         });
 
-                        markers.push(marker);
+                        const infowindow = new google.maps.InfoWindow({
+                            content: `<strong>${prov.nama}</strong><br>Jumlah Desa: ${prov.total_desa}`
+                        });
+
+                        marker.addListener('click', () => {
+                            infowindow.open(map, marker);
+                        });
+
+                        markers.push(marker); // Simpan marker ke array jika perlu
                     });
-                });
+                })
+                .catch(error => console.error('Error fetching markers:', error));
         }
 
-        // Jalankan ini saat filter berubah
-        $('#provinsiFilter').on('change', function () {
-            loadMapMarkers();
-        });
 
+        // Jalankan initMap saat dokumen siap
         $(document).ready(function () {
-            initMap();
+            // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
+            if (typeof google === 'object' && typeof google.maps === 'object') {
+                initMap().then(() => {
+                    console.log("Peta berhasil diinisialisasi.");
+                }).catch(e => {
+                    console.error("Inisialisasi peta gagal:", e);
+                    alert("Gagal memuat peta. Pastikan koneksi internet Anda stabil dan API Key/Map ID Google Maps valid.");
+                });
+            } else {
+                console.error("Google Maps API script belum termuat.");
+                alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
+            }
+
+
+            $('#provinsiFilter').on('change', function () {
+                const selectedProvinsiId = $(this).val();
+                if (selectedProvinsiId && selectedProvinsiId !== "") {
+                     loadMapMarkers(selectedProvinsiId);
+                } else {
+                     loadMapMarkers();
+                }
+            });
         });
     </script>
 
