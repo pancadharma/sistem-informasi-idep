@@ -38,40 +38,6 @@ class HomeController extends Controller
 
         return view('home', compact('programs', 'provinsis', 'years'));
     }
-
-    // public function getDashboardData(Request $request)
-    // {
-    //     $query = DB::table('trmeals_penerima_manfaat')
-    //         ->leftJoin('trprogram', 'trprogram.id', '=', 'trmeals_penerima_manfaat.program_id')
-    //         ->leftJoin('trmeals_penerima_manfaat_kelompok_marjinal', 'trmeals_penerima_manfaat_kelompok_marjinal.trmeals_penerima_manfaat_id', '=', 'trmeals_penerima_manfaat.id')
-    //         ->whereNull('trmeals_penerima_manfaat.deleted_at');
-
-    //     if ($request->filled('program_id')) {
-    //         $query->where('trmeals_penerima_manfaat.program_id', $request->program_id);
-    //     }
-
-    //     if ($request->filled('provinsi_id')) {
-    //         $query->where('trmeals_penerima_manfaat.provinsi_id', $request->provinsi_id); // pastikan kolom ini ada
-    //     }
-
-    //     if ($request->filled('tahun')) {
-    //         $tahun = $request->tahun;
-    //         $query->whereYear('trprogram.tanggalmulai', '<=', $tahun)
-    //             ->whereYear('trprogram.tanggalselesai', '>=', $tahun);
-    //     }
-
-    //     $data = $query->selectRaw("
-    //         COUNT(DISTINCT trmeals_penerima_manfaat.id) AS semua,
-    //         COUNT(DISTINCT CASE WHEN trmeals_penerima_manfaat.jenis_kelamin = 'laki' THEN trmeals_penerima_manfaat.id END) AS laki,
-    //         COUNT(DISTINCT CASE WHEN trmeals_penerima_manfaat.jenis_kelamin = 'perempuan' THEN trmeals_penerima_manfaat.id END) AS perempuan,
-    //         COUNT(DISTINCT CASE WHEN trmeals_penerima_manfaat.umur < 17 AND trmeals_penerima_manfaat.jenis_kelamin = 'laki' THEN trmeals_penerima_manfaat.id END) AS anak_laki,
-    //         COUNT(DISTINCT CASE WHEN trmeals_penerima_manfaat.umur < 17 AND trmeals_penerima_manfaat.jenis_kelamin = 'perempuan' THEN trmeals_penerima_manfaat.id END) AS anak_perempuan,
-    //         COUNT(DISTINCT CASE WHEN trmeals_penerima_manfaat_kelompok_marjinal.kelompok_marjinal_id = 3 THEN trmeals_penerima_manfaat.id END) AS disabilitas
-    //     ")->first();
-
-    //     return response()->json($data);
-    // }
-
     function getDashboardData(Request $request)
     {
         $data = Meals_Penerima_Manfaat::query()
@@ -111,25 +77,6 @@ class HomeController extends Controller
         ]);
     }
 
-    // public function getDesaPerProvinsiChartData(Request $request)
-    // {
-    //     $data = DB::table('trmeals_penerima_manfaat as pm')
-    //         ->join('dusun', 'pm.dusun_id', '=', 'dusun.id')
-    //         ->join('kelurahan', 'dusun.desa_id', '=', 'kelurahan.id')
-    //         ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id')
-    //         ->join('kabupaten', 'kecamatan.kabupaten_id', '=', 'kabupaten.id')
-    //         ->join('provinsi', 'kabupaten.provinsi_id', '=', 'provinsi.id')
-    //         ->selectRaw('provinsi.nama as provinsi, count(distinct kelurahan.id) as total_desa')
-    //         ->groupBy('provinsi.nama')
-    //         ->orderByDesc('total_desa')
-    //         ->get();
-
-    //     return response()->json([
-    //         'bar' => $data,
-    //         'pie' => $data // Jika pie chart masih ingin digunakan dengan data yang sama
-    //     ]);
-    // }
-
     public function getDesaPerProvinsiChartData(Request $request)
     {
         $data = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
@@ -156,4 +103,22 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
+
+    public function getFilteredProvinsi(Request $request)
+    {
+        $query = Provinsi::query();
+
+        // Filter berdasarkan input pengguna
+        if ($request->filled('provinsi_id')) {
+            $query->where('id', $request->provinsi_id);
+        }
+
+        $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
+
+        return response()->json($provinsiList);
+    }
+
+
+
+
 }

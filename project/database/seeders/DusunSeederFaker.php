@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Dusun;
 use App\Models\Desa; // Import the Desa model
 use App\Models\Kelurahan;
+use App\Models\Program;
 
 class DusunSeederFaker extends Seeder
 {
@@ -41,5 +42,32 @@ class DusunSeederFaker extends Seeder
                 'updated_at' => $faker->dateTimeThisYear(),
             ]);
         }
+    }
+
+    public function getAllProgramMarkers()
+    {
+        $programs = Program::with(['outcome.output.activities.lokasi'])->get();
+
+        $markers = [];
+
+        foreach ($programs as $program) {
+            foreach ($program->outcome as $outcome) {
+                foreach ($outcome->output as $output) {
+                    foreach ($output->activities as $activity) {
+                        foreach ($activity->lokasi as $lokasi) {
+                            $markers[] = [
+                                'program'     => $program->nama,
+                                'kegiatan'    => $activity->nama,
+                                'latitude'    => $lokasi->lat,
+                                'longitude'   => $lokasi->long,
+                                'keterangan'  => $lokasi->keterangan ?? '', // jika ada
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json($markers);
     }
 }

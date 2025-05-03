@@ -12,7 +12,7 @@
             <select id="programFilter" class="form-control">
                 <option value="">Semua Program</option>
                 @foreach ($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->nama ?? 'Tanpa Nama' }}</option>
+                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
                 @endforeach
             </select>
         </div>
@@ -38,6 +38,7 @@
     </div>
     <!-- End Filter Section -->
 
+    <!-- Statistik Section -->
     <div class="row" id="dashboardCards">
         <div class="col-lg-3 col-6">
             <!-- small box -->
@@ -170,6 +171,31 @@
     </div>
     <!-- End Chart Section -->
 
+    <!-- Map Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
+                <h3 class="card-title">
+                    <i class="fas fa-map-marker-alt mr-1"></i>
+                    Peta Data
+                </h3>
+                <!-- card tools -->
+                <div class="card-tools">
+                    <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+                <!-- /.card-tools -->
+                </div>
+                <div class="card-body" style="display: block;">
+                    <div id="map" style="height: 300px; width: 100%;"></div>
+                </div>
+                <!-- /.card-body-->
+            </div>
+        </div>
+    </div>
+    <!-- End Maps Section -->
 @endsection
 
 
@@ -188,10 +214,8 @@
 @endpush
 
 @push('js')
-    <script src="/vendor/chart.js/Chart.min.js"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"
-        integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
+    {{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
         function loadDashboardData() {
@@ -228,30 +252,21 @@
                     $('#totalAnakLaki').text('0');
                     $('#totalAnakPerempuan').text('0');
                     $('#totalDisabilitas').text('0');
-                    $('#totalKeluaga').text('0');
+                    $('#totalKeluarga').text('0');
                     console.error('Error fetching data');
                 }
             });
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#programFilter, #provinsiFilter, #tahunFilter').change(loadDashboardData);
             loadDashboardData(); // initial load
-
 
             fetch('/dashboard/data/get-desa-chart-data')
                 .then(res => res.json())
                 .then(data => {
                     const provinsiLabels = data.map(item => item.provinsi);
                     const desaCounts = data.map(item => item.total_desa);
-
-                    var ticksStyle = {
-                        fontColor: '#495057',
-                        fontStyle: 'bold'
-                    }
-
-                    var mode = 'index'
-                    var intersect = true
 
                     const barChart = new Chart(document.getElementById('barChart'), {
                         type: 'bar',
@@ -260,25 +275,16 @@
                             datasets: [{
                                 label: 'Jumlah Desa Penerima Manfaat',
                                 data: desaCounts,
-                                backgroundColor: '#007bff'
+                                // backgroundColor: '#007bff',
+                                backgroundColor: generateColors(desaCounts.length),
+                                borderWidth: 2,
+                                hoverOffset: 4
                             }]
                         },
                         options: {
-                            maintainAspectRatio: false,
-                            tooltips: {
-                                mode: mode,
-                                intersect: intersect
-                            },
-                            hover: {
-                                mode: mode,
-                                intersect: intersect
-                            },
-                            legend: {
-                                display: false
-                            },
-
                             responsive: true,
-                            indexAxis: 'x', // bisa jadi 'y' jika ingin horizontal bar
+                            maintainAspectRatio: false,
+                            indexAxis: 'x', // atau 'y' jika ingin horizontal
                             plugins: {
                                 legend: {
                                     display: true
@@ -289,72 +295,184 @@
                                     }
                                 }
                             },
-                            // scales: {
-                            //     x: {
-                            //         ticks: {
-                            //             autoSkip: false,
-                            //             maxRotation: 90,
-                            //             minRotation: 45
-                            //         }
-                            //     },
-                            //     y: {
-                            //         beginAtZero: true
-                            //     }
-                            // }
                             scales: {
-                                yAxes: [{
-                                    // display: false,
-                                    gridLines: {
-                                        display: true,
-                                        lineWidth: '2px',
-                                        color: 'rgba(0, 0, 0, .2)',
-                                        zeroLineColor: 'transparent'
+                                x: {
+                                    ticks: {
+                                        color: '#495057',
+                                        font: {
+                                            weight: 'bold'
+                                        }
                                     },
-                                    ticks: $.extend({
-                                        beginAtZero: true,
-                                        // callback: function(value) {
-                                        //     if (value >= 100) {
-                                        //         value /= 100
-                                        //     }
-
-                                        // return value
-                                        // }
-                                    }, ticksStyle)
-                                }],
-                                xAxes: [{
-                                    display: true,
-                                    gridLines: {
+                                    grid: {
                                         display: false
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: '#495057',
+                                        font: {
+                                            weight: 'bold'
+                                        },
+                                        callback: function (value) {
+                                            return value >= 1000 ? value / 1000 : value;
+                                        }
                                     },
-                                    ticks: ticksStyle
-                                }]
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, .2)',
+                                        zeroLineColor: '#000' // Not used in v4 but retained for reference
+                                    }
+                                }
                             }
                         }
                     });
 
-                    // Jika pie chart masih diinginkan:
                     const pieChart = new Chart(document.getElementById('pieChart'), {
                         type: 'pie',
                         data: {
                             labels: provinsiLabels,
                             datasets: [{
                                 data: desaCounts,
-                                backgroundColor: generateColors(desaCounts.length)
+                                backgroundColor: generateColors(desaCounts.length),
+
                             }]
                         },
                         options: {
-                            responsive: true
+                            responsive: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            const value = ctx.raw;
+                                            const total = ctx.chart._metasets[ctx.datasetIndex].total;
+                                            const percentage = ((value / total) * 100).toFixed(1);
+                                            return `${ctx.label}: ${value} desa (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            },
                         }
                     });
                 });
 
             function generateColors(count) {
                 const baseColors = ['#4caf50', '#03a9f4', '#00bcd4', '#e91e63', '#ff9800', '#ff5722', '#9c27b0'];
-                while (baseColors.length < count) {
-                    baseColors.push(`#${Math.floor(Math.random()*16777215).toString(16)}`);
+                const generatedColors = new Set(baseColors); // Use a Set to ensure uniqueness
+
+                while (generatedColors.size < count) {
+                    // Generate a random color
+                    const randomColor = generateReadableColor();
+                    generatedColors.add(randomColor); // Add to the Set (duplicates are automatically ignored)
                 }
-                return baseColors.slice(0, count);
+
+                return Array.from(generatedColors).slice(0, count); // Convert Set to Array and return the required count
+            }
+
+            // Helper function to generate readable random colors
+            function generateReadableColor() {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+
+                // Ensure the color is not too light or too dark
+                if (isReadableColor(color)) {
+                    return color;
+                } else {
+                    return generateReadableColor(); // Retry if the color is not readable
+                }
+            }
+
+            // Helper function to check if a color is readable
+            function isReadableColor(color) {
+                // Convert hex color to RGB
+                const r = parseInt(color.slice(1, 3), 16);
+                const g = parseInt(color.slice(3, 5), 16);
+                const b = parseInt(color.slice(5, 7), 16);
+
+                // Calculate brightness (0 = dark, 255 = bright)
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+                // Return true if brightness is within a readable range
+                return brightness > 50 && brightness < 200;
             }
         });
+
     </script>
+
+    <!-- prettier-ignore -->
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
+
+    <script>
+        let map;
+        let markers = [];
+
+        async function initMap() {
+            // Request needed libraries.
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+            const map = new Map(document.getElementById("map"), {
+                center: { lat: -8.1961057, lng: 115.3231341 }, // Pusat Indonesia
+                zoom: 5,
+                mapId: "4504f8b37365c3d0",
+            });
+            const priceTag = document.createElement("div");
+
+            priceTag.className = "price-tag";
+            priceTag.textContent = "$2.5M";
+
+            const marker = new AdvancedMarkerElement({
+                map,
+                position: { lat: -8.1961057, lng: 115.3231341 },
+                content: priceTag,
+            });
+            loadMapMarkers(); // Load marker saat awal
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        function loadMapMarkers() {
+            // const provinsiId = $('#provinsiFilter').val();
+            // let url = "{{ url('/dashboard/data/get-provinsi-koordinat') }}/" + provinsiId;
+            const url = "{{ route('dashboard.api.markers') }}";
+
+            // fetch(`/dashboard/data/get-provinsi-koordinat?provinsi_id=${provinsiId}`)
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    clearMarkers();
+
+                    data.forEach(prov => {
+                        const marker = new google.maps.Marker({
+                            position: {
+                                lat: parseFloat(prov.latitude),
+                                lng: parseFloat(prov.longitude)
+                            },
+                            map: map,
+                            title: prov.nama
+                        });
+
+                        markers.push(marker);
+                    });
+                });
+        }
+
+        // Jalankan ini saat filter berubah
+        $('#provinsiFilter').on('change', function () {
+            loadMapMarkers();
+        });
+
+        $(document).ready(function () {
+            initMap();
+        });
+    </script>
+
 @endpush
