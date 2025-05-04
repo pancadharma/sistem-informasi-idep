@@ -78,33 +78,6 @@ class HomeController extends Controller
         ]);
     }
 
-    // public function getDesaPerProvinsiChartData(Request $request)
-    // {
-    //     $data = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
-    //         ->whereNull('deleted_at')
-    //         ->get()
-    //         ->groupBy(function ($item) {
-    //             return optional($item->dusun?->desa?->kecamatan?->kabupaten?->provinsi)->nama;
-    //         })
-    //         ->map(function ($group) {
-    //             $uniqueDesa = $group->pluck('dusun.desa.id')->unique()->count();
-    //             return [
-    //                 'total_desa' => $uniqueDesa,
-    //             ];
-    //         })
-    //         ->filter(fn($v, $k) => !is_null($k))
-    //         ->sortByDesc('total_desa')
-    //         ->map(function ($item, $provinsi) {
-    //             return [
-    //                 'provinsi'    => $provinsi,
-    //                 'total_desa'  => $item['total_desa'],
-    //             ];
-    //         })
-    //         ->values(); // to reset keys (make it an array of objects)
-
-    //     return response()->json($data);
-    // }
-
     /* updated method to Add filter parameters (provinsi_id, program_id, tahun) to the method
        Users can analyze data more deeply by combining filters, which is valuable for a dashboard’s purpose
     */
@@ -214,36 +187,50 @@ class HomeController extends Controller
         return response()->json($provinsiList);
     }
 
-    //
-    //
-    //
-
-    // public function getFilteredProvinsi($id = null)
+    // this query is too slow
+    // public function getFilteredProvinsi(Request $request, $id = null)
     // {
-    //     $query = Provinsi::query();
+    //     $programId = $request->program_id;
+    //     $tahun = $request->tahun;
 
-    //     if ($id) {
-    //         $query->where('id', $id);
-    //     }
+    //     // Build cache key based on filters
+    //     $cacheKey = "provinsi_stats_{$id}_{$programId}_{$tahun}";
 
-    //     $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
+    //     $provinsiList = Provinsi::withCount([
+    //         'desa as total_desa' => function ($q) use ($request) {
+    //             if ($request->program_id) {
+    //                 $q->whereHas('penerimaManfaat', function ($qq) use ($request) {
+    //                     $qq->where('program_id', $request->program_id);
+    //                 });
+    //             }
+    //         },
+    //         'penerimaManfaat as total_penerima' => function ($q) use ($request) {
+    //             if ($request->program_id) {
+    //                 $q->where('program_id', $request->program_id);
+    //             }
 
-    //     // Hitung jumlah desa per provinsi
-    //     $desaCounts = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
-    //         ->whereNull('deleted_at')
-    //         ->get()
-    //         ->groupBy(function ($item) {
-    //             return optional($item->dusun?->desa?->kecamatan?->kabupaten?->provinsi)->id;
-    //         })
-    //         ->map(function ($group) {
-    //             return $group->pluck('dusun.desa.id')->unique()->count();
-    //         });
+    //             if ($request->tahun) {
+    //                 $q->whereHas('program', function ($qq) use ($request) {
+    //                     $qq->whereYear('tanggalmulai', '<=', $request->tahun)
+    //                         ->whereYear('tanggalselesai', '>=', $request->tahun);
+    //                 });
+    //             }
+    //         }
+    //     ])->get(); // tanpa ->get([...])
 
-    //     $provinsiList->each(function ($provinsi) use ($desaCounts) {
-    //         $provinsi->total_desa = $desaCounts[$provinsi->id] ?? 0;
-    //     });
+    //     return response()->json(
+    //         $provinsiList->map(function ($prov) {
+    //             return [
+    //                 'id' => $prov->id,
+    //                 'nama' => $prov->nama,
+    //                 'latitude' => $prov->latitude,
+    //                 'longitude' => $prov->longitude,
+    //                 'total_desa' => (int) $prov->total_desa,
+    //                 'total_penerima' => (int) $prov->total_penerima,
+    //             ];
+    //         })->values()
+    //     );
 
-    //     return response()->json($provinsiList);
     // }
 
 }
