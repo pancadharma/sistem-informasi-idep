@@ -393,6 +393,19 @@
         let infoWindow;
         let AdvancedMarkerElement;
 
+        // Global variables for map instances and markers
+        // let leafletMapInstance = null;
+        let googleMapInstance = null;
+        let googleMapMarkers = [];
+        // let leafletMarkerLayerGroup = null; // Use LayerGroup for Leaflet markers
+
+        // Indonesia Center Coordinates
+        const centerLat = -2.711614;
+        const centerLng = 121.631757;
+        const initialZoom = 5;
+
+
+
         // --- STYLE DEFINITION ---
         const mapStyles = [
             { // Hide Points of Interest (businesses, landmarks, etc.)
@@ -488,10 +501,12 @@
             ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
             // Inisialisasi Peta
             map = new Map(document.getElementById("map"), {
-                center: { lat: -2.548926, lng: 118.0148634 },
-                zoom: 5,
+                center: { lat: centerLat, lng: centerLng },
+                zoom: initialZoom,
                 // mapId: "YOUR_MAP_ID" // GANTI DENGAN MAP ID
                 styles: mapStyles,
+                // mapTypeId: 'roadmap'
+
             });
 
             // Inisialisasi InfoWindow
@@ -511,45 +526,6 @@
             markers.forEach(marker => marker.setMap(null));
             markers = [];
         }
-
-        // function loadMapMarkers() {
-        //     const provinsiId = $('#provinsiFilter').val();
-        //     let url = "{{ route('dashboard.api.markers', ['id' => ':id']) }}".replace(':id', provinsiId || '');
-
-        //     fetch(url)
-        //         .then(res => res.json())
-        //         .then(data => {
-        //             clearMarkers(); // Fungsi untuk menghapus marker sebelumnya
-        //             data.forEach(prov => {
-        //                 const marker = new google.maps.Marker({
-        //                     position: {
-        //                         lat: parseFloat(prov.latitude),
-        //                         lng: parseFloat(prov.longitude)
-        //                     },
-        //                     map: map, // Variabel map harus sudah didefinisikan sebelumnya
-        //                     title: prov.nama
-        //                 });
-
-        //                 const infowindow = new google.maps.InfoWindow({
-        //                     content: `
-        //                     <div>
-        //                         <h4>${prov.nama}</h4>
-        //                     </div>
-        //                     <div class="info-box-text">#${prov.id}</div>
-        //                     <div class="info-box-number">Jumlah Desa: ${prov.total_desa}</div>
-        //                     <div class="info-box-number">Jumlah Penerima Manfaat: ${prov.total_penerima}</div>
-        //                     `
-        //                 });
-
-        //                 marker.addListener('click', () => {
-        //                     infowindow.open(map, marker);
-        //                 });
-
-        //                 markers.push(marker); // Simpan marker ke array jika perlu
-        //             });
-        //         })
-        //         .catch(error => console.error('Error fetching markers:', error));
-        // }
 
         function loadMapMarkers() {
             const provinsiId = $('#provinsiFilter').val();
@@ -592,13 +568,7 @@
                         });
 
                         const infowindow = new google.maps.InfoWindow({
-                            content: `
-                                <div style="font-family: sans-serif; font-size: 14px;">
-                                    <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
-                                    <p style="margin: 0;">Jumlah Desa: ${prov.total_desa}</p>
-                                    <p style="margin: 0;">Total Penerima Manfaat: ${prov.total_penerima}</p>
-                                </div>
-                            `
+                            content: generateInfoContent(prov)
                         });
 
                         marker.addListener('click', () => {
@@ -610,10 +580,19 @@
                 })
                 .catch(error => {
                     console.error('Error fetching markers:', error);
-                    alert('Gagal memuat data peta. Silakan coba lagi.');
                 });
         }
 
+        // reusable function
+        function generateInfoContent(prov) {
+            return `
+                <div style="font-family: sans-serif; font-size: 14px;">
+                    <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
+                    <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
+                    <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
+                </div>`
+            ;
+        }
 
         // Jalankan initMap saat dokumen siap
         $(document).ready(function () {
