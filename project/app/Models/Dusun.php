@@ -22,7 +22,7 @@ class Dusun extends Model
     public $table = "dusun";
     protected $fillable = [
         'kode', 'nama', 'aktif', 'desa_id', 'kode_pos', 'created_at','updated_at'
-    ];  
+    ];
     protected $casts = [
         'updated_at',
         'created_at'
@@ -34,5 +34,13 @@ class Dusun extends Model
     }
     public function desa() {
         return $this->belongsTo(Kelurahan::class, 'desa_id');
+    }
+    public function kelurahan() {
+        return $this->belongsTo(Kelurahan::class, 'desa_id');
+    }
+
+    public function penerimaManfaat()
+    {
+        return $this->hasMany(Meals_Penerima_Manfaat::class, 'dusun_id');
     }
 }
