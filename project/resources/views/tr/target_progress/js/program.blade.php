@@ -92,7 +92,17 @@
 
             $targetProgressTable.trigger("ajaxLoad:DataTable");
 
-            $modal.modal('hide');
-        });
-    });
+		// Tanggal
+		let $fieldTanggal	= $('#target_progress_tanggal'),
+			minDate			= $fieldTanggal.val() || null;
+
+		$('#target_progress_tanggal').daterangepicker({
+			singleDatePicker: true,
+			showDropdowns: true,
+			autoApply: true,
+			minDate: minDate,
+			format: "DD/MM/YYYY",
+			locale: @json(__('daterangepicker.locale')),
+		});
+	});
 </script>

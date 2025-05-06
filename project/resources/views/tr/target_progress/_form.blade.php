@@ -18,10 +18,19 @@
 
 			{{-- Kode & ID --}}
 			<div class="col-sm-12 col-md-12 col-lg-6 self-center order-2 order-md-2">
-				<label for="tanggal" class="input-group col-form-label">
+				<label for="target_progress_tanggal" class="input-group col-form-label">
 					{{ __('cruds.target_progress.basic.tanggal') }}
 				</label>
-				<input type="date" class="form-control" id="tanggal" placeholder="{{ __('cruds.target_progress.basic.tanggal') }}" name="tanggal">
+				<input
+					id="target_progress_tanggal"
+					type="text"
+					name="target_progress[tanggal]"
+					class="form-control"
+					inputmode="none"
+					autocomplete="off"
+					placeholder="{{ __('cruds.target_progress.basic.tanggal') }}"
+					value="{{ old('tanggal', $targetProgress->tanggal?->format("d/m/Y")) }}"
+				>
 			</div>
 		</div>
 		
