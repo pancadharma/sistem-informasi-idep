@@ -1070,4 +1070,49 @@ return [
         'ya'                            => 'Yes',
         'tidak'                         => 'No',
     ],
+
+    'target_progress' => [
+        'title'                         => 'Target & Progress',
+        'add'                           => 'Add Target & Progress',
+        'create'                        => 'Add Target & Progress',
+        'edit'                          => 'Edit Target & Progress',
+        'show'                          => 'Show Target & Progress',
+        'delete'                        => 'Delete Target & Progress',
+
+        'list'                          => 'Target & Progress List',
+        'label'                         => 'Target & Progress',
+        'level'                         => 'Level',
+        'deskripsi'                     => 'Description',
+        'indikator'                     => 'Indicator',
+        'target'                        => 'Target',
+        'achievements'                  => 'Achievements',
+        'progress'                      => 'Progress',
+        'persentase_complete'           => '% to complete',
+        'status'                        => 'Status',
+        'challenges'                    => 'Challenges',
+        'mitigation'                    => 'Mitigation / action plan',
+        'risk'                          => 'Risk',
+        'notes'                         => 'Notes',
+        'tipe'                          => 'Type',
+        'updated_count'                 => 'Updated Count',
+
+        'kode_program'					=> "Program Code",
+        'nama_program'					=> "Program Name",
+        'tanggal'                       => 'Date',
+
+        'basic' => [
+            'history'           => 'History',
+            'tanggal'           => 'Date',
+            'program_select'    => 'Select Program',
+            'kode_program'      => 'Program Code',
+            'nama_program'      => 'Program Name',
+            'jumlah_target'     => 'Number of Targets',
+            'created_at'        => 'Created At',
+            'updated_at'        => 'Updated At',
+        ],
+    ],
+
+    'history' => [
+        'title' => 'History'
+    ],
 ];
