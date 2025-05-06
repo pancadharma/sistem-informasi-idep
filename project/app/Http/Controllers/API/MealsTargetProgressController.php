@@ -5,7 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Meals_Target_Progress;
 use Illuminate\Http\Request;
-use App\Models\Meals_Target_Progress_Detail as TargetProgress;
+use App\Enums\TargetProgressStatus as StatusOptions;
+use App\Enums\TargetProgressRisk as RiskOptions;
 use Yajra\DataTables\DataTables;
 use App\Models\Program;
 
@@ -206,62 +207,47 @@ class MealsTargetProgressController extends Controller
                 return $target;
             }, $targets, array_keys($targets));
 
-            return DataTables::of(source: $targets)
-                ->addIndexColumn()
-                ->addColumn('level', function ($target) {
-                    return $target->level;
-                })
-                ->addColumn('deskripsi', function ($target) {
-                    return $target->deskripsi;
-                })
-                ->addColumn('indikator', function ($target) {
-                    return $target->indikator;
-                })
-                ->addColumn('target', function ($target) {
-                    return $target->target;
-                })
-                ->addColumn('achievements', function ($target) {
-                    return $target->achievements;
-                })
-                ->addColumn('progress', function ($target) {
-                    return $target->progress;
-                })
-                ->addColumn('persentase_complete', function ($target) {
-                    return $target->persentase_complete;
-                })
-                ->addColumn('status', function ($target) {
-                    return $target->status;
-                })
-                ->addColumn('challenges', function ($target) {
-                    return $target->challenges;
-                })
-                ->addColumn('mitigation', function ($target) {
-                    return $target->mitigation;
-                })
-                ->addColumn('risk', function ($target) {
-                    return $target->risk;
-                })
-                ->addColumn('notes', function ($target) {
-                    return $target->notes;
-                })
-                // ->addColumn('tipe', function ($target) {
-                //     return $target->tipe;
-                // })
-                ->rawColumns([
-                    'level',
-                    'achievements',
-                    'progress',
-                    'persentase_complete',
-                    'status',
-                    'challenges',
-                    'mitigation',
-                    'risk',
-                    'notes',
-                    // 'tipe',
-                ])
-                ->make(true);
-        }
-    }
+
+	/**
+	* SELECT2 Ajax Options
+	*   - TargetProgressStatus
+	*   - TargetProgressRisk
+	*/
+	public function getStatusOptions(Request $request)
+	{
+		$query = strtolower($request->get('q', ''));
+		$options = collect(StatusOptions::asSelectArray())
+			->filter(function ($label, $value) use ($query) {
+				return stripos($label, $query) !== false;
+			})
+			->map(function ($label, $value) {
+				return [
+					'id' => $value,   // Select2 expects 'id' for value
+					'text' => $label, // and 'text' for label
+				];
+			})
+			->values();
+
+		return response()->json($options);
+	}
+
+	public function getRiskOptions(Request $request)
+	{
+		$query = strtolower($request->get('q', ''));
+		$options = collect(RiskOptions::asSelectArray())
+			->filter(function ($label, $value) use ($query) {
+				return stripos($label, $query) !== false;
+			})
+			->map(function ($label, $value) {
+				return [
+					'id'	=> $value,	// Select2 expects 'id' for value
+					'text'	=> $label,	// and 'text' for label
+				];
+			})
+			->values();
+
+		return response()->json($options);
+	}
 
     private function splitupTargets(?string $target): array
     {

@@ -267,10 +267,16 @@
 					});
 					
 					// SETUP SELECT2 - untuk status & risk input
-					inputs.status.select2({
-						placeholder: "Select Status",
-						width: '100%',
-						allowClear: true,
+					fields.status.select2({
+						placeholder: "{{__('enums.target_progress_status.placeholder')}}",
+						ajax: {
+							url: "{{ route('api.target_progress.status_options') }}",
+							processResults: function (data) {
+								return {
+									results: data,
+								};
+							},
+						},
     					templateResult: function(el) {
 							return `<span class="target-progress-status opt-${el.id}">${el.text}</span>`;
 						},
@@ -280,11 +286,19 @@
     					escapeMarkup: function(markup) {
 							return markup;
 						},
-					});
-					inputs.risk.select2({
-						placeholder: "Select Risk",
+						dropdownAutoWidth: true,
 						width: '100%',
-						allowClear: true,
+					});
+					fields.risk.select2({
+						placeholder: "{{__('enums.target_progress_risk.placeholder')}}",
+						ajax: {
+							url: "{{ route('api.target_progress.risk_options') }}",
+							processResults: function (data) {
+								return {
+									results: data,
+								};
+							},
+						},
     					templateResult: function(el) {
 							return `<span class="target-progress-risk opt-${el.id}">${el.text}</span>`;
 						},
@@ -294,6 +308,8 @@
     					escapeMarkup: function(markup) {
 							return markup;
 						},
+						dropdownAutoWidth: true,
+						width: '100%',
 					});
 				},
 				pageLength: 10,
