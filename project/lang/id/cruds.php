@@ -1069,7 +1069,8 @@ return [
 
     'target_progress' => [
         'title'                         => 'Target & Progress',
-        'add'                           => 'Add Target & Progress',
+        'add'                           => 'Tambah Target & Progress',
+        'create'                        => 'Tambah Target & Progress',
         'edit'                          => 'Edit Target & Progress',
         'show'                          => 'Tampilkan Target & Progress',
         'delete'                        => 'Hapus Target & Progress',
@@ -1090,14 +1091,18 @@ return [
         'notes'                         => 'Notes',
         'tipe'                          => 'Tipe',
 
-        'program'                       => "Program",
+        'kode_program'					=> "Kode Program",
+        'nama_program'					=> "Nama Program",
         'tanggal'                       => "Tanggal",
+        'updated_count'                 => 'Perubahan',
 
-        'basic'             => [
-            'tanggal'           => 'Tanggal',
+        'basic'	=> [
+            'history'           => 'History',
+            'tanggal'			=> 'Tanggal',
+            'waktu'				=> 'Waktu',
             'program_select'    => 'Pilih Program',
             'kode_program'      => 'Kode Program',
-            'nama_program'      => 'Name Program',
+            'nama_program'      => 'Nama Program',
             'jumlah_target'     => 'Jumlah Target',
             'created_at'        => 'Waktu Dibuat',
             'updated_at'        => 'Diupdate Pada',
@@ -1105,7 +1110,7 @@ return [
     ],
 
     'history' => [
-        'title' => "Histoty"
+        'title' => "History"
     ],
 
 ];

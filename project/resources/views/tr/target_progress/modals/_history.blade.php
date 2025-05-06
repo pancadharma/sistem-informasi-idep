@@ -13,14 +13,18 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-sm table-bordered table-striped" id="history_table">
+                        <table class="table table-sm table-bordered table-striped w-100" id="history_table">
                             <thead>
                                 <tr>
-                                    <th>{{ __('cruds.target_progress.basic.kode_program') }}</th>
-                                    <th>{{ __('cruds.target_progress.basic.nama_program') }}</th>
-                                    <th>{{ __('cruds.target_progress.basic.jumlah_target') }}</th>
-                                    <th>{{ __('cruds.target_progress.basic.created_at') }}</th>
-                                    <th>{{ __('cruds.target_progress.basic.updated_at') }}</th>
+                                    <th>raw_tanggal</th>
+                                    <th>{{ __('cruds.target_progress.basic.tanggal') }}</th>
+                                    <th class="text-center">
+                                        <i class="fa fa-history" aria-hidden="true"></i>
+                                        {{ __('cruds.target_progress.basic.history') }}
+                                    </th>
+                                    <th class="text-nowrap">{{ __('cruds.target_progress.basic.kode_program') }}</th>
+                                    <th class="text-nowrap">{{ __('cruds.target_progress.basic.nama_program') }}</th>
+                                    <th class="text-nowrap">{{ __('cruds.target_progress.basic.jumlah_target') }}</th>
                                     <th>{{ __('global.actions') }}</th>
                                 </tr>
                             </thead>

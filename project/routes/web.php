@@ -367,11 +367,19 @@ Route::middleware(['auth'])->group(function () {
 
     // TARGET & PROGRESS
     Route::group(['prefix' => 'target-progress', 'as' => 'target_progress.'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+        Route::get('/',						[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
+        Route::get('/create',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+        Route::get('/{program_id}/edit',		[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
+        Route::POST('/store',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
     });
     Route::group(['prefix' => 'target-progress/api/', 'as' => 'api.target_progress.'], function () {
+		Route::get('target-progresses',		[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
+        Route::get('programs',					[App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
         Route::get('status-options',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
         Route::get('risk-options',				[App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
+        Route::get('program/targets',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
+
+        Route::get('target-progresses/{target_progress_id}/show',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
 });
