@@ -983,9 +983,12 @@ return [
             'elderly_age'               => '>60',
             'laki'                      => 'Male',
             'perempuan'                 => 'Female',
+            'girl'                      => 'Girl',
+            'boy'                       => 'Boy',
             'lainnya'                   => 'Other',
             'ket'                       => 'Information',
             'non_act'                   => 'Non-AC',
+            'keluarga'                  => 'Family',
 
 
         ],

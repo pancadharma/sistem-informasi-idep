@@ -25,8 +25,8 @@ class Kabupaten extends Model
         return LogOptions::defaults()
         ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
-    
-    
+
+
     public function provinsi()
     {
         return $this->belongsTo(Provinsi::class, 'provinsi_id');

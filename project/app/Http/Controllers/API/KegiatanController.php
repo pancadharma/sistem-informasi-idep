@@ -644,4 +644,31 @@ class KegiatanController extends Controller
 
         return response()->json($results);
     }
+
+    public function getKegiatanPenulis(Request $request)
+    {
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+        if (!is_array($ids)) $ids = [$ids];
+        $users = User::when(!empty($ids), fn($q) => $q->whereIn('id', $ids), fn($q) => $q->where('nama', 'like', "%{$search}%"))
+            ->paginate(20, ['id', 'nama'], 'page', $page);
+        return response()->json([
+            'results' => $users->map(fn($item) => ['id' => $item->id, 'text' => $item->nama]),
+            'pagination' => ['more' => $users->hasMorePages()],
+        ]);
+    }
+    public function getKegiatanJabatan(Request $request)
+    {
+        $search = $request->input('search', '');
+        $page = $request->input('page', 1);
+        $ids = $request->input('id', []);
+        if (!is_array($ids)) $ids = [$ids];
+        $peran = Peran::when(!empty($ids), fn($q) => $q->whereIn('id', $ids), fn($q) => $q->where('nama', 'like', "%{$search}%"))
+            ->paginate(20, ['id', 'nama'], 'page', $page);
+        return response()->json([
+            'results' => $peran->map(fn($item) => ['id' => $item->id, 'text' => $item->nama]),
+            'pagination' => ['more' => $peran->hasMorePages()],
+        ]);
+    }
 }

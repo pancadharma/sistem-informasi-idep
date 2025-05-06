@@ -217,7 +217,4 @@
 @endpush
 @push('basic_tab_js')
 
-<!--script for maps behavoiour-->
-@include('tr.kegiatan.js.tabs.basic')
-
 @endpush
