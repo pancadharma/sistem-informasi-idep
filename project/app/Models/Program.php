@@ -13,6 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Meals_Target_Progress as TargetProgress;
 
 class Program extends Model implements HasMedia
 {
@@ -207,4 +208,33 @@ class Program extends Model implements HasMedia
 
         return $activities;
     }
+
+    // Target Progress
+    public function targetProgresses() {
+        return $this->hasMany(TargetProgress::class, 'program_id');
+    }
+
+	public static function withTargetsProgress(){
+		return self::with([
+            // For Persisted Records
+			'targetProgresses:id',
+			'targetProgresses.details' => function ($query){
+				$query->with([
+                    'targetable:id,deskripsi,indikator,target',
+                ])->select('*');
+            },
+            // For New Records
+			'goal:id,program_id,deskripsi,indikator,target',
+			'objektif:id,program_id,deskripsi,indikator,target',
+			'outcome' => function ($query) {
+				$query->select('id', 'program_id', 'deskripsi', 'indikator', 'target');
+			},
+			'outcome.output' => function ($query) {
+				$query->select('id', 'programoutcome_id', 'deskripsi', 'indikator', 'target');
+			},
+			'outcome.output.activities' => function ($query) {
+				$query->select('id', 'programoutcomeoutput_id', 'deskripsi', 'indikator', 'target');
+			},
+		]);
+	}
 }
