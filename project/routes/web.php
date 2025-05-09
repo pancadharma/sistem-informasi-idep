@@ -256,7 +256,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Untuk Kegiatan
     Route::resource('kegiatan', KegiatanController::class);
-    Route::get('kegiatan/api/list', [KegiatanController::class, 'list_kegiatan'])->name('api.kegiatan.list');
 
     //bentuk or sektor kegiatan
     Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
@@ -264,10 +263,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
     Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
-    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
+    Route::get('kegiatan/api/sektor',  [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
 
     Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
-        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/list',      [App\Http\Controllers\API\KegiatanController::class, 'dataTable'])->name('list');
+        Route::get('/provinsi',  [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
         Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
         Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
         Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
@@ -275,11 +275,10 @@ Route::middleware(['auth'])->group(function () {
 
     //
     Route::get('/api/geojson/provinsi/{id}',        [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
-
-    // Route for getting kabupaten geojson
     Route::get('/api/geojson/kabupaten/{id}',       [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
-    // penerima manfaat
+
+    // Penerima Manfaat / Beneficiary
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
         Route::POST('/',                            [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
