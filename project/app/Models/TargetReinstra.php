@@ -44,4 +44,9 @@ class TargetReinstra extends Model
         return $this->belongsToMany(Program::class, 'trprogramtargetreinstra', 'targetreinstra_id', 'program_id');
     }
 
+    public function komponen_models()
+    {
+        return $this->belongsToMany(Meals_Komponen_Model::class, 'trmeals_komponen_model_targetreinstra', 'targetreinstra_id', 'trmeals_komponen_model_id');
+    }
+
 }

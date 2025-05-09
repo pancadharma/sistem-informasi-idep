@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use Log;
 use Exception;
 use App\Models\Dusun;
+use App\Models\Satuan;
 use App\Models\Country;
 use App\Models\Kegiatan;
 use App\Models\Provinsi;
@@ -14,11 +16,11 @@ use Illuminate\Http\Request;
 use App\Models\KomponenModel;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use App\Models\Meals_Komponen_Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\StoreKomponenRequest;
-use App\Models\Satuan;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -26,50 +28,69 @@ class KomponenModelController extends Controller
 {
     public function getKomodelDatatable(Request $request)
     {
-        // if (!$request->ajax() && !$request->isJson()) {
-        //     return "Not an Ajax Request & JSON REQUEST";
-        // }
+        try {
+            if ($request->ajax()) {
+                $query = Meals_Komponen_Model::with([
+                    'program',
+                    'komponenmodel',
+                    'lokasi.provinsi',
+                    'lokasi.kabupaten',
+                    'lokasi.kecamatan',
+                    'lokasi.desa',
+                    'lokasi.dusun',
+                    'lokasi.satuan',
+                    'sektors'
+                ]);
 
-        $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-            ->select('trkegiatan.*')
-            ->get()
-            ->map(function ($item) {
-                $item->duration_in_days = $item->getDurationInDays();
-                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
-                $program = $item->activity->program_outcome_output->program_outcome->program;
-                $item->total_beneficiaries = $program->getTotalBeneficiaries();
+                return DataTables::of($query)
+                    ->addIndexColumn()
+                    ->addColumn('program_name', fn($item) => $item->program->nama ?? '-')
+                    ->addColumn('sektor', fn($item) => $item->sektors->pluck('nama')->join(', ') ?: '-')
+                    ->addColumn('komponen_model', fn($item) => $item->komponenmodel->nama ?? '-')
+                    ->addColumn('totaljumlah', fn($item) => $item->totaljumlah ?? '0')
+                    ->addColumn('satuan', function ($item) {
+                        return $item->lokasi->pluck('satuan.nama')->unique()->join(', ') ?: '-';
+                    })
+                    ->addColumn('provinsi', fn($item) => $item->lokasi->pluck('provinsi.nama')->unique()->count() . ' provinsi')
+                    ->addColumn('kabupaten', fn($item) => $item->lokasi->pluck('kabupaten.nama')->unique()->count() . ' kabupaten')
+                    ->addColumn('kecamatan', fn($item) => $item->lokasi->pluck('kecamatan.nama')->unique()->count() . ' kecamatan')
+                    ->addColumn('desa', fn($item) => $item->lokasi->pluck('desa.nama')->unique()->count() . ' desa')
+                    ->addColumn('dusun', fn($item) => $item->lokasi->pluck('dusun.nama')->unique()->count() . ' dusun')
+                    ->addColumn('action', function ($item) {
+                        $buttons = [];
 
-                return $item;
-            });
+                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_edit')) {
+                            $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
+                        }
+                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_view') || auth()->user()->can('komodel_access')) {
+                            $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
+                        }
+                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_details_edit') || auth()->user()->can('komodel_edit')) {
+                            $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
+                        }
 
-        $data = DataTables::of($kegiatan)
-            ->addIndexColumn()
-            ->addColumn('program_name', function ($kegiatan) {
-                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
-            })
-            ->addColumn('duration_in_days', function ($kegiatan) {
-                return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
-            })
-            ->addColumn('action', function ($kegiatan) {
-                $buttons = [];
-
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
-                return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-
-        return $data;
+                        return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in getKomodelDatatable: ' . $e->getMessage());
+            return response()->json(['error' => 'An error occurred while loading data.'], 500);
+        }
     }
+
+    private function generateButton($action, $class, $icon, $title, $komodelId)
+    {
+        return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-komponen-model-btn" 
+            data-action="' . $action . '" 
+            data-komponen-model-id="' . $komodelId . '" 
+            data-toggle="tooltip" data-placement="top">
+            <i class="bi bi-' . $icon . '"></i>
+            <span class="d-none d-sm-inline"></span>
+        </button>';
+    }
+
 
     public function storeKomponen(StoreKomponenRequest $request)
     {
