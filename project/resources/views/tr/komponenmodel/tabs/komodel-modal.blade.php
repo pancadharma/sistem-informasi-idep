@@ -176,7 +176,7 @@
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
                 <div class="form-input">
                     <label class="form-label mb-0"><strong>{{ __('cruds.provinsi.title') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-control select2" name="provinsi_id" id="provinsi_id" required>
+                    <select class="form-control select2" name="provinsi_id" id="pilihprovinsi_id" required>
                     </select>
                 </div>
             </div>
@@ -186,7 +186,7 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.kabupaten.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="kabupaten_id" id="kabupaten_id" required></select>
+                            <select class="form-control select2 flex-grow-1" name="kabupaten_id" id="pilihkabupaten_id" required></select>
                         </div>
                     </div>
                 </div>
@@ -197,7 +197,7 @@
             <div class="col-sm-12 col-md-12 col-lg-6 self-center order-1 order-md-1" id="PilihDataDesa">
                 <div class="form-input">
                     <label class="form-label mb-0"><strong>{{ __('cruds.kecamatan.title') }}</strong> <span class="text-danger">*</span></label>
-                    <select class="form-control select2" name="kecamatan_id" id="kecamatan_id" required>
+                    <select class="form-control select2" name="kecamatan_id" id="pilihkecamatan_id" required>
                     </select>
                 </div>
             </div>
@@ -207,7 +207,7 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.desa.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="desa_id" id="desa_id" required></select>
+                            <select class="form-control select2 flex-grow-1" name="desa_id" id="pilihdesa_id" required></select>
                         </div>
                     </div>
                 </div>
@@ -220,15 +220,15 @@
                     <div class="row">
                         <label class="form-label mb-0">{{ __('cruds.dusun.title') }} <span class="text-danger">*</span></label>
                         <div class="col-12 pl-0">
-                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="dusun_id" required></select>
+                            <select class="form-control select2 flex-grow-1" name="dusun_id" id="pilihdusun_id" required></select>
                         </div>
                     </div>
                 </div>
                 <div class="form-input">
                     <label class="form-label mb-0">&nbsp;</label>
-                    <button type="button" class="form-control btn btn-success btn-sm ml-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru" hidden>
+                    {{-- <button type="button" class="form-control btn btn-success btn-sm ml-1" id="addDusunBaru" data-toggle="modal" data-target="#ModalDusunBaru">
                         <i class="bi bi-plus"></i>
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>

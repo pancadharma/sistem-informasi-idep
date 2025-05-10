@@ -13,6 +13,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Meals_Target_Progress as TargetProgress;
 
 class Program extends Model implements HasMedia
 {
@@ -114,7 +115,7 @@ class Program extends Model implements HasMedia
     {
         return $this->hasOne(ProgramGoal::class, 'program_id');
     }
-    
+
     public function jadwalreport()
     {
         return $this->hasMany(Program_Report_Schedule::class, 'program_id');
@@ -180,4 +181,60 @@ class Program extends Model implements HasMedia
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
+
+    public function penerimaManfaat()
+    {
+        return $this->hasMany(Meals_Penerima_Manfaat::class, 'program_id')->whereNull('deleted_at');
+    }
+
+    public function programOutputActivities()
+    {
+        return Program_Outcome_Output_Activity::whereHas('program_outcome_output.program_outcome', function ($query) {
+            $query->where('program_id', $this->id);
+        });
+    }
+
+    public function getAllActivities()
+    {
+        $activities = collect();
+
+        $this->load('outcome.output.activities');
+
+        foreach ($this->outcome as $outcome) {
+            foreach ($outcome->output as $output) {
+                $activities = $activities->merge($output->activities);
+            }
+        }
+
+        return $activities;
+    }
+
+    // Target Progress
+    public function targetProgresses() {
+        return $this->hasMany(TargetProgress::class, 'program_id');
+    }
+
+	public static function withTargetsProgress(){
+		return self::with([
+            // For Persisted Records
+			'targetProgresses:id',
+			'targetProgresses.details' => function ($query){
+				$query->with([
+                    'targetable:id,deskripsi,indikator,target',
+                ])->select('*');
+            },
+            // For New Records
+			'goal:id,program_id,deskripsi,indikator,target',
+			'objektif:id,program_id,deskripsi,indikator,target',
+			'outcome' => function ($query) {
+				$query->select('id', 'program_id', 'deskripsi', 'indikator', 'target');
+			},
+			'outcome.output' => function ($query) {
+				$query->select('id', 'programoutcome_id', 'deskripsi', 'indikator', 'target');
+			},
+			'outcome.output.activities' => function ($query) {
+				$query->select('id', 'programoutcomeoutput_id', 'deskripsi', 'indikator', 'target');
+			},
+		]);
+	}
 }

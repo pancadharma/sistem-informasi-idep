@@ -24,8 +24,6 @@
             </div>
         </div>
 
-
-
         <form id="dataForm">
             <div class="card-body">
                 <div class="row">
@@ -65,7 +63,9 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="btnTambahWilayah" class="form-control btn btn-primary">Tambah Wilayah</button>
+                        <div class="form-group">
+                            <button id="btnTambahWilayah" class="form-control btn btn-primary">Tambah Wilayah</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,20 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <table id="dataTable" class="table table-bordered table-striped">
+                    <div class="form-group">
+                        <input type="text" name="custom-search-input" id="custom-search-input" placeholder="Search ..." class="form-control">
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-primary">Search</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="dataTable" class="table table-bordered table-striped" data-sortlist="[[0,0],[2,0]]">
                         <thead class="text-center">
                             <tr>
                                 <th>No</th>
@@ -151,10 +164,21 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-
+@include('api.master.dynamic-table')
 <script>
     $(document).ready(function() {
         $('.select2').select2();
+
+
+        $('#dataTable').dynamicTableHandler({
+            searchInputSelector: '#custom-search-input',
+            noResultsMessage: 'No matching records found',
+            excludeLastColumn: false,
+            onNoResults: function() {
+                console.log('No results found');
+            }
+        });
+
         let rowCount = 0;
 
         function addRow(data) {
@@ -190,6 +214,7 @@
 
 
         }
+
 
         function saveRow() {
             const form = $("#dataForm")[0];

@@ -50,5 +50,6 @@ return [
     'satuan'            => 'Satuan',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Peran',
-    'komponenmodel'     => 'Komponen/Model'
+    'komponenmodel'     => 'Komponen/Model',
+    'target_progress'    => 'Target & Progress',
 ];

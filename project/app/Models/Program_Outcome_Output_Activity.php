@@ -35,7 +35,7 @@ class Program_Outcome_Output_Activity extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -46,5 +46,21 @@ class Program_Outcome_Output_Activity extends Model
     public function program_outcome_output()
     {
         return $this->belongsTo(Program_Outcome_Output::class, 'programoutcomeoutput_id', 'id');
+    }
+
+    /**
+     * Relasi many to many antara Program Outcome Output Activity dengan Meals Penerima Manfaat Activity.
+     * Tabel pivot: trmeals_penerima_manfaat_activity.
+     * Foreign key di tabel pivot untuk model ini: programoutcomeoutputactivity_id.
+     * Foreign key di tabel pivot untuk model yang berelasi: trmeals_penerima_manfaat_id.
+     */
+    public function penerimaManfaat()
+    {
+        return $this->belongsToMany(
+            Meals_Penerima_Manfaat::class, // Model yang berelasi
+            'trmeals_penerima_manfaat_activity', // Nama tabel pivot
+            'programoutcomeoutputactivity_id', // Foreign key di tabel pivot untuk model ini
+            'trmeals_penerima_manfaat_id' // Foreign key di tabel pivot untuk model yang berelasi
+        );
     }
 }

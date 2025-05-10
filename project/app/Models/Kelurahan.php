@@ -31,13 +31,16 @@ class Kelurahan extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
-
-    public function kec()
-    {
+    public function kecamatan() {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 
-    public function kecamatan() {
+    public function dusun()
+    {
+        return $this->hasMany(Dusun::class, 'desa_id');
+    }
+    public function kec()
+    {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 
@@ -45,8 +48,7 @@ class Kelurahan extends Model
     {
         return $this->hasMany(Kelurahan::class, 'kecamatan_id');
     }
-
-    public function dusun()
+    public function dusun_beneficiary()
     {
         return $this->hasMany(Dusun::class, 'desa_id');
     }
