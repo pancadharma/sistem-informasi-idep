@@ -292,33 +292,11 @@ class KegiatanController extends Controller
         return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
     }
 
-    // public function edit($id)
-    // {
-    //     $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
-    //     $program = $kegiatan->programoutcomeoutputactivity
-    //         ->program_outcome_output
-    //         ->program_outcome
-    //         ->program;
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'status' => 'success',
-    //         'data' => [
-    //             'kegiatan_id' => $kegiatan->id,
-    //             'kegiatan_nama' => $kegiatan->programoutcomeoutputactivity->nama ?? 'N/A',
-    //             'program_id' => $program->id ?? null,
-    //             'program_nama' => $program->nama ?? 'N/A',
-    //         ],
-    //         'message' => 'Kegiatan processed successfully'
-    //     ], Response::HTTP_OK);
-    // }
-
     public function edit($id)
     {
         // $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
-        // $kegiatan = new KegiatanResource(Kegiatan::with([...])->findOrFail($id));
         $kegiatan = Kegiatan::with([
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program', // required for `program`
+            'programOutcomeOutputActivity',
             'sektor',
             'mitra',
             'user',
@@ -326,29 +304,20 @@ class KegiatanController extends Controller
             'jenisKegiatan',
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
-            'kegiatan_penulis.user',
         ])->findOrFail($id);
+        $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+        $sektorList = TargetReinstra::select('id', 'nama')->get();
 
-        // Use the Resource for formatting
-        $kegiatan = new KegiatanResource($kegiatan);
+        $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+        $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
         $statusOptions = Kegiatan::STATUS_SELECT;
-
-        // return $data->toArray(request());
-        // return $kegiatan;
-        // return $data;
 
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
-            'statusOptions'
-            // 'dokumenPendukung',
-            // 'mediaPendukung',
-            // 'kegiatanRelation',
-            // 'durationInDays'
+            'statusOptions',
+            'jenisKegiatanList',
+            'sektorList',
         ));
-        // Convert to array to pass to Blade view
-        // return view('kegiatan.edit', [
-        //     'data' => $data->toArray(request()),
-        // ]);
     }
 
     // public function edit($id)
