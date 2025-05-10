@@ -319,15 +319,32 @@ class KegiatanController extends Controller
         // $kegiatan = new KegiatanResource(Kegiatan::with([...])->findOrFail($id));
         $kegiatan = Kegiatan::with([
             'programOutcomeOutputActivity.program_outcome_output.program_outcome.program', // required for `program`
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
             'kegiatan_penulis.peran',
             'kegiatan_penulis.user',
         ])->findOrFail($id);
 
         // Use the Resource for formatting
-        $data = new KegiatanResource($kegiatan);
+        $kegiatan = new KegiatanResource($kegiatan);
+        $statusOptions = Kegiatan::STATUS_SELECT;
 
         // return $data->toArray(request());
-        return $kegiatan;
+        // return $kegiatan;
+        // return $data;
+
+        return view('tr.kegiatan.edit', compact(
+            'kegiatan',
+            'statusOptions'
+            // 'dokumenPendukung',
+            // 'mediaPendukung',
+            // 'kegiatanRelation',
+            // 'durationInDays'
+        ));
         // Convert to array to pass to Blade view
         // return view('kegiatan.edit', [
         //     'data' => $data->toArray(request()),
