@@ -11,6 +11,7 @@ use App\Models\Program_Outcome;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Resources\KegiatanResource;
 use App\Models\Dusun;
 use App\Models\Jenis_Bantuan;
 use App\Models\Jenis_Kegiatan;
@@ -18,6 +19,7 @@ use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Kegiatan_Assessment;
 use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Konsultasi;
 use App\Models\Kegiatan_Kunjungan;
 use App\Models\Kegiatan_Lainnya;
 use App\Models\Kegiatan_Lokasi;
@@ -46,6 +48,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 class KegiatanController extends Controller
 {
     public function index()
@@ -67,23 +70,23 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-        ->select('trkegiatan.*')
-        ->get()
-        ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $item->penerimamanfaattotal;
-            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $item->penerimamanfaattotal;
+                $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-            return $item;
-        });
+                return $item;
+            });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
@@ -169,14 +172,14 @@ class KegiatanController extends Controller
     public function create()
     {
         if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-            $program = Program::all();
+            // $program = Program::all();
             $statusOptions = Kegiatan::STATUS_SELECT;
             $kegiatan = new Kegiatan(); // Empty instance
             $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
 
-            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+            // $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
 
-            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan'));
+            return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
         }
         return response()->json([
             'success' => false,
@@ -252,12 +255,12 @@ class KegiatanController extends Controller
             $kegiatanRelation = $kegiatan->$relationName;
         }
 
-        foreach ($kegiatan->kegiatan_penulis as $penulis) {
+        foreach ($kegiatan->datapenulis as $penulis) {
             $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
         }
 
         // $lokasi = $kegiatan->lokasi;
-        // return $lokasi;
+        // return $kegiatan->datapenulis;
 
         return view('tr.kegiatan.show', compact(
             'kegiatan',
@@ -291,61 +294,76 @@ class KegiatanController extends Controller
 
     // public function edit($id)
     // {
-    //     $kegiatan = Kegiatan::with([
-    //         'programOutcomeOutputActivity',
-    //         'sektor',
-    //         'mitra',
-    //         'user',
-    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
-    //         'jenisKegiatan',
-    //         'lokasi_kegiatan',
-    //         'kegiatan_penulis.peran',
-    //     ])->findOrFail($id);
+    //     $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
+    //     $program = $kegiatan->programoutcomeoutputactivity
+    //         ->program_outcome_output
+    //         ->program_outcome
+    //         ->program;
 
-    //     // $activities = Program_Outcome_Output_Activity::all();
-    //     // $jeniskegiatans = Jenis_Kegiatan::where('aktif', 1)->get();
-    //     // $desas = Kelurahan::where('aktif', 1)->get();
-    //     // $mitras = Partner::where('aktif', 1)->get();
-    //     // $users = User::where('aktif', 1)->get();
-    //     // $selectedMitras = $kegiatan->mitra->pluck('id')->toArray();
-    //     // $selectedPenulis = $kegiatan->penulis->pluck('id')->toArray();
-    //     // $penulisPeran = $kegiatan->penulis->pluck('pivot.peran_id', 'id')->toArray();
-
-    //     // return $kegiatan;
-    //     // return view('tr.kegiatan.edit', compact('kegiatan', 'activities', 'jeniskegiatans', 'desas', 'mitras', 'users', 'selectedMitras', 'selectedPenulis', 'penulisPeran'));
-    //     return view('tr.kegiatan.edit', compact('kegiatan'));
+    //     return response()->json([
+    //         'success' => true,
+    //         'status' => 'success',
+    //         'data' => [
+    //             'kegiatan_id' => $kegiatan->id,
+    //             'kegiatan_nama' => $kegiatan->programoutcomeoutputactivity->nama ?? 'N/A',
+    //             'program_id' => $program->id ?? null,
+    //             'program_nama' => $program->nama ?? 'N/A',
+    //         ],
+    //         'message' => 'Kegiatan processed successfully'
+    //     ], Response::HTTP_OK);
     // }
 
     public function edit($id)
     {
-        try {
-            $kegiatan = Kegiatan::with([
-                'mitra',
-                'sektor',
-                'lokasi',
-                'penulis' => function ($query) {
-                    $query->withPivot('peran_id')->with(['peran']);
-                }
-            ])->findOrFail($id);
+        // $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
+        // $kegiatan = new KegiatanResource(Kegiatan::with([...])->findOrFail($id));
+        $kegiatan = Kegiatan::with([
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program', // required for `program`
+            'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
+        ])->findOrFail($id);
 
-            return response()->json([
-                'success' => true,
-                'data' => $kegiatan,
-                'message' => 'Kegiatan retrieved successfully',
-            ], 200);
-        } catch (\Exception $e) {
-            Log::error('Failed to retrieve kegiatan: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve record: ' . $e->getMessage(),
-                'error' => $e->getMessage(),
-            ], 404);
-        }
+        // Use the Resource for formatting
+        $data = new KegiatanResource($kegiatan);
+
+        // return $data->toArray(request());
+        return $kegiatan;
+        // Convert to array to pass to Blade view
+        // return view('kegiatan.edit', [
+        //     'data' => $data->toArray(request()),
+        // ]);
     }
+
+    // public function edit($id)
+    // {
+    //     try {
+    //         $kegiatan = Kegiatan::with([
+    //             'mitra',
+    //             'sektor',
+    //             'lokasi',
+    //             'penulis' => function ($query) {
+    //                 $query->withPivot('peran_id')->with(['peran']);
+    //             }
+    //         ])->findOrFail($id);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $kegiatan,
+    //             'message' => 'Kegiatan retrieved successfully',
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         Log::error('Failed to retrieve kegiatan: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Failed to retrieve record: ' . $e->getMessage(),
+    //             'error' => $e->getMessage(),
+    //         ], 404);
+    //     }
+    // }
 
     public function update(Request $request, $id)
     {
-        $kegiatan = Trkegiatan::findOrFail($id);
+        $kegiatan = Kegiatan::findOrFail($id);
         $validated = $request->validate([
             'programoutcomeoutputactivity_id' => 'required|exists:trprogramoutcomeoutputactivity,id',
             'jeniskegiatan_id' => 'required|exists:mjeniskegiatan,id',
@@ -607,157 +625,157 @@ class KegiatanController extends Controller
 
     // method to save kegiatan ->hasil based on selected jenis kegiatan
 
-    public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
-    {
-        $jenisKegiatan = $request->input('jeniskegiatan_id');
-        $idKegiatan = $kegiatan->id;
+    // public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
+    // {
+    //     $jenisKegiatan = $request->input('jeniskegiatan_id');
+    //     $idKegiatan = $kegiatan->id;
 
-        switch ($jenisKegiatan) {
-            case 1: // Assessment
-                Kegiatan_Assessment::create(array_merge($request->only([
-                    'assessmentyangterlibat',
-                    'assessmenttemuan',
-                    'assessmenttambahan',
-                    'assessmenttambahan_ket',
-                    'assessmentkendala',
-                    'assessmentisu',
-                    'assessmentpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 2: // Sosialisasi
-                Kegiatan_Sosialisasi::create(array_merge($request->only([
-                    'sosialisasiyangterlibat',
-                    'sosialisasitemuan',
-                    'sosialisasitambahan',
-                    'sosialisasitambahan_ket',
-                    'sosialisasikendala',
-                    'sosialisasiisu',
-                    'sosialisasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 3: // Pelatihan
-                Kegiatan_Pelatihan::create(array_merge($request->only([
-                    'pelatihanpelatih',
-                    'pelatihanhasil',
-                    'pelatihandistribusi',
-                    'pelatihandistribusi_ket',
-                    'pelatihanrencana',
-                    'pelatihanunggahan',
-                    'pelatihanisu',
-                    'pelatihanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 4: // Pembelanjaan
-                Kegiatan_Pembelanjaan::create(array_merge($request->only([
-                    'pembelanjaandetailbarang',
-                    'pembelanjaanmulai',
-                    'pembelanjaanselesai',
-                    'pembelanjaandistribusimulai',
-                    'pembelanjaandistribusiselesai',
-                    'pembelanjaanterdistribusi',
-                    'pembelanjaanakandistribusi',
-                    'pembelanjaanakandistribusi_ket',
-                    'pembelanjaankendala',
-                    'pembelanjaanisu',
-                    'pembelanjaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 5: // Pengembangan
-                Kegiatan_Pengembangan::create(array_merge($request->only([
-                    'pengembanganjeniskomponen',
-                    'pengembanganberapakomponen',
-                    'pengembanganlokasikomponen',
-                    'pengembanganyangterlibat',
-                    'pengembanganrencana',
-                    'pengembangankendala',
-                    'pengembanganisu',
-                    'pengembanganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 6: // Kampanye
-                Kegiatan_Kampanye::create(array_merge($request->only([
-                    'kampanyeyangdikampanyekan',
-                    'kampanyejenis',
-                    'kampanyebentukkegiatan',
-                    'kampanyeyangterlibat',
-                    'kampanyeyangdisasar',
-                    'kampanyejangkauan',
-                    'kampanyerencana',
-                    'kampanyekendala',
-                    'kampanyeisu',
-                    'kampanyepembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 7: // Pemetaan
-                Kegiatan_Pemetaan::create(array_merge($request->only([
-                    'pemetaanyangdihasilkan',
-                    'pemetaanluasan',
-                    'pemetaanunit',
-                    'pemetaanyangterlibat',
-                    'pemetaanrencana',
-                    'pemetaanisu',
-                    'pemetaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 8: // Monitoring
-                Kegiatan_Monitoring::create(array_merge($request->only([
-                    'monitoringyangdipantau',
-                    'monitoringdata',
-                    'monitoringyangterlibat',
-                    'monitoringmetode',
-                    'monitoringhasil',
-                    'monitoringkegiatanselanjutnya',
-                    'monitoringkegiatanselanjutnya_ket',
-                    'monitoringkendala',
-                    'monitoringisu',
-                    'monitoringpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 9: // Kunjungan
-                Kegiatan_Kunjungan::create(array_merge($request->only([
-                    'kunjunganlembaga',
-                    'kunjunganpeserta',
+    //     switch ($jenisKegiatan) {
+    //         case 1: // Assessment
+    //             Kegiatan_Assessment::create(array_merge($request->only([
+    //                 'assessmentyangterlibat',
+    //                 'assessmenttemuan',
+    //                 'assessmenttambahan',
+    //                 'assessmenttambahan_ket',
+    //                 'assessmentkendala',
+    //                 'assessmentisu',
+    //                 'assessmentpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 2: // Sosialisasi
+    //             Kegiatan_Sosialisasi::create(array_merge($request->only([
+    //                 'sosialisasiyangterlibat',
+    //                 'sosialisasitemuan',
+    //                 'sosialisasitambahan',
+    //                 'sosialisasitambahan_ket',
+    //                 'sosialisasikendala',
+    //                 'sosialisasiisu',
+    //                 'sosialisasipembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 3: // Pelatihan
+    //             Kegiatan_Pelatihan::create(array_merge($request->only([
+    //                 'pelatihanpelatih',
+    //                 'pelatihanhasil',
+    //                 'pelatihandistribusi',
+    //                 'pelatihandistribusi_ket',
+    //                 'pelatihanrencana',
+    //                 'pelatihanunggahan',
+    //                 'pelatihanisu',
+    //                 'pelatihanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 4: // Pembelanjaan
+    //             Kegiatan_Pembelanjaan::create(array_merge($request->only([
+    //                 'pembelanjaandetailbarang',
+    //                 'pembelanjaanmulai',
+    //                 'pembelanjaanselesai',
+    //                 'pembelanjaandistribusimulai',
+    //                 'pembelanjaandistribusiselesai',
+    //                 'pembelanjaanterdistribusi',
+    //                 'pembelanjaanakandistribusi',
+    //                 'pembelanjaanakandistribusi_ket',
+    //                 'pembelanjaankendala',
+    //                 'pembelanjaanisu',
+    //                 'pembelanjaanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 5: // Pengembangan
+    //             Kegiatan_Pengembangan::create(array_merge($request->only([
+    //                 'pengembanganjeniskomponen',
+    //                 'pengembanganberapakomponen',
+    //                 'pengembanganlokasikomponen',
+    //                 'pengembanganyangterlibat',
+    //                 'pengembanganrencana',
+    //                 'pengembangankendala',
+    //                 'pengembanganisu',
+    //                 'pengembanganpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 6: // Kampanye
+    //             Kegiatan_Kampanye::create(array_merge($request->only([
+    //                 'kampanyeyangdikampanyekan',
+    //                 'kampanyejenis',
+    //                 'kampanyebentukkegiatan',
+    //                 'kampanyeyangterlibat',
+    //                 'kampanyeyangdisasar',
+    //                 'kampanyejangkauan',
+    //                 'kampanyerencana',
+    //                 'kampanyekendala',
+    //                 'kampanyeisu',
+    //                 'kampanyepembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 7: // Pemetaan
+    //             Kegiatan_Pemetaan::create(array_merge($request->only([
+    //                 'pemetaanyangdihasilkan',
+    //                 'pemetaanluasan',
+    //                 'pemetaanunit',
+    //                 'pemetaanyangterlibat',
+    //                 'pemetaanrencana',
+    //                 'pemetaanisu',
+    //                 'pemetaanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 8: // Monitoring
+    //             Kegiatan_Monitoring::create(array_merge($request->only([
+    //                 'monitoringyangdipantau',
+    //                 'monitoringdata',
+    //                 'monitoringyangterlibat',
+    //                 'monitoringmetode',
+    //                 'monitoringhasil',
+    //                 'monitoringkegiatanselanjutnya',
+    //                 'monitoringkegiatanselanjutnya_ket',
+    //                 'monitoringkendala',
+    //                 'monitoringisu',
+    //                 'monitoringpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 9: // Kunjungan
+    //             Kegiatan_Kunjungan::create(array_merge($request->only([
+    //                 'kunjunganlembaga',
+    //                 'kunjunganpeserta',
 
-                   'kunjunganyangdilakukan',
-                    'kunjunganhasil',
-                    'kunjunganpotensipendapatan',
-                    'kunjunganrencana',
-                    'kunjungankendala',
-                    'kunjunganisu',
-                    'kunjunganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 10: // Konsultasi
-                Kegiatana_Konsultasi::create(array_merge($request->only([
-                    'konsultasilembaga',
-                    'konsultasikomponen',
-                    'konsultasiyangdilakukan',
-                    'konsultasihasil',
-                    'konsultasipotensipendapatan',
-                    'konsultasirencana',
-                    'konsultasikendala',
-                    'konsultasiisu',
-                    'konsultasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 11: // Lainnya
-                Kegiatan_Lainnya::create(array_merge($request->only([
-                    'lainnyamengapadilakukan',
-                    'lainnyadampak',
-                    'lainnyasumberpendanaan',
-                    'lainnyasumberpendanaan_ket',
-                    'lainnyayangterlibat',
-                    'lainnyarencana',
-                    'lainnyakendala',
-                    'lainnyaisu',
-                    'lainnyapembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            default:
-                // Handle invalid jenisKegiatan (e.g., throw an exception)
-                throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
-        }
-    }
+    //                 'kunjunganyangdilakukan',
+    //                 'kunjunganhasil',
+    //                 'kunjunganpotensipendapatan',
+    //                 'kunjunganrencana',
+    //                 'kunjungankendala',
+    //                 'kunjunganisu',
+    //                 'kunjunganpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 10: // Konsultasi
+    //             Kegiatan_Konsultasi::create(array_merge($request->only([
+    //                 'konsultasilembaga',
+    //                 'konsultasikomponen',
+    //                 'konsultasiyangdilakukan',
+    //                 'konsultasihasil',
+    //                 'konsultasipotensipendapatan',
+    //                 'konsultasirencana',
+    //                 'konsultasikendala',
+    //                 'konsultasiisu',
+    //                 'konsultasipembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 11: // Lainnya
+    //             Kegiatan_Lainnya::create(array_merge($request->only([
+    //                 'lainnyamengapadilakukan',
+    //                 'lainnyadampak',
+    //                 'lainnyasumberpendanaan',
+    //                 'lainnyasumberpendanaan_ket',
+    //                 'lainnyayangterlibat',
+    //                 'lainnyarencana',
+    //                 'lainnyakendala',
+    //                 'lainnyaisu',
+    //                 'lainnyapembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         default:
+    //             // Handle invalid jenisKegiatan (e.g., throw an exception)
+    //             throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
+    //     }
+    // }
 
     //method to store kegiatan basic tab data
 }
