@@ -28,161 +28,158 @@
         </div>
 
         <div class="card-body m-0 p-0">
-            <div class="detail">
-                <table class= "table table-sm table-hover kegiatan-table-data">
+            <div class="details">
+                <table class="table datatable table-sm mb-0 table-hover">
                     <tbody>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.program_kode') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.program_kode') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 {{ $kegiatan->activity->program_outcome_output->program_outcome->program->kode ?? '-' }}
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.program_nama') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.program_nama') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 {{ $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? '-' }}
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.kode') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $kegiatan->activity->kode ?? '-' }}
-                            </td>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.kode') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $kegiatan->activity->kode ?? '-' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.nama') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $kegiatan->activity->nama ?? '-' }}
-                            </td>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.nama') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $kegiatan->activity->nama ?? '-' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.penulis.laporan') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.laporan') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 @foreach ($kegiatan->datapenulis as $penulis)
                                     {{ $penulis->nama ?? '' }},
                                 @endforeach
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.penulis.jabatan') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.jabatan') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 @foreach ($kegiatan->datapenulis as $penulis)
                                     {{ $penulis->kegiatanPeran->nama . ',' ?? '' }}
                                 @endforeach
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.jenis_kegiatan') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $kegiatan->jenisKegiatan->nama ?? '' }}
-                            </td>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $kegiatan->jenisKegiatan->nama ?? '' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.penulis.jabatan') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.jabatan') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 @foreach ($kegiatan->sektor as $key => $value)
                                     {{ $value->nama . ',' ?? '' }}
                                 @endforeach
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.fase_pelaporan') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $kegiatan->fasepelaporan ?? '' }}
-                            </td>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.fase_pelaporan') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $kegiatan->fasepelaporan ?? '' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.tanggalmulai') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') ?? '' }}
                                 ({{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->diffForHumans() ?? '' }})
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.tanggalselesai') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') ?? '' }}
                                 ({{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->diffForHumans() ?? '' }})
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.durasi') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $durationInDays ?? '-' }} {{ __('cruds.kegiatan.days') }}
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.durasi') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $durationInDays ?? '-' }} {{ __('cruds.kegiatan.days') }}
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.basic.nama_mitra') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.nama_mitra') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 @foreach ($kegiatan->mitra as $partner)
                                     {{ $partner->nama . ',' ?? '' }}
                                 @endforeach
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.status') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
-                                {{ $kegiatan->status ?? '' }}
-                            </td>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.status') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">{{ $kegiatan->status ?? '' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="tb-header mr-0 pr-0 align-middle">
-                                {{ __('cruds.kegiatan.tempat') }}
-                            </th>
-                            <td class="separator ml-0 pl-0 text-center align-middle">:</td>
-                            <td class="tb-value ml-0 pl-0 align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.tempat') }}</th>
+                            <td class="text-center align-middle" style="width: 1%;">:</td>
+                            <td class="align-middle w-50">
                                 @if ($kegiatan->lokasi->isNotEmpty())
                                     {{ $kegiatan->lokasi->unique('kabupaten_id')->pluck('desa.kecamatan.kabupaten.nama')->implode(', ') }}
                                     @if ($kegiatan->lokasi->unique('provinsi_id')->count() == 1)
                                         ,
                                         {{ $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->provinsi->nama ?? '' }}
                                     @endif
-
                                 @endif
                             </td>
                         </tr>
+                        <tr class="align-middle bg-success">
+                            <th colspan="3" class="align-middle">
+                                {{ __('global.details') . ' ' . __('cruds.kegiatan.tempat') }} <i
+                                    class="fas fa-map-marker-alt"></i>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+                {{-- detail lokasi --}}
+                <table class="table datatable table-sm mb-0 table-hover">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="tb-header mr-0 pr-0 align-middle col-3" {{-- style="width: 20%;" --}}>Nama Tempat</th>
+                            <th class="tb-header mr-0 pr-0 align-middle col-3" {{-- style="width: 20%;" --}}>Longitude</th>
+                            <th class="tb-header mr-0 pr-0 align-middle col-3" {{-- style="width: 30%;" --}}>Latitude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($kegiatan->lokasi as $lokasi)
+                            <tr class="align-middle">
+                                <td class="tb-header mr-0 pr-0 align-middle">
+                                    @if ($lokasi->lat && $lokasi->long)
+                                        <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}"
+                                            target="_blank">
+                                            {{ ucwords(strtolower($lokasi->lokasi ?? 'Lihat Di Peta')) }}
+                                        </a>
+                                    @else
+                                        {{ $lokasi->lokasi ?? '—' }}
+                                    @endif
+                                </td>
+                                <td class="tb-header mr-0 pr-0 align-middle">{{ $lokasi->long ?? '—' }}</td>
+                                <td class="tb-header mr-0 pr-0 align-middle">{{ $lokasi->lat ?? '—' }}</td>
+                            </tr>
+                        @empty
+                            <tr class="align-middle">
+                                <td colspan="3" class="text-center text-muted">Tidak ada data lokasi tersedia.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -225,7 +222,7 @@
             <!-- Peserta yang terlibat -->
             <div class="form-group row mb-0">
                 <div class="col-sm col-md col-lg self-center">
-                    <label class="mb-0 self-center input-group">
+                    <label class="self-center input-group">
                         {{ __('cruds.kegiatan.peserta.label') }}
                         <i class="fas fa-info-circle text-success" data-toggle="tooltip"
                             title="{{ __('cruds.kegiatan.peserta.helper') }}"></i>
@@ -233,6 +230,8 @@
                 </div>
             </div>
 
+            <!-- Jumlah Peserta Kegiatan -->
+            {{-- Tabel Jumlah Peserta Kegiatan --}}
             <div class="form-group row">
                 <div class="col-sm col-md col-lg self-center">
                     <div class="card-body table-responsive p-0">
