@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('subtitle', __('cruds.kegiatan.edit') . ' ' . $kegiatan->activity->nama)
 @section('content_header_title')
-    <strong>{{ __('cruds.kegiatan.edit') . ' ' . $kegiatan->activity->nama ?? '-' }}</strong>
+    <strong>
+        {{ __('cruds.kegiatan.edit') . ' ' . $kegiatan->activity->nama ?? '-' }}</strong>
 @endsection
 
 @section('sub_breadcumb')
@@ -117,7 +118,7 @@
                                     <!-- nama kegiatan-->
                                     <div
                                         class="col-sm-12
-                                            col-md-12 col-lg-9 self-center order-2 order-md-2">
+                                        col-md-12 col-lg-9 self-center order-2 order-md-2">
                                         <label for="nama_kegiatan" class="input-group col-form-label">
                                             {{ __('cruds.kegiatan.basic.nama') }}
                                         </label>
@@ -134,19 +135,10 @@
                                             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
                                         </label>
                                         <div class="select2-purple">
-                                            {{-- <select class="form-control select2" name="jeniskegiatan_id"
-                                                id="jeniskegiatan_id"
-                                                data-api-url="{{ route('api.kegiatan.jenis_kegiatan') }}">
-                                                <!-- Options will be populated by select2 -->
-                                            </select> --}}
                                             <select name="jeniskegiatan_id" id="jeniskegiatan_id"
                                                 class="form-control select2">
                                                 <option value="">{{ __('global.pleaseSelect') }}</option>
                                                 @foreach ($jenisKegiatanList as $item)
-                                                    {{-- <option value="{{ $item['id'] }}"
-                                                        {{ old('jeniskegiatan_id', $kegiatan->jeniskegiatan_id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                        {{ $item['text'] }}
-                                                    </option> --}}
                                                     <option value="{{ $item->id }}"
                                                         {{ old('jeniskegiatan_id', $kegiatan->jeniskegiatan_id ?? '') == $item['id'] ? 'selected' : '' }}>
                                                         {{ $item->nama }}
@@ -264,27 +256,44 @@
                                         </div>
                                     </div>
                                 </div>
-
-
+                                <!--Pilih Provinsi Data-->
                                 <div class="form-group row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                                         <label for="provinsi_id"
                                             class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
+                                        <input type="hidden" name="provinsiID"
+                                            value="{{ $kegiatan->lokasi['0']->kecamatan->kabupaten->provinsi->id ?? ' ?>' }}">
                                         <select name="provinsi_id" id="provinsi_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.provinsi') }}"
-                                            data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}">
+                                            data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}"
+                                            disabled>
+
+                                            @foreach ($ProvinsiList as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ old('provinsi_id', $kegiatan->lokasi['0']->kecamatan->kabupaten->provinsi->id ?? '') == $item['id'] ? 'selected' : '' }}>
+                                                    {{ $item->nama }}
+                                                </option>
+                                            @endforeach
                                         </select>
+
                                     </div>
+                                    <!--Pilih Kabupaten Data-->
                                     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                                        <label for="kabupaten_id"
-                                            class="input-group col-form-label">{{ __('cruds.kabupaten.title') }}</label>
+                                        <label for="kabupaten_id" class="input-group col-form-label">
+                                            {{ __('cruds.kabupaten.title') }}</label>
                                         <select name="kabupaten_id" id="kabupaten_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.kabupaten') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}">
+                                            @foreach ($kabupatenList as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ old('kabupaten_id', $kegiatan->lokasi['0']->kecamatan->kabupaten->id ?? '') == $item['id'] ? 'selected' : '' }}>
+                                                    {{ $item->nama }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-
+                                <!--button tambah lokasi dinamis-->
                                 <div class="card-info pt-2">
                                     <div class="card-header pl-1">
                                         <div class="col-sm-12 col-md-12 col-lg-4 self-center order-1 order-md-1">
@@ -331,7 +340,98 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="list-lokasi-kegiatan"></div>
+                                    <!--Input Kelurahan dan Kecamatan-->
+                                    <div class="list-lokasi-kegiatan">
+                                        @forelse ($kegiatan->lokasi as $item)
+                                            <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
+                                                    <select name="kecamatan_id[]" id="kecamatan_id"
+                                                        class="form-control select2"
+                                                        data-api-url="{{ route('api.kegiatan.kecamatan') }}"
+                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.kecamatan.title') }}">
+                                                        @foreach ($kecamatanList as $kecamatan)
+                                                            <option value="{{ $kecamatan->id }}"
+                                                                {{ old('kecamatan_id', $item->kecamatan_id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
+                                                                {{ $kecamatan->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
+                                                    <select name="desa_id[]" id="desa_id" class="form-control select2"
+                                                        data-api-url="{{ route('api.kegiatan.desa') }}"
+                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
+                                                        @foreach ($desaList as $desa)
+                                                            <option value="{{ $desa->id }}"
+                                                                {{ old('desa_id', $item->desa_id ?? '') == $desa['id'] ? 'selected' : '' }}>
+                                                                {{ $desa->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
+                                                    <input type="text"
+                                                        placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}"
+                                                        class="form-control lokasi-input" id="lokasi" name="lokasi[]"
+                                                        value="{{ old('lokasi', $item->lokasi ?? '') }}">
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
+                                                    <input type="text" class="form-control lat-input"
+                                                        id="lat-${uniqueId}" name="lat[]"
+                                                        placeholder="{{ __('cruds.kegiatan.basic.lat') }}"
+                                                        value="{{ old('lat', $item->lat ?? '') }}">
+                                                </div>
+
+                                                <div
+                                                    class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
+                                                    <input type="text" class="form-control lang-input flex-grow-1"
+                                                        id="long-${uniqueId}" name="long[]"
+                                                        placeholder="{{ __('cruds.kegiatan.basic.long') }}"
+                                                        value="{{ old('lat', $item->long ?? '') }}">
+                                                    <button type="button"
+                                                        class="btn btn-danger remove-lokasi-row btn-sm ml-1">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="form-group row lokasi-kegiatan mb-0">
+                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                                    <select name="kecamatan_id[]" id="kecamatan_id"
+                                                        class="form-control select2"
+                                                        data-api-url="{{ route('api.kegiatan.kecamatan') }}"
+                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.kecamatan.title') }}">
+                                                        @foreach ($kecamatanList as $kecamatan)
+                                                            <option value="{{ $kecamatan->id }}"
+                                                                {{ old('kecamatan_id', $item->kecamatan_id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
+                                                                {{ $kecamatan->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                                    <select name="desa_id[]" id="desa_id" class="form-control select2"
+                                                        data-api-url="{{ route('api.kegiatan.desa') }}"
+                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
+                                                        @foreach ($desaList as $desa)
+                                                            <option value="{{ $desa->id }}"
+                                                                {{ old('desa_id', $item->desa_id ?? '') == $desa['id'] ? 'selected' : '' }}>
+                                                                {{ $desa->nama }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                                    <input type="text" class="form-control" id="lokasi"
+                                                        name="lokasi[]" value="{{ old('lokasi', $item->lokasi ?? '') }}">
+                                                </div>
+                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-2 order-md-2">
+                                                    <input type="text" class="form-control" id="lat"
+                                                        name="lat[]" value="{{ old('lat', $item->lat ?? '') }}">
+                                                </div> --}}
+                                        @empty
+
+                                        @endforelse
+                                    </div>
                                 </div>
 
                                 <div class="form-group row">
@@ -817,6 +917,45 @@
         .select2-container--default.select2-container--open .select2-selection--single.is-invalid-select2 {
             border-color: #a7dc35 !important;
         }
+
+        .fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+            width: 100% !important;
+        }
+
+        .content-header h1 {
+            font-size: 1.1rem !important;
+            margin: 0;
+        }
+
+        .note-toolbar {
+            background: #00000000 !important;
+        }
+
+        .note-editor.note-frame .note-statusbar,
+        .note-editor.note-airframe .note-statusbar {
+            background-color: #007bff17 !important;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            border-top: 1px solid #00000000;
+        }
+
+        .table-custom th:nth-child(2),
+        .table-custom td:nth-child(2),
+        .table-custom th:nth-child(3),
+        .table-custom td:nth-child(3),
+        .table-custom th:nth-child(4),
+        .table-custom td:nth-child(4) {
+            width: 20%;
+        }
+
+        .table-custom th:first-child,
+        .table-custom td:first-child {
+            width: 40%;
+        }
     </style>
 @endpush
 
@@ -826,6 +965,7 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
+@section('plugins.Summernote', true)
 
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
@@ -837,6 +977,11 @@
 
 @stack('basic_tab_js')
 <script>
+    let uniqueId = Date.now();
+    var provinsiLayer = null;
+    var kabupatenLayer = null;
+    var map;
+
     function calculateDuration() {
         const start = new Date($('#tanggalmulai').val());
         const end = new Date($('#tanggalselesai').val());
@@ -852,6 +997,7 @@
 
     $('#tanggalmulai, #tanggalselesai').on('change', calculateDuration);
     $(document).ready(function() {
+
         $('.select2').select2({
             width: 'resolve'
         });
@@ -884,14 +1030,78 @@
             }
         });
 
-        $('#jeniskegiatan_id').on('change', function() {
-            var selectedOption = $(this).find('option:selected');
-            var selectedGroup = selectedOption.closest('optgroup').attr('label');
-            var selectedValue = selectedOption.val();
+        $(`#kabupaten_id`).select2({
+            placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
+            allowClear: true,
+            ajax: {
+                url: "{{ route('api.kegiatan.kabupaten') }}",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    const provinsiId = $(`#provinsi_id`).val();
+                    return {
+                        search: params.term,
+                        provinsi_id: provinsiId,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true,
+                error: function(jqXHR, textStatus, errorThrown) {
+                    const provinsiId = $(`#provinsi_id`).val();
+                    let errorMessage = "";
+                    if (jqXHR.responseText) {
+                        try {
+                            const response = JSON.parse(jqXHR.responseText);
+                            if (response.message) {
+                                errorMessage = response
+                                    .message; // Use message from the server if available
+                            }
+                        } catch (e) {
+                            console.warn("Could not parse JSON response:", jqXHR.responseText);
+                        }
+                    }
+                    if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
+                        Swal.fire({
+                            icon: 'warning' ?? textStatus,
+                            title: 'Failed to load Kabupaten data',
+                            text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
+                            timer: 1500,
+                        })
+                        setTimeout(() => {
+                            $(`#provinsi_id`).focus();
+                        }, 1000);
+                        return;
+                    } else {
+                        // Handle other AJAX errors
+                        let errorMessage =
+                            '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
+                        Swal.fire({
+                            icon: 'error', // Always use 'error' for AJAX failures
+                            title: errorThrown ||
+                                'Error', // Use errorThrown if available, otherwise generic 'Error'
+                            text: errorMessage,
+                            timer: 2500, // Slightly longer timer for general errors
+                            showConfirmButton: false // Hide confirm button
+                        });
 
-            alert('Selected Group: ' + selectedGroup + '\nSelected Value: ' + selectedValue);
-        })
-        // Optional: Select2 AJAX untuk mitra
+                    }
+                }
+            }
+        }).on('select2:open', function(e) {
+            $('.select2-container').css('z-index', 1035);
+        }).on('select2:close', function(e) {
+            $('.select2-container').css('z-index', 999);
+        });
+
         function initializeSelect2WithDynamicUrl(fieldId) {
             var select2Field = $('#' + fieldId);
             var apiUrl = select2Field.data('api-url');
@@ -930,9 +1140,252 @@
             });
         }
 
+        function select2Single(fieldId) {
+            var select2Field = $('#' + fieldId);
+            var apiUrl = select2Field.data('api-url');
+
+            select2Field.select2({
+                width: 'resolve',
+                placeholder: select2Field.attr('placeholder'),
+                aallowClear: true,
+                ajax: {
+                    url: apiUrl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true
+                }
+            }).on('select2:open', function(e) {
+                $('.select2-container').css('z-index', 1035);
+            }).on('select2:close', function(e) {
+                $('.select2-container').css('z-index', 999);
+            });;
+        }
+
+        function addNewLocationInputs(uniqueId) {
+            if (!uniqueId) {
+                uniqueId = Date.now();
+            }
+            var newLocationField = `
+            <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
+                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
+                    <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select" id="kecamatan-${uniqueId}" data-placeholder="Pilih Kecamatan">
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
+                    <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select" id="kelurahan-${uniqueId}" data-placeholder="Pilih Desa">
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
+                    <input type="text" class="form-control lokasi-input" id="lokasi-${uniqueId}" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}">
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
+                    <input type="text" class="form-control lat-input" id="lat-${uniqueId}" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
+                    <input type="text" class="form-control lang-input flex-grow-1" id="long-${uniqueId}" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>`;
+            $('.list-lokasi-kegiatan').append(newLocationField);
+
+            $(document).on('blur', '.lat-input, .lang-input', function() {
+                const $input = $(this);
+                const value = $input.val();
+                const type = $input.hasClass('lat-input') ? 'latitude' : 'longitude';
+
+                const validationResult = validateCoordinate(value, type);
+
+                if (validationResult.valid) {
+                    $input.val(validationResult.value);
+                    $input.removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $input.val('');
+                    $input.removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+
+            // Initialize kecamatan select2
+            $(`#kecamatan-${uniqueId}`).select2({
+                placeholder: '{{ __('cruds.kegiatan.basic.select_kecamatan') }}',
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('api.kegiatan.kecamatan') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kabupaten_id: $(`#kabupaten_id`).val(),
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'There was an error fetching Kecamatan data. Please try again later.',
+                            position: 'center',
+                            timer: 2000,
+                            timerProgressBar: true
+                        });
+                        $('#kecamatan-' + uniqueId).focus();
+                    }
+                }
+            }).on('select2:open', function(e) {
+                $('.select2-container').css('z-index', 1035);
+            }).on('select2:close', function(e) {
+                $('.select2-container').css('z-index', 999);
+            });
+
+            $(`#kelurahan-${uniqueId}`).select2({
+                placeholder: '{{ __('cruds.kegiatan.basic.select_desa') }}',
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('api.kegiatan.kelurahan') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: data.pagination.more
+                            }
+                        };
+                    },
+                    cache: true,
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error fetching Kelurahan data:", textStatus, errorThrown);
+                        Toast.fire({
+                            icon: 'error', // Use 'error' icon for errors
+                            title: 'Please Select Kecamatan First!',
+                            text: 'Kelurahan data depends on Kecamatan data. Please select a Kecamatan first.',
+                            position: 'center',
+                            timer: 2000, // Increased timer to 3 seconds for better visibility
+                            timerProgressBar: true
+                        });
+                        $('#kecamatan-' + uniqueId).focus();
+                    }
+                }
+            }).on('select2:open', function(e) {
+                $('.select2-container').css('z-index', 1035);
+            }).on('select2:close', function(e) {
+                $('.select2-container').css('z-index', 999);
+            });
+
+            // Handle dependencies
+            $(`#provinsi_id`).on('change', function() {
+                $(`#kabupaten_id`).val(null).trigger('change');
+                changeKabupatenAlert();
+            });
+
+            $(`#kabupaten_id`).on('change', function() {
+                changeKabupatenAlert();
+            });
+
+            $(`#kecamatan-${uniqueId}`).on('change', function() {
+                $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
+            });
+
+            $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`)
+                .on('change', function() {});
+
+            $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click',
+                '.remove-lokasi-row',
+                function() {
+                    $(this).closest('.lokasi-kegiatan').remove();
+                });
+            return uniqueId
+        }
+
+        $('#btn-lokasi-kegiatan').on('click', function() {
+            let idProvinsi = $('#provinsi_id').val();
+            let idKabupaten = $('#kabupaten_id').val();
+            if (!idProvinsi) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '',
+                    text: 'Please select a province first.',
+                    position: 'center',
+                    timer: 1000,
+                    timerProgressBar: true
+                });
+                $('#provinsi_id').focus();
+                return false;
+            }
+            if (!idKabupaten) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '',
+                    text: 'Please select a kabupaten after selecting a province.',
+                    position: 'center',
+                    timer: 1000,
+                    timerProgressBar: true
+                });
+
+                $('#kabupaten_id').focus();
+                return false;
+            }
+
+            addNewLocationInputs();
+        });
+
         calculateDuration();
         initializeSelect2WithDynamicUrl('mitra_id');
         initializeSelect2WithDynamicUrl('sektor_id');
+
+        function changeKabupatenAlert() {
+            Swal.fire({
+                title: 'Change Kabupaten ?',
+                text: 'Changing the Kabupaten will clear all current entries. Do you want to proceed?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Clear All',
+                cancelButtonText: 'No, Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('.kecamatan-select').val(null).trigger('change');
+                    $('.kelurahan-select').val(null).trigger('change');
+                }
+            });
+        }
+
     });
 </script>
 {{-- validation form --}}
