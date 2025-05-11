@@ -587,7 +587,7 @@
                 cache: true
             }
         }).on('select2:open', function(e) {
-            $('.select2-container').css('z-index', 1051);
+            $('.select2-container').css('z-index', 1035);
         }).on('select2:close', function(e) {
             $('.select2-container').css('z-index', 999);
         });
@@ -625,7 +625,7 @@
                             const response = JSON.parse(jqXHR.responseText);
                             if (response.message) {
                                 errorMessage = response
-                                .message; // Use message from the server if available
+                                    .message; // Use message from the server if available
                             }
                         } catch (e) {
                             console.warn("Could not parse JSON response:", jqXHR.responseText);
@@ -649,7 +649,7 @@
                         Swal.fire({
                             icon: 'error', // Always use 'error' for AJAX failures
                             title: errorThrown ||
-                            'Error', // Use errorThrown if available, otherwise generic 'Error'
+                                'Error', // Use errorThrown if available, otherwise generic 'Error'
                             text: errorMessage,
                             timer: 2500, // Slightly longer timer for general errors
                             showConfirmButton: false // Hide confirm button
@@ -659,7 +659,7 @@
                 }
             }
         }).on('select2:open', function(e) {
-            $('.select2-container').css('z-index', 1051);
+            $('.select2-container').css('z-index', 1035);
         }).on('select2:close', function(e) {
             $('.select2-container').css('z-index', 999);
         });
@@ -686,7 +686,7 @@
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
                     <input type="text" class="form-control lang-input flex-grow-1" id="long-${uniqueId}" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
-                    <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
+                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -817,7 +817,7 @@
                 });
 
             $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click',
-                '.remove-staff-row',
+                '.remove-lokasi-row',
                 function() {
                     $(this).closest('.lokasi-kegiatan').remove();
                 });
@@ -870,7 +870,7 @@
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
         });
-        $(document).on('click', '.remove-staff-row', function() {
+        $(document).on('click', '.remove-lokasi-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
             row.remove();
