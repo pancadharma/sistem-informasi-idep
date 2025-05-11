@@ -306,46 +306,36 @@ class KegiatanController extends Controller
             'kegiatan_penulis.peran',
         ])->findOrFail($id);
         $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+        $ProvinsiList = Provinsi::select('id', 'nama')->get();
         $sektorList = TargetReinstra::select('id', 'nama')->get();
 
         $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
         $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
         $statusOptions = Kegiatan::STATUS_SELECT;
 
+        foreach ($kegiatan->lokasi as $lokasi) {
+            $lokasi->kecamatan = Kecamatan::find($lokasi->desa->kecamatan_id);
+            $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan->kabupaten_id);
+            $lokasi->provinsi = Provinsi::find($lokasi->desa->kecamatan->kabupaten->provinsi_id);
+        }
+
+        $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $lokasi->provinsi->id)->get();
+        $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
+        $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
+
+        // return $kegiatan->lokasi[0]->kecamatan->kabupaten->provinsi;
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
             'jenisKegiatanList',
             'sektorList',
+            'ProvinsiList',
+            'kabupatenList',
+            'kecamatanList',
+            'desaList',
         ));
     }
 
-    // public function edit($id)
-    // {
-    //     try {
-    //         $kegiatan = Kegiatan::with([
-    //             'mitra',
-    //             'sektor',
-    //             'lokasi',
-    //             'penulis' => function ($query) {
-    //                 $query->withPivot('peran_id')->with(['peran']);
-    //             }
-    //         ])->findOrFail($id);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $kegiatan,
-    //             'message' => 'Kegiatan retrieved successfully',
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         Log::error('Failed to retrieve kegiatan: ' . $e->getMessage());
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Failed to retrieve record: ' . $e->getMessage(),
-    //             'error' => $e->getMessage(),
-    //         ], 404);
-    //     }
-    // }
 
     public function update(Request $request, $id)
     {
