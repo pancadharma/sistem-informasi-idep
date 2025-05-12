@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.komponenmodel.edit'))
-@section('content_header_title') <strong>{{ __('cruds.komponenmodel.edit') }}</strong>  @endsection
-@section('sub_breadcumb')<a href="{{ route('komodel.index') }}" title="{{ __('cruds.komponenmodel.edit') }}"> {{ __('cruds.komponenmodel.edit') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.komponenmodel.edit') }}">{{ __('cruds.komponenmodel.edit') }}</span> @endsection
+@section('subtitle', __('cruds.prepost.edit'))
+@section('content_header_title') <strong>{{ __('cruds.prepost.edit') }}</strong>  @endsection
+@section('sub_breadcumb')<a href="{{ route('prepost.index') }}" title="{{ __('cruds.prepost.edit') }}"> {{ __('cruds.prepost.edit') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.prepost.edit') }}">{{ __('cruds.prepost.edit') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -24,7 +24,7 @@
                             </button>
                             <li class="nav-item">
                                 <a class="nav-link active" id="beneficiaries-tab" data-toggle="pill" href="#tab-beneficiaries" role="tab" aria-controls="tab-beneficiaries" aria-selected="true">
-                                    {{ __('cruds.komponenmodel.label') }}
+                                    {{ __('cruds.prepost.label') }}
                                 </a>
                             </li>
                         </ul>
@@ -32,9 +32,9 @@
                     <div class="card-body">
                         <div class="tab-content" id="details-kegiatan-tabContent">
                             <div class="tab-pane fade show active" id="tab-beneficiaries" role="tabpanel" aria-labelledby="beneficiaries-tab">
-                                @include('tr.komponenmodel.tabs.komodel-edit')
+                                @include('tr.prepost.tabs.prepost-edit')
 
-                                nanti lanjut buat tabedit js ajax dll
+                               
                             </div>
                         </div>
                     </div>
@@ -126,73 +126,6 @@
 @section('plugins.Validation', true)
 
 <script>
-    $(document).ready(function() {
-        $('#sektor_id').select2({
-            allowClear: true,
-            placeholder: "Pilih Sektor",
-            ajax: {
-                url: "{{ route('api.komodel.sektor') }}",
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term, // kirim parameter pencarian
-                        page: params.page || 1 // pagination
-                    };
-                },
-                processResults: function(response) {
-                    // console.log("Data dari API:", response); // Debugging
-
-                    return {
-                        results: response.results.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama
-                            };
-                        }),
-                        pagination: {
-                            more: response.pagination.more
-                        }
-                    };
-                },
-                cache: false
-            }
-        });
-    });
-
-    $(document).ready(function() {
-        $('#model_id').select2({
-            allowClear: true,
-            placeholder: "Pilih Model",
-            ajax: {
-                url: "{{ route('api.komodel.model') }}", // Ganti dengan route API yang benar
-                dataType: "json",
-                delay: 250,
-                data: function(params) {
-                    return {
-                        search: params.term, // kirim parameter pencarian
-                        page: params.page || 1 // pagination
-                    };
-                },
-                processResults: function(response) {
-                    // console.log("Data Model dari API:", response); // Debugging
-
-                    return {
-                        results: response.results.map(function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nama // Sesuaikan dengan field yang benar
-                            };
-                        }),
-                        pagination: {
-                            more: response.pagination.more
-                        }
-                    };
-                },
-                cache: false
-            }
-        });
-    });
     
     function escapeHtml(str) {
         if (!str) return ""; // Handle null/undefined cases
@@ -234,13 +167,6 @@
                 // }
             }
         });
-    }
-
-    function loadSatuan() {
-        const placeholder = "{{ __('global.pleaseSelect') . ' ' . __('cruds.satuan.title') }}";
-        const apiRoute = '{{ route('api.komodel.satuan') }}';
-        buatSelect2('#satuan_id', '#ModalTambah', placeholder, apiRoute);
-        buatSelect2('#editsatuan_id', '#editDataModal', placeholder, apiRoute);
     }
     
     function initializeLocationSelects(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
@@ -396,7 +322,9 @@
                 "#pilihkecamatan_id",
                 "#pilihdesa_id",
                 "#pilihdusun_id",
-                "#satuan_id"
+                "#gender",
+                "#prefill",
+                "#postfill",
             ];
 
             selectsToReset.forEach(id => {
@@ -404,9 +332,11 @@
             });
 
             // Reset input text dan angka (optional karena sudah pakai .reset())
-            $("input[name='long']").val("");
-            $("input[name='lat']").val("");
-            $("input[name='jumlah']").val("");
+            $("input[name='nama']").val("");
+            $("input[name='no_telp']").val("");
+            $("input[name='pretest']").val("");
+            $("input[name='posttest']").val("");
+            $("input[name='notes']").val("");
 
             // Tutup modal
             $("#ModalTambah").modal("hide");
@@ -421,12 +351,16 @@
             $("#editkecamatan_id").val(null).empty().trigger("change");
             $("#editdesa_id").val(null).empty().trigger("change");
             $("#editdusun_id").val(null).empty().trigger("change");
-            $("#editsatuan_id").val(null).empty().trigger("change");
+            $("#editgender").val(null).empty().trigger("change");
+            $("#editprefill").val(null).empty().trigger("change");
+            $("#editpostfill").val(null).empty().trigger("change");
 
             // Reset input text dan angka
-            $("input[name='long']").val("");
-            $("input[name='lat']").val("");
-            $("input[name='jumlah']").val("");
+            $("input[name='editnama']").val("");
+            $("input[name='editno_telp']").val("");
+            $("input[name='editpretest']").val("");
+            $("input[name='editposttest']").val("");
+            $("input[name='editnotes']").val("");
 
             // Sembunyikan modal setelah reset
             $("#editDataModal").modal("hide");
@@ -605,7 +539,6 @@
             let rowCount = lokasi.length;
 
             initializeLocationSelects();
-            loadSatuan();
             
             // Initialize for #tambahData
             initializeLocationSelects(
@@ -635,20 +568,31 @@
                 }
 
                 const formData = {
-                    mealskomponenmodel_id: '{{ $komodel->id }}', // ID dari data yang sedang diedit
-                    provinsi_id: $("#pilihprovinsi_id").val(),
-                    kabupaten_id: $("#pilihkabupaten_id").val(),
-                    kecamatan_id: $("#pilihkecamatan_id").val(),
-                    desa_id: $("#pilihdesa_id").val(),
-                    dusun_id: $("#pilihdusun_id").val(),
-                    long: $("#long").val(),
-                    lat: $("#lat").val(),
-                    jumlah: $("#jumlah").val(),
-                    satuan_id: $("#satuan_id").val(),
+                    programoutcomeoutputactivity_id: '{{ $prepost->programoutcomeoutputactivity_id }}',
+                    user_id: '{{ $prepost->user_id }}',
+                    nama_pelatihan: '{{ $prepost->trainingname }}',
+                    start_date: '{{ $prepost->tanggalmulai }}',
+                    end_date: '{{ $prepost->tanggalselesai }}',
+                    data: [{
+                        nama: $("#nama").val(),
+                        gender: $("#gender").val(),
+                        no_telp: $("#no_telp").val(),
+                        pretest: $("#pretest").val(),
+                        prefill: $("#prefill").val(),
+                        posttest: $("#posttest").val(),
+                        postfill: $("#postfill").val(),
+                        selisih: $("#selisih").val(),
+                        notes: $("#notes").val(),
+                        provinsi_id: $("#pilihprovinsi_id").val(),
+                        kabupaten_id: $("#pilihkabupaten_id").val(),
+                        kecamatan_id: $("#pilihkecamatan_id").val(),
+                        desa_id: $("#pilihdesa_id").val(),
+                        dusun_id: $("#pilihdusun_id").val(),
+                    }]
                 };
 
                 $.ajax({
-                    url: '{{ route('komodel.store.lokindi') }}',
+                    url: '{{ route('prepost.store.editadd') }}', // sesuaikan route
                     method: 'POST',
                     data: JSON.stringify(formData),
                     contentType: 'application/json',
@@ -666,12 +610,12 @@
                         });
                     },
                     success: function (response) {
-                        redrawTable(); // pastikan fungsi ini reload ulang data lokasi dari backend
+                        redrawTable(); // kalau kamu punya fungsi reload peserta
                         $("#dataForm")[0].reset();
                         $("#ModalTambah").modal("hide");
                         Swal.fire({
                             title: "Success",
-                            text: "Data lokasi berhasil ditambahkan.",
+                            text: "Data peserta berhasil ditambahkan.",
                             icon: "success",
                             timer: 1500,
                             showConfirmButton: false,
@@ -681,17 +625,17 @@
                                 Swal.showLoading();
                             },
                         });
-                        resetFormAdd(); // kalau ada fungsi reset tambahan
+                        resetFormAdd(); // opsional
                     },
                     error: function (xhr) {
-                        Swal.fire("Error", xhr.responseJSON?.message || "Gagal menyimpan data lokasi.", "error");
+                        Swal.fire("Error", xhr.responseJSON?.message || "Gagal menyimpan data peserta.", "error");
                     }
                 });
             }
 
             function redrawTable() {
                 $.ajax({
-                    url: '{{ route('komodel.edit', $komodel->id) }}', // Assumes this returns the edit view with updated table
+                    url: '{{ route('prepost.edit', $prepost->id) }}', // Assumes this returns the edit view with updated table
                     method: 'GET',
                     success: function(response) {
                         const newTableBody = $(response).find('#tableBody').html(); // Extract the updated table body
@@ -710,34 +654,40 @@
             $('#tableBody').on('click', '.edit-btn', function (e) {
                 e.preventDefault();
                 const lokasiId = $(this).data('id');
-                const url = "{{ route('komodel.get.lokindi', ':id') }}".replace(':id', lokasiId);
+                const url = "{{ route('prepost.get.barispeserta', ':id') }}".replace(':id', lokasiId);
 
                 $.ajax({
                     url: url,
                     method: 'GET',
-                    success: function (lokasi) {
-                        $('#editRowId').val(lokasi.id);
+                    success: function (peserta) {
+                        $('#editRowId').val(peserta.id);
 
-                        // Populate dropdown dengan text/value yang sesuai
-                        $('#editprovinsi_id').empty().append(new Option(lokasi.provinsi?.nama, lokasi.provinsi_id, true, true)).trigger('change');
-                        $('#editkabupaten_id').empty().append(new Option(lokasi.kabupaten?.nama, lokasi.kabupaten_id, true, true)).trigger('change');
-                        $('#editkecamatan_id').empty().append(new Option(lokasi.kecamatan?.nama, lokasi.kecamatan_id, true, true)).trigger('change');
-                        $('#editdesa_id').empty().append(new Option(lokasi.desa?.nama, lokasi.desa_id, true, true)).trigger('change');
-                        $('#editdusun_id').empty().append(new Option(lokasi.dusun?.nama, lokasi.dusun_id, true, true)).trigger('change');
-                        $('#editsatuan_id').empty().append(new Option(lokasi.satuan?.nama, lokasi.satuan_id, true, true)).trigger('change');
+                        // Populate dropdown dengan text/value dari data peserta
+                        $('#editprovinsi_id').empty().append(new Option(peserta.provinsi_nama, peserta.provinsi_id, true, true)).trigger('change');
+                        $('#editkabupaten_id').empty().append(new Option(peserta.kabupaten_nama, peserta.kabupaten_id, true, true)).trigger('change');
+                        $('#editkecamatan_id').empty().append(new Option(peserta.kecamatan_nama, peserta.kecamatan_id, true, true)).trigger('change');
+                        $('#editdesa_id').empty().append(new Option(peserta.desa_nama, peserta.desa_id, true, true)).trigger('change');
+                        $('#editdusun_id').empty().append(new Option(peserta.dusun_nama, peserta.dusun_id, true, true)).trigger('change');
 
                         // Field input lainnya
-                        $('#editlat').val(lokasi.lat);
-                        $('#editlong').val(lokasi.long);
-                        $('#editjumlah').val(lokasi.jumlah);
+                        $('#editnama').val(peserta.nama);
+                        $('#editgender').val(peserta.gender).trigger('change');
+                        $('#editno_telp').val(peserta.no_telp);
+                        $('#editpretest').val(peserta.pretest);
+                        $('#editprefill').val(peserta.prefill).trigger('change');
+                        $('#editposttest').val(peserta.posttest);
+                        $('#editpostfill').val(peserta.postfill).trigger('change');
+                        $('#editvaluechange').val(peserta.valuechange);
+                        $('#editnotes').val(peserta.notes);
 
-                        // Tampilkan modal
+                        // Tampilkan modal edit
                         $('#editDataModal').modal('show');
                     },
                     error: function () {
-                        Swal.fire("Gagal", "Tidak bisa memuat data lokasi.", "error");
+                        Swal.fire("Gagal", "Tidak bisa memuat data peserta.", "error");
                     }
                 });
+
             });
 
             // simpan hasil edit baris lokasi
@@ -745,7 +695,7 @@
                 e.preventDefault();
                 const id = $('#editRowId').val();
                 const formData = $('#editDataForm').serialize();
-                const url = "{{ route('komodel.update.lokindi', ':id') }}".replace(':id', id);
+                const url = "{{ route('prepost.update.barispeserta', ':id') }}".replace(':id', id);
 
                 $.ajax({
                     url: url,
@@ -758,57 +708,6 @@
                     error: function (xhr) {
                         const errorMsg = xhr.responseJSON?.message ?? "Terjadi kesalahan.";
                         Swal.fire("Gagal", errorMsg, "error");
-                    }
-                });
-            });
-
-            function calculateTotalJumlah() {
-                let total = 0;
-                $('.jumlah-cell').each(function () {
-                    const val = parseFloat($(this).text().trim());
-                    if (!isNaN(val)) {
-                        total += val;
-                    }
-                });
-                return total;
-            }
-
-            $('#submitDataBtn').on('click', function (e) {
-                e.preventDefault();
-
-                const modelId = $('#model_id').val(); // select2, jadi bisa ambil langsung
-                const sektorIds = $('#sektor_id').val(); // array karena multiple
-                const totaljumlah = calculateTotalJumlah(); // update total jumlah
-
-                if (!modelId || sektorIds.length === 0) {
-                    Swal.fire("Peringatan", "Mohon pilih komponen dan minimal satu sektor.", "warning");
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('komodel.update.modelsektor', $komodel->id) }}",
-                    method: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        model_id: modelId,
-                        sektor_ids: sektorIds,
-                        totaljumlah: totaljumlah
-                    },
-                    beforeSend: function () {
-                        Swal.fire({
-                            title: "Menyimpan...",
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function (response) {
-                        Swal.fire("Sukses", response.message, "success").then(() => location.reload());
-                    },
-                    error: function (xhr) {
-                        const msg = xhr.responseJSON?.message || "Terjadi kesalahan.";
-                        Swal.fire("Gagal", msg, "error");
                     }
                 });
             });
@@ -827,7 +726,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/komodel/lokasi/${lokasiId}`,
+                            url: `/prepost/peserta/${lokasiId}`,
                             method: "DELETE",
                             data: {
                                 _token: "{{ csrf_token() }}"
@@ -864,6 +763,51 @@
                                 Swal.fire("Gagal", xhr.responseJSON?.message || "Tidak dapat menghapus data.", "error");
                             }
                         });
+                    }
+                });
+            });
+
+            $('#submitDataBtn').on('click', function (e) {
+                e.preventDefault();
+
+                const programId = $('#program_id').val();      // select
+                const kegiatanId = $('#programoutcomeoutputactivity_id').val();    // select
+                const namaPelatihan = $('#nama_pelatihan').val().trim(); // input text
+                const tanggalMulai = $('#start_date').val();          // input date
+                const tanggalSelesai = $('#end_date').val();      // input date
+
+                if (!namaPelatihan || !tanggalMulai || !tanggalSelesai) {
+                    Swal.fire("Peringatan", "Mohon lengkapi semua data pelatihan.", "warning");
+                    return;
+                }
+
+                $.ajax({
+                    url: "{{ route('prepost.update.header', $prepost->id) }}", // atau route update jika sedang edit
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        program_id: programId,
+                        kegiatan_id: kegiatanId,
+                        nama_pelatihan: namaPelatihan,
+                        tanggal_mulai: tanggalMulai,
+                        tanggal_selesai: tanggalSelesai
+                    },
+                    beforeSend: function () {
+                        Swal.fire({
+                            title: "Menyimpan...",
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function (response) {
+                        Swal.fire("Sukses", response.message || "Data berhasil disimpan.", "success")
+                            .then(() => location.reload());
+                    },
+                    error: function (xhr) {
+                        const msg = xhr.responseJSON?.message || "Terjadi kesalahan saat menyimpan.";
+                        Swal.fire("Gagal", msg, "error");
                     }
                 });
             });
@@ -907,8 +851,9 @@
 </script>
 
 @stack('basic_tab_js')
-@include('tr.komponenmodel.tabs.tambahkomponen-modal')
-@include('tr.komponenmodel.tabs.komodel-modal')
+{{-- @include('tr.prepost.tabs.program') --}}
+@include('tr.prepost.tabs.program-act')
+@include('tr.prepost.tabs.modal-tambah-main')
 @include('api.master.dusun')
 
 @endpush

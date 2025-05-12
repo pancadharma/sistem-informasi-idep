@@ -21,321 +21,170 @@
 
         function loadSelect2Option() {
 
-            initializeSelect2ForProvinsi();
-            initializeSelect2ForKabupaten();
-            initializeSelect2ForKecamatan();
-            initializeSelect2ForDesa();
-            initializeSelect2ForDusun();
+            initializeLocationSelects();
         }
 
 
-        function initializeSelect2ForProvinsi() {
-            $("#pilihprovinsi_id").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}',
+        
+
+        function initializeLocationSelects(provinsiSelector, kabupatenSelector, kecamatanSelector, desaSelector, dusunSelector, dropdownParent) {
+            // Fungsi bantu reset + disable
+            const resetSelect = selector => {
+                $(selector).val(null).empty().trigger('change').prop('disabled', true);
+            };
+
+            // Disable semua jika provinsi belum dipilih
+            if (!$(provinsiSelector).val()) {
+                resetSelect(kabupatenSelector);
+                resetSelect(kecamatanSelector);
+                resetSelect(desaSelector);
+                resetSelect(dusunSelector);
+            }
+
+            $(provinsiSelector).select2({
                 ajax: {
-                    url: '{{ route('api.komodel.prov') }}',
-                    dataType: "json",
+                    url: "{{ route('api.komodel.prov') }}",
+                    dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
                     cache: true,
+                    data: params => ({
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
                 },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
+                dropdownParent: dropdownParent,
+                placeholder: "{{ __('global.selectProv') }}"
+            }).on('change', function () {
+                resetSelect(kabupatenSelector);
+                resetSelect(kecamatanSelector);
+                resetSelect(desaSelector);
+                resetSelect(dusunSelector);
+
+                if ($(this).val()) {
+                    $(kabupatenSelector).prop('disabled', false);
+                }
             });
 
-            $("#editProvinsi").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}',
+            $(kabupatenSelector).select2({
                 ajax: {
-                    url: '{{ route('api.komodel.prov') }}',
-                    dataType: "json",
+                    url: () => "{{ route('api.komodel.kab', ['id' => ':id']) }}".replace(':id', $(provinsiSelector).val()),
+                    dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
                     cache: true,
+                    data: params => ({
+                        provinsi_id: $(provinsiSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
                 },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-            });
-        }
+                dropdownParent: dropdownParent,
+                placeholder: "{{ __('global.selectKab') }}"
+            }).on('change', function () {
+                resetSelect(kecamatanSelector);
+                resetSelect(desaSelector);
+                resetSelect(dusunSelector);
 
-        function initializeSelect2ForKabupaten() {
-            $("#pilihkabupaten_id").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.kab') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            provinsi_id: $("#pilihprovinsi_id").val() || $("#editProvinsi").val(),
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination,
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-                // minimumInputLength: 2,
+                if ($(this).val()) {
+                    $(kecamatanSelector).prop('disabled', false);
+                }
             });
 
-            $("#editKabupaten").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}',
+            $(kecamatanSelector).select2({
                 ajax: {
-                    url: '{{ route('api.komodel.prov') }}',
-                    dataType: "json",
+                    url: () => "{{ route('api.komodel.kec', ['id' => ':id']) }}".replace(':id', $(kabupatenSelector).val()),
+                    dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
+                    data: params => ({
+                        kabupaten_id: $(kabupatenSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
                 },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-            });
-        }
+                dropdownParent: dropdownParent,
+                placeholder: "{{ __('global.selectKec') }}"
+            }).on('change', function () {
+                resetSelect(desaSelector);
+                resetSelect(dusunSelector);
 
-        function initializeSelect2ForKecamatan() {
-            $("#pilihkecamatan_id").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kecamatan.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.kec') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            kabupaten_id: $("#pilihkabupaten_id").val() || $("#editKabupaten").val(),
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination,
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-                // minimumInputLength: 2,
+                if ($(this).val()) {
+                    $(desaSelector).prop('disabled', false);
+                }
             });
 
-            $("#editKecamatan").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kecamatan.title') }}',
+            $(desaSelector).select2({
                 ajax: {
-                    url: '{{ route('api.komodel.kec') }}',
-                    dataType: "json",
+                    url: () => "{{ route('api.komodel.desa', ['id' => ':id']) }}".replace(':id', $(kecamatanSelector).val()),
+                    dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
+                    data: params => ({
+                        kecamatan_id: $(kecamatanSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
                 },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-            });
-        }
-
-        function initializeSelect2ForDesa() {
-            $("#pilihdesa_id").select2({
+                dropdownParent: dropdownParent,
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.desa') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            kecamatan_id: $("#pilihkecamatan_id").val() || $("#editKecamatan").val(),
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination,
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-                // minimumInputLength: 2,
+            }).on('change', function () {
+                resetSelect(dusunSelector);
+
+                if ($(this).val()) {
+                    $(dusunSelector).prop('disabled', false);
+                }
             });
 
-            $("#editDesa").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}',
+            $(dusunSelector).select2({
                 ajax: {
-                    url: '{{ route('api.komodel.desa') }}',
-                    dataType: "json",
+                    url: () => "{{ route('api.komodel.dusun', ['id' => ':id']) }}".replace(':id', $(desaSelector).val()),
+                    dataType: 'json',
                     delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
+                    data: params => ({
+                        desa_id: $(desaSelector).val(),
+                        search: params.term,
+                        page: params.page || 1
+                    }),
+                    processResults: data => ({
+                        results: data.results,
+                        pagination: data.pagination
+                    }),
                 },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-            });
-        }
-
-        function initializeSelect2ForDusun() {
-            $("#pilihdusun_id").select2({
+                dropdownParent: dropdownParent,
                 placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.dusun.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.dusun') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            desa_id: $("#pilihdesa_id").val() || $("#editDesa").val(),
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination,
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-                // minimumInputLength: 2,
-            });
-
-            $("#editDusun").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.dusun.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.dusun') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
             });
         }
+        initializeLocationSelects(
+            '#pilihprovinsi_id',
+            '#pilihkabupaten_id',
+            '#pilihkecamatan_id',
+            '#pilihdesa_id',
+            '#pilihdusun_id',
+            $('#ModalTambah')
+        );
 
-        function initializeSatuan() 
-        {
-            let placeholder = '{{ __('global.pleaseSelect') . ' ' . __('cruds.satuan.title') }}';
-            
-            $("#satuan_id").select2({
-                placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.satuan.title') }}',
-                ajax: {
-                    url: '{{ route('api.komodel.satuan') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#ModalTambah"),
-                width: "100%",
-            });
-        }
+        // Initialize for #editDataModal
+        initializeLocationSelects(
+            '#editprovinsi_id',
+            '#editkabupaten_id',
+            '#editkecamatan_id',
+            '#editdesa_id',
+            '#editdusun_id',
+            $('#editDataModal')
+        );
 
 
         function addRow(data) {
@@ -349,30 +198,36 @@
             const prefillText = $("#prefill option:selected").text();
             const postfillText = $("#postfill option:selected").text();
             const genderText = $("#gender option:selected").text();
-            const selisih = parseInt(data.posttest || 0) - parseInt(data.pretest || 0); // Hitung selisih
+
+            const selisih = parseInt(data.posttest || 0) - parseInt(data.pretest || 0); // Hitung selisih skor
 
             const newRow = `
-            <tr data-row-id="${rowCount}" class="nowrap">
-                <td class="text-center align-middle d-none">${rowCount}</td>
-                <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
-               <td data-gender="${data.gender}" data-gender="${genderText}" class="text-center align-middle">${genderText}</td>
-                <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
-                <td data-provinsi-id="${data.pilihprovinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
-                <td data-kabupaten-id="${data.pilihkabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
-                <td data-kecamatan-id="${data.pilihkecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
-                <td data-desa-id="${data.pilihdesa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
-                <td data-dusun-id="${data.pilihdusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
-                <td data-pretest="${data.pretest}" class="text-center align-middle">${data.pretest}</td>
-                <td data-prefill="${data.prefill}" data-satuan-nama="${prefillText}" class="text-center align-middle">${prefillText}</td>
-                <td data-posttest="${data.posttest}" class="text-center align-middle">${data.posttest}</td>
-                <td data-postfill="${data.postfill}" data-satuan-nama="${postfillText}" class="text-center align-middle">${postfillText}</td>
-                <td data-selisih="${selisih}" class="text-center align-middle">${selisih}</td>
-                <td data-notes="${data.notes}" class="text-center align-middle">${data.notes}</td>
-                <td class="text-center align-middle">
-                    <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}" hidden><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
-                </td>
-            </tr>
+                <tr data-row-id="${rowCount}" class="nowrap">
+                    <td class="text-center align-middle d-none">${rowCount}</td>
+                    <td data-nama="${data.nama}" class="text-center align-middle">${data.nama}</td>
+                    <td data-gender="${data.gender}" class="text-center align-middle">${genderText}</td>
+                    <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+
+                    <td data-provinsi-id="${data.pilihprovinsi_id}" data-provinsi-nama="${provinsiText}" class="text-center align-middle">${provinsiText}</td>
+                    <td data-kabupaten-id="${data.pilihkabupaten_id}" data-kabupaten-nama="${kabupatenText}" class="text-center align-middle">${kabupatenText}</td>
+                    <td data-kecamatan-id="${data.pilihkecamatan_id}" data-kecamatan-nama="${kecamatanText}" class="text-center align-middle">${kecamatanText}</td>
+                    <td data-desa-id="${data.pilihdesa_id}" data-desa-nama="${desaText}" class="text-center align-middle">${desaText}</td>
+                    <td data-dusun-id="${data.pilihdusun_id}" data-dusun-nama="${dusunText}" class="text-center align-middle">${dusunText}</td>
+
+                    <td data-pretest="${data.pretest}" class="text-center align-middle">${data.pretest}</td>
+                    <td data-prefill="${data.prefill}" class="text-center align-middle">${prefillText}</td>
+
+                    <td data-posttest="${data.posttest}" class="text-center align-middle">${data.posttest}</td>
+                    <td data-postfill="${data.postfill}" class="text-center align-middle">${postfillText}</td>
+
+                    <td data-selisih="${selisih}" class="text-center align-middle">${selisih}</td>
+                    <td data-notes="${data.notes}" class="text-center align-middle">${data.notes}</td>
+
+                    <td class="text-center align-middle">
+                        <button class="btn btn-sm btn-info edit-btn" id="edit-btn-${rowCount}"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-sm btn-danger delete-btn"><i class="bi bi-trash3"></i></button>
+                    </td>
+                </tr>
             `;
 
             $("#tableBody").append(newRow);
@@ -385,28 +240,21 @@
             const form = $("#dataForm")[0];
 
             if (form.checkValidity()) {
-                const formData = $("#dataForm").serializeArray().reduce((obj, item) => {
-                    if (obj[item.name]) {
-                        if (!Array.isArray(obj[item.name])) {
-                            obj[item.name] = [obj[item.name]];
-                        }
-                        obj[item.name].push(item.value);
-                    } else {
-                        obj[item.name] = item.value;
-                    }
-                    return obj;
-                }, {});
-
-                if (!Array.isArray(formData.disabilitas)) {
-                    formData.disabilitas = [formData.disabilitas];
-                }
-
-                if (!Array.isArray(formData.kelompok_rentan)) {
-                    formData.kelompok_rentan = [formData.kelompok_rentan];
-                }
-
-                // Get the selected activities
-                formData.activitySelect = $("#activitySelect").val();
+                const formData = {
+                    nama: $("#nama").val(),
+                    gender: $("#gender").val(),
+                    no_telp: $("#no_telp").val(),
+                    pilihprovinsi_id: $("#pilihprovinsi_id").val(),
+                    pilihkabupaten_id: $("#pilihkabupaten_id").val(),
+                    pilihkecamatan_id: $("#pilihkecamatan_id").val(),
+                    pilihdesa_id: $("#pilihdesa_id").val(),
+                    pilihdusun_id: $("#pilihdusun_id").val(),
+                    pretest: $("#pretest").val(),
+                    prefill: $("#prefill").val(),
+                    posttest: $("#posttest").val(),
+                    postfill: $("#postfill").val(),
+                    notes: $("#notes").val()
+                };
 
                 addRow(formData);
                 resetFormAdd();
@@ -431,7 +279,7 @@
 
             // Reset input text dan angka
             $("input[name='nama']").val("");
-            $("input[name='no_telp']").val("");
+            $("input[name='notelp']").val("");
             $("input[name='pretest']").val("");
             $("input[name='posttest']").val("");
             $("input[name='notes']").val("");
@@ -442,11 +290,24 @@
 
         function resetFormEdit() {
             $("#editDataForm")[0].reset();
-            $("#kelompok_rentan").val(null).trigger("change");
-            $("#editDisabilitas").val(null).trigger("change");
-            $("#activitySelectEdit").val(null).trigger("change");
-            $("#editDesa").val(null).trigger("change");
-            $("#editDusun").val(null).trigger("change");
+            // Reset Select2 dropdowns
+            $("#pilihprovinsi_id").val(null).trigger("change");
+            $("#pilihkabupaten_id").val(null).trigger("change");
+            $("#pilihkecamatan_id").val(null).trigger("change");
+            $("#pilihdesa_id").val(null).trigger("change");
+            $("#pilihdusun_id").val(null).trigger("change");
+            $("#gender").val(null).trigger("change");
+            $("#prefill").val(null).trigger("change");
+            $("#postfill").val(null).trigger("change");
+
+            // Reset input text dan angka
+            $("input[name='nama']").val("");
+            $("input[name='notelp']").val("");
+            $("input[name='prescore']").val("");
+            $("input[name='postscore']").val("");
+            $("input[name='keterangan']").val("");
+
+            // Sembunyikan modal setelah reset
             $("#editDataModal").modal("hide");
         }
 
@@ -454,102 +315,38 @@
             const currentRow = $(row).closest("tr");
             const rowId = currentRow.data("row-id");
 
-            const disabilitas = currentRow.find("td[data-disabilitas]").attr("data-disabilitas");
-            const disabilitasValues = disabilitas ? disabilitas.split(",") : [];
+            // Nama & No Telp
+            $("#editnama").val(currentRow.find("td[data-nama]").attr("data-nama") || "");
+            $("#editno_telp").val(currentRow.find("td[data-no_telp]").attr("data-no_telp") || "");
 
-            const kelompok_rentan = currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan");
-            const kelompokRentanValues = kelompok_rentan ? kelompok_rentan.split(",") : [];
-            const kelompokRentanFullData = JSON.parse(currentRow.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan_full") || "[]");
+            // Gender
+            const gender = currentRow.find("td[data-gender]").attr("data-gender") || "";
+            $("#editgender").val(gender).trigger("change");
 
-            const desaId = currentRow.find("td[data-desa-id]").data("desa-id");
-            const desaNama = currentRow.find("td[data-desa-id]").data("desa-nama");
-
-            const dusunId = currentRow.find("td[data-dusun-id]").data("dusun-id");
-            const dusunNama = currentRow.find("td[data-dusun-id]").data("dusun-nama");
-
-            const jenisKelompokId = currentRow.find("td[data-jenis_kelompok]").data("jenis_kelompok");
-            const jenisKelompokNama = currentRow.find("td[data-jenis_kelompok-text]").data("jenis_kelompok-text");
-
-            // console.log("jenis_kelompk:", jenisKelompokId, jenisKelompokNama);
-
-            $("#editKelompokRentan").select2({
-                multiple: true,
-                ajax: {
-                    url: '{{ route('api.beneficiary.kelompok.rentan') }}',
-                    dataType: "json",
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1,
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        const combinedResults = [...kelompokRentanFullData, ...data.results];
-                        const uniqueResults = combinedResults.filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i);
-                        return {
-                            results: uniqueResults,
-                            pagination: {
-                                more: data.pagination.more,
-                            },
-                        };
-                    },
-                    cache: true,
-                },
-                dropdownParent: $("#editDataModal"),
-                width: "100%",
-                closeOnSelect: false,
-                placeholder: "{{ __('cruds.beneficiary.penerima.sel_rentan') }} ...",
+            // Lokasi (provinsi, kabupaten, kecamatan, desa, dusun)
+            const locationFields = ["provinsi", "kabupaten", "kecamatan", "desa", "dusun"];
+            locationFields.forEach(field => {
+                const id = currentRow.find(`td[data-${field}-id]`).attr(`data-${field}-id`) || 0;
+                const name = currentRow.find(`td[data-${field}-nama]`).attr(`data-${field}-nama`) || "-";
+                const select = $(`#edit${field}_id`);
+                select.empty().append(new Option(name, id, true, true)).trigger('change');
             });
 
-            kelompokRentanFullData.forEach(function(item) {
-                if ($("#editKelompokRentan option[value='" + item.id + "']").length === 0) {
-                    var option = new Option(item.text, item.id, true, true);
-                    $("#editKelompokRentan").append(option);
-                }
-            });
+            // Pretest & Prefill
+            $("#editpretest").val(currentRow.find("td[data-pretest]").attr("data-pretest") || "");
+            $("#editprefill").val(currentRow.find("td[data-prefill]").attr("data-prefill")).trigger("change");
 
-            const activityHeaders = $('#activityHeaders th.activity-header');
-            const selectedActivities = activityHeaders.map((index, header) => {
-                const activityId = $(header).data('activity-id');
-                const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
-                const isChecked = cell.text().trim() === '✔️'; // Assuming checkmark still indicates selection
-                return isChecked ? activityId.toString() : null;
-            }).get().filter(Boolean);
+            // Posttest & Postfill
+            $("#editposttest").val(currentRow.find("td[data-posttest]").attr("data-posttest") || "");
+            $("#editpostfill").val(currentRow.find("td[data-postfill]").attr("data-postfill")).trigger("change");
 
-            // Ensure Select2 is initialized
-            if (!$('#activitySelectEdit').data('select2')) {
-                $('#activitySelectEdit').select2({
-                    placeholder: "Select Activities",
-                    allowClear: true
-                });
-            }
+            // Notes
+            $("#editnotes").val(currentRow.find("td[data-notes]").attr("data-notes") || "");
 
-            $('#activitySelectEdit').val(selectedActivities).trigger('change');
-            // console.info("Activities: ", selectedActivities)
-
-
-            // Kemudian set nilai dan trigger change
-            $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
-            // $("#editKelompokRentan").val(kelompokRentanValues).trigger("change");
-            // $("#editJenisKelompok").val(jenisKelompokId).trigger("change");
-
-
+            // Simpan ID baris ke hidden input
             $("#editRowId").val(rowId);
-            $("#editNama").val(currentRow.find("td[data-nama]").attr("data-nama"));
-            $("#editGender").val(currentRow.find("td[data-gender]").attr("data-gender")).trigger("change");
-            $("#editDisabilitas").val(disabilitasValues).trigger("change");
-            $("#editRt").val(currentRow.find("td[data-rt]").attr("data-rt"));
-            $("#editRwBanjar").val(currentRow.find("td[data-rw_banjar]").attr("data-rw_banjar"));
-            $("#editDesa").append(new Option(desaNama, desaId, true, true)).trigger("change");
-            $("#editDusun").append(new Option(dusunNama, dusunId, true, true)).trigger("change");
-            $("#editJenisKelompok").append(new Option(jenisKelompokNama, jenisKelompokId, true, true)).trigger("change");
-            // $("#editJenisKelompok").val(currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"));
 
-            $("#editNoTelp").val(currentRow.find("td[data-no_telp]").attr("data-no_telp"));
-            $("#editUsia").val(currentRow.find("td[data-usia]").attr("data-usia"));
-
+            // Tampilkan modal edit
             $("#editDataModal").modal("show");
         }
 
@@ -557,120 +354,75 @@
             const rowId = $("#editRowId").val();
             const form = document.getElementById("editDataForm");
 
-            const desaId = $("#editDesa").val();
-            const desaText = $("#editDesa option:selected").text();
-            const dusunId = $("#editDusun").val();
-            const dusunText = $("#editDusun option:selected").text();
-
-            const jenisKelompokId = $("#editJenisKelompok").val();
-            const jenisKelompokText = $("#editJenisKelompok option:selected").text();
-
-            console.log("Update Jenis Kelompok Value: ", jenisKelompokId + jenisKelompokText);
-
             if (!form) {
                 console.error("Edit form not found");
                 return;
             }
 
             if (form.checkValidity()) {
-                const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
-                    if (obj[item.name]) {
-                        if (!Array.isArray(obj[item.name])) {
-                            obj[item.name] = [obj[item.name]];
-                        }
-                        obj[item.name].push(item.value);
-                    } else {
-                        obj[item.name] = item.value;
-                    }
-                    return obj;
-                }, {});
+                // Ambil nilai dari form edit
+                const formData = {
+                    nama: $("#editnama").val(),
+                    gender: $("#editgender").val(),
+                    genderText: $("#editgender option:selected").text(),
+                    no_telp: $("#editno_telp").val(),
+                    pretest: $("#editpretest").val(),
+                    prefill: $("#editprefill").val(),
+                    prefillText: $("#editprefill option:selected").text(),
+                    posttest: $("#editposttest").val(),
+                    postfill: $("#editpostfill").val(),
+                    postfillText: $("#editpostfill option:selected").text(),
+                    notes: $("#editnotes").val(),
+                    provinsiId: $("#editprovinsi_id").val(),
+                    provinsiText: $("#editprovinsi_id option:selected").text(),
+                    kabupatenId: $("#editkabupaten_id").val(),
+                    kabupatenText: $("#editkabupaten_id option:selected").text(),
+                    kecamatanId: $("#editkecamatan_id").val(),
+                    kecamatanText: $("#editkecamatan_id option:selected").text(),
+                    desaId: $("#editdesa_id").val(),
+                    desaText: $("#editdesa_id option:selected").text(),
+                    dusunId: $("#editdusun_id").val(),
+                    dusunText: $("#editdusun_id option:selected").text()
+                };
 
-                // Ensure formData.disabilitas is an array
-                if (!Array.isArray(formData.disabilitas)) {
-                    formData.disabilitas = [formData.disabilitas];
-                }
+                // Hitung selisih
+                const selisih = parseInt(formData.posttest || 0) - parseInt(formData.pretest || 0);
 
-                // Ensure formData.kelompok_rentan is an array
-                if (!Array.isArray(formData.kelompok_rentan)) {
-                    formData.kelompok_rentan = [formData.kelompok_rentan];
-                }
-
-                // Ensure formData.jenis_kelompok is an array
-                if (!Array.isArray(formData.jenis_kelompok)) {
-                    formData.jenis_kelompok = [formData.jenis_kelompok];
-                }
-
-                const updatedActivities = $("#activitySelectEdit").val() || [];
-                // Update activities in the row
-                const activityHeaders = $('#activityHeaders th.activity-header');
-
-
-                const genderText = $("#editGender option:selected").text();
-
-                const kelompokRentanData = $("#editKelompokRentan").select2("data").map(item => ({
-                    id: item.id,
-                    text: item.text
-                }));
-
-                const kelompokRentanHtml = kelompokRentanData.map((item) => {
-                    const randomColor = getRandomColor();
-                    return `<span class="badge badge-${randomColor}">${item.text}</span>`;
-                }).join(" ");
-
+                // Update data di baris tabel
                 const currentRow = $("#dataTable tbody").find(`tr[data-row-id="${rowId}"]`);
                 if (currentRow.length === 0) {
                     console.error("Row not found");
                     return;
                 }
 
+                currentRow.find("td[data-nama]").text(formData.nama).attr("data-nama", formData.nama);
+                currentRow.find("td[data-gender]").text(formData.genderText).attr("data-gender", formData.gender);
+                currentRow.find("td[data-no_telp]").text(formData.no_telp).attr("data-no_telp", formData.no_telp);
 
-                activityHeaders.each(function(index) {
-                    const activityId = $(this).data('activity-id');
-                    const cell = currentRow.find(`td[data-program-activity-id="${activityId}"]`);
-                    if (updatedActivities.includes(activityId.toString())) {
-                        cell.text('✔️'); // Set checkmark if activity is in updated list
-                    } else {
-                        cell.text(''); // Clear checkmark if activity is not in updated list
-                    }
+                const locationFields = ["provinsi", "kabupaten", "kecamatan", "desa", "dusun"];
+                locationFields.forEach(field => {
+                    const id = formData[`${field}Id`];
+                    const name = formData[`${field}Text`];
+                    currentRow.find(`td[data-${field}-id]`)
+                        .text(name)
+                        .attr(`data-${field}-id`, id)
+                        .attr(`data-${field}-nama`, name);
                 });
 
+                currentRow.find("td[data-pretest]").text(formData.pretest).attr("data-pretest", formData.pretest);
+                currentRow.find("td[data-prefill]").text(formData.prefillText).attr("data-prefill", formData.prefill);
+                currentRow.find("td[data-posttest]").text(formData.posttest).attr("data-posttest", formData.posttest);
+                currentRow.find("td[data-postfill]").text(formData.postfillText).attr("data-postfill", formData.postfill);
+                currentRow.find("td[data-selisih]").text(selisih).attr("data-selisih", selisih);
+                currentRow.find("td[data-notes]").text(formData.notes).attr("data-notes", formData.notes);
 
-                currentRow.find("td[data-nama]").text(formData.nama).attr("data-nama", formData.nama);
-                currentRow.find("td[data-gender]").text(genderText).attr("data-gender", formData.gender);
-
-                currentRow.find("td[data-disabilitas]").html(formData.disabilitas.map((value) => {
-                    const text = $('#editDisabilitas option[value="' + value + '"]').text();
-                    const randomColor = getRandomColor();
-                    return `<span class="badge badge-${randomColor}">${text}</span>`;
-                }).join(" ")).attr("data-disabilitas", formData.disabilitas.join(","));
-
-
-                currentRow.find("td[data-rt]").text(formData.rt).attr("data-rt", formData.rt);
-                currentRow.find("td[data-rw_banjar]").text(formData.rw_banjar).attr("data-rw_banjar", formData.rw_banjar);
-                currentRow.find("td[data-no_telp]").text(formData.no_telp).attr("data-no_telp", formData.no_telp);
-                // currentRow.find("td[data-jenis_kelompok]").text(formData.jenis_kelompok.join(", ")).attr("data-jenis_kelompok", formData.jenis_kelompok.join(","));
-                currentRow.find("td[data-usia]").text(formData.usia).attr("data-usia", formData.usia);
-                currentRow.find("td[data-desa-id]").attr("data-desa-id", desaId).attr("data-desa-nama", desaText).text(desaText);
-                currentRow.find("td[data-dusun-id]").attr("data-dusun-id", dusunId).attr("data-dusun-nama", dusunText).text(dusunText);
-                currentRow.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok", jenisKelompokId).attr("data-jenis_kelompok-text", jenisKelompokText).text(jenisKelompokText);
-
-                currentRow.find("td[data-kelompok_rentan]").html(kelompokRentanHtml).attr("data-kelompok_rentan", kelompokRentanData.map((item) => item.id).join(",")).attr("data-kelompok_rentan_full", JSON.stringify(kelompokRentanData));
-
-
+                // Reset form dan tutup modal
                 resetFormEdit();
                 $("#editDataModal").modal("hide");
-
-                $("#disabilitas").val(null).trigger("change");
-                $("#editKelompokRentan").val(null).trigger("change");
-                $("#editGender").val(null).trigger("change");
-
-                form.reset();
             } else {
                 form.reportValidity();
             }
         }
-
-
 
         function deleteRow(row) {
             $(row).closest("tr").remove();
@@ -680,6 +432,102 @@
             const colors = ["primary", "secondary", "success", "danger", "warning", "info", "light", "dark"];
             const randomIndex = Math.floor(Math.random() * colors.length);
             return colors[randomIndex];
+        }
+
+        function prosesSimpanDataPreposttest({ activity_id, nama_pelatihan, start_date, end_date}) {
+            const userId = $("#user_id").val();
+            const tableData = [];
+
+            $("#dataTable tbody tr").each(function () {
+                const row = $(this);
+
+                const rowData = {
+                    nama: row.find("td[data-nama]").attr("data-nama"),
+                    gender: row.find("td[data-gender]").attr("data-gender"),
+                    no_telp: row.find("td[data-no_telp]").attr("data-no_telp"),
+                    pretest: row.find("td[data-pretest]").attr("data-pretest"),
+                    prefill: row.find("td[data-prefill]").attr("data-prefill"),
+                    posttest: row.find("td[data-posttest]").attr("data-posttest"),
+                    postfill: row.find("td[data-postfill]").attr("data-postfill"),
+                    selisih: row.find("td[data-selisih]").attr("data-selisih"),
+                    notes: row.find("td[data-notes]").attr("data-notes"),
+                    provinsi_id: row.find("td[data-provinsi-id]").attr("data-provinsi-id"),
+                    kabupaten_id: row.find("td[data-kabupaten-id]").attr("data-kabupaten-id"),
+                    kecamatan_id: row.find("td[data-kecamatan-id]").attr("data-kecamatan-id"),
+                    desa_id: row.find("td[data-desa-id]").attr("data-desa-id"),
+                    dusun_id: row.find("td[data-dusun-id]").attr("data-dusun-id"),
+                };
+
+                tableData.push(rowData);
+            });
+
+            if (tableData.length === 0) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Tidak ada data peserta yang bisa disimpan!",
+                    icon: "error",
+                    timer: 1500,
+                    timerProgressBar: true,
+                });
+                return;
+            }
+
+            const submitData = {
+                user_id: userId,
+                programoutcomeoutputactivity_id: activity_id,
+                nama_pelatihan,
+                start_date,
+                end_date,
+                data: tableData
+            };
+
+            $.ajax({
+                url: "{{ route('prepost.store') }}",
+                method: "POST",
+                data: JSON.stringify(submitData),
+                contentType: "application/json",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                beforeSend: function () {
+                    Swal.fire({
+                        title: "Menyimpan...",
+                        text: "Mohon tunggu data sedang diproses.",
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: "Sukses",
+                        text: response.message || "Data berhasil disimpan!",
+                        icon: "success",
+                        timer: 1500,
+                        timerProgressBar: true,
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = "Terjadi kesalahan saat menyimpan data.";
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).flat().join("\n");
+                    } else if (xhr.responseJSON?.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        title: "Error",
+                        text: errorMessage,
+                        icon: "error",
+                        width: '40em',
+                        timer: 5000,
+                        timerProgressBar: true,
+                    });
+                }
+            });
         }
 
         function bindEvents() {
@@ -747,47 +595,44 @@
             });
 
             $("#submitDataBtn").on("click", function() {
-                const tableData = [];
-                $("#dataTable tbody tr").each(function() {
-                    const row = $(this);
-                    const rowData = {
-                        nama: row.find("td[data-nama]").attr("data-nama"),
-                        gender: row.find("td[data-gender]").attr("data-gender"),
-                        disabilitas: row.find("td[data-disabilitas]").attr("data-disabilitas").split(","),
-                        kelompok_rentan: row.find("td[data-kelompok_rentan]").attr("data-kelompok_rentan").split(","),
-                        rt: row.find("td[data-rt]").attr("data-rt"),
-                        rw_banjar: row.find("td[data-rw_banjar]").attr("data-rw_banjar"),
-                        dusun_id: row.find("td[data-dusun-id]").attr("data-dusun-id"),
-                        desa_id: row.find("td[data-desa-id]").attr("data-desa-id"),
-                        no_telp: row.find("td[data-no_telp]").attr("data-no_telp"),
-                        jenis_kelompok: row.find("td[data-jenis_kelompok]").attr("data-jenis_kelompok"),
-                        usia: row.find("td[data-usia]").attr("data-usia"),
-                    };
-                    tableData.push(rowData);
-                });
+                const activityId = $("#programoutcomeoutputactivity_id").val();
+                const namaPelatihan = $("#nama_pelatihan").val();
+                const startDate = $("#start_date").val();
+                const endDate = $("#end_date").val();
 
-                const jsonData = JSON.stringify(tableData, null, 2);
-                $("#modalData").text(jsonData);
-                $("#previewModalsData").modal("show");
-            });
+                if (!activityId || !namaPelatihan || !startDate || !endDate) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Harap lengkapi semua isian: kegiatan, nama pelatihan, dan tanggal!",
+                        icon: "error",
+                        timer: 2000,
+                        timerProgressBar: true,
+                    });
+                    return;
+                }
 
-            $("#sendDataBtn").on("click", function() {
-                const finalData = JSON.parse($("#modalData").text());
-
-                $.ajax({
-                    url: "/beneficiary/kirim-peserta",
-                    method: "POST",
-                    data: JSON.stringify(finalData),
-                    contentType: "application/json",
-                    success: function(response) {
-                        alert("Data sent successfully!");
-                        $("#previewModal").modal("hide");
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Error sending data: " + error);
-                    },
+                Swal.fire({
+                    title: "Yakin ingin menyimpan?",
+                    text: "Data pelatihan akan disimpan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, simpan!",
+                    cancelButtonText: "Batal",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        prosesSimpanDataPreposttest({
+                            activity_id: activityId,
+                            nama_pelatihan: namaPelatihan,
+                            start_date: startDate,
+                            end_date: endDate,
+                        });
+                    }
                 });
             });
+
+            
+
+            
         }
 
         $("#ModalTambah, #editDataModal").on("shown.bs.modal", function() {

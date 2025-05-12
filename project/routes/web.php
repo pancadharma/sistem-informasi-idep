@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\KomponenModelController;
+use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Monolog\Handler\RotatingFileHandler;
@@ -368,8 +369,17 @@ Route::middleware(['auth'])->group(function () {
 
     // MEALS Pre Post
     Route::group(['prefix' => 'prepost', 'as' => 'prepost.'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\Admin\MealsPrePostTestController::class, 'create'])->name('create');
+        Route::get('/', [MealsPrePostTestController::class, 'index'])->name('index');
+        Route::get('/create', [MealsPrePostTestController::class, 'create'])->name('create');
+        Route::get('/{id}/edit', [MealsPrePostTestController::class, 'edit'])->name('edit');
+        Route::post('/', [MealsPrePostTestController::class, 'store'])->name('store');
+        Route::get('/datatable', [MealsPrePostTestController::class, 'getPrepostDatatable'])->name('datatable');
+        Route::post('/add', [MealsPrePostTestController::class, 'storeAddPeserta'])->name('store.editadd');//tambah data peserta baru ketika edit 
+        Route::get('/{id}/get', [MealsPrePostTestController::class, 'getPesertaById'])->name('get.barispeserta'); // ambil data peserta berdasarkan id ketika edit
+        Route::put('/{id}/update', [MealsPrePostTestController::class, 'updateSinglepeserta'])->name('update.barispeserta'); // update data peserta berdasarkan id ketika edit
+        Route::delete('/peserta/{id}', [MealsPrePostTestController::class, 'deletePeserta'])->name('peserta.delete'); // delete peserta
+        Route::post('/{id}/update-prepost', [MealsPrePostTestController::class, 'updatePrePostHeader'])->name('update.header'); // update data pre post
+
     });
 
     // TARGET & PROGRESS

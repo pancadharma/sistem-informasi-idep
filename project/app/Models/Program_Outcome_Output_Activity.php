@@ -63,4 +63,9 @@ class Program_Outcome_Output_Activity extends Model
             'trmeals_penerima_manfaat_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
     }
+
+    public function preposttests()
+    {
+        return $this->hasMany(Meals_PrePostTest::class, 'programoutcomeoutputactivity_id');
+    }
 }

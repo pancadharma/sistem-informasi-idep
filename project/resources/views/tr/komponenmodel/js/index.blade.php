@@ -1,7 +1,7 @@
 <script>
         $(document).ready(function () {
         $('#komponenmodelTable').DataTable({
-            serverSide: true,
+            serverSide: false,
             processing: true,
             // responsive: true,
             ajax: '{{ route('api.komodel.datatable') }}',
@@ -17,7 +17,7 @@
     },
     { data: 'program_name', name: 'program_name', title: '{{ __('cruds.program.nama') }}' },
     { data: 'sektor', name: 'sektor', title: '{{ __('cruds.komponenmodel.sektor') }}' },
-    { data: 'komponen_model', name: 'komponen_model', title: '{{ __('cruds.komponenmodel.nama') }}' },
+    { data: 'komponen_model', name: 'komponen_model', title: '{{ __('cruds.komponenmodel.nama') }}', orderable: true, searchable: true, },
     { data: 'totaljumlah', name: 'totaljumlah', title: '{{ __('cruds.komponenmodel.jumlah') }}' },
     // { data: 'satuan', name: 'satuan', title: '{{ __('cruds.komponenmodel.satuan') }}' },
     { data: 'provinsi', name: 'provinsi', title: '{{ __('cruds.komponenmodel.provinsi') }}' },
