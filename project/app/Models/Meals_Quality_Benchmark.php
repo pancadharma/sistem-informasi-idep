@@ -16,10 +16,13 @@ class Meals_Quality_Benchmark extends Model
     protected $fillable = [
         'program_id',
         'jeniskegiatan_id',
-        'programoutcomeoutputactivity_id',
+        'kegiatan_id',
         'desa_id',
+        'kecamatan_id',
+        'kabupaten_id',
+        'provinsi_id',
         'tanggalimplementasi',
-        'userhandler_id',
+        'handler',
         'usercompiler_id',
         'score',
         'catatanevaluasi',
@@ -40,31 +43,41 @@ class Meals_Quality_Benchmark extends Model
     // Relasi
     public function program()
     {
-        return $this->belongsTo(Program::class, 'id_program');
+        return $this->belongsTo(Program::class, 'program_id', 'id');
     }
 
     public function jenisKegiatan()
     {
-        return $this->belongsTo(Jenis_Kegiatan::class, 'id_jeniskegiatan');
+        return $this->belongsTo(Jenis_Kegiatan::class, 'jeniskegiatan_id','id');
     }
 
     public function outcomeActivity()
     {
-        return $this->belongsTo(Program_Outcome_Output_Activity::class, 'id_programoutcomeoutputactivity');
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id', 'id');
     }
 
     public function desa()
     {
-        return $this->belongsTo(Kecamatan::class, 'id_desa');
+        return $this->belongsTo(Kelurahan::class, 'desa_id', 'id');
     }
 
-    public function handler()
+    public function kecamatan()
     {
-        return $this->belongsTo(User::class, 'id_userhandler');
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id', 'id');
+    }
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class, 'kabupaten_id', 'id');
+    }
+
+    public function provinsi()
+    {
+        return $this->belongsTo(Provinsi::class, 'provinsi_id', 'id');
     }
 
     public function compiler()
     {
-        return $this->belongsTo(User::class, 'id_usercompiler');
+        return $this->belongsTo(User::class, 'usercompiler_id', 'id');
     }
 }

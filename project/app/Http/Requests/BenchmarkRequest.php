@@ -16,14 +16,16 @@ class BenchmarkRequest extends FormRequest
     {
         return [
             'program_id' => ['required', 'exists:trprogram,id'],
-            'jenis_kegiatan_id' => ['required', 'exists:trkegiatan,id'],
-            'outcome_activity_id' => ['required', 'exists:trmealsqb,id'], // Jika relasinya benar
-            'dusun_id' => ['required', 'exists:mdusun,id'],
+            'jenis_kegiatan_id' => ['required', 'exists:mjeniskegiatan,id'],
+            'kegiatan_id' => ['required', 'exists:trkegiatan,id'], // Jika relasinya benar
+            'desa_id' => ['required', 'exists:kelurahan,id'],
+            'kecamatan_id' => ['required', 'exists:kecamatan,id'],
+            'provinsi_id' => ['required', 'exists:provinsi,id'],
+            'kabuoaten_id' => ['required', 'exists:kabupaten,id'],
             'tanggal_implementasi' => ['required', 'date'],
-            'user_handler_id' => ['required', 'exists:users,id'],
+            'handler' => ['required'],
             'user_compiler_id' => ['required', 'exists:users,id'],
             'score' => ['required', 'numeric', 'between:0,100'],
-            'lokasi' => ['nullable', 'string', 'max:255'],
             'catatan_evaluasi' => ['nullable', 'string'],
         ];
     }

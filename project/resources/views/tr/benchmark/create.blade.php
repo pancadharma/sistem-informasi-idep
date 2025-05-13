@@ -1,13 +1,17 @@
 @extends("layouts.app")
 
+
+@section('subtitle', __('cruds.benchmark.add'))
+@section('content_header_title') <strong>{{ __('cruds.benchmark.add') }}</strong>  @endsection
+@section('sub_breadcumb')<a href="{{ route('benchmark.index') }}" title="{{ __('cruds.benchmark.list') }}"> {{ __('cruds.benchmark.list') }} </a> @endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.benchmark.add') }}">{{ __('cruds.benchmark.add') }}</span> @endsection
+
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
     <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
 @endsection
 
 @section('subtitle', 'Tambah Benchmark')
-
-@section('content_header_title', 'Tambah Benchmark')
 
 @section('content_body')
 <div class="card card-outline card-primary">
@@ -17,52 +21,85 @@
             <div class="row">
                 {{-- Kiri --}}
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Program</label>
-                        <select id="program_id" name="program_id" class="form-control" required>
-                            <option value="">-- Pilih Program --</option>
-                            @foreach ($programs as $program)
-                                <option value="{{ $program->id }}">{{ $program->nama }}</option>
-                            @endforeach
-                        </select>
+                    <div class="form-group row">
+                        <!-- nama program-->
+                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+                            <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+                        <!-- id program -->
+                            <input type="hidden" name="program_id" id="program_id">
+                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}">
+                        <!-- kode program -->
+                            <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
+                            data-toggle="modal" data-target="#ModalDaftarProgram">
+                        </div>
+                        <!-- nama program-->
+                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
+                            <label for="nama_program" class="input-group col-form-label">
+                                {{ __('cruds.kegiatan.basic.program_nama') }}
+                            </label>
+                            <input type="text" class="form-control" id="nama_program" readonly placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
+                        </div>
                     </div>
+                
                     <div class="form-group">
                         <label for="jenis_kegiatan_id">Jenis Kegiatan</label>
                         <select id="jenis_kegiatan_id" name="jenis_kegiatan_id" class="form-control" required>
-                            <option value="">-- Pilih Jenis Kegiatan --</option>
+                            <option value="">Pilih Jenis Kegiatan</option>
                             @foreach ($kegiatan as $item)
                                 <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="form-group row">
+                        <!-- kode kegiatan-->
+                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
+                            <label for="kode_kegiatan" class="input-group col-form-label">
+                                {{ __('cruds.kegiatan.basic.kode') }}
+                            </label>
+                            <input type="hidden" class="form-control" id="programoutcomeoutputactivity_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="programoutcomeoutputactivity_id">
+                            <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
+                            data-toggle="modal" data-target="#ModalDaftarProgramActivity">
+                        </div>
+                        <!-- nama kegiatan-->
+                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
+                            <label for="nama_kegiatan" class="input-group col-form-label">
+                                {{ __('cruds.kegiatan.basic.nama') }}
+                            </label>
+                            <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan">
+                        </div>
+                    </div>
+
                     <div class="form-group">
-                        <label for="outcome_activity_id">Kegiatan</label>
-                        <select id="outcome_activity_id" name="outcome_activity_id" class="form-control" required>
-                            <option value="">-- Pilih Kegiatan --</option>
-                            @foreach ($outcomes as $outcome)
-                                <option value="{{ $outcome->id }}">{{ $outcome->nama }}</option>
-                            @endforeach
+                        <label>Provinsi</label>
+                        <select id="provinsi_id" name="provinsi_id" class="form-control" required>
+                            <option>
+                                
+                            </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Provinsi</label>
-                        <input type="text" class="form-control" name="provinsi">
-                    </div>
-                    <div class="form-group">
                         <label>Kabupaten</label>
-                        <input type="text" class="form-control" name="kabupaten">
-                    </div>
+                        <select id="kabupaten_id" name="kabupaten_id" class="form-control" required>
+                            <option>
+
+                            </option>
+                        </select>
+                    </div>        
                     <div class="form-group">
                         <label>Kecamatan</label>
-                        <input type="text" class="form-control" name="kecamatan">
+                        <select id="kecamatan_id" name="kecamatan_id" class="form-control" required>
+                            <option value="">
+
+                            </option>
+                        </select>    
                     </div>
                     <div class="form-group">
-                        <label for="dusun_id">Desa</label>
-                        <select id="dusun_id" name="dusun_id" class="form-control" required>
-                            <option value="">-- Pilih Desa --</option>
-                            @foreach ($dusun as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                            @endforeach
+                        <label>Desa</label>
+                        <select id="desa_id" name="desa_id" class="form-control" required>
+                            <option value="">
+                                
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -74,13 +111,8 @@
                         <input type="date" id="tanggal_implementasi" name="tanggal_implementasi" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="user_handler_id">Handler</label>
-                        <select id="user_handler_id" name="user_handler_id" class="form-control" required>
-                            <option value="">-- Pilih Handler --</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
+                        <label for="handler">Handler</label>
+                        <input type="text" id="handler" name="handler" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="user_compiler_id">Compiler</label>
@@ -97,7 +129,7 @@
                     </div>
                     <div class="form-group">
                         <label for="catatan_evaluasi">Catatan Evaluasi</label>
-                        <textarea id="catatan_evaluasi" name="catatan_evaluasi" class="form-control"></textarea>
+                        <textarea id="catatan_evaluasi" name="catatan_evaluasi" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Area Peningkatan</label>
@@ -112,6 +144,7 @@
         </form>
     </div>
 </div>
+
 @endsection
 
 @push('js')
@@ -120,5 +153,16 @@
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-<script src="{{ asset('tr/benchmark/js/create.blade.js') }}"></script>
+
+<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
+<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
+<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
+
+@include('tr.benchmark.js.create')
+@include('tr.benchmark.program-modal')
+@include('tr.benchmark.kegiatan-modal')
 @endpush

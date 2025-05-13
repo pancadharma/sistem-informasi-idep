@@ -1,20 +1,12 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Daftar Benchmark')
-
+@section('subtitle', __('cruds.benchmark.list'))
 @section('content_header_title')
-<div class="d-flex align-items-center">
-    <a class="btn btn-success mr-3 w-25" href="{{ route('benchmark.create') }}" id="btnTambahBenchmark">
-        Tambah Benchmark
-    </a>
-    <select class="form-control w-auto" id="filterProgram">
-        <option value="">Filter Program</option>
-        {{-- Data program akan diisi via AJAX --}}
-    </select>
-</div>
+        <a class="btn-success btn" href="{{ route('benchmark.create') }}" title="{{ __('cruds.benchmark.add') }}">
+            {{ __('global.create') .' '.__('cruds.benchmark.label') }}
+        </a>
 @endsection
-
-@section('sub_breadcumb', 'Daftar Benchmark')
+@section('sub_breadcumb', __('cruds.benchmark.list'))
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -26,25 +18,22 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="bi bi-graph-up"></i>
-                Daftar Benchmark
+                {{__('cruds.benchmark.list')}}
             </h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('benchmark.create') }}`"
+                title="{{ __('global.create') . ' ' . __('cruds.benchmark.label') }}">
+                <i class="fas fa-plus"></i>
+            </button>
         </div>
 
         <div class="card-body table-responsive">
-            <table id="benchmarkTable" class="table table-bordered table-striped w-100">
-                <thead class="text-center">
-                    <tr>
-                        <th>Program</th>
-                        <th>Tipe Kegiatan</th>
-                        <th>Nama Kegiatan</th>
-                        <th>Tanggal Implementasi</th>
-                        <th>Score</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+            <table id="benchmarkTable" class="table responsive-table table-bordered datatable-benchmark" width="100%">
+               {{-- Header diambil dari js/index --}}
             </table>
         </div>
     </div>
+</div>
 @stop
 
 @push('css')

@@ -363,17 +363,17 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
-        Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getData'])->name('datatable');
-        Route::post('store',    [App\Http\Controllers\API\BenchmarkController::class, 'store'])->name('store');
-        Route::get('show/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'show'])->name('show');
-        Route::put('update/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [App\Http\Controllers\API\BenchmarkController::class, 'destroy'])->name('delete');
+        Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getBenchmarkDatatable'])->name('datatable');
+        Route::post('store', [App\Http\Controllers\API\BenchmarkController::class, 'storeBenchmark'])->name('store');
     
-        // Optional untuk dropdown / lookup
-        Route::get('programs',   [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
-        Route::get('kegiatan',   [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
-        Route::get('outcomes',   [App\Http\Controllers\API\BenchmarkController::class, 'getOutcomes'])->name('outcomes');
-        Route::get('dusuns',     [App\Http\Controllers\API\BenchmarkController::class, 'getDusuns'])->name('dusuns');
-    });
+        // Lokasi (lookup)
+        Route::get('provinsi', [App\Http\Controllers\API\BenchmarkController::class, 'getProv'])->name('provinsi');
+        Route::get('kabupaten', [App\Http\Controllers\API\BenchmarkController::class, 'getKabupatens'])->name('kabupaten');
+        Route::get('kecamatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKecamatans'])->name('kecamatan');
+        Route::get('desa', [App\Http\Controllers\API\BenchmarkController::class, 'getDesas'])->name('desa');
+        Route::get('programs', [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
+        Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
+        Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
+    });    
 
 });

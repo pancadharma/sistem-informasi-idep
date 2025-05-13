@@ -361,23 +361,23 @@ return [
                 [
                     'text'      => 'benchmark',
                     'icon'      => 'nav-icon bi bi-person-raised-hand',
-                    'icon_text' => 'monitoring',
+                    // 'icon_text' => 'monitoring',
                     'route'     => 'benchmark.index',
-                    'can'       => ['benchmark_access'],
+                    // 'can'       => ['benchmark_access'],
                     'active'    => ['benchmark', 'benchmark*', 'regex:@^benchmark/[0-9]+$@'],
                 ],
                 [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],
-                [
-                    'text'      => 'target_progress',
-                    'icon'      => 'nav-icon bi bi-bar-chart-steps', 
-                    'icon_text' => 'monitoring',
-                    'route'     => 'target_progress.index',
-                    // 'can'       => ['target_progress_access'],
-                    'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
-                ],
+                // [
+                //     'text'      => 'target_progress',
+                //     'icon'      => 'nav-icon bi bi-bar-chart-steps', 
+                //     'icon_text' => 'monitoring',
+                //     'route'     => 'target_progress.index',
+                //     // 'can'       => ['target_progress_access'],
+                //     'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
+                // ],
             ],
         ],
         [
