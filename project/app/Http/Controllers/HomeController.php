@@ -169,8 +169,8 @@ class HomeController extends Controller
             return $statsQuery
                 ->select(
                     'provinsi.id as provinsi_id',
-                    \DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
-                    \DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
+                    DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
+                    DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
                 )
                 ->groupBy('provinsi.id')
                 ->get()

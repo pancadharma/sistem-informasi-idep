@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Requests\UpdateKegiatanRequest;
 use App\Models\Dusun;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use App\Models\Kegiatan_Pemetaan;
 use App\Models\Kegiatan_Pengembangan;
 use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
+use App\Models\Peran;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -586,7 +588,7 @@ class KegiatanController extends Controller
 
             $kegiatan->penulis()->sync($penulisData); // sync handles adds, updates, and deletes
         } catch (Exception $e) {
-            \Log::error('Error updating penulis: ' . $e->getMessage());
+            Log::error('Error updating penulis: ' . $e->getMessage());
             throw $e;
         }
     }
@@ -764,6 +766,6 @@ class KegiatanController extends Controller
 
     public function getPeran()
     {
-        return Mperan::where('aktif', 1)->select('id', 'nama')->get();
+        return Peran::where('aktif', 1)->select('id', 'nama')->get();
     }
 }

@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\DashboardProvinsiController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Monolog\Handler\RotatingFileHandler;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -64,7 +66,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
         Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
-        // Route::get('/data/get-provinsi-koordinat', [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+        // Route::get('/data/get-provinsi-koordinat',       [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+        Route::get('/data/provinsi',                        [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
+        Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
+        Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
+
+
     });
 
     // Permissions
