@@ -47,6 +47,7 @@ class FeedbackController extends Controller
         $validatedData = $request->validate([
             'program_id' => 'required|integer|exists:trprogram,id', // Validasi ID program
             // 'program' => 'nullable|string|max:255', // Validasi nama string (tidak dipakai)
+            'nama_pelapor' => 'nullable|string|max:255',
             'tanggal_registrasi' => 'required|date',
             'umur' => 'nullable|integer|min:0',
             'penerima' => 'nullable|string|max:255',
@@ -115,6 +116,7 @@ class FeedbackController extends Controller
             'program_id' => 'required|integer|exists:trprogram,id',
             // Hapus atau komentari validasi untuk 'program' (string)
             // 'program' => 'nullable|string|max:255',
+            'nama_pelapor' => 'nullable|string|max:255',
             'tanggal_registrasi' => 'required|date',
             'umur' => 'nullable|integer|min:0',
             'penerima' => 'nullable|string|max:255',

@@ -29,6 +29,7 @@ class Feedback extends Model
     protected $fillable = [
         'program_id',           // Sudah Benar
         // 'program',           // Sudah Benar (dikomentari/dihapus)
+        'nama_pelapor',
         'tanggal_registrasi',
         'umur',
         'penerima',
