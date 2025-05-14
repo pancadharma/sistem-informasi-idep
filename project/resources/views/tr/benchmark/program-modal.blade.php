@@ -22,7 +22,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            
+                                
                             </tbody>
                         </table>
                     </div>
@@ -34,3 +34,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    #list_program_kegiatan td:nth-child(2) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 600px; /* Bisa disesuaikan */
+    }
+
+</style>

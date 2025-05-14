@@ -21,6 +21,7 @@ use App\Models\Meals_Quality_Benchmark; // Model untuk benchmark (table trmealsq
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Benchmark;
 
 class BenchmarkController extends Controller
 {
@@ -64,6 +65,23 @@ class BenchmarkController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+
+    public function getProgramActivities($id, Request $request)
+    {
+        $jenisKegiatanId = $request->jenis_kegiatan_id;
+            
+        $program = Program::with([
+            'outcome.output.activities' => function ($query) use ($jenisKegiatanId) {
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id', 'jeniskegiatan_id', 'created_at')
+                      ->when($jenisKegiatanId, function ($q) use ($jenisKegiatanId) {
+                          $q->where('jeniskegiatan_id', $jenisKegiatanId);
+                      });
+            }
+        ])->findOrFail($id);
+        
+        return response()->json($program);
+    }
+
     
     /**
      * Simpan benchmark baru.
@@ -202,33 +220,21 @@ class BenchmarkController extends Controller
      * Lookup kegiatan berdasarkan program_id dan jenis_kegiatan_id.
      * Dipakai untuk form benchmark ketika memilih kegiatan.
      */
-    public function getKegiatan(Request $request)
-    {
-        $search = $request->search;
-        $programId = $request->program_id;
-        $jenisKegiatanId = $request->jenis_kegiatan_id;
+ public function getKegiatan(Request $request)
+{
+    $programId = $request->program_id;
+    $jenisKegiatanId = $request->jenis_kegiatan_id;
 
-        $query = Kegiatan::query();
+    $kegiatan = DB::table('kegiatan')
+        ->join('jenis_kegiatan', 'kegiatan.jenis_kegiatan_id', '=', 'jenis_kegiatan.id')
+        ->where('kegiatan.program_id', $programId)
+        ->where('kegiatan.jenis_kegiatan_id', $jenisKegiatanId)
+        ->select('kegiatan.*', 'jenis_kegiatan.nama as jenis_kegiatan_nama')
+        ->get();
 
-        if ($programId) {
-            $query->where('program_id', $programId);
-        }
+    return response()->json($kegiatan);
+}
 
-        if ($jenisKegiatanId) {
-            $query->where('jenis_kegiatan_id', $jenisKegiatanId);
-        }
-
-        if ($search) {
-            $query->where('nama', 'like', '%' . $search . '%');
-        }
-
-        $results = $query->paginate(10);
-
-        return response()->json([
-            'results' => $results->items(),
-            'pagination' => ['more' => $results->hasMorePages()]
-        ]);
-    }
     
     /**
      * Lookup provinsi dari table trkegiatan berdasarkan kegiatan yang dipilih.

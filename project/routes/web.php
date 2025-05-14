@@ -372,6 +372,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('kecamatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKecamatans'])->name('kecamatan');
         Route::get('desa', [App\Http\Controllers\API\BenchmarkController::class, 'getDesas'])->name('desa');
         Route::get('programs', [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
+        Route::get('/benchmark/api/programs/{id}/activities', [App\Http\Controllers\API\BenchmarkController::class, 'getProgramActivities'])->name('programs.activities');
         Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
         Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
     });    
