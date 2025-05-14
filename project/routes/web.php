@@ -60,18 +60,20 @@ Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/',[HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/',                                     [HomeController::class, 'index'])->name('index');
         Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
         Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
-        // Route::get('/data/get-provinsi-koordinat',       [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
-        Route::get('/data/provinsi',                        [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
+
+        Route::get('/provinsi',                             [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
         Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
         Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
 
-
+        Route::get('/data/program-stats',   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desa',            [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie',   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
     });
 
     // Permissions
@@ -373,19 +375,19 @@ Route::middleware(['auth'])->group(function () {
 
     // TARGET & PROGRESS
     Route::group(['prefix' => 'target-progress', 'as' => 'target_progress.'], function () {
-        Route::get('/',						[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
-        Route::get('/create',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
-        Route::get('/{program_id}/edit',		[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
-        Route::POST('/store',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
+        Route::get('/',                        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
+        Route::get('/create',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+        Route::get('/{program_id}/edit',        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
+        Route::POST('/store',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
     });
     Route::group(['prefix' => 'target-progress/api/', 'as' => 'api.target_progress.'], function () {
-		Route::get('target-progresses',		[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
-        Route::get('programs',					[App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
-        Route::get('status-options',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
-        Route::get('risk-options',				[App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
-        Route::get('program/targets',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
-        Route::get('program/{id}/histories',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
+        Route::get('target-progresses',        [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
+        Route::get('programs',                    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
+        Route::get('status-options',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
+        Route::get('risk-options',                [App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
+        Route::get('program/targets',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
 
-        Route::get('target-progresses/{target_progress_id}/show',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
+        Route::get('target-progresses/{target_progress_id}/show',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
 });
