@@ -14,24 +14,24 @@ class KelompokMarjinalSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['nama' => 'Masyarakat Adat', 'aktif' => 1],
-            ['nama' => 'Disabilitas', 'aktif' => 1],
-            ['nama' => 'Komunitas LGBTQ+', 'aktif' => 1],
-            ['nama' => 'Pengungsi dan Pencari Suaka', 'aktif' => 1],
-            ['nama' => 'Tunawisma', 'aktif' => 1],
-            ['nama' => 'Lansia', 'aktif' => 1],
-            ['nama' => 'Perempuan dan Anak Perempuan', 'aktif' => 1],
-            ['nama' => 'Etnis Minoritas', 'aktif' => 1],
-            ['nama' => 'Pekerja Migran', 'aktif' => 1],
-            ['nama' => 'Korban Kekerasan dan Eksploitasi', 'aktif' => 1],
-            ['nama' => 'Ibu Tunggal Kepala Keluarga', 'aktif' => 1],
-            ['nama' => 'Korban Konflik dan Perang', 'aktif' => 1],
-            ['nama' => 'Ekonomi Rendah', 'aktif' => 1],
-            ['nama' => 'Wilayah Sulit Akses', 'aktif' => 1],
-            ['nama' => 'Orang Dengan HIV/AIDS', 'aktif' => 1],
-            ['nama' => 'Perempuan Hamil', 'aktif' => 1],
-            ['nama' => 'Bayi', 'aktif' => 1],
-            ['nama' => 'Non-Kelompok Rentan', 'aktif' => 1],
+            ['id'=>1 ,'nama' => 'Masyarakat Adat', 'aktif' => 1],
+            ['id'=>2 ,'nama' => 'Bayi', 'aktif' => 1],
+            ['id'=>3 ,'nama' => 'Disabilitas', 'aktif' => 1], // Disabilitas for Dashboard to Count, id should be 3
+            ['id'=>4 ,'nama' => 'Lansia', 'aktif' => 1],
+            ['id'=>5 ,'nama' => 'Komunitas LGBTQ+', 'aktif' => 1],
+            ['id'=>6 ,'nama' => 'Pengungsi dan Pencari Suaka', 'aktif' => 1],
+            ['id'=>7 ,'nama' => 'Tunawisma', 'aktif' => 1],
+            ['id'=>8 ,'nama' => 'Perempuan dan Anak Perempuan', 'aktif' => 1],
+            ['id'=>9 ,'nama' => 'Etnis Minoritas', 'aktif' => 1],
+            ['id'=>10 ,'nama' => 'Pekerja Migran', 'aktif' => 1],
+            ['id'=>11 ,'nama' => 'Korban Kekerasan dan Eksploitasi', 'aktif' => 1],
+            ['id'=>12 ,'nama' => 'Ibu Tunggal Kepala Keluarga', 'aktif' => 1],
+            ['id'=>13 ,'nama' => 'Korban Konflik dan Perang', 'aktif' => 1],
+            ['id'=>14 ,'nama' => 'Ekonomi Rendah', 'aktif' => 1],
+            ['id'=>15 ,'nama' => 'Wilayah Sulit Akses', 'aktif' => 1],
+            ['id'=>16 ,'nama' => 'Orang Dengan HIV/AIDS', 'aktif' => 1],
+            ['id'=>17 ,'nama' => 'Perempuan Hamil', 'aktif' => 1],
+            ['id'=>18 ,'nama' => 'Non-Kelompok Rentan', 'aktif' => 1],
 
         ];
 
