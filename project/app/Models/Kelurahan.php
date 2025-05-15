@@ -57,4 +57,9 @@ class Kelurahan extends Model
         return $this->belongsToMany(Kegiatan::class, 'trkegiatan_lokasi', 'desa_id', 'kegiatan_id')
         ->withPivot('program_id');
     }
+    public function lokasi()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_lokasi', 'desa_id', 'kegiatan_id')
+        ->withPivot('program_id');
+    }
 }

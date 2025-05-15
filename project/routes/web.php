@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
+use App\Http\Controllers\Admin\DashboardProvinsiController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Monolog\Handler\RotatingFileHandler;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
@@ -58,13 +60,20 @@ Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/',[HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/',                                     [HomeController::class, 'index'])->name('index');
         Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
         Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
-        // Route::get('/data/get-provinsi-koordinat', [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+
+        Route::get('/provinsi',                             [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
+        Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
+        Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
+
+        Route::get('/data/program-stats',   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desa',            [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie',   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
     });
 
     // Permissions
@@ -256,7 +265,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Untuk Kegiatan
     Route::resource('kegiatan', KegiatanController::class);
-    Route::get('kegiatan/api/list', [KegiatanController::class, 'list_kegiatan'])->name('api.kegiatan.list');
 
     //bentuk or sektor kegiatan
     Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
@@ -264,10 +272,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
     Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
-    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
+    Route::get('kegiatan/api/sektor',  [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
 
     Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
-        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/list',      [App\Http\Controllers\API\KegiatanController::class, 'dataTable'])->name('list');
+        Route::get('/provinsi',  [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
         Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
         Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
         Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
@@ -275,11 +284,10 @@ Route::middleware(['auth'])->group(function () {
 
     //
     Route::get('/api/geojson/provinsi/{id}',        [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
-
-    // Route for getting kabupaten geojson
     Route::get('/api/geojson/kabupaten/{id}',       [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
-    // penerima manfaat
+
+    // Penerima Manfaat / Beneficiary
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
         Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
         Route::POST('/',                            [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
@@ -367,19 +375,19 @@ Route::middleware(['auth'])->group(function () {
 
     // TARGET & PROGRESS
     Route::group(['prefix' => 'target-progress', 'as' => 'target_progress.'], function () {
-        Route::get('/',						[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
-        Route::get('/create',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
-        Route::get('/{program_id}/edit',		[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
-        Route::POST('/store',					[App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
+        Route::get('/',                        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
+        Route::get('/create',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+        Route::get('/{program_id}/edit',        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
+        Route::POST('/store',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
     });
     Route::group(['prefix' => 'target-progress/api/', 'as' => 'api.target_progress.'], function () {
-		Route::get('target-progresses',		[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
-        Route::get('programs',					[App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
-        Route::get('status-options',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
-        Route::get('risk-options',				[App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
-        Route::get('program/targets',			[App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
-        Route::get('program/{id}/histories',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
+        Route::get('target-progresses',        [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
+        Route::get('programs',                    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
+        Route::get('status-options',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
+        Route::get('risk-options',                [App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
+        Route::get('program/targets',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
 
-        Route::get('target-progresses/{target_progress_id}/show',	[App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
+        Route::get('target-progresses/{target_progress_id}/show',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
 });

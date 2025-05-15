@@ -1,10 +1,44 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Dashboard')
-@section('content_header_title', 'Dashboard')
-@section('sub_breadcumb', '')
+@section('subtitle', 'Dashboard Departemen Program')
+@section('content_header_title', 'Dashboard Departemen Program')
+@section('sub_breadcumb', 'Dashboard Departemen Program')
 
 @section('content_body')
+
+    <!-- Filter Section -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="programFilter">Program:</label>
+            <select id="programFilter" class="form-control">
+                <option value="">Semua Program</option>
+                @foreach ($programs as $program)
+                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? '-' }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tahunFilter">Periode (Tahun):</label>
+            <select id="tahunFilter" class="form-control">
+                <option value="">Semua Tahun</option>
+                @foreach ($years as $year)
+                    <option value="{{ $year }}">{{ $year }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="provinsiFilter">Provinsi:</label>
+            <select id="provinsiFilter" class="form-control">
+                <option value="">Semua Provinsi</option>
+                @foreach ($provinsis as $provinsi)
+                    <option value="{{ $provinsi->id }}" {{ $selectedProvinsi->id == $provinsi->id ? 'selected' : '' }}>{{ $provinsi->nama ?? '-' }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <!-- End Filter Section -->
+
     <!-- Statistik Section -->
     <div class="row" id="dashboardCards">
         <div class="col-lg-3 col-6">
@@ -135,38 +169,24 @@
     </div>
     <!-- End Maps Section -->
 
-    <!-- Filter Section -->
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="programFilter">Program:</label>
-            <select id="programFilter" class="form-control">
-                <option value="">Semua Program</option>
-                @foreach ($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-4">
-            <label for="tahunFilter">Periode (Tahun):</label>
-            <select id="tahunFilter" class="form-control">
-                <option value="">Semua Tahun</option>
-                @foreach ($years as $year)
-                    <option value="{{ $year }}">{{ $year }}</option>
-                @endforeach
-            </select>
-        </div>
 
-        <div class="col-md-4">
-            <label for="provinsiFilter">Provinsi:</label>
-            <select id="provinsiFilter" class="form-control">
-                <option value="">Semua Provinsi</option>
-                @foreach ($provinsis as $provinsi)
-                    <option value="{{ $provinsi->id }}">{{ $provinsi->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-    <!-- End Filter Section -->
+
+    <!-- Table Stats Section -->
+    {{-- <table id="tableDesa" class="table table-striped">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Desa / Village</th>
+            <th>Penerima Manfaat</th>
+          </tr>
+        </thead>
+    </table> --}}
+
+    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress" width="100%">
+    </table>
+      
+    <!-- End Maps Section -->
+
 
 
     <!-- Chart Section -->
@@ -217,10 +237,21 @@
 @endpush
 
 @push('js')
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
-    {{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@section('plugins.Toastr', true)
+@section('plugins.Validation', true)
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- 
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+    <!-- jQuery-FusionCharts -->
+    <script type="text/javascript" src="https://rawgit.com/fusioncharts/fusioncharts-jquery-plugin/develop/dist/fusioncharts.jqueryplugin.min.js"></script>
+    <!-- Fusion Theme -->
+    <script type="text/javascript" src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+    
+    --}}
     <script>
         function loadDashboardData() {
             $.ajax({
@@ -263,8 +294,6 @@
         }
         // Chart Scripts
         $(document).ready(function () {
-            $('#programFilter, #tahunFilter, #provinsiFilter').select2();
-
             let barChart, pieChart;
             function loadChartData() {
                 const filters = {
@@ -355,7 +384,6 @@
                     const randomColor = generateReadableColor();
                     generatedColors.add(randomColor);
                 }
-
                 return Array.from(generatedColors).slice(0, count);
             }
 
@@ -379,35 +407,27 @@
                 const brightness = (r * 299 + g * 587 + b * 114) / 1000;
                 return brightness > 50 && brightness < 200;
             }
-            $('#programFilter, #provinsiFilter, #tahunFilter').change(function () {
-                loadDashboardData();
-                loadChartData();
-            });
+
         });
 
     </script>
     <!-- prettier-ignore -->
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
+    <script async>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly", libraries: "marker"});</script>
 
     <script>
         let map;
         let markers = [];
         let infoWindow;
         let AdvancedMarkerElement;
-
-        // Global variables for map instances and markers
-        // let leafletMapInstance = null;
+        
         let googleMapInstance = null;
         let googleMapMarkers = [];
-        // let leafletMarkerLayerGroup = null; // Use LayerGroup for Leaflet markers
 
-        // Indonesia Center Coordinates
-        const centerLat = -2.711614;
-        const centerLng = 121.631757;
-        const initialZoom = 5;
-
-
+        // Bali Center Coordinates
+        const centerLat = -8.409518;
+        const centerLng = 115.188919;
+        const initialZoom = 9;
 
         // --- STYLE DEFINITION ---
         const mapStyles = [
@@ -506,12 +526,9 @@
             map = new Map(document.getElementById("map"), {
                 center: { lat: centerLat, lng: centerLng },
                 zoom: initialZoom,
-                // mapId: "YOUR_MAP_ID" // GANTI DENGAN MAP ID
                 styles: mapStyles,
-                // mapTypeId: 'roadmap'
-
+                mapId: "DEMO_MAP_ID",
             });
-
             // Inisialisasi InfoWindow
             infoWindow = new google.maps.InfoWindow();
 
@@ -530,16 +547,26 @@
             markers = [];
         }
 
+
         function loadMapMarkers() {
             const provinsiId = $('#provinsiFilter').val();
+            if (provinsiId && provinsiId !== "") {
+                $('#provinsiFilter').val();
+            }else {
+                const provinsiId = {{ $selectedProvinsi->id }};
+                alert("Silakan pilih provinsi untuk menampilkan data");
+                return;
+            }
+
             const programId = $('#programFilter').val();
             const tahun = $('#tahunFilter').val();
 
             // Construct URL with route parameter
             let url = "{{ route('dashboard.api.markers', ['id' => ':id']) }}".replace(':id', provinsiId || '');
+            let urlMarkers = "{{ route('dashboard.api.markers.provinsi', ['id' => ':id']) }}".replace(':id', provinsiId || '');
 
-            // Add query parameters for program and year
             const params = new URLSearchParams();
+
             if (programId) params.append('program_id', programId);
             if (tahun) params.append('tahun', tahun);
             const queryString = params.toString();
@@ -547,45 +574,43 @@
                 url += `?${queryString}`;
             }
 
-            fetch(url)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`HTTP error! status: ${res.status}`);
+            fetch(urlMarkers).then(response => response.json()).then(data => {
+                clearMarkers();
+                data.forEach(data => {
+                    const lat = parseFloat(data.lat);
+                    const lng = parseFloat(data.long);
+                    if (isNaN(lat) || isNaN(lng)) {
+                        console.warn(`Koordinat tidak valid untuk ${data.nama_kegiatan} di ${data.desa}`);
+                        return;
                     }
-                    return res.json();
-                })
-                .then(data => {
-                    clearMarkers();
-                    data.forEach(prov => {
-                        const lat = parseFloat(prov.latitude);
-                        const lng = parseFloat(prov.longitude);
-                        if (isNaN(lat) || isNaN(lng)) {
-                            console.warn(`Koordinat tidak valid untuk ${prov.nama}`);
-                            return;
-                        }
-
-                        const marker = new google.maps.Marker({
-                            position: { lat, lng },
-                            map: map,
-                            title: prov.nama
-                        });
-
-                        const infowindow = new google.maps.InfoWindow({
-                            content: generateInfoContent(prov)
-                        });
-
-                        marker.addListener('click', () => {
-                            infowindow.open(map, marker);
-                        });
-
-                        markers.push(marker);
+                    const pinData = new google.maps.Marker({
+                        position: { lat: data.lat, lng: data.long },
+                        map: map,
+                        title: data.nama_kegiatan
                     });
-                })
-                .catch(error => {
-                    console.error('Error fetching markers:', error);
-                });
-        }
+                    
+                    // const pinData = new AdvancedMarkerElement({
+                    //     position: { lat: data.lat, lng: data.long },
+                    //     map: map,
+                    //     title: data.nama_kegiatan,
+                    //     content: pin.element,
+                    //     gmpClickable: true,
+                    // });
 
+
+                    const infowindow = new google.maps.InfoWindow({
+                            content: markerInfoContent(data)
+                    });
+
+                    pinData.addListener('click', () => {
+                        infowindow.open(map, pinData);
+                    });
+
+                    markers.push(pinData);
+                });
+            });
+
+        }
         // reusable function
         function generateInfoContent(prov) {
             return `
@@ -593,6 +618,21 @@
                     <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
                     <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
                     <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
+                </div>`
+            ;
+        }
+        function markerInfoContent(marker) {
+            return `
+                <div style="font-family: sans-serif; font-size: 14px;">
+                    <h4 style="margin: 0 0 5px 0;">${marker.nama_kegiatan}</h4>
+                    <p style="margin: 0;">#️⃣ Kode Kegiatan: ${marker.kode_kegiatan} </p>
+                    <p style="margin: 0;">📃 Program: ${marker.program ?? 'Tidak ada'} </p>
+                    <p style="margin: 0;">📌 Lokasi: ${marker.lokasi ?? 'Tidak ada'} </p>
+                    <p style="margin: 0;">🗺️ Desa: ${marker.desa}</p>
+                    <p style="margin: 0;">🗺️ Kecamatan: ${marker.kecamatan}</p>
+                    <p style="margin: 0;">🗺️ Kecamatan: ${marker.kabupaten}</p>
+                    <p style="margin: 0;">🗺️ Provinsi: ${marker.provinsi}</p>
+                    <p style="margin: 0;">📌 Coordinate: ${marker.lat}, ${marker.long}</p>
                 </div>`
             ;
         }
@@ -612,7 +652,6 @@
                 alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
             }
 
-
             $('#provinsiFilter').on('change', function () {
                 const selectedProvinsiId = $(this).val();
                 if (selectedProvinsiId && selectedProvinsiId !== "") {
@@ -621,11 +660,68 @@
                      loadMapMarkers();
                 }
             });
+            let debounceTimer;
             $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function () {
-                loadDashboardData();
-                loadMapMarkers();
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    loadDashboardData();
+                    loadMapMarkers();
+                }, 500);
             });
         });
     </script>
+    
 
+    {{-- dataables --}}
+    <script>
+        $(document).ready(function () {
+            // $('#tableDesa').DataTable({
+            //     serverSide: true,
+            //     processing: true,
+            //     ajax: {
+            //         url: '{{ route("dashboard.data.desa") }}',
+            //         data: () => ({
+            //             provinsi_id: $('#provinsiFilter').val(),
+            //             program_id:  $('#programFilter').val(),
+            //             tahun:       $('#tahunFilter').val(),
+            //         })
+            //     },
+            //     columns: [
+            //         {data: 'DT_RowIndex',name: 'No.',className: "text-center align-middle",title: '{ __('No.') }}',orderable: true,searchable: false},
+            //         { data: 'kelurahan', name: 'kelurahan', title: 'Desa/Kelurahan' },
+            //         { data: 'penerima', name: 'penerima', title: '{{ __('cruds.beneficiary.title') }}' }
+            //         // { data: 'desa', render:(_,__,row,meta)=> meta.row+1 },
+            //         // { data: 'desa' },
+            //         // { data: 'penerima' }
+            //     ]
+            // });
+
+            $('#tableDesa').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('dashboard.data.desa') }}",
+                    data: function (d) {
+                        d.provinsi_id = $('#provinsiFilter').val();
+                        d.program_id = $('#programFilter').val();
+                        d.tahun = $('#tahunFilter').val();
+                    }
+                },
+                columns: [
+                    {data: 'DT_RowIndex',name: 'No.',className: "text-center align-middle",title: '{ __('No.') }}',orderable: true,searchable: false},
+                    { data: 'kelurahan', name: 'kelurahan' title: 'kelurahan'},
+                    { data: 'kabupaten', name: 'kabupaten' title: 'kabupaten'},
+                    { data: 'penerima', name: 'penerima' title: 'total penerima manfaat'},
+                ],
+                order: [[1, 'asc']],
+            });
+            // tableDesa.on('draw', function () {
+            //     var info = tableDesa.page.info();
+            //     tableDesa.column(0, { search: 'applied', order: 'applied', page: 'applied' }).nodes().each(function (cell, i) {
+            //         cell.innerHTML = i + 1 + info.start;
+            //     });
+            // });
+
+            // tableDesa.DataTable();
+        });
+    </script>
 @endpush
