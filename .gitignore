@@ -31,3 +31,4 @@ project/public/uploads
 .prettierrc
 .prettierignore
 *.windsurfrules
+cline_mcp_settings.json
