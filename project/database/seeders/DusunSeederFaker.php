@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Dusun;
-use App\Models\Desa; // Import the Desa model
+
 use App\Models\Kelurahan;
 use App\Models\Program;
 
@@ -21,7 +21,7 @@ class DusunSeederFaker extends Seeder
         // Fetch Desa IDs where the related Provinsi's ID is 51
         // Assumes Desa -> Kecamatan -> Kabupaten -> Provinsi relationship chain
         $desaIds = Kelurahan::whereHas('kecamatan.kabupaten.provinsi', function ($query) {
-            $query->where('id', 51);
+            $query->where('id', 51); //BALI - 51
         })->pluck('id');
 
         // Check if any Desa records were found
@@ -30,12 +30,17 @@ class DusunSeederFaker extends Seeder
             return; // Or handle this case as needed
         }
 
+        $kelurahanCodes = Kelurahan::whereHas('kecamatan.kabupaten.provinsi', function ($query) {
+            $query->where('id', 51);
+        })->pluck('kode')->toArray();
+
         $faker = \Faker\Factory::create('id_ID'); // Use Indonesian locale
         for ($i = 0; $i < 100; $i++) {
+            $kodeDusun = $faker->randomElement($kelurahanCodes) . '.' . sprintf('%02d', $faker->numberBetween(1, 99));
             Dusun::create([
                 'nama' => $faker->name(),
-                'kode' => $faker->regexify('[A-Z0-9]{16}'),
-                'aktif' => $faker->boolean(),
+                'kode' => $kodeDusun,
+                'aktif' => 1,
                 // Assign a random desa_id from the fetched collection
                 'desa_id' => $faker->randomElement($desaIds),
                 'created_at' => $faker->dateTimeThisYear(),
