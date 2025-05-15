@@ -1072,6 +1072,7 @@ return [
         'jenis_kelamin'                 => 'Gender',
         'ya'                            => 'Yes',
         'tidak'                         => 'No',
+        'total_peserta'                 => 'Total Participants',
     ],
 
     'target_progress' => [

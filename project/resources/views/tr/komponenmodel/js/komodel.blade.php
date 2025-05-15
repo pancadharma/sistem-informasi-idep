@@ -485,21 +485,21 @@
             // Lokasi: provinsi, kabupaten, kecamatan, desa, dusun
             const locationFields = ["provinsi", "kabupaten", "kecamatan", "desa", "dusun"];
             locationFields.forEach(field => {
-                const id = currentRow.find(`td[data-${field}-id]`).data(`${field}-id`) || 0;
-                const name = currentRow.find(`td[data-${field}-nama]`).data(`${field}-nama`) || "-";
+                const id = currentRow.find(`td[data-${field}-id]`).attr(`data-${field}-id`) || 0;
+                const name = currentRow.find(`td[data-${field}-nama]`).attr(`data-${field}-nama`) || "-";
                 const select = $(`#edit${field}_id`);
                 select.empty().append(new Option(name, id, true, true)).trigger('change');
             });
 
             // Satuan sebagai Select2
-            const satuanId = currentRow.find("td[data-satuan-id]").data("satuan-id") || null;
-            const satuanNama = currentRow.find("td[data-satuan-nama]").data("satuan-nama") || "-";
+            const satuanId = currentRow.find("td[data-satuan-id]").attr("data-satuan-id") || null;
+            const satuanNama = currentRow.find("td[data-satuan-nama]").attr("data-satuan-nama") || "-";
             $("#editsatuan_id").empty().append(new Option(satuanNama, satuanId, true, true)).trigger("change");
 
             // Input angka & koordinat pake id
-            $("#editjumlah").val(currentRow.find("td[data-jumlah]").data("jumlah") || "");
-            $("#editlat").val(currentRow.find("td[data-lat]").data("lat") || "");
-            $("#editlong").val(currentRow.find("td[data-long]").data("long") || "");
+            $("#editjumlah").val(currentRow.find("td[data-jumlah]").attr("data-jumlah") || "");
+            $("#editlat").val(currentRow.find("td[data-lat]").attr("data-lat") || "");
+            $("#editlong").val(currentRow.find("td[data-long]").attr("data-long") || "");
 
             //console.log("Editing row with row-id:", rowId);
             // Simpan index baris

@@ -64,8 +64,13 @@ class Program_Outcome_Output_Activity extends Model
         );
     }
 
+    public function preposttests()
+    {
+        return $this->hasMany(Meals_PrePostTest::class, 'programoutcomeoutputactivity_id');
+
     public function kegiatan()
     {
         return $this->hasMany(Kegiatan::class, 'programoutcomeoutputactivity_id');
+
     }
 }
