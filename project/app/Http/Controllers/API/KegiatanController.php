@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Requests\UpdateKegiatanRequest;
 use App\Models\Dusun;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
@@ -24,7 +25,9 @@ use App\Models\Kegiatan_Pemetaan;
 use App\Models\Kegiatan_Pengembangan;
 use App\Models\Kegiatan_Sosialisasi;
 use App\Models\Kelurahan;
+use App\Models\Peran;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Validator;
@@ -32,9 +35,93 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use PHPUnit\Event\Code\Throwable;
+use Yajra\DataTables\Facades\DataTables;
 
 class KegiatanController extends Controller
 {
+
+    public function dataTable(Request $request)
+    {
+        if (!$request->ajax() && !$request->isJson()) {
+            return "Not an Ajax Request & JSON REQUEST";
+        }
+
+        $kegiatan = Kegiatan::with([
+            'users',
+            'activity.program_outcome_output.program_outcome.program',
+            'jenisKegiatan',
+            'kategori_lokasi',
+            'sektor'
+        ])
+        ->select('trkegiatan.*')
+        ->get()
+        ->map(function ($item) {
+            // Calculate duration before formatting
+            $item->duration_in_days = $item->getDurationInDays();
+
+            // Format dates after calculating duration
+            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+
+            // Add calculated values
+            $program = $item->activity->program_outcome_output->program_outcome->program;
+            $item->total_beneficiaries = $item->penerimamanfaattotal;
+            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+
+            return $item;
+        });
+
+        $data = DataTables::of($kegiatan)
+            ->addIndexColumn()
+            ->addColumn('program_name', function ($kegiatan) {
+                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+            })
+            ->addColumn('kegiatan_kode', function ($kegiatan) {
+                return $kegiatan->activity->kode ?? 'N/A';
+            })
+            ->addColumn('duration_in_days', function ($kegiatan) {
+                return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
+            })
+            ->addColumn('jenis_kegiatan', function ($kegiatan) {
+                return $kegiatan->jenisKegiatan->nama ?? 'N/A';
+            })
+            ->addColumn('action', function ($kegiatan) {
+                $buttons = [];
+
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
+                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
+                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
+                }
+                return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+            })
+            ->rawColumns(['action'])
+            ->make(true);
+
+        return $data;
+    }
+
+    private function generateButton($type, $color, $icon, $label, $id)
+    {
+        $url = '';
+        switch ($type) {
+            case 'edit':
+                $url = route('kegiatan.edit', $id);
+                break;
+            case 'view':
+                $url = route('kegiatan.show', $id);
+                break;
+            case 'details':
+                $url = route('kegiatan.show', $id);
+                break;
+        }
+
+        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
+    }
     public function getProvinsi(Request $request)
     {
         $request->validate([
@@ -501,7 +588,7 @@ class KegiatanController extends Controller
 
             $kegiatan->penulis()->sync($penulisData); // sync handles adds, updates, and deletes
         } catch (Exception $e) {
-            \Log::error('Error updating penulis: ' . $e->getMessage());
+            Log::error('Error updating penulis: ' . $e->getMessage());
             throw $e;
         }
     }
@@ -670,5 +757,15 @@ class KegiatanController extends Controller
             'results' => $peran->map(fn($item) => ['id' => $item->id, 'text' => $item->nama]),
             'pagination' => ['more' => $peran->hasMorePages()],
         ]);
+    }
+
+    public function getPenulis()
+    {
+        return User::where('aktif', 1)->select('id', 'nama')->get();
+    }
+
+    public function getPeran()
+    {
+        return Peran::where('aktif', 1)->select('id', 'nama')->get();
     }
 }
