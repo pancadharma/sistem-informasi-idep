@@ -163,19 +163,15 @@ class HomeController extends Controller
             });
         }
 
-        // Cache the stats query results
-        $cacheKey = "provinsi_stats_{$id}_{$request->program_id}_{$request->tahun}";
-        $stats = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($statsQuery) {
-            return $statsQuery
-                ->select(
-                    'provinsi.id as provinsi_id',
-                    DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
-                    DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
-                )
-                ->groupBy('provinsi.id')
-                ->get()
-                ->keyBy('provinsi_id');
-        });
+        $stats = $statsQuery
+            ->select(
+                'provinsi.id as provinsi_id',
+                DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
+                DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
+            )
+            ->groupBy('provinsi.id')
+            ->get()
+            ->keyBy('provinsi_id');
 
         // Attach stats to province list
         $provinsiList->each(function ($provinsi) use ($stats) {
