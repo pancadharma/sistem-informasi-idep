@@ -29,6 +29,8 @@ class Kegiatan extends Model implements HasMedia
 {
     use InteractsWithMedia, Auditable, HasFactory, HasRoles, LogsActivity;
 
+    protected $with = ['assessment', 'sosialisasi', 'pelatihan', 'pembelanjaan', 'pengembangan', 'kampanye', 'pemetaan', 'monitoring', 'kunjungan', 'konsultasi', 'lainnya'];
+
     protected $table = 'trkegiatan';
 
     protected $dates = [
@@ -374,15 +376,28 @@ class Kegiatan extends Model implements HasMedia
     public function getKegiatanHasilAttribute()
     {
         $jenisKegiatan = (int) $this->jeniskegiatan_id;
-        $modelMapping = self::getJenisKegiatanModelMap();
+        $relationMap = self::getJenisKegiatanRelationMap();
 
-        if (!isset($modelMapping[$jenisKegiatan])) {
+        if (!isset($relationMap[$jenisKegiatan])) {
             return null; // Or throw an exception
         }
 
-        $modelClass = $modelMapping[$jenisKegiatan];
-        return $modelClass::where('kegiatan_id', $this->id)->get();
+        $relationName = $relationMap[$jenisKegiatan];
+        return $this->$relationName;
     }
+
+    // public function getKegiatanHasilAttribute()
+    // {
+    //     $jenisKegiatan = (int) $this->jeniskegiatan_id;
+    //     $modelMapping = self::getJenisKegiatanModelMap();
+
+    //     if (!isset($modelMapping[$jenisKegiatan])) {
+    //         return null; // Or throw an exception
+    //     }
+
+    //     $modelClass = $modelMapping[$jenisKegiatan];
+    //     return $modelClass::where('kegiatan_id', $this->id)->get();
+    // }
 
 
     public function getAllMediaAttribute()
