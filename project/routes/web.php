@@ -354,16 +354,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('komodel/api/model', [KomponenModelController::class, 'getModel'])->name('api.komodel.model');
     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'store'])->name('store');
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
+        Route::get('/{id}/edit', [KomponenModelController::class, 'edit'])->name('edit');
+        Route::post('/add', [KomponenModelController::class, 'storeSingleLokasi'])->name('store.lokindi'); // tambah data lokasi baru ketika edit 
+        Route::get('/{id}/get', [KomponenModelController::class, 'getLokasiById'])->name('get.lokindi'); // ambil data lokasi berdasarkan id ketika edit
+        Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
+        Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
+        Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
     });
     Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
         Route::get('datatable',         [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
         Route::post('komponen',         [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
         Route::get('prov',              [APIKomponenModelController::class, 'getProv'])->name('prov');
-        Route::get('kab',               [APIKomponenModelController::class, 'getKabupatens'])->name('kab');
-        Route::get('kec',               [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
-        Route::get('desa',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
-        Route::get('dusun',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
+        Route::get('kab{id}',               [APIKomponenModelController::class, 'getKabupatens'])->name('kab');
+        Route::get('kec{id}',               [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
+        Route::get('desa{id}',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
+        Route::get('dusun{id}',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
 

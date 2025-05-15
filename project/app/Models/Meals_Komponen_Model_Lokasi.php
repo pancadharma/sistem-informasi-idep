@@ -21,7 +21,7 @@ class Meals_Komponen_Model_Lokasi extends Model
     use HasFactory, Auditable, LogsActivity;
 
     // Define the table name
-    protected $table = 'trmealskomponenmodellokasi';
+    protected $table = 'trmeals_komponen_model_lokasi';
 
     // Allow mass-assignment for these fields
     protected $fillable = [
