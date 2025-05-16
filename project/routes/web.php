@@ -72,9 +72,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
         Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
 
-        Route::get('/data/program-stats',   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
-        Route::get('/data/desa',            [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
-        Route::get('/data/kabupaten-pie',   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
+        Route::get('/data/program-stats',       [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desatable',           [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie',       [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
+
+        Route::get('/data/desa/{id?}',   [DashboardProvinsiController::class, 'getDataDesa'])->name('provinsi.data.desa');
+
     });
 
     // Permissions
@@ -358,7 +361,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'store'])->name('store');
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
         Route::get('/{id}/edit', [KomponenModelController::class, 'edit'])->name('edit');
-        Route::post('/add', [KomponenModelController::class, 'storeSingleLokasi'])->name('store.lokindi'); // tambah data lokasi baru ketika edit 
+        Route::post('/add', [KomponenModelController::class, 'storeSingleLokasi'])->name('store.lokindi'); // tambah data lokasi baru ketika edit
         Route::get('/{id}/get', [KomponenModelController::class, 'getLokasiById'])->name('get.lokindi'); // ambil data lokasi berdasarkan id ketika edit
         Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
         Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
@@ -382,7 +385,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/edit', [MealsPrePostTestController::class, 'edit'])->name('edit');
         Route::post('/', [MealsPrePostTestController::class, 'store'])->name('store');
         Route::get('/datatable', [MealsPrePostTestController::class, 'getPrepostDatatable'])->name('datatable');
-        Route::post('/add', [MealsPrePostTestController::class, 'storeAddPeserta'])->name('store.editadd');//tambah data peserta baru ketika edit 
+        Route::post('/add', [MealsPrePostTestController::class, 'storeAddPeserta'])->name('store.editadd');//tambah data peserta baru ketika edit
         Route::get('/{id}/get', [MealsPrePostTestController::class, 'getPesertaById'])->name('get.barispeserta'); // ambil data peserta berdasarkan id ketika edit
         Route::put('/{id}/update', [MealsPrePostTestController::class, 'updateSinglepeserta'])->name('update.barispeserta'); // update data peserta berdasarkan id ketika edit
         Route::delete('/peserta/{id}', [MealsPrePostTestController::class, 'deletePeserta'])->name('peserta.delete'); // delete peserta
