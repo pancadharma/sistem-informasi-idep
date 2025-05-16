@@ -67,6 +67,87 @@ class DashboardProvinsiController extends Controller
         ]);
     }
 
+
+    // DEV
+    public function indexProvinsiData(Request $request)
+    {
+        $programId = $request->input('program');
+        $tahun = $request->input('tahun');
+        $provinsiId = $request->input('provinsi');
+
+        // Ambil data desa dan total penerima manfaat
+        $dataDesa = DB::table('trkegiatan_lokasi as lokasi')
+            ->join('trkegiatan as keg', 'lokasi.kegiatan_id', '=', 'keg.id')
+            ->join('trprogramoutcomeoutputactivity as poa', 'keg.programoutcomeoutputactivity_id', '=', 'poa.id')
+            ->join('trprogram as prog', 'poa.program_id', '=', 'prog.id')
+            ->join('kelurahan as desa', 'lokasi.desa_id', '=', 'desa.id')
+            ->leftJoin('dusun', 'desa.id', '=', 'dusun.desa_id')
+            ->leftJoin('trmeals_penerima_manfaat as penerima', 'dusun.id', '=', 'penerima.dusun_id')
+            ->where('prog.id', $programId)
+            ->whereYear('prog.tanggalmulai', '<=', $tahun)
+            ->whereYear('prog.tanggalselesai', '>=', $tahun)
+            ->where('desa.provinsi_id', $provinsiId)
+            ->selectRaw('desa.nama as nama_desa, lokasi.lokasi as lokasi_kegiatan, COUNT(penerima.id) as total_penerima')
+            ->groupBy('desa.id', 'lokasi.lokasi')
+            ->get();
+
+        return response()->json($dataDesa);
+    }
+
+        public function getDataDesa(Request $request, $id = null)
+        {
+            $provinsi_id = $request->input('provinsi') ?? $id;
+            $provinsi = Provinsi::find($provinsi_id);
+
+            if (!$provinsi) {
+                return response()->json([
+                    'error' => 'Selected Provinsi Not Found',
+                    'message' => 'Provinsi with ID ' . $provinsi_id . ' Does Not Exist',
+                ], 404);
+            }
+            // Ambil data lokasi kegiatan berdasarkan provinsi_id
+            $markers = Kegiatan_Lokasi::with([
+                'kegiatan.activity',
+                'desa.kecamatan',
+                'desa.kecamatan.kabupaten',
+                'desa.kecamatan.kabupaten.provinsi',
+                'kegiatan.activity.program_outcome_output.program_outcome.program',
+                'penerimaManfaat',
+            ])->whereHas('desa.kecamatan.kabupaten.provinsi', function ($q) use ($provinsi_id) {
+                $q->where('id', $provinsi_id);
+            })
+                ->whereNotNull('lat')
+                ->whereNotNull('long')
+                ->get()
+                ->map(function ($lokasi) {
+                    return [
+                        'kegiatan_id'   => $lokasi->kegiatan_id ?? null,
+                        'nama_kegiatan' => $lokasi->kegiatan->activity->nama ?? null,
+                        'kode_kegiatan' => $lokasi->kegiatan->activity->kode ?? null,
+                        'kode_program'  => $lokasi->kegiatan->activity->program_outcome_output->program_outcome->program->kode ?? null,
+                        'program'       => $lokasi->kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? null,
+                        'lat'           => $lokasi->lat,
+                        'long'          => $lokasi->long,
+                        'lokasi'        => $lokasi->lokasi,
+                        'desa'          => $lokasi->desa->nama,
+                        'kecamatan'     => $lokasi->desa->kecamatan->nama,
+                        'kabupaten'     => $lokasi->desa->kecamatan->kabupaten->nama,
+                        'provinsi'      => $lokasi->desa->kecamatan->kabupaten->provinsi->nama,
+                        'total_penerima'   => $lokasi->penerimaManfaat->count(),
+                    ];
+                });
+            return response()->json($markers);
+        }
+
+
+
+
+
+    // EMD DEV
+
+
+
+
     public function getProgramStatsPerProvinsi(Request $request)
     {
         $data = MealsPM::query()
