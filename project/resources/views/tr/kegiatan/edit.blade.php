@@ -304,7 +304,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body pl-0 pt-1 pb-0 pr-1 mb-0">
-                                        <div class="form-group row lokasi-kegiatan mb-0">
+                                        <div class="form-group row header-lokasi-kegiatan mb-0">
                                             <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
                                                 <label class="input-group col-form-label">
                                                     {{ __('cruds.kecamatan.title') }}
