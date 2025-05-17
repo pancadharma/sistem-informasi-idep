@@ -324,6 +324,7 @@ class KegiatanController extends Controller
         $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
 
         // return $kegiatan->lokasi[0]->kecamatan->kabupaten->provinsi;
+        // return 
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
