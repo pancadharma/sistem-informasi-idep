@@ -11,7 +11,7 @@ class Meals_Quality_Benchmark extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $table = 'meals_quality_benchmark';
+    protected $table = 'benchmark';
 
     protected $fillable = [
         'program_id',

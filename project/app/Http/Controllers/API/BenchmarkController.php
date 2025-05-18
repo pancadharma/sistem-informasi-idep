@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Log;
 use Exception;
 use App\Models\Program;
 use App\Models\Kegiatan;
@@ -13,15 +14,17 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\BenchmarkRequest;
-use App\Models\Meals_Quality_Benchmark; // Model untuk benchmark (table trmealsqb)
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Program_Outcome_Output_Activity;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Benchmark;
+use App\Models\Meals_Quality_Benchmark; // Model untuk benchmark (table trmealsqb)
+use App\Models\User;
 
 class BenchmarkController extends Controller
 {
@@ -33,18 +36,18 @@ class BenchmarkController extends Controller
     {
         $query = Meals_Quality_Benchmark::with([
             'program:id,nama',          // Relasi ke table trprogram
-            'jenis_kegiatan:id,nama',     // Dropdown jenis kegiatan
-            'kegiatan:id,nama',           // Kegiatan berdasarkan filter program dan jenis kegiatan
-            'kelurahan:id,nama',
+            'jenisKegiatan:id,nama',     // Dropdown jenis kegiatan
+            'outcomeActivity:id,nama',           // Kegiatan berdasarkan filter program dan jenis kegiatan
+            'desa:id,nama',
             'kecamatan:id,nama',
             'kabupaten:id,nama',
             'provinsi:id,nama',
-            'user_compiler:id,name',
-        ])->select('id', 'program_id', 'user_compiler_id', 'tanggal_implementasi');
+            'compiler:id,nama',
+        ])->select('id', 'program_id', 'usercompiler_id', 'tanggalimplementasi');
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
-            ->editColumn('tanggal_implementasi', function ($item) {
+            ->editColumn('tanggalimplementasi', function ($item) {
                 return Carbon::parse($item->tanggal_implementasi)->format('d-m-Y');
             })
             ->addColumn('program_name', fn($item) => $item->program->nama ?? 'N/A')
@@ -66,18 +69,18 @@ class BenchmarkController extends Controller
             ->make(true);
     }
 
-    public function getProgramActivities($id, Request $request)
+    public function getProgramActivities(Request $request)
     {
-        $jenisKegiatanId = $request->jenis_kegiatan_id;
-            
+        $jenisKegiatanId = $request->jeniskegiatan_id;
+
         $program = Program::with([
             'outcome.output.activities' => function ($query) use ($jenisKegiatanId) {
-                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutput_id', 'jeniskegiatan_id', 'created_at')
+                $query->select('id', 'kode', 'nama', 'deskripsi', 'indikator', 'target', 'programoutcomeoutputactivity_id', 'jeniskegiatan_id', 'created_at')
                       ->when($jenisKegiatanId, function ($q) use ($jenisKegiatanId) {
                           $q->where('jeniskegiatan_id', $jenisKegiatanId);
                       });
             }
-        ])->findOrFail($id);
+        ])->get();
         
         return response()->json($program);
     }
@@ -125,30 +128,30 @@ class BenchmarkController extends Controller
     /**
      * Lookup compiler (data user) untuk dropdown compiler.
      */
-    public function getCompilers(Request $request)
-    {
-        $search = $request->input('search', '');
-    
-        $query = \App\Models\User::query();
-    
-        if ($search) {
-            $query->where('name', 'like', "%{$search}%");
-        }
-    
-        $results = $query->paginate(10);
-    
-        return response()->json([
-            'results' => $results->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'text' => $user->name
-                ];
-            }),
-            'pagination' => [
-                'more' => $results->hasMorePages()
-            ]
-        ]);
+   public function getCompilers(Request $request)
+{
+    $users = User::select('id', 'nama');
+
+    if ($search = $request->input('search')) {
+        $users->where('nama', 'like', "%{$search}%");
     }
+
+    $results = $users->paginate(10);
+
+    return response()->json([
+        'results' => $results->getCollection()->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'text' => $user->nama,
+            ];
+        }),
+        'pagination' => [
+            'more' => $results->hasMorePages(),
+        ],
+    ]);
+}
+
+
     
     /**
      * Lookup program dari table trprogram.
@@ -220,20 +223,62 @@ class BenchmarkController extends Controller
      * Lookup kegiatan berdasarkan program_id dan jenis_kegiatan_id.
      * Dipakai untuk form benchmark ketika memilih kegiatan.
      */
- public function getKegiatan(Request $request)
-{
-    $programId = $request->program_id;
-    $jenisKegiatanId = $request->jenis_kegiatan_id;
+    public function getKegiatan(Request $request)
+    {
+        $programId = $request->program_id;
+        $jenisKegiatanId = $request->jeniskegiatan_id;
 
-    $kegiatan = DB::table('kegiatan')
-        ->join('jenis_kegiatan', 'kegiatan.jenis_kegiatan_id', '=', 'jenis_kegiatan.id')
-        ->where('kegiatan.program_id', $programId)
-        ->where('kegiatan.jenis_kegiatan_id', $jenisKegiatanId)
-        ->select('kegiatan.*', 'jenis_kegiatan.nama as jenis_kegiatan_nama')
+        $data = DB::table('trkegiatan')
+        ->select(
+            'trprogramoutcomeoutputactivity.id',
+            'trprogramoutcomeoutputactivity.nama',
+            'trprogramoutcomeoutputactivity.kode',
+            'trprogramoutcomeoutputactivity.deskripsi',
+            'trprogramoutcomeoutputactivity.indikator',
+            'trprogramoutcomeoutputactivity.target',
+            'trkegiatan.jeniskegiatan_id AS idjeniskegiatan',
+            'mjeniskegiatan.nama AS namajeniskegiatan'
+        )
+        ->leftJoin('mjeniskegiatan', 'mjeniskegiatan.id', '=', 'trkegiatan.jeniskegiatan_id')
+        ->leftJoin('trprogramoutcomeoutputactivity', 'trkegiatan.programoutcomeoutputactivity_id', '=', 'trprogramoutcomeoutputactivity.id')
+        ->leftJoin('trprogramoutcomeoutput', 'trprogramoutcomeoutput.id', '=', 'trprogramoutcomeoutputactivity.programoutcomeoutput_id')
+        ->leftJoin('trprogramoutcome', 'trprogramoutcome.id', '=', 'trprogramoutcomeoutput.programoutcome_id')
+        ->where('trprogramoutcome.program_id', $programId)
+        ->where('trkegiatan.jeniskegiatan_id', $jenisKegiatanId)
         ->get();
 
-    return response()->json($kegiatan);
-}
+        return response()->json($data);
+    }
+
+    public function getLokasi(Request $request)
+    {
+        $kegiatanId = $request->kegiatan_id;
+
+        $data = DB::table('trkegiatan_lokasi')
+                ->join('kelurahan', 'trkegiatan_lokasi.desa_id', '=', 'kelurahan.id')
+                ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id')
+                ->join('kabupaten', 'kecamatan.kabupaten_id', '=', 'kabupaten.id')
+                ->join('provinsi', 'kabupaten.provinsi_id', '=', 'provinsi.id')
+                ->where('trkegiatan_lokasi.kegiatan_id', $kegiatanId)
+                ->select(
+                    'provinsi.id as provinsi_id',
+                    'provinsi.nama as provinsi_nama',
+                    'kabupaten.id as kabupaten_id',
+                    'kabupaten.nama as kabupaten_nama',
+                    'kecamatan.id as kecamatan_id',
+                    'kecamatan.nama as kecamatan_nama',
+                    'kelurahan.id as desa_id',
+                    'kelurahan.nama as desa_nama' 
+                )->get();
+
+        return response()->json($data);
+    }
+
+    // public function getUserCompiler()
+    // {
+    //     $users = User::select('id', 'name')->get();
+    //     return response()->json($users);
+    // }
 
     
     /**

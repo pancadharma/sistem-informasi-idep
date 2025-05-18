@@ -9,22 +9,22 @@ class BenchmarkRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Gate::allows('meals_quality_benchmark_create');
+        return  auth()->user()->id === 1 || auth()->user()->can('benchmark_create') || Gate::allows('benchmark_create');
     }
 
     public function rules(): array
     {
         return [
             'program_id' => ['required', 'exists:trprogram,id'],
-            'jenis_kegiatan_id' => ['required', 'exists:mjeniskegiatan,id'],
-            'kegiatan_id' => ['required', 'exists:trkegiatan,id'], // Jika relasinya benar
+            'jeniskegiatan_id' => ['required', 'exists:mjeniskegiatan,id'],
+            'kegiatan_id' => ['required', 'exists:trkegiatan,id'],
             'desa_id' => ['required', 'exists:kelurahan,id'],
             'kecamatan_id' => ['required', 'exists:kecamatan,id'],
             'provinsi_id' => ['required', 'exists:provinsi,id'],
-            'kabuoaten_id' => ['required', 'exists:kabupaten,id'],
-            'tanggal_implementasi' => ['required', 'date'],
+            'kabupaten_id' => ['required', 'exists:kabupaten,id'],
+            'tanggalimplementasi' => ['required', 'date'],
             'handler' => ['required'],
-            'user_compiler_id' => ['required', 'exists:users,id'],
+            'usercompiler_id' => ['required', 'exists:users,id'],
             'score' => ['required', 'numeric', 'between:0,100'],
             'catatan_evaluasi' => ['nullable', 'string'],
         ];

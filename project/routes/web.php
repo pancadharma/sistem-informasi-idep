@@ -372,9 +372,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('kecamatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKecamatans'])->name('kecamatan');
         Route::get('desa', [App\Http\Controllers\API\BenchmarkController::class, 'getDesas'])->name('desa');
         Route::get('programs', [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
-        Route::get('/benchmark/api/programs/{id}/activities', [App\Http\Controllers\API\BenchmarkController::class, 'getProgramActivities'])->name('programs.activities');
-        Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('kegiatan');
+        Route::get('/benchmark/api/programs/activities', [App\Http\Controllers\API\BenchmarkController::class, 'getProgramActivities'])->name('programs.activities');
+        Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKegiatan'])->name('kegiatan');
         Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
+        Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
+        Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
     });    
 
 });

@@ -16,8 +16,9 @@
 @section('content_body')
 <div class="card card-outline card-primary">
     <div class="card-body">
-        <form id="benchmarkForm">
+        <form id="benchmarkForm" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off" enctype="multipart/form-data">
             @csrf
+            @method('POST')
             <div class="row">
                 {{-- Kiri --}}
                 <div class="col-md-6">
@@ -42,12 +43,9 @@
                     </div>
                 
                     <div class="form-group">
-                        <label for="jenis_kegiatan_id">Jenis Kegiatan</label>
-                        <select id="jenis_kegiatan_id" name="jenis_kegiatan_id" class="form-control" required>
+                        <label for="jeniskegiatan_id">Jenis Kegiatan</label>
+                        <select id="jeniskegiatan_id" name="jeniskegiatan_id" class="form-control" required>
                             <option value="">Pilih Jenis Kegiatan</option>
-                            @foreach ($kegiatan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                            @endforeach
                         </select>
                     </div>
 
@@ -57,7 +55,7 @@
                             <label for="kode_kegiatan" class="input-group col-form-label">
                                 {{ __('cruds.kegiatan.basic.kode') }}
                             </label>
-                            <input type="hidden" class="form-control" id="programoutcomeoutputactivity_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="programoutcomeoutputactivity_id">
+                            <input type="hidden" class="form-control" id="kegiatan_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kegiatan_id">
                             <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
                             data-toggle="modal" data-target="#ModalDaftarProgramActivity">
                         </div>
@@ -66,7 +64,7 @@
                             <label for="nama_kegiatan" class="input-group col-form-label">
                                 {{ __('cruds.kegiatan.basic.nama') }}
                             </label>
-                            <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan">
+                            <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan" readonly>
                         </div>
                     </div>
 
@@ -107,20 +105,17 @@
                 {{-- Kanan --}}
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="tanggal_implementasi">Tanggal Implementasi</label>
-                        <input type="date" id="tanggal_implementasi" name="tanggal_implementasi" class="form-control" required>
+                        <label for="tanggalimplementasi">Tanggal Implementasi</label>
+                        <input type="date" id="tanggalimplementasi" name="tanggalimplementasi" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="handler">Handler</label>
                         <input type="text" id="handler" name="handler" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="user_compiler_id">Compiler</label>
-                        <select id="user_compiler_id" name="user_compiler_id" class="form-control" required>
+                        <label for="usercompiler_id">Compiler</label>
+                        <select id="usercompiler_id" name="usercompiler_id" class="form-control" required>
                             <option value="">-- Pilih Compiler --</option>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -139,7 +134,7 @@
             </div>
 
             <div class="text-right mt-4">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" id="submit" class="btn btn-primary">Simpan</button>
             </div>
         </form>
     </div>
