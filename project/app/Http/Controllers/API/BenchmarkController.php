@@ -35,34 +35,32 @@ class BenchmarkController extends Controller
     public function getBenchmarkDatatable(Request $request)
     {
         $query = Meals_Quality_Benchmark::with([
-            'program:id,nama',          // Relasi ke table trprogram
-            'jenisKegiatan:id,nama',     // Dropdown jenis kegiatan
-            'outcomeActivity:id,nama',           // Kegiatan berdasarkan filter program dan jenis kegiatan
-            'desa:id,nama',
-            'kecamatan:id,nama',
-            'kabupaten:id,nama',
-            'provinsi:id,nama',
-            'compiler:id,nama',
-        ])->select('id', 'program_id', 'usercompiler_id', 'tanggalimplementasi');
+            'program',          // Relasi ke table trprogram
+            'jenisKegiatan',     // Dropdown jenis kegiatan
+            'kegiatan.programOutcomeOutputActivity',           // Kegiatan berdasarkan filter program dan jenis kegiatan
+            'desa',
+            'kecamatan',
+            'kabupaten',
+            'provinsi',
+            'compiler',
+        ])->select('benchmark.id', 'benchmark.program_id', 'benchmark.usercompiler_id', 'benchmark.tanggalimplementasi', 'benchmark.jeniskegiatan_id', 'benchmark.kegiatan_id', 'benchmark.score');
 
         return DataTables::eloquent($query)
             ->addIndexColumn()
             ->editColumn('tanggalimplementasi', function ($item) {
-                return Carbon::parse($item->tanggal_implementasi)->format('d-m-Y');
+                return Carbon::parse($item->tanggalimplementasi)->format('d-m-Y');
             })
-            ->addColumn('program_name', fn($item) => $item->program->nama ?? 'N/A')
+            ->addColumn('program', fn($item) => $item->program->nama ?? 'N/A')
+            ->addColumn('jenisKegiatan', fn($item) => $item->jeniskegiatan->nama ?? 'N/A')
+            ->addColumn('kegiatan', fn($item) => $item->kegiatan->programOutcomeOutputActivity->nama ?? 'N/A')
             ->addColumn('compiler', fn($item) => $item->user_compiler->name ?? 'N/A')
-            ->addColumn('action', function ($item) {
+            ->addColumn('score', fn($item) => $item->score ?? 'N/A')
+              ->addColumn('action', function ($benchmark) {
                 $buttons = [];
 
-                if (auth()->user()->can('meals_quality_benchmark_edit')) {
-                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', 'Edit Benchmark ' . $item->id, $item->id);
+                if (auth()->user()->id === 1 || auth()->user()->can('benchmark_edit')) {
+                    $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.benchmark.label') . $benchmark->nama, $benchmark->id);
                 }
-
-                if (auth()->user()->can('meals_quality_benchmark_view')) {
-                    $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', 'Lihat Benchmark ' . $item->id, $item->id);
-                }
-
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])

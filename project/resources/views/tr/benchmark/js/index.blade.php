@@ -2,8 +2,7 @@
     $(document).ready(function () {
     $('#benchmarkTable').DataTable({
         serverSide: true,
-        processing: false,
-        // responsive: true,
+        processing: true,
         ajax: '{{ route('api.benchmark.datatable') }}',
         columns: [
             {
@@ -13,12 +12,14 @@
                 className: "text-center",
                 title: '{{ __('No.') }}',
                 orderable: true,
-                searchable: true,
+                searchable: false,
             },
-            // {data: 'kode', name: 'kode', title: '{{ __('cruds.program.kode') }}'},
-            {data: 'program_name', name: 'program.nama', title: '{{ __('cruds.program.nama') }}'},
-            {data: 'tanggalimplementasi', name: 'tanggalimplementasi', title: '{{ __('cruds.benchmark.tanggal_implementasi') }}'},
-            {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: true, searchable: false, className: 'text-center'},
+            {data: 'program', name: 'program.nama', title: '{{ __('cruds.program.nama') }}', rderable: true, searchable: true},
+            {data: 'jenisKegiatan', name: 'jenisKegiatan.nama', title: 'Tipe Kegiatan', orderable: true, searchable: true },
+            {data: 'kegiatan', name: 'kegiatan.programOutcomeOutputActivity.nama', title: 'Nama Kegiatan', orderable: true, searchable: true },
+            {data: 'tanggalimplementasi', name: 'tanggalimplementasi', title: '{{ __('cruds.benchmark.tanggal_implementasi') }}', orderable: true, searchable: false },
+            {data: 'score', name: 'score', title: 'Score', orderable: true, searchable: false },
+            {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center'},
         ],
         layout: {
             topStart: {

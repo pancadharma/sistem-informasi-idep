@@ -51,7 +51,7 @@ class Meals_Quality_Benchmark extends Model
         return $this->belongsTo(Jenis_Kegiatan::class, 'jeniskegiatan_id','id');
     }
 
-    public function outcomeActivity()
+    public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id', 'id');
     }
