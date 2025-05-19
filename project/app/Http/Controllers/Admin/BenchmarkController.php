@@ -26,16 +26,7 @@ class BenchmarkController extends Controller
 
     public function create()
     {
-        return view('tr.benchmark.create', [
-            'programs' => Program::all(),
-            'jenis_kegiatan' => Jenis_Kegiatan::all(),
-            'kegiatan' => Kegiatan::all(),
-            'desa' => Kelurahan::all(),
-            'kecamatan' => Kecamatan::all(),
-            'provinsi' => Provinsi::all(),
-            'kabupaten' => Kabupaten::all(),
-            'users' => User::all(),
-        ]);
+        return view('tr.benchmark.create');
     }
 
     public function getBenchmark(Request $request)

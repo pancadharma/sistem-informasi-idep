@@ -7,7 +7,7 @@
         let formData = new FormData(form);
         
         $.ajax({
-            url: "{{ route('api.benchmark.store') }}",
+            url: "{{ route('benchmark.api.benchmark.store') }}",
             method: "POST",
             data: formData,
             processData: false,
@@ -48,7 +48,7 @@
     let programTable = $('#list_program_kegiatan').DataTable({
       processing: true,
       serverSide: true,
-      ajax: '{{ route("api.benchmark.programs") }}',
+      ajax: '{{ route("benchmark.api.benchmark.programs") }}',
       columns: [
         { data: 'kode', name: 'kode' },
         { data: 'nama', name: 'nama' },
@@ -61,7 +61,7 @@
       allowClear: true,
       placeholder: "Pilih Jenis Kegiatan",
       ajax: {
-        url: "{{ route('api.benchmark.jenis-kegiatan') }}",
+        url: "{{ route('benchmark.api.benchmark.jenis-kegiatan') }}",
         dataType: "json",
         delay: 250,
         data: params => ({
@@ -102,7 +102,7 @@
 
       // Fetch kegiatan via AJAX
       $.ajax({
-        url: '{{ route("api.benchmark.kegiatan") }}',
+        url: '{{ route("benchmark.api.benchmark.kegiatan") }}',
         type: 'GET',
         data: {
           program_id: programId,
@@ -170,7 +170,7 @@
 
     function setLokasiWilayah(kegiatanId) {
     $.ajax({
-      url: '{{ route("api.benchmark.lokasi") }}',
+      url: '{{ route("benchmark.api.benchmark.lokasi") }}',
       type: 'GET',
       data: { kegiatan_id: kegiatanId },
       success: function (data) {
@@ -253,12 +253,12 @@
   $('#usercompiler_id').select2({
       placeholder: 'Pilih Compiler',
       ajax: {
-          url: '{{ route("api.benchmark.compiler") }}', // ganti ini dengan URL endpoint getCompilers kamu
+          url: '{{ route("benchmark.api.benchmark.compiler") }}',
           dataType: 'json',
           delay: 250,
           data: function(params) {
               return {
-                  search: params.term, // search term dari input select2
+                  search: params.term,
                   page: params.page || 1
               };
           },

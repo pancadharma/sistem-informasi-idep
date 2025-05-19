@@ -325,7 +325,6 @@ Route::middleware(['auth'])->group(function () {
         Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
 
-
     Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
         Route::get('prov',                          [WilayahController::class, 'getProvinsi'])->name('prov');
         Route::get('kab/{id}',                      [WilayahController::class, 'getKabupaten'])->name('kab');
@@ -412,15 +411,14 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('target-progresses/{target_progress_id}/show',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
+
+
     Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
         Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getBenchmarkDatatable'])->name('datatable');
+
         Route::post('store', [App\Http\Controllers\API\BenchmarkController::class, 'storeBenchmark'])->name('store');
-    
-        // Lokasi (lookup)
-        Route::get('provinsi', [App\Http\Controllers\API\BenchmarkController::class, 'getProv'])->name('provinsi');
-        Route::get('kabupaten', [App\Http\Controllers\API\BenchmarkController::class, 'getKabupatens'])->name('kabupaten');
-        Route::get('kecamatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKecamatans'])->name('kecamatan');
-        Route::get('desa', [App\Http\Controllers\API\BenchmarkController::class, 'getDesas'])->name('desa');
         Route::get('programs', [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
         Route::get('/benchmark/api/programs/activities', [App\Http\Controllers\API\BenchmarkController::class, 'getProgramActivities'])->name('programs.activities');
         Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKegiatan'])->name('kegiatan');
