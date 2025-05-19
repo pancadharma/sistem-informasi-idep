@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Peta Provinsi - Bootstrap Tabs (Google Default)</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Custom CSS for Map Containers -->
+    <style>
+        /* Ensure map divs take up space */
+        #google-map-container,
+        #leaflet-map-container {
+            height: 600px;
+            /* Adjust height as needed */
+            width: 100%;
+        }
+
+        /* Optional: Add some padding above the map */
+        .tab-content {
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <h1>Peta Provinsi Indonesia</h1>
+
+        <!-- Bootstrap Nav Tabs -->
+        <ul class="nav nav-tabs" id="mapTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <!-- Set Google Maps tab as active -->
+                <a class="nav-link active" id="google-tab" data-toggle="tab" href="#google-map-tab" role="tab"
+                    aria-controls="google-map-tab" aria-selected="true">Google Maps</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="leaflet-tab" data-toggle="tab" href="#leaflet-map-tab" role="tab"
+                    aria-controls="leaflet-map-tab" aria-selected="false">Leaflet (OSM)</a>
+            </li>
+        </ul>
+
+        <!-- Bootstrap Tab Content -->
+        <div class="tab-content" id="mapTabContent">
+            <!-- Google Maps Pane (Set as active and shown by default) -->
+            <div class="tab-pane fade show active" id="google-map-tab" role="tabpanel" aria-labelledby="google-tab">
+                <div id="google-map-container"></div>
+                <p class="text-muted small mt-2">Google Maps View</p>
+            </div>
+
+            <!-- Leaflet Pane -->
+            <div class="tab-pane fade" id="leaflet-map-tab" role="tabpanel" aria-labelledby="leaflet-tab">
+                <div id="leaflet-map-container"></div>
+                <p class="text-muted small mt-2">Leaflet View (OpenStreetMap)</p>
+            </div>
+        </div>
+    </div> <!-- /container -->
+
+
+    <!-- 1. jQuery and Popper.js (Required for Bootstrap JS) -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <!-- 2. Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+        integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+        crossorigin="anonymous"></script>
+
+    <!-- 3. Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- 4. Google Maps JavaScript API -->
+    <!-- IMPORTANT: Replace YOUR_API_KEY -->
+    <!-- Callback is now 'initGoogleMap' -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&callback=initGoogleMap">
+        </script>
+
+
+    <script>
+        // 5. Your Shared Data Array (Same as before)
+        const dataProvinsi = [
+            { nama_provinsi: "Aceh", lat: 4.6951, long: 96.7494, jumlah_desa: 6500 },
+            { nama_provinsi: "Sumatera Utara", lat: 2.1153, long: 99.5451, jumlah_desa: 6110 },
+            { nama_provinsi: "Sumatera Barat", lat: -0.7399, long: 100.8000, jumlah_desa: 1158 },
+            // ... (Add the rest of your dataProvinsi array here) ...
+            { nama_provinsi: "Papua", lat: -4.2247, long: 138.0804, jumlah_desa: 5505 },
+        ];
+
+        // Global variables for map instances and markers
+        let leafletMapInstance = null;
+        let googleMapInstance = null;
+        let googleMapMarkers = [];
+        let leafletMarkerLayerGroup = null; // Use LayerGroup for Leaflet markers
+
+        // Indonesia Center Coordinates
+        const centerLat = -2.5489;
+        const centerLng = 118.0149;
+        const initialZoom = 5;
+
+        // --- Google Maps Initialization (Callback Function) ---
+        // This function is called by the Google Maps API script tag when ready
+        function initGoogleMap() {
+            console.log("Google Maps API ready. Initializing map...");
+            if (googleMapInstance) return; // Avoid re-initializing
+
+            googleMapInstance = new google.maps.Map(document.getElementById('google-map-container'), {
+                center: { lat: centerLat, lng: centerLng },
+                zoom: initialZoom,
+                mapTypeId: 'roadmap' // Default map type
+            });
+
+            // Add Markers to Google Map
+            addMarkersToGoogleMaps(googleMapInstance, dataProvinsi);
+            console.log("Google Map initialized.");
+        }
+
+        // --- Leaflet Map Initialization ---
+        // This function is called *only when* the Leaflet tab is shown for the first time
+        function initLeafletMap() {
+            console.log("Initializing Leaflet map...");
+            if (leafletMapInstance) return; // Avoid re-initializing
+
+            leafletMapInstance = L.map('leaflet-map-container').setView([centerLat, centerLng], initialZoom);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(leafletMapInstance);
+
+            // Use a LayerGroup for easier management if needed later
+            leafletMarkerLayerGroup = L.layerGroup().addTo(leafletMapInstance);
+
+            // Add Markers to Leaflet Map
+            addMarkersToLeaflet(leafletMarkerLayerGroup, dataProvinsi); // Add to group
+
+            console.log("Leaflet map initialized.");
+
+            // IMPORTANT: Invalidate size shortly after initialization inside a hidden tab
+            // Sometimes needed if the container dimensions weren't final right at creation
+            setTimeout(() => {
+                if (leafletMapInstance) {
+                    leafletMapInstance.invalidateSize();
+                    console.log("Leaflet map size invalidated after init.");
+                }
+            }, 100); // Small delay
+        }
+
+
+        // --- Marker Adding Functions (Identical logic to previous example) ---
+
+        function addMarkersToLeaflet(layerGroup, data) { // Accepts layerGroup now
+            layerGroup.clearLayers(); // Clear existing markers in the group first
+            data.forEach(provinsi => {
+                if (typeof provinsi.lat === 'number' && typeof provinsi.long === 'number') {
+                    const marker = L.marker([provinsi.lat, provinsi.long]);
+                    const popupContent = `
+                    <strong>${provinsi.nama_provinsi}</strong><br>
+                    Jumlah Desa: ${provinsi.jumlah_desa.toLocaleString()} <br>
+                    Lat: ${provinsi.lat.toFixed(4)}, Long: ${provinsi.long.toFixed(4)}
+                `;
+                    marker.bindPopup(popupContent);
+                    marker.addTo(layerGroup); // Add to the layer group
+                } else {
+                    console.warn(`Leaflet: Skipping province due to invalid coordinates: ${provinsi.nama_provinsi}`);
+                }
+            });
+            console.log(`Added ${layerGroup.getLayers().length} markers to Leaflet.`);
+        }
+
+        function addMarkersToGoogleMaps(map, data) {
+            // Clear previous markers
+            googleMapMarkers.forEach(marker => marker.setMap(null));
+            googleMapMarkers = [];
+
+            const infoWindow = new google.maps.InfoWindow();
+
+            data.forEach(provinsi => {
+                if (typeof provinsi.lat === 'number' && typeof provinsi.long === 'number') {
+                    const position = { lat: provinsi.lat, lng: provinsi.long };
+                    const marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: provinsi.nama_provinsi
+                    });
+
+                    marker.addListener('click', () => {
+                        const popupContent = `
+                        <div style="font-family: sans-serif; line-height: 1.5;">
+                          <strong>${provinsi.nama_provinsi}</strong><br>
+                          Jumlah Desa: ${provinsi.jumlah_desa.toLocaleString()}<br>
+                          Lat: ${provinsi.lat.toFixed(4)}, Long: ${provinsi.long.toFixed(4)}
+                        </div>
+                    `;
+                        infoWindow.setContent(popupContent);
+                        infoWindow.open(map, marker);
+                    });
+                    googleMapMarkers.push(marker);
+                } else {
+                    console.warn(`Google Maps: Skipping province due to invalid coordinates: ${provinsi.nama_provinsi}`);
+                }
+            });
+            console.log(`Added ${googleMapMarkers.length} markers to Google Maps.`);
+        }
+
+
+        // --- Bootstrap Tab Event Listener ---
+        // Use jQuery since Bootstrap 4 relies on it for its JS components
+        $(document).ready(function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                const targetTab = $(e.target).attr("href"); // Activated tab href (e.g., "#leaflet-map-tab")
+                console.log(`Tab shown: ${targetTab}`);
+
+                if (targetTab === '#leaflet-map-tab') {
+                    if (!leafletMapInstance) {
+                        // Initialize Leaflet map ONLY when its tab is shown for the first time
+                        initLeafletMap();
+                    } else {
+                        // If already initialized, just ensure size is correct
+                        // Delay slightly to allow tab pane display update
+                        setTimeout(() => {
+                            if (leafletMapInstance) {
+                                leafletMapInstance.invalidateSize();
+                                console.log("Leaflet map size invalidated on tab switch.");
+                            }
+                        }, 100);
+                    }
+                } else if (targetTab === '#google-map-tab') {
+                    if (googleMapInstance) {
+                        // If Google Map is already initialized, trigger resize and recenter
+                        google.maps.event.trigger(googleMapInstance, 'resize');
+                        googleMapInstance.setCenter({ lat: centerLat, lng: centerLng });
+                        console.log("Google map resized and centered on tab switch.");
+                    } else {
+                        // This case should ideally not happen often if the API callback worked,
+                        // but if the user switches *before* the API is ready, initGoogleMap will handle it.
+                        console.log("Google map tab shown, waiting for init if not already done.");
+                        // If the API *is* ready but init didn't happen (edge case), try initializing now
+                        if (typeof google !== 'undefined' && google.maps && !googleMapInstance) {
+                            initGoogleMap();
+                        }
+                    }
+                }
+            });
+
+            // Initial check: Google map should be initialized by its callback.
+            // No need to explicitly initialize the default tab map here.
+            console.log("Document ready. Google Maps tab is active by default.");
+        });
+
+    </script>
+
+</body>
+
+</html>

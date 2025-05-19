@@ -132,6 +132,12 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 108, 'nama' => 'komponenmodel_show'],
                 ['id' => 109, 'nama' => 'komponenmodel_edit'],
                 ['id' => 110, 'nama' => 'komponenmodel_delete'],
+                ['id' => 111, 'nama' => 'prepostl_access'],
+                ['id' => 112, 'nama' => 'prepostl_create'],
+                ['id' => 113, 'nama' => 'prepostl_index'],
+                ['id' => 114, 'nama' => 'prepostl_show'],
+                ['id' => 115, 'nama' => 'prepostl_edit'],
+                ['id' => 116, 'nama' => 'prepostl_delete'],
             ];
 
             $now = Carbon::now();

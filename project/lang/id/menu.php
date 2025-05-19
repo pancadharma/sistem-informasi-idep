@@ -52,4 +52,5 @@ return [
     'peran'             => 'Peran',
     'komponenmodel'     => 'Komponen/Model',
     'target_progress'    => 'Target & Progress',
+	'prepost'			=>	'Pre/Post Test',
 ];

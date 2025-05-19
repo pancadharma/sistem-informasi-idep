@@ -29,6 +29,8 @@ class Kegiatan extends Model implements HasMedia
 {
     use InteractsWithMedia, Auditable, HasFactory, HasRoles, LogsActivity;
 
+    protected $with = ['assessment', 'sosialisasi', 'pelatihan', 'pembelanjaan', 'pengembangan', 'kampanye', 'pemetaan', 'monitoring', 'kunjungan', 'konsultasi', 'lainnya'];
+
     protected $table = 'trkegiatan';
 
     protected $dates = [
@@ -86,7 +88,7 @@ class Kegiatan extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     public function getTglMulaiAttribute($value)
@@ -137,10 +139,10 @@ class Kegiatan extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('dokumen_pendukung')
-        ->useDisk('kegiatan_uploads');
+            ->useDisk('kegiatan_uploads');
 
         $this->addMediaCollection('media_pendukung')
-        ->useDisk('kegiatan_uploads');
+            ->useDisk('kegiatan_uploads');
     }
 
 
@@ -232,8 +234,8 @@ class Kegiatan extends Model implements HasMedia
     public function laporan()
     {
         return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
-        ->using(Kegiatan_Penulis::class)
-        ->withTimestamps();
+            ->using(Kegiatan_Penulis::class)
+            ->withTimestamps();
     }
 
 
@@ -258,37 +260,47 @@ class Kegiatan extends Model implements HasMedia
         return $this->hasOne(Kegiatan_Assessment::class, 'kegiatan_id');
     }
 
-    public function kampanye(){
+    public function kampanye()
+    {
         return $this->hasOne(Kegiatan_Kampanye::class, 'kegiatan_id');
     }
 
-    public function konsultasi(){
+    public function konsultasi()
+    {
         return $this->hasMany(Kegiatan_Konsultasi::class, 'kegiatan_id');
     }
 
-    public function kunjungan(){
+    public function kunjungan()
+    {
         return $this->hasOne(Kegiatan_Kunjungan::class, 'kegiatan_id');
     }
-    public function lainnya(){
+    public function lainnya()
+    {
         return $this->hasOne(Kegiatan_Lainnya::class, 'kegiatan_id');
     }
 
-    public function monitoring(){
+    public function monitoring()
+    {
         return $this->hasOne(Kegiatan_Monitoring::class, 'kegiatan_id');
     }
-    public function pelatihan(){
+    public function pelatihan()
+    {
         return $this->hasOne(Kegiatan_Pelatihan::class, 'kegiatan_id');
     }
-    public function pembelanjaan(){
+    public function pembelanjaan()
+    {
         return $this->hasOne(Kegiatan_Pembelanjaan::class, 'kegiatan_id');
     }
-    public function pemetaan(){
+    public function pemetaan()
+    {
         return $this->hasOne(Kegiatan_Pemetaan::class, 'kegiatan_id');
     }
-    public function pengembangan(){
+    public function pengembangan()
+    {
         return $this->hasOne(Kegiatan_Pengembangan::class, 'kegiatan_id');
     }
-    public function sosialisasi(){
+    public function sosialisasi()
+    {
         return $this->hasOne(Kegiatan_Sosialisasi::class, 'kegiatan_id');
     }
 
@@ -297,12 +309,19 @@ class Kegiatan extends Model implements HasMedia
         return $this->belongsToMany(Partner::class, 'trkegiatan_mitra', 'kegiatan_id', 'mitra_id');
     }
 
+    // public function kegiatan_penulis()
+    // {
+    //     return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
+    //         ->withPivot('peran_id')
+    //         ->withTimestamps();
+    // }
+
     public function kegiatan_penulis()
     {
-        return $this->belongsToMany(User::class, 'trkegiatanpenulis', 'kegiatan_id', 'penulis_id')
-        ->withPivot('peran_id')
-        ->withTimestamps();
+        return $this->hasMany(Kegiatan_Penulis::class, 'kegiatan_id')
+            ->with('peran', 'user'); // eager load peran & user
     }
+
     public function sektor()
     {
         return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
@@ -357,15 +376,28 @@ class Kegiatan extends Model implements HasMedia
     public function getKegiatanHasilAttribute()
     {
         $jenisKegiatan = (int) $this->jeniskegiatan_id;
-        $modelMapping = self::getJenisKegiatanModelMap();
+        $relationMap = self::getJenisKegiatanRelationMap();
 
-        if (!isset($modelMapping[$jenisKegiatan])) {
+        if (!isset($relationMap[$jenisKegiatan])) {
             return null; // Or throw an exception
         }
 
-        $modelClass = $modelMapping[$jenisKegiatan];
-        return $modelClass::where('kegiatan_id', $this->id)->get();
+        $relationName = $relationMap[$jenisKegiatan];
+        return $this->$relationName;
     }
+
+    // public function getKegiatanHasilAttribute()
+    // {
+    //     $jenisKegiatan = (int) $this->jeniskegiatan_id;
+    //     $modelMapping = self::getJenisKegiatanModelMap();
+
+    //     if (!isset($modelMapping[$jenisKegiatan])) {
+    //         return null; // Or throw an exception
+    //     }
+
+    //     $modelClass = $modelMapping[$jenisKegiatan];
+    //     return $modelClass::where('kegiatan_id', $this->id)->get();
+    // }
 
 
     public function getAllMediaAttribute()
@@ -377,4 +409,20 @@ class Kegiatan extends Model implements HasMedia
     }
 
 
+    // In Kegiatan.php
+
+    public function program()
+    {
+        return $this->belongsToThrough(
+            \App\Models\Program::class,
+            [
+                \App\Models\Program_Outcome_Output_Activity::class,
+                \App\Models\Program_Outcome_Output::class,
+                \App\Models\Program_Outcome::class,
+            ],
+            foreignKeyLookup: [
+                \App\Models\Program_Outcome_Output_Activity::class => 'programoutcomeoutputactivity_id',
+            ]
+        );
+    }
 }

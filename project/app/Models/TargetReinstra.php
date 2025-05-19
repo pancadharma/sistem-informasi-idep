@@ -37,11 +37,22 @@ class TargetReinstra extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
-    public function program() {
+    public function program()
+    {
         return $this->belongsToMany(Program::class, 'trprogramtargetreinstra', 'targetreinstra_id', 'program_id');
+    }
+
+    public function komponen_models()
+    {
+        return $this->belongsToMany(Meals_Komponen_Model::class, 'trmeals_komponen_model_targetreinstra', 'targetreinstra_id', 'trmeals_komponen_model_id');
+    }
+
+    public function kegiatan()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'trkegiatan_sektor', 'sektor_id', 'kegiatan_id');
     }
 
 }
