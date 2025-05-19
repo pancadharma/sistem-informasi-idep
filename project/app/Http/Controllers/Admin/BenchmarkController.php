@@ -29,6 +29,11 @@ class BenchmarkController extends Controller
         return view('tr.benchmark.create');
     }
 
+    public function edit()
+    {
+        return view('tr.benchmark.edit');
+    }
+
     public function getBenchmark(Request $request)
     {
         $request->validate([

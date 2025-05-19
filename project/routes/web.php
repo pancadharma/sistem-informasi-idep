@@ -365,6 +365,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
         Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
     });
+
     Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
         Route::get('datatable',         [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
         Route::post('komponen',         [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
@@ -376,9 +377,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
 
-    Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
-        Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
-        Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
     // MEALS Pre Post
     Route::group(['prefix' => 'prepost', 'as' => 'prepost.'], function () {
         Route::get('/', [MealsPrePostTestController::class, 'index'])->name('index');
@@ -413,9 +411,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-    Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
+    Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
+        Route::get('/edit', [App\Http\Controllers\Admin\BenchmarkController::class, 'edit'])->name('edit');
+    });
+
+    Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
         Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getBenchmarkDatatable'])->name('datatable');
 
         Route::post('store', [App\Http\Controllers\API\BenchmarkController::class, 'storeBenchmark'])->name('store');
@@ -425,6 +427,4 @@ Route::middleware(['auth'])->group(function () {
         Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
         Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
         Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
-    });    
-
-});
+    });  

@@ -3,7 +3,7 @@
     $('#benchmarkTable').DataTable({
         serverSide: true,
         processing: true,
-        ajax: "{{ route('benchmark.api.benchmark.datatable') }}",
+        ajax: "{{ route('api.benchmark.datatable') }}",
         columns: [
             {
                 data: 'DT_RowIndex',
