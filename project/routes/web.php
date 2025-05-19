@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/desatable',           [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
         Route::get('/data/kabupaten-pie',       [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
 
-        Route::get('/data/desa/{id?}',   [DashboardProvinsiController::class, 'getDataDesa'])->name('provinsi.data.desa');
+        Route::get('/data/get-data-desa/{id?}',  [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
 
     });
 
