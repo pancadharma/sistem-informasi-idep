@@ -62,7 +62,7 @@
                 <div class="icon">
                     <i class="fas fa-child"></i>
                 </div>
-                {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -109,34 +109,8 @@
         <!-- ./col -->
     </div>
 
-    <!-- Map Section -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card card-primary card-outline">
-                <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
-                    <h3 class="card-title">
-                        <i class="fas fa-map-marker-alt mr-1"></i>
-                        Peta Data
-                    </h3>
-                    <!-- card tools -->
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.card-tools -->
-                </div>
-                <div class="card-body">
-                    <div id="map" style="height: 500px; width: 100%;"></div>
-                </div>
-                <!-- /.card-body-->
-            </div>
-        </div>
-    </div>
-    <!-- End Maps Section -->
-
     <!-- Filter Section -->
-    <div class="row mb-3">
+    <div class="row mb-3 ">
         <div class="col-md-4">
             <label for="programFilter">Program:</label>
             <select id="programFilter" class="form-control">
@@ -168,27 +142,61 @@
     </div>
     <!-- End Filter Section -->
 
+    <!-- Map Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        Peta Data
+                    </h3>
+                    <!-- card tools -->
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <div class="card-body">
+                    <div id="map" style="height: 500px; width: 100%;"></div>
+                </div>
+                <!-- /.card-body-->
+            </div>
+        </div>
+    </div>
+    <!-- End Maps Section -->
+
 
     <!-- Chart Section -->
     <div class="row" id="dashboardCharts">
-        <div class="col-6">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card card-success">
                 <div class="card-header">
                     <h3 class="card-title">Bar Chart</h3>
                     <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
+                    <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
                     <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card-danger">
                 <div class="card-header">
                     <h3 class="card-title">Pie Chart</h3>
                     <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
+                    <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
                     <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -198,6 +206,26 @@
     </div>
     <!-- End Chart Section -->
 
+    <div class="row" id="tableDesaPenerimaManfaat">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    {{-- <h3 class="card-title">Data Penerima Manfaat</h3> --}}
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+
+                <div class="card-body">
+                    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress" width="100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -218,6 +246,9 @@
 
 @push('js')
 @section('plugins.Select2', true)
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Toastr', true)
     {{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -624,8 +655,79 @@
             $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function () {
                 loadDashboardData();
                 loadMapMarkers();
+                reloadTableIfValid();
             });
+
+            // Initialize DataTable
+            const provinsiId = $('#provinsiFilter').val();
+
+            if (provinsiId) {
+                url_ajax = `/dashboard/data/get-data-desa/${provinsiId}`;
+            } else {
+                url_ajax = `/dashboard/data/get-data-desa`;
+            }
+
+            let table = $('#tableDesa').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                pageLength: 25,
+                searching: true,
+                ordering: true,
+                responsive: true,
+
+                order: [[1, 'asc']],
+                lengthMenu: [10, 25, 50, 100],
+                ajax: {
+                    url: url_ajax,
+                    data: function (d) {
+                        d.program_id = $('#filterProgram').val();
+                        d.tahun = $('#filterTahun').val();
+                    },
+                    dataSrc: function (json) {
+                        return json.data || [];
+                    }
+                },
+                columns: [
+                    { data: 'nama_dusun', title: 'Nama Dusun' },
+                    { data: 'desa', title: 'Desa' },
+                    { data: 'kecamatan', title: 'Kecamatan' },
+                    { data: 'kabupaten', title: 'Kabupaten' },
+                    { data: 'provinsi', title: 'Provinsi' },
+                    // { data: 'total_dusun', title: 'Total Dusun' },
+                    { data: 'total_penerima', title: 'Total Penerima' }
+                ]
+            });
+
+            function reloadTableIfValid() {
+                const program = $('#programFilter').val();
+                const tahun = $('#tahunFilter').val();
+                const provinsi = $('#provinsiFilter').val();
+
+                if (program && tahun && provinsi) {
+                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+                }
+                else if (program && tahun) {
+                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
+                } else if (program && provinsi) {
+                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+                } else if (tahun && provinsi) {
+                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+                }else if (program) {
+                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
+                } else if (tahun) {
+                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
+                } else if (provinsi) {
+                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+                }
+                else {
+                    table.ajax.url(url_ajax).load();
+                }
+            }
+
+            reloadTableIfValid();
         });
     </script>
+
 
 @endpush
