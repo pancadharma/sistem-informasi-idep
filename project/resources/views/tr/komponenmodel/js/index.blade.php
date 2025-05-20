@@ -1,33 +1,32 @@
 <script>
         $(document).ready(function () {
         $('#komponenmodelTable').DataTable({
-            serverSide: true,
+            serverSide: false,
             processing: true,
             // responsive: true,
             ajax: '{{ route('api.komodel.datatable') }}',
             columns: [
-                {
-                    data: 'DT_RowIndex',
-                    width: "5%",
-                    name: 'No.',
-                    className: "text-center",
-                    title: '{{ __('No.') }}',
-                    orderable: false,
-                    searchable: true,
-                },
-                // {data: 'kode', name: 'kode', title: '{{ __('cruds.program.kode') }}'},
-                {data: 'nama', name: 'nama', title: '{{ __('cruds.program.nama') }}'},
-                {data: 'dusun.nama', name: 'dusun.nama', title: '{{ __('cruds.komponenmodel.nama') }}'},
-                {data: 'tanggalmulai', name: 'tanggalmulai', title: '{{ __('cruds.komponenmodel.sektor') }}'},
-                {data: 'tanggalselesai', name: 'tanggalselesai', title: '{{ __('cruds.komponenmodel.dusun') }}'},
-                {data: 'duration_in_days', name: 'duration_in_days', title: '{{ __('cruds.komponenmodel.desa') }}'},
-                {data: 'tempat', name: 'tempat', title: '{{ __('cruds.komponenmodel.kecamatan') }}'},
-                {data: 'fase', name: 'tempat', title: '{{ __('cruds.komponenmodel.kabupaten') }}'},
-                {data: 'status', name: 'status', title: '{{ __('cruds.komponenmodel.provinsi') }}'},
-                {data: 'status', name: 'status', title: '{{ __('cruds.komponenmodel.jumlah') }}'},
-                {data: 'status', name: 'status', title: '{{ __('cruds.komponenmodel.satuan') }}'},
-                {data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center'},
-            ],
+    {
+        data: 'DT_RowIndex',
+        width: "5%",
+        name: 'DT_RowIndex',
+        className: "text-center",
+        title: '{{ __('No.') }}',
+        orderable: false,
+        searchable: false,
+    },
+    { data: 'program_name', name: 'program_name', title: '{{ __('cruds.program.nama') }}' },
+    { data: 'sektor', name: 'sektor', title: '{{ __('cruds.komponenmodel.sektor') }}' },
+    { data: 'komponen_model', name: 'komponen_model', title: '{{ __('cruds.komponenmodel.nama') }}', orderable: true, searchable: true, },
+    { data: 'totaljumlah', name: 'totaljumlah', title: '{{ __('cruds.komponenmodel.jumlah') }}' },
+    // { data: 'satuan', name: 'satuan', title: '{{ __('cruds.komponenmodel.satuan') }}' },
+    { data: 'provinsi', name: 'provinsi', title: '{{ __('cruds.komponenmodel.provinsi') }}' },
+    { data: 'kabupaten', name: 'kabupaten', title: '{{ __('cruds.komponenmodel.kabupaten') }}' },
+    { data: 'kecamatan', name: 'kecamatan', title: '{{ __('cruds.komponenmodel.kecamatan') }}' },
+    { data: 'desa', name: 'desa', title: '{{ __('cruds.komponenmodel.desa') }}' },
+    { data: 'dusun', name: 'dusun', title: '{{ __('cruds.komponenmodel.dusun') }}' },
+    { data: 'action', name: 'action', title: '{{ __('global.action') }}', orderable: false, searchable: false, className: 'text-center' },
+],
             layout: {
                 topStart: {
                     buttons: [{
@@ -79,6 +78,14 @@
             order: [1, 'asc'],
             lengthMenu: [10,25,50,100],
 
+        });
+    });
+
+    $(document).ready(function () {
+        $('#komponenmodelTable tbody').on('click', '.edit-komponen-model-btn', function () {
+            var id = $(this).data('komponen-model-id');
+            window.location.href = '{{ route('komodel.edit', ['id' => ':id']) }}'
+                    .replace(':id', id);
         });
     });
 </script>

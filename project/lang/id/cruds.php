@@ -1065,6 +1065,7 @@ return [
         'kontak'                        => 'Kontak',
         'ya'                            => 'Ya',
         'tidak'                         => 'Tidak',
+        'total_peserta'                 => 'Total Peserta',
     ],
 
     'target_progress' => [

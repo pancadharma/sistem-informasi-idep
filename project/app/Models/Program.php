@@ -51,7 +51,7 @@ class Program extends Model implements HasMedia
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -210,31 +210,63 @@ class Program extends Model implements HasMedia
     }
 
     // Target Progress
-    public function targetProgresses() {
+    public function targetProgresses()
+    {
         return $this->hasMany(TargetProgress::class, 'program_id');
     }
 
-	public static function withTargetsProgress(){
-		return self::with([
+    public static function withTargetsProgress()
+    {
+        return self::with([
             // For Persisted Records
-			'targetProgresses:id',
-			'targetProgresses.details' => function ($query){
-				$query->with([
+            'targetProgresses:id',
+            'targetProgresses.details' => function ($query) {
+                $query->with([
                     'targetable:id,deskripsi,indikator,target',
                 ])->select('*');
             },
             // For New Records
-			'goal:id,program_id,deskripsi,indikator,target',
-			'objektif:id,program_id,deskripsi,indikator,target',
-			'outcome' => function ($query) {
-				$query->select('id', 'program_id', 'deskripsi', 'indikator', 'target');
-			},
-			'outcome.output' => function ($query) {
-				$query->select('id', 'programoutcome_id', 'deskripsi', 'indikator', 'target');
-			},
-			'outcome.output.activities' => function ($query) {
-				$query->select('id', 'programoutcomeoutput_id', 'deskripsi', 'indikator', 'target');
-			},
-		]);
-	}
+            'goal:id,program_id,deskripsi,indikator,target',
+            'objektif:id,program_id,deskripsi,indikator,target',
+            'outcome' => function ($query) {
+                $query->select('id', 'program_id', 'deskripsi', 'indikator', 'target');
+            },
+            'outcome.output' => function ($query) {
+                $query->select('id', 'programoutcome_id', 'deskripsi', 'indikator', 'target');
+            },
+            'outcome.output.activities' => function ($query) {
+                $query->select('id', 'programoutcomeoutput_id', 'deskripsi', 'indikator', 'target');
+            },
+        ]);
+    }
+
+    // In Program.php
+    public function kegiatan()
+    {
+        return $this->hasManyThrough(
+            Kegiatan::class,
+            Program_Outcome_Output_Activity::class,
+            'programoutcomeoutput_id', // Foreign key on Program_Outcome_Output_Activity
+            'programoutcomeoutputactivity_id', // Foreign key on Kegiatan
+            'id', // Local key on Program
+            'id'  // Local key on Program_Outcome_Output_Activity
+        )->whereHas('programOutcomeOutputActivity.program_outcome_output.program_outcome', function ($q) {
+            $q->where('program_id', $this->id);
+        });
+    }
+
+    public function allKegiatan()
+    {
+        // Eager load everything needed
+        $this->loadMissing('outcome.output.activities.kegiatan');
+
+        return $this->outcome
+            ->flatMap(function ($outcome) {
+                return $outcome->output->flatMap(function ($output) {
+                    return $output->activities->flatMap(function ($activity) {
+                        return $activity->kegiatan;
+                    });
+                });
+            });
+    }
 }
