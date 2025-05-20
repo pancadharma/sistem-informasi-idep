@@ -413,6 +413,10 @@ class DashboardProvinsiController extends Controller
             'success' => true,
             'message' => 'Data penerima manfaat per dusun berhasil diambil'
         ]);
+
+        // return response()->json([
+        //     'data' => $grouped->values(), // <= pastikan ini array numerik
+        // ]);
     }
 
 
