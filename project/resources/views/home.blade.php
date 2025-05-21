@@ -206,25 +206,40 @@
     </div>
     <!-- End Chart Section -->
 
+    <!-- Table Data Desa & Pie Chart Section Based on Selected Provinsi-->
     <div class="row" id="tableDesaPenerimaManfaat">
-        <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
-                    {{-- <h3 class="card-title">Data Penerima Manfaat</h3> --}}
+                    <h3 class="card-title">Table Data Desa Penerima Manfaat</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
                         </button>
                     </div>
-                    <!-- /.card-tools -->
                 </div>
-
                 <div class="card-body">
                     <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress" width="100%">
                     </table>
                 </div>
             </div>
         </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Chart Kabupaten Penerima Manfaat</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChartCanvas" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%"></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 @endsection
@@ -628,6 +643,7 @@
             ;
         }
 
+
         // Jalankan initMap saat dokumen siap
         $(document).ready(function () {
             // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
@@ -685,6 +701,7 @@
                         d.tahun = $('#filterTahun').val();
                     },
                     dataSrc: function (json) {
+                        pieChartKabupatenPenerimaManfaat(json.data);
                         return json.data || [];
                     }
                 },
@@ -699,32 +716,110 @@
                 ]
             });
 
-            function reloadTableIfValid() {
+             function reloadTableIfValid() {
+                const provinsi = $('#provinsiFilter').val();
                 const program = $('#programFilter').val();
                 const tahun = $('#tahunFilter').val();
-                const provinsi = $('#provinsiFilter').val();
 
-                if (program && tahun && provinsi) {
-                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+                let url = "{{ route('dashboard.provinsi.data.desa', ['id' => ':id']) }}".replace(':id', provinsi || '');
+
+                const params = new URLSearchParams();
+                if (program) params.append('program_id', program);
+
+                if (tahun) params.append('tahun', tahun);
+                const queryString = params.toString();
+                if (queryString) {
+                    url += `?${queryString}`;
                 }
-                else if (program && tahun) {
-                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
-                } else if (program && provinsi) {
-                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-                } else if (tahun && provinsi) {
-                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-                }else if (program) {
-                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
-                } else if (tahun) {
-                    table.ajax.url(`/dashboard/data/get-data-desa`).load();
-                } else if (provinsi) {
-                    table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-                }
-                else {
+
+                if (program || tahun || provinsi) {
+                    table.ajax.url(url).load();
+                } else {
                     table.ajax.url(url_ajax).load();
                 }
             }
 
+            // function reloadTableIfValid() {
+            //     const program = $('#programFilter').val();
+            //     const tahun = $('#tahunFilter').val();
+            //     const provinsi = $('#provinsiFilter').val();
+
+
+            //     if (program && tahun && provinsi) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+            //     }
+            //     else if (program && tahun) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
+            //     } else if (program && provinsi) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+            //     } else if (tahun && provinsi) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+            //     }else if (program) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
+            //     } else if (tahun) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
+            //     } else if (provinsi) {
+            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
+            //     }
+            //     else {
+            //         table.ajax.url(url_ajax).load();
+            //     }
+            // }
+
+
+
+                    // pie chart kabupaten
+            function pieChartKabupatenPenerimaManfaat(data) {
+                const kabupatenTotals = {};
+
+                data.forEach(row => {
+                    const kabupaten = row.kabupaten || 'Lainnya';
+                    if (!kabupatenTotals[kabupaten]) {
+                        kabupatenTotals[kabupaten] = 0;
+                    }
+                    kabupatenTotals[kabupaten] += row.total_penerima;
+                });
+
+                const labels = Object.keys(kabupatenTotals);
+                const values = Object.values(kabupatenTotals);
+
+                const total = values.reduce((a, b) => a + b, 0);
+                const colors = [
+                    '#666', '#673ab7', '#ff9800', '#4caf50', '#00bcd4',
+                    '#9c27b0', '#ff1744', '#ffee00', '#ffb300', '#ff5722'
+                ];
+
+                const percentages = values.map(v => ((v / total) * 100).toFixed(1) + '%');
+
+                const chartData = {
+                    labels: labels.map((l, i) => `${l} (${percentages[i]})`),
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors.slice(0, values.length),
+                    }]
+                };
+
+                if (window.pieChart instanceof Chart) {
+                    window.pieChart.destroy();
+                }
+
+                const ctx = document.getElementById('pieChartCanvas').getContext('2d');
+                window.pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            tooltip: { callbacks: {
+                                label: function (context) {
+                                    return context.label;
+                                }
+                            }}
+                        }
+                    }
+                });
+            }
             reloadTableIfValid();
         });
     </script>
