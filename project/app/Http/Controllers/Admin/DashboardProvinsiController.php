@@ -356,36 +356,115 @@ class DashboardProvinsiController extends Controller
     // }
 
 
+    //method untuk filter data dusun dan desa di home.blade.php berdasarkan provinsi yang dipilih
+    // public function getFilteredDataDesa(Request $request, $id = null)
+    // {
+    //     if ($id) {
+    //         $request->merge(['provinsi_id' => $id]);
+    //     }
+
+    //     $filters = $request->only(['program_id', 'tahun', 'provinsi_id']);
+
+    //     $query = MealsPM::with([
+    //         'dusun.desa.kecamatan.kabupaten.provinsi',
+    //         'program',
+    //         'penerimaActivity',
+    //         'kelompokMarjinal'
+    //     ])
+    //         ->when($filters['program_id'] ?? null, function ($q, $programId) {
+    //             $q->where('program_id', $programId);
+    //         })
+    //         ->when($filters['tahun'] ?? null, function ($q, $tahun) {
+    //             $q->whereHas('program', function ($sub) use ($tahun) {
+    //                 $sub->whereYear('tanggalmulai', '<=', $tahun)
+    //                     ->whereYear('tanggalselesai', '>=', $tahun);
+    //             });
+    //         })
+    //         ->when($filters['provinsi_id'] ?? null, function ($q, $provinsiId) {
+    //             $q->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($sub) use ($provinsiId) {
+    //                 $sub->where('id', $provinsiId);
+    //             });
+    //         })
+    //         ->whereNull('deleted_at');
+
+    //     $data = $query->get();
+
+    //     // Group by dusun
+    //     $grouped = $data->groupBy('dusun_id')->map(function ($items) {
+    //         $first = $items->first();
+
+    //         return [
+    //             'nama_dusun'       => $first->dusun->nama ?? '-',
+    //             'desa'             => $first->dusun->desa->nama ?? '-',
+    //             'kecamatan'        => $first->dusun->desa->kecamatan->nama ?? '-',
+    //             'kabupaten'        => $first->dusun->desa->kecamatan->kabupaten->nama ?? '-',
+    //             'provinsi'         => $first->dusun->desa->kecamatan->kabupaten->provinsi->nama ?? '-',
+    //             'program'          => $first->program->nama ?? '-',
+    //             'total_penerima'   => $items->count(),
+
+    //             // Statistik tambahan:
+    //             'laki'             => $items->where('jenis_kelamin', 'laki')->count(),
+    //             'perempuan'        => $items->where('jenis_kelamin', 'perempuan')->count(),
+    //             'anak_laki'        => $items->where('jenis_kelamin', 'laki')->where('umur', '<', 17)->count(),
+    //             'anak_perempuan'   => $items->where('jenis_kelamin', 'perempuan')->where('umur', '<', 17)->count(),
+    //             'disabilitas'      => $items->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(),
+    //         ];
+    //     })->values();
+
+    //     return response()->json([
+    //         'data' => $grouped,
+    //         'total_dusun' => $grouped->count(),
+    //         'success' => true,
+    //         'message' => 'Data penerima manfaat per dusun berhasil diambil'
+    //     ]);
+    // }
+
     public function getFilteredDataDesa(Request $request, $id = null)
     {
         if ($id) {
             $request->merge(['provinsi_id' => $id]);
         }
 
-        $data = MealsPM::query()
-            ->with([
-                'dusun.desa.kecamatan.kabupaten.provinsi',
-                'kelompokMarjinal'
-            ])
-            ->when($request->program_id, function ($query, $program_id) {
-                $query->where('program_id', $program_id);
-            })
-            ->when($request->tahun, function ($query, $tahun) {
-                $query->whereHas('program', function ($q) use ($tahun) {
-                    $q->whereYear('tanggalmulai', '<=', $tahun)
-                        ->whereYear('tanggalselesai', '>=', $tahun);
-                });
-            })
-            ->when($request->provinsi_id, function ($query, $provinsi_id) {
-                $query->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($q) use ($provinsi_id) {
-                $q->where('id', $provinsi_id);
-            });
-        })
-            ->whereNull('deleted_at')
-            ->get();
+        $query = MealsPM::with([
+            'dusun.desa.kecamatan.kabupaten.provinsi',
+            'program',
+            'kelompokMarjinal'
+        ])->whereNull('deleted_at');
 
-        // Kelompokkan berdasarkan dusun
-        $grouped = $data->groupBy('dusun_id')->map(function ($items, $dusun_id) {
+        // Provinsi filter
+        if ($request->provinsi_id) {
+            $query->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($q) use ($request) {
+                $q->where('id', $request->provinsi_id);
+            });
+        }
+
+        // Program ID filter
+        if ($request->program_id) {
+            $query->where('program_id', $request->program_id);
+        }
+
+        // Tahun filter
+        if ($request->tahun) {
+            $query->whereHas('program', function ($q) use ($request) {
+                $q->whereYear('tanggalmulai', '<=', $request->tahun)
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
+            });
+        }
+
+        $data = $query->get();
+
+        // Jika data kosong, langsung balikan agar datatable kosong
+        if ($data->isEmpty()) {
+            return response()->json([
+                'data' => [],
+                'total_dusun' => 0,
+                'success' => true,
+                'message' => 'No data matching filter'
+            ]);
+        }
+
+        // Group by dusun
+        $grouped = $data->groupBy('dusun_id')->map(function ($items) {
             $first = $items->first();
 
             return [
@@ -395,7 +474,6 @@ class DashboardProvinsiController extends Controller
                 'kabupaten'        => $first->dusun->desa->kecamatan->kabupaten->nama ?? '-',
                 'provinsi'         => $first->dusun->desa->kecamatan->kabupaten->provinsi->nama ?? '-',
                 'program'          => $first->program->nama ?? '-',
-                'kegiatan'         => $first->program->activity->nama ?? '-',
                 'total_penerima'   => $items->count(),
 
                 // Statistik tambahan:
@@ -405,24 +483,41 @@ class DashboardProvinsiController extends Controller
                 'anak_perempuan'   => $items->where('jenis_kelamin', 'perempuan')->where('umur', '<', 17)->count(),
                 'disabilitas'      => $items->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(),
             ];
-        })->values(); // untuk reset index agar berbentuk array biasa
+        })->values();
 
         return response()->json([
             'data' => $grouped,
             'total_dusun' => $grouped->count(),
             'success' => true,
-            'message' => 'Data penerima manfaat per dusun berhasil diambil'
+            'message' => 'Data berhasil difilter dan dikembalikan'
         ]);
-
-        // return response()->json([
-        //     'data' => $grouped->values(), // <= pastikan ini array numerik
-        // ]);
     }
 
 
 
 
+    //method untuk endpoint baru chart by selected provinsi /data/chart/kabupaten/{id?}
+    public function getChartByKabupaten(Request $request, $id = null)
+    {
+        if ($id) $request->merge(['provinsi_id' => $id]);
 
+        $data = MealsPM::with('dusun.desa.kecamatan.kabupaten')
+            ->when(
+                $request->provinsi_id,
+                fn($q, $v) =>
+                $q->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', fn($q2) => $q2->where('id', $v))
+            )
+            ->whereNull('deleted_at')
+            ->get();
+
+        $grouped = $data->groupBy(fn($pm) => $pm->dusun->desa->kecamatan->kabupaten->nama ?? 'Lainnya')
+            ->map(fn($items) => $items->count());
+
+        return response()->json([
+            'labels' => $grouped->keys(),
+            'values' => $grouped->values(),
+        ]);
+    }
 
     // EMD DEV
 
