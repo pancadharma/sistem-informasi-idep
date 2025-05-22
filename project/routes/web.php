@@ -414,7 +414,8 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
         Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
-        Route::get('/edit', [App\Http\Controllers\Admin\BenchmarkController::class, 'edit'])->name('edit');
+        Route::get('/{id}/edit', [App\Http\Controllers\Admin\BenchmarkController::class, 'edit'])->name('edit');
+        Route::put('/{id}/edit', [App\Http\Controllers\API\BenchmarkController::class, 'updateBenchmark'])->name('update');
     });
 
     Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {

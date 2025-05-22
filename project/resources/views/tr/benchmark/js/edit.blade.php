@@ -1,13 +1,15 @@
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
       $('#benchmarkForm').on('submit', function (e) {
         e.preventDefault();
         let form = $(this)[0];
         let formData = new FormData(form);
+        let actionUrl = $('#benchmarkForm').attr('action');
+
+        formData.append('_method', 'PUT');
         
         $.ajax({
-            url: "{{ route('api.benchmark.store') }}",
+            url: actionUrl,
             method: "POST",
             data: formData,
             processData: false,
@@ -41,134 +43,109 @@
             }
         });
     });
-  });
 
-  $(document).ready(function () {
-    // 1) Inisialisasi DataTable Modal Program
-    let programTable = $('#list_program_kegiatan').DataTable({
-      processing: true,
-      serverSide: true,
-      ajax: '{{ route("api.benchmark.programs") }}',
-      columns: [
-        { data: 'kode', name: 'kode' },
-        { data: 'nama', name: 'nama' },
-        { data: 'action', name: 'action', orderable: false, searchable: false }
-      ]
-    });
-
-    // 2) Inisialisasi Select2 Jenis Kegiatan
     $('#jeniskegiatan_id').select2({
-      allowClear: true,
-      placeholder: "Pilih Jenis Kegiatan",
-      ajax: {
-        url: "{{ route('api.benchmark.jenis-kegiatan') }}",
-        dataType: "json",
-        delay: 250,
-        data: params => ({
-          search: params.term,
-          page: params.page || 1
-        }),
-        processResults: resp => ({
-          results: resp.results.map(i => ({ id: i.id, text: i.nama })),
-          pagination: { more: resp.pagination.more }
-        }),
-        cache: true
-      }
+        allowClear: true,
+        placeholder: "Pilih Jenis Kegiatan",
+        ajax: {
+          url: "{{ route('api.benchmark.jenis-kegiatan') }}",
+          dataType: "json",
+          delay: 250,
+          data: params => ({
+            search: params.term,
+            page: params.page || 1
+          }),
+          processResults: resp => ({
+            results: resp.results.map(i => ({ id: i.id, text: i.nama })),
+            pagination: { more: resp.pagination.more }
+          }),
+          cache: true
+        }
     });
 
-    // 3) Pilih Program
-    $(document).on('click', '.select-program', function () {
-      const id   = $(this).data('id');
-      const kode = $(this).data('kode');
-      const nama = $(this).data('nama');
 
-      $('#ModalDaftarProgram').modal('hide');
-      $('#program_id').val(id);
-      $('#kode_program').val(kode);
-      $('#nama_program').val(nama);
-    });
-
-    // 4) Pilih Jenis Kegiatan → fetch modal kegiatan
-    $('#jeniskegiatan_id').on('select2:select', function () {
-      const jenisId   = $(this).val();
-      const programId = $('#program_id').val();
-
-      // Validasi: Harus pilih program dulu
-      if (!programId) {
-        toastr.warning('Silakan pilih Program terlebih dahulu.');
-        $(this).val(null).trigger('change');
+function fetchKegiatan(programId, jenisId, showModal = false) {
+  $('#error-jeniskegiatan').hide().text('');
+  $.ajax({
+    url: '{{ route("api.benchmark.kegiatan") }}',
+    type: 'GET',
+    data: {
+      program_id: programId,
+      jeniskegiatan_id: jenisId
+    },
+    success: function (response) {
+      if (response.length === 0) {
+        $('#error-jeniskegiatan').text('Tidak ada kegiatan terkait untuk jenis kegiatan ini.').show();
+        $('#list_program_out_activity tbody').html('<tr><td colspan="6">Tidak ada kegiatan.</td></tr>');
         return;
       }
-
-      // Fetch kegiatan via AJAX
-      $.ajax({
-        url: '{{ route("api.benchmark.kegiatan") }}',
-        type: 'GET',
-        data: {
-          program_id: programId,
-          jeniskegiatan_id: jenisId
-        },
-        success: function (response) {
-          let tbody = '';
-          response.forEach(activity => {
-            tbody += `<tr>
-              <td>${activity.kode}</td>
-              <td>${activity.nama}</td>
-              <td>${activity.deskripsi ?? '-'}</td>
-              <td>${activity.indikator ?? '-'}</td>
-              <td>${activity.target ?? '-'}</td>
-              <td>
-                <button class="btn btn-sm btn-success pilih-kegiatan"
-                        data-id="${activity.id}"
-                        data-kode="${activity.kode}"
-                        data-nama="${activity.nama}">
-                  <i class="bi bi-check"></i>
-                </button>
-              </td>
-            </tr>`;
-            console.log(
-              'kegiatan : ', activity, 
-              'id : ', activity.id, 
-              'kode : ', activity.kode
-            )
-          });
-
-          $('#list_program_out_activity tbody').html(
-            tbody || '<tr><td colspan="6">Tidak ada kegiatan.</td></tr>'
-          );
-          $('#ModalDaftarProgramActivity').modal('show');
-        },
-        error: function () {
-          toastr.error('Gagal mengambil data kegiatan.');
-        }
+      $('#error-jeniskegiatan').hide().text('');
+      let tbody = '';
+      response.forEach(activity => {
+        tbody += `<tr>
+          <td>${activity.kode}</td>
+          <td>${activity.nama}</td>
+          <td>${activity.deskripsi ?? '-'}</td>
+          <td>${activity.indikator ?? '-'}</td>
+          <td>${activity.target ?? '-'}</td>
+          <td>
+            <button class="btn btn-sm btn-success pilih-kegiatan"
+                    data-id="${activity.id}"
+                    data-kode="${activity.kode}"
+                    data-nama="${activity.nama}">
+              <i class="bi bi-check"></i>
+            </button>
+          </td>
+        </tr>`;
       });
-    });
+      $('#list_program_out_activity tbody').html(tbody);
 
-    // 5) Pilih Kegiatan
-    $(document).on('click', '.pilih-kegiatan', function () {
-      const id = $(this).data('id');
-      const kode = $(this).data('kode');
-      const nama = $(this).data('nama');
+      if (showModal) {
+        $('#ModalDaftarProgramActivity').modal('show');
+      }
+    },
+    error: function () {
+      toastr.error('Gagal mengambil data kegiatan.');
+    }
+  });
+}
 
-      $('#kegiatan_id').val(id);
-      $('#kode_kegiatan').val(kode);
-      $('#nama_kegiatan').val(nama);
-      $('#ModalDaftarProgramActivity').modal('hide');
-    });
+// Pas halaman siap, fetch data kegiatan tapi TIDAK buka modal
+$(document).ready(function () {
+  const programId = $('#program_id').val();
+  const jenisId = $('#jeniskegiatan_id').val();
+
+  if (programId && jenisId) {
+    fetchKegiatan(programId, jenisId, false);  // false = modal tidak muncul otomatis
+  }
+});
+
+// Saat select jenis kegiatan berubah (atau klik tombol khusus) baru tampilkan modal
+$('#jeniskegiatan_id').on('select2:select', function () {
+  const jenisId = $(this).val();
+  const programId = $('#program_id').val();
+
+  if (!programId) {
+    toastr.warning('Silakan pilih Program terlebih dahulu.');
+    $(this).val(null).trigger('change');
+    return;
+  }
+
+  fetchKegiatan(programId, jenisId, true);  // true = modal tampil saat ini juga
+});
 
     $('#kode_kegiatan').on('click', function (e) {
       const programId = $('#program_id').val();
       const jenisId = $('#jeniskegiatan_id').val();
 
       if (!programId || !jenisId) {
-          e.preventDefault();     // cegah default hanya kalau belum lengkap
-          e.stopPropagation();    // cegah bubbling hanya kalau belum lengkap
+          e.preventDefault();
+          e.stopPropagation();
           toastr.error('Silakan pilih Program dan Jenis Kegiatan terlebih dahulu.');
       }
-      // kalau programId dan jenisId sudah ada → biarkan default jalan (modal terbuka)
     });
 
-    function setLokasiWilayah(kegiatanId) {
+     function setLokasiWilayah(kegiatanId) {
     $.ajax({
       url: '{{ route("api.benchmark.lokasi") }}',
       type: 'GET',
@@ -275,8 +252,10 @@
           cache: true
       },
   });
+  const kegiatanId = $('#kegiatan_id').val();
+    if (kegiatanId) {
+        setLokasiWilayah(kegiatanId);
+    }
 
-
-  });
-
+});
 </script>

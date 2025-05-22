@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
-use App\Models\Meals_Quality_Benchmark;
-use Illuminate\Support\Facades\Gate;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Program;
-use App\Models\Jenis_Kegiatan;
+use App\Models\Kegiatan;
+use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
-use App\Models\Kegiatan;
 use App\Models\Kelurahan;
-use App\Models\Provinsi;
-use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Models\Jenis_Kegiatan;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Meals_Quality_Benchmark;
 
 class BenchmarkController extends Controller
 {
@@ -29,9 +30,27 @@ class BenchmarkController extends Controller
         return view('tr.benchmark.create');
     }
 
-    public function edit()
+    public function edit($id)
     {
-        return view('tr.benchmark.edit');
+        $benchmark = Meals_Quality_Benchmark::with(['program', 'jenisKegiatan', 'kegiatan', 'provinsi', 'desa', 'kecamatan', 'kabupaten', 'compiler'])->findOrFail($id);
+
+        // $selectedProgram = Program::select('id', 'kode', 'nama')->get();
+
+        // $selectedJenisKegiatan = [
+        //     'id' => $benchmark->jeniskegiatan_id,
+        //     'nama' => optional($benchmark->jenisKegiatan)->nama
+        // ];
+
+        $selectedKegiatan = [
+            'id' => $benchmark->kegiatan_id,
+            'kode' => optional($benchmark->kegiatan->programOutcomeOutputActivity)->kode,
+            'nama' => optional($benchmark->kegiatan->programOutcomeOutputActivity)->nama
+        ];
+
+        return view('tr.benchmark.edit', compact(
+            'benchmark',
+            'selectedKegiatan'
+        ));
     }
 
     public function getBenchmark(Request $request)

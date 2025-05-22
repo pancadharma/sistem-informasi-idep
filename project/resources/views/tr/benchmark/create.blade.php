@@ -123,12 +123,12 @@
                         <input type="number" step="0.01" class="form-control" name="score">
                     </div>
                     <div class="form-group">
-                        <label for="catatan_evaluasi">Catatan Evaluasi</label>
-                        <textarea id="catatan_evaluasi" name="catatan_evaluasi" class="form-control" rows="3"></textarea>
+                        <label for="catatanevaluasi">Catatan Evaluasi</label>
+                        <textarea id="catatanevaluasi" name="catatanevaluasi" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Area Peningkatan</label>
-                        <textarea class="form-control" name="area_peningkatan" rows="3"></textarea>
+                        <textarea class="form-control" name="area" rows="3"></textarea>
                     </div>
                 </div>
             </div>
