@@ -73,11 +73,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
         Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
 
-        Route::get('/data/program-stats',       [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
-        Route::get('/data/desatable',           [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
-        Route::get('/data/kabupaten-pie',       [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
+        Route::get('/data/program-stats',                   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desatable',                       [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie',                   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
 
-        Route::get('/data/desa/{id?}',   [DashboardProvinsiController::class, 'getDataDesa'])->name('provinsi.data.desa');
+        Route::get('/data/get-data-desa/{id?}',             [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
+        Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
 
     });
 });

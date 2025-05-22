@@ -299,10 +299,12 @@
                                         <div class="col-sm-12 col-md-12 col-lg-4 self-center order-1 order-md-1">
                                             <button type="button" id="btn-lokasi-kegiatan"
                                                 class="btn btn-warning">{{ __('cruds.kegiatan.basic.tambah_lokasi') }}</button>
+                                            <button type="button" id="btn-preview-kegiatan"
+                                                class="btn btn-info ml-2">{{ __('Preview Data') }}</button>
                                         </div>
                                     </div>
                                     <div class="card-body pl-0 pt-1 pb-0 pr-1 mb-0">
-                                        <div class="form-group row lokasi-kegiatan mb-0">
+                                        <div class="form-group row header-lokasi-kegiatan mb-0">
                                             <div class="col-sm-12 col-md-12 col-lg-2 self-center order-1 order-md-1">
                                                 <label class="input-group col-form-label">
                                                     {{ __('cruds.kecamatan.title') }}
@@ -358,7 +360,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
-                                                    <select name="desa_id[]" id="desa_id" class="form-control select2"
+                                                    <select name="kelurahan_id[]" id="kelurahan_id"
+                                                        class="form-control select2"
                                                         data-api-url="{{ route('api.kegiatan.desa') }}"
                                                         data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
                                                         @foreach ($desaList as $desa)
@@ -896,6 +899,7 @@
     </form>
 @stop
 
+@include('tr.kegiatan.modal._preview')
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
@@ -1388,7 +1392,319 @@
 
     });
 </script>
-{{-- validation form --}}
+
+<script>
+    function validateCoordinate(value, type) {
+        if (!value) return {
+            valid: false,
+            message: `${type} is required`
+        };
+
+        // Remove any spaces
+        value = value.toString().trim();
+
+        // Regex patterns for latitude and longitude
+        const latPattern = /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+        const longPattern = /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/;
+
+        const pattern = type === 'latitude' ? latPattern : longPattern;
+
+        if (!pattern.test(value)) {
+            return {
+                valid: false,
+                message: `Invalid ${type} format. ${type === 'latitude' ? 'Must be between -90 and 90' : 'Must be between -180 and 180'}`
+            };
+        }
+
+        return {
+            valid: true,
+            value: value
+        };
+    }
+
+    function collectFormData() {
+        const formData = {};
+
+        // Collect basic form fields
+        formData.programoutcomeoutputactivity_id = $('#programoutcomeoutputactivity_id').val();
+        formData.jeniskegiatan_id = $('#jeniskegiatan_id').val();
+        formData.fasepelaporan = $('#fasepelaporan').val();
+        formData.tanggalmulai = $('#tanggalmulai').val();
+        formData.tanggalselesai = $('#tanggalselesai').val();
+        formData.status = $('#status').val();
+        formData.mitra_id = $('#mitra_id').val();
+        formData.provinsi_id = $('#provinsi_id').val();
+        formData.kabupaten_id = $('#kabupaten_id').val();
+
+        // Collect description fields
+        formData.deskripsilatarbelakang = $('#deskripsilatarbelakang').val();
+        formData.deskripsitujuan = $('#deskripsitujuan').val();
+        formData.deskripsikeluaran = $('#deskripsikeluaran').val();
+
+        // Collect beneficiary data
+        formData.penerimamanfaatdewasaperempuan = $('#penerimamanfaatdewasaperempuan').val();
+        formData.penerimamanfaatdewasalakilaki = $('#penerimamanfaatdewasalakilaki').val();
+        formData.penerimamanfaatdewasatotal = $('#penerimamanfaatdewasatotal').val();
+        // ... (collect all other beneficiary fields)
+
+        // Collect location data
+        formData.locations = [];
+        $('.lokasi-kegiatan').each(function() {
+            const uniqueId = $(this).data('unique-id');
+            const kecamatanId = $(this).find('select[name="kecamatan_id[]"]').val();
+            // const kecamatanText = $(this).find('select[name="kecamatan_id[]"] option:selected').text();
+            const kecamatanSelect = $(this).find('select[name="kecamatan_id[]"]');
+            const kecamatanText = kecamatanSelect.find('option:selected').text().trim() || '-';
+
+            const desaId = $(this).find('select[name="kelurahan_id[]"]').val();
+            // const desaText = $(this).find('select[name="desa_id[]"] option:selected').text();
+            const desaSelect = $(this).find('select[name="kelurahan_id[]"]');
+            const desaData = desaSelect.select2('data');
+            const desaText = desaSelect.find('option:selected').text().trim() || '-';
+
+
+            const lokasi = $(this).find('input[name="lokasi[]"]').val();
+            const lat = $(this).find('input[name="lat[]"]').val();
+            const long = $(this).find('input[name="long[]"]').val();
+
+            // formData.locations.push({
+            //     kecamatan_id: kecamatanId,
+            //     kecamatan_text: kecamatanText,
+            //     desa_id: desaId,
+            //     desa_text: desaText,
+            //     lokasi: lokasi,
+            //     lat: lat,
+            //     long: long
+            // });
+
+            formData.locations.push({
+                kecamatan_id: kecamatanSelect.val(),
+                kecamatan_text: kecamatanText,
+                desa_id: desaSelect.val(),
+                desa_text: desaText,
+                lokasi: lokasi,
+                lat: lat,
+                long: long
+            });
+        });
+
+        // Collect penulis data
+        formData.penulis = [];
+        $('.penulis-row').each(function() {
+            const penulisId = $(this).find('select[name="penulis[]"]').val();
+            const penulisText = $(this).find('select[name="penulis[]"] option:selected').text();
+            const jabatanId = $(this).find('select[name="jabatan[]"]').val();
+            const jabatanText = $(this).find('select[name="jabatan[]"] option:selected').text();
+
+            formData.penulis.push({
+                penulis_id: penulisId,
+                penulis_text: penulisText,
+                jabatan_id: jabatanId,
+                jabatan_text: jabatanText
+            });
+        });
+
+        return formData;
+    }
+
+    function validateFormData(formData) {
+        const errors = [];
+
+        // Validate required fields
+        if (!formData.programoutcomeoutputactivity_id) errors.push("Program Activity is required");
+        if (!formData.jeniskegiatan_id) errors.push("Jenis Kegiatan is required");
+        if (!formData.tanggalmulai) errors.push("Tanggal Mulai is required");
+        if (!formData.tanggalselesai) errors.push("Tanggal Selesai is required");
+
+        // Validate locations
+        if (formData.locations.length === 0) {
+            errors.push("At least one location is required");
+        } else {
+            formData.locations.forEach((location, index) => {
+                if (!location.kecamatan_id) errors.push(`Location ${index+1}: Kecamatan is required`);
+                if (!location.desa_id) errors.push(`Location ${index+1}: Desa is required`);
+                if (!location.lokasi) errors.push(`Location ${index+1}: Lokasi is required`);
+
+                // Validate lat/long
+                if (location.lat) {
+                    const latValidation = validateCoordinate(location.lat, 'latitude');
+                    if (!latValidation.valid) errors.push(`Location ${index+1}: ${latValidation.message}`);
+                }
+
+                if (location.long) {
+                    const longValidation = validateCoordinate(location.long, 'longitude');
+                    if (!longValidation.valid) errors.push(`Location ${index+1}: ${longValidation.message}`);
+                }
+            });
+        }
+
+        return errors;
+    }
+
+    function displayPreview(formData) {
+        let html = '<div class="container-fluid">';
+
+        // Basic Information
+        html += '<h4>Basic Information</h4>';
+        html += '<div class="row">';
+        html += `<div class="col-md-6"><strong>Program Activity:</strong> ${$('#nama_kegiatan').val()}</div>`;
+        html +=
+            `<div class="col-md-6"><strong>Jenis Kegiatan:</strong> ${$('#jeniskegiatan_id option:selected').text()}</div>`;
+        html += `<div class="col-md-6"><strong>Fase Pelaporan:</strong> ${formData.fasepelaporan}</div>`;
+        html += `<div class="col-md-6"><strong>Status:</strong> ${$('#status option:selected').text()}</div>`;
+        html += `<div class="col-md-6"><strong>Tanggal Mulai:</strong> ${formData.tanggalmulai}</div>`;
+        html += `<div class="col-md-6"><strong>Tanggal Selesai:</strong> ${formData.tanggalselesai}</div>`;
+        html += '</div>';
+
+        // Location Information
+        html += '<h4 class="mt-4">Location Information</h4>';
+        html += '<div class="table-responsive">';
+        html += '<table class="table table-bordered table-sm">';
+        html +=
+            '<thead><tr><th>Kecamatan</th><th>Desa</th><th>Lokasi</th><th>Latitude</th><th>Longitude</th></tr></thead>';
+        html += '<tbody>';
+
+        formData.locations.forEach(location => {
+            html += '<tr>';
+            html += `<td>${location.kecamatan_text || '-'}</td>`;
+            html += `<td>${location.desa_text || '-'}</td>`;
+            html += `<td>${location.lokasi || '-'}</td>`;
+            html += `<td>${location.lat || '-'}</td>`;
+            html += `<td>${location.long || '-'}</td>`;
+            html += '</tr>';
+        });
+
+        html += '</tbody></table></div>';
+
+        // Penulis Information
+        if (formData.penulis && formData.penulis.length > 0) {
+            html += '<h4 class="mt-4">Penulis Information</h4>';
+            html += '<div class="table-responsive">';
+            html += '<table class="table table-bordered table-sm">';
+            html += '<thead><tr><th>Penulis</th><th>Jabatan</th></tr></thead>';
+            html += '<tbody>';
+
+            formData.penulis.forEach(penulis => {
+                html += '<tr>';
+                html += `<td>${penulis.penulis_text || '-'}</td>`;
+                html += `<td>${penulis.jabatan_text || '-'}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+        }
+
+        html += '</div>'; // Close container
+
+        $('#preview-content').html(html);
+
+        console.table(formData.locations);
+    }
+
+    $(document).ready(function() {
+        // Preview button click handler
+        $('#btn-preview-kegiatan').on('click', function() {
+            const formData = collectFormData();
+            // const errors = validateFormData(formData);
+
+            // if (errors.length > 0) {
+            //     // Display validation errors
+            //     let errorHtml = '<ul>';
+            //     errors.forEach(error => {
+            //         errorHtml += `<li>${error}</li>`;
+            //     });
+            //     errorHtml += '</ul>';
+
+            //     $('#validation-errors').html(errorHtml).show();
+            // } else {
+            //     // Hide any previous errors
+            //     $('#validation-errors').hide();
+
+            //     // Display the preview
+            displayPreview(formData);
+            // }
+
+            // Show the modal
+            $('#previewModal').modal('show');
+        });
+
+        // Submit button in modal click handler
+        $('#btn-submit-preview').on('click', function() {
+            // Get form data
+            const formData = collectFormData();
+
+            // Send data via AJAX
+            $.ajax({
+                url: '{{ route('kegiatan.update', [$kegiatan->id]) }}',
+                type: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    _method: 'PUT',
+                    ...formData
+                },
+                success: function(response) {
+                    // Close the modal
+                    $('#previewModal').modal('hide');
+
+                    // Show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data has been saved successfully',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Optionally redirect or refresh
+                    // window.location.href = '{{ route('kegiatan.index') }}';
+                },
+                error: function(xhr) {
+                    // Handle errors
+                    let errorMessage = 'An error occurred while saving the data.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage
+                    });
+                }
+            });
+        });
+    });
+
+
+    // $('#previewModal').on('show.bs.modal', function () {
+    //     let tableBody = $('#lokasiPreview tbody');
+    //     tableBody.empty();
+
+    //     $('.lokasi-row').each(function () {
+    //         const kecamatanSelect = $(this).find('.kecamatan_id');
+    //         const desaSelect = $(this).find('.desa_id');
+
+    //         const kecamatanText = kecamatanSelect.find('option:selected').text().trim() || '-';
+    //         const desaData = desaSelect.select2('data');
+    //         const desaText = desaData.length ? desaData[0].text : '-';
+
+    //         const lokasi = $(this).find('input[name="lokasi[]"]').val() || '-';
+    //         const lat = $(this).find('input[name="lat[]"]').val() || '-';
+    //         const long = $(this).find('input[name="long[]"]').val() || '-';
+
+    //         tableBody.append(`
+    //             <tr>
+    //                 <td>${kecamatanText}</td>
+    //                 <td>${desaText}</td>
+    //                 <td>${lokasi}</td>
+    //                 <td>${lat}</td>
+    //                 <td>${long}</td>
+    //             </tr>
+    //         `);
+    //     });
+    // });
+</script>
 
 @include('tr.kegiatan.js._validasi')
 @endpush
