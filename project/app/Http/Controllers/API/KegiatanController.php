@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
 use App\Http\Requests\UpdateKegiatanRequest;
+use App\Jobs\ProcessKegiatanFiles;
 use App\Models\Dusun;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
@@ -420,16 +421,17 @@ class KegiatanController extends Controller
             $this->storeHasilKegiatan($request, $kegiatan);
             $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
-            $this->storeMediaDokumen($request, $kegiatan);
 
-
+            // Handle file uploads asynchronously for large files
+            $this->queueMediaUploads($request, $kegiatan);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'data'    => $data,
-                'created by' => $user->nama,
-                'message' => __('global.create_success'),
+                'created by' => $user->nama ?? 'Unknown',
+                'message' => __('global.create_success') . ' Files are being processed in background.',
             ], 201);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -438,9 +440,6 @@ class KegiatanController extends Controller
                 'message' => 'Failed to create record: ' . $th->getMessage(),
                 'error'   => $th->getMessage(),
             ], 500);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
         }
     }
 
@@ -484,6 +483,41 @@ class KegiatanController extends Controller
         if ($request->hasFile('media_pendukung')) {
             $handleFileUploads(
                 $request->file('media_pendukung'),
+                $request->input('keterangan', []),
+                'media_pendukung'
+            );
+        }
+    }
+
+
+    private function queueMediaUploads(Request $request, Kegiatan $kegiatan)
+    {
+        // Store files temporarily and queue processing
+        if ($request->hasFile('dokumen_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('dokumen_pendukung') as $file) {
+                $tempPath = $file->store('temp');
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
+                $request->input('keterangan', []),
+                'dokumen_pendukung'
+            );
+        }
+
+        if ($request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('media_pendukung') as $file) {
+                $tempPath = $file->store('temp');
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
                 $request->input('keterangan', []),
                 'media_pendukung'
             );
