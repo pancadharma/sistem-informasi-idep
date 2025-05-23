@@ -2,6 +2,7 @@
 <div class="form-group row">
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+        <input type="hidden" id="user_id" value="{{ auth()->id() }}">
     <!-- id program -->
         <input type="hidden" name="program_id" id="program_id">
     <!-- kode program -->
@@ -103,74 +104,7 @@
 {{-- @include('tr.komponenmodel.tabs.komodel-modal') --}}
 
 @push('basic_tab_js')
-{{-- <script>
-    $(document).ready(function() {
-    $('#sektor_id').select2({
-        allowClear: true,
-        placeholder: "Pilih Sektor",
-        ajax: {
-            url: "{{ route('api.komodel.sektor') }}",
-            dataType: "json",
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term, // kirim parameter pencarian
-                    page: params.page || 1 // pagination
-                };
-            },
-            processResults: function(response) {
-                // console.log("Data dari API:", response); // Debugging
 
-                return {
-                    results: response.results.map(function(item) {
-                        return {
-                            id: item.id,
-                            text: item.nama
-                        };
-                    }),
-                    pagination: {
-                        more: response.pagination.more
-                    }
-                };
-            },
-            cache: true
-        }
-    });
-});
-$(document).ready(function() {
-    $('#model_id').select2({
-        allowClear: true,
-        placeholder: "Pilih Model",
-        ajax: {
-            url: "{{ route('api.komodel.model') }}", // Ganti dengan route API yang benar
-            dataType: "json",
-            delay: 250,
-            data: function(params) {
-                return {
-                    search: params.term, // kirim parameter pencarian
-                    page: params.page || 1 // pagination
-                };
-            },
-            processResults: function(response) {
-                // console.log("Data Model dari API:", response); // Debugging
-
-                return {
-                    results: response.results.map(function(item) {
-                        return {
-                            id: item.id,
-                            text: item.nama // Sesuaikan dengan field yang benar
-                        };
-                    }),
-                    pagination: {
-                        more: response.pagination.more
-                    }
-                };
-            },
-            cache: true
-        }
-    });
-});
-</script> --}}
 
 @endpush
 

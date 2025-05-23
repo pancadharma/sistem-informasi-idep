@@ -472,6 +472,8 @@
 <!-- Script for description.blade.php -->
 <script>
     $(document).ready(function() {
+
+
         function calculateTotals() {
             // Calculate totals for each row in the first table
             $('tr').each(function() {
@@ -532,8 +534,6 @@
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
             $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
-
-
         }
 
         // Validation for second table inputs
@@ -707,6 +707,26 @@
                 confirmButtonText: 'OK'
             });
 
+        });
+
+        $('.calculate, .hitung-difabel').on('input', function() {
+            let value = parseInt($(this).val()) || 0;
+            if (value < 0) {
+                Toast.fire({
+                        icon: "error",
+                        title: "Number cannot be negative",
+                        timer: 600,
+                        timerProgressBar: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            // Swal.showLoading();
+                        },
+                    });
+                $(this).val(0);
+                value = 0;
+            }
+            $(this).val(value);
+            calculateTotals($(this).closest('tr'));
         });
 
     });

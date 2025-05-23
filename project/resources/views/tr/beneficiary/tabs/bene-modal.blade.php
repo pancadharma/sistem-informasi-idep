@@ -1,4 +1,4 @@
-<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" >
     <div class="modal-dialog    ">
         <div class="modal-content">
             <div class="modal-header">
@@ -16,7 +16,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="previewModal2" tabindex="-1" aria-labelledby="previewModalLabel2" aria-hidden="true">
+<div class="modal fade" id="previewModal2" tabindex="-1" aria-labelledby="previewModalLabel2">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -67,6 +67,22 @@
                 <input type="text" class="form-control" id="editNama" name="nama" required>
             </div>
         </div>
+
+        {{-- Head Family Section --}}
+        <div class="row ml-0 mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center icheck-teal d-inline">
+                <input class="form-check-input" type="checkbox" id="edit_is_head_family" name="is_head_family" data-sync-nama="#editNama"
+                data-sync-head-family="#edit_head_family_name">
+                <label class="form-label" for="edit_is_head_family">{{ __('Kepala Keluarga') }}</label>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
+                {{-- <label class="form-label mb-0">{{ __('Nama Kepala Keluarga') }}</label> --}}
+                <input type="text" class="form-control" id="edit_head_family_name" name="head_family_name" placeholder="Nama Kepala Keluarga" readonly>
+            </div>
+        </div>
+
 
         <div class="row">
             <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1 mb-3">
@@ -201,13 +217,28 @@
 
 
 <x-adminlte-modal id="ModalTambahPeserta" title="{{ __('global.add') .' '. __('cruds.kegiatan.peserta.label') }}" theme="teal" icon="bi bi-person-plus" size='lg' static-backdrop scrollable>
-    <form id="dataForm" class="big" autocomplete="off">
-        <div class="row mb-3">
+    <form id="dataForm" class="needs-validation" novalidate autocomplete="off" method="POST">
+        <div class="row mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.nama') }} <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" name="nama" required id="nama_beneficiary">
             </div>
         </div>
+        {{-- Head Family Section --}}
+        <div class="row ml-0 mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center icheck-teal d-inline">
+                <input class="form-check-input" type="checkbox" id="is_head_family" name="is_head_family" data-sync-nama="#nama_beneficiary"
+                data-sync-head-family="#head_family_name">
+                <label class="form-label" for="is_head_family">{{ __('Kepala Keluarga') }}</label>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 self-center order-2 order-md-2">
+                {{-- <label class="form-label mb-0">{{ __('Nama Kepala Keluarga') }}</label> --}}
+                <input type="text" class="form-control" id="head_family_name" name="head_family_name" placeholder="Nama Kepala Keluarga" readonly>
+            </div>
+        </div>
+
 
         <div class="row">
             <div class="col-sm-12 col-md-4 col-lg-4 self-center order-1 order-md-1 mb-3">
@@ -320,11 +351,11 @@
         <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-3 order-md-3 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rw') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rw" id="rw">
+                <input type="text" class="form-control" name="rw" id="rw" required>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6 self-center order-4 order-md-4 mb-3">
                 <label class="form-label mb-0">{{ __('cruds.beneficiary.penerima.rt') }} <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="rt" id="rt">
+                <input type="text" class="form-control" name="rt" id="rt" required>
             </div>
         </div>
         {{-- Non-AC Kode --}}
@@ -357,10 +388,109 @@
     </form>
     <x-slot name="footerSlot">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.close') }}</button>
-        <button type="submit" class="btn btn-primary" id="saveDataBtn">{{ __('global.save') }}</button>
+        <button type="submit" class="btn btn-primary" id="saveDataBtn" form="dataForm">{{ __('global.save') }}</button>
     </x-slot>
 </x-adminlte-modal>
 
+@push('js')
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.getElementById('is_head_family');
+        const namaInput = document.getElementById('nama_beneficiary');
+        const headFamilyInput = document.getElementById('head_family_name');
+
+        function toggleHeadFamilyInput() {
+            if (checkbox.checked) {
+                headFamilyInput.value = namaInput.value;
+                headFamilyInput.readonly = true;
+            } else {
+                headFamilyInput.readonly = false;
+                headFamilyInput.value = '';
+            }
+        }
+
+        checkbox.addEventListener('change', toggleHeadFamilyInput);
+
+        // Also, if user types in "nama", and checkbox is checked, update "head_family_name" live
+        namaInput.addEventListener('input', function () {
+            if (checkbox.checked) {
+                headFamilyInput.value = namaInput.value;
+            }
+        });
+
+        toggleHeadFamilyInput(); // run once on page load
+    });
+</script> --}}
+
+<script>
+    $(document).ready(function () {
+        $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').each(function () {
+            const $checkbox = $(this);
+            const $namaInput = $($checkbox.data('sync-nama'));
+            const $headFamilyInput = $($checkbox.data('sync-head-family'));
+
+            if ($namaInput.length === 0 || $headFamilyInput.length === 0) {
+                console.warn('Missing related input fields for head family sync.');
+                return;
+            }
+
+            function toggleHeadFamilyInput() {
+                if ($checkbox.is(':checked')) {
+                    $headFamilyInput.val($namaInput.val()).prop('readonly', true);
+                } else {
+                    $headFamilyInput.prop('readonly', false);
+                }
+            }
+
+            $checkbox.on('change', toggleHeadFamilyInput);
+
+            $namaInput.on('input', function () {
+                if ($checkbox.is(':checked')) {
+                    $headFamilyInput.val($namaInput.val());
+                }
+            });
+
+            toggleHeadFamilyInput(); // Initialize on page load
+        });
+    });
+</script>
 
 
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const headFamilyCheckboxes = document.querySelectorAll('input[type="checkbox"][data-sync-nama][data-sync-head-family]');
 
+        headFamilyCheckboxes.forEach(function (checkbox) {
+            const namaInput = document.querySelector(checkbox.getAttribute('data-sync-nama'));
+            const headFamilyInput = document.querySelector(checkbox.getAttribute('data-sync-head-family'));
+
+            if (!namaInput || !headFamilyInput) {
+                console.warn('Missing related input fields');
+                return;
+            }
+
+            function toggleHeadFamilyInput() {
+                if (checkbox.checked) {
+                    headFamilyInput.value = namaInput.value;
+                    headFamilyInput.readOnly    = true;
+                } else {
+                    headFamilyInput.readOnly = false;
+                    // headFamilyInput.value = '';
+                    alert('test')
+                }
+            }
+
+            checkbox.addEventListener('change', toggleHeadFamilyInput);
+
+            namaInput.addEventListener('input', function () {
+                if (checkbox.checked) {
+                    headFamilyInput.value = namaInput.value;
+                }
+            });
+
+            toggleHeadFamilyInput(); // Initialize
+        });
+    });
+</script> --}}
+
+@endpush

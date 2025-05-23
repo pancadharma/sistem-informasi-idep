@@ -52,5 +52,7 @@ return [
     'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Responsibility',
-    'komponenmodel'     => 'Componen/Model'
+    'komponenmodel'     => 'Componen/Model',
+    'target_progress'    => 'Target & Progress',
+	'prepost'			=>	'Pre/Post Test',
 ];

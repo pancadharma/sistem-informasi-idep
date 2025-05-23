@@ -12,7 +12,7 @@ class StoreKegiatanRequest extends FormRequest
         return auth()->user()->id === 1 || auth()->user()->can('kegiatan_create') || Gate::allows('kegiatan_create');
     }
 
-    public function rules() : array
+    public function rules(): array
     {
         $rules = [
             'programoutcomeoutputactivity_id'           => ['required', 'exists:trprogramoutcomeoutputactivity,id'],
@@ -54,6 +54,9 @@ class StoreKegiatanRequest extends FormRequest
             // mitra id
             'mitra_id'          => ['array'],
             'mitra_id.*'        => ['nullable', 'integer', 'exists:mpartner,id'],
+            // sektor id
+            'sektor_id'         => ['array'],
+            'sektor_id.*'       => ['nullable', 'integer', 'exists:mtargetreinstra,id'],
 
             // 'penulis'           => ['array'],
             // 'penulis.*'         => ['nullable', 'integer', 'exists:users,id'],
@@ -129,7 +132,7 @@ class StoreKegiatanRequest extends FormRequest
                 'pembelanjaandistribusiselesai' => ['nullable', 'date'],
                 'pembelanjaanterdistribusi'     => ['nullable', 'integer'],
                 'pembelanjaanakandistribusi'    => ['nullable', 'integer'],
-                'pembelanjaanakandistribusi_ket'=> ['nullable', 'string'],
+                'pembelanjaanakandistribusi_ket' => ['nullable', 'string'],
                 'pembelanjaankendala'           => ['nullable', 'string'],
                 'pembelanjaanisu'               => ['nullable', 'string'],
                 'pembelanjaanpembelajaran'      => ['nullable', 'string'],

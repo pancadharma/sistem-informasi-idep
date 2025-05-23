@@ -1,4 +1,3 @@
-
 <script>
     // Variables to store current GeoJSON layers
     var provinsiLayer = null;
@@ -26,14 +25,18 @@
 
                 // Handle case where data is direct array of coordinate pairs
                 if (pathData.length === 2 && typeof pathData[0] === 'number') {
-                    return [[this.formatCoordinate(pathData)]];
+                    return [
+                        [this.formatCoordinate(pathData)]
+                    ];
                 }
 
                 // Handle single polygon
-                if (pathData.length > 0 && Array.isArray(pathData[0]) && pathData[0].length === 2 && typeof pathData[0][0] === 'number') {
+                if (pathData.length > 0 && Array.isArray(pathData[0]) && pathData[0].length === 2 &&
+                    typeof pathData[0][0] === 'number') {
                     const formattedCoords = pathData.map(coord => this.formatCoordinate(coord));
                     // Ensure polygon is closed
-                    if (JSON.stringify(formattedCoords[0]) !== JSON.stringify(formattedCoords[formattedCoords.length - 1])) {
+                    if (JSON.stringify(formattedCoords[0]) !== JSON.stringify(formattedCoords[formattedCoords
+                            .length - 1])) {
                         formattedCoords.push(formattedCoords[0]);
                     }
                     return [formattedCoords];
@@ -45,7 +48,8 @@
 
                     const formattedPolygon = polygon.map(coord => this.formatCoordinate(coord));
                     // Ensure polygon is closed
-                    if (JSON.stringify(formattedPolygon[0]) !== JSON.stringify(formattedPolygon[formattedPolygon.length - 1])) {
+                    if (JSON.stringify(formattedPolygon[0]) !== JSON.stringify(formattedPolygon[
+                            formattedPolygon.length - 1])) {
                         formattedPolygon.push(formattedPolygon[0]);
                     }
                     return formattedPolygon;
@@ -114,7 +118,10 @@
                     const paths = polygon.map(ring => {
                         // Each ring is an array of coordinates
                         return ring.map(coord => {
-                            return { lat: coord[1], lng: coord[0] }; // Google Maps uses {lat, lng}
+                            return {
+                                lat: coord[1],
+                                lng: coord[0]
+                            }; // Google Maps uses {lat, lng}
                         });
                     });
 
@@ -144,7 +151,10 @@
 
                 const paths = coordinates.map(ring => {
                     return ring.map(coord => {
-                        return { lat: coord[1], lng: coord[0] };
+                        return {
+                            lat: coord[1],
+                            lng: coord[0]
+                        };
                     });
                 });
 
@@ -332,7 +342,7 @@
         }
     }
 
-        // Function to generate a random hex color
+    // Function to generate a random hex color
     function getRandomColor() {
         const letters = '0123456789ABCDEF';
         let color = '#';
@@ -432,9 +442,12 @@
     //     });
     // }
 
-        function initMap() {
+    function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -2.5489, lng: 118.0149},
+            center: {
+                lat: -2.5489,
+                lng: 118.0149
+            },
             zoom: 5,
             scrollwheel: true,
             gestureHandling: 'auto',
@@ -453,7 +466,10 @@
             // Create an AdvancedMarkerElement
             const marker = new google.maps.marker.AdvancedMarkerElement({
                 map: map,
-                position: { lat: lat, lng: lng },
+                position: {
+                    lat: lat,
+                    lng: lng
+                },
                 title: 'Clicked Location',
             });
 
@@ -478,7 +494,12 @@
 
             //Reverse Geocoding
             const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ location: { lat: lat, lng: lng } }, (results, status) => {
+            geocoder.geocode({
+                location: {
+                    lat: lat,
+                    lng: lng
+                }
+            }, (results, status) => {
                 if (status === "OK") {
                     if (results[0]) {
                         infowindow.setContent(`
@@ -509,7 +530,8 @@
     function loadGoogleMapsAPI(apiKey) {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry,marker`; // Add libraries if needed
+            script.src =
+                `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry,marker`; // Add libraries if needed
             script.async = true;
             script.defer = true;
             script.onload = resolve;
@@ -522,12 +544,12 @@
         // Initialize Google Maps
         // loadGoogleMapsAPI('AIzaSyDyl1M3DUZB5CZ3LARYxNqKiUQ8COBrI0Y') //dev api
         loadGoogleMapsAPI('AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ') //live api
-        .then(() => {
-            initMap(); // Call initMap after the API is loaded
-        })
-        .catch(error => {
-            console.error("Error loading Google Maps API:", error);
-        });
+            .then(() => {
+                initMap(); // Call initMap after the API is loaded
+            })
+            .catch(error => {
+                console.error("Error loading Google Maps API:", error);
+            });
 
 
 
@@ -541,7 +563,7 @@
         });
 
         $(`#provinsi_id`).select2({
-            placeholder: '{{ __("cruds.kegiatan.basic.select_provinsi") }}',
+            placeholder: '{{ __('cruds.kegiatan.basic.select_provinsi') }}',
             allowClear: true,
             ajax: {
                 url: "{{ route('api.kegiatan.provinsi') }}",
@@ -564,14 +586,14 @@
                 },
                 cache: true
             }
-        }).on('select2:open', function (e) {
-            $('.select2-container').css('z-index', 1051);
-        }).on('select2:close', function (e) {
+        }).on('select2:open', function(e) {
+            $('.select2-container').css('z-index', 1035);
+        }).on('select2:close', function(e) {
             $('.select2-container').css('z-index', 999);
         });
 
         $(`#kabupaten_id`).select2({
-            placeholder: '{{ __("cruds.kegiatan.basic.select_kabupaten") }}',
+            placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
             allowClear: true,
             ajax: {
                 url: "{{ route('api.kegiatan.kabupaten') }}",
@@ -602,13 +624,14 @@
                         try {
                             const response = JSON.parse(jqXHR.responseText);
                             if (response.message) {
-                                errorMessage = response.message; // Use message from the server if available
+                                errorMessage = response
+                                    .message; // Use message from the server if available
                             }
                         } catch (e) {
                             console.warn("Could not parse JSON response:", jqXHR.responseText);
                         }
                     }
-                    if(provinsiId === null || provinsiId === undefined || provinsiId === ''){
+                    if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
                         Swal.fire({
                             icon: 'warning' ?? textStatus,
                             title: 'Failed to load Kabupaten data',
@@ -619,13 +642,14 @@
                             $(`#provinsi_id`).focus();
                         }, 1000);
                         return;
-                    }
-                    else{
+                    } else {
                         // Handle other AJAX errors
-                        let errorMessage = '{{ __("Failed to fetch kabupaten data.  Please check your internet connection or try again later.") }}'; // Default, localized message
+                        let errorMessage =
+                            '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
                         Swal.fire({
                             icon: 'error', // Always use 'error' for AJAX failures
-                            title: errorThrown || 'Error', // Use errorThrown if available, otherwise generic 'Error'
+                            title: errorThrown ||
+                                'Error', // Use errorThrown if available, otherwise generic 'Error'
                             text: errorMessage,
                             timer: 2500, // Slightly longer timer for general errors
                             showConfirmButton: false // Hide confirm button
@@ -634,9 +658,9 @@
                     }
                 }
             }
-        }).on('select2:open', function (e) {
-            $('.select2-container').css('z-index', 1051);
-        }).on('select2:close', function (e) {
+        }).on('select2:open', function(e) {
+            $('.select2-container').css('z-index', 1035);
+        }).on('select2:close', function(e) {
             $('.select2-container').css('z-index', 999);
         });
 
@@ -662,7 +686,7 @@
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
                     <input type="text" class="form-control lang-input flex-grow-1" id="long-${uniqueId}" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
-                    <button type="button" class="btn btn-danger remove-staff-row btn-sm ml-1">
+                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -687,7 +711,7 @@
 
             // Initialize kecamatan select2
             $(`#kecamatan-${uniqueId}`).select2({
-                placeholder: '{{ __("cruds.kegiatan.basic.select_kecamatan") }}',
+                placeholder: '{{ __('cruds.kegiatan.basic.select_kecamatan') }}',
                 allowClear: true,
                 ajax: {
                     url: "{{ route('api.kegiatan.kecamatan') }}",
@@ -722,14 +746,14 @@
                         $('#kecamatan-' + uniqueId).focus();
                     }
                 }
-            }).on('select2:open', function (e) {
+            }).on('select2:open', function(e) {
                 $('.select2-container').css('z-index', 1051);
-            }).on('select2:close', function (e) {
+            }).on('select2:close', function(e) {
                 $('.select2-container').css('z-index', 999);
             });
 
             $(`#kelurahan-${uniqueId}`).select2({
-                placeholder: '{{ __("cruds.kegiatan.basic.select_desa") }}',
+                placeholder: '{{ __('cruds.kegiatan.basic.select_desa') }}',
                 allowClear: true,
                 ajax: {
                     url: "{{ route('api.kegiatan.kelurahan') }}",
@@ -743,17 +767,17 @@
                         };
                     },
                     processResults: function(data, params) {
-                    params.page = params.page || 1;
+                        params.page = params.page || 1;
                         return {
                             results: data.results,
                             pagination: {
-                            more: data.pagination.more
+                                more: data.pagination.more
                             }
                         };
                     },
                     cache: true,
                     error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Error fetching Kelurahan data:", textStatus, errorThrown);
+                        console.error("Error fetching Kelurahan data:", textStatus, errorThrown);
                         Toast.fire({
                             icon: 'error', // Use 'error' icon for errors
                             title: 'Please Select Kecamatan First!',
@@ -765,9 +789,9 @@
                         $('#kecamatan-' + uniqueId).focus();
                     }
                 }
-            }).on('select2:open', function (e) {
+            }).on('select2:open', function(e) {
                 $('.select2-container').css('z-index', 1051);
-            }).on('select2:close', function (e) {
+            }).on('select2:close', function(e) {
                 $('.select2-container').css('z-index', 999);
             });
 
@@ -787,13 +811,16 @@
                 $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
             });
 
-            $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`).on('change', function() {
+            $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`)
+                .on('change', function() {
 
-            });
+                });
 
-            $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click', '.remove-staff-row', function() {
-                $(this).closest('.lokasi-kegiatan').remove();
-            });
+            $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click',
+                '.remove-lokasi-row',
+                function() {
+                    $(this).closest('.lokasi-kegiatan').remove();
+                });
             return uniqueId
         }
 
@@ -843,7 +870,7 @@
                 ErrorHandler.handleCoordinateError('Invalid coordinate format');
             }
         });
-        $(document).on('click', '.remove-staff-row', function() {
+        $(document).on('click', '.remove-lokasi-row', function() {
             var row = $(this).closest('.lokasi-kegiatan');
             var index = $('.lokasi-kegiatan').index(row);
             row.remove();
@@ -904,9 +931,9 @@
                     }
                     return convertedRing;
                 }).filter(ring => ring !== null && ring.length > 0); // Remove invalid rings
-            }).filter(polygon => polygon !== null && polygon.length > 0);  // Remove invalid polygons
+            }).filter(polygon => polygon !== null && polygon.length > 0); // Remove invalid polygons
 
-            if(convertedCoordinates.length === 0){
+            if (convertedCoordinates.length === 0) {
                 console.error("No valid convertedCoordinates:", convertedCoordinates)
                 return null;
             }

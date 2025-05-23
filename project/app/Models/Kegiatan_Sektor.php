@@ -5,6 +5,7 @@ namespace App\Models;
 use DateTimeInterface;
 use App\Traits\Auditable;
 use App\Models\TargetReinstra;
+use Carbon\Carbon;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;

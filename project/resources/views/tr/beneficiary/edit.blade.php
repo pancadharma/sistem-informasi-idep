@@ -51,7 +51,7 @@
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
-            z-index: 1045;
+            z-index: 1030;
             top: 0;
         }
         .wah {
@@ -143,37 +143,37 @@
             .replace(/'/g, "&#039;");
     }
 
-    function updateActivityHeaders(activities) {
-        if (activities.length > 0) {
-            const activityHeaders = activities.map(activity => `
-                <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
-            `).join('');
-            $('#activityHeaders').html(`
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
-                ${activityHeaders}
-            `);
-            $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
-        } else {
-            $('#activityHeaders').html(`
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
-                <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-                <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-                <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
-                <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
-                <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
-                <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
-            `);
-            $('#headerActivityProgram').attr('rowspan', 2);
-        }
-    }
+    // function updateActivityHeaders(activities) {
+    //     if (activities.length > 0) {
+    //         const activityHeaders = activities.map(activity => `
+    //             <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
+    //         `).join('');
+    //         $('#activityHeaders').html(`
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+    //             <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+    //             <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+    //             <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+    //             <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+    //             <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
+    //             ${activityHeaders}
+    //         `);
+    //         $('#headerActivityProgram').attr('rowspan', 1).attr('colspan', activities.length);
+    //     } else {
+    //         $('#activityHeaders').html(`
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }}</th>
+    //             <th colspan="1" class="align-middle text-center" title="{{ __("cruds.beneficiary.penerima.banjar") }}">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
+    //             <th colspan="1" class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
+    //             <th colspan="1" class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0 - 17</th>
+    //             <th colspan="1" class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18 - 24</th>
+    //             <th colspan="1" class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25 - 59</th>
+    //             <th colspan="1" class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> >60 </th>
+    //         `);
+    //         $('#headerActivityProgram').attr('rowspan', 2);
+    //     }
+    // }
 
     function populateActivitySelect(activities, selectElement) {
         activities.forEach(activity => {
@@ -385,184 +385,9 @@
     }
 
     $(document).ready(function() {
-        // $('#dataTable').DataTable({
-        //     "paging": true,
-        //     "lengthChange": false,
-        //     "searching": true,
-        //     "ordering": true,
-        //     "info": true,
-        //     "autoWidth": false,
-        //     layout: {
-        //         topStart: {
-        //             buttons: [
-        //                 {
-        //                     text: '<i class="fas fa-print" title="Print Table Data"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-secondary',
-        //                     extend: 'print',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 {
-        //                     text: '<i class="fas fa-file-excel" title="Export to EXCEL"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-success',
-        //                     extend: 'excel',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 // {
-        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                 //     className: 'btn btn-danger',
-        //                 //     extend: 'pdfHtml5',
-        //                 //     exportOptions: {
-        //                 //         columns: ':not(:last-child)', // Exclude the last column
-        //                 //         stripHTML: false,
-        //                 //         format: {
-        //                 //             body: function (data, row, column, node) {
-        //                 //                 if (column === 10) {
-        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-        //                 //                 }
-        //                 //                 return data;
-        //                 //             }
-        //                 //         },
-        //                 //         header: true,
-        //                 //         footer: true
-
-        //                 //     },
-        //                 //     orientation: 'landscape', // Landscape orientation
-        //                 //     pageSize: 'A3', // A4 page size
-        //                 //     customize: function (doc) {
-
-        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                 //     }
-        //                 // },
-        //                 // {
-        //                 //     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                 //     className: 'btn btn-danger',
-        //                 //     extend: 'pdfHtml5',
-        //                 //     exportOptions: {
-        //                 //         columns: ':not(:last-child)', // Exclude the last column
-        //                 //         stripHTML: false,
-        //                 //         format: {
-        //                 //             body: function (data, row, column, node) {
-        //                 //                 if (column === 10) { // Example: Checkbox column
-        //                 //                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
-        //                 //                 }
-        //                 //                 return data;
-        //                 //             }
-        //                 //         }
-        //                 //     },
-        //                 //     orientation: 'landscape', // Landscape orientation
-        //                 //     pageSize: 'A4', // A4 page size
-        //                 //     customize: function (doc) {
-        //                 //         // Set font size for the entire document
-        //                 //         doc.defaultStyle.fontSize = 10; // Adjust font size (default is 10)
-
-        //                 //         // Set font style for the table header
-        //                 //         doc.styles.tableHeader = {
-        //                 //             fontSize: 12, // Header font size
-        //                 //             bold: true, // Make header bold
-        //                 //             alignment: 'center' // Center-align header text
-        //                 //         };
-
-        //                 //         // Set font style for the table body
-        //                 //         doc.styles.tableBodyEven = {
-        //                 //             fontSize: 10, // Font size for even rows
-        //                 //             alignment: 'left' // Left-align text
-        //                 //         };
-        //                 //         doc.styles.tableBodyOdd = {
-        //                 //             fontSize: 10, // Font size for odd rows
-        //                 //             alignment: 'left' // Left-align text
-        //                 //         };
-
-        //                 //         // Add padding to cells for better readability
-        //                 //         doc.content[1].table.body.forEach(function (row) {
-        //                 //             row.forEach(function (cell) {
-        //                 //                 // cell.margin = [5, 5, 5, 5]; // Add padding to each cell
-        //                 //             });
-        //                 //         });
-
-        //                 //         // Adjust column widths to fit content
-        //                 //         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                 //     }
-        //                 // },
-        //                 {
-        //                     text: '<i class="fas fa-file-pdf" title="Export to PDF"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-danger',
-        //                     extend: 'pdfHtml5',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)', // Exclude the last column
-        //                         rows: null, // Include all rows, not just visible ones
-        //                         stripHTML: false,
-        //                         format: {
-        //                             body: function (data, row, column, node) {
-        //                                 if (column === 10) { // Example: Checkbox column
-        //                                     return $(data).find('input').is(':checked') ? '\u2611' : '\u2610'; // Checked or unchecked box
-        //                                 }
-        //                                 return data;
-        //                             }
-        //                         }
-        //                     },
-        //                     orientation: 'landscape', // Landscape orientation
-        //                     pageSize: 'A3', // A3 page size
-        //                     customize: function (doc) {
-        //                         // Adjust cell height
-        //                         doc.styles.tableBodyEven = { lineHeight: 1.5 }; // Adjust line height for even rows
-        //                         doc.styles.tableBodyOdd = { lineHeight: 1.5 }; // Adjust line height for odd rows
-
-        //                         // Use the layout property to add padding to cells
-        //                         doc.content[1].layout = {
-        //                             paddingLeft: function (i, node) { return 5; },
-        //                             paddingRight: function (i, node) { return 5; },
-        //                             paddingTop: function (i, node) { return 5; },
-        //                             paddingBottom: function (i, node) { return 5; }
-        //                         };
-
-        //                         // Adjust column widths to fit content
-        //                         doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
-        //                     }
-        //                 },
-        //                 {
-        //                     // text: '<i class="bi bi-filetype-csv text-light" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
-        //                     text: '<i class="fas fa-file-csv" title="Export to CSV"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-info',
-        //                     extend: 'csv',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     },
-        //                     bom: true, // Add UTF-8 BOM
-        //                     customize: function (csv) {
-        //                         // Replace unsupported characters
-        //                         return csv.replace(/√/g, '✔️'); // Replace '√' with 'Checked'
-        //                     }
-        //                 },
-        //                 {
-        //                     extend: 'copy',
-        //                     text: '<i class="fas fa-copy" title="Copy Table Data"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-primary',
-        //                     exportOptions: {
-        //                         columns: ':not(:last-child)' // Exclude the last column
-        //                     }
-        //                 },
-        //                 {
-        //                     extend: 'colvis',
-        //                     text: '<i class="fas fa-eye"></i> <span class="d-none d-md-inline"></span>',
-        //                     className: 'btn btn-warning',
-        //                 },
-        //             ],
-        //         },
-        //         bottomStart: {
-        //             pageLength: 10,
-        //         }
-        //     },
-        //     order: [2, 'asc'],
-        //     lengthMenu: [10, 25, 50, 100],
-        // });
-
         $('#dataTable').DataTable({
             "paging": true,
-            "lengthChange": false,
+            "lengthChange": true,
             "searching": true,
             "ordering": true,
             "info": true,
@@ -639,26 +464,16 @@
                                         bolditalics: 'Courier-BoldOblique'
                                     }
                                 };
-
-                                // Set basic styling with alternative font
-                                // doc.defaultStyle = {
-                                //     font: 'helvetica', // Using Helvetica for better compatibility
-                                //     fontSize: 10
-                                // };
-
                                 // Style headers like Bootstrap tables
                                 doc.styles.tableHeader = {
-                                    // font: 'helvetica',
                                     fontSize: 11,
                                     bold: true,
                                     color: '#212529',
                                     fillColor: '#f8f9fa',
                                     alignment: 'left'
                                 };
-
-                                // Style even rows
                                 doc.styles.tableBodyEven = {
-                                    // font: 'helvetica',
+
                                     fontSize: 10,
                                     color: '#212529',
                                     alignment: 'left'
@@ -666,7 +481,6 @@
 
                                 // Style odd rows for zebra striping
                                 doc.styles.tableBodyOdd = {
-                                    // font: 'helvetica',
                                     fontSize: 10,
                                     color: '#212529',
                                     fillColor: '#f2f2f2',
@@ -697,7 +511,6 @@
                                         alignment: 'right',
                                         margin: [0, 10, 20, 0],
                                         fontSize: 8,
-                                        // font: 'helvetica'
                                     };
                                 };
                             }
@@ -731,7 +544,7 @@
                     ],
                 },
                 bottomStart: {
-                    pageLength: 10,
+                    pageLength: 25,
                 }
             },
             order: [2, 'asc'],
@@ -793,6 +606,9 @@
 
             formData.activity_ids = $("#activitySelect").val() || [];
             formData.is_non_activity = $("#is_non_activity").is(":checked");
+
+            formData.is_head_family    = $("#is_head_family").is(":checked") ? 1 : 0;
+            formData.head_family_name  = $("#head_family_name").val() || '';
 
             $.ajax({
                 url: '{{ route('beneficiary.store.individual') }}',
@@ -861,30 +677,54 @@
                 method: "GET",
                 success: function(response) {
                     const beneficiary = response[0]; // Assuming the server returns the beneficiary in response.data
-
                     // console.log("isi data dari", beneficiary);
-
                     // Populate the modal with the latest data
                     $("#editRowId").val(beneficiaryId);
                     $("#editNama").val(beneficiary.nama);
+
                     $("#editNoTelp").val(beneficiary.no_telp);
                     $("#editGender").val(beneficiary.jenis_kelamin).trigger("change");
                     $("#editUsia").val(beneficiary.umur);
                     $("#editRt").val(beneficiary.rt);
                     $("#editRwBanjar").val(beneficiary.rw);
                     $("#edit_is_non_activity").prop("checked", beneficiary.is_non_activity);
+                    // $("#edit_is_head_family").prop("checked", beneficiary.is_head_family);
                     $("#keterangan_edit").val(beneficiary.keterangan);
 
-                    const addOptionAndTriggerChange = (selector, text, value) => {
-                        const option = new Option(text || '-', value || '', true, true);
-                        $(selector).empty().append(option).trigger('change');
-                    };
+                    // Populate checkbox + family name input
+                    const isFamilyHead = beneficiary.is_head_family == 1;
+                    $("#edit_is_head_family").prop("checked", isFamilyHead);
+                    $("#edit_head_family_name").val(beneficiary.head_family_name);
+                    $("#edit_head_family_name").prop("readonly", isFamilyHead);
 
-                    addOptionAndTriggerChange("#provinsi_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.provinsi.id || '');
-                    addOptionAndTriggerChange("#kabupaten_id_edit", beneficiary.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', beneficiary.dusun.desa.kecamatan.kabupaten.id || '');
-                    addOptionAndTriggerChange("#kecamatan_id_edit", beneficiary.dusun?.desa?.kecamatan?.nama || '-', beneficiary.dusun.desa.kecamatan.id || '');
-                    addOptionAndTriggerChange("#desa_id_edit", beneficiary.dusun?.desa?.nama || '-', beneficiary.dusun?.desa_id || '');
-                    addOptionAndTriggerChange("#dusun_id_edit", beneficiary.dusun?.nama || '-', beneficiary.dusun_id || '');
+                    // Sync logic — checkbox toggle
+                    $("#edit_is_head_family").off("change").on("change", function () {
+                        const checked = $(this).is(":checked");
+                        const nameVal = $("#nama").val();
+                        $("#edit_head_family_name").prop("readonly", checked);
+                        $("#edit_head_family_name").val(checked ? nameVal : "");
+                    });
+
+                    // When typing in nama, update family head name
+                    $("#editNama").off("input").on("input", function () {
+                        if ($("#edit_is_head_family").is(":checked")) {
+                            $("#edit_head_family_name").val($(this).val());
+                        }
+                    });
+
+                    const locationFields = [
+                        { key: 'provinsi', name: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.provinsi?.id || '' },
+                        { key: 'kabupaten', name: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.kabupaten?.id || '' },
+                        { key: 'kecamatan', name: beneficiary?.dusun?.desa?.kecamatan?.nama || '-', id: beneficiary?.dusun?.desa?.kecamatan?.id || '' },
+                        { key: 'desa', name: beneficiary?.dusun?.desa?.nama || '-', id: beneficiary?.dusun?.desa_id || '' },
+                        { key: 'dusun', name: beneficiary?.dusun?.nama || '-', id: beneficiary?.dusun_id || '' },
+                    ];
+
+                    locationFields.forEach(({ key, name, id }) => {
+                        const select = $(`#${key}_id_edit`);
+                        select.empty().append(new Option(name, id, true, true)).trigger('change');
+                    });
+
 
                     $("#editKelompokRentan").empty();
                     beneficiary.kelompok_marjinal.forEach(k => {
@@ -911,14 +751,13 @@
         function updateRow() {
             const form = document.getElementById("editDataForm");
             const beneficiaryId = $("#editRowId").val();
+
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
             }
 
-            // Start with data from serializeArray (gets standard inputs like nama, usia, rt, rw, etc.)
             const formData = $("#editDataForm").serializeArray().reduce((obj, item) => {
-                // Handle potential duplicate names (though less likely in an edit form)
                 if (obj[item.name]) {
                     if (!Array.isArray(obj[item.name])) {
                         obj[item.name] = [obj[item.name]];
@@ -938,6 +777,12 @@
             // 2. Select2 Multi-Select Values
             formData.id = $("#editRowId").val() || [];
             formData.nama = $("#editNama").val() || [];
+
+            // 3. Family Head Checkbox + Family Head Name
+            formData.is_head_family    = $("#edit_is_head_family").is(":checked") ? 1 : 0;
+            formData.head_family_name  = $("#edit_head_family_name").val() || '';
+
+
             formData.umur = $("#editUsia").val() || [];
             formData.kelompok_rentan = $("#editKelompokRentan").val() || [];
             formData.jenis_kelompok = $("#editJenisKelompok").val() || [];
@@ -950,7 +795,7 @@
 
             formData.activity_ids = $("#activitySelectEdit").val() || [];
 
-            // 3. Location Select2 Values (Crucial Addition!)
+            // 4. Location Select2 Values (Crucial Addition!)
             formData.provinsi_id = $("#provinsi_id_edit").val() || null; // Send null if empty
             formData.kabupaten_id = $("#kabupaten_id_edit").val() || null;
             formData.kecamatan_id = $("#kecamatan_id_edit").val() || null;
@@ -958,12 +803,12 @@
             formData.dusun_id = $("#dusun_id_edit").val() || null;
             formData.is_non_activity = $("#edit_is_non_activity").is(":checked");
 
-            // 4. Other Required IDs (like program_id, user_id if needed)
+            // 5. Other Required IDs (like program_id, user_id if needed)
             formData.program_id = '{{ $program->id }}';
             formData.user_id = '{{ Auth::id() }}'; // Uncomment if needed
 
-            // --- AJAX Call ---
-            const id = beneficiaryId; // Use the beneficiaryId directly
+
+            const id = beneficiaryId;
             if (!id) {
                  Swal.fire("Error", "Beneficiary ID is missing.", "error");
                  return; // Prevent AJAX call if ID is missing
@@ -972,9 +817,9 @@
 
             $.ajax({
                 url: url,
-                method: "PUT", // Use PUT for updates
-                data: JSON.stringify(formData), // Send the manually constructed object as JSON
-                contentType: "application/json", // Tell the server we're sending JSON
+                method: "PUT",
+                data: JSON.stringify(formData),
+                contentType: "application/json",
                 beforeSend: function() {
                     Toast.fire({
                         icon: "info",
@@ -987,7 +832,7 @@
                 success: function(response) {
                     const index = beneficiaries.findIndex(b => b.id === beneficiaryId);
                     if (index !== -1) {
-                        beneficiaries[index] = response.data; // Assuming the server returns the updated beneficiary in response.data
+                        beneficiaries[index] = response.data;
                     }
                     Swal.fire({
                         title: "Success",
@@ -1072,13 +917,11 @@
 
         $("#saveDataBtn").on("click", function(e) {
             e.preventDefault();
-            // alert("saveDataBtn clicked");
             addRow();
         });
 
         $("#dataTable tbody").on("click", ".edit-btn", function(e) {
             e.preventDefault();
-            // console.info("form reset, now opening edit modal")
             setTimeout(() => {
                 editRow(this);
             }, 250);
@@ -1093,13 +936,41 @@
             e.preventDefault();
             deleteRow(this);
         });
+
+        // $('#editDataModal').on('shown.bs.modal', initHeadFamilySync);
+        $('#ModalTambahPeserta, #editDataModal').on('shown.bs.modal', function () {
+            $('input[type="checkbox"][data-sync-nama][data-sync-head-family]').off('change input').each(function () {
+                const $checkbox = $(this);
+                const $namaInput = $($checkbox.data('sync-nama'));
+                const $headFamilyInput = $($checkbox.data('sync-head-family'));
+
+                function toggleHeadFamilyInput() {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val()).prop('readonly', true);
+                    } else {
+                        $headFamilyInput.prop('readonly', false);
+                        $headFamilyInput.prop('required', true);
+                    }
+                }
+
+                $checkbox.on('change', toggleHeadFamilyInput);
+
+                $namaInput.on('input', function () {
+                    if ($checkbox.is(':checked')) {
+                        $headFamilyInput.val($namaInput.val());
+                    }
+                });
+
+                toggleHeadFamilyInput(); // Initialize on modal load
+            });
+        });
     });
 
 
 </script>
 
 
-@include('tr.beneficiary.js.search')
+{{-- @include('tr.beneficiary.js.search') --}}
 
 @stack('basic_tab_js')
 

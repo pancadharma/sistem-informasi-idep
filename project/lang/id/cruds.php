@@ -985,6 +985,9 @@ return [
             'lainnya'                            => 'Lainnya',
             'ket'                                => 'Keterangan',
             'non_act'                            => 'Non-AC',
+            'girl'                               => 'Anak Perempuan',
+            'boy'                                => 'Anak Laki-Laki',
+            'keluarga'                           => 'Keluarga',
 
         ],
     ],
@@ -1062,7 +1065,53 @@ return [
         'kontak'                        => 'Kontak',
         'ya'                            => 'Ya',
         'tidak'                         => 'Tidak',
+        'total_peserta'                 => 'Total Peserta',
     ],
 
+    'target_progress' => [
+        'title'                         => 'Target & Progress',
+        'add'                           => 'Tambah Target & Progress',
+        'create'                        => 'Tambah Target & Progress',
+        'edit'                          => 'Edit Target & Progress',
+        'show'                          => 'Tampilkan Target & Progress',
+        'delete'                        => 'Hapus Target & Progress',
+
+        'list'                          => 'Daftar Target & Progress',
+        'label'                         => 'Target & Progress',
+        'level'                         => 'Level',
+        'deskripsi'                     => 'Deskripsi',
+        'indikator'                     => 'Indikator',
+        'target'                        => 'Target',
+        'achievements'                  => 'Achievements',
+        'progress'                      => 'Progress',
+        'persentase_complete'           => '% to complete',
+        'status'                        => 'Status',
+        'challenges'                    => 'Challenges',
+        'mitigation'                    => 'Mitigation / action plan',
+        'risk'                          => 'Risk',
+        'notes'                         => 'Notes',
+        'tipe'                          => 'Tipe',
+
+        'kode_program'					=> "Kode Program",
+        'nama_program'					=> "Nama Program",
+        'tanggal'                       => "Tanggal",
+        'updated_count'                 => 'Perubahan',
+
+        'basic'	=> [
+            'history'           => 'History',
+            'tanggal'			=> 'Tanggal',
+            'waktu'				=> 'Waktu',
+            'program_select'    => 'Pilih Program',
+            'kode_program'      => 'Kode Program',
+            'nama_program'      => 'Nama Program',
+            'jumlah_target'     => 'Jumlah Target',
+            'created_at'        => 'Waktu Dibuat',
+            'updated_at'        => 'Diupdate Pada',
+        ],
+    ],
+
+    'history' => [
+        'title' => "History"
+    ],
 
 ];

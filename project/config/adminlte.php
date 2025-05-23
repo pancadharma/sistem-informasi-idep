@@ -370,6 +370,14 @@ return [
                     'url' => '#',
                     'text' => 'Hehe',
                 ],
+                [
+                    'text'      => 'target_progress',
+                    'icon'      => 'nav-icon bi bi-bar-chart-steps', 
+                    'icon_text' => 'monitoring',
+                    'route'     => 'target_progress.index',
+                    // 'can'       => ['target_progress_access'],
+                    'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
+                ],
             ],
         ],
         [
@@ -466,9 +474,39 @@ return [
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.fixedHeader.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.fixedColumns.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.rowGroup.min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/datatables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/fixedHeader.dataTables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/fixedColumns.dataTables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/rowGroup.dataTables.min.css',
                 ],
             ],
         ],

@@ -2,8 +2,8 @@
 
 @section('subtitle', __('cruds.komponenmodel.add'))
 @section('content_header_title') <strong>{{ __('cruds.komponenmodel.add') }}</strong>  @endsection
-@section('sub_breadcumb')<a href="{{ route('komodel.index') }}" title="{{ __('cruds.komponenmodel.list') }}"> {{ __('cruds.komponenmodel.list') }} </a> @endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('cruds.komponenmodel.add') }}">{{ __('cruds.komponenmodel.add') }}</span> @endsection
+@section('sub_breadcumb')<a href="{{ route('komodel.index') }}" title="{{ __('cruds.komponenmodel.list') }}"> {{ __('cruds.komponenmodel.add') }} </a> @endsection
+@section('sub_breadcumb') / <span title="Current Page {{ __('cruds.komponenmodel.add') }}">{{ __('cruds.komponenmodel.add') }}</span> @endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -26,7 +26,7 @@
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
-            z-index: 1045;
+            z-index: 1030;
             top: 0;
         }
         .wah {

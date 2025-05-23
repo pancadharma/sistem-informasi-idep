@@ -2,6 +2,7 @@
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+        <input type="hidden" id="user_id" value="{{ auth()->id() }}">
         <!-- id program -->
         <input type="hidden" name="program_id" id="program_id">
         <!-- kode program -->
@@ -19,15 +20,9 @@
 
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-        <label for="kode_komponenmodel" class="input-group col-form-label">{{ __('cruds.komponenmodel.label_komponen') }}</label>
-        {{-- <!-- id komponenmodel -->
-        <input type="hidden" name="komponenmodel_id" id="komponenmodel_id">
-        <!-- nama komponen model -->
-        <input type="text" class="form-control" id="kode_komponenmodel" placeholder="{{ __('cruds.komponenmodel.label_komponen') }}" name="kode_komponenmodel"
-        data-toggle="modal" data-target="#ModalKomponenModel"> --}}
-        
+        <label for="kode_komponenmodel" class="input-group col-form-label">{{ __('cruds.komponenmodel.title') }}</label>
         <div class="select2-purple">
-            <select class="form-control select2" name="model_id[]" id="model_id" multiple data-api-url="{{ route('api.komodel.model') }}" required>
+            <select class="form-control select2" name="model_id[]" id="model_id" data-api-url="{{ route('api.komodel.model') }}" required>
                 <!-- Options will be populated by select2 -->
             </select>
         </div>
@@ -46,12 +41,6 @@
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
         <label for="kode_sektor" class="input-group col-form-label">{{ __('cruds.komponenmodel.label_sektor') }}</label>
-        {{-- <!-- id sektor -->
-        <input type="hidden" name="sektor_id" id="sektor_id">
-        <!-- nama sektor -->
-        <input type="text" class="form-control" id="kode_sektor" placeholder="{{ __('cruds.komponenmodel.label_sektor') }}" name="kode_sektor"
-        data-toggle="modal" data-target="#ModalDaftarSektor"> --}}
-
         <div class="select2-purple">
             <select class="form-control select2" name="sektor_id[]" id="sektor_id" multiple data-api-url="{{ route('api.komodel.sektor') }}" required>
                 <!-- Options will be populated by select2 -->
@@ -61,7 +50,7 @@
     </div>
 </div>
 
-<!-- List -->
+
 <div class="row tambah_komodel" id="tambah_komodel">
     <div class="col mb-1 mt-2">
         <button type="button" class="btn btn-warning" id="addDataBtn" data-toggle="modal" data-target="#ModalTambah" title="{{ __('global.add') }}">
@@ -70,7 +59,17 @@
         </button>
         <button type="button" class="btn btn-success" id="submitDataBtn">{{ __('global.save') }} <i class="bi bi-save"></i></button>
     </div>
+    <div class="col-sm-12 col-md-12 col-lg-2 mb-2 mt-2">
+        <div class="input-group ml-auto">
+            <input type="text" class="form-control" id="search_peserta" placeholder="Cari..." name="search_peserta">
+            <span class="input-group-append">
+                <span type="button" class="btn btn-primary"><i class="fas fa-fw fa-search"></i></span>
+            </span>
+        </div>
+    </div>
 </div>
+
+<!-- List -->
 <div class="row responsive list_peserta">
     <div class="col-12 table-responsive">
         <table id="dataTable" class="table table-sm table-bordered table-hover datatable-kegiatan display text-nowrap">
@@ -78,8 +77,8 @@
                 <tr class="align-middle text-center display nowrap">
                     <th rowspan="2" class="text-center align-middle d-none">#</th>
                     <th colspan="7" class="text-center align-middle">{{ __("cruds.komponenmodel.label_lokasi") }}</th>
-                    <th rowspan="2" class="align-middle">Jumlah</th>
-                    <th rowspan="2" class="align-middle">Satuan</th>
+                    <th rowspan="2" class="align-middle">{{ __("cruds.komponenmodel.jumlah") }}</th>
+                    <th rowspan="2" class="align-middle">{{ __("cruds.komponenmodel.satuan") }}</th>
                     <th rowspan="2" class="text-center align-middle">{{ __("global.actions") }}</th>
                 </tr>
                 <tr id="activityHeaders" class="text-sm">
@@ -102,6 +101,7 @@
 @include('tr.komponenmodel.tabs.komodel-modal')
 
 @push('basic_tab_js')
+@include('tr.beneficiary.js.search')
 <script>
     $(document).ready(function() {
     $('#sektor_id').select2({
@@ -132,7 +132,7 @@
                     }
                 };
             },
-            cache: true
+            cache: false
         }
     });
 });
@@ -165,7 +165,7 @@ $(document).ready(function() {
                     }
                 };
             },
-            cache: true
+            cache: false
         }
     });
 });

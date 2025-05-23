@@ -32,6 +32,8 @@ class Meals_Penerima_Manfaat extends Model
         'rw',
         'umur',
         'keterangan',
+        'is_head_family',
+        'head_family_name',
         'is_non_activity',
         'created_at',
         'updated_at',
@@ -43,6 +45,12 @@ class Meals_Penerima_Manfaat extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    protected $casts = [
+        'is_non_activity' => 'boolean',
+        'is_head_family' => 'boolean',
+    ];
+
 
 
     protected function serializeDate(DateTimeInterface $date)
@@ -74,6 +82,17 @@ class Meals_Penerima_Manfaat extends Model
         );
     }
 
+    // public function kelompokMarjinal()
+    // {
+    //     return $this->belongsToMany(
+    //         Kelompok_Marjinal::class,
+    //         'trmeals_penerima_manfaat_kelompok_marjinal',
+    //         'trmeals_penerima_manfaat_id',
+    //         'kelompok_marjinal_id'
+    //     )->withTimestamps()->withTrashed(); // jika ingin ikut soft-deleted
+    // }
+
+
     public function kelompokMarjinal()
     {
         return $this->belongsToMany(
@@ -83,6 +102,13 @@ class Meals_Penerima_Manfaat extends Model
             'kelompok_marjinal_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
     }
+
+    public function kelompokMarjinalPivot()
+    {
+        return $this->hasMany(Meals_Penerima_Manfaat_Kelompok_Marjinal::class, 'trmeals_penerima_manfaat_id');
+    }
+
+
     public function penerimaActivity()
     {
         return $this->belongsToMany(
@@ -92,5 +118,4 @@ class Meals_Penerima_Manfaat extends Model
             'programoutcomeoutputactivity_id' // Foreign key di tabel pivot untuk model yang berelasi
         );
     }
-
 }

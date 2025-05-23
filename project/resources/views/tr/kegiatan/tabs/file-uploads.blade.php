@@ -84,11 +84,29 @@
                 var uniqueId = $(`#${$.escapeSelector(id)}`).attr('data-unique-id');
                 delete fileCaptions[uniqueId]; // Remove the file from the tracking object
                 $(`#caption-group-${uniqueId}`).remove();
-            }).on('fileclear', function(event) {
+            })
+            .on('fileclear', function(event) {
                 // Clear all caption inputs when files are cleared
                 fileCaptions = {}; // Reset the tracking object
                 $('#' + captionContainerId).empty();
-            }).on('filebatchselected', function(event, files) {
+            })
+            // .on('filebatchselected', function(event, files) {
+            //     let existingFiles = Object.values(fileCaptions);
+            //     $('#' + captionContainerId).empty();
+            //     files.forEach(file => {
+            //         if (!existingFiles.includes(file.name)) {
+            //             var uniqueId = fileInputId + '-' + (new Date().getTime());
+            //             fileCaptions[uniqueId] = file.name;
+            //             $('#' + captionContainerId).append(
+            //                 `<div class="form-group" id="caption-group-${uniqueId}">
+            //                     <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+            //                     <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}">
+            //                 </div>`
+            //             );
+            //         }
+            //     });
+            // });
+            .on('filebatchselected', function(event, files) {
                 // Clear all caption inputs when new files are selected
                 fileCaptions = {}; // Reset the tracking object
                 $('#' + captionContainerId).empty();
