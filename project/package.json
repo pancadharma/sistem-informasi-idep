@@ -23,6 +23,7 @@
         "datetimepicker": "^0.1.39",
         "material-icons": "^1.13.12",
         "materialize-css": "^1.0.0-rc.2",
+        "project": "file:",
         "tabulator-tables": "^6.2.1"
     },
     "name": "project",
