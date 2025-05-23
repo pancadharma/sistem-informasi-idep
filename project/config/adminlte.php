@@ -88,7 +88,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -121,8 +121,8 @@ return [
         [
             'text'          => 'User Profile',
             'route'         => 'user.profile',
-            'icon'          => 'fas fa-fw fa-user',
-            'icon_color'    => 'primary',
+            'icon'          => 'fas fa-fw fa-user-alt',
+            'active'        => ['profile/admin', 'profile/admin', 'profile/admin*', 'regex:@^profile/admin/[0-9]+$@']
         ],
         [
             'type'          => 'navbar-search',
@@ -143,16 +143,11 @@ return [
             'topnav_right'  => false,
         ],
 
-        // Sidebar items:
-        // [
-        //     'type' => 'sidebar-menu-search',
-        //     'text' => 'search',
-        // ],
         [
             'text'          => 'Dashboard',
-            'url'           => 'home',
+            'url'           => 'dashboard',
             'icon'          => 'fas fa-tachometer-alt',
-            'active'        => ['home', 'dashboard', 'home*', 'regex:@^home/[0-9]+$@']
+            'active'        => ['dashboard', 'dashboard', 'dashboard*', 'regex:@^dashboard/[0-9]+$@']
         ],
         [
             'header'        => 'Master Data',
@@ -352,7 +347,7 @@ return [
                 ],
                 [
                     'text'      => 'komponenmodel',
-                    'icon'      => 'nav-icon bi bi-puzzle', 
+                    'icon'      => 'nav-icon bi bi-puzzle',
                     'icon_text' => 'monitoring',
                     'route'     => 'komodel.index',
                     'can'       => ['komponenmodel_access'],
@@ -360,7 +355,7 @@ return [
                 ],
                 [
                     'text'      => 'prepost',
-                    'icon'      => 'nav-icon bi bi-clipboard-check', 
+                    'icon'      => 'nav-icon bi bi-clipboard-check',
                     'icon_text' => 'prepost',
                     'route'     => 'prepost.index',
                     // 'can'       => ['komponenmodel_access'],
@@ -372,7 +367,7 @@ return [
                 ],
                 [
                     'text'      => 'target_progress',
-                    'icon'      => 'nav-icon bi bi-bar-chart-steps', 
+                    'icon'      => 'nav-icon bi bi-bar-chart-steps',
                     'icon_text' => 'monitoring',
                     'route'     => 'target_progress.index',
                     // 'can'       => ['target_progress_access'],
