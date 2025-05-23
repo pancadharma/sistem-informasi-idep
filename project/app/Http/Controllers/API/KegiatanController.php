@@ -453,7 +453,7 @@ class KegiatanController extends Controller
             foreach ($files as $index => $file) {
                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
-                $kegiatanName = str_replace(' ', '_', $kegiatan->nama);
+                $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan'); // Fallback if nama is null
                 $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
                 $keterangan = $captions[$index] ?? $fileName;
 

@@ -390,8 +390,7 @@
                                     title: 'Processing...',
                                     text: 'Please wait while we save your data.',
                                     allowOutsideClick: false,
-                                    timer: 10000,
-                                    showLoading: true
+                                    // timer: 10000,
                                 });
                             },
                             success: function(data) {
@@ -409,12 +408,16 @@
                                     }
                                 });
                             },
-                            error: function(data) {
+                            error: function(xhr, status, error) {
                                 Swal.fire({
                                     title: '{{ __('global.error') }}',
-                                    text: '{{ __('global.response.save_failed') }}',
+                                    text: xhr.responseJSON.message   || xhr.responseText || xhr.statusText || '{{ __('global.response.save_failed') }}',
                                     icon: 'error'
                                 });
+                                console.table(xhr);
+                                console.log('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response:', xhr.responseText);
                             }
                         });
                     }
