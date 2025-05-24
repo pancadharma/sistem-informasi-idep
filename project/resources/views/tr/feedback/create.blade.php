@@ -16,22 +16,27 @@
         <div class="card-header">
             <h3 class="card-title">{{ __('Formulir Tambah Feedback') }}</h3>
         </div>
-        <form action="{{ route('feedback.store') }}" method="POST">
+        <form action="{{ route('feedback.store') }}" method="POST" id="createFeedbackForm">
             @csrf
             <div class="card-body">
-                {{-- Tampilkan error validasi global jika ada --}}
-                @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> Terdapat kesalahan pada input Anda.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
+                @if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Peringatan!</strong> {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+{{-- Blok untuk error validasi standar tetap ada --}}
+<!-- @if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Peringatan!</strong> Terdapat satu atau lebih kesalahan pada input Anda:
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif -->
                 <div class="row g-3">
                     {{-- ====================================== --}}
                     {{-- KOLOM KIRI --}}
@@ -56,6 +61,25 @@
                                 <label for="add_tanggal_registrasi" class="form-label">Tanggal Registrasi <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control @error('tanggal_registrasi') is-invalid @enderror" id="add_tanggal_registrasi" name="tanggal_registrasi" value="{{ old('tanggal_registrasi', date('Y-m-d')) }}" required>
                                 @error('tanggal_registrasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="field_office" class="form-label">Field Office</label>
+                                <div class="select2-purple"> {{-- Jika menggunakan Select2 --}}
+                                    <select class="form-select form-control select2 @error('field_office') is-invalid @enderror" id="field_office" name="field_office">
+                                        <option value="" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == '' ? 'selected' : '' }}>-- Pilih Field Office --</option>
+                                        <option value="Bali" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Bali' ? 'selected' : '' }}>Bali</option>
+                                        <option value="Bangka Belitung" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Bangka Belitung' ? 'selected' : '' }}>Bangka Belitung</option>
+                                        <option value="Jawa Timur" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Jawa Timur' ? 'selected' : '' }}>Jawa Timur</option>
+                                        <option value="Kalimantan Timur" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Kalimantan Timur' ? 'selected' : '' }}>Kalimantan Timur</option>
+                                        <option value="Kalimantan Utara" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Kalimantan Utara' ? 'selected' : '' }}>Kalimantan Utara</option>
+                                        <option value="NTT" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'NTT' ? 'selected' : '' }}>NTT</option>
+                                        <option value="Papua Barat" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Papua Barat' ? 'selected' : '' }}>Papua Barat</option>
+                                        <option value="Sulawesi Tengah" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Sulawesi Tengah' ? 'selected' : '' }}>Sulawesi Tengah</option>
+                                        <option value="Yogyakarta" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Yogyakarta' ? 'selected' : '' }}>Yogyakarta</option>
+                                        {{-- Tambahkan opsi lain atau muat dari database --}}
+                                    </select>
+                                </div>
+                                @error('field_office') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </fieldset>
 
@@ -84,14 +108,18 @@
                                     </div>
                                 </div>
                              </div>
-                             <div class="mb-3">
+                            <div class="mb-3">
                                 <label for="add_sex" class="form-label">Jenis Kelamin</label>
-                                <select class="form-select @error('sex') is-invalid @enderror" id="add_sex" name="sex">
-                                    <option value="" {{ old('sex') == '' ? 'selected' : '' }}>-- Pilih --</option>
-                                    <option value="Laki-laki" {{ old('sex') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                    <option value="Perempuan" {{ old('sex') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                                    <option value="Lainnya" {{ old('sex') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                                </select>
+                                <div class="select2-purple">
+                                    <select class="form-select form-control select2 @error('sex') is-invalid @enderror" id="add_sex" name="sex">
+                                        <option value="" {{ old('sex') == '' ? 'selected' : '' }}>-- Pilih --</option>
+                                        <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
+                                        <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
+                                        <option value="Boy" {{ old('sex') == 'Boy' ? 'selected' : '' }}>Boy</option>
+                                        <option value="Girl" {{ old('sex') == 'Girl' ? 'selected' : '' }}>Girl</option>
+                                        <option value="Unspecified" {{ old('sex') == 'Unspecified' ? 'selected' : '' }}>Unspecified</option>
+                                    </select>
+                                </div>
                                 @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                              <div class="mb-3">
@@ -148,44 +176,95 @@
                                 <input type="text" class="form-control @error('kategori_komplain') is-invalid @enderror" id="add_kategori_komplain" name="kategori_komplain" value="{{ old('kategori_komplain') }}">
                                 @error('kategori_komplain') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
-                             <div class="mb-3">
-                                <label for="add_channels" class="form-label">Channel Pengaduan</label>
-                                <input type="text" class="form-control @error('channels') is-invalid @enderror" id="add_channels" name="channels" value="{{ old('channels') }}">
-                                @error('channels') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                             {{-- Channel Pengaduan --}}
+                        <div class="mb-3">
+                            <label for="add_channels" class="form-label">Channel Pengaduan</label>
+                            <div class="select2-purple">
+                                <select class="form-select form-control select2 @error('channels') is-invalid @enderror" id="add_channels" name="channels">
+                                    <option value="" {{ old('channels') == '' ? 'selected' : '' }}>-- Pilih Channel --</option>
+                                    <option value="Complaint Form" {{ old('channels') == 'Complaint Form' ? 'selected' : '' }}>Complaint Form</option>
+                                    <option value="Complaint Box" {{ old('channels') == 'Complaint Box' ? 'selected' : '' }}>Complaint Box</option>
+                                    <option value="Face to Face" {{ old('channels') == 'Face to Face' ? 'selected' : '' }}>Face to Face</option>
+                                    <option value="Hotline" {{ old('channels') == 'Hotline' ? 'selected' : '' }}>Hotline</option>
+                                    <option value="Help Desk" {{ old('channels') == 'Help Desk' ? 'selected' : '' }}>Help Desk</option>
+                                    <option value="SMS" {{ old('channels') == 'SMS' ? 'selected' : '' }}>SMS</option>
+                                    <option value="WhatsApp" {{ old('channels') == 'WhatsApp' ? 'selected' : '' }}>WhatsApp</option>
+                                    <option value="Children Consultation" {{ old('channels') == 'Children Consultation' ? 'selected' : '' }}>Children Consultation</option>
+                                    <option value="Local Agency" {{ old('channels') == 'Local Agency' ? 'selected' : '' }}>Local Agency</option>
+                                    <option value="Others" {{ old('channels') == 'Others' ? 'selected' : '' }}>Others</option>
+                                </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="add_other_channel" class="form-label">Channel Lain</label>
-                                <input type="text" class="form-control @error('other_channel') is-invalid @enderror" id="add_other_channel" name="other_channel" value="{{ old('other_channel') }}">
-                                @error('other_channel') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                             </div>
+                            @error('channels') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        {{-- Channel Lain (Awalnya mungkin tersembunyi) --}}
+                        <div class="mb-3" id="other_channel_group" style="display: none;"> {{-- Tambahkan ID dan style display none --}}
+                            <label for="add_other_channel" class="form-label">Channel Lain</label>
+                            <input type="text" class="form-control @error('other_channel') is-invalid @enderror" id="add_other_channel" name="other_channel" value="{{ old('other_channel') }}">
+                            @error('other_channel') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
                              <div class="mb-3">
                                 <label for="add_deskripsi" class="form-label">Deskripsi Keluhan <span class="text-danger">*</span></label>
                                 <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="add_deskripsi" name="deskripsi" rows="5" required>{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
                              <div class="mb-3">
-                                <label for="add_status_complaint" class="form-label">Status Awal</label>
-                                <select class="form-select @error('status_complaint') is-invalid @enderror" id="add_status_complaint" name="status_complaint" >
-                                    <option value="Baru" selected>Baru</option>
-                                </select>
+                                <label for="add_status_complaint" class="form-label">Status Complaint</label>
+                                <div class="select2-purple">
+                                    <select class="form-select form-control select2 @error('status_complaint') is-invalid @enderror" id="add_status_complaint" name="status_complaint">
+                                        <option value="Process" {{ old('status_complaint') == 'Process' ? 'selected' : '' }}>Process</option>
+                                        <option value="Resolved" {{ old('status_complaint') == 'Resolved' ? 'selected' : '' }}>Resolved</option>
+                                        {{-- Jika Anda ingin ada opsi "Pilih" sebagai default --}}
+                                        {{-- <option value="" {{ old('status_complaint') == '' ? 'selected' : '' }}>-- Pilih Status --</option> --}}
+                                    </select>
+                                </div>
                                 @error('status_complaint') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                             </div>
+                            </div>
+                            <div class="mb-3">
+                            <label for="is_hidden" class="form-label">Status Tampilan</label>
+                            <div class="select2-purple">
+                                <select class="form-select form-control select2 @error('is_hidden') is-invalid @enderror" id="is_hidden" name="is_hidden">
+                                    <option value="0" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 0 ? 'selected' : '' }}>Tampilkan (Unhide)</option>
+                                    <option value="1" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 1 ? 'selected' : '' }}>Sembunyikan (Hide)</option>
+                                </select>
+                            </div>
+                            @error('is_hidden') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
                         </fieldset>
 
                          {{-- Grup: Informasi Penanganan (Handler) --}}
                         <fieldset class="mb-4 border p-3 rounded">
                              <legend class="w-auto px-2 h6 fw-bold text-primary">Informasi Penanganan (Handler)</legend>
 
-                             <div class="mb-3">
-                                <label for="add_handler" class="form-label">Handler (Petugas)</label>
-                                <input type="text" class="form-control @error('handler') is-invalid @enderror" id="add_handler" name="handler" value="{{ old('handler') }}">
-                                @error('handler') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                             </div>
-                             <div class="mb-3">
-                                <label for="add_position_handler" class="form-label">Posisi Handler</label>
-                                <input type="text" class="form-control @error('position_handler') is-invalid @enderror" id="add_position_handler" name="position_handler" value="{{ old('position_handler') }}">
-                                @error('position_handler') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                             </div>
+                               <div class="mb-3">
+                                <label for="add_handler_id" class="form-label">Handler (Petugas)</label>
+                                <div class="select2-purple">
+                                    {{-- Menggunakan name="handler_id" --}}
+                                    <select class="form-select form-control select2 @error('handler_id') is-invalid @enderror" 
+                                            id="add_handler_id" name="handler_id"> 
+                                        <option value="" data-position="">-- Pilih Handler --</option>
+                                        @if(isset($handlers))
+                                            @foreach($handlers as $user)
+                                                <option value="{{ $user->id }}" 
+                                                        {{ old('handler_id') == $user->id ? 'selected' : '' }}
+                                                        data-position="{{ $user->jabatan?->nama ?? '' }}"> {{-- PASTIKAN 'nama' adalah nama kolom yang benar di tabel jabatan Anda --}}
+                                                    {{ $user->nama }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                @error('handler_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                              <div class="mb-3">
+                        <label for="add_position_handler" class="form-label">Posisi Handler</label>
+                        {{-- Dijadikan readonly karena akan diisi otomatis --}}
+                        <input type="text" class="form-control @error('position_handler') is-invalid @enderror" 
+                               id="add_position_handler" name="position_handler" 
+                               value="{{ old('position_handler') }}" readonly> 
+                        @error('position_handler') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                    </div>
                              <div class="mb-3">
                                 <label for="add_kontak_handler" class="form-label">Kontak Handler</label>
                                 <input type="text" class="form-control @error('kontak_handler') is-invalid @enderror" id="add_kontak_handler" name="kontak_handler" value="{{ old('kontak_handler') }}">
@@ -196,6 +275,11 @@
                                 <input type="date" class="form-control @error('tanggal_selesai') is-invalid @enderror" id="add_tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai') }}">
                                 @error('tanggal_selesai') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
+                             <div class="mb-3">
+                            <label for="handler_description" class="form-label">Handler Description</label>
+                            <textarea class="form-control @error('handler_description') is-invalid @enderror" id="handler_description" name="handler_description" rows="3">{{ old('handler_description', isset($feedback) ? $feedback->handler_description : '') }}</textarea>
+                            @error('handler_description') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>      
                         </fieldset>
 
                     </div> {{-- End Kolom Kanan --}}
@@ -213,10 +297,10 @@
         <div class="modal fade" id="programSelectionModal" tabindex="-1" aria-labelledby="programSelectionModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-scrollable ">
                 <div class="modal-content">
-                    <div class="modal-header bg-danger">
+                   <div class="modal-header bg-danger">
                         <h5 class="modal-title" id="programSelectionModalLabel">Daftar Program</h5>
-                        <button type="button" class="btn bg-danger" data-bs-dismiss="modal" aria-label="Close" title="{{ __('global.close') }}">
-                             <i class="fas fa-times text-dark"></i>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="{{ __('global.close') }}">
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -234,7 +318,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -264,7 +348,7 @@ $(document).ready(function() {
         } else if (age >= 60) {
             return '>60';
         } else {
-            return ''; // Default jika tidak masuk kategori (seharusnya tidak terjadi jika umur >= 0)
+            return ''; 
         }
     }
 
@@ -274,9 +358,9 @@ $(document).ready(function() {
 
     // Event listener saat input umur berubah
     umurInput.on('input', function() {
-        const umur = parseInt($(this).val(), 10); // Ambil nilai umur sebagai integer
-        const kelompokUsia = calculateAgeGroup(umur); // Hitung kelompok usia
-        ageGroupInput.val(kelompokUsia); // Set nilai input kelompok usia
+        const umur = parseInt($(this).val(), 10); 
+        const kelompokUsia = calculateAgeGroup(umur); 
+        ageGroupInput.val(kelompokUsia); 
     });
 
     // Panggil sekali saat halaman load untuk menghitung dari old value (jika ada)
@@ -293,19 +377,16 @@ $(document).ready(function() {
     });
 
     function openProgramModalAndInitDataTable() {
-        // Cek apakah DataTable sudah diinisialisasi dalam modal ini
-        // Tambahkan pengecekan agar tidak re-init jika modal hanya di-hide/show
         if (!$.fn.DataTable.isDataTable('#programListTable')) {
-             programDataTable = $('#programListTable').DataTable({
+            programDataTable = $('#programListTable').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
                 ajax: {
-                    url: "{{ route('api.beneficiary.program') }}", // Pastikan route ini benar
+                    url: "{{ route('api.beneficiary.program') }}", 
                     type: "GET"
                 },
                 columns: [
-                    // Sesuaikan 'data:' & 'name:' dengan response API Anda
                     { data: 'kode', name: 'kode', width: '20%' },
                     { data: 'nama', name: 'nama' },
                     {
@@ -314,73 +395,60 @@ $(document).ready(function() {
                     }
                 ],
                 language: {
-                    // Opsi bahasa Indonesia bisa ditambahkan di sini
-                     "sEmptyTable":     "Tidak ada data yang tersedia pada tabel ini",
-                     "sProcessing":   "Sedang memproses...",
-                     "sLengthMenu":   "Tampilkan _MENU_ entri",
-                     "sZeroRecords":  "Tidak ditemukan data yang sesuai",
-                     "sInfo":         "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                     "sInfoEmpty":    "Menampilkan 0 sampai 0 dari 0 entri",
-                     "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                     "sInfoPostFix":  "",
-                     "sSearch":       "Cari:",
-                     "sUrl":          "",
-                     "oPaginate": {
-                         "sFirst":    "Pertama",
-                         "sPrevious": "Sebelumnya",
-                         "sNext":     "Selanjutnya",
-                         "sLast":     "Terakhir"
-                     }
+                    "sEmptyTable":     "Tidak ada data yang tersedia pada tabel ini",
+                    "sProcessing":   "Sedang memproses...",
+                    // ... (terjemahan DataTables lainnya) ...
+                    "sSearch":       "Cari:",
+                    "oPaginate": {
+                        "sFirst":    "Pertama",
+                        "sPrevious": "Sebelumnya",
+                        "sNext":     "Selanjutnya",
+                        "sLast":     "Terakhir"
+                    }
                 },
                 lengthMenu: [5, 10, 25, 50, 100],
                 pagingType: 'full_numbers',
-                // bDestroy: true // Hapus bDestroy karena kita cek dengan isDataTable
             });
         }
-        // Tampilkan modal setelah DataTable siap (atau sudah ada)
         $('#programSelectionModal').modal('show');
     }
 
-    // Optional: Hancurkan DataTable saat modal benar-benar ditutup (jika diperlukan untuk memory)
-    // $('#programSelectionModal').on('hidden.bs.modal', function (e) {
-    //     if (programDataTable) {
-    //         programDataTable.destroy();
-    //         $('#programListTable tbody').empty(); // Kosongkan tbody juga
-    //         programDataTable = null;
-    //     }
-    // });
-
-    // Modifikasi Handler Tombol Pilih
     $('#programListTable tbody').on('click', '.select-program', function() {
-        // Pastikan data attributes (id, kode, nama) ada di tombol .select-program yang di-generate oleh API
         const programId   = $(this).data('id');
         const programKode = $(this).data('kode');
         const programNama = $(this).data('nama');
 
-        // Isi input di form utama
-        $('#add_kode_program_display').val(programKode); // Isi display Kode
-        $('#add_nama_program_display').val(programNama); // Isi display Nama
-        $('#add_program_id').val(programId);             // Isi hidden ID (YANG DISIMPAN)
+        $('#add_kode_program_display').val(programKode);
+        $('#add_nama_program_display').val(programNama);
+        $('#add_program_id').val(programId);        
 
-        // Tutup modal
         $('#programSelectionModal').modal('hide');
     });
-
     // --- Akhir Logika Modal Program ---
 
-    // Isi display program jika ada old value untuk program_id
-    const oldProgramId = $('#add_program_id').val();
-    const oldKodeDisplay = $('#add_kode_program_display').val(); // Ambil dari old value display jika ada
-    const oldNamaDisplay = $('#add_nama_program_display').val();
+    // Isi display program jika ada old value untuk program_id (saat validasi gagal)
+    // Ini penting jika 'kode_program_display' dan 'nama_program_display' tidak memiliki atribut name
+    // atau jika old() untuknya tidak terisi karena alasan lain.
+    const oldProgramIdVal = "{{ old('program_id') }}"; // Ambil dari old() helper
+    const oldKodeDisplayVal = "{{ old('kode_program_display') }}";
+    const oldNamaDisplayVal = "{{ old('nama_program_display') }}";
 
-    if (oldProgramId && (!oldKodeDisplay || !oldNamaDisplay)) {
-        // Jika ada old program_id tapi display kosong (misal error validasi hanya pada field lain)
-        // Kita perlu fetch data program berdasarkan oldProgramId untuk mengisi display
-        // Ini memerlukan endpoint API baru atau modifikasi yang ada
-        // Contoh (membutuhkan endpoint '/api/program/{id}'):
+    if (oldKodeDisplayVal) { // Jika old value untuk display kode ada, gunakan itu
+        $('#add_kode_program_display').val(oldKodeDisplayVal);
+    }
+    if (oldNamaDisplayVal) { // Jika old value untuk display nama ada, gunakan itu
+        $('#add_nama_program_display').val(oldNamaDisplayVal);
+    }
+
+    // Fallback jika display kosong tapi program_id ada (misalnya jika display field tidak di-submit/flash)
+    if (oldProgramIdVal && oldProgramIdVal !== "" && (!oldKodeDisplayVal || !oldNamaDisplayVal)) {
+        // Anda bisa mengaktifkan AJAX call di sini jika diperlukan
+        // Untuk saat ini, pastikan field 'kode_program_display' dan 'nama_program_display'
+        // memiliki atribut 'name' di HTML agar old() helpernya bekerja optimal.
+        console.log('Old program_id exists (' + oldProgramIdVal + '), but display fields might be empty. Consider AJAX fallback if needed.');
         /*
         $.ajax({
-            url: '/api/program/' + oldProgramId, // Ganti dengan endpoint Anda
+            url: '/api/program/' + oldProgramIdVal, // Ganti dengan endpoint Anda
             type: 'GET',
             success: function(program) {
                 if (program) {
@@ -393,11 +461,105 @@ $(document).ready(function() {
             }
         });
         */
-       // Jika Anda sudah menyimpan old value untuk display, baris di atas tidak perlu
-       // Pastikan input display di atas memiliki value="{{ old('kode_program_display') }}"
-       // dan value="{{ old('nama_program_display') }}" dan controller mengembalikannya saat validasi gagal.
     }
 
+    // =====================================================
+    // --- Script untuk Auto-fill Posisi Handler ---
+    // =====================================================
+    $('#add_handler_id').on('change', function() {
+        const selectedOption = $(this).find('option:selected');
+        const position = selectedOption.data('position');
+        
+        // console.log untuk debugging (bisa Anda hapus jika sudah bekerja)
+        console.log('Handler selected. Option value:', $(this).val());
+        console.log('Selected HTML Option:', selectedOption[0]); 
+        console.log('Value of data-position attribute:', position);
+        
+        $('#add_position_handler').val(position || ''); // Isi field posisi handler
+        console.log('Posisi Handler input set to:', $('#add_position_handler').val());
+    });
+
+    // Trigger 'change' sekali saat halaman dimuat jika ada old value untuk handler_id
+    // Ini akan mengisi Posisi Handler jika halaman kembali setelah validasi gagal
+    // dan handler_id sebelumnya sudah terpilih.
+    const oldHandlerId = "{{ old('handler_id') }}"; // Ambil dari old() helper
+    if (oldHandlerId && oldHandlerId !== "") { 
+        // Kita set dulu valuenya agar event change bisa membaca data-position dari option yang terpilih
+        $('#add_handler_id').val(oldHandlerId); 
+        console.log('Triggering change on load for handler ID:', oldHandlerId);
+        $('#add_handler_id').trigger('change');
+    }
+    // =====================================================
+    // --- Akhir Script Auto-fill Posisi Handler ---
+    // =====================================================
+
+     // =====================================================
+    // --- Script untuk Show/Hide "Channel Lain" ---
+    // =====================================================
+    const channelsDropdown = $('#add_channels');
+    const otherChannelGroup = $('#other_channel_group'); // Target div berdasarkan ID yang baru ditambahkan
+    const otherChannelInput = $('#add_other_channel');
+
+    function toggleOtherChannelField() {
+        if (channelsDropdown.val() === 'Others') {
+            otherChannelGroup.slideDown(); // Tampilkan dengan animasi
+        } else {
+            otherChannelGroup.slideUp();   // Sembunyikan dengan animasi
+            otherChannelInput.val('');     // Kosongkan nilai input Channel Lain
+        }
+    }
+
+    // Panggil fungsi saat halaman pertama kali dimuat untuk memeriksa nilai old() atau default
+    toggleOtherChannelField(); 
+
+    // Tambahkan event listener untuk dropdown "Channel Pengaduan"
+    channelsDropdown.on('change select2:select', function() { // Dengarkan juga event Select2
+        toggleOtherChannelField();
+    });
+    // =====================================================
+    // --- Akhir Script untuk Show/Hide "Channel Lain" ---
+    // =====================================================
+
+    // ================================================================================
+    // --- Script untuk auto-fill "Channel Lain" dengan '-' saat submit (CREATE) ---
+    // ================================================================================
+    // Pastikan form memiliki id="createFeedbackForm" (sudah ditambahkan di HTML)
+    $('#createFeedbackForm').on('submit', function() {
+        // Gunakan variabel channelsDropdown dan otherChannelInput yang sudah didefinisikan di atas
+        if (channelsDropdown.val() === 'Others') {
+            if (otherChannelInput.val().trim() === '') {
+                otherChannelInput.val('-'); // Isi dengan '-' jika kosong
+            }
+        }
+        // Jika channel bukan 'Others', otherChannelInput sudah dikosongkan oleh toggleOtherChannelField()
+        // dan akan dikirim sebagai string kosong.
+        // Form akan melanjutkan proses submit setelah ini.
+    });
+    // ================================================================================
+    // --- Akhir Script untuk auto-fill "Channel Lain" ---
+    // ================================================================================
+
+
+
+    // =====================================================
+    // --- Inisialisasi Select2 ---
+    // =====================================================
+    // Inisialisasi untuk semua elemen select dengan class .select2
+    if ($.fn.select2) {
+        // Daftar ID dari semua <select> yang menggunakan class 'select2' di create.blade.php Anda
+        const select2Elements = '#add_sex, #add_channels, #add_status_complaint, #field_office, #is_hidden, #add_handler_id';
+        
+        $(select2Elements).select2({
+            theme: 'bootstrap-5' // Ganti ke 'bootstrap4' jika environment Anda menggunakan AdminLTE default dengan Bootstrap 4
+                                  // atau hapus 'theme' untuk menggunakan tema default Select2.
+                                  // Pastikan CSS untuk tema yang dipilih sudah dimuat.
+        });
+    } else {
+        console.warn('Select2 library not found. Please ensure it is included.');
+    }
+    // =====================================================
+    // --- Akhir Inisialisasi Select2 ---
+    // =====================================================
 
 });
 </script>

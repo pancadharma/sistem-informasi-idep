@@ -39,16 +39,19 @@ class Feedback extends Model
         'tanggal_selesai',
         'sex',
         'kontak_penerima',
-        'handler',
+        'handler_id', // Ganti dari 'handler'
+        'position_handler',
         'phone_number',
         'channels',
-        'position_handler',
         'address',
         'other_channel',
         'kontak_handler',
         'kategori_komplain',
         'deskripsi',
         'status_complaint',
+        'field_office',
+        'is_hidden',
+        'handler_description',
     ];
 
      /**
@@ -60,6 +63,7 @@ class Feedback extends Model
          'tanggal_registrasi' => 'date',
          'tanggal_selesai' => 'date',
          'umur' => 'integer', // Cast umur ke integer (sudah ada)
+         'is_hidden' => 'boolean', // Ini akan otomatis konversi nilai ke true/false
      ];
 
     // ===========================================
@@ -80,5 +84,11 @@ class Feedback extends Model
         return $this->belongsTo(Program::class, 'program_id');
     }
     // ===========================================
+
+      public function handlerUser() // Atau Anda bisa menamakannya 'handler' jika tidak ada field 'handler' lagi
+    {
+        // Asumsi 'handler_id' adalah foreign key di tabel 'feedback' yang merujuk ke 'id' di tabel 'users'
+        return $this->belongsTo(User::class, 'handler_id');
+    }
 
 }

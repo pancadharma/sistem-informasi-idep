@@ -43,10 +43,16 @@ class FeedbackController extends Controller
             ->addColumn('status_badge', function ($row) {
                  $status = $row->status_complaint ?? 'N/A';
                  $class = 'bg-secondary';
-                 if ($status == 'Baru') $class = 'bg-info';
-                 elseif ($status == 'Diproses') $class = 'bg-warning text-dark';
-                 elseif ($status == 'Selesai') $class = 'bg-success';
-                 elseif ($status == 'Ditolak') $class = 'bg-danger';
+
+                if ($status == 'Process') {
+                    $class = 'bg-secondary'; // Abu-abu untuk Process
+                } elseif ($status == 'Resolved') {
+                    $class = 'bg-success';   // Hijau untuk Resolved
+                } 
+                //  if ($status == 'Baru') $class = 'bg-info';
+                //  elseif ($status == 'Diproses') $class = 'bg-warning text-dark';
+                //  elseif ($status == 'Selesai') $class = 'bg-success';
+                //  elseif ($status == 'Ditolak') $class = 'bg-danger';
                  return '<span class="badge ' . htmlspecialchars($class) . '">' . htmlspecialchars($status) . '</span>';
             })
             ->addColumn('action', function ($row) {

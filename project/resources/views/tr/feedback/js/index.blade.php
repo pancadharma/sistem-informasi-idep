@@ -67,7 +67,7 @@
                      pageLength: 10,
                  }
             },
-            order: [1, 'asc'],
+            order: [[2, 'asc']],
             lengthMenu: [10,25,50,100],
 
             drawCallback: function( settings ) {
