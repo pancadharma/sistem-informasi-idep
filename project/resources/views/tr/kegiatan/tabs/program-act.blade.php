@@ -1,5 +1,6 @@
 <!-- Modal Daftar Kegiatan Based on Selected Program-->
-<div class="modal fade" id="ModalDaftarProgramActivity" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgramActivity" theme="info">
+<div class="modal fade" id="ModalDaftarProgramActivity" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="TitleModalDaftarProgramActivity" theme="info">
     <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info">
@@ -7,7 +8,8 @@
                     <i class="bi bi-person-plus"></i>
                     {{ __('cruds.kegiatan.list') }}
                 </h5>
-                <button type="button" class="close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="{{ __('global.close') }}">
+                <button type="button" class="close" data-bs-dismiss="modal" data-dismiss="modal"
+                    aria-label="{{ __('global.close') }}">
                     <span>&times;</span>
                 </button>
             </div>
@@ -25,10 +27,10 @@
                             </tr>
                         </thead>
                         <tbody id="data-program-kegiatan">
-                        {{-- autofill by js based on selected program --}}
-                        <tr>
-                            <td>{{ __('global.loading') }}</td>
-                        </tr>
+                            {{-- autofill by js based on selected program --}}
+                            <tr>
+                                <td>{{ __('global.loading') }}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -39,4 +41,3 @@
         </div>
     </div>
 </div>
-
