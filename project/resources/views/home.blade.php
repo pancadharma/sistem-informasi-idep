@@ -436,6 +436,7 @@
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
 
+    <!-- Google Maps Scripts -->
     <script>
         let map;
         let markers = [];
@@ -452,8 +453,6 @@
         const centerLat = -2.711614;
         const centerLng = 121.631757;
         const initialZoom = 5;
-
-
 
         // --- STYLE DEFINITION ---
         const mapStyles = [
@@ -643,7 +642,6 @@
             ;
         }
 
-
         // Jalankan initMap saat dokumen siap
         $(document).ready(function () {
             // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
@@ -658,8 +656,7 @@
                 console.error("Google Maps API script belum termuat.");
                 alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
             }
-
-
+            // Event listeners for filters
             $('#provinsiFilter').on('change', function () {
                 const selectedProvinsiId = $(this).val();
                 if (selectedProvinsiId && selectedProvinsiId !== "") {
@@ -706,13 +703,12 @@
                     }
                 },
                 columns: [
-                    { data: 'nama_dusun', title: 'Nama Dusun' },
-                    { data: 'desa', title: 'Desa' },
-                    { data: 'kecamatan', title: 'Kecamatan' },
-                    { data: 'kabupaten', title: 'Kabupaten' },
-                    { data: 'provinsi', title: 'Provinsi' },
-                    // { data: 'total_dusun', title: 'Total Dusun' },
-                    { data: 'total_penerima', title: 'Total Penerima' }
+                    { data: 'nama_dusun', title: '{{ __("cruds.dusun.form.nama") }}' },
+                    { data: 'desa', title: '{{ __("cruds.dusun.form.des") }}' },
+                    { data: 'kecamatan', title: '{{ __("cruds.dusun.form.kec") }}' },
+                    { data: 'kabupaten', title: '{{ __("cruds.dusun.form.kab") }}' },
+                    { data: 'provinsi', title: '{{ __("cruds.dusun.form.prov") }}' },
+                    { data: 'total_penerima', title: '{{ __("cruds.dusun.form.total") }}' }
                 ]
             });
 
@@ -739,36 +735,7 @@
                 }
             }
 
-            // function reloadTableIfValid() {
-            //     const program = $('#programFilter').val();
-            //     const tahun = $('#tahunFilter').val();
-            //     const provinsi = $('#provinsiFilter').val();
-
-
-            //     if (program && tahun && provinsi) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-            //     }
-            //     else if (program && tahun) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
-            //     } else if (program && provinsi) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-            //     } else if (tahun && provinsi) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-            //     }else if (program) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
-            //     } else if (tahun) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa`).load();
-            //     } else if (provinsi) {
-            //         table.ajax.url(`/dashboard/data/get-data-desa/${provinsi}`).load();
-            //     }
-            //     else {
-            //         table.ajax.url(url_ajax).load();
-            //     }
-            // }
-
-
-
-                    // pie chart kabupaten
+            // pie chart kabupaten
             function pieChartKabupatenPenerimaManfaat(data) {
                 const kabupatenTotals = {};
 

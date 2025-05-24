@@ -101,7 +101,7 @@ return [
         ],
     ],
     'dusun' => [
-        'list'          => 'List Hamlet',
+        'list'          => 'Hamlet List',
         'title'         => 'Hamlet',
         'form'          => [
             'id'        => 'ID',
