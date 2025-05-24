@@ -54,23 +54,23 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-        ->select('trkegiatan.*')
-        ->get()
-        ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $item->penerimamanfaattotal;
-            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $item->penerimamanfaattotal;
+                $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-            return $item;
-        });
+                return $item;
+            });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
@@ -445,6 +445,13 @@ class KegiatanController extends Controller
 
     public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
     {
+        $request->validate([
+            'dokumen_pendukung'     => 'nullable|array|max:25',
+            'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:51200',
+            'media_pendukung'       => 'nullable|array|max:25',
+            'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:51200',
+        ]);
+
         $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {
             $timestamp = now()->format('Ymd_His');
             $fileCount = 1;

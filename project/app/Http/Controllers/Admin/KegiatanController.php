@@ -318,13 +318,16 @@ class KegiatanController extends Controller
             $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan->kabupaten_id);
             $lokasi->provinsi = Provinsi::find($lokasi->desa->kecamatan->kabupaten->provinsi_id);
         }
+        if (!$kegiatan->lokasi->isEmpty()) {
+            $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $lokasi->provinsi->id)->get();
+            $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
+            $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
+        }
 
-        $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $lokasi->provinsi->id)->get();
-        $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
-        $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
+        $kabupatenList = [];
+        $kecamatanList = [];
+        $desaList = [];
 
-        // return $kegiatan->lokasi[0]->kecamatan->kabupaten->provinsi;
-        // return
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
