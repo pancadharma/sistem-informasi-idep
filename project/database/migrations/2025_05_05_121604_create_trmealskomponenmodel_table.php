@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         // hapus table lama jika ada
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('trmealskomponenmodel');
-    
+        Schema::enableForeignKeyConstraints();
+        // Schema::dropIfExists('trmealskomponenmodel');
+
         // Cek apakah tabel sudah ada
         if (Schema::hasTable('trmeals_komponen_model')) {
             echo "Table 'trmeals_komponen_model' already exists. Do you want to drop it and create a new one? \nType 'yes' to proceed: ";

@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DesaController;
-use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DusunController;
 use App\Http\Controllers\Admin\PeranController;
 use App\Http\Controllers\Admin\RolesController;
@@ -24,12 +23,14 @@ use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\MPendonorController;
 use App\Http\Controllers\Admin\TrProgramController;
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\UserProfileController;
 use App\Http\Controllers\Admin\JenisbantuanController;
 use App\Http\Controllers\Admin\TargetReinstraController;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
+use App\Http\Controllers\Admin\MealsTargetProgressController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\API\BeneficiaryController;
@@ -72,11 +73,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
         Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
 
-        Route::get('/data/program-stats',   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
-        Route::get('/data/desa',            [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
-        Route::get('/data/kabupaten-pie',   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
-    });
+        Route::get('/data/program-stats',                   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desatable',                       [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie',                   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
 
+        Route::get('/data/get-data-desa/{id?}',             [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
+        Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
+
+    });
+});
     // Permissions
     // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', PermissionsController::class);
@@ -167,9 +172,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/satuan', [KegiatanController::class, 'getSatuan'])->name('api.kegiatan.satuan');
     Route::get('kegiatan/api/program/{id}/out/activity', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
     Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
+    Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
     Route::get('kegiatan/api/jenis_kegiatan', [KegiatanController::class, 'getJenisKegiatan'])->name('api.kegiatan.jenis_kegiatan');
     Route::get('kegiatan/api/mitra', [KegiatanController::class, 'getKegiatanMitra'])->name('api.kegiatan.mitra');
     Route::get('kegiatan/api/desa', [KegiatanController::class, 'getKegiatanDesa'])->name('api.kegiatan.desa');
+    Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
     Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
     //Master Jenis Bantuan
@@ -295,6 +302,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{program}/edit',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
         Route::get('/{id}/data',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'getBeneficiaryData'])->name('get.individual');
         Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
+        Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
         Route::post('/add',                         [App\Http\Controllers\Admin\BeneficiaryController::class, 'storeBeneficiary'])->name('store.individual');
         Route::delete('/delete/{id}',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'deleteBeneficiary'])->name('delete.individual');
         Route::PUT('/{beneficiary}/update',         [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
@@ -318,7 +326,6 @@ Route::middleware(['auth'])->group(function () {
         Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
 
-
     Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
         Route::get('prov',                          [WilayahController::class, 'getProvinsi'])->name('prov');
         Route::get('kab/{id}',                      [WilayahController::class, 'getKabupaten'])->name('kab');
@@ -341,11 +348,6 @@ Route::middleware(['auth'])->group(function () {
         Route::POST('jenis-kelompok/save',          [BeneficiaryController::class, 'apiStoreJenisKelompok'])->name('jenis_kelompok.simpan');
     });
 
-
-
-
-
-
     //SPATIE Activity logs
     Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.show');
@@ -358,12 +360,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'store'])->name('store');
         Route::get('/create', [App\Http\Controllers\Admin\KomponenModelController::class, 'create'])->name('create');
         Route::get('/{id}/edit', [KomponenModelController::class, 'edit'])->name('edit');
-        Route::post('/add', [KomponenModelController::class, 'storeSingleLokasi'])->name('store.lokindi'); // tambah data lokasi baru ketika edit 
+        Route::post('/add', [KomponenModelController::class, 'storeSingleLokasi'])->name('store.lokindi'); // tambah data lokasi baru ketika edit
         Route::get('/{id}/get', [KomponenModelController::class, 'getLokasiById'])->name('get.lokindi'); // ambil data lokasi berdasarkan id ketika edit
         Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
         Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
         Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
     });
+
     Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
         Route::get('datatable',         [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
         Route::post('komponen',         [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
@@ -382,7 +385,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/edit', [MealsPrePostTestController::class, 'edit'])->name('edit');
         Route::post('/', [MealsPrePostTestController::class, 'store'])->name('store');
         Route::get('/datatable', [MealsPrePostTestController::class, 'getPrepostDatatable'])->name('datatable');
-        Route::post('/add', [MealsPrePostTestController::class, 'storeAddPeserta'])->name('store.editadd');//tambah data peserta baru ketika edit 
+        Route::post('/add', [MealsPrePostTestController::class, 'storeAddPeserta'])->name('store.editadd');//tambah data peserta baru ketika edit
         Route::get('/{id}/get', [MealsPrePostTestController::class, 'getPesertaById'])->name('get.barispeserta'); // ambil data peserta berdasarkan id ketika edit
         Route::put('/{id}/update', [MealsPrePostTestController::class, 'updateSinglepeserta'])->name('update.barispeserta'); // update data peserta berdasarkan id ketika edit
         Route::delete('/peserta/{id}', [MealsPrePostTestController::class, 'deletePeserta'])->name('peserta.delete'); // delete peserta
@@ -407,4 +410,23 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('target-progresses/{target_progress_id}/show',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
-});
+
+
+    Route::group(['prefix' => 'benchmark', 'as' => 'benchmark.'], function () {
+        Route::get('/', [App\Http\Controllers\Admin\BenchmarkController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\BenchmarkController::class, 'create'])->name('create');
+        Route::get('/{id}/edit', [App\Http\Controllers\Admin\BenchmarkController::class, 'edit'])->name('edit');
+        Route::put('/{id}/edit', [App\Http\Controllers\API\BenchmarkController::class, 'updateBenchmark'])->name('update');
+    });
+
+    Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function () {
+        Route::get('datatable', [App\Http\Controllers\API\BenchmarkController::class, 'getBenchmarkDatatable'])->name('datatable');
+
+        Route::post('store', [App\Http\Controllers\API\BenchmarkController::class, 'storeBenchmark'])->name('store');
+        Route::get('programs', [App\Http\Controllers\API\BenchmarkController::class, 'getPrograms'])->name('programs');
+        Route::get('/benchmark/api/programs/activities', [App\Http\Controllers\API\BenchmarkController::class, 'getProgramActivities'])->name('programs.activities');
+        Route::get('kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getKegiatan'])->name('kegiatan');
+        Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
+        Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
+        Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
+    });  

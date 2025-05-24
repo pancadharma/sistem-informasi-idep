@@ -343,7 +343,6 @@
                 };
             }
             // submision if all validated
-
             $('#simpan_kegiatan').on('click', function(e) {
                 e.preventDefault();
                 if (!validateForm()) {
@@ -360,7 +359,6 @@
                 Swal.fire({
                     title: 'Konfirmasi',
                     text: 'Apakah anda yakin ingin menyimpan data ini?',
-                    // html: `<pre>${displayData}</pre>`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -371,7 +369,7 @@
                         // Show loading state
                         Swal.fire({
                             title: 'Processing...',
-                            html: 'Please wait while we save your data.',
+                            html: 'Please wait while we save your data. This may take a few minutes for large files.',
                             allowOutsideClick: false,
                             didOpen: () => {
                                 Swal.showLoading();
@@ -379,20 +377,25 @@
                         });
 
                         $.ajax({
-                            url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
+                            url: "{{ route('api.kegiatan.store') }}",
                             type: 'POST',
                             data: formData,
                             processData: false,
                             contentType: false,
                             cache: false,
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Processing...',
-                                    text: 'Please wait while we save your data.',
-                                    allowOutsideClick: false,
-                                    timer: 10000,
-                                    showLoading: true
-                                });
+                            timeout: 300000, // 5 minutes timeout
+                            xhr: function() {
+                                var xhr = new window.XMLHttpRequest();
+                                // Upload progress
+                                xhr.upload.addEventListener("progress", function(evt) {
+                                    if (evt.lengthComputable) {
+                                        var percentComplete = (evt.loaded / evt.total) * 100;
+                                        Swal.update({
+                                            html: `Uploading... ${Math.round(percentComplete)}%`
+                                        });
+                                    }
+                                }, false);
+                                return xhr;
                             },
                             success: function(data) {
                                 Swal.fire({
@@ -401,25 +404,118 @@
                                     icon: 'success'
                                 }).then((result) => {
                                     if (result.isConfirmed) {
-                                        // Optionally redirect or reset form here
-                                        // redirect to route kegiatan index
                                         window.location.href = "{{ route('kegiatan.index') }}";
-                                        // location.reload(); // Example to reload page
-                                        // $('#createKegiatan')[0].reset(); // Reset form
                                     }
                                 });
                             },
-                            error: function(data) {
+                            error: function(xhr, status, error) {
+                                let errorMessage = '{{ __('global.response.save_failed') }}';
+
+                                if (status === 'timeout') {
+                                    errorMessage = 'Request timeout. Please try again with smaller files or check your internet connection.';
+                                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                } else if (xhr.responseText) {
+                                    errorMessage = xhr.responseText;
+                                } else if (xhr.statusText) {
+                                    errorMessage = xhr.statusText;
+                                }
+
                                 Swal.fire({
                                     title: '{{ __('global.error') }}',
-                                    text: '{{ __('global.response.save_failed') }}',
+                                    text: errorMessage ?? '{{ __('global.response.save_failed') }}',
                                     icon: 'error'
                                 });
+
+                                console.table(xhr);
+                                console.log('Error:', error);
+                                console.log('Status:', status);
+                                console.log('Response:', xhr.responseText);
                             }
                         });
                     }
                 });
             });
+
+            // $('#simpan_kegiatan').on('click', function(e) {
+            //     e.preventDefault();
+            //     if (!validateForm()) {
+            //         return false;
+            //     }
+            //     // Get form data
+            //     let formData = new FormData($('#createKegiatan')[0]);
+            //     let serializedData = $("#createKegiatan").serializeArray();
+
+            //     // Convert serialized data to a readable format for display
+            //     let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
+            //     console.log(`pre ${displayData}`);
+
+            //     Swal.fire({
+            //         title: 'Konfirmasi',
+            //         text: 'Apakah anda yakin ingin menyimpan data ini?',
+            //         // html: `<pre>${displayData}</pre>`,
+            //         icon: 'warning',
+            //         showCancelButton: true,
+            //         confirmButtonColor: '#3085d6',
+            //         cancelButtonColor: '#d33',
+            //         confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + ' ! '
+            //     }).then((result) => {
+            //         if (result.isConfirmed) {
+            //             // Show loading state
+            //             Swal.fire({
+            //                 title: 'Processing...',
+            //                 html: 'Please wait while we save your data.',
+            //                 allowOutsideClick: false,
+            //                 didOpen: () => {
+            //                     Swal.showLoading();
+            //                 }
+            //             });
+
+            //             $.ajax({
+            //                 url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
+            //                 type: 'POST',
+            //                 data: formData,
+            //                 processData: false,
+            //                 contentType: false,
+            //                 cache: false,
+            //                 beforeSend: function() {
+            //                     Swal.fire({
+            //                         title: 'Processing...',
+            //                         text: 'Please wait while we save your data.',
+            //                         allowOutsideClick: false,
+            //                         // timer: 10000,
+            //                     });
+            //                 },
+            //                 success: function(data) {
+            //                     Swal.fire({
+            //                         title: '{{ __('global.response.success') }}',
+            //                         text: '{{ __('global.response.save_success') }}',
+            //                         icon: 'success'
+            //                     }).then((result) => {
+            //                         if (result.isConfirmed) {
+            //                             // Optionally redirect or reset form here
+            //                             // redirect to route kegiatan index
+            //                             window.location.href = "{{ route('kegiatan.index') }}";
+            //                             // location.reload(); // Example to reload page
+            //                             // $('#createKegiatan')[0].reset(); // Reset form
+            //                         }
+            //                     });
+            //                 },
+            //                 error: function(xhr, status, error) {
+            //                     Swal.fire({
+            //                         title: '{{ __('global.error') }}',
+            //                         text: xhr.responseJSON.message   || xhr.responseText || xhr.statusText || '{{ __('global.response.save_failed') }}',
+            //                         icon: 'error'
+            //                     });
+            //                     console.table(xhr);
+            //                     console.log('Error:', error);
+            //                     console.log('Status:', status);
+            //                     console.log('Response:', xhr.responseText);
+            //                 }
+            //             });
+            //         }
+            //     });
+            // });
 
         });
     </script>

@@ -62,7 +62,7 @@
                 <div class="icon">
                     <i class="fas fa-child"></i>
                 </div>
-                {{-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> --}}
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
         <div class="col-lg-3 col-6">
@@ -109,34 +109,8 @@
         <!-- ./col -->
     </div>
 
-    <!-- Map Section -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card card-primary card-outline">
-                <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
-                    <h3 class="card-title">
-                        <i class="fas fa-map-marker-alt mr-1"></i>
-                        Peta Data
-                    </h3>
-                    <!-- card tools -->
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.card-tools -->
-                </div>
-                <div class="card-body">
-                    <div id="map" style="height: 500px; width: 100%;"></div>
-                </div>
-                <!-- /.card-body-->
-            </div>
-        </div>
-    </div>
-    <!-- End Maps Section -->
-
     <!-- Filter Section -->
-    <div class="row mb-3">
+    <div class="row mb-3 ">
         <div class="col-md-4">
             <label for="programFilter">Program:</label>
             <select id="programFilter" class="form-control">
@@ -168,27 +142,61 @@
     </div>
     <!-- End Filter Section -->
 
+    <!-- Map Section -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header border-0 ui-sortable-handle" style="cursor: move;">
+                    <h3 class="card-title">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        Peta Data
+                    </h3>
+                    <!-- card tools -->
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <div class="card-body">
+                    <div id="map" style="height: 500px; width: 100%;"></div>
+                </div>
+                <!-- /.card-body-->
+            </div>
+        </div>
+    </div>
+    <!-- End Maps Section -->
+
 
     <!-- Chart Section -->
     <div class="row" id="dashboardCharts">
-        <div class="col-6">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card card-success">
                 <div class="card-header">
                     <h3 class="card-title">Bar Chart</h3>
                     <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
+                    <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
                     <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card-danger">
                 <div class="card-header">
                     <h3 class="card-title">Pie Chart</h3>
                     <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
+                    <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
                     <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
@@ -198,6 +206,41 @@
     </div>
     <!-- End Chart Section -->
 
+    <!-- Table Data Desa & Pie Chart Section Based on Selected Provinsi-->
+    <div class="row" id="tableDesaPenerimaManfaat">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Table Data Desa Penerima Manfaat</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress" width="100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">Chart Kabupaten Penerima Manfaat</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChartCanvas" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 @endsection
 
@@ -218,6 +261,9 @@
 
 @push('js')
 @section('plugins.Select2', true)
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Toastr', true)
     {{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -390,6 +436,7 @@
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
         ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
 
+    <!-- Google Maps Scripts -->
     <script>
         let map;
         let markers = [];
@@ -406,8 +453,6 @@
         const centerLat = -2.711614;
         const centerLng = 121.631757;
         const initialZoom = 5;
-
-
 
         // --- STYLE DEFINITION ---
         const mapStyles = [
@@ -611,8 +656,7 @@
                 console.error("Google Maps API script belum termuat.");
                 alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
             }
-
-
+            // Event listeners for filters
             $('#provinsiFilter').on('change', function () {
                 const selectedProvinsiId = $(this).val();
                 if (selectedProvinsiId && selectedProvinsiId !== "") {
@@ -624,8 +668,128 @@
             $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function () {
                 loadDashboardData();
                 loadMapMarkers();
+                reloadTableIfValid();
             });
+
+            // Initialize DataTable
+            const provinsiId = $('#provinsiFilter').val();
+
+            if (provinsiId) {
+                url_ajax = `/dashboard/data/get-data-desa/${provinsiId}`;
+            } else {
+                url_ajax = `/dashboard/data/get-data-desa`;
+            }
+
+            let table = $('#tableDesa').DataTable({
+                processing: true,
+                serverSide: false,
+                paging: true,
+                pageLength: 25,
+                searching: true,
+                ordering: true,
+                responsive: true,
+
+                order: [[1, 'asc']],
+                lengthMenu: [10, 25, 50, 100],
+                ajax: {
+                    url: url_ajax,
+                    data: function (d) {
+                        d.program_id = $('#filterProgram').val();
+                        d.tahun = $('#filterTahun').val();
+                    },
+                    dataSrc: function (json) {
+                        pieChartKabupatenPenerimaManfaat(json.data);
+                        return json.data || [];
+                    }
+                },
+                columns: [
+                    { data: 'nama_dusun', title: '{{ __("cruds.dusun.form.nama") }}' },
+                    { data: 'desa', title: '{{ __("cruds.dusun.form.des") }}' },
+                    { data: 'kecamatan', title: '{{ __("cruds.dusun.form.kec") }}' },
+                    { data: 'kabupaten', title: '{{ __("cruds.dusun.form.kab") }}' },
+                    { data: 'provinsi', title: '{{ __("cruds.dusun.form.prov") }}' },
+                    { data: 'total_penerima', title: '{{ __("cruds.dusun.form.total") }}' }
+                ]
+            });
+
+             function reloadTableIfValid() {
+                const provinsi = $('#provinsiFilter').val();
+                const program = $('#programFilter').val();
+                const tahun = $('#tahunFilter').val();
+
+                let url = "{{ route('dashboard.provinsi.data.desa', ['id' => ':id']) }}".replace(':id', provinsi || '');
+
+                const params = new URLSearchParams();
+                if (program) params.append('program_id', program);
+
+                if (tahun) params.append('tahun', tahun);
+                const queryString = params.toString();
+                if (queryString) {
+                    url += `?${queryString}`;
+                }
+
+                if (program || tahun || provinsi) {
+                    table.ajax.url(url).load();
+                } else {
+                    table.ajax.url(url_ajax).load();
+                }
+            }
+
+            // pie chart kabupaten
+            function pieChartKabupatenPenerimaManfaat(data) {
+                const kabupatenTotals = {};
+
+                data.forEach(row => {
+                    const kabupaten = row.kabupaten || 'Lainnya';
+                    if (!kabupatenTotals[kabupaten]) {
+                        kabupatenTotals[kabupaten] = 0;
+                    }
+                    kabupatenTotals[kabupaten] += row.total_penerima;
+                });
+
+                const labels = Object.keys(kabupatenTotals);
+                const values = Object.values(kabupatenTotals);
+
+                const total = values.reduce((a, b) => a + b, 0);
+                const colors = [
+                    '#666', '#673ab7', '#ff9800', '#4caf50', '#00bcd4',
+                    '#9c27b0', '#ff1744', '#ffee00', '#ffb300', '#ff5722'
+                ];
+
+                const percentages = values.map(v => ((v / total) * 100).toFixed(1) + '%');
+
+                const chartData = {
+                    labels: labels.map((l, i) => `${l} (${percentages[i]})`),
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors.slice(0, values.length),
+                    }]
+                };
+
+                if (window.pieChart instanceof Chart) {
+                    window.pieChart.destroy();
+                }
+
+                const ctx = document.getElementById('pieChartCanvas').getContext('2d');
+                window.pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            tooltip: { callbacks: {
+                                label: function (context) {
+                                    return context.label;
+                                }
+                            }}
+                        }
+                    }
+                });
+            }
+            reloadTableIfValid();
         });
     </script>
+
 
 @endpush

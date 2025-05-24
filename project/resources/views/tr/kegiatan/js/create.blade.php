@@ -1,5 +1,6 @@
 <!-- javascript to create kegiatan first -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
     function handleErrors(response) {
         let errorMessage = response.message;
@@ -116,170 +117,45 @@
     });
 </script>
 
-<!-- JS for Modal Program -->
-<script>
-    $(document).ready(function() {
-        let programId = null;
-
-        $('#list_program_kegiatan tbody').on('click', '.select-program', function(e) {
-            e.preventDefault();
-            programId = $(this).data('program-id');
-            const programKode = $(this).data('program-kode');
-            const programNama = $(this).data('program-nama');
-
-            // Update the hidden input and display fields
-            $('#program_id').val(programId).trigger('change');
-            $('#kode_program').val(programKode);
-            $('#nama_program').val(programNama).prop('disabled', true);
-
-            $('#programoutcomeoutputactivity_id, #kode_kegiatan').val('').trigger('change');
-            $('#kode_kegiatan').val('').trigger('change');
-            $('#nama_kegiatan').val('').trigger('change');
-
-            // Blur the currently focused element
-            $('#nama_kegiatan').focus();
-            setTimeout(function() {
-                $('#ModalDaftarProgram').modal('hide');
-            }, 200);
-
-
-        });
-
-        $('#list_program_out_activity tbody').on('click', '.select-activity', function(e) {
-            e.preventDefault();
-            var activity_Id = $(this).closest('tr').data('id');
-            var activityKode = $(this).closest('tr').data('kode');
-            var activityNama = $(this).closest('tr').data('nama');
-
-            $('#programoutcomeoutputactivity_id').val(activity_Id).trigger('change');
-            $('#kode_kegiatan').val(activityKode);
-            $('#nama_kegiatan').val(activityNama).prop('disabled', true);
-            $('#nama_kegiatan').focus();
-            setTimeout(function() {
-                $('#ModalDaftarProgramActivity').modal('hide');
-            }, 200);
-
-        });
-
-        $('#kode_kegiatan').click(function(e) {
-            e.preventDefault();
-            let programId = $('#program_id').val();
-            if (!programId) {
-                e.preventDefault();
-                Toast.fire({
-                    icon: "warning",
-                    title: "Opssss...",
-                    text: "Please select a program first.",
-                    timer: 2000,
-                    position: "top-end",
-                    timerProgressBar: true,
-                });
-
-                $('#ModalDaftarProgram').modal('show');
-                return false;
-            } else {
-                fetchProgramActivities(programId);
-            }
-        });
-
-        function fetchProgramActivities(programId) {
-            const url = '{{ route('api.program.kegiatan', ':id') }}'.replace(':id', programId);
-
-            $.ajax({
-                url: url,
-                method: 'GET',
-                dataType: 'JSON',
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        title: "{{ __('cruds.activity.search') }}...",
-                        timer: 2000,
-                        position: "top-end",
-                        timerProgressBar: true,
-                    });
-                },
-                success: function(data) {
-                    setTimeout(() => {
-                        populateModalWithActivities(data);
-                    }, 500);
-                },
-                error: function() {
-                    Toast.fire({
-                        icon: "error",
-                        title: "Failed to fetch activities.",
-                    });
-                }
-            });
-        }
-
-        function populateModalWithActivities(data) {
-            const tbody = $('#list_program_out_activity tbody');
-            tbody.empty();
-
-            if (data.length > 0) {
-                data.forEach(activity => {
-                    const row = `
-                        <tr data-id="${activity.id}" data-kode="${activity.kode}" data-nama="${activity.nama}" data-deskripsi="${activity.deskripsi}" data-indikator="${activity.indikator}" data-target="${activity.target}">
-                            <td>${activity.kode}</td>
-                            <td>${activity.nama}</td>
-                            <td>${activity.deskripsi}</td>
-                            <td>${activity.indikator}</td>
-                            <td>${activity.target}</td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm btn-info select-activity" data-id="${activity.id}">
-                                    <i class="bi bi-plus-lg"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.append(row);
-                });
-            } else {
-                const row = `<tr><td colspan="6" class="dt-empty text-center">{{ __('global.no_results') }}</td></tr>`;
-                tbody.append(row);
-            }
-            $('#ModalDaftarProgramActivity').modal('show');
-        }
-    });
-</script>
-
 <!-- Script for Kegiatan Peserta -->
 <script>
     function saveFormDataToStorage() {
-        var formData = {
-            program_id: $('#program_id').val(),
-            programoutcomeoutputactivity_id: $('#programoutcomeoutputactivity_id').val(),
-            program_kode: $('#program_kode').val(),
-            kode_program : $('#kode_program').val(),
-            nama_program : $('#nama_program').val(),
-            kode_kegiatan: $('#kode_kegiatan').val(),
-            nama_kegiatan: $('#nama_kegiatan').val(),
-            nama_desa: $('#nama_desa').val(),
-            lokasi: $('#lokasi').val(),
-            lat: $('#lat').val(),
-            longitude: $('#longitude').val(),
-            tanggalmulai: $('#tanggalmulai').val(),
-            tanggalselesai: $('#tanggalselesai').val(),
-            nama_mitra: $('#nama_mitra').val(),
-            status: $('#status').val(),
-            fasepelaporan: $('#fasepelaporan').val(),
+        // var formData = {
+        //     program_id: $('#program_id').val(),
+        //     programoutcomeoutputactivity_id: $('#programoutcomeoutputactivity_id').val(),
+        //     program_kode: $('#program_kode').val(),
+        //     kode_program: $('#kode_program').val(),
+        //     nama_program: $('#nama_program').val(),
+        //     // kode_kegiatan: $('#kode_kegiatan').val(),
+        //     nama_kegiatan: $('#nama_kegiatan').val(),
+        //     nama_desa: $('#nama_desa').val(),
+        //     lokasi: $('#lokasi').val(),
+        //     lat: $('#lat').val(),
+        //     longitude: $('#longitude').val(),
+        //     tanggalmulai: $('#tanggalmulai').val(),
+        //     tanggalselesai: $('#tanggalselesai').val(),
+        //     nama_mitra: $('#nama_mitra').val(),
+        //     status: $('#status').val(),
+        //     fasepelaporan: $('#fasepelaporan').val(),
 
-            provinsi_id: $('#provinsi_id').val(),
-            kabupaten_id: $('#kabupaten_id').val(),
+        //     provinsi_id: $('#provinsi_id').val(),
+        //     kabupaten_id: $('#kabupaten_id').val(),
 
-            sektor_kegiatan: $('#sektor_kegiatan').val(),
-            deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
-            tujuan_kegiatan: $('#tujuan_kegiatan').val(),
-            yang_terlibat: $('#yang_terlibat').val(),
-            pelatih_asal: $('#pelatih_asal').val(),
-            kegiatan: $('#kegiatan').val(),
-            informasi_lain: $('#informasi_lain').val(),
-            luas_lahan: $('#luas_lahan').val(),
-            barang: $('#barang').val(),
-            satuan: $('#satuan').val(),
-            others: $('#others').val(),
+        //     sektor_kegiatan: $('#sektor_kegiatan').val(),
+        //     deskripsi_kegiatan: $('#deskripsi_kegiatan').val(),
+        //     tujuan_kegiatan: $('#tujuan_kegiatan').val(),
+        //     yang_terlibat: $('#yang_terlibat').val(),
+        //     pelatih_asal: $('#pelatih_asal').val(),
+        //     kegiatan: $('#kegiatan').val(),
+        //     informasi_lain: $('#informasi_lain').val(),
+        //     luas_lahan: $('#luas_lahan').val(),
+        //     barang: $('#barang').val(),
+        //     satuan: $('#satuan').val(),
+        //     others: $('#others').val(),
 
-        };
+        // };
+
+        var formData = $('#createKegiatan').serializeArray();
 
         $('.summernote').each(function() {
             const id = $(this).attr('id');
@@ -332,148 +208,153 @@
         });
     }
 
-    function loadFormDataFromStorage() {
-        var storedData = localStorage.getItem('kegiatanFormData');
-        if (storedData) {
-            var formData = JSON.parse(storedData);
-            $('#program_id').val(formData.program_id || '');
-            $('#programoutcomeoutputactivity_id').val(formData.programoutcomeoutputactivity_id || '');
-            $('#program_kode').val(formData.program_kode || '');
-            $('#kode_program').val(formData.kode_program || '');
-            $('#nama_program').val(formData.nama_program || '').attr('disabled', true);
-
-            $('#kode_kegiatan').val(formData.kode_kegiatan || '');
-            $('#nama_kegiatan').val(formData.nama_kegiatan || '').attr('disabled', true);
-
-            $('#nama_desa').val(formData.nama_desa || '');
-            $('#lokasi').val(formData.lokasi || '');
-            $('#lat').val(formData.lat || '');
-            $('#longitude').val(formData.longitude || '');
-            $('#tanggalmulai').val(formData.tanggalmulai || '');
-            $('#tanggalselesai').val(formData.tanggalselesai || '');
-            $('#status').val(formData.status || '');
-            $('#fasepelaporan').val(formData.fasepelaporan || '');
-
-            $('#provinsi_id').val(formData.provinsi_id || '');
-            $('#kabupaten_id').val(formData.kabupaten_id || '');
+    // function loadFormDataFromStorage() {
+    //     var storedData = localStorage.getItem('kegiatanFormData');
 
 
-            $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
-            $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
-            $('#yang_terlibat').val(formData.yang_terlibat || '');
-            $('#pelatih_asal').val(formData.pelatih_asal || '');
-            $('#kegiatan').val(formData.kegiatan || '');
-            $('#informasi_lain').val(formData.informasi_lain || '');
-            $('#luas_lahan').val(formData.luas_lahan || '');
-            $('#barang').val(formData.barang || '');
-            $('#satuan').val(formData.satuan || '');
-            $('#others').val(formData.others || '');
 
-            $('.summernote').each(function() {
-                const id = $(this).attr('id');
-                if (!id) {
-                    console.error('Found Summernote element with undefined id:', this);
-                    return;
-                }
-                const value = formData[id] || '';
-                $(this).summernote('code', value);
-            });
+    //     if (storedData) {
+    //         var formData = JSON.parse(storedData);
+    //         $('#program_id').val(formData.program_id || '');
+    //         $('#programoutcomeoutputactivity_id').val(formData.programoutcomeoutputactivity_id || '');
+    //         $('#program_kode').val(formData.program_kode || '');
+    //         $('#kode_program').val(formData.kode_program || '');
+    //         $('#nama_program').val(formData.nama_program || '').attr('disabled', true);
 
-            if (formData.jenis_kegiatan) {
-                var apiUrl = $('#jeniskegiatan_id').data('api-url');
-                $.ajax({
-                    url: apiUrl,
-                    method: 'GET',
-                    data: {
-                        id: formData.jenis_kegiatan
-                    },
-                    success: function(response) {
-                        if (response.data && response.data.length > 0) {
-                            var item = response.data[0];
-                            var newOption = new Option(item.nama, item.id, true, true);
-                            $('#jeniskegiatan_id')
-                                .append(newOption)
-                                .trigger('change');
-                        }
-                    }
-                });
-            }
-            var uniqueId = Date.now();
-            $('.select2').not('#jeniskegiatan_id, #provinsi_id, #kabupaten_id, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]').each(function() {
-                var fieldId = $(this).attr('id');
-                var values = formData[fieldId];
-                var select2Field = $(this);
-                var apiUrl = $(this).data('api-url');
+    //         $('#kode_kegiatan').val(formData.kode_kegiatan || '');
+    //         $('#nama_kegiatan').val(formData.nama_kegiatan || '').attr('disabled', true);
 
-                if (values) {
-                    var valueArray = Array.isArray(values) ? values : [values];
-                    $.ajax({
-                        url: apiUrl,
-                        method: 'GET',
-                        data: {
-                            id: valueArray
-                        },
-                        success: function(data) {
-                            select2Field.empty();
-                            if (data.data && Array.isArray(data.data)) {
-                                data.data.forEach(function(item) {
-                                    var newOption = new Option(item.nama, item.id, true, true);
-                                    select2Field.append(newOption);
-                                });
-                            }
-                            initializeSelect2WithDynamicUrl(fieldId);
-                            select2Field.val(valueArray).trigger('change');
-                        },
-                        error: function(error) {
-                            initializeSelect2WithDynamicUrl(fieldId);
-                        }
-                    });
-                } else {
-                    initializeSelect2WithDynamicUrl(fieldId);
-                }
-            });
-        } else {
-            $('.select2').each(function() {
-                var fieldId = $(this).attr('id');
-                initializeSelect2WithDynamicUrl(fieldId);
-            });
-        }
-    }
+    //         $('#nama_desa').val(formData.nama_desa || '');
+    //         $('#lokasi').val(formData.lokasi || '');
+    //         $('#lat').val(formData.lat || '');
+    //         $('#longitude').val(formData.longitude || '');
+    //         $('#tanggalmulai').val(formData.tanggalmulai || '');
+    //         $('#tanggalselesai').val(formData.tanggalselesai || '');
+    //         $('#status').val(formData.status || '');
+    //         $('#fasepelaporan').val(formData.fasepelaporan || '');
+
+    //         $('#provinsi_id').val(formData.provinsi_id || '');
+    //         $('#kabupaten_id').val(formData.kabupaten_id || '');
+
+
+    //         $('#deskripsi_kegiatan').val(formData.deskripsi_kegiatan || '');
+    //         $('#tujuan_kegiatan').val(formData.tujuan_kegiatan || '');
+    //         $('#yang_terlibat').val(formData.yang_terlibat || '');
+    //         $('#pelatih_asal').val(formData.pelatih_asal || '');
+    //         $('#kegiatan').val(formData.kegiatan || '');
+    //         $('#informasi_lain').val(formData.informasi_lain || '');
+    //         $('#luas_lahan').val(formData.luas_lahan || '');
+    //         $('#barang').val(formData.barang || '');
+    //         $('#satuan').val(formData.satuan || '');
+    //         $('#others').val(formData.others || '');
+
+    //         $('.summernote').each(function() {
+    //             const id = $(this).attr('id');
+    //             if (!id) {
+    //                 console.error('Found Summernote element with undefined id:', this);
+    //                 return;
+    //             }
+    //             const value = formData[id] || '';
+    //             $(this).summernote('code', value);
+    //         });
+
+    //         if (formData.jenis_kegiatan) {
+    //             var apiUrl = $('#jeniskegiatan_id').data('api-url');
+    //             $.ajax({
+    //                 url: apiUrl,
+    //                 method: 'GET',
+    //                 data: {
+    //                     id: formData.jenis_kegiatan
+    //                 },
+    //                 success: function(response) {
+    //                     if (response.data && response.data.length > 0) {
+    //                         var item = response.data[0];
+    //                         var newOption = new Option(item.nama, item.id, true, true);
+    //                         $('#jeniskegiatan_id')
+    //                             .append(newOption)
+    //                             .trigger('change');
+    //                     }
+    //                 }
+    //             });
+    //         }
+    //         var uniqueId = Date.now();
+    //         $('.select2').not(
+    //             '#jeniskegiatan_id, #provinsi_id, #kabupaten_id, #kecamatan, #kelurahan, [id^="provinsi-"], [id^="kabupaten-"], [id^="kecamatan-"], [id^="kelurahan-"]'
+    //         ).each(function() {
+    //             var fieldId = $(this).attr('id');
+    //             var values = formData[fieldId];
+    //             var select2Field = $(this);
+    //             var apiUrl = $(this).data('api-url');
+
+    //             if (values) {
+    //                 var valueArray = Array.isArray(values) ? values : [values];
+    //                 $.ajax({
+    //                     url: apiUrl,
+    //                     method: 'GET',
+    //                     data: {
+    //                         id: valueArray
+    //                     },
+    //                     success: function(data) {
+    //                         select2Field.empty();
+    //                         if (data.data && Array.isArray(data.data)) {
+    //                             data.data.forEach(function(item) {
+    //                                 var newOption = new Option(item.nama, item.id, true,
+    //                                     true);
+    //                                 select2Field.append(newOption);
+    //                             });
+    //                         }
+    //                         initializeSelect2WithDynamicUrl(fieldId);
+    //                         select2Field.val(valueArray).trigger('change');
+    //                     },
+    //                     error: function(error) {
+    //                         initializeSelect2WithDynamicUrl(fieldId);
+    //                     }
+    //                 });
+    //             } else {
+    //                 initializeSelect2WithDynamicUrl(fieldId);
+    //             }
+    //         });
+    //     } else {
+    //         $('.select2').each(function() {
+    //             var fieldId = $(this).attr('id');
+    //             initializeSelect2WithDynamicUrl(fieldId);
+    //         });
+    //     }
+    // }
 
     $(document).ready(function() {
-        // loadParticipantsFromStorage();
-        loadFormDataFromStorage();
+        $('.select2').each(function() {
+            var fieldId = $(this).attr('id');
+            initializeSelect2WithDynamicUrl(fieldId);
+        });
+        // $('#createKegiatan').on('change', 'input, select, textarea', function() {
+        //     saveFormDataToStorage();
+        // });
 
-        $('#createKegiatan').on('change', 'input, select, textarea', function() {
-            saveFormDataToStorage();
-        });
+        // $(document).on('select2:select select2:unselect', '.select2', function() {
+        //     saveFormDataToStorage();
+        // });
 
-        $(document).on('select2:select select2:unselect', '.select2', function() {
-            saveFormDataToStorage();
-        });
+        // $(document).on('summernote.change', '.summernote', function() {
+        //     saveFormDataToStorage();
+        // });
 
-        $(document).on('summernote.change', '.summernote', function() {
-            saveFormDataToStorage();
-        });
+        // $('#createKegiatan').on('change', 'input, select, textarea, .select2, .summernote', function() {
+        //     saveFormDataToStorage();
+        // });
 
-        $('#createKegiatan').on('change', 'input, select, textarea, .select2, .summernote', function() {
-            saveFormDataToStorage();
-        });
-
-        $('.select2').on('select2:select select2:unselect', function() {
-            saveFormDataToStorage();
-        });
-        $('.summernote').on('summernote.change', function() {
-            saveFormDataToStorage();
-        });
+        // $('.select2').on('select2:select select2:unselect', function() {
+        //     saveFormDataToStorage();
+        // });
+        // $('.summernote').on('summernote.change', function() {
+        //     saveFormDataToStorage();
+        // });
     });
 </script>
 
 <!-- Script for description.blade.php -->
 <script>
     $(document).ready(function() {
-
-
         function calculateTotals() {
             // Calculate totals for each row in the first table
             $('tr').each(function() {
@@ -713,15 +594,15 @@
             let value = parseInt($(this).val()) || 0;
             if (value < 0) {
                 Toast.fire({
-                        icon: "error",
-                        title: "Number cannot be negative",
-                        timer: 600,
-                        timerProgressBar: true,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            // Swal.showLoading();
-                        },
-                    });
+                    icon: "error",
+                    title: "Number cannot be negative",
+                    timer: 600,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        // Swal.showLoading();
+                    },
+                });
                 $(this).val(0);
                 value = 0;
             }
@@ -1516,7 +1397,8 @@
                     $('#fasepelaporan').val(data.next_fase_pelaporan).trigger('change');
                     $('#fasepelaporan option').prop('disabled', false); // Enable all options first
                     $.each(data.disabled_fase, function(index, value) {
-                        $('#fasepelaporan option[value="' + value + '"]').prop('disabled', true);
+                        $('#fasepelaporan option[value="' + value + '"]').prop('disabled',
+                            true);
                     });
                 }
             });
@@ -1536,4 +1418,3 @@
         fetchFasePelaporan(initialProgramOutcomeOutputActivityId);
     });
 </script>
-
