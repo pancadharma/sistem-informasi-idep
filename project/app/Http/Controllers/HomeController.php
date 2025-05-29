@@ -28,8 +28,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $programs = Program::all();
-        $provinsis = Provinsi::all();
+        // $programs = Program::all()->where('status', true)->sortBy('nama');
+        $programs = Program::all()->sortByDesc('created_at');
+        $provinsis = Provinsi::all()->where('aktif', true)->sortBy('nama');
 
         $years = DB::table('trprogram')
             ->select(DB::raw('YEAR(tanggalmulai) as year'))
@@ -102,7 +103,7 @@ class HomeController extends Controller
         if ($request->tahun) {
             $query->whereHas('program', function ($q) use ($request) {
                 $q->whereYear('tanggalmulai', '<=', $request->tahun)
-                  ->whereYear('tanggalselesai', '>=', $request->tahun);
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
 
@@ -159,7 +160,7 @@ class HomeController extends Controller
         if ($request->tahun) {
             $statsQuery->whereHas('program', function ($q) use ($request) {
                 $q->whereYear('tanggalmulai', '<=', $request->tahun)
-                  ->whereYear('tanggalselesai', '>=', $request->tahun);
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
 

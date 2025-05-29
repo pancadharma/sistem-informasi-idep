@@ -116,7 +116,8 @@
             <select id="programFilter" class="form-control">
                 <option value="">Semua Program</option>
                 @foreach ($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
+                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -183,7 +184,8 @@
                     <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
-                    <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <canvas id="barChart"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
         </div>
@@ -199,7 +201,8 @@
                     <!-- /.card-tools -->
                 </div>
                 <div class="card-body">
-                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <canvas id="pieChart"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                 </div>
             </div>
         </div>
@@ -219,7 +222,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress" width="100%">
+                    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress"
+                        width="100%">
                     </table>
                 </div>
             </div>
@@ -235,7 +239,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="pieChartCanvas" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%"></canvas>
+                    <canvas id="pieChartCanvas"
+                        style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%"></canvas>
                 </div>
             </div>
         </div>
@@ -260,536 +265,606 @@
 @endpush
 
 @push('js')
-@section('plugins.Select2', true)
+    @section('plugins.Select2', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Toastr', true)
-    {{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{-- <script src="/vendor/chart.js/Chart.min.js"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+    integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script>
-        function loadDashboardData() {
-            $.ajax({
-                url: "{{ route('dashboard.data') }}",
-                method: 'GET',
-                data: {
-                    program_id: $('#programFilter').val(),
-                    provinsi_id: $('#provinsiFilter').val(),
-                    tahun: $('#tahunFilter').val()
-                },
-                success: function(data) {
-                    $('#totalSemua').text(data.semua);
-                    $('#totalLaki').text(data.laki);
-                    $('#totalPerempuan').text(data.perempuan);
-                    $('#totalAnakLaki').text(data.anak_laki);
-                    $('#totalAnakPerempuan').text(data.anak_perempuan);
-                    $('#totalDisabilitas').text(data.disabilitas);
-                    $('#totalKeluarga').text(data.keluarga);
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Tidak ada data berdasarkan parameter yang dipilih',
-                        showCloseButton: true,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        showConfirmButton: false,
-                        position: 'top-end',
-                    });
-                    $('#totalSemua').text('0');
-                    $('#totalLaki').text('0');
-                    $('#totalPerempuan').text('0');
-                    $('#totalAnakLaki').text('0');
-                    $('#totalAnakPerempuan').text('0');
-                    $('#totalDisabilitas').text('0');
-                    $('#totalKeluarga').text('0');
-                    console.error('Error fetching data');
-                }
-            });
-        }
-        // Chart Scripts
-        $(document).ready(function () {
-            $('#programFilter, #tahunFilter, #provinsiFilter').select2();
+<script>
+    function loadDashboardData() {
+        $.ajax({
+            url: "{{ route('dashboard.data') }}",
+            method: 'GET',
+            data: {
+                program_id: $('#programFilter').val(),
+                provinsi_id: $('#provinsiFilter').val(),
+                tahun: $('#tahunFilter').val()
+            },
+            success: function(data) {
+                $('#totalSemua').text(data.semua);
+                $('#totalLaki').text(data.laki);
+                $('#totalPerempuan').text(data.perempuan);
+                $('#totalAnakLaki').text(data.anak_laki);
+                $('#totalAnakPerempuan').text(data.anak_perempuan);
+                $('#totalDisabilitas').text(data.disabilitas);
+                $('#totalKeluarga').text(data.keluarga);
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tidak ada data berdasarkan parameter yang dipilih',
+                    showCloseButton: true,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                });
+                $('#totalSemua').text('0');
+                $('#totalLaki').text('0');
+                $('#totalPerempuan').text('0');
+                $('#totalAnakLaki').text('0');
+                $('#totalAnakPerempuan').text('0');
+                $('#totalDisabilitas').text('0');
+                $('#totalKeluarga').text('0');
+                console.error('Error fetching data');
+            }
+        });
+    }
+    // Chart Scripts
+    $(document).ready(function() {
+        $('#programFilter, #tahunFilter, #provinsiFilter').select2();
 
-            let barChart, pieChart;
-            function loadChartData() {
-                const filters = {
-                    provinsi_id: $('#provinsiFilter').val(),
-                    program_id: $('#programFilter').val(),
-                    tahun: $('#tahunFilter').val()
-                };
+        let barChart, pieChart;
 
-                fetch('/dashboard/data/get-desa-chart-data?' + new URLSearchParams(filters))
-                    .then(res => res.json())
-                    .then(data => {
-                        const provinsiLabels = data.map(item => item.provinsi);
-                        const desaCounts = data.map(item => item.total_desa);
+        function loadChartData() {
+            const filters = {
+                provinsi_id: $('#provinsiFilter').val(),
+                program_id: $('#programFilter').val(),
+                tahun: $('#tahunFilter').val()
+            };
 
-                        // Destroy existing charts if they exist
-                        if (barChart) barChart.destroy();
-                        if (pieChart) pieChart.destroy();
+            fetch('/dashboard/data/get-desa-chart-data?' + new URLSearchParams(filters))
+                .then(res => res.json())
+                .then(data => {
+                    const provinsiLabels = data.map(item => item.provinsi);
+                    const desaCounts = data.map(item => item.total_desa);
 
-                        // Create Bar Chart
-                        barChart = new Chart(document.getElementById('barChart'), {
-                            type: 'bar',
-                            data: {
-                                labels: provinsiLabels,
-                                datasets: [{
-                                    label: 'Jumlah Desa Penerima Manfaat',
-                                    data: desaCounts,
-                                    backgroundColor: generateColors(desaCounts.length),
-                                    borderWidth: 2
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { position: 'bottom', display: false },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: (ctx) => `${ctx.raw} Desa`
-                                        }
-                                    }
+                    // Destroy existing charts if they exist
+                    if (barChart) barChart.destroy();
+                    if (pieChart) pieChart.destroy();
+
+                    // Create Bar Chart
+                    barChart = new Chart(document.getElementById('barChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: provinsiLabels,
+                            datasets: [{
+                                label: 'Jumlah Desa Penerima Manfaat',
+                                data: desaCounts,
+                                backgroundColor: generateColors(desaCounts.length),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    display: false
                                 },
-                                scales: {
-                                    y: { beginAtZero: true }
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.raw} Desa`
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
                                 }
                             }
-                        });
+                        }
+                    });
 
-                        // Create Pie Chart
-                        pieChart = new Chart(document.getElementById('pieChart'), {
-                            type: 'pie',
-                            data: {
-                                labels: provinsiLabels,
-                                datasets: [{
-                                    data: desaCounts,
-                                    backgroundColor: generateColors(desaCounts.length),
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: { position: 'right' },
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(ctx) {
-                                                const value = ctx.raw;
-                                                const total = ctx.chart._metasets[ctx.datasetIndex].total;
-                                                const percentage = ((value / total) * 100).toFixed(1);
-                                                return `${ctx.label}: ${value} desa (${percentage}%)`;
-                                            }
+                    // Create Pie Chart
+                    pieChart = new Chart(document.getElementById('pieChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: provinsiLabels,
+                            datasets: [{
+                                data: desaCounts,
+                                backgroundColor: generateColors(desaCounts.length),
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            const value = ctx.raw;
+                                            const total = ctx.chart._metasets[ctx.datasetIndex]
+                                                .total;
+                                            const percentage = ((value / total) * 100).toFixed(
+                                                1);
+                                            return `${ctx.label}: ${value} desa (${percentage}%)`;
                                         }
                                     }
                                 }
                             }
-                        });
-                    })
-                    .catch(error => console.error('Error fetching chart data:', error));
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        // Load initial data
+        loadDashboardData();
+        loadChartData();
+
+        function generateColors(count) {
+            const baseColors = ['#4caf50', '#03a9f4', '#00bcd4', '#e91e63', '#ff9800', '#ff5722', '#9c27b0'];
+            const generatedColors = new Set(baseColors);
+
+            while (generatedColors.size < count) {
+                const randomColor = generateReadableColor();
+                generatedColors.add(randomColor);
             }
 
-            // Load initial data
+            return Array.from(generatedColors).slice(0, count);
+        }
+
+        function generateReadableColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            if (isReadableColor(color)) {
+                return color;
+            } else {
+                return generateReadableColor();
+            }
+        }
+
+        function isReadableColor(color) {
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 50 && brightness < 200;
+        }
+        $('#programFilter, #provinsiFilter, #tahunFilter').change(function() {
             loadDashboardData();
             loadChartData();
+        });
+    });
+</script>
+<!-- prettier-ignore -->
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
 
-            function generateColors(count) {
-                const baseColors = ['#4caf50', '#03a9f4', '#00bcd4', '#e91e63', '#ff9800', '#ff5722', '#9c27b0'];
-                const generatedColors = new Set(baseColors);
+<!-- Google Maps Scripts -->
+<script>
+    let map;
+    let markers = [];
+    let infoWindow;
+    let AdvancedMarkerElement;
 
-                while (generatedColors.size < count) {
-                    const randomColor = generateReadableColor();
-                    generatedColors.add(randomColor);
+    // Global variables for map instances and markers
+    // let leafletMapInstance = null;
+    let googleMapInstance = null;
+    let googleMapMarkers = [];
+    // let leafletMarkerLayerGroup = null; // Use LayerGroup for Leaflet markers
+
+    // Indonesia Center Coordinates
+    const centerLat = -2.711614;
+    const centerLng = 121.631757;
+    const initialZoom = 5;
+
+    // --- STYLE DEFINITION ---
+    const mapStyles = [{ // Hide Points of Interest (businesses, landmarks, etc.)
+            featureType: "poi",
+            elementType: "all",
+            stylers: [{
+                visibility: "off"
+            }],
+        },
+        { // Hide transit lines and icons
+            featureType: "transit",
+            elementType: "all",
+            stylers: [{
+                visibility: "off"
+            }],
+        },
+        { // Hide all road types
+            featureType: "road",
+            elementType: "all",
+            stylers: [{
+                visibility: "off"
+            }],
+        },
+        { // Style water bodies (e.g., oceans, lakes)
+            featureType: "water",
+            elementType: "geometry",
+            stylers: [{
+                    color: "#cccccc"
+                } // Medium gray color for water
+            ],
+        },
+        { // Style landmasses
+            featureType: "landscape",
+            elementType: "geometry",
+            stylers: [{
+                    color: "#e5e5e5"
+                } // Lighter gray for land
+            ],
+        },
+        { // Style administrative boundaries (like country borders)
+            featureType: "administrative.country",
+            elementType: "geometry.stroke",
+            stylers: [{
+                    color: "#ffffff"
+                }, // White or very light border
+                {
+                    weight: 0.5
+                } // Make it thin
+            ],
+        },
+        { // Hide boundaries other than countries (provinces, etc.)
+            featureType: "administrative",
+            elementType: "geometry.stroke",
+            stylers: [
+                // Apply a general rule first to potentially hide others
+                {
+                    visibility: "on"
                 }
-
-                return Array.from(generatedColors).slice(0, count);
-            }
-
-            function generateReadableColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
+            ],
+        },
+        { // Re-apply country border specifically after the general rule
+            featureType: "administrative.country",
+            elementType: "geometry.stroke",
+            stylers: [{
+                    visibility: "on"
+                }, // Ensure it's visible
+                {
+                    color: "#f0f0f0"
+                }, // Light gray border
+                {
+                    weight: 0.6
                 }
-                if (isReadableColor(color)) {
-                    return color;
-                } else {
-                    return generateReadableColor();
-                }
-            }
+            ],
+        },
+        { // Style country labels
+            featureType: "administrative.country",
+            elementType: "labels.text.fill",
+            stylers: [{
+                    color: "#aaaaaa"
+                } // Subtle gray text color
+            ]
+        },
+        {
+            // Style other administrative labels (provinces, cities) - make them subtle or hide
+            featureType: "administrative",
+            elementType: "labels.text.fill",
+            stylers: [{
+                    color: "#c5c5c5"
+                }, // Even more subtle gray, or use visibility: "off" to hide
+                {
+                    visibility: "off"
+                } // Uncomment to hide province/city labels completely
+            ]
+        },
+        {
+            // Hide icons associated with labels (like city dots)
+            featureType: "all",
+            elementType: "labels.icon",
+            stylers: [{
+                visibility: "off"
+            }]
+        },
+        {
+            // General text styling (make strokes invisible for cleaner look)
+            featureType: "all",
+            elementType: "labels.text.stroke",
+            stylers: [{
+                visibility: "off"
+            }]
+        }
 
-            function isReadableColor(color) {
-                const r = parseInt(color.slice(1, 3), 16);
-                const g = parseInt(color.slice(3, 5), 16);
-                const b = parseInt(color.slice(5, 7), 16);
-                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-                return brightness > 50 && brightness < 200;
-            }
-            $('#programFilter, #provinsiFilter, #tahunFilter').change(function () {
-                loadDashboardData();
-                loadChartData();
-            });
+        // Add more rules as needed to fine-tune
+    ];
+    // --- END STYLE DEFINITION ---
+
+    async function initMap() {
+        const {
+            Map
+        } = await google.maps.importLibrary("maps");
+        ({
+            AdvancedMarkerElement
+        } = await google.maps.importLibrary("marker"));
+        // Inisialisasi Peta
+        map = new Map(document.getElementById("map"), {
+            center: {
+                lat: centerLat,
+                lng: centerLng
+            },
+            zoom: initialZoom,
+            // mapId: "YOUR_MAP_ID" // GANTI DENGAN MAP ID
+            styles: mapStyles,
+            // mapTypeId: 'roadmap'
+
         });
 
-    </script>
-    <!-- prettier-ignore -->
-    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-        ({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script>
+        // Inisialisasi InfoWindow
+        infoWindow = new google.maps.InfoWindow();
 
-    <!-- Google Maps Scripts -->
-    <script>
-        let map;
-        let markers = [];
-        let infoWindow;
-        let AdvancedMarkerElement;
+        // Pastikan AdvancedMarkerElement sudah terdefinisi sebelum load marker
+        if (typeof AdvancedMarkerElement === 'undefined') {
+            console.error("Gagal mengimpor AdvancedMarkerElement dari Google Maps Library.");
+            alert("Terjadi masalah saat memuat komponen peta. Silakan refresh halaman.");
+            return;
+        }
+        // Load marker saat peta pertama kali dimuat
+        loadMapMarkers();
+    }
 
-        // Global variables for map instances and markers
-        // let leafletMapInstance = null;
-        let googleMapInstance = null;
-        let googleMapMarkers = [];
-        // let leafletMarkerLayerGroup = null; // Use LayerGroup for Leaflet markers
+    function clearMarkers() {
+        markers.forEach(marker => marker.setMap(null));
+        markers = [];
+    }
 
-        // Indonesia Center Coordinates
-        const centerLat = -2.711614;
-        const centerLng = 121.631757;
-        const initialZoom = 5;
+    function loadMapMarkers() {
+        const provinsiId = $('#provinsiFilter').val();
+        const programId = $('#programFilter').val();
+        const tahun = $('#tahunFilter').val();
 
-        // --- STYLE DEFINITION ---
-        const mapStyles = [
-            { // Hide Points of Interest (businesses, landmarks, etc.)
-                featureType: "poi",
-                elementType: "all",
-                stylers: [{ visibility: "off" }],
-            },
-            { // Hide transit lines and icons
-                featureType: "transit",
-                elementType: "all",
-                stylers: [{ visibility: "off" }],
-            },
-            { // Hide all road types
-                featureType: "road",
-                elementType: "all",
-                stylers: [{ visibility: "off" }],
-            },
-            { // Style water bodies (e.g., oceans, lakes)
-                featureType: "water",
-                elementType: "geometry",
-                stylers: [
-                    { color: "#cccccc" } // Medium gray color for water
-                    ],
-            },
-            { // Style landmasses
-                featureType: "landscape",
-                elementType: "geometry",
-                stylers: [
-                    { color: "#e5e5e5" } // Lighter gray for land
-                ],
-            },
-            { // Style administrative boundaries (like country borders)
-                featureType: "administrative.country",
-                elementType: "geometry.stroke",
-                stylers: [
-                    { color: "#ffffff" }, // White or very light border
-                    { weight: 0.5 }      // Make it thin
-                ],
-            },
-            { // Hide boundaries other than countries (provinces, etc.)
-                featureType: "administrative",
-                elementType: "geometry.stroke",
-                stylers: [
-                    // Apply a general rule first to potentially hide others
-                    { visibility: "on" }
-                ],
-            },
-                { // Re-apply country border specifically after the general rule
-                featureType: "administrative.country",
-                elementType: "geometry.stroke",
-                stylers: [
-                    { visibility: "on" }, // Ensure it's visible
-                    { color: "#f0f0f0" }, // Light gray border
-                    { weight: 0.6 }
-                ],
-            },
-            { // Style country labels
-                featureType: "administrative.country",
-                elementType: "labels.text.fill",
-                stylers: [
-                        { color: "#aaaaaa" } // Subtle gray text color
-                ]
-            },
-            {
-                // Style other administrative labels (provinces, cities) - make them subtle or hide
-                featureType: "administrative",
-                elementType: "labels.text.fill",
-                stylers: [{
-                    color: "#c5c5c5"
-                    }, // Even more subtle gray, or use visibility: "off" to hide
-                    { visibility: "off" } // Uncomment to hide province/city labels completely
-                ]
-            },
-            {
-                // Hide icons associated with labels (like city dots)
-                featureType: "all",
-                elementType: "labels.icon",
-                stylers: [ { visibility: "off" } ]
-            },
-            {
-                // General text styling (make strokes invisible for cleaner look)
-                featureType: "all",
-                elementType: "labels.text.stroke",
-                stylers: [ { visibility: "off" } ]
-            }
+        // Construct URL with route parameter
+        let url = "{{ route('dashboard.api.markers', ['id' => ':id']) }}".replace(':id', provinsiId || '');
 
-            // Add more rules as needed to fine-tune
-        ];
-        // --- END STYLE DEFINITION ---
+        // Add query parameters for program and year
+        const params = new URLSearchParams();
+        if (programId) params.append('program_id', programId);
+        if (tahun) params.append('tahun', tahun);
+        const queryString = params.toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
 
-        async function initMap() {
-            const { Map } = await google.maps.importLibrary("maps");
-            ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-            // Inisialisasi Peta
-            map = new Map(document.getElementById("map"), {
-                center: { lat: centerLat, lng: centerLng },
-                zoom: initialZoom,
-                // mapId: "YOUR_MAP_ID" // GANTI DENGAN MAP ID
-                styles: mapStyles,
-                // mapTypeId: 'roadmap'
+        fetch(url)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                clearMarkers();
+                data.forEach(prov => {
+                    const lat = parseFloat(prov.latitude);
+                    const lng = parseFloat(prov.longitude);
+                    if (isNaN(lat) || isNaN(lng)) {
+                        console.warn(`Koordinat tidak valid untuk ${prov.nama}`);
+                        return;
+                    }
 
+                    const marker = new google.maps.Marker({
+                        position: {
+                            lat,
+                            lng
+                        },
+                        map: map,
+                        title: prov.nama,
+                        gmpClickable: true,
+                    });
+
+                    const infowindow = new google.maps.InfoWindow({
+                        content: generateInfoContent(prov)
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.close();
+                        infowindow.open(map, marker);
+                    });
+
+                    markers.push(marker);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching markers:', error);
             });
+    }
 
-            // Inisialisasi InfoWindow
-            infoWindow = new google.maps.InfoWindow();
+    // reusable function
+    function generateInfoContent(prov) {
+        return `
+                <div style="font-family: sans-serif; font-size: 14px;">
+                    <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
+                    <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
+                    <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
+                </div>`;
+    }
 
-            // Pastikan AdvancedMarkerElement sudah terdefinisi sebelum load marker
-            if (typeof AdvancedMarkerElement === 'undefined') {
-                 console.error("Gagal mengimpor AdvancedMarkerElement dari Google Maps Library.");
-                 alert("Terjadi masalah saat memuat komponen peta. Silakan refresh halaman.");
-                 return;
+    // Jalankan initMap saat dokumen siap
+    $(document).ready(function() {
+        // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
+        if (typeof google === 'object' && typeof google.maps === 'object') {
+            initMap().then(() => {
+                console.log("Peta berhasil diinisialisasi.");
+            }).catch(e => {
+                console.error("Inisialisasi peta gagal:", e);
+                alert(
+                    "Gagal memuat peta. Pastikan koneksi internet Anda stabil dan API Key/Map ID Google Maps valid."
+                );
+            });
+        } else {
+            console.error("Google Maps API script belum termuat.");
+            alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
+        }
+        // Event listeners for filters
+        $('#provinsiFilter').on('change', function() {
+            const selectedProvinsiId = $(this).val();
+            if (selectedProvinsiId && selectedProvinsiId !== "") {
+                loadMapMarkers(selectedProvinsiId);
+            } else {
+                loadMapMarkers();
             }
-            // Load marker saat peta pertama kali dimuat
+        });
+        $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function() {
+            loadDashboardData();
             loadMapMarkers();
+            reloadTableIfValid();
+        });
+
+        // Initialize DataTable
+        const provinsiId = $('#provinsiFilter').val();
+
+        if (provinsiId) {
+            url_ajax = `/dashboard/data/get-data-desa/${provinsiId}`;
+        } else {
+            url_ajax = `/dashboard/data/get-data-desa`;
         }
 
-        function clearMarkers() {
-            markers.forEach(marker => marker.setMap(null));
-            markers = [];
-        }
+        let table = $('#tableDesa').DataTable({
+            processing: true,
+            serverSide: false,
+            paging: true,
+            pageLength: 25,
+            searching: true,
+            ordering: true,
+            responsive: true,
 
-        function loadMapMarkers() {
-            const provinsiId = $('#provinsiFilter').val();
-            const programId = $('#programFilter').val();
+            order: [
+                [1, 'asc']
+            ],
+            lengthMenu: [10, 25, 50, 100],
+            ajax: {
+                url: url_ajax,
+                data: function(d) {
+                    d.program_id = $('#filterProgram').val();
+                    d.tahun = $('#filterTahun').val();
+                },
+                dataSrc: function(json) {
+                    pieChartKabupatenPenerimaManfaat(json.data);
+                    return json.data || [];
+                }
+            },
+            columns: [{
+                    data: 'nama_dusun',
+                    title: '{{ __('cruds.dusun.form.nama') }}'
+                },
+                {
+                    data: 'desa',
+                    title: '{{ __('cruds.dusun.form.des') }}'
+                },
+                {
+                    data: 'kecamatan',
+                    title: '{{ __('cruds.dusun.form.kec') }}'
+                },
+                {
+                    data: 'kabupaten',
+                    title: '{{ __('cruds.dusun.form.kab') }}'
+                },
+                {
+                    data: 'provinsi',
+                    title: '{{ __('cruds.dusun.form.prov') }}'
+                },
+                {
+                    data: 'total_penerima',
+                    title: '{{ __('cruds.dusun.form.total') }}'
+                }
+            ]
+        });
+
+        function reloadTableIfValid() {
+            const provinsi = $('#provinsiFilter').val();
+            const program = $('#programFilter').val();
             const tahun = $('#tahunFilter').val();
 
-            // Construct URL with route parameter
-            let url = "{{ route('dashboard.api.markers', ['id' => ':id']) }}".replace(':id', provinsiId || '');
+            let url = "{{ route('dashboard.provinsi.data.desa', ['id' => ':id']) }}".replace(':id', provinsi ||
+                '');
 
-            // Add query parameters for program and year
             const params = new URLSearchParams();
-            if (programId) params.append('program_id', programId);
+            if (program) params.append('program_id', program);
+
             if (tahun) params.append('tahun', tahun);
             const queryString = params.toString();
             if (queryString) {
                 url += `?${queryString}`;
             }
 
-            fetch(url)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`HTTP error! status: ${res.status}`);
-                    }
-                    return res.json();
-                })
-                .then(data => {
-                    clearMarkers();
-                    data.forEach(prov => {
-                        const lat = parseFloat(prov.latitude);
-                        const lng = parseFloat(prov.longitude);
-                        if (isNaN(lat) || isNaN(lng)) {
-                            console.warn(`Koordinat tidak valid untuk ${prov.nama}`);
-                            return;
-                        }
-
-                        const marker = new google.maps.Marker({
-                            position: { lat, lng },
-                            map: map,
-                            title: prov.nama
-                        });
-
-                        const infowindow = new google.maps.InfoWindow({
-                            content: generateInfoContent(prov)
-                        });
-
-                        marker.addListener('click', () => {
-                            infowindow.open(map, marker);
-                        });
-
-                        markers.push(marker);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching markers:', error);
-                });
+            if (program || tahun || provinsi) {
+                table.ajax.url(url).load();
+            } else {
+                table.ajax.url(url_ajax).load();
+            }
         }
 
-        // reusable function
-        function generateInfoContent(prov) {
-            return `
-                <div style="font-family: sans-serif; font-size: 14px;">
-                    <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
-                    <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
-                    <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
-                </div>`
-            ;
-        }
+        // pie chart kabupaten
+        function pieChartKabupatenPenerimaManfaat(data) {
+            const kabupatenTotals = {};
 
-        // Jalankan initMap saat dokumen siap
-        $(document).ready(function () {
-            // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
-            if (typeof google === 'object' && typeof google.maps === 'object') {
-                initMap().then(() => {
-                    console.log("Peta berhasil diinisialisasi.");
-                }).catch(e => {
-                    console.error("Inisialisasi peta gagal:", e);
-                    alert("Gagal memuat peta. Pastikan koneksi internet Anda stabil dan API Key/Map ID Google Maps valid.");
-                });
-            } else {
-                console.error("Google Maps API script belum termuat.");
-                alert("Gagal memuat script Google Maps. Periksa koneksi internet dan konfigurasi API Anda.");
-            }
-            // Event listeners for filters
-            $('#provinsiFilter').on('change', function () {
-                const selectedProvinsiId = $(this).val();
-                if (selectedProvinsiId && selectedProvinsiId !== "") {
-                     loadMapMarkers(selectedProvinsiId);
-                } else {
-                     loadMapMarkers();
+            data.forEach(row => {
+                const kabupaten = row.kabupaten || 'Lainnya';
+                if (!kabupatenTotals[kabupaten]) {
+                    kabupatenTotals[kabupaten] = 0;
                 }
-            });
-            $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function () {
-                loadDashboardData();
-                loadMapMarkers();
-                reloadTableIfValid();
+                kabupatenTotals[kabupaten] += row.total_penerima;
             });
 
-            // Initialize DataTable
-            const provinsiId = $('#provinsiFilter').val();
+            const labels = Object.keys(kabupatenTotals);
+            const values = Object.values(kabupatenTotals);
 
-            if (provinsiId) {
-                url_ajax = `/dashboard/data/get-data-desa/${provinsiId}`;
-            } else {
-                url_ajax = `/dashboard/data/get-data-desa`;
+            const total = values.reduce((a, b) => a + b, 0);
+            const colors = [
+                '#666', '#673ab7', '#ff9800', '#4caf50', '#00bcd4',
+                '#9c27b0', '#ff1744', '#ffee00', '#ffb300', '#ff5722'
+            ];
+
+            const percentages = values.map(v => ((v / total) * 100).toFixed(1) + '%');
+
+            const chartData = {
+                labels: labels.map((l, i) => `${l} (${percentages[i]})`),
+                datasets: [{
+                    data: values,
+                    backgroundColor: colors.slice(0, values.length),
+                }]
+            };
+
+            if (window.pieChart instanceof Chart) {
+                window.pieChart.destroy();
             }
 
-            let table = $('#tableDesa').DataTable({
-                processing: true,
-                serverSide: false,
-                paging: true,
-                pageLength: 25,
-                searching: true,
-                ordering: true,
-                responsive: true,
-
-                order: [[1, 'asc']],
-                lengthMenu: [10, 25, 50, 100],
-                ajax: {
-                    url: url_ajax,
-                    data: function (d) {
-                        d.program_id = $('#filterProgram').val();
-                        d.tahun = $('#filterTahun').val();
-                    },
-                    dataSrc: function (json) {
-                        pieChartKabupatenPenerimaManfaat(json.data);
-                        return json.data || [];
-                    }
-                },
-                columns: [
-                    { data: 'nama_dusun', title: '{{ __("cruds.dusun.form.nama") }}' },
-                    { data: 'desa', title: '{{ __("cruds.dusun.form.des") }}' },
-                    { data: 'kecamatan', title: '{{ __("cruds.dusun.form.kec") }}' },
-                    { data: 'kabupaten', title: '{{ __("cruds.dusun.form.kab") }}' },
-                    { data: 'provinsi', title: '{{ __("cruds.dusun.form.prov") }}' },
-                    { data: 'total_penerima', title: '{{ __("cruds.dusun.form.total") }}' }
-                ]
-            });
-
-             function reloadTableIfValid() {
-                const provinsi = $('#provinsiFilter').val();
-                const program = $('#programFilter').val();
-                const tahun = $('#tahunFilter').val();
-
-                let url = "{{ route('dashboard.provinsi.data.desa', ['id' => ':id']) }}".replace(':id', provinsi || '');
-
-                const params = new URLSearchParams();
-                if (program) params.append('program_id', program);
-
-                if (tahun) params.append('tahun', tahun);
-                const queryString = params.toString();
-                if (queryString) {
-                    url += `?${queryString}`;
-                }
-
-                if (program || tahun || provinsi) {
-                    table.ajax.url(url).load();
-                } else {
-                    table.ajax.url(url_ajax).load();
-                }
-            }
-
-            // pie chart kabupaten
-            function pieChartKabupatenPenerimaManfaat(data) {
-                const kabupatenTotals = {};
-
-                data.forEach(row => {
-                    const kabupaten = row.kabupaten || 'Lainnya';
-                    if (!kabupatenTotals[kabupaten]) {
-                        kabupatenTotals[kabupaten] = 0;
-                    }
-                    kabupatenTotals[kabupaten] += row.total_penerima;
-                });
-
-                const labels = Object.keys(kabupatenTotals);
-                const values = Object.values(kabupatenTotals);
-
-                const total = values.reduce((a, b) => a + b, 0);
-                const colors = [
-                    '#666', '#673ab7', '#ff9800', '#4caf50', '#00bcd4',
-                    '#9c27b0', '#ff1744', '#ffee00', '#ffb300', '#ff5722'
-                ];
-
-                const percentages = values.map(v => ((v / total) * 100).toFixed(1) + '%');
-
-                const chartData = {
-                    labels: labels.map((l, i) => `${l} (${percentages[i]})`),
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colors.slice(0, values.length),
-                    }]
-                };
-
-                if (window.pieChart instanceof Chart) {
-                    window.pieChart.destroy();
-                }
-
-                const ctx = document.getElementById('pieChartCanvas').getContext('2d');
-                window.pieChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: chartData,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'right' },
-                            tooltip: { callbacks: {
-                                label: function (context) {
+            const ctx = document.getElementById('pieChartCanvas').getContext('2d');
+            window.pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
                                     return context.label;
                                 }
-                            }}
+                            }
                         }
                     }
-                });
-            }
-            reloadTableIfValid();
-        });
-    </script>
-
-
+                }
+            });
+        }
+        reloadTableIfValid();
+    });
+</script>
 @endpush
