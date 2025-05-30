@@ -38,7 +38,9 @@ class HomeController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        return view('home', compact('programs', 'provinsis', 'years'));
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+
+        return view('home', compact('programs', 'provinsis', 'years', 'googleMapsApiKey'));
     }
     function getDashboardData(Request $request)
     {
@@ -82,6 +84,108 @@ class HomeController extends Controller
     /* updated method to Add filter parameters (provinsi_id, program_id, tahun) to the method
        Users can analyze data more deeply by combining filters, which is valuable for a dashboard’s purpose
     */
+    // public function getDesaPerProvinsiChartData(Request $request)
+    // {
+    //     $query = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
+    //         ->whereNull('deleted_at');
+
+    //     // Apply province filter
+    //     if ($request->provinsi_id) {
+    //         $query->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($q) use ($request) {
+    //             $q->where('id', $request->provinsi_id);
+    //         });
+    //     }
+
+    //     // Apply program filter
+    //     if ($request->program_id) {
+    //         $query->where('program_id', $request->program_id);
+    //     }
+
+    //     // Apply year filter
+    //     if ($request->tahun) {
+    //         $query->whereHas('program', function ($q) use ($request) {
+    //             $q->whereYear('tanggalmulai', '<=', $request->tahun)
+    //                 ->whereYear('tanggalselesai', '>=', $request->tahun);
+    //         });
+    //     }
+
+    //     $data = $query->get()
+    //         ->groupBy(function ($item) {
+    //             return optional($item->dusun?->desa?->kecamatan?->kabupaten?->provinsi)->nama;
+    //         })
+    //         ->map(function ($group) {
+    //             $uniqueDesa = $group->pluck('dusun.desa.id')->unique()->count();
+    //             return [
+    //                 'total_desa' => $uniqueDesa,
+    //             ];
+    //         })
+    //         ->filter(fn($v, $k) => !is_null($k))
+    //         ->sortByDesc('total_desa')
+    //         ->map(function ($item, $provinsi) {
+    //             return [
+    //                 'provinsi'    => $provinsi,
+    //                 'total_desa'  => $item['total_desa'],
+    //             ];
+    //         })
+    //         ->values();
+
+    //     return response()->json($data);
+    // }
+    // //
+    // //
+    // //
+
+    // public function getFilteredProvinsi(Request $request, $id = null)
+    // {
+    //     // Fetch province data
+    //     $query = Provinsi::query();
+    //     if ($id) {
+    //         $query->where('id', $id);
+    //     }
+    //     $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
+
+    //     // Build the stats query
+    //     $statsQuery = Meals_Penerima_Manfaat::query()
+    //         ->whereNull('trmeals_penerima_manfaat.deleted_at')
+    //         ->join('dusun', 'trmeals_penerima_manfaat.dusun_id', '=', 'dusun.id')
+    //         ->join('kelurahan', 'dusun.desa_id', '=', 'kelurahan.id')
+    //         ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id')
+    //         ->join('kabupaten', 'kecamatan.kabupaten_id', '=', 'kabupaten.id')
+    //         ->join('provinsi', 'kabupaten.provinsi_id', '=', 'provinsi.id');
+
+    //     // Apply program filter
+    //     if ($request->program_id) {
+    //         $statsQuery->where('trmeals_penerima_manfaat.program_id', $request->program_id);
+    //     }
+
+    //     // Apply year filter
+    //     if ($request->tahun) {
+    //         $statsQuery->whereHas('program', function ($q) use ($request) {
+    //             $q->whereYear('tanggalmulai', '<=', $request->tahun)
+    //                 ->whereYear('tanggalselesai', '>=', $request->tahun);
+    //         });
+    //     }
+
+    //     $stats = $statsQuery
+    //         ->select(
+    //             'provinsi.id as provinsi_id',
+    //             DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
+    //             DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
+    //         )
+    //         ->groupBy('provinsi.id')
+    //         ->get()
+    //         ->keyBy('provinsi_id');
+
+    //     // Attach stats to province list
+    //     $provinsiList->each(function ($provinsi) use ($stats) {
+    //         $stat = $stats->get($provinsi->id);
+    //         $provinsi->total_desa = $stat ? (int) $stat->total_desa : 0;
+    //         $provinsi->total_penerima = $stat ? (int) $stat->total_penerima : 0;
+    //     });
+
+    //     return response()->json($provinsiList);
+    // }
+
     public function getDesaPerProvinsiChartData(Request $request)
     {
         $query = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
@@ -129,20 +233,19 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
-    //
-    //
-    //
 
     public function getFilteredProvinsi(Request $request, $id = null)
     {
         // Fetch province data
         $query = Provinsi::query();
         if ($id) {
+            // If an ID is provided, fetch only that province (for specific filtering)
             $query->where('id', $id);
         }
+        // Select necessary columns (id, nama, latitude, longitude)
         $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
 
-        // Build the stats query
+        // Build the stats query for beneficiaries and desa, joining through geographic tables
         $statsQuery = Meals_Penerima_Manfaat::query()
             ->whereNull('trmeals_penerima_manfaat.deleted_at')
             ->join('dusun', 'trmeals_penerima_manfaat.dusun_id', '=', 'dusun.id')
@@ -167,16 +270,19 @@ class HomeController extends Controller
         $stats = $statsQuery
             ->select(
                 'provinsi.id as provinsi_id',
+                // Count distinct desa (kelurahan) IDs where beneficiaries exist
                 DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
+                // Count total beneficiaries
                 DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
             )
             ->groupBy('provinsi.id')
             ->get()
-            ->keyBy('provinsi_id');
+            ->keyBy('provinsi_id'); // Key by provinsi_id for easy lookup
 
-        // Attach stats to province list
+        // Attach stats to the province list
         $provinsiList->each(function ($provinsi) use ($stats) {
             $stat = $stats->get($provinsi->id);
+            // Assign 0 if no stats found for a province, otherwise cast to int
             $provinsi->total_desa = $stat ? (int) $stat->total_desa : 0;
             $provinsi->total_penerima = $stat ? (int) $stat->total_penerima : 0;
         });
