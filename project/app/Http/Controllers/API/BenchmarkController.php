@@ -50,12 +50,13 @@ class BenchmarkController extends Controller
             ->addIndexColumn()
             ->editColumn('tanggalimplementasi', function ($item) {
                 return Carbon::parse($item->tanggalimplementasi)->format('d-m-Y');
+            })->editColumn('score', function($item) {
+                return is_numeric($item->score) ? $item->score : null; 
             })
             ->addColumn('program', fn($item) => $item->program->nama ?? 'N/A')
             ->addColumn('jenisKegiatan', fn($item) => $item->jeniskegiatan->nama ?? 'N/A')
             ->addColumn('kegiatan', fn($item) => $item->kegiatan->programOutcomeOutputActivity->nama ?? 'N/A')
             ->addColumn('compiler', fn($item) => $item->user_compiler->name ?? 'N/A')
-            ->addColumn('score', fn($item) => $item->score ?? 'N/A')
             ->addColumn('action', function ($benchmark) {
                 $buttons = [];
 
