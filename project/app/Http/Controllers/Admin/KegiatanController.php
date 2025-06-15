@@ -353,9 +353,12 @@ class KegiatanController extends Controller
                     ->where('kabupaten_id', $kabupatenId)
                     ->get();
 
+                //each desa_id might have different kecamatan and the desa list should not depend to kecamatanID instead in this , kecamartan list should depend on desa_id at kegiatan_lokasi while merge with master kecamatan depend on kabupaten_id
                 $desaList = Kelurahan::select('id', 'nama')
                     ->where('kecamatan_id', $kecamatanId)
                     ->get();
+                // Kegiatan_Lokasi::with('desa.kecamatan')->where('kegiatan_id', $kegiatan->id)->get();
+                //');
             }
         }
 
@@ -380,7 +383,7 @@ class KegiatanController extends Controller
         //     $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
         // }
 
-        // return $kegiatan->lokasi;
+        // return $desaList;
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',

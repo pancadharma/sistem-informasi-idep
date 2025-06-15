@@ -370,7 +370,7 @@
                                                         data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
                                                         @foreach ($desaList as $desa)
                                                             <option value="{{ $desa->id }}"
-                                                                {{ old('desa_id', $item->desa_id ?? '') == $desa['id'] ? 'selected' : '' }}>
+                                                                {{ old('desa_id', $item->desa->id ?? '') == $desa['id'] ? 'selected' : '' }}>
                                                                 {{ $desa->nama }}
                                                             </option>
                                                         @endforeach
