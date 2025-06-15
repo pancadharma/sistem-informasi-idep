@@ -344,23 +344,27 @@
                                     </div>
                                     <!--Input Kelurahan dan Kecamatan-->
                                     <div class="list-lokasi-kegiatan">
+
+
+
                                         @forelse ($kegiatan->lokasi as $item)
-                                            <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
+                                            <div class="form-group row lokasi-kegiatan"
+                                                data-unique-id="{{ $item->id }}">
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
-                                                    <select name="kecamatan_id[]" id="kecamatan_id"
+                                                    <select name="kecamatan_id[]" id="kecamatan_id-{{ $item->id }}"
                                                         class="form-control select2"
                                                         data-api-url="{{ route('api.kegiatan.kecamatan') }}"
                                                         data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.kecamatan.title') }}">
                                                         @foreach ($kecamatanList as $kecamatan)
                                                             <option value="{{ $kecamatan->id }}"
-                                                                {{ old('kecamatan_id', $item->kecamatan_id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
+                                                                {{ old('kecamatan_id', $item->desa->kecamatan->id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
                                                                 {{ $kecamatan->nama }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
-                                                    <select name="kelurahan_id[]" id="kelurahan_id"
+                                                    <select name="kelurahan_id[]" id="kelurahan_id-{{ $item->id }}"
                                                         class="form-control select2"
                                                         data-api-url="{{ route('api.kegiatan.desa') }}"
                                                         data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
@@ -375,12 +379,13 @@
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
                                                     <input type="text"
                                                         placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}"
-                                                        class="form-control lokasi-input" id="lokasi" name="lokasi[]"
+                                                        class="form-control lokasi-input"
+                                                        id="lokasi-{{ $item->id }}" name="lokasi[]"
                                                         value="{{ old('lokasi', $item->lokasi ?? '') }}">
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
                                                     <input type="text" class="form-control lat-input"
-                                                        id="lat-${uniqueId}" name="lat[]"
+                                                        id="lat-{{ $item->id }}" name="lat[]"
                                                         placeholder="{{ __('cruds.kegiatan.basic.lat') }}"
                                                         value="{{ old('lat', $item->lat ?? '') }}">
                                                 </div>
@@ -388,7 +393,7 @@
                                                 <div
                                                     class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
                                                     <input type="text" class="form-control lang-input flex-grow-1"
-                                                        id="long-${uniqueId}" name="long[]"
+                                                        id="long-{{ $item->id }}" name="long[]"
                                                         placeholder="{{ __('cruds.kegiatan.basic.long') }}"
                                                         value="{{ old('lat', $item->long ?? '') }}">
                                                     <button type="button"
@@ -1566,8 +1571,8 @@
 
         formData.locations.forEach(location => {
             html += '<tr>';
-            html += `<td>${location.kecamatan_text || '-'}</td>`;
-            html += `<td>${location.desa_text || '-'}</td>`;
+            html += `<td>${location.kecamatan_text || '-'} - ${location.kecamatan_id || '-'}</td>`;
+            html += `<td>${location.desa_text || '-'} - ${location.desa_id || '-'}</td>`;
             html += `<td>${location.lokasi || '-'}</td>`;
             html += `<td>${location.lat || '-'}</td>`;
             html += `<td>${location.long || '-'}</td>`;
