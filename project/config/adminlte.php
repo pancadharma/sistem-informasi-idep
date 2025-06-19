@@ -371,10 +371,6 @@ return [
                     'active'    => ['prepost', 'prepost*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
-                    'url' => '#',
-                    'text' => 'Hehe',
-                ],
-                [
                     'text'      => 'target_progress',
                     'icon'      => 'nav-icon bi bi-bar-chart-steps',
                     'icon_text' => 'monitoring',

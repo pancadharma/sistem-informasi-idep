@@ -304,6 +304,19 @@ class KegiatanController extends Controller
             'jenisKegiatan',
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
+
+            'kegiatan_penulis.user',
+            'assessment',
+            'sosialisasi',
+            'pelatihan',
+            'pembelanjaan',
+            'pengembangan',
+            'kampanye',
+            'pemetaan',
+            'monitoring',
+            'kunjungan',
+            'konsultasi',
+            'lainnya'
         ])->findOrFail($id);
         $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
         $ProvinsiList = Provinsi::select('id', 'nama')->get();
@@ -313,21 +326,64 @@ class KegiatanController extends Controller
         $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
         $statusOptions = Kegiatan::STATUS_SELECT;
 
+        $kabupatenList = collect([]);
+        $kecamatanList = collect([]);
+        $desaList = collect([]);
+
+        // Process location data if exists
+        if (!$kegiatan->lokasi->isEmpty()) {
+            // Get the first location for initial dropdown population
+            $firstLokasi = $kegiatan->lokasi->first();
+
+            if (
+                $firstLokasi && $firstLokasi->desa && $firstLokasi->desa->kecamatan &&
+                $firstLokasi->desa->kecamatan->kabupaten && $firstLokasi->desa->kecamatan->kabupaten->provinsi
+            ) {
+
+                $provinsiId = $firstLokasi->desa->kecamatan->kabupaten->provinsi->id;
+                $kabupatenId = $firstLokasi->desa->kecamatan->kabupaten->id;
+                $kecamatanId = $firstLokasi->desa->kecamatan->id;
+
+                // Load location hierarchies for all locations
+                $kabupatenList = Kabupaten::select('id', 'nama')
+                    ->where('provinsi_id', $provinsiId)
+                    ->get();
+
+                $kecamatanList = Kecamatan::select('id', 'nama')
+                    ->where('kabupaten_id', $kabupatenId)
+                    ->get();
+
+                //each desa_id might have different kecamatan and the desa list should not depend to kecamatanID instead in this , kecamartan list should depend on desa_id at kegiatan_lokasi while merge with master kecamatan depend on kabupaten_id
+                $desaList = Kelurahan::select('id', 'nama')
+                    ->where('kecamatan_id', $kecamatanId)
+                    ->get();
+                // Kegiatan_Lokasi::with('desa.kecamatan')->where('kegiatan_id', $kegiatan->id)->get();
+                //');
+            }
+        }
+
         foreach ($kegiatan->lokasi as $lokasi) {
+            $lokasi->desa = Kelurahan::find($lokasi->desa_id);
             $lokasi->kecamatan = Kecamatan::find($lokasi->desa->kecamatan_id);
             $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan->kabupaten_id);
             $lokasi->provinsi = Provinsi::find($lokasi->desa->kecamatan->kabupaten->provinsi_id);
         }
-        if (!$kegiatan->lokasi->isEmpty()) {
-            $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $lokasi->provinsi->id)->get();
-            $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
-            $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
-        }
+        // if (!$kegiatan->lokasi->isEmpty()) {
+        //     $provinsiId = $lokasi->desa->kecamatan->kabupaten->provinsi->id;
+        //     // $kabupatenId = $lokasi->desa->kecamatan->kabupaten->id;
+        //     // $kecamatanId = $lokasi->desa->kecamatan->id;
+        //     // $desaId = $lokasi->desa->id;
 
-        $kabupatenList = [];
-        $kecamatanList = [];
-        $desaList = [];
+        //     // $ProvinsiList = Provinsi::select('id', 'nama')->where('id', $provinsiId)->get();
+        //     // $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();  
+        //     // $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $kabupatenId)->get();
+        //     // $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $kecamatanId)->get();
+        //     $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();
+        //     $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
+        //     $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
+        // }
 
+        // return $desaList;
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
@@ -340,6 +396,125 @@ class KegiatanController extends Controller
         ));
     }
 
+
+
+    // public function edit($id)
+    // {
+    //     // Load kegiatan with all necessary relationships
+    //     $kegiatan = Kegiatan::with([
+    //         'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
+    //         'sektor',
+    //         'mitra',
+    //         'user',
+    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
+    //         'jenisKegiatan',
+    //         'lokasi_kegiatan',
+    //         'kegiatan_penulis.peran',
+    //         'kegiatan_penulis.user',
+    //         // Load the specific relationship based on jenis kegiatan
+    //         'assessment',
+    //         'sosialisasi',
+    //         'pelatihan',
+    //         'pembelanjaan',
+    //         'pengembangan',
+    //         'kampanye',
+    //         'pemetaan',
+    //         'monitoring',
+    //         'kunjungan',
+    //         'konsultasi',
+    //         'lainnya'
+    //     ])->findOrFail($id);
+
+    //     // Format dates for form display
+    //     $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+    //     $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
+
+    //     // Get all necessary dropdown data
+    //     $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+    //     $ProvinsiList = Provinsi::select('id', 'nama')->get();
+    //     $sektorList = TargetReinstra::select('id', 'nama')->get();
+    //     $statusOptions = Kegiatan::STATUS_SELECT;
+    //     $peranList = Peran::select('id', 'nama')->get();
+
+    //     // Initialize location lists
+    //     $kabupatenList = collect([]);
+    //     $kecamatanList = collect([]);
+    //     $desaList = collect([]);
+
+    //     // Process location data if exists
+    //     if (!$kegiatan->lokasi->isEmpty()) {
+    //         // Get the first location for initial dropdown population
+    //         $firstLokasi = $kegiatan->lokasi->first();
+
+    //         if (
+    //             $firstLokasi && $firstLokasi->desa && $firstLokasi->desa->kecamatan &&
+    //             $firstLokasi->desa->kecamatan->kabupaten && $firstLokasi->desa->kecamatan->kabupaten->provinsi
+    //         ) {
+
+    //             $provinsiId = $firstLokasi->desa->kecamatan->kabupaten->provinsi->id;
+    //             $kabupatenId = $firstLokasi->desa->kecamatan->kabupaten->id;
+    //             $kecamatanId = $firstLokasi->desa->kecamatan->id;
+
+    //             // Load location hierarchies for all locations
+    //             $kabupatenList = Kabupaten::select('id', 'nama')
+    //                 ->where('provinsi_id', $provinsiId)
+    //                 ->get();
+
+    //             $kecamatanList = Kecamatan::select('id', 'nama')
+    //                 ->where('kabupaten_id', $kabupatenId)
+    //                 ->get();
+
+    //             $desaList = Kelurahan::select('id', 'nama')
+    //                 ->where('kecamatan_id', $kecamatanId)
+    //                 ->get();
+    //         }
+    //     }
+
+    //     // Get media collections
+    //     $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+    //     $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+
+    //     // Get specific relation based on jenis kegiatan
+    //     $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+    //     $relationMap = Kegiatan::getJenisKegiatanRelationMap();
+
+    //     $kegiatanRelation = null;
+    //     if (isset($relationMap[$jenisKegiatanId])) {
+    //         $relationName = $relationMap[$jenisKegiatanId];
+    //         $kegiatanRelation = $kegiatan->$relationName;
+    //     }
+
+    //     // Get authors with their roles
+    //     $penulisList = User::select('id', 'nama')->get();
+
+    //     // Prepare data for penulis tab
+    //     $penulisData = $kegiatan->kegiatan_penulis->map(function ($item) {
+    //         return [
+    //             'penulis_id' => $item->penulis_id,
+    //             'peran_id' => $item->peran_id,
+    //             'user' => $item->user,
+    //             'peran' => $item->peran
+    //         ];
+    //     });
+
+    //     // Return view with all necessary data
+    //     return view('tr.kegiatan.edit', compact(
+    //         'kegiatan',
+    //         'statusOptions',
+    //         'jenisKegiatanList',
+    //         'sektorList',
+    //         'ProvinsiList',
+    //         'kabupatenList',
+    //         'kecamatanList',
+    //         'desaList',
+    //         'dokumenPendukung',
+    //         'mediaPendukung',
+    //         'kegiatanRelation',
+    //         'penulisList',
+    //         'peranList',
+    //         'penulisData'
+    //     ));
+    // }
 
     public function update(Request $request, $id)
     {

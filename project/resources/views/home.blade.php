@@ -549,36 +549,6 @@
             }
         });
 
-        // $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function() {
-        //     loadDashboardData(); // Update statistics
-        //     loadChartData(); // Update charts
-        //     reloadTableIfValid(); // Reload data table
-
-        //     const selectedProvinsiId = $('#provinsiFilter').val();
-        //     if (selectedProvinsiId && selectedProvinsiId !== "") {
-        //         // Find the selected province's lat/lng from the Blade-rendered options
-        //         const selectedOption = $('#provinsiFilter option:selected');
-        //         const lat = parseFloat(selectedOption.data('lat'));
-        //         const lng = parseFloat(selectedOption.data('lng'));
-
-        //         if (!isNaN(lat) && !isNaN(lng)) {
-        //             map.setCenter({
-        //                 lat: lat,
-        //                 lng: lng
-        //             });
-        //             map.setZoom(PROVINCE_ZOOM_THRESHOLD); // Zoom to province level
-        //         }
-        //     } else {
-        //         // If "Semua Provinsi" is selected, reset to initial Indonesia view
-        //         map.setCenter({
-        //             lat: centerLat,
-        //             lng: centerLng
-        //         });
-        //         map.setZoom(initialZoom);
-        //     }
-        //     loadMapMarkers(); // Reload map markers after potential center/zoom change
-        // });
-
         $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function() {
             loadDashboardData();
             loadChartData();
@@ -664,7 +634,7 @@
                 },
                 {
                     data: 'total_penerima',
-                    title: '{{ __('cruds.dusun.form.total') }}'
+                    title: '{{ __('Total') }}'
                 }
             ]
         });
@@ -861,50 +831,6 @@
     ];
     // --- END STYLE DEFINITION ---
 
-    // async function initMap() {
-    //     const {
-    //         Map
-    //     } = await google.maps.importLibrary("maps");
-    //     ({
-    //         AdvancedMarkerElement
-    //     } = await google.maps.importLibrary("marker")); // Correctly import AdvancedMarkerElement
-
-    //     map = new Map(document.getElementById("map"), {
-    //         center: {
-    //             lat: centerLat,
-    //             lng: centerLng
-    //         },
-    //         zoom: initialZoom,
-    //         mapId: "7e7fb1bfd929ec61", // Uncomment and replace if you have a custom Map ID
-    //         // styles: mapStyles,
-    //     });
-
-    //     infoWindow = new google.maps.InfoWindow();
-
-    //     // Add listener for zoom changes to re-load markers dynamically
-    //     map.addListener('zoom_changed', () => {
-    //         console.log('Zoom changed to:', map.getZoom());
-    //         loadMapMarkers(); // Re-load markers based on new zoom level
-    //     });
-
-    //     // Check if AdvancedMarkerElement is defined before proceeding
-    //     if (typeof AdvancedMarkerElement === 'undefined') {
-    //         console.error("Failed to import AdvancedMarkerElement from Google Maps Library.");
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Gagal memuat komponen peta',
-    //             text: 'Terjadi masalah saat memuat peta. Silakan refresh halaman.',
-    //             timer: 5000,
-    //             timerProgressBar: true,
-    //             showConfirmButton: false,
-    //             position: 'top-end',
-    //         });
-    //         return;
-    //     }
-
-    //     // Load initial markers when map is ready
-    //     loadMapMarkers();
-    // }
     async function initMap() {
         const {
             Map
@@ -965,130 +891,6 @@
         }
         markers = [];
     }
-
-    //
-    // async function loadMapMarkers() { // Made async because we might fetch data
-    //     const programId = $('#programFilter').val();
-    //     const tahun = $('#tahunFilter').val();
-    //     const provinsiId = $('#provinsiFilter').val(); // Selected province ID
-    //     const currentZoom = map.getZoom();
-
-    //     let apiUrl;
-    //     let params = new URLSearchParams();
-
-    //     // Always apply program and year filters
-    //     if (programId) params.append('program_id', programId);
-    //     if (tahun) params.append('tahun', tahun);
-
-    //     let isDusunMarkerContext = false; // Flag to indicate if the current API call is for dusun data
-
-    //     if (provinsiId && provinsiId !== "") {
-    //         // If a specific province is selected
-    //         if (currentZoom >= DETAIL_ZOOM_THRESHOLD) {
-    //             // Zoomed in enough, fetch detailed dusun data
-    //             apiUrl = `{{ route('dashboard.api.markers.provinsi', ['id' => ':id']) }}`.replace(':id',
-    //                 provinsiId);
-    //             isDusunMarkerContext = true; // Set flag
-    //         } else {
-    //             // Not zoomed in enough, show province-level marker for the selected province
-    //             apiUrl = `{{ route('dashboard.api.markers', ['id' => ':id']) }}`.replace(':id', provinsiId);
-    //             isDusunMarkerContext = false; // Set flag
-    //         }
-    //     } else {
-    //         // No specific province selected, show all province-level markers
-    //         apiUrl = `{{ route('dashboard.api.markers') }}`; // No ID needed for all provinces
-    //         isDusunMarkerContext = false; // Set flag
-    //     }
-
-    //     // Append common parameters
-    //     const queryString = params.toString();
-    //     if (queryString) {
-    //         apiUrl += `?${queryString}`;
-    //     }
-
-    //     console.log("Fetching map data from:", apiUrl);
-
-    //     try {
-    //         const response = await fetch(apiUrl);
-    //         if (!response.ok) {
-    //             throw new Error(`HTTP error! status: ${response.status}`);
-    //         }
-    //         const data = await response.json();
-
-    //         clearMarkers();
-    //         if (!data || data.length === 0) {
-    //             console.log("No map data received for current filters/zoom.");
-    //             // Optionally display a message on the map or console
-    //             return;
-    //         }
-
-    //         data.forEach(item => {
-    //             const lat = parseFloat(item.latitude || item
-    //                 .lat); // Handle both 'latitude' (province) and 'lat' (dusun)
-    //             const lng = parseFloat(item.longitude || item
-    //                 .long); // Handle both 'longitude' (province) and 'long' (dusun)
-
-    //             if (isNaN(lat) || isNaN(lng)) {
-    //                 console.warn(`Koordinat tidak valid untuk ${item.nama || item.desa_name || 'item'}:`,
-    //                     item);
-    //                 return;
-    //             }
-
-    //             let marker;
-    //             let infoContent;
-
-    //             if (isDusunMarkerContext) {
-    //                 // Create AdvancedMarkerElement for dusun data (bubbles)
-    //                 const markerContent = createBubbleMarkerContent(item);
-    //                 marker = new AdvancedMarkerElement({
-    //                     position: {
-    //                         lat,
-    //                         lng
-    //                     },
-    //                     map: map,
-    //                     title: item.nama || item.desa_name ||
-    //                         'Dusun', // Use appropriate name for tooltip
-    //                     content: markerContent,
-    //                 });
-    //                 infoContent = generateDetailedInfoContent(item); // For dusun markers
-    //             } else {
-    //                 // Create standard google.maps.Marker for province data (red pin)
-    //                 marker = new google.maps.Marker({
-    //                     position: {
-    //                         lat,
-    //                         lng
-    //                     },
-    //                     map: map,
-    //                     title: item.nama || 'Provinsi', // Use appropriate name for tooltip
-    //                     // No 'icon' property means default red pin
-    //                 });
-    //                 infoContent = generateProvinceInfoContent(item); // For province markers
-    //             }
-
-    //             // Attach info window listener to the created marker
-    //             marker.addListener('click', () => {
-    //                 infoWindow.close(); // Close any currently open info window
-    //                 infoWindow.setContent(infoContent);
-    //                 infoWindow.open(map, marker);
-    //             });
-
-    //             markers.push(marker);
-    //         });
-    //         console.log(`Added ${markers.length} markers.`);
-
-    //     } catch (error) {
-    //         console.error('Error fetching markers:', error);
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Gagal memuat data lokasi',
-    //             text: 'Terjadi kesalahan saat mengambil data peta. Silakan coba lagi.',
-    //             timer: 3000,
-    //             timerProgressBar: true,
-    //             showConfirmButton: false,
-    //             position: 'top-end',
-    //         });
-    //     }
-    // }
 
     async function loadMapMarkers() {
         const programId = $('#programFilter').val();
@@ -1272,15 +1074,6 @@
 
         return element;
     }
-
-    // function generateProvinceInfoContent(item) {
-    //     return `
-    //             <div style="font-family: sans-serif; font-size: 14px;">
-    //                 <h4 style="margin: 0 0 5px 0;">${item.nama || 'Provinsi'}</h4>
-    //                 <p style="margin: 0;">🧩Desa Penerima Manfaat: <strong>${item.total_desa || 0}</strong> Desa </p>
-    //                 <p style="margin: 0;">👥Total Penerima: <strong>${item.total_penerima || 0}</strong> Orang</p>
-    //             </div>`;
-    // }
 
     // Info Window content for detailed dusun markers (from DashboardProvinsiController::getKegiatanMarkers)
     function generateDetailedInfoContent(item) {
