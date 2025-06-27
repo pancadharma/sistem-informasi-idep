@@ -69,7 +69,7 @@
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="details-kegiatan-tabContent">
-                            {{-- Basic Information --}}
+                            <!--BASIC INFORMATION-->
                             <div class="tab-pane fade show active" id="tab-basic" role="tabpanel"
                                 aria-labelledby="basic-tab">
                                 <div class="form-group row">
@@ -99,7 +99,7 @@
                                             value="{{ $kegiatan->programoutcomeoutputactivity->program_outcome_output->program_outcome->program->nama ?? '' }}">
                                     </div>
                                 </div>
-                                {{-- Kode Kegiatan & Nama Kegiatan --}}
+                                <!--Kode Kegiatan & Nama Kegiatan -->
                                 <div class="form-group row">
                                     <!-- kode kegiatan-->
                                     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
@@ -415,6 +415,12 @@
                                             <div id="map" class="form-control col-form-label"></div>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!--MAPS-->
+                                <div class="card-info pt-2">
+                                {{-- @include('tr.kegiatan._map') --}}
+                                @include('tr.kegiatan._google_map')
                                 </div>
                             </div>
                             <!-- deskripsi kegiatan -->
