@@ -116,7 +116,7 @@
 
             window.mapState.markers[uniqueId] = marker;
             window.mapState.infoWindows[uniqueId] = infoWindow;
-            
+
             window.mapState.markerClusterer.addMarker(marker);
         }
 
@@ -126,9 +126,9 @@
     function removeMarker(uniqueId) {
         if (window.mapState.markers[uniqueId]) {
             const marker = window.mapState.markers[uniqueId];
-            
+
             window.mapState.markerClusterer.removeMarker(marker);
-            
+
             delete window.mapState.markers[uniqueId];
             delete window.mapState.infoWindows[uniqueId];
 
@@ -139,7 +139,7 @@
     function updateMapBounds() {
         window.mapState.bounds = new google.maps.LatLngBounds();
         const currentMarkers = Object.values(window.mapState.markers);
-        
+
         if (currentMarkers.length > 0) {
             currentMarkers.forEach(marker => {
                 window.mapState.bounds.extend(marker.getPosition());
