@@ -412,16 +412,16 @@
                                                 {{ __('Get Coordinate') }}
                                                 <i class="bi bi-map-fill"></i>
                                             </label>
-                                            <div id="map" class="form-control col-form-label"></div>
+                                            <!--MAPS-->
+                                            <div class="card-info pt-2">
+                                            {{-- @include('tr.kegiatan._map') --}}
+                                            @include('tr.kegiatan._google_map')
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!--MAPS-->
-                                <div class="card-info pt-2">
-                                {{-- @include('tr.kegiatan._map') --}}
-                                @include('tr.kegiatan._google_map')
-                                </div>
+
                             </div>
                             <!-- deskripsi kegiatan -->
                             <div class="tab-pane fade" id="description-tab" role="tabpanel"

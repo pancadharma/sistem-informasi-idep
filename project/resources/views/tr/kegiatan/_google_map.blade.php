@@ -1,72 +1,159 @@
 <div id="googleMap" style="height: 400px; width: 100%;"></div>
 
 @push('js')
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 <script>
+    // Use a global object to store map state
+    window.mapState = {
+        map: null,
+        markers: {}, // Use an object to store markers by unique ID
+        markerClusterer: null,
+        bounds: null,
+        infoWindows: {} // Store infoWindows by unique ID
+    };
+
     function initMap() {
-        const map = new google.maps.Map(document.getElementById("googleMap"), {
-            zoom: 3,
-            mapId: "7e7fb1bfd929ec61",
-            center: { lat: -2.548926, lng: 118.0148634 } // Center of Indonesia
+        // Initialize map and bounds
+        window.mapState.map = new google.maps.Map(document.getElementById("googleMap"), {
+            zoom: 5,
+            center: { lat: -2.548926, lng: 118.0148634 }, // Center of Indonesia
         });
+        window.mapState.bounds = new google.maps.LatLngBounds();
 
-        const locations = @json($kegiatan->lokasi);
-        const bounds = new google.maps.LatLngBounds();
-        const markers = [];
+        // Initialize the clusterer right after the map
+        window.mapState.markerClusterer = new markerClusterer.MarkerClusterer({ map: window.mapState.map, markers: [] });
 
-        if (locations.length > 0) {
-            locations.forEach(function(location) {
-                if (location.lat && location.long) {
-                    const latLng = new google.maps.LatLng(parseFloat(location.lat), parseFloat(location.long));
-
-                    const marker = new google.maps.Marker({
-                        position: latLng,
-                        // map: map,
-                        title: location.lokasi,
-                         icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 7,
-                            fillColor: "red",
-                            fillOpacity: 1,
-                            strokeWeight: 1,
-                            strokeColor: "white"
-                        }
-                    });
-
-
-                    const infoWindowContent = `
-                        <div class="info-window-content">
-                            <strong>Lokasi:</strong> ${location.lokasi || '-'}<br>
-                            <strong>Desa:</strong> ${location.desa ? location.desa.nama : '-'}<br>
-                            <strong>Kecamatan:</strong> ${location.desa && location.desa.kecamatan ? location.desa.kecamatan.nama : '-'}
-                        </div>`;
-
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: infoWindowContent
-                    });
-
-                    marker.addListener('click', () => {
-                        infoWindow.open(map, marker);
-                    });
-
-                    markers.push(marker);
-                    bounds.extend(marker.getPosition());
+        // Initial marker setup from loaded data
+        const initialLocations = @json($kegiatan->lokasi);
+        if (initialLocations.length > 0) {
+            initialLocations.forEach(function(location, index) {
+                const row = $(`.list-lokasi-kegiatan .lokasi-kegiatan`).eq(index);
+                if (row.length) {
+                    const uniqueId = row.data('unique-id');
+                    if (location.lat && location.long) {
+                        addOrUpdateMarker(uniqueId, location.lat, location.long, location.lokasi, location.desa);
+                    }
                 }
             });
 
-            new markerClusterer.MarkerClusterer({ map, markers });
+            // Fit map to bounds if there are markers
+            if (Object.keys(window.mapState.markers).length > 0) {
+                window.mapState.map.fitBounds(window.mapState.bounds);
+            }
+        }
 
-            map.fitBounds(bounds);
+        // --- DYNAMIC EVENT LISTENERS ---
+        $('.list-lokasi-kegiatan').on('change', '.lat-input, .lang-input', function() {
+            const row = $(this).closest('.lokasi-kegiatan');
+            const uniqueId = row.data('unique-id');
+            const lat = row.find('.lat-input').val();
+            const lng = row.find('.lang-input').val();
+            const lokasi = row.find('.lokasi-input').val();
+            const desaSelect = row.find('.kelurahan-select');
+            const desa = {
+                nama: desaSelect.find('option:selected').text(),
+                kecamatan: {
+                    nama: row.find('.kecamatan-select option:selected').text()
+                }
+            };
+
+            if (lat && lng) {
+                addOrUpdateMarker(uniqueId, lat, lng, lokasi, desa);
+            }
+        });
+
+        $('.list-lokasi-kegiatan').on('click', '.remove-lokasi-row', function() {
+            const row = $(this).closest('.lokasi-kegiatan');
+            const uniqueId = row.data('unique-id');
+            removeMarker(uniqueId);
+        });
+    }
+
+    function addOrUpdateMarker(uniqueId, lat, lng, lokasi, desa) {
+        const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+
+        if (window.mapState.markers[uniqueId]) {
+            const marker = window.mapState.markers[uniqueId];
+            marker.setPosition(latLng);
+
+            const infoWindow = window.mapState.infoWindows[uniqueId];
+            const newInfoWindowContent = `
+                <div class="info-window-content">
+                    <strong>Lokasi:</strong> ${lokasi || '-'}
+                    <br><strong>Desa:</strong> ${desa && desa.nama ? desa.nama : '-'}
+                    <br><strong>Kecamatan:</strong> ${desa && desa.kecamatan && desa.kecamatan.nama ? desa.kecamatan.nama : '-'}
+                </div>`;
+            infoWindow.setContent(newInfoWindowContent);
+
+        } else {
+            const marker = new google.maps.Marker({
+                position: latLng,
+                title: lokasi,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 7,
+                    fillColor: "red",
+                    fillOpacity: 1,
+                    strokeWeight: 1,
+                    strokeColor: "white"
+                }
+            });
+
+            const infoWindowContent = `
+                <div class="info-window-content">
+                    <strong>Lokasi:</strong> ${lokasi || '-'}
+                    <br><strong>Desa:</strong> ${desa && desa.nama ? desa.nama : '-'}
+                    <br><strong>Kecamatan:</strong> ${desa && desa.kecamatan && desa.kecamatan.nama ? desa.kecamatan.nama : '-'}
+                </div>`;
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: infoWindowContent
+            });
+
+            marker.addListener('click', () => {
+                infoWindow.open(window.mapState.map, marker);
+            });
+
+            window.mapState.markers[uniqueId] = marker;
+            window.mapState.infoWindows[uniqueId] = infoWindow;
+            
+            window.mapState.markerClusterer.addMarker(marker);
+        }
+
+        updateMapBounds();
+    }
+
+    function removeMarker(uniqueId) {
+        if (window.mapState.markers[uniqueId]) {
+            const marker = window.mapState.markers[uniqueId];
+            
+            window.mapState.markerClusterer.removeMarker(marker);
+            
+            delete window.mapState.markers[uniqueId];
+            delete window.mapState.infoWindows[uniqueId];
+
+            updateMapBounds();
         }
     }
-</script>
 
-<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    function updateMapBounds() {
+        window.mapState.bounds = new google.maps.LatLngBounds();
+        const currentMarkers = Object.values(window.mapState.markers);
+        
+        if (currentMarkers.length > 0) {
+            currentMarkers.forEach(marker => {
+                window.mapState.bounds.extend(marker.getPosition());
+            });
+            window.mapState.map.fitBounds(window.mapState.bounds);
+        } else {
+            window.mapState.map.setCenter({ lat: -2.548926, lng: 118.0148634 });
+            window.mapState.map.setZoom(5);
+        }
+    }
+
+</script>
 <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ&callback=initMap&v=beta&libraries=maps">
 </script>
-
-{{-- <script async defer>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-({key: "AIzaSyCqxb0Be7JWTChc3E_A8rTlSmiVDLPUSfQ", v: "weekly"});</script> --}}
-
-
 @endpush
+
