@@ -228,6 +228,23 @@
         setupSelect2(`#kelurahan-${uniqueId}`, '{{ __('cruds.kegiatan.basic.select_desa') }}', "{{ route('api.kegiatan.kelurahan') }}", params => ({ search: params.term, kecamatan_id: $(`#kecamatan-${uniqueId}`).val(), page: params.page || 1 }));
         $('#kabupaten_id').on('change', () => $(`#kecamatan-${uniqueId}`).val(null).trigger('change'));
         $(`#kecamatan-${uniqueId}`).on('change', () => $(`#kelurahan-${uniqueId}`).val(null).trigger('change'));
+
+        // Add paste event listener for lat/lng inputs
+        $(`#lat-${uniqueId}, #long-${uniqueId}`).on('paste', function(e) {
+            e.preventDefault();
+            const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+            const coords = pasteData.split(/[,;\s]+/);
+            if (coords.length === 2) {
+                const lat = parseFloat(coords[0]);
+                const lng = parseFloat(coords[1]);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    const row = $(this).closest('.lokasi-kegiatan');
+                    row.find('.lat-input').val(lat.toFixed(6));
+                    row.find('.lang-input').val(lng.toFixed(6));
+                    row.find('.lat-input').trigger('change'); // Trigger change to update marker
+                }
+            }
+        });
     }
 
     function initMap() {
@@ -254,8 +271,10 @@
         });
 
         $('.list-lokasi-kegiatan').on('click', '.remove-lokasi-row', function() {
-            const uniqueId = $(this).closest('.lokasi-kegiatan').data('unique-id');
+            const row = $(this).closest('.lokasi-kegiatan');
+            const uniqueId = row.data('unique-id');
             removeMarker(uniqueId);
+            row.remove(); // This line removes the input field row
         });
 
         // Attach event listeners for GeoJSON after map initialization
