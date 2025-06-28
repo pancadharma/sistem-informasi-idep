@@ -209,11 +209,11 @@
             {{ __('Get Coordinate') }}
             <i class="bi bi-map-fill"></i>
         </label>
-        {{-- <div id="map" class="form-control col-form-label"></div> --}}
-        @include('tr.kegiatan._google_map_create')
-
-    </div>
-</div>
+                {{-- <div id="map" class="form-control col-form-label"></div> --}}
+                {{-- @include('tr.kegiatan._google_map_create') --}}
+                <div id="googleMap" style="height: 400px; width: 100%;"></div>
+            </div>
+        </div>
 
 
 @include('tr.kegiatan.tabs.program')
