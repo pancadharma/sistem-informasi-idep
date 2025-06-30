@@ -50,7 +50,8 @@ return [
     'satuan'            => 'Satuan',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Peran',
+    'benchmark'        => 'Benchmark',
     'komponenmodel'     => 'Komponen/Model',
-    'target_progress'    => 'Target & Progress',
-	'prepost'			=>	'Pre/Post Test',
+    'target_progress'   => 'Target & Progress',
+    'prepost'           => 'Pre/Post Test',
 ];
