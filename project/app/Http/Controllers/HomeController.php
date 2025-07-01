@@ -132,15 +132,6 @@ class HomeController extends Controller
 
     public function getFilteredProvinsi(Request $request, $id = null)
     {
-        // Fetch province data
-        $query = Provinsi::query();
-        if ($id) {
-            // If an ID is provided, fetch only that province (for specific filtering)
-            $query->where('id', $id);
-        }
-        // Select necessary columns (id, nama, latitude, longitude)
-        $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
-
         // Build the stats query for beneficiaries and desa, joining through geographic tables
         $statsQuery = Meals_Penerima_Manfaat::query()
             ->whereNull('trmeals_penerima_manfaat.deleted_at')
@@ -162,6 +153,17 @@ class HomeController extends Controller
                     ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
+
+        if ($id) {
+            // If an ID is provided, fetch only that province (for specific filtering)
+            $provinsiList = Provinsi::where('id', $id)->select('id', 'nama', 'latitude', 'longitude')->get();
+            $statsQuery->where('provinsi.id', $id);
+        } else {
+            // Initial load: only get provinces that have beneficiaries matching the filters
+            $provinceIdsWithStats = (clone $statsQuery)->distinct('provinsi.id')->pluck('provinsi.id');
+            $provinsiList = Provinsi::whereIn('id', $provinceIdsWithStats)->select('id', 'nama', 'latitude', 'longitude')->get();
+        }
+
 
         $stats = $statsQuery
             ->select(
