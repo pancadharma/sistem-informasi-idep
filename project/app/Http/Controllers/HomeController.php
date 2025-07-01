@@ -198,21 +198,21 @@ class HomeController extends Controller
             ->select(
                 'desa_id',
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN MAX(`lat`)
                     WHEN COUNT(id) > 1 THEN AVG(`lat`)
                     ELSE NULL
                 END as lokasi_lat
             '),
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN MAX(`long`)
                     WHEN COUNT(id) > 1 THEN AVG(`long`)
                     ELSE NULL
                 END as lokasi_long
             '),
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN "exact"
                     WHEN COUNT(id) > 1 THEN "averaged"
                     ELSE NULL
@@ -250,7 +250,7 @@ class HomeController extends Controller
             ) as longitude
         '),
             DB::raw('
-            CASE 
+            CASE
                 WHEN lokasi.lokasi_lat IS NOT NULL THEN lokasi.lokasi_source
                 WHEN dusun.latitude IS NOT NULL THEN "dusun"
                 ELSE "kabupaten"
