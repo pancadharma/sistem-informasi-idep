@@ -440,6 +440,8 @@ class KegiatanController extends Controller
         $kecamatanList = collect([]);
         $desaList = collect([]);
 
+        // return $provinsiList->firstWhere('id', $preselectedProvinsiId)?->kabupaten ?? collect();
+
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
