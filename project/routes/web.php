@@ -290,7 +290,7 @@ Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () 
     Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
     Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
     Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
-    Route::get('/upload_media', [App\Http\Controllers\API\KegiatanController::class, 'upload_media'])->name('delete_media');
+    Route::get('/upload_media', [App\Http\Controllers\API\KegiatanController::class, 'upload_media'])->name('upload_media');
     Route::DELETE('/delete_media', [App\Http\Controllers\API\KegiatanController::class, 'delete_media'])->name('delete_media');
 });
 
