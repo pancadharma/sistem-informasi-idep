@@ -36,6 +36,14 @@ class PermissionsController extends Controller
 
     public function update(Request $request, Permission $permission)
     {
+        // Validate the request, allowing the current permission's name
+        // to be unchanged while ensuring uniqueness for others
+        if ($permission->nama === $request->nama) {
+            $request->validate(['nama' => 'required']);
+        } else {
+            $request->validate(['nama' => 'required|unique:permissions,nama']);
+        }
+
         $request->validate(['nama' => 'required|unique:permissions,nama,' . $permission->id]);
 
         $permission->update(['nama' => $request->nama]);
