@@ -3,63 +3,50 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class PermissionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $permissions = Permission::query();
+            return DataTables::of($permissions)
+                ->addColumn('actions', function ($permission) {
+                    return '<button class="btn btn-sm btn-warning edit-btn" data-id="' . $permission->id . '" data-nama="' . $permission->nama . '">Edit</button>
+                            <button class="btn btn-sm btn-danger delete-btn" data-id="' . $permission->id . '">Delete</button>';
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('admin.permissions.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate(['nama' => 'required|unique:permissions,nama']);
+
+        $permission = Permission::create(['nama' => $request->nama]);
+
+        return response()->json($permission);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $request->validate(['nama' => 'required|unique:permissions,nama,' . $permission->id]);
+
+        $permission->update(['nama' => $request->nama]);
+
+        return response()->json($permission);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(Permission $permission)
     {
-        //
-    }
+        $permission->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['success' => true]);
     }
 }

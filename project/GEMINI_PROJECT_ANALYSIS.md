@@ -15,3 +15,9 @@
 - Corrected the `collectFormData` function in `resources/views/tr/kegiatan/edit.blade.php` to properly retrieve text values from Select2 elements for accurate preview display.
 - Added a conditional message in `displayPreview` to indicate when no locations have been added.
 - Added console logs for debugging the preview functionality.
+
+### Task: Create CRUD functionality for managing permissions
+
+**Date:** 2025-07-04 14:00:00
+
+**Description:** Created CRUD functionality for managing permissions using the Spatie Laravel Permission package with AJAX for dynamic operations. Generated a `Permission` model, a `PermissionController` with CRUD methods, API routes for AJAX requests, a Blade view with a Bootstrap 5 table and modal forms, and a JavaScript file for AJAX handling with jQuery. Ensured the code follows PSR-12, uses the `role:admin` middleware, includes CSRF tokens for AJAX, and integrates with Spatie's permission system.
