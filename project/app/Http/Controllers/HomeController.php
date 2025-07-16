@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelurahan;
 use App\Models\Meals_Penerima_Manfaat;
 use App\Models\Program;
 use App\Models\Provinsi;
@@ -28,8 +29,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $programs = Program::all();
-        $provinsis = Provinsi::all();
+        // $programs = Program::all()->where('status', true)->sortBy('nama');
+        $programs = Program::all()->sortByDesc('created_at');
+        $provinsis = Provinsi::all()->where('aktif', true)->sortBy('nama');
 
         $years = DB::table('trprogram')
             ->select(DB::raw('YEAR(tanggalmulai) as year'))
@@ -37,7 +39,9 @@ class HomeController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
-        return view('home', compact('programs', 'provinsis', 'years'));
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+
+        return view('home', compact('programs', 'provinsis', 'years', 'googleMapsApiKey'));
     }
     function getDashboardData(Request $request)
     {
@@ -78,9 +82,6 @@ class HomeController extends Controller
         ]);
     }
 
-    /* updated method to Add filter parameters (provinsi_id, program_id, tahun) to the method
-       Users can analyze data more deeply by combining filters, which is valuable for a dashboard’s purpose
-    */
     public function getDesaPerProvinsiChartData(Request $request)
     {
         $query = Meals_Penerima_Manfaat::with('dusun.desa.kecamatan.kabupaten.provinsi')
@@ -102,7 +103,7 @@ class HomeController extends Controller
         if ($request->tahun) {
             $query->whereHas('program', function ($q) use ($request) {
                 $q->whereYear('tanggalmulai', '<=', $request->tahun)
-                  ->whereYear('tanggalselesai', '>=', $request->tahun);
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
 
@@ -128,20 +129,19 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
-    //
-    //
-    //
 
     public function getFilteredProvinsi(Request $request, $id = null)
     {
         // Fetch province data
         $query = Provinsi::query();
         if ($id) {
+            // If an ID is provided, fetch only that province (for specific filtering)
             $query->where('id', $id);
         }
+        // Select necessary columns (id, nama, latitude, longitude)
         $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
 
-        // Build the stats query
+        // Build the stats query for beneficiaries and desa, joining through geographic tables
         $statsQuery = Meals_Penerima_Manfaat::query()
             ->whereNull('trmeals_penerima_manfaat.deleted_at')
             ->join('dusun', 'trmeals_penerima_manfaat.dusun_id', '=', 'dusun.id')
@@ -159,23 +159,26 @@ class HomeController extends Controller
         if ($request->tahun) {
             $statsQuery->whereHas('program', function ($q) use ($request) {
                 $q->whereYear('tanggalmulai', '<=', $request->tahun)
-                  ->whereYear('tanggalselesai', '>=', $request->tahun);
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
 
         $stats = $statsQuery
             ->select(
                 'provinsi.id as provinsi_id',
+                // Count distinct desa (kelurahan) IDs where beneficiaries exist
                 DB::raw('COUNT(DISTINCT kelurahan.id) as total_desa'),
+                // Count total beneficiaries
                 DB::raw('COUNT(trmeals_penerima_manfaat.id) as total_penerima')
             )
             ->groupBy('provinsi.id')
             ->get()
-            ->keyBy('provinsi_id');
+            ->keyBy('provinsi_id'); // Key by provinsi_id for easy lookup
 
-        // Attach stats to province list
+        // Attach stats to the province list
         $provinsiList->each(function ($provinsi) use ($stats) {
             $stat = $stats->get($provinsi->id);
+            // Assign 0 if no stats found for a province, otherwise cast to int
             $provinsi->total_desa = $stat ? (int) $stat->total_desa : 0;
             $provinsi->total_penerima = $stat ? (int) $stat->total_penerima : 0;
         });
@@ -183,6 +186,134 @@ class HomeController extends Controller
         return response()->json($provinsiList);
     }
 
+    public function getCombinedDesaMapData(Request $request, $provinsi_id = null)
+    {
+        $programId = $request->input('program_id');
+        $tahun = $request->input('tahun');
+
+        // Subquery for trkegiatan_lokasi coordinates
+        $lokasiSubquery = DB::table('trkegiatan_lokasi')
+            ->select(
+                'desa_id',
+                DB::raw('
+                CASE 
+                    WHEN COUNT(id) = 1 THEN MAX(`lat`)
+                    WHEN COUNT(id) > 1 THEN AVG(`lat`)
+                    ELSE NULL
+                END as lokasi_lat
+            '),
+                DB::raw('
+                CASE 
+                    WHEN COUNT(id) = 1 THEN MAX(`long`)
+                    WHEN COUNT(id) > 1 THEN AVG(`long`)
+                    ELSE NULL
+                END as lokasi_long
+            '),
+                DB::raw('
+                CASE 
+                    WHEN COUNT(id) = 1 THEN "exact"
+                    WHEN COUNT(id) > 1 THEN "averaged"
+                    ELSE NULL
+                END as lokasi_source
+            ')
+            )
+            ->groupBy('desa_id');
+
+        // Subquery for dusun coordinates
+        $dusunSubquery = DB::table('dusun')
+            ->select(
+                'desa_id',
+                DB::raw('AVG(latitude) as dusun_lat'),
+                DB::raw('AVG(longitude) as dusun_long')
+            )
+            ->groupBy('desa_id');
+
+        $query = Kelurahan::select(
+            'kelurahan.id',
+            'kelurahan.nama as desa_name',
+            'kecamatan.nama as kecamatan_name',
+            'kabupaten.nama as kabupaten_name',
+            DB::raw('
+            COALESCE(
+                lokasi.lokasi_lat,
+                dusun.latitude,
+                kabupaten.latitude
+            ) as latitude
+        '),
+            DB::raw('
+            COALESCE(
+                lokasi.lokasi_long,
+                dusun.longitude,
+                kabupaten.longitude
+            ) as longitude
+        '),
+            DB::raw('
+            CASE 
+                WHEN lokasi.lokasi_lat IS NOT NULL THEN lokasi.lokasi_source
+                WHEN dusun.latitude IS NOT NULL THEN "dusun"
+                ELSE "kabupaten"
+            END as coordinate_source
+        '),
+            DB::raw('COUNT(DISTINCT tpm.id) as total_beneficiaries_in_desa'),
+            DB::raw('kabupaten.latitude as kabupaten_latitude'),
+            DB::raw('kabupaten.longitude as kabupaten_longitude')
+        )
+            ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id')
+            ->join('kabupaten', 'kecamatan.kabupaten_id', '=', 'kabupaten.id')
+            ->leftJoin('dusun', 'kelurahan.id', '=', 'dusun.desa_id')
+            ->leftJoin('trmeals_penerima_manfaat as tpm', 'dusun.id', '=', 'tpm.dusun_id')
+            ->leftJoin('trprogram as tp', 'tpm.program_id', '=', 'tp.id')
+            ->leftJoinSub($lokasiSubquery, 'lokasi', function ($join) {
+                $join->on('kelurahan.id', '=', 'lokasi.desa_id');
+            })
+            ->leftJoinSub($dusunSubquery, 'dusun_coords', function ($join) {
+                $join->on('kelurahan.id', '=', 'dusun_coords.desa_id');
+            })
+            ->whereNotNull('dusun.nama')
+            ->whereNotNull('tpm.nama');
+
+        if ($provinsi_id) {
+            $query->where('kabupaten.provinsi_id', $provinsi_id);
+        }
+
+        if ($programId) {
+            $query->where('tpm.program_id', $programId);
+        }
+
+        if ($tahun) {
+            $query->whereYear('tp.tanggalmulai', '<=', $tahun)
+                ->whereYear('tp.tanggalselesai', '>=', $tahun);
+        }
+
+        $query->groupBy(
+            'kelurahan.id',
+            'kelurahan.nama',
+            'kecamatan.nama',
+            'kabupaten.nama',
+            'kabupaten.latitude',
+            'kabupaten.longitude',
+            'lokasi.lokasi_lat',
+            'lokasi.lokasi_long',
+            'lokasi.lokasi_source',
+            'dusun.latitude',
+            'dusun.longitude'
+        )
+            ->having('total_beneficiaries_in_desa', '>', 0);
+
+        $desas = $query->get();
+
+        $desas = $desas->map(function ($desa) {
+            $desa->type = 'desa';
+            $desa->total_beneficiaries_in_desa = (int) $desa->total_beneficiaries_in_desa;
+            $desa->latitude = (float) $desa->latitude;
+            $desa->longitude = (float) $desa->longitude;
+            $desa->kabupaten_latitude = (float) $desa->kabupaten_latitude;
+            $desa->kabupaten_longitude = (float) $desa->kabupaten_longitude;
+            return $desa;
+        });
+
+        return response()->json($desas);
+    }
     // this query is too slow
     // public function getFilteredProvinsi(Request $request, $id = null)
     // {

@@ -919,6 +919,7 @@ return [
             'program_activity'                   => 'Silahkan pilih Program dan Kegiatan.',
             'program'                            => 'Silahkan pilih Program.',
             'activity'                           => 'Silahkan pilih Kegiatan.',
+            'kab_change'                         => 'Apakah anda yakin ingin mengubah Kabupaten? Ini akan mereset input lokasi.'
         ],
     ],
 

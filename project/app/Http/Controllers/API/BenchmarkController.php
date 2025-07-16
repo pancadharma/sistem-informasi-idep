@@ -72,7 +72,7 @@ class BenchmarkController extends Controller
 ->make(true);
     }
 
-    
+
     /**
      * Simpan benchmark baru.
      * Semua input divalidasi melalui BenchmarkRequest.
@@ -111,7 +111,7 @@ class BenchmarkController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     /**
      * Lookup compiler (data user) untuk dropdown compiler.
      */
@@ -139,7 +139,7 @@ class BenchmarkController extends Controller
     }
 
 
-    
+
     /**
      * Lookup program dari table trprogram.
      * Dilengkapi relasi output dan activities untuk filter (seperti di transaksi kegiatan).
@@ -184,16 +184,16 @@ class BenchmarkController extends Controller
                 ->make(true);
         }
     }
-    
+
     /**
      * Lookup jenis kegiatan untuk dropdown.
      */
     public function getJenisKegiatan(Request $request)
     {
         $search = $request->search;
-        
+
         $query = Jenis_Kegiatan::query();
-        
+
         if ($search) {
             $query->where('nama', 'like', '%' . $search . '%');
         }
@@ -205,7 +205,7 @@ class BenchmarkController extends Controller
             'pagination' => ['more' => $results->hasMorePages()]
         ]);
     }
-    
+
     /**
      * Lookup kegiatan berdasarkan program_id dan jenis_kegiatan_id.
      * Dipakai untuk form benchmark ketika memilih kegiatan.
@@ -217,7 +217,8 @@ class BenchmarkController extends Controller
 
         $data = DB::table('trkegiatan')
         ->select(
-            'trprogramoutcomeoutputactivity.id',
+            'trkegiatan.id',
+            'trprogramoutcomeoutputactivity.id as output_activity_id',
             'trprogramoutcomeoutputactivity.nama',
             'trprogramoutcomeoutputactivity.kode',
             'trprogramoutcomeoutputactivity.deskripsi',
@@ -255,19 +256,19 @@ class BenchmarkController extends Controller
                     'kecamatan.id as kecamatan_id',
                     'kecamatan.nama as kecamatan_nama',
                     'kelurahan.id as desa_id',
-                    'kelurahan.nama as desa_nama' 
+            'kelurahan.nama as desa_nama'
                 )->get();
 
         return response()->json($data);
     }
 
-    
+
     public function updateBenchmark(UpdateBenchmarkRequest $request, $id)
     {
         try {
             $benchmark = Meals_Quality_Benchmark::findOrFail($id);
             $data = $request->validated();
-        
+
             unset($data['program_id']); // abaikan update program_id
 
             $exists = DB::table('trkegiatan')
@@ -284,7 +285,7 @@ class BenchmarkController extends Controller
     ]);
 }
             $benchmark->update($data);
-        
+
             return response()->json([
                 'success' => true,
                 'message' => 'Benchmark berhasil diperbarui',
@@ -310,7 +311,7 @@ class BenchmarkController extends Controller
         }
     }
 
-    
+
     // Metode tambahan untuk generate tombol aksi, misalnya edit & view
     protected function generateButton($type, $btnClass, $icon, $title, $id)
     {
