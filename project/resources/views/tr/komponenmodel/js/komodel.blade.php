@@ -790,7 +790,8 @@
                         timer: 1500,
                         timerProgressBar: true,
                     }).then(() => {
-                        location.reload();
+                        //location.reload();
+                        window.location.href = "{{ route('komodel.index') }}";
                     });
                 },
                 error: function (xhr) {
