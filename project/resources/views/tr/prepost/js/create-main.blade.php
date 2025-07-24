@@ -507,7 +507,8 @@
                         timer: 1500,
                         timerProgressBar: true,
                     }).then(() => {
-                        location.reload();
+                        //location.reload();
+                        window.location.href = "{{ route('prepost.index') }}";
                     });
                 },
                 error: function (xhr) {
