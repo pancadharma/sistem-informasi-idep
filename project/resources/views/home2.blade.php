@@ -744,8 +744,8 @@
     const centerLng = 121.631757;
     const initialZoom = 5;
 
-    const PROVINCE_ZOOM_THRESHOLD = 7; // Zoom level at which to show province markers
-    const DETAIL_ZOOM_THRESHOLD = 9; // Zoom level at which to show detailed (dusun/specific) markers
+    const PROVINCE_ZOOM_THRESHOLD = 8; // Zoom level at which to show province markers
+    const DETAIL_ZOOM_THRESHOLD = 10; // Zoom level at which to show detailed (dusun/specific) markers
 
     // --- STYLE DEFINITION ---
     const mapStyles = [{
@@ -1073,8 +1073,7 @@
 
         // Skip loading if zoom is too high (e.g., > 14) to prevent excessive zooming
         if (currentZoom > 14) {
-            // console.log('Zoom level too high, skipping marker reload.');
-            // console.table(map);
+            console.log('Zoom level too high, skipping marker reload.');
             return;
         }
 

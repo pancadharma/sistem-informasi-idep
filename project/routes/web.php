@@ -88,6 +88,11 @@ Route::middleware(['auth'])->group(function () {
 // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
 Route::resource('permissions', PermissionsController::class);
 
+// Roles 2
+Route::resource('roles2', 'App\Http\Controllers\Admin\RoleController2')->parameters([
+    'roles2' => 'role'
+])->middleware('auth');
+
 // Roles
 Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
 Route::get('roles-permission', [RolesController::class, 'getPermission'])->name('roles.permission');
@@ -290,6 +295,8 @@ Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () 
     Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
     Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
     Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
+    Route::get('/upload_media', [App\Http\Controllers\API\KegiatanController::class, 'upload_media'])->name('upload_media');
+    Route::DELETE('/delete_media', [App\Http\Controllers\API\KegiatanController::class, 'delete_media'])->name('delete_media');
 });
 
 //

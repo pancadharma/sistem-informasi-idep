@@ -38,8 +38,21 @@ use Illuminate\Support\Facades\Log;
 use PHPUnit\Event\Code\Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 class KegiatanController extends Controller
 {
+    public function delete_media(Request $request)
+    {
+        try {
+            $media = Media::findOrFail($request->media_id);
+            $media->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
 
     public function dataTable(Request $request)
     {

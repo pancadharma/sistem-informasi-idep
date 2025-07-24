@@ -262,11 +262,11 @@
                                         <label for="provinsi_id"
                                             class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
                                         <input type="hidden" name="provinsiID"
-                                            value="{{ $kegiatan->lokasi['0']->kecamatan->kabupaten->provinsi->id ?? ' ?>' }}">
+                                        {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'value=' . $preselectedProvinsiId . '' : '' }}>
                                         <select name="provinsi_id" id="provinsi_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.provinsi') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}"
-                                            disabled>
+                                            {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'disabled' : '' }}>
                                             @foreach ($provinsiList as $provinsi)
                                                 <option value="{{ $provinsi->id }}" {{ $preselectedProvinsiId == $provinsi->id ? 'selected' : '' }}>
                                                     {{ $provinsi->nama }}
@@ -282,7 +282,7 @@
                                         <select name="kabupaten_id" id="kabupaten_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.kabupaten') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}">
-                                            @foreach ($provinsiList->firstWhere('id', $preselectedProvinsiId)?->kabupaten as $kabupaten)
+                                            @foreach (($provinsiList->firstWhere('id', $preselectedProvinsiId)?->kabupaten ?? collect()) as $kabupaten)
                                                 <option value="{{ $kabupaten->id }}" {{ $preselectedKabupatenId == $kabupaten->id ? 'selected' : '' }}>
                                                     {{ $kabupaten->nama }}
                                                 </option>
@@ -955,6 +955,7 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @stack('basic_tab_js')
+{{-- @include('tr.kegiatan.js.tabs.basic') --}}
 <script>
     let uniqueId = Date.now();
     var provinsiLayer = null;
@@ -975,10 +976,89 @@
     }
 
     $('#tanggalmulai, #tanggalselesai').on('change', calculateDuration);
+
+    function initializeSelect2WithDynamicUrl(fieldId) {
+        var select2Field = $('#' + fieldId);
+        var apiUrl = select2Field.data('api-url');
+
+        select2Field.select2({
+            width: '100%',
+            placeholder: select2Field.attr('placeholder'),
+            allowClear: true,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama
+                            };
+                        }),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
+        });
+    }
+
+    function select2Single(fieldId) {
+        var select2Field = $('#' + fieldId);
+        var apiUrl = select2Field.data('api-url');
+
+        select2Field.select2({
+            width: 'resolve',
+            placeholder: select2Field.attr('placeholder'),
+            aallowClear: true,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        }).on('select2:open', function(e) {
+            $('.select2-container').css('z-index', 1035);
+        }).on('select2:close', function(e) {
+            $('.select2-container').css('z-index', 999);
+        });;
+    }
     $(document).ready(function() {
 
         $('.select2').select2({
             width: 'resolve'
+        });
+
+        $('.select2').each(function() {
+            var fieldId = $(this).attr('id');
+            initializeSelect2WithDynamicUrl(fieldId);
         });
 
         // select2 jenis kegiatan
@@ -1009,151 +1089,83 @@
             }
         });
 
-        $(`#kabupaten_id`).select2({
-            placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
-            allowClear: true,
-            ajax: {
-                url: "{{ route('api.kegiatan.kabupaten') }}",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    const provinsiId = $(`#provinsi_id`).val();
-                    return {
-                        search: params.term,
-                        provinsi_id: provinsiId,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                },
-                cache: true,
-                error: function(jqXHR, textStatus, errorThrown) {
-                    const provinsiId = $(`#provinsi_id`).val();
-                    let errorMessage = "";
-                    if (jqXHR.responseText) {
-                        try {
-                            const response = JSON.parse(jqXHR.responseText);
-                            if (response.message) {
-                                errorMessage = response
-                                    .message; // Use message from the server if available
-                            }
-                        } catch (e) {
-                            console.warn("Could not parse JSON response:", jqXHR.responseText);
-                        }
-                    }
-                    if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
-                        Swal.fire({
-                            icon: 'warning' ?? textStatus,
-                            title: 'Failed to load Kabupaten data',
-                            text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
-                            timer: 1500,
-                        })
-                        setTimeout(() => {
-                            $(`#provinsi_id`).focus();
-                        }, 1000);
-                        return;
-                    } else {
-                        // Handle other AJAX errors
-                        let errorMessage =
-                            '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
-                        Swal.fire({
-                            icon: 'error', // Always use 'error' for AJAX failures
-                            title: errorThrown ||
-                                'Error', // Use errorThrown if available, otherwise generic 'Error'
-                            text: errorMessage,
-                            timer: 2500, // Slightly longer timer for general errors
-                            showConfirmButton: false // Hide confirm button
-                        });
+        // $(`#kabupaten_id`).select2({
+        //     placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
+        //     allowClear: true,
+        //     ajax: {
+        //         url: "{{ route('api.kegiatan.kabupaten') }}",
+        //         dataType: 'json',
+        //         delay: 250,
+        //         data: function(params) {
+        //             const provinsiId = $(`#provinsi_id`).val();
+        //             return {
+        //                 search: params.term,
+        //                 provinsi_id: provinsiId,
+        //                 page: params.page || 1
+        //             };
+        //         },
+        //         processResults: function(data, params) {
+        //             params.page = params.page || 1;
+        //             return {
+        //                 results: data.results,
+        //                 pagination: {
+        //                     more: data.pagination.more
+        //                 }
+        //             };
+        //         },
+        //         cache: true,
+        //         error: function(jqXHR, textStatus, errorThrown) {
+        //             const provinsiId = $(`#provinsi_id`).val();
+        //             let errorMessage = "";
+        //             if (jqXHR.responseText) {
+        //                 try {
+        //                     const response = JSON.parse(jqXHR.responseText);
+        //                     if (response.message) {
+        //                         errorMessage = response
+        //                             .message; // Use message from the server if available
+        //                     }
+        //                 } catch (e) {
+        //                     console.warn("Could not parse JSON response:", jqXHR.responseText);
+        //                 }
+        //             }
+        //             if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
+        //                 Swal.fire({
+        //                     icon: 'warning' ?? textStatus,
+        //                     title: 'Failed to load Kabupaten data',
+        //                     text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
+        //                     timer: 1500,
+        //                 })
+        //                 setTimeout(() => {
+        //                     $(`#provinsi_id`).focus();
+        //                 }, 1000);
+        //                 return;
+        //             } else {
+        //                 // Handle other AJAX errors
+        //                 let errorMessage =
+        //                     '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
+        //                 Swal.fire({
+        //                     icon: 'error', // Always use 'error' for AJAX failures
+        //                     title: errorThrown ||
+        //                         'Error', // Use errorThrown if available, otherwise generic 'Error'
+        //                     text: errorMessage,
+        //                     timer: 2500, // Slightly longer timer for general errors
+        //                     showConfirmButton: false // Hide confirm button
+        //                 });
 
-                    }
-                }
-            }
-        }).on('select2:open', function(e) {
-            $('.select2-container').css('z-index', 1035);
-        }).on('select2:close', function(e) {
-            $('.select2-container').css('z-index', 999);
-        });
+        //             }
+        //         }
+        //     }
+        // }).on('select2:open', function(e) {
+        //     $('.select2-container').css('z-index', 1035);
+        // }).on('select2:close', function(e) {
+        //     $('.select2-container').css('z-index', 999);
+        // });
 
-        function initializeSelect2WithDynamicUrl(fieldId) {
-            var select2Field = $('#' + fieldId);
-            var apiUrl = select2Field.data('api-url');
 
-            select2Field.select2({
-                width: '100%',
-                placeholder: select2Field.attr('placeholder'),
-                allowClear: true,
-                ajax: {
-                    url: apiUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.data.map(function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama
-                                };
-                            }),
-                            pagination: {
-                                more: data.current_page < data.last_page
-                            }
-                        };
-                    },
-                    cache: true
-                },
-                minimumInputLength: 0
-            });
-        }
+        // initializeSelect2WithDynamicUrl("provinsi_id");
+        // initializeSelect2WithDynamicUrl("kabupaten_id");
 
-        function select2Single(fieldId) {
-            var select2Field = $('#' + fieldId);
-            var apiUrl = select2Field.data('api-url');
 
-            select2Field.select2({
-                width: 'resolve',
-                placeholder: select2Field.attr('placeholder'),
-                aallowClear: true,
-                ajax: {
-                    url: apiUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    },
-                    cache: true
-                }
-            }).on('select2:open', function(e) {
-                $('.select2-container').css('z-index', 1035);
-            }).on('select2:close', function(e) {
-                $('.select2-container').css('z-index', 999);
-            });;
-        }
 
         // start grok
         $('#provinsi_id, #kabupaten_id').select2({
