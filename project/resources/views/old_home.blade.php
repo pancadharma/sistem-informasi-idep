@@ -265,31 +265,36 @@
 
         /* CSS for custom bubble markers */
         .map-bubble-marker {
+            /* Background color for province markers if they were bubbles */
+            /* This style will only apply to dusun markers now */
             color: white;
-            /* font-family: Arial, sans-serif; */
-            /* font-weight: bold; */
-            padding: 5px 5px;
-            /* border-radius: 63px; */
-            /* white-space: nowrap; */
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 15px;
+            /* Pill shape */
+            white-space: nowrap;
             text-align: center;
-            /* border: 2px solid #ffffff; */
-            box-shadow: 0 2px 4px rgb(0 0 0 / 0%);
-            /* transform: translate(-50%, -100%); */
-            /* position: relative; */
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translate(-50%, -100%);
+            /* Adjust to center marker at its bottom-middle point */
+            position: relative;
             cursor: pointer;
-            /* min-width: 60px; */
+            min-width: 60px;
+            /* Minimum width for small numbers */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .map-bubble-marker.dusun {
-            background-color: red; /* Google Red */
-            /* font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 15px;
-            min-width: 60px; */
-            /* transform: translate(-50%, -100%); */
+            background-color: rgba(234, 67, 53, 0.9);
+            /* Google Red for dusun bubbles */
+            font-size: 10px;
+            padding: 4px 7px;
+            border-radius: 12px;
+            min-width: 50px;
         }
 
         /* Optional: Add a pointer/triangle at the bottom of the bubble */
@@ -538,18 +543,8 @@
         $('#provinsiFilter').on('change', function() {
             const selectedProvinsiId = $(this).val();
             if (selectedProvinsiId && selectedProvinsiId !== "") {
-                const selectedOption = $('#provinsiFilter option:selected');
-                const lat = parseFloat(selectedOption.data('lat'));
-                const lng = parseFloat(selectedOption.data('lng'));
-
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    map.setCenter({ lat: lat, lng: lng });
-                    map.setZoom(DETAIL_ZOOM_THRESHOLD); // Zoom to 10
-                }
-                loadMapMarkers();
+                loadMapMarkers(selectedProvinsiId);
             } else {
-                map.setCenter({ lat: centerLat, lng: centerLng });
-                map.setZoom(initialZoom);
                 loadMapMarkers();
             }
         });
@@ -716,13 +711,6 @@
         reloadTableIfValid();
 
     });
-
-    function addJitter(lat, lng, jitterAmount = 0.0001) {
-        return {
-            lat: lat + (Math.random() -0.5) * jitterAmount,
-            lng: lng + (Math.random() - 0.5) * jitterAmount
-        };
-    }
     //
     //
     //
@@ -744,8 +732,8 @@
     const centerLng = 121.631757;
     const initialZoom = 5;
 
-    const PROVINCE_ZOOM_THRESHOLD = 7; // Zoom level at which to show province markers
-    const DETAIL_ZOOM_THRESHOLD = 9; // Zoom level at which to show detailed (dusun/specific) markers
+    const PROVINCE_ZOOM_THRESHOLD = 8; // Zoom level at which to show province markers
+    const DETAIL_ZOOM_THRESHOLD = 6; // Zoom level at which to show detailed (dusun/specific) markers
 
     // --- STYLE DEFINITION ---
     const mapStyles = [{
@@ -843,152 +831,29 @@
     ];
     // --- END STYLE DEFINITION ---
 
-    // async function initMap() {
-    //     const { Map } = await google.maps.importLibrary("maps");
-    //     ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-
-    //     map = new Map(document.getElementById("map"), {
-    //         center: { lat: centerLat, lng: centerLng },
-    //         zoom: initialZoom,
-    //         mapId: "7e7fb1bfd929ec61",
-    //     });
-
-    //     infoWindow = new google.maps.InfoWindow();
-
-    //     map.addListener('rightclick', (e) => {
-    //         const lat = e.latLng.lat();
-    //         const lng = e.latLng.lng();
-    //         Swal.fire({
-    //             title: 'Koordinat Lokasi',
-    //             html: `Latitude: <strong>${lat.toFixed(6)}</strong><br>Longitude: <strong>${lng.toFixed(6)}</strong>`,
-    //             icon: 'info',
-    //             confirmButtonText: 'OK'
-    //         });
-    //     });
-
-    //     let zoomChangeTimeout = null;
-
-    //     map.addListener('zoom_changed', () => {
-    //         console.log('Zoom changed to:', map.getZoom());
-
-    //         // Clear any existing timeout to debounce the zoom_changed event
-    //         if (zoomChangeTimeout) {
-    //             clearTimeout(zoomChangeTimeout);
-    //         }
-
-    //         // Delay the call to loadMapMarkers to avoid rapid consecutive calls
-    //         zoomChangeTimeout = setTimeout(() => {
-    //             const currentZoom = map.getZoom();
-    //             const provinsiId = $('#provinsiFilter').val();
-
-    //             // Only reload markers if the zoom level is appropriate for the current view
-    //             if (provinsiId && currentZoom >= DETAIL_ZOOM_THRESHOLD) {
-    //                 loadMapMarkers(); // Load dusun markers
-    //             } else if (!provinsiId && currentZoom < DETAIL_ZOOM_THRESHOLD) {
-    //                 loadMapMarkers(); // Load province markers
-    //             }
-    //         }, 500); // 500ms debounce
-    //     });
-
-    //     if (typeof AdvancedMarkerElement === 'undefined') {
-    //         console.error("Failed to import AdvancedMarkerElement from Google Maps Library.");
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Gagal memuat komponen peta',
-    //             text: 'Terjadi masalah saat memuat peta. Silakan refresh halaman.',
-    //             timer: 5000,
-    //             timerProgressBar: true,
-    //             showConfirmButton: false,
-    //             position: 'top-end',
-    //         });
-    //         return;
-    //     }
-
-    //     markerClusterer = new markerClusterer.MarkerClusterer({
-    //         map: map,
-    //         markers: [],
-    //         renderer: {
-    //             render: ({ count, position }) => {
-    //                 return new google.maps.Marker({
-    //                     position: position,
-    //                     icon: {
-    //                         url: `https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m${Math.min(Math.floor(count / 10) + 1, 5)}.png`,
-    //                         scaledSize: new google.maps.Size(50, 50),
-    //                     },
-    //                     label: {
-    //                         text: String(count),
-    //                         color: 'white',
-    //                         fontSize: '12',
-    //                     },
-    //                     zIndex: 1000,
-    //                 });
-    //             },
-    //         },
-    //     });
-
-    //     markerClusterer.addListener('clusterclick', (cluster) => {
-    //         const hasDusunMarker = cluster.markers.some(marker => marker.isDusun);
-
-    //         if (hasDusunMarker) {
-    //             const bounds = new google.maps.LatLngBounds();
-    //             cluster.markers.forEach(marker => {
-    //                 bounds.extend(marker.position);
-    //             });
-
-    //             // Fit the map to the bounds with padding
-    //             map.fitBounds(bounds, { padding: 50 });
-
-    //             // Cap the zoom level to a maximum of 14
-    //             const currentZoom = map.getZoom();
-    //             if (currentZoom > 14) {
-    //                 map.setZoom(14);
-    //             } else if (currentZoom < DETAIL_ZOOM_THRESHOLD) {
-    //                 map.setZoom(DETAIL_ZOOM_THRESHOLD); // Ensure at least DETAIL_ZOOM_THRESHOLD (10)
-    //             }
-    //         }
-    //     });
-
-    //     loadMapMarkers();
-    // }
-
     async function initMap() {
-        const { Map } = await google.maps.importLibrary("maps");
-        ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+        const {
+            Map
+        } = await google.maps.importLibrary("maps");
+        ({
+            AdvancedMarkerElement
+        } = await google.maps.importLibrary("marker"));
 
         map = new Map(document.getElementById("map"), {
-            center: { lat: centerLat, lng: centerLng },
+            center: {
+                lat: centerLat,
+                lng: centerLng
+            },
             zoom: initialZoom,
-            mapId: "7e7fb1bfd929ec61",
+            mapId: "7e7fb1bfd929ec61", // Make sure this is set and styles are configured in Cloud Console
+            // styles: mapStyles, // REMOVE THIS LINE IF USING mapId
         });
 
         infoWindow = new google.maps.InfoWindow();
 
-        map.addListener('rightclick', (e) => {
-            const lat = e.latLng.lat();
-            const lng = e.latLng.lng();
-            Swal.fire({
-                title: 'Koordinat Lokasi',
-                html: `Latitude: <strong>${lat.toFixed(6)}</strong><br>Longitude: <strong>${lng.toFixed(6)}</strong>`,
-                icon: 'info',
-                confirmButtonText: 'OK'
-            });
-        });
-
-        let zoomChangeTimeout = null;
         map.addListener('zoom_changed', () => {
             console.log('Zoom changed to:', map.getZoom());
-            if (zoomChangeTimeout) {
-                clearTimeout(zoomChangeTimeout);
-            }
-            zoomChangeTimeout = setTimeout(() => {
-                const currentZoom = map.getZoom();
-                const provinsiId = $('#provinsiFilter').val();
-                if (provinsiId && currentZoom >= DETAIL_ZOOM_THRESHOLD) {
-                    loadMapMarkers();
-                } else if (!provinsiId && currentZoom < DETAIL_ZOOM_THRESHOLD) {
-                    loadMapMarkers();
-                }
-            }, 500);
+            loadMapMarkers(); // Re-load markers based on new zoom level
         });
 
         if (typeof AdvancedMarkerElement === 'undefined') {
@@ -1005,47 +870,13 @@
             return;
         }
 
+        // Initialize MarkerClusterer
         markerClusterer = new markerClusterer.MarkerClusterer({
             map: map,
-            markers: [],
-            renderer: {
-                render: ({ count, position }) => {
-                    return new google.maps.Marker({
-                        position: position,
-                        icon: {
-                            url: `https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m${Math.min(Math.floor(count / 10) + 1, 5)}.png`,
-                            scaledSize: new google.maps.Size(50, 50),
-                        },
-                        label: {
-                            text: String(count),
-                            color: 'white',
-                            fontSize: '12',
-                        },
-                        zIndex: 1000,
-                    });
-                },
-            },
+            markers: []
         });
 
-        markerClusterer.addListener('clusterclick', (cluster) => {
-            const hasDusunMarker = cluster.markers.some(marker => marker.isDusun);
-            if (hasDusunMarker) {
-                const bounds = new google.maps.LatLngBounds();
-                cluster.markers.forEach(marker => {
-                    bounds.extend(marker.position);
-                });
-                console.log('Cluster bounds:', bounds.toJSON());
-
-                map.fitBounds(bounds, { padding: 50 });
-                const currentZoom = map.getZoom();
-                if (currentZoom > 14) {
-                    map.setZoom(14);
-                } else if (currentZoom < DETAIL_ZOOM_THRESHOLD) {
-                    map.setZoom(DETAIL_ZOOM_THRESHOLD);
-                }
-            }
-        });
-
+        // Load initial markers when map is ready
         loadMapMarkers();
     }
 
@@ -1061,22 +892,11 @@
         markers = [];
     }
 
-
-
     async function loadMapMarkers() {
         const programId = $('#programFilter').val();
         const tahun = $('#tahunFilter').val();
         const provinsiId = $('#provinsiFilter').val();
         const currentZoom = map.getZoom();
-
-
-
-        // Skip loading if zoom is too high (e.g., > 14) to prevent excessive zooming
-        if (currentZoom > 14) {
-            // console.log('Zoom level too high, skipping marker reload.');
-            // console.table(map);
-            return;
-        }
 
         let apiUrl;
         let params = new URLSearchParams();
@@ -1084,14 +904,18 @@
         if (programId) params.append('program_id', programId);
         if (tahun) params.append('tahun', tahun);
 
-        // Determine which markers to load based on zoom and province selection
-        let isClusteredDesaView = provinsiId && provinsiId !== "" && currentZoom >= DETAIL_ZOOM_THRESHOLD;
+        // --- Updated Logic for API Call and Marker Type ---
+        let isClusteredDesaView = false; // Flag for new clustered desa view
 
-        if (isClusteredDesaView) {
+        if (provinsiId && provinsiId !== "") {
+            // If a specific province is selected, load the new combined desa data for clustering
             apiUrl = `{{ route('dashboard.api.combined_desa_map_data', ['provinsi_id' => ':provinsi_id']) }}`
                 .replace(':provinsi_id', provinsiId);
+            isClusteredDesaView = true;
         } else {
-            apiUrl = `{{ route('dashboard.api.markers') }}`;
+            // If no province is selected, show all province-level markers (red pins)
+            apiUrl = `{{ route('dashboard.api.markers') }}`; // This is HomeController::getFilteredProvinsi
+            isClusteredDesaView = false;
         }
 
         const queryString = params.toString();
@@ -1115,49 +939,53 @@
                 return;
             }
 
+            // Temporary array to hold markers before adding to clusterer
             const newMarkers = [];
 
             data.forEach(item => {
-                const lat = parseFloat(item.latitude);
-                const lng = parseFloat(item.longitude);
+                const lat = parseFloat(item.latitude); // Ensure it's latitude
+                const lng = parseFloat(item.longitude); // Ensure it's longitude
 
                 if (isNaN(lat) || isNaN(lng)) {
-                    console.warn(`Koordinat tidak valid untuk ${item.desa_name || item.nama || 'item'}:`, item);
+                    console.warn(`Koordinat tidak valid untuk ${item.desa_name || item.nama || 'item'}:`,
+                        item);
                     return;
                 }
-
-                // Log coordinates to check for duplicates
-                    console.log(`Marker: ${item.desa_name || 'N/A'}, Lat: ${lat}, Lng: ${lng}`);
 
                 let marker;
                 let infoContent;
 
                 if (isClusteredDesaView) {
-                    // Create AdvancedMarkerElement for dusun/desa bubbles
-                    const markerContent = createDesaBubbleMarkerContent(item);
-                    const { lat: newLat, lng: newLng } = addJitter(lat, lng);
+                    // Create AdvancedMarkerElement for clustered Desa bubbles
+                    const markerContent = createDesaBubbleMarkerContent(
+                        item); // New function for desa bubbles
                     marker = new AdvancedMarkerElement({
-                        // position: { lat, lng },
-                        position: { lat: newLat, lng: newLng },
-                        map: map,
-                        title: `Desa: ${item.desa_name || 'N/A'}`,
+                        position: {
+                            lat,
+                            lng
+                        },
+                        map: map, // Assign map initially, clusterer will manage it
+                        title: `Desa: ${item.desa_name || 'N/A'}`, // Tooltip for clusterer
                         content: markerContent,
-                        // isDusun: true,
                     });
-                    infoContent = generateDesaInfoContent(item);
-                    newMarkers.push(marker);
+                    infoContent = generateDesaInfoContent(item); // New function for desa info window
+                    newMarkers.push(marker); // Add to newMarkers array for clustering
                 } else {
                     // Create standard google.maps.Marker for Province data (red pin)
                     marker = new google.maps.Marker({
-                        position: { lat, lng },
+                        position: {
+                            lat,
+                            lng
+                        },
                         map: map,
                         title: item.nama || 'Provinsi',
+                        // No 'icon' property means default red pin
                     });
                     infoContent = generateProvinceInfoContent(item);
-                    markers.push(marker);
+                    markers.push(marker); // Add directly to map (no clustering for provinces)
                 }
 
-                // Attach info window listener
+                // Attach info window listener to the created marker
                 marker.addListener('click', () => {
                     infoWindow.close();
                     infoWindow.setContent(infoContent);
@@ -1165,9 +993,8 @@
                 });
             });
 
-            // Add markers to clusterer if in clustered view
+            // Add all newMarkers to the clusterer if in clustered view
             if (isClusteredDesaView && markerClusterer) {
-                // console.log('Cluster bounds:', bounds.toJSON());
                 markerClusterer.addMarkers(newMarkers);
             }
 

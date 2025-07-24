@@ -440,6 +440,35 @@ class KegiatanController extends Controller
         $kecamatanList = collect([]);
         $desaList = collect([]);
 
+        // Dokumen
+        $dokumen_initialPreview = [];
+        $dokumen_initialPreviewConfig = [];
+        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+        foreach ($dokumen_files as $file) {
+            $dokumen_initialPreview[] = $file->getUrl();
+            $dokumen_initialPreviewConfig[] = [
+                'caption' => $file->name,
+                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key' => $file->id,
+                'extra' => ['_token' => csrf_token()]
+            ];
+        }
+
+        // Media
+        $media_initialPreview = [];
+        $media_initialPreviewConfig = [];
+        $media_files = $kegiatan->getMedia('media_pendukung');
+        foreach ($media_files as $file) {
+            $media_initialPreview[] = $file->getUrl();
+            $media_initialPreviewConfig[] = [
+                'caption' => $file->name,
+                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key' => $file->id,
+                'extra' => ['_token' => csrf_token()]
+            ];
+        }
+
+
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
             'statusOptions',
@@ -450,7 +479,11 @@ class KegiatanController extends Controller
             'kecamatanList',
             'desaList',
             'preselectedProvinsiId',
-            'preselectedKabupatenId'
+            'preselectedKabupatenId',
+            'dokumen_initialPreview',
+            'dokumen_initialPreviewConfig',
+            'media_initialPreview',
+            'media_initialPreviewConfig'
         ));
     }
 

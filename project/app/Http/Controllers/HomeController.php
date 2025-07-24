@@ -132,15 +132,6 @@ class HomeController extends Controller
 
     public function getFilteredProvinsi(Request $request, $id = null)
     {
-        // Fetch province data
-        $query = Provinsi::query();
-        if ($id) {
-            // If an ID is provided, fetch only that province (for specific filtering)
-            $query->where('id', $id);
-        }
-        // Select necessary columns (id, nama, latitude, longitude)
-        $provinsiList = $query->select('id', 'nama', 'latitude', 'longitude')->get();
-
         // Build the stats query for beneficiaries and desa, joining through geographic tables
         $statsQuery = Meals_Penerima_Manfaat::query()
             ->whereNull('trmeals_penerima_manfaat.deleted_at')
@@ -162,6 +153,17 @@ class HomeController extends Controller
                     ->whereYear('tanggalselesai', '>=', $request->tahun);
             });
         }
+
+        if ($id) {
+            // If an ID is provided, fetch only that province (for specific filtering)
+            $provinsiList = Provinsi::where('id', $id)->select('id', 'nama', 'latitude', 'longitude')->get();
+            $statsQuery->where('provinsi.id', $id);
+        } else {
+            // Initial load: only get provinces that have beneficiaries matching the filters
+            $provinceIdsWithStats = (clone $statsQuery)->distinct('provinsi.id')->pluck('provinsi.id');
+            $provinsiList = Provinsi::whereIn('id', $provinceIdsWithStats)->select('id', 'nama', 'latitude', 'longitude')->get();
+        }
+
 
         $stats = $statsQuery
             ->select(
@@ -196,21 +198,21 @@ class HomeController extends Controller
             ->select(
                 'desa_id',
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN MAX(`lat`)
                     WHEN COUNT(id) > 1 THEN AVG(`lat`)
                     ELSE NULL
                 END as lokasi_lat
             '),
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN MAX(`long`)
                     WHEN COUNT(id) > 1 THEN AVG(`long`)
                     ELSE NULL
                 END as lokasi_long
             '),
                 DB::raw('
-                CASE 
+                CASE
                     WHEN COUNT(id) = 1 THEN "exact"
                     WHEN COUNT(id) > 1 THEN "averaged"
                     ELSE NULL
@@ -248,7 +250,7 @@ class HomeController extends Controller
             ) as longitude
         '),
             DB::raw('
-            CASE 
+            CASE
                 WHEN lokasi.lokasi_lat IS NOT NULL THEN lokasi.lokasi_source
                 WHEN dusun.latitude IS NOT NULL THEN "dusun"
                 ELSE "kabupaten"
