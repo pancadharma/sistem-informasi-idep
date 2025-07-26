@@ -500,18 +500,18 @@
                                                             <input type="number" id="penerimamanfaatdewasaperempuan"
                                                                 name="penerimamanfaatdewasaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasaperempuan', $kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatdewasalakilaki"
                                                                 name="penerimamanfaatdewasalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasalakilaki', $kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatdewasatotal"
                                                                 name="penerimamanfaatdewasatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatdewasatotal', $kegiatan->penerimamanfaatdewasatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--lansia row-->
@@ -524,18 +524,18 @@
                                                             <input type="number" id="penerimamanfaatlansiaperempuan"
                                                                 name="penerimamanfaatlansiaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansiaperempuan', $kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatlansialakilaki"
                                                                 name="penerimamanfaatlansialakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansialakilaki', $kegiatan->penerimamanfaatlansialakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatlansiatotal"
                                                                 name="penerimamanfaatlansiatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlansiatotal', $kegiatan->penerimamanfaatlansiatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--remaja row-->
@@ -548,18 +548,18 @@
                                                             <input type="number" id="penerimamanfaatremajaperempuan"
                                                                 name="penerimamanfaatremajaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajaperempuan', $kegiatan->penerimamanfaatremajaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatremajalakilaki"
                                                                 name="penerimamanfaatremajalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajalakilaki', $kegiatan->penerimamanfaatremajalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatremajatotal"
                                                                 name="penerimamanfaatremajatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatremajatotal', $kegiatan->penerimamanfaatremajatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--anak-anak row-->
@@ -572,18 +572,18 @@
                                                             <input type="number" id="penerimamanfaatanakperempuan"
                                                                 name="penerimamanfaatanakperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanakperempuan', $kegiatan->penerimamanfaatanakperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatanaklakilaki"
                                                                 name="penerimamanfaatanaklakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanaklakilaki', $kegiatan->penerimamanfaatanaklakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatanaktotal"
                                                                 name="penerimamanfaatanaktotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatanaktotal', $kegiatan->penerimamanfaatanaktotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <tr class="align-middle text-center text-nowrap">
@@ -593,18 +593,18 @@
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatperempuantotal"
                                                                 name="penerimamanfaatperempuantotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatperempuantotal', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1">
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatlakilakitotal"
                                                                 name="penerimamanfaatlakilakitotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlakilakitotal', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaattotal"
                                                                 name="penerimamanfaattotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaattotal', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </th>
                                                     </tr>
                                                 </tbody>
@@ -649,19 +649,19 @@
                                                             <input type="number" id="penerimamanfaatdisabilitasperempuan"
                                                                 name="penerimamanfaatdisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitasperempuan', $kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatdisabilitaslakilaki"
                                                                 name="penerimamanfaatdisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitaslakilaki', $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatdisabilitastotal"
                                                                 name="penerimamanfaatdisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatdisabilitastotal', $kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--non_disabilitas row-->
@@ -675,20 +675,20 @@
                                                                 id="penerimamanfaatnondisabilitasperempuan"
                                                                 name="penerimamanfaatnondisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitasperempuan', $kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number"
                                                                 id="penerimamanfaatnondisabilitaslakilaki"
                                                                 name="penerimamanfaatnondisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitaslakilaki', $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatnondisabilitastotal"
                                                                 name="penerimamanfaatnondisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatnondisabilitastotal', $kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--marjinal row-->
@@ -701,19 +701,19 @@
                                                             <input type="number" id="penerimamanfaatmarjinalperempuan"
                                                                 name="penerimamanfaatmarjinalperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinalperempuan', $kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatmarjinallakilaki"
                                                                 name="penerimamanfaatmarjinallakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinallakilaki', $kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatmarjinaltotal"
                                                                 name="penerimamanfaatmarjinaltotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatmarjinaltotal', $kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--total beneficiaries difabel-->
@@ -726,19 +726,19 @@
                                                             <input type="number" id="total_beneficiaries_perempuan"
                                                                 name="total_beneficiaries_perempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_perempuan', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="total_beneficiaries_lakilaki"
                                                                 name="total_beneficiaries_lakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_lakilaki', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="beneficiaries_difable_total"
                                                                 name="beneficiaries_difable_total"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('beneficiaries_difable_total', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </td>
                                                     </tr>
 
@@ -769,12 +769,11 @@
                                                     )
                                                 </span>
                                             </label>
-                                            <div class="form-group file-loading">
-                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
+                                            <div class="form-group">
+                                                <div class="needsclick dropzone" id="dokumen_pendukung-dropzone">
+                                                </div>
                                             </div>
-                                            <div id="captions-container-docs"></div>
+                                            <div id="dokumen_pendukung_uploaded_files" class="row"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -791,12 +790,11 @@
                                                     ( {{ __('allowed file: .jpg, .png, .jpeg | max: 50 MB') }} )
                                                 </span>
                                             </label>
-                                            <div class="form-group file-loading">
-                                                <input id="media_pendukung" name="media_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
+                                            <div class="form-group">
+                                                <div class="needsclick dropzone" id="media_pendukung-dropzone">
+                                                </div>
                                             </div>
-                                            <div id="captions-container-media"></div>
+                                            <div id="media_pendukung_uploaded_files" class="row"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -945,7 +943,9 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @stack('basic_tab_js')
-{{-- @include('tr.kegiatan.js.tabs.basic') --}}
+<script>
+    @include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
+</script>
 <script>
     let uniqueId = Date.now();
     var provinsiLayer = null;
@@ -1086,6 +1086,28 @@
             },
             allowClear: true
         });
+
+        // Initial load of dynamic form based on existing jenis_kegiatan
+        const initialJenisKegiatan = $('#jeniskegiatan_id').val();
+        if (initialJenisKegiatan) {
+            const initialFieldPrefix = formFieldMap[initialJenisKegiatan];
+            const formContainer = $('#dynamic-form-container');
+            if (initialFieldPrefix) {
+                const initialFormFields = getFormFields(initialFieldPrefix, {{ Js::from($kegiatan->kegiatanHasil) }});
+                formContainer.append(initialFormFields);
+
+                $('.summernote').each(function() {
+                    const placeholder = $(this).attr('placeholder');
+                    $(this).summernote({
+                        inheritPlaceholder: true,
+                        height: 150,
+                        width: '100%',
+                        codeviewFilter: false,
+                    });
+                    $(this).summernote('placeholder', placeholder);
+                });
+            }
+        }
 
         $('.list-lokasi-kegiatan .lokasi-kegiatan').each(function() {
             const uniqueId = $(this).data('unique-id');
