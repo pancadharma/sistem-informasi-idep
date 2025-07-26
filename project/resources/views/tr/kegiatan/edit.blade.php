@@ -137,13 +137,9 @@
                                         <div class="select2-purple">
                                             <select name="jeniskegiatan_id" id="jeniskegiatan_id"
                                                 class="form-control select2">
-                                                <option value="">{{ __('global.pleaseSelect') }}</option>
-                                                @foreach ($jenisKegiatanList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ old('jeniskegiatan_id', $kegiatan->jeniskegiatan_id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
-                                                @endforeach
+                                                @if ($kegiatan->jeniskegiatan)
+                                                    <option value="{{ $kegiatan->jeniskegiatan->id }}" selected>{{ $kegiatan->jeniskegiatan->nama }}</option>
+                                                @endif
                                             </select>
 
                                         </div>
@@ -156,11 +152,8 @@
                                         <div class="select2-purple">
                                             <select name="sektor_id[]" id="sektor_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
-                                                @foreach ($sektorList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('sektor_id', $kegiatan->sektor->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                @foreach ($kegiatan->sektor as $item)
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
 
@@ -231,10 +224,7 @@
                                             <select name="mitra_id[]" id="mitra_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.mitra') }}">
                                                 @foreach ($kegiatan->mitra as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('mitra_id', $kegiatan->mitra->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -435,7 +425,7 @@
                                         </label>
                                         <textarea name="deskripsilatarbelakang" id="deskripsilatarbelakang"
                                             placeholder=" {{ __('cruds.kegiatan.description.latar_belakang_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsilatarbelakang', $kegiatan->deskripsilatarbelakang) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- tujuan kegiatan -->
@@ -448,7 +438,7 @@
                                         </label>
                                         <textarea name="deskripsitujuan" id="deskripsitujuan"
                                             placeholder=" {{ __('cruds.kegiatan.description.tujuan_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsitujuan', $kegiatan->deskripsitujuan) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- siapa deskripsi keluaran kegiatan -->
@@ -462,7 +452,7 @@
 
                                         <textarea name="deskripsikeluaran" id="deskripsikeluaran"
                                             placeholder=" {{ __('cruds.kegiatan.description.keluaran_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsikeluaran', $kegiatan->deskripsikeluaran) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- Peserta yang terlibat -->
@@ -1089,84 +1079,6 @@
             }
         });
 
-        // $(`#kabupaten_id`).select2({
-        //     placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
-        //     allowClear: true,
-        //     ajax: {
-        //         url: "{{ route('api.kegiatan.kabupaten') }}",
-        //         dataType: 'json',
-        //         delay: 250,
-        //         data: function(params) {
-        //             const provinsiId = $(`#provinsi_id`).val();
-        //             return {
-        //                 search: params.term,
-        //                 provinsi_id: provinsiId,
-        //                 page: params.page || 1
-        //             };
-        //         },
-        //         processResults: function(data, params) {
-        //             params.page = params.page || 1;
-        //             return {
-        //                 results: data.results,
-        //                 pagination: {
-        //                     more: data.pagination.more
-        //                 }
-        //             };
-        //         },
-        //         cache: true,
-        //         error: function(jqXHR, textStatus, errorThrown) {
-        //             const provinsiId = $(`#provinsi_id`).val();
-        //             let errorMessage = "";
-        //             if (jqXHR.responseText) {
-        //                 try {
-        //                     const response = JSON.parse(jqXHR.responseText);
-        //                     if (response.message) {
-        //                         errorMessage = response
-        //                             .message; // Use message from the server if available
-        //                     }
-        //                 } catch (e) {
-        //                     console.warn("Could not parse JSON response:", jqXHR.responseText);
-        //                 }
-        //             }
-        //             if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
-        //                 Swal.fire({
-        //                     icon: 'warning' ?? textStatus,
-        //                     title: 'Failed to load Kabupaten data',
-        //                     text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
-        //                     timer: 1500,
-        //                 })
-        //                 setTimeout(() => {
-        //                     $(`#provinsi_id`).focus();
-        //                 }, 1000);
-        //                 return;
-        //             } else {
-        //                 // Handle other AJAX errors
-        //                 let errorMessage =
-        //                     '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
-        //                 Swal.fire({
-        //                     icon: 'error', // Always use 'error' for AJAX failures
-        //                     title: errorThrown ||
-        //                         'Error', // Use errorThrown if available, otherwise generic 'Error'
-        //                     text: errorMessage,
-        //                     timer: 2500, // Slightly longer timer for general errors
-        //                     showConfirmButton: false // Hide confirm button
-        //                 });
-
-        //             }
-        //         }
-        //     }
-        // }).on('select2:open', function(e) {
-        //     $('.select2-container').css('z-index', 1035);
-        // }).on('select2:close', function(e) {
-        //     $('.select2-container').css('z-index', 999);
-        // });
-
-
-        // initializeSelect2WithDynamicUrl("provinsi_id");
-        // initializeSelect2WithDynamicUrl("kabupaten_id");
-
-
-
         // start grok
         $('#provinsi_id, #kabupaten_id').select2({
             placeholder: function() {
@@ -1309,6 +1221,11 @@
 
             const newUniqueId = addNewLocationInputs();
             initializeLocationSelect2(newUniqueId, $(`#kecamatan-${newUniqueId}`), $(`#kelurahan-${newUniqueId}`));
+        });
+
+        $('#status, #fasepelaporan').select2({
+            width: 'resolve',
+            minimumResultsForSearch: -1 // Disable search for static dropdowns
         });
 
         let isProgrammaticChange = false;

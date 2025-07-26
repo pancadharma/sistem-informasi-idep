@@ -401,7 +401,7 @@ class KegiatanController extends Controller
     public function edit($id)
     {
         $kegiatan = Kegiatan::with([
-            'programOutcomeOutputActivity',
+            'programoutcomeoutputactivity.program_outcome_output.program_outcome.program',
             'sektor',
             'mitra',
             'user',

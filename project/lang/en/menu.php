@@ -29,7 +29,7 @@ return [
     'desa'              => 'Village',
     'dusun'             => 'Hamlet',
     'user_management'   => 'User Management',
-    'role'              => 'Role',
+    'role'              => 'Control Access',
     'roles'             => 'Position',
     'user'              => 'User',
     'users'             => 'Users',

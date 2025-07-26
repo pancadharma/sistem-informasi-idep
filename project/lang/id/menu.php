@@ -27,7 +27,7 @@ return [
     'desa'              => 'Desa',
     'dusun'             => 'Dusun',
     'user_management'   => 'Manajemen User',
-    'role'              => 'Role',
+    'role'              => 'Akses Sistem',
     'roles'             => 'Jabatan',
     'user'              => 'Pengguna',
     'users'             => 'Pengguna',
