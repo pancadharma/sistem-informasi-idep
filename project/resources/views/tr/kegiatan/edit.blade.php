@@ -769,11 +769,12 @@
                                                     )
                                                 </span>
                                             </label>
-                                            <div class="form-group">
-                                                <div class="needsclick dropzone" id="dokumen_pendukung-dropzone">
-                                                </div>
+                                            <div class="form-group file-loading">
+                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file"
+                                                    class="form-control" multiple data-show-upload="false"
+                                                    data-show-caption="true">
                                             </div>
-                                            <div id="dokumen_pendukung_uploaded_files" class="row"></div>
+                                            <div id="captions-container-docs"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -790,11 +791,12 @@
                                                     ( {{ __('allowed file: .jpg, .png, .jpeg | max: 50 MB') }} )
                                                 </span>
                                             </label>
-                                            <div class="form-group">
-                                                <div class="needsclick dropzone" id="media_pendukung-dropzone">
-                                                </div>
+                                            <div class="form-group file-loading">
+                                                <input id="media_pendukung" name="media_pendukung[]" type="file"
+                                                    class="form-control" multiple data-show-upload="false"
+                                                    data-show-caption="true">
                                             </div>
-                                            <div id="media_pendukung_uploaded_files" class="row"></div>
+                                            <div id="captions-container-media"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -865,7 +867,8 @@
 @include('tr.kegiatan.modal._preview')
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
@@ -936,13 +939,10 @@
 
 <script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
 <script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/buffer.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/sortable.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/plugins/piexif.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/fileinput.min.js') }}"></script>
-<script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
+
 
 @stack('basic_tab_js')
+@include('tr.kegiatan.js._dropzone_scripts')
 <script>
     @include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
 </script>

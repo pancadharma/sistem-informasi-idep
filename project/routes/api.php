@@ -22,3 +22,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () 
     Route::resource('permissions', 'App\Http\Controllers\Admin\PermissionController')->except(['create', 'edit']);
     Route::resource('roles2', 'App\Http\Controllers\Admin\RoleController2')->except(['create', 'edit']);
 });
+
+Route::post('kegiatan/storeMedia', [App\Http\Controllers\Admin\KegiatanController::class, 'storeMedia'])->name('api.kegiatan.storeMedia');
+Route::delete('kegiatan/deleteMedia/{media_id}', [App\Http\Controllers\Admin\KegiatanController::class, 'deleteMedia'])->name('api.kegiatan.delete_media');

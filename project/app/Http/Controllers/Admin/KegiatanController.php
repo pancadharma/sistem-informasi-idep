@@ -903,5 +903,31 @@ class KegiatanController extends Controller
     //     }
     // }
 
-    //method to store kegiatan basic tab data
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path('tmp/uploads');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file('file');
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            'name'          => $name,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
+    }
+
+    public function deleteMedia(Request $request, $media_id)
+    {
+        $media = Media::find($media_id);
+        if ($media) {
+            $media->delete();
+            return response()->json(['message' => 'File deleted successfully']);
+        }
+        return response()->json(['message' => 'File not found'], 404);
+    }
 }

@@ -1,2 +1,3 @@
-- **2025-07-27: Corrected JavaScript file inclusion in `edit.blade.php`**
-  - Changed `@include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')` to `<script src="{{ asset('resources/views/tr/kegiatan/js/hasil_kegiatan_dynamic_form.js') }}"></script>` in `resources/views/tr/kegiatan/edit.blade.php` to resolve "View not found" error and correctly load the JavaScript file.
+
+- **2025-07-27: Implemented `storeMedia` and `deleteMedia` methods in `KegiatanController`**
+  - Added methods to handle file uploads and deletions for Dropzone.js integration.
