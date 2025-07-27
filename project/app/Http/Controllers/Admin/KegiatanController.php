@@ -291,112 +291,12 @@ class KegiatanController extends Controller
         $modelClass = $modelMapping[$jenisKegiatan];
         return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
     }
-
-    // public function edit($id)
-    // {
-    //     // $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
-    //     $kegiatan = Kegiatan::with([
-    //         'programOutcomeOutputActivity',
-    //         'sektor',
-    //         'mitra',
-    //         'user',
-    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
-    //         'jenisKegiatan',
-    //         'lokasi_kegiatan',
-    //         'kegiatan_penulis.peran',
-
-    //         'kegiatan_penulis.user',
-    //         'assessment',
-    //         'sosialisasi',
-    //         'pelatihan',
-    //         'pembelanjaan',
-    //         'pengembangan',
-    //         'kampanye',
-    //         'pemetaan',
-    //         'monitoring',
-    //         'kunjungan',
-    //         'konsultasi',
-    //         'lainnya'
-    //     ])->findOrFail($id);
-    //     $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
-    //     $ProvinsiList = Provinsi::select('id', 'nama')->get();
-    //     $sektorList = TargetReinstra::select('id', 'nama')->get();
-
-    //     $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
-    //     $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
-    //     $statusOptions = Kegiatan::STATUS_SELECT;
-
-    //     $kabupatenList = collect([]);
-    //     $kecamatanList = collect([]);
-    //     $desaList = collect([]);
-
-    //     // Process location data if exists
-    //     if (!$kegiatan->lokasi->isEmpty()) {
-    //         // Get the first location for initial dropdown population
-    //         $firstLokasi = $kegiatan->lokasi->first();
-
-    //         if (
-    //             $firstLokasi && $firstLokasi->desa && $firstLokasi->desa->kecamatan &&
-    //             $firstLokasi->desa->kecamatan->kabupaten && $firstLokasi->desa->kecamatan->kabupaten->provinsi
-    //         ) {
-
-    //             $provinsiId = $firstLokasi->desa->kecamatan->kabupaten->provinsi->id;
-    //             $kabupatenId = $firstLokasi->desa->kecamatan->kabupaten->id;
-    //             $kecamatanId = $firstLokasi->desa->kecamatan->id;
-
-    //             // Load location hierarchies for all locations
-    //             $kabupatenList = Kabupaten::select('id', 'nama')
-    //                 ->where('provinsi_id', $provinsiId)
-    //                 ->get();
-
-    //             $kecamatanList = Kecamatan::select('id', 'nama')
-    //                 ->where('kabupaten_id', $kabupatenId)
-    //                 ->get();
-
-    //             //each desa_id might have different kecamatan and the desa list should not depend to kecamatanID instead in this , kecamartan list should depend on desa_id at kegiatan_lokasi while merge with master kecamatan depend on kabupaten_id
-    //             $desaList = Kelurahan::select('id', 'nama')
-    //                 ->where('kecamatan_id', $kecamatanId)
-    //                 ->get();
-    //             // Kegiatan_Lokasi::with('desa.kecamatan')->where('kegiatan_id', $kegiatan->id)->get();
-    //             //');
-    //         }
-    //     }
-
-    //     foreach ($kegiatan->lokasi as $lokasi) {
-    //         $lokasi->desa = Kelurahan::find($lokasi->desa_id);
-    //         // $lokasi->kecamatan = Kecamatan::find($lokasi->desa->kecamatan_id);
-    //         // $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan->kabupaten_id);
-    //         $lokasi->kecamatan = Kecamatan::find($lokasi->desa ? $lokasi->desa->kecamatan_id : null);
-    //         $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan ? $lokasi->desa->kecamatan->kabupaten_id : null);
-    //         $lokasi->provinsi = Provinsi::find($lokasi->desa->kecamatan->kabupaten->provinsi_id);
-    //     }
-    //     // if (!$kegiatan->lokasi->isEmpty()) {
-    //     //     $provinsiId = $lokasi->desa->kecamatan->kabupaten->provinsi->id;
-    //     //     // $kabupatenId = $lokasi->desa->kecamatan->kabupaten->id;
-    //     //     // $kecamatanId = $lokasi->desa->kecamatan->id;
-    //     //     // $desaId = $lokasi->desa->id;
-
-    //     //     // $ProvinsiList = Provinsi::select('id', 'nama')->where('id', $provinsiId)->get();
-    //     //     // $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();
-    //     //     // $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $kabupatenId)->get();
-    //     //     // $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $kecamatanId)->get();
-    //     //     $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();
-    //     //     $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
-    //     //     $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
-    //     // }
-
-    //     // return $desaList;
-    //     return view('tr.kegiatan.edit', compact(
-    //         'kegiatan',
-    //         'statusOptions',
-    //         'jenisKegiatanList',
-    //         'sektorList',
-    //         'ProvinsiList',
-    //         'kabupatenList',
-    //         'kecamatanList',
-    //         'desaList',
-    //     ));
-    // }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function edit($id)
     {
@@ -446,11 +346,15 @@ class KegiatanController extends Controller
         $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
         foreach ($dokumen_files as $file) {
             $dokumen_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
             $dokumen_initialPreviewConfig[] = [
-                'caption' => $file->name,
+                'caption' => $caption,
                 'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
                 'key' => $file->id,
-                'extra' => ['_token' => csrf_token()]
+                'extra' => [
+                    '_token' => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                ]
             ];
         }
 
@@ -460,11 +364,15 @@ class KegiatanController extends Controller
         $media_files = $kegiatan->getMedia('media_pendukung');
         foreach ($media_files as $file) {
             $media_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
             $media_initialPreviewConfig[] = [
-                'caption' => $file->name,
+                'caption' => $caption,
                 'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
                 'key' => $file->id,
-                'extra' => ['_token' => csrf_token()]
+                'extra' => [
+                    '_token' => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                ]
             ];
         }
 
@@ -483,9 +391,126 @@ class KegiatanController extends Controller
             'dokumen_initialPreview',
             'dokumen_initialPreviewConfig',
             'media_initialPreview',
-            'media_initialPreviewConfig'
+            'media_initialPreviewConfig',
+
         ));
     }
+
+    // public function edit($id)
+    // {
+    //     $kegiatan = Kegiatan::with([
+    //         'programoutcomeoutputactivity.program_outcome_output.program_outcome.program',
+    //         'sektor',
+    //         'mitra',
+    //         'user',
+    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
+    //         'jenisKegiatan',
+    //         'lokasi_kegiatan',
+    //         'kegiatan_penulis.peran',
+    //         'kegiatan_penulis.user',
+    //         'assessment',
+    //         'sosialisasi',
+    //         'pelatihan',
+    //         'pembelanjaan',
+    //         'pengembangan',
+    //         'kampanye',
+    //         'pemetaan',
+    //         'monitoring',
+    //         'kunjungan',
+    //         'konsultasi',
+    //         'lainnya'
+    //     ])->findOrFail($id);
+
+    //     $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+    //     $provinsiList = Provinsi::select('id', 'nama')->get();
+    //     $sektorList = TargetReinstra::select('id', 'nama')->get();
+
+    //     $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+    //     $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
+    //     $statusOptions = Kegiatan::STATUS_SELECT;
+
+    //     $preselectedProvinsiId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->provinsi->id ?? null;
+    //     $preselectedKabupatenId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->id ?? null;
+
+    //     $kabupatenList = collect([]);
+    //     $kecamatanList = collect([]);
+    //     $desaList = collect([]);
+
+    //     // Define allowed extensions
+    //     $allowedDocExtensions = ['docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'];
+    //     $allowedMediaExtensions = ['jpg', 'png', 'jpeg'];
+
+    //     // Dokumen
+    //     $dokumen_initialPreview = [];
+    //     $dokumen_initialPreviewConfig = [];
+    //     $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+    //     foreach ($dokumen_files as $file) {
+    //         try {
+    //             $extension = strtolower($file->getExtension());
+    //             if (!in_array($extension, $allowedDocExtensions)) {
+    //                 \Log::warning("Invalid extension for dokumen file ID {$file->id}: {$extension}");
+    //                 continue;
+    //             }
+    //         $dokumen_initialPreview[] = $file->getUrl();
+    //             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+    //         $dokumen_initialPreviewConfig[] = [
+    //                 'caption' => $caption, // Avoid HTML in config, handle in JS
+    //                 'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+    //             'key' => $file->id,
+    //                 'extra' => [
+    //                     '_token' => csrf_token(),
+    //                     'keterangan' => $file->getCustomProperty('keterangan', '')
+    //                 ]
+    //         ];
+    //         } catch (\Exception $e) {
+    //             \Log::error("Failed to process dokumen file ID {$file->id}: {$e->getMessage()}");
+    //         }
+    //     }
+
+    //     // Media
+    //     $media_initialPreview = [];
+    //     $media_initialPreviewConfig = [];
+    //     $media_files = $kegiatan->getMedia('media_pendukung');
+    //     foreach ($media_files as $file) {
+    //         try {
+    //             $extension = strtolower($file->getExtension());
+    //             if (!in_array($extension, $allowedMediaExtensions)) {
+    //                 \Log::warning("Invalid extension for media file ID {$file->id}: {$extension}");
+    //                 continue;
+    //             }
+    //         $media_initialPreview[] = $file->getUrl();
+    //             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+    //         $media_initialPreviewConfig[] = [
+    //                 'caption' => $caption,
+    //             'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+    //             'key' => $file->id,
+    //                 'extra' => [
+    //                     '_token' => csrf_token(),
+    //                     'keterangan' => $file->getCustomProperty('keterangan', '')
+    //                 ]
+    //         ];
+    //         } catch (\Exception $e) {
+    //             \Log::error("Failed to process media file ID {$file->id}: {$e->getMessage()}");
+    //         }
+    //     }
+
+    //     return view('tr.kegiatan.edit', compact(
+    //         'kegiatan',
+    //         'statusOptions',
+    //         'jenisKegiatanList',
+    //         'sektorList',
+    //         'provinsiList',
+    //         'kabupatenList',
+    //         'kecamatanList',
+    //         'desaList',
+    //         'preselectedProvinsiId',
+    //         'preselectedKabupatenId',
+    //         'dokumen_initialPreview',
+    //         'dokumen_initialPreviewConfig',
+    //         'media_initialPreview',
+    //         'media_initialPreviewConfig'
+    //     ));
+    // }
 
     public function update(Request $request, $id)
     {
