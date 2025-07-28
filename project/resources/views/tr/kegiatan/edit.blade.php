@@ -19,17 +19,17 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
+    <form id="updateKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
         action="{{ route('kegiatan.update', [$kegiatan->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
             <div class="col-12 col-sm-12">
-                <div class="card card-primary card-tabs">
+                <div class="card card-info card-tabs">
                     <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-                        <button type="button" class="btn btn-danger float-right mr-2 mt-1"
-                            id="simpan_kegiatan">{{ __('global.save') }}</button>
-                        <ul class="nav nav-tabs border-bottom-1 border-primary kegiatan-border pt-2"
+                        <button type="button" class="btn btn-warning float-right mr-2 mt-1"
+                            id="update_kegiatan">{{ __('global.update') }}</button>
+                        <ul class="nav nav-tabs border-bottom-1 border-danger kegiatan-border pt-2"
                             id="details-kegiatan-tab" role="tablist">
                             <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse"
                                 title="Minimize">
@@ -1559,51 +1559,51 @@
         });
 
         // Submit button in modal click handler
-        $('#btn-submit-preview').on('click', function() {
-            // Get form data
-            const formData = collectFormData();
+        // $('#btn-submit-preview').on('click', function() {
+        //     // Get form data
+        //     const formData = collectFormData();
 
-            // Send data via AJAX
-            $.ajax({
-                url: '{{ route('kegiatan.update', [$kegiatan->id]) }}',
-                type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    _method: 'PUT',
-                    ...formData
-                },
-                success: function(response) {
-                    // Close the modal
-                    $('#previewModal').modal('hide');
+        //     // Send data via AJAX
+        //     $.ajax({
+        //         url: '{{ route('api.kegiatan.update', [$kegiatan->id]) }}',
+        //         type: 'POST',
+        //         data: {
+        //             _token: $('meta[name="csrf-token"]').attr('content'),
+        //             _method: 'PUT',
+        //             ...formData
+        //         },
+        //         success: function(response) {
+        //             // Close the modal
+        //             $('#previewModal').modal('hide');
 
-                    // Show success message
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Data has been saved successfully',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
+        //             // Show success message
+        //             Swal.fire({
+        //                 icon: 'success',
+        //                 title: 'Success',
+        //                 text: 'Data has been saved successfully',
+        //                 timer: 2000,
+        //                 showConfirmButton: false
+        //             });
 
-                    // Optionally redirect or refresh
-                    // window.location.href = '{{ route('kegiatan.index') }}';
-                },
-                error: function(xhr) {
-                    // Handle errors
-                    let errorMessage = 'An error occurred while saving the data.';
+        //             // Optionally redirect or refresh
+        //             // window.location.href = '{{ route('kegiatan.index') }}';
+        //         },
+        //         error: function(xhr) {
+        //             // Handle errors
+        //             let errorMessage = 'An error occurred while saving the data.';
 
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
+        //             if (xhr.responseJSON && xhr.responseJSON.message) {
+        //                 errorMessage = xhr.responseJSON.message;
+        //             }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessage
-                    });
-                }
-            });
-        });
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Error',
+        //                 text: errorMessage
+        //             });
+        //         }
+        //     });
+        // });
     });
 
 

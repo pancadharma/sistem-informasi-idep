@@ -711,62 +711,144 @@ class KegiatanController extends Controller
         }
     }
 
-    public function updateApi(Request $request, Kegiatan $kegiatan)
+    public function updateAPI(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
         try {
+            $data = $request->validated();
             DB::beginTransaction();
 
-            $kegiatan->update([
-                'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
-            ]);
+            // Update main Kegiatan record
+            $kegiatan->update($data);
 
-            $this->syncRelationships($request, $kegiatan);
-            $this->updateLocations($request, $kegiatan);
+            // Sync relationships
+            $kegiatan->mitra()->sync($request->input('mitra_id', []));
+            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+            // Update related data
+            $this->updateHasilKegiatan($request, $kegiatan);
+            $this->updateLocations($request, $kegiatan); // Reusing updateLocations
+            $this->storePenulisKegiatan($request, $kegiatan); // Reusing storePenulisKegiatan
+            $this->handleMediaUpdates($request, $kegiatan);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
-                'data' => $kegiatan,
+                'data' => $data ?? '',
                 'message' => __('global.update_success'),
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update record: ' . $th->getMessage(),
+                'message' => 'Failed to update kegiatan: ' . $th->getMessage(),
                 'error' => $th->getMessage(),
             ], 500);
         }
     }
 
-
-    public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    protected function updateHasilKegiatan(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        try {
-            $data = $request->validated();
+        $jenisKegiatan = (int)$request->input('jeniskegiatan_id');
+        $idKegiatan = $kegiatan->id;
 
-            DB::beginTransaction();
-            $kegiatan->update($data);
-            $kegiatan->mitra()->sync($request->input('mitra_id', []));
-            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+        $modelMapping = [
+            1 => Kegiatan_Assessment::class,
+            2 => Kegiatan_Sosialisasi::class,
+            3 => Kegiatan_Pelatihan::class,
+            4 => Kegiatan_Pembelanjaan::class,
+            5 => Kegiatan_Pengembangan::class,
+            6 => Kegiatan_Kampanye::class,
+            7 => Kegiatan_Pemetaan::class,
+            8 => Kegiatan_Monitoring::class,
+            9 => Kegiatan_Kunjungan::class,
+            10 => Kegiatan_Konsultasi::class,
+            11 => Kegiatan_Lainnya::class,
+        ];
 
-            // Update hasil kegiatan jika diperlukan
-            DB::commit();
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
+        }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kegiatan berhasil diperbarui',
-                'data' => $kegiatan,
-            ], 200);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memperbarui kegiatan',
-                'error' => $th->getMessage(),
-            ], 500);
+        $modelClass = $modelMapping[$jenisKegiatan];
+        $validatedData = $request->validated();
+        $validatedData['kegiatan_id'] = $idKegiatan;
+
+        // Update or create the type-specific record
+        $modelClass::updateOrCreate(
+            ['kegiatan_id' => $idKegiatan],
+            array_intersect_key($validatedData, array_flip($this->getTypeSpecificFields($jenisKegiatan)))
+        );
+    }
+
+    protected function handleMediaUpdates(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    {
+        // Handle existing media captions
+        if ($request->has('keterangan_existing')) {
+            foreach ($request->input('keterangan_existing', []) as $mediaId => $keterangan) {
+                $media = Media::find($mediaId);
+                if ($media && $media->model_id === $kegiatan->id) {
+                    $media->setCustomProperty('keterangan', $keterangan);
+                    $media->save();
+                }
+            }
+        }
+
+        // Handle new file uploads
+        if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            $captions = $request->input('keterangan_new', []);
+            $collections = [];
+
+            if ($request->hasFile('dokumen_pendukung')) {
+                foreach ($request->file('dokumen_pendukung') as $index => $file) {
+                    $tempPath = $file->store('temp');
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'dokumen_pendukung';
+                }
+            }
+
+            if ($request->hasFile('media_pendukung')) {
+                foreach ($request->file('media_pendukung') as $index => $file) {
+                    $tempPath = $file->store('temp');
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'media_pendukung';
+                }
+            }
+
+            // Queue processing for new files
+            ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);
         }
     }
+
+
+    // public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    // {
+    //     try {
+    //         $data = $request->validated();
+
+    //         DB::beginTransaction();
+    //         $kegiatan->update($data);
+    //         $kegiatan->mitra()->sync($request->input('mitra_id', []));
+    //         $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+    //         // Update hasil kegiatan jika diperlukan
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Kegiatan berhasil diperbarui',
+    //             'data' => $kegiatan,
+    //         ], 200);
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Gagal memperbarui kegiatan',
+    //             'error' => $th->getMessage(),
+    //         ], 500);
+    //     }
+    // }
 
     public function getKegiatan(Request $request)
     {

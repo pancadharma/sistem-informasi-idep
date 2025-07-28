@@ -920,7 +920,9 @@ return [
             'program_activity'                   => 'Please select a Program and Activity.',
             'program'                            => 'Please select a Program.',
             'activity'                           => 'Please select an Activity.',
-            'kab_change'                         => 'Are you sure you want to change the Kabupaten? This will reset the location fields.'
+            'kab_change'                         => 'Are you sure you want to change the Kabupaten? This will reset the location fields.',
+            'update_kegiatan'                    => 'Are you sure you want to update the Activity ?',
+            'store_kegiatan'                     => 'Are you sure you want to save the Activity?',
         ],
 
     ],

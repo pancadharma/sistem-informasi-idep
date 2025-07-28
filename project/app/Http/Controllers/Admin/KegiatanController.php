@@ -2,52 +2,53 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+use Exception;
 use Carbon\Carbon;
-use App\Models\Program;
-use App\Models\Kegiatan;
-use Illuminate\Http\Request;
-use App\Models\Program_Outcome;
-use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreKegiatanRequest;
-use App\Http\Resources\KegiatanResource;
+use App\Models\User;
 use App\Models\Dusun;
-use App\Models\Jenis_Bantuan;
-use App\Models\Jenis_Kegiatan;
-use App\Models\Kabupaten;
-use App\Models\Kecamatan;
-use App\Models\Kegiatan_Assessment;
-use App\Models\Kegiatan_Kampanye;
-use App\Models\Kegiatan_Konsultasi;
-use App\Models\Kegiatan_Kunjungan;
-use App\Models\Kegiatan_Lainnya;
-use App\Models\Kegiatan_Lokasi;
-use App\Models\Kegiatan_Monitoring;
-use App\Models\Kegiatan_Pelatihan;
-use App\Models\Kegiatan_Pembelanjaan;
-use App\Models\Kegiatan_Pemetaan;
-use App\Models\Kegiatan_Pengembangan;
-use App\Models\Kegiatan_Penulis;
-use App\Models\Kegiatan_Sosialisasi;
-use App\Models\Kelurahan;
+use App\Models\Peran;
+use App\Models\Satuan;
 use App\Models\mSektor;
 use App\Models\Partner;
-use App\Models\Peran;
+use App\Models\Program;
+use App\Models\Kegiatan;
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+use Illuminate\Http\Request;
+use App\Models\Jenis_Bantuan;
+use App\Models\Jenis_Kegiatan;
+use App\Models\TargetReinstra;
+use App\Models\Kegiatan_Lokasi;
+use App\Models\Program_Outcome;
+use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Penulis;
+use Yajra\DataTables\DataTables;
+use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Pemetaan;
+use App\Models\Kegiatan_Kunjungan;
+use App\Models\Kegiatan_Pelatihan;
+use App\Models\Kegiatan_Assessment;
+use App\Models\Kegiatan_Konsultasi;
+use App\Models\Kegiatan_Monitoring;
+use App\Http\Controllers\Controller;
+use App\Models\Kegiatan_Sosialisasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Kegiatan_Pembelanjaan;
+use App\Models\Kegiatan_Pengembangan;
 use App\Models\Program_Outcome_Output;
+use App\Http\Resources\KegiatanResource;
+use Dotenv\Exception\ValidationException;
+use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Requests\UpdateKegiatanRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
-use App\Models\Provinsi;
-use App\Models\Satuan;
-use App\Models\TargetReinstra;
-use App\Models\User;
-use Dotenv\Exception\ValidationException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
 
 class KegiatanController extends Controller
 {
@@ -512,61 +513,64 @@ class KegiatanController extends Controller
     //     ));
     // }
 
-    public function update(Request $request, $id)
+
+    // public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    // {
+    //     try {
+    //         $kegiatanController = new APIKegiatanController();
+    //         $response = $kegiatanController->updateAPI($request, $kegiatan);
+    //         return response()->json([
+    //             'success' => true,
+    //             'status' => 'success',
+    //             'data' => $response['data'],
+    //             'message' => 'Kegiatan update by UpdateAPI'
+    //         ], Response::HTTP_CREATED);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     } catch (ValidationException $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     } catch (HttpException $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], $e->getStatusCode());
+    //     }
+    // }
+
+    public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        $kegiatan = Kegiatan::findOrFail($id);
-        $validated = $request->validate([
-            'programoutcomeoutputactivity_id' => 'required|exists:trprogramoutcomeoutputactivity,id',
-            'jeniskegiatan_id' => 'required|exists:mjeniskegiatan,id',
-            'tanggalmulai' => 'required|date',
-            'tanggalselesai' => 'required|date|after:tanggalmulai',
-            'status' => 'required|in:Planned,Ongoing,Completed',
-            'deskripsilatarbelakang' => 'nullable|string',
-            'deskripsitujuan' => 'nullable|string',
-            'deskripsikeluaran' => 'nullable|string',
-            'deskripsiyangdikaji' => 'nullable|string',
-            'penerimamanfaatdewasaperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatdewasalakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatremajaperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatremajalakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatanakperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatanaklakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatdisabilitasperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatdisabilitaslakilaki' => 'nullable|integer|min:0',
-            'desa_id' => 'nullable|exists:kelurahan,id',
-            'lokasi' => 'nullable|string',
-            'long' => 'nullable|numeric',
-            'lat' => 'nullable|numeric',
-            'mitra' => 'nullable|array',
-            'mitra.*' => 'exists:mpartner,id',
-            'penulis' => 'nullable|array',
-            'penulis.*' => 'exists:users,id',
-        ]);
+        try {
+            $kegiatanController = new APIKegiatanController();
+            $response = $kegiatanController->updateAPI($request, $kegiatan);
 
-        $kegiatan->update($validated);
+            if ($response->getStatusCode() === 200) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('global.update_success'),
+                    'redirect' => route('kegiatan.index')
+                ], 200);
+            }
 
-        // Sync mitra
-        $kegiatan->mitra()->sync($request->input('mitra', []));
-
-        // Sync penulis (assuming peran_id is handled separately or defaults to a specific role)
-        $kegiatan->penulis()->sync($request->input('penulis', []));
-
-        // Update or create location
-        if ($request->filled('desa_id') || $request->filled('lokasi') || $request->filled('long') || $request->filled('lat')) {
-            $kegiatan->lokasi()->updateOrCreate(
-                ['kegiatan_id' => $kegiatan->id],
-                [
-                    'desa_id' => $request->desa_id,
-                    'lokasi' => $request->lokasi,
-                    'long' => $request->long,
-                    'lat' => $request->lat,
-                ]
-            );
+            return response()->json([
+                'success' => false,
+                'message' => $response->getData()->message ?? 'Failed to update kegiatan.'
+            ], 400);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update kegiatan: ' . $th->getMessage()
+            ], 500);
         }
-
-        return redirect()->route('tr.kegiatan.index')->with('success', 'Kegiatan updated successfully.');
     }
-
 
     public function destroy($id)
     {

@@ -352,8 +352,8 @@
                 console.log(`pre ${displayData}`);
 
                 Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Apakah anda yakin ingin menyimpan data ini?',
+                    title: '{{ __('global.areYouSure') }}',
+                    text: '{{ __('cruds.kegiatan.validate.store_kegiatan') }}',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

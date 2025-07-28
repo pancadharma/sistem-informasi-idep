@@ -348,7 +348,7 @@ Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
     // using api to store / create kegiatan
     Route::post('kegiatan/store',               [App\Http\Controllers\API\KegiatanController::class, 'storeApi'])->name('kegiatan.store');
     Route::GET('kegiatan/edit/{id}',            [App\Http\Controllers\API\KegiatanController::class, 'edit'])->name('kegiatan.edit');
-    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'updateAPI'])->name('kegiatan.update');
     // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
     Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');

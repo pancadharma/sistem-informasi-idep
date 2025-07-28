@@ -1,4 +1,4 @@
-<script>
+{{-- <script>
     $(document).ready(function() {
     /**
      * Initializes a Bootstrap FileInput instance with caption generation.
@@ -55,6 +55,18 @@
             initialPreviewAsData: true,
             initialPreview: initialPreview,
             initialPreviewConfig: initialPreviewConfig,
+            previewFileIconSettings: {
+                'doc': '<i class="fas fa-file-word text-primary"></i>',
+                'docx': '<i class="fas fa-file-word text-primary"></i>',
+                'xls': '<i class="fas fa-file-excel text-success"></i>',
+                'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+                'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                'htm': '<i class="fas fa-file-code text-info"></i>',
+                'txt': '<i class="fas fa-file-alt text-info"></i>',
+            },
             // Custom error messages
             msgTooManyFiles: `You can upload up to ${maxCount} files only!`,
             msgFilesTooMany: 'Number of files selected ({n}) exceeds the maximum allowed limit of {m}.',
@@ -115,95 +127,114 @@
         {!! json_encode($media_initialPreviewConfig ?? []) !!}
     );
 });
-</script>
+</script> --}}
 
-{{--
-<script>
+
+{{-- <script>
 $(document).ready(function() {
-    var docFileCaptions = {}; // Object to track document files and captions
-    var mediaFileCaptions = {}; // Object to track media files and captions
+    var docFileIndex = 0;
+    var mediaFileIndex = 0;
+    var docFileCaptions = {};
+    var mediaFileCaptions = {};
 
-    function handleFileInput(
-        fileInputId,
-        captionContainerId,
-        fileCaptions,
-        allowedExtensions,
-        maxSize,
-        maxCount,
-        initialPreview,
-        initialPreviewConfig
-    ) {
-        const captionContainer = $('#' + captionContainerId);
-
-        // Create caption fields for existing files from the server.
-        initialPreviewConfig.forEach(config => {
-            const fileId = config.key;
-            // ✅ This is the only change needed.
-            // It gets the clean text for the label and the value for the input field.
-            const captionValue = config.extra?.keterangan || '';
-            const labelText = captionValue || $(config.caption).text(); // Use caption value or extract text from the HTML caption.
-
-            // Track the existing file
-            fileCaptions[fileId] = labelText;
-
-            // Add the caption input to the page
-            captionContainer.append(
-                `<div class="form-group" id="caption-group-${fileId}">
-                    <label class="control-label mb-0 small mt-2" for="caption-${fileId}">{{ __('cruds.program.ket_file') }}: <span class="text-primary">${labelText}</span></label>
-                    <input type="text" class="form-control" name="keterangan_existing[${fileId}]" id="caption-${fileId}" value="${captionValue}">
-                </div>`
-            );
-        });
-
+    function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize, maxCount, initialPreview, initialPreviewConfig) {
         $("#" + fileInputId).fileinput({
             theme: "fa5",
             showBrowse: false,
             showUpload: false,
-            showRemove: true,
+            showRemove: false,
             showCaption: true,
-            browseOnZoneClick: true,
+            showDrag: true,
             uploadAsync: false,
-            overwriteInitial: false,
+            browseOnZoneClick: true,
             maxFileSize: maxSize,
+            maxFilePreviewSize: 10240,
             maxFileCount: maxCount,
             allowedFileExtensions: allowedExtensions,
-            initialPreview: initialPreview,
-            initialPreviewConfig: initialPreviewConfig,
+            overwriteInitial: false,
+            previewFileIconSettings: {
+                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                'doc': '<i class="fas fa-file-word text-primary"></i>',
+                'docx': '<i class="fas fa-file-word text-primary"></i>',
+                'xls': '<i class="fas fa-file-excel text-success"></i>',
+                'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+                'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                'htm': '<i class="fas fa-file-code text-info"></i>',
+                'txt': '<i class="fas fa-file-alt text-info"></i>',
+            },
+            initialPreview: initialPreview || [],
+            initialPreviewConfig: initialPreviewConfig || [],
+            initialPreviewAsData: true,
+
+            // Custom messages
             msgTooManyFiles: `You can upload up to ${maxCount} files only!`,
-
-        }).on('fileloaded', function(event, file, previewId, index, reader) {
-            var uniqueId = fileInputId + '-' + (new Date().getTime()) + '-' + index;
-            fileCaptions[uniqueId] = file.name;
-
-            captionContainer.append(
+            msgSizeTooLarge: 'File "{name}" (<b>{size}</b>) exceeds the maximum allowed size of <b>{maxSize} KB</b>.',
+            msgInvalidFileExtension: 'File "{name}" has an invalid extension. Allowed extensions are: <b>{extensions}</b>.',
+            msgFilesTooMany: 'Number of files selected ({n}) exceeds the maximum allowed limit of {m}.',
+        }).on('filepreloaded', function(event, data, previewId, index) {
+            // Handle preloaded files
+            var uniqueId = fileInputId + '-' + data.key; // Use media ID for uniqueness
+            var caption = data.extra.keterangan || data.caption.replace(/<[^>]+>/g, ''); // Strip HTML from caption
+            fileCaptions[uniqueId] = caption;
+            $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+            $('#' + captionContainerId).append(
                 `<div class="form-group" id="caption-group-${uniqueId}">
-                    <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }}: <span class="text-red">${file.name}</span></label>
-                    <input type="text" class="form-control" name="keterangan_new[]" id="caption-${uniqueId}">
+                    <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${caption}</span></label>
+                    <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}" value="${caption}">
                 </div>`
             );
+        }).on('fileloaded', function(event, file, previewId, index, reader) {
+            // Handle new files
+            var uniqueId = fileInputId + '-' + (new Date().getTime() + index);
+            fileCaptions[uniqueId] = file.name;
             $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
-
+            $('#' + captionContainerId).append(
+                `<div class="form-group" id="caption-group-${uniqueId}">
+                    <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+                    <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}" value="">
+                </div>`
+            );
         }).on('fileremoved', function(event, id) {
-            var uniqueId = $(`#${$.escapeSelector(id)}`).data('unique-id');
-            if (uniqueId) {
-                delete fileCaptions[uniqueId];
-                $(`#caption-group-${uniqueId}`).remove();
-            }
+            var uniqueId = $(`#${$.escapeSelector(id)}`).attr('data-unique-id');
+            delete fileCaptions[uniqueId];
+            $(`#caption-group-${uniqueId}`).remove();
         }).on('fileclear', function(event) {
-            captionContainer.find('div[id^="caption-group-' + fileInputId + '"]').remove();
-            Object.keys(fileCaptions).forEach(key => {
-                if (key.startsWith(fileInputId)) {
-                    delete fileCaptions[key];
+            fileCaptions = {};
+            $('#' + captionContainerId).empty();
+        }).on('filebatchselected', function(event, files) {
+            // Only append captions for new files, preserve preloaded captions
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var uniqueId = fileInputId + '-' + (new Date().getTime() + i);
+                if (!Object.values(fileCaptions).includes(file.name)) { // Avoid duplicates
+                    fileCaptions[uniqueId] = file.name;
+                    $('#' + captionContainerId).append(
+                        `<div class="form-group" id="caption-group-${uniqueId}">
+                            <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+                            <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}" value="">
+                        </div>`
+                    );
                 }
-            });
-        }).on('filepredelete', function(event, key, jqXHR, data) {
-            delete fileCaptions[key];
-            $(`#caption-group-${key}`).remove();
+            }
         });
     }
 
-    // --- INITIALIZE THE UPLOADERS ---
 
+        // Initialize for media
+    handleFileInput(
+        'media_pendukung',
+        'captions-container-media',
+        mediaFileCaptions,
+        ['jpg', 'png', 'jpeg'],
+        55240,
+        25,
+        {!! json_encode($media_initialPreview ?? []) !!},
+        {!! json_encode($media_initialPreviewConfig ?? []) !!}
+    );
+
+    // Initialize for documents
     handleFileInput(
         'dokumen_pendukung',
         'captions-container-docs',
@@ -215,6 +246,101 @@ $(document).ready(function() {
         {!! json_encode($dokumen_initialPreviewConfig ?? []) !!}
     );
 
+
+});
+</script> --}}
+
+<script>
+$(document).ready(function() {
+    var docFileCaptions = {};
+    var mediaFileCaptions = {};
+
+    function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize, maxCount, initialPreview, initialPreviewConfig, captionPrefix) {
+        $("#" + fileInputId).fileinput({
+            theme: "fa5",
+            showBrowse: false,
+            showUpload: false,
+            showRemove: false,
+            showCaption: true,
+            showDrag: true,
+            uploadAsync: false,
+            browseOnZoneClick: true,
+            maxFileSize: maxSize,
+            maxFilePreviewSize: 10240,
+            maxFileCount: maxCount,
+            allowedFileExtensions: allowedExtensions,
+            overwriteInitial: false,
+            previewFileIconSettings: {
+                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                'doc': '<i class="fas fa-file-word text-primary"></i>',
+                'docx': '<i class="fas fa-file-word text-primary"></i>',
+                'xls': '<i class="fas fa-file-excel text-success"></i>',
+                'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+                'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                'htm': '<i class="fas fa-file-code text-info"></i>',
+                'txt': '<i class="fas fa-file-alt text-info"></i>',
+            },
+            initialPreview: initialPreview || [],
+            initialPreviewConfig: initialPreviewConfig || [],
+            initialPreviewAsData: true,
+            // Custom messages
+            msgTooManyFiles: `You can upload up to ${maxCount} files only!`,
+            msgSizeTooLarge: 'File "{name}" (<b>{size}</b>) exceeds the maximum allowed size of <b>{maxSize} KB</b>.',
+            msgInvalidFileExtension: 'File "{name}" has an invalid extension. Allowed extensions are: <b>{extensions}</b>.',
+            msgFilesTooMany: 'Number of files selected ({n}) exceeds the maximum allowed limit of {m}.',
+        }).on('filepreloaded', function(event, data, previewId, index) {
+            // Handle preloaded (existing) files
+            var uniqueId = data.key; // Media ID from initialPreviewConfig
+            var caption = data.extra.keterangan || data.caption.replace(/<[^>]+>/g, '');
+            fileCaptions[uniqueId] = caption;
+            $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+            $('#' + captionContainerId).append(
+                `<div class="form-group" id="caption-group-${uniqueId}">
+                    <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${data.caption}</span></label>
+                    <input type="text" class="form-control" name="${captionPrefix}[existing][${uniqueId}]" id="caption-${uniqueId}" value="${caption}">
+                </div>`
+            );
+        }).on('fileloaded', function(event, file, previewId, index, reader) {
+            // Handle newly uploaded files
+            var uniqueId = fileInputId + '-' + (new Date().getTime() + index);
+            fileCaptions[uniqueId] = file.name;
+            $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+            $('#' + captionContainerId).append(
+                `<div class="form-group" id="caption-group-${uniqueId}">
+                    <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+                    <input type="text" class="form-control" name="${captionPrefix}[new][]" id="caption-${uniqueId}" value="">
+                </div>`
+            );
+        }).on('fileremoved', function(event, id) {
+            // Remove caption when file is removed
+            var uniqueId = $(`#${$.escapeSelector(id)}`).attr('data-unique-id');
+            delete fileCaptions[uniqueId];
+            $(`#caption-group-${uniqueId}`).remove();
+        }).on('fileclear', function(event) {
+            // Clear all captions when file input is cleared
+            fileCaptions = {};
+            $('#' + captionContainerId).empty();
+        }).on('filebatchselected', function(event, files) {
+            // No need to append captions here; handled by fileloaded
+        });
+    }
+
+    // Initialize for documents
+    handleFileInput(
+        'dokumen_pendukung',
+        'captions-container-docs',
+        docFileCaptions,
+        ['docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'],
+        55240,
+        25,
+        {!! json_encode($dokumen_initialPreview ?? []) !!},
+        {!! json_encode($dokumen_initialPreviewConfig ?? []) !!},
+        'dokumen_keterangan'
+    );
+
+    // Initialize for media
     handleFileInput(
         'media_pendukung',
         'captions-container-media',
@@ -223,8 +349,8 @@ $(document).ready(function() {
         55240,
         25,
         {!! json_encode($media_initialPreview ?? []) !!},
-        {!! json_encode($media_initialPreviewConfig ?? []) !!}
+        {!! json_encode($media_initialPreviewConfig ?? []) !!},
+        'media_keterangan'
     );
 });
 </script>
- --}}
