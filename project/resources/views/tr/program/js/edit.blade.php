@@ -140,7 +140,7 @@
             allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
-            maxFileSize: 4096,
+            maxFileSize: 50096,
             maxFilePreviewSize: 2048,
             overwriteInitial: true,
             append: false,

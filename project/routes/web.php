@@ -279,7 +279,29 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 
 
 // Route Untuk Kegiatan
-Route::resource('kegiatan', KegiatanController::class);
+// Route::resource('kegiatan', KegiatanController::class);
+Route::get('kegiatan', [KegiatanController::class, 'index'])
+    ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
+Route::get('kegiatan/create', [KegiatanController::class, 'create'])
+    ->name('kegiatan.create')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::post('kegiatan',  [KegiatanController::class, 'store'])
+    ->name('kegiatan.store')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::get('kegiatan/{kegiatan}', [KegiatanController::class, 'show'])
+    ->name('kegiatan.show')
+    ->middleware('check.kegiatan:kegiatan_show');
+Route::get('kegiatan/{kegiatan}/edit',  [KegiatanController::class, 'edit'])
+    ->name('kegiatan.edit')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::put('kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
+    ->name('kegiatan.update')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
+    ->name('kegiatan.destroy')
+    ->middleware('check.kegiatan:kegiatan_delete');
+
+
 
 //bentuk or sektor kegiatan
 Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');

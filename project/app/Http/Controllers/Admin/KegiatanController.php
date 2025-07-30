@@ -170,24 +170,50 @@ class KegiatanController extends Controller
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
     }
 
+    // public function create()
+    // {
+    //     if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
+    //         // $program = Program::all();
+    //         $statusOptions = Kegiatan::STATUS_SELECT;
+    //         $kegiatan = new Kegiatan(); // Empty instance
+    //         $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
+
+    //         // $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+
+    //         return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
+    //     }
+    //     return response()->json([
+    //         'success' => false,
+    //         'status' => 'error',
+    //         'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
+    //     ], Response::HTTP_FORBIDDEN);
+    // }
+
     public function create()
     {
-        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-            // $program = Program::all();
-            $statusOptions = Kegiatan::STATUS_SELECT;
-            $kegiatan = new Kegiatan(); // Empty instance
-            $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
-
-            // $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-
-            return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
+        // If user is not logged in
+        if (!auth()->check()) {
+            return redirect()->route('login'); // or any named login route
         }
-        return response()->json([
-            'success' => false,
-            'status' => 'error',
-            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-        ], Response::HTTP_FORBIDDEN);
+        if (!auth()->check() || !(auth()->id() === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create'))) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'status' => 'error',
+                    'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access this Page',
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            abort(403, 'Unauthorized Permission');
+        }
+
+        $statusOptions = Kegiatan::STATUS_SELECT;
+        $kegiatan = new Kegiatan();
+        $kegiatan->setRelation('penulis', collect([]));
+
+        return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
     }
+
 
     public function store(StoreKegiatanRequest $request)
     {
@@ -345,15 +371,24 @@ class KegiatanController extends Controller
         $dokumen_initialPreview = [];
         $dokumen_initialPreviewConfig = [];
         $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+
         foreach ($dokumen_files as $file) {
             $dokumen_initialPreview[] = $file->getUrl();
             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $mimeType = $file->mime_type;
+
             $dokumen_initialPreviewConfig[] = [
-                'caption' => $caption,
-                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
-                'key' => $file->id,
-                'extra' => [
-                    '_token' => csrf_token(),
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $mimeType,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
                     'keterangan' => $file->getCustomProperty('keterangan', '')
                 ]
             ];
@@ -363,15 +398,24 @@ class KegiatanController extends Controller
         $media_initialPreview = [];
         $media_initialPreviewConfig = [];
         $media_files = $kegiatan->getMedia('media_pendukung');
+
         foreach ($media_files as $file) {
             $media_initialPreview[] = $file->getUrl();
             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $mimeType = $file->mime_type;
+
             $media_initialPreviewConfig[] = [
-                'caption' => $caption,
-                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
-                'key' => $file->id,
-                'extra' => [
-                    '_token' => csrf_token(),
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $mimeType,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
                     'keterangan' => $file->getCustomProperty('keterangan', '')
                 ]
             ];

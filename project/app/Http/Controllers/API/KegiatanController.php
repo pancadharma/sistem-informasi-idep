@@ -520,11 +520,13 @@ class KegiatanController extends Controller
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
+            $collections = array_fill(0, count($tempPaths), 'dokumen_pendukung');
+            
             ProcessKegiatanFiles::dispatch(
                 $kegiatan,
                 $tempPaths,
                 $request->input('keterangan', []),
-                'dokumen_pendukung'
+                $collections
             );
         }
 
@@ -535,11 +537,13 @@ class KegiatanController extends Controller
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
+            $collections = array_fill(0, count($tempPaths), 'media_pendukung');
+            
             ProcessKegiatanFiles::dispatch(
                 $kegiatan,
                 $tempPaths,
                 $request->input('keterangan', []),
-                'media_pendukung'
+                $collections
             );
         }
     }
