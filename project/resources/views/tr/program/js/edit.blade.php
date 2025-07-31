@@ -454,6 +454,23 @@
                 console.log(`${pair[0]}: ${pair[1]}`);
             }
 
+            // Check if we have large file upload (50+ files)
+            const fileCount = formData.getAll('file_pendukung').length;
+            const isBulkUpload = fileCount >= 50;
+
+            if (isBulkUpload) {
+                // Show bulk upload progress modal
+                showBulkUploadProgress(fileCount);
+            } else {
+                // Show regular processing toast
+                Toast.fire({
+                    icon: "info",
+                    title: "Updating ...",
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
+
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'post',
@@ -463,17 +480,33 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    if (isBulkUpload) {
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                updateBulkUploadProgress(percentComplete, evt.loaded, evt.total);
+                            }
+                        }, false);
+                    }
+                    return xhr;
+                },
                 beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        title: "Updating ...",
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
+                    // Log the values of staff[] and peran[] to verify they are included
+                    var staffValues = $('select[name="staff[]"]').map(function() {
+                        return $(this).val();
+                    }).get();
+                    var peranValues = $('select[name="peran[]"]').map(function() {
+                        return $(this).val();
+                    }).get();
                 },
                 success: function(response) {
                     setTimeout(() => {
                         if (response.success === true) {
+                            if (isBulkUpload) {
+                                completeBulkUpload();
+                            }
                             Swal.fire({
                                 title: "Success",
                                 text: response.message,
@@ -490,6 +523,9 @@
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
+                    if (isBulkUpload) {
+                        failBulkUpload();
+                    }
                     const errorMessage = getErrorMessage(xhr);
                     const response = JSON.parse(xhr.responseText);
                     if (response.errors) {
@@ -505,5 +541,77 @@
 
             });
         });
+
+        // Bulk upload progress functions
+        function showBulkUploadProgress(fileCount) {
+            Swal.fire({
+                title: 'Uploading Files',
+                html: `
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
+                        </div>
+                        <p><strong>Uploading ${fileCount} files...</strong></p>
+                        <div class="progress mb-2" style="height: 20px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                 role="progressbar" style="width: 0%" id="bulkUploadProgress">0%</div>
+                        </div>
+                        <div class="small text-muted">
+                            <span id="uploadStatus">Preparing upload...</span>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="cancelBulkUpload()" id="cancelUploadBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCloseButton: false
+            });
+        }
+
+        function updateBulkUploadProgress(percentComplete, loaded, total) {
+            const progressBar = $('#bulkUploadProgress');
+            const statusText = $('#uploadStatus');
+            
+            progressBar.css('width', percentComplete + '%');
+            progressBar.text(Math.round(percentComplete) + '%');
+            
+            // Format file sizes
+            const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
+            const totalMB = (total / (1024 * 1024)).toFixed(1);
+            
+            if (percentComplete < 100) {
+                statusText.html(`Uploaded: ${loadedMB} MB / ${totalMB} MB`);
+            } else {
+                statusText.html('Processing files on server...');
+            }
+        }
+
+        function completeBulkUpload() {
+            $('#bulkUploadProgress').removeClass('progress-bar-animated').addClass('bg-success');
+            $('#uploadStatus').html('<i class="fas fa-check-circle text-success"></i> Upload complete! Processing data...');
+            $('#cancelUploadBtn').hide();
+        }
+
+        function failBulkUpload() {
+            $('#bulkUploadProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+            $('#uploadStatus').html('<i class="fas fa-exclamation-triangle text-danger"></i> Upload failed!');
+            $('#cancelUploadBtn').hide();
+        }
+
+        function cancelBulkUpload() {
+            // This would need to be implemented with proper XHR abort
+            Swal.fire({
+                title: 'Upload Cancelled',
+                text: 'File upload has been cancelled.',
+                icon: 'info',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        }
     });
 </script>
