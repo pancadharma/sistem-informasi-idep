@@ -94,9 +94,9 @@
 
         handleFileInput('dokumen_pendukung', 'captions-container-docs', docFileCaptions, ['docx', 'doc', 'ppt',
             'pptx', 'xls', 'xlsx', 'pdf'
-        ], 55240, 25);
+        ], 40960, 20);
         handleFileInput('media_pendukung', 'captions-container-media', mediaFileCaptions, ['jpg', 'png',
             'jpeg'
-        ], 55240, 25);
+        ], 40960, 20);
     });
 </script>

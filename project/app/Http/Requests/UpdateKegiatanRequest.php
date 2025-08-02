@@ -82,12 +82,12 @@ class UpdateKegiatanRequest extends FormRequest
             'long'                                      => ['array'],
             'long.*'                                    => ['nullable', 'numeric', 'between:-180,180'], // Stricter validation
             // media validations
-            'dokumen_pendukung'                         => ['nullable', 'array', 'max:25'],
-            'dokumen_pendukung.*'                       => ['file', 'mimes:pdf,doc,docx,xls,xlsx,pptx', 'max:51200'],
-            'media_pendukung'                           => ['nullable', 'array', 'max:25'],
-            'media_pendukung.*'                         => ['file', 'mimes:jpg,jpeg,png', 'max:51200'],
-            'keterangan_existing'                        => ['nullable', 'array'],
-            'keterangan_existing.*'                      => ['nullable', 'string'],
+            'dokumen_pendukung'                         => ['nullable', 'array', 'max:50'],
+            'dokumen_pendukung.*'                       => ['file', 'mimes:pdf,doc,docx,xls,xlsx,pptx', 'max:48960'],
+            'media_pendukung'                           => ['nullable', 'array', 'max:50'],
+            'media_pendukung.*'                         => ['file', 'mimes:jpg,jpeg,png', 'max:48960'],
+            'keterangan_existing'                       => ['nullable', 'array'],
+            'keterangan_existing.*'                     => ['nullable', 'string'],
             'keterangan_new'                            => ['nullable', 'array'],
             'keterangan_new.*'                          => ['nullable', 'string'],
         ];

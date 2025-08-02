@@ -347,18 +347,22 @@
 
             // Check if we have large file upload (50+ files)
             const fileCount = formData.getAll('file_pendukung').length;
-            const isBulkUpload = fileCount >= 50;
+            const isBulkUpload = fileCount >= 10;
 
             if (isBulkUpload) {
                 // Show bulk upload progress modal
                 showBulkUploadProgress(fileCount);
             } else {
                 // Show regular processing toast
-                Toast.fire({
-                    icon: "info",
+                Swal.fire({
                     title: "Processing...",
-                    timer: 3000,
-                    timerProgressBar: true,
+                    icon: "info",
+                    html: "Please wait while we save your data. This may take a few minutes for large files...",
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
                 });
             }
 
@@ -368,6 +372,8 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                cache: false,
+                timeout: 300000, // 5 minutes timeout
                 xhr: function() {
                     var xhr = new window.XMLHttpRequest();
                     if (isBulkUpload) {
@@ -399,20 +405,49 @@
                         if (isBulkUpload) {
                             completeBulkUpload();
                         }
-                        Swal.fire({
-                            title: "{{ __('global.success') }}",
-                            text: response.message,
-                            icon: "success",
-                            timer: 500,
-                            timerProgressBar: true,
-                        }).then(() => {
-                            $form[ 0 ].reset();
-                            $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
-                            $('#pendonor-container').empty(); // Clear dynamically added rows
-                            $('#donor').val(null).trigger('change'); // Reset Select2 dropdown
-                            window.location.href = "{{ route('program.index') }}";
-                        });
+
+                        // Check if files are being processed in background
+                        if (response.message && response.message.includes('Files are being processed')) {
+                            Swal.fire({
+                                title: "{{ __('global.success') }}",
+                                html: `
+                                    <div class="text-center">
+                                        <div class="mb-3">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
+                                        </div>
+                                        <p><strong>${response.message}</strong></p>
+                                        <div class="progress mb-3" style="height: 20px;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                                 role="progressbar" style="width: 100%">Processing...</div>
+                                        </div>
+                                        <p class="text-muted small">You will be redirected shortly...</p>
+                                    </div>
+                                `,
+                                icon: "success",
+                                timer: 5000,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then(() => {
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "{{ __('global.success') }}",
+                                text: response.message,
+                                icon: "success",
+                                timer: 500,
+                                timerProgressBar: true,
+                            }).then(() => {
+                                $form[ 0 ].reset();
+                                $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
+                                $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                                $('#pendonor-container').empty(); // Clear dynamically added rows
+                                $('#donor').val(null).trigger('change'); // Reset Select2 dropdown
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        }
                     }
                 },
                 error: function (xhr) {
@@ -450,7 +485,7 @@
                         </div>
                         <p><strong>Uploading ${fileCount} files...</strong></p>
                         <div class="progress mb-2" style="height: 20px;">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
                                  role="progressbar" style="width: 0%" id="bulkUploadProgress">0%</div>
                         </div>
                         <div class="small text-muted">
@@ -473,14 +508,14 @@
         function updateBulkUploadProgress(percentComplete, loaded, total) {
             const progressBar = $('#bulkUploadProgress');
             const statusText = $('#uploadStatus');
-            
+
             progressBar.css('width', percentComplete + '%');
             progressBar.text(Math.round(percentComplete) + '%');
-            
+
             // Format file sizes
             const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
             const totalMB = (total / (1024 * 1024)).toFixed(1);
-            
+
             if (percentComplete < 100) {
                 statusText.html(`Uploaded: ${loadedMB} MB / ${totalMB} MB`);
             } else {

@@ -15,6 +15,7 @@ use App\Models\TargetReinstra;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\UpdateProgramRequest;
+use App\Jobs\ProcessProgramFiles;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
@@ -465,7 +466,7 @@ class ProgramController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $program,
-                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
+                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added') . '. Files are being processed in background.',
             ], Response::HTTP_CREATED);
         } catch (ValidationException $e) {
             DB::rollBack();
@@ -631,7 +632,7 @@ class ProgramController extends Controller
     }
 
     /**
-     * Handle file uploads with batch processing and better error handling
+     * Handle file uploads with job queue processing
      */
     private function handleFileUploads(Program $program, Request $request)
     {
@@ -640,57 +641,23 @@ class ProgramController extends Controller
             return;
         }
 
-        $timestamp = now()->format('Ymd_His');
-        $fileCount = 1;
+        // Store files temporarily and queue processing
+        $tempPaths = [];
         $files = $request->file('file_pendukung');
-        $captions = $request->input('captions', []);
-
-        \Log::info("Starting upload of " . count($files) . " files for program: " . $program->id);
-
-        // Process files in batches to avoid memory issues
-        $batchSize = 10;
-        $batches = array_chunk($files, $batchSize, true);
-
-        foreach ($batches as $batchIndex => $batch) {
-            foreach ($batch as $index => $file) {
-                try {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $extension = $file->getClientOriginalExtension();
-                    $programName = str_replace(' ', '_', $program->nama);
-                    $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
-                    $keterangan = $captions[$index] ?? $originalName;
-
-                    \Log::info("Uploading file {$fileCount}: {$fileName}");
-
-                    $program->addMedia($file)
-                        ->withCustomProperties([
-                            'keterangan' => $keterangan,
-                            'user_id' => auth()->user()->id,
-                            'original_name' => $originalName,
-                            'extension' => $extension,
-                            'upload_batch' => $batchIndex + 1
-                        ])
-                        ->usingName("{$programName}_{$originalName}_{$fileCount}")
-                        ->usingFileName($fileName)
-                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
-
-                    $fileCount++;
-
-                    // Clear memory after each file
-                    if ($fileCount % 5 === 0) {
-                        gc_collect_cycles();
-                    }
-                } catch (Exception $e) {
-                    \Log::error("Failed to upload file {$file->getClientOriginalName()}: " . $e->getMessage());
-                    throw new Exception("Failed to upload file {$file->getClientOriginalName()}: " . $e->getMessage());
-                }
-            }
-
-            // Clear memory after each batch
-            gc_collect_cycles();
+        
+        foreach ($files as $file) {
+            $tempPath = $file->store('temp');
+            $tempPaths[] = storage_path('app/' . $tempPath);
         }
 
-        \Log::info("Successfully uploaded " . ($fileCount - 1) . " files for program: " . $program->id);
+        // Dispatch job for processing
+        ProcessProgramFiles::dispatch(
+            $program,
+            $tempPaths,
+            $request->input('captions', [])
+        );
+
+        \Log::info("Queued " . count($files) . " files for processing for program: " . $program->id);
     }
 
     private function handleFileUpdates(Program $program, Request $request)

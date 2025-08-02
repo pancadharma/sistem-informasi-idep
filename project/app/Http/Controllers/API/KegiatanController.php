@@ -459,10 +459,10 @@ class KegiatanController extends Controller
     public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
     {
         $request->validate([
-            'dokumen_pendukung'     => 'nullable|array|max:25',
-            'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:51200',
-            'media_pendukung'       => 'nullable|array|max:25',
-            'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:51200',
+            'dokumen_pendukung'     => 'nullable|array|max:20',
+            'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:40960',
+            'media_pendukung'       => 'nullable|array|max:20',
+            'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:40960',
         ]);
 
         $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {

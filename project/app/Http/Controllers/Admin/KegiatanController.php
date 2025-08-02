@@ -1003,4 +1003,98 @@ class KegiatanController extends Controller
         }
         return response()->json(['message' => 'File not found'], 404);
     }
+
+    public function uploadTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|max:51200',
+                'collection' => 'required|string|in:dokumen_pendukung,media_pendukung'
+            ]);
+
+            $file = $request->file('file');
+            $collection = $request->input('collection');
+            
+            // Define allowed MIME types based on collection
+            $allowedMimes = $collection === 'dokumen_pendukung' 
+                ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx']
+                : ['jpg', 'jpeg', 'png'];
+            
+            // Validate file type
+            $extension = strtolower($file->getClientOriginalExtension());
+            if (!in_array($extension, $allowedMimes)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File type not allowed for this collection'
+                ], 422);
+            }
+
+            // Create temp directory if it doesn't exist
+            $tempPath = storage_path('app/temp/uploads');
+            if (!file_exists($tempPath)) {
+                mkdir($tempPath, 0755, true);
+            }
+
+            // Generate unique filename
+            $fileName = uniqid() . '_' . time() . '.' . $extension;
+            $filePath = $tempPath . '/' . $fileName;
+            
+            // Move file to temp location
+            $file->move($tempPath, $fileName);
+
+            return response()->json([
+                'success' => true,
+                'file_path' => $filePath,
+                'file_name' => $fileName,
+                'original_name' => $file->getClientOriginalName(),
+                'file_size' => $file->getSize(),
+                'mime_type' => $file->getMimeType(),
+                'collection' => $collection
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to upload file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file_path' => 'required|string'
+            ]);
+
+            $filePath = $request->input('file_path');
+            
+            // Security check - ensure file is in temp directory
+            if (strpos($filePath, storage_path('app/temp/uploads')) !== 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid file path'
+                ], 400);
+            }
+
+            if (file_exists($filePath)) {
+                unlink($filePath);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Temporary file deleted successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
