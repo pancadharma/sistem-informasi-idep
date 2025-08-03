@@ -36,7 +36,7 @@
                     {{-- Informasi Dasar --}}
                     <div class="card-body pb-0">
                         <div class="row">
-                                <div class="col-lg-9">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
                                         <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required oninput="this.value = this.value.toUpperCase();">
@@ -45,7 +45,7 @@
                                         <span class="text-danger">{{ $errors->first('kode') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-9">
                                     <div class="form-group">
                                         <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
                                         <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>

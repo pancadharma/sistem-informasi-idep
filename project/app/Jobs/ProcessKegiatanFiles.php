@@ -41,11 +41,28 @@ class ProcessKegiatanFiles implements ShouldQueue
                 continue;
             }
 
-            $originalName = pathinfo($filePath, PATHINFO_FILENAME);
+            // Extract the original filename from the temp file path
+            $tempFilename = pathinfo($filePath, PATHINFO_FILENAME);
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+            
+            // Try to extract the original filename from the temp filename
+            // Temp files are stored as uniqid() . '_' . trim($file->getClientOriginalName())
+            $parts = explode('_', $tempFilename, 2);
+            $originalDisplayName = isset($parts[1]) ? $parts[1] : $tempFilename;
+            
+            // Get the file extension from the original display name if it has one
+            $originalName = pathinfo($originalDisplayName, PATHINFO_FILENAME);
+            $originalExtension = pathinfo($originalDisplayName, PATHINFO_EXTENSION);
+            
+            // Use the original extension if available, otherwise use the temp file extension
+            $fileExtension = $originalExtension ?: $extension;
+            
             $kegiatanName = str_replace(' ', '_', $this->kegiatan->nama ?? 'kegiatan');
-            $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
-            $keterangan = $this->captions[$index] ?? $fileName;
+            $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$fileExtension}";
+            
+            // Use the caption if provided, otherwise use the original display name with extension
+            $keterangan = $this->captions[$index] ?? ($originalDisplayName . ($fileExtension ? ".{$fileExtension}" : ''));
+            
             $collectionName = $this->collectionNames[$index] ?? 'media_pendukung';
 
             try {
@@ -55,9 +72,10 @@ class ProcessKegiatanFiles implements ShouldQueue
                         'keterangan' => $keterangan,
                         'user_id' => $this->kegiatan->user_id,
                         'original_name' => $originalName,
-                        'extension' => $extension
+                        'extension' => $fileExtension,
+                        'updated_by' => $this->kegiatan->user_id
                     ])
-                    ->usingName("{$kegiatanName}_{$originalName}_{$fileCount}")
+                    ->usingName($originalDisplayName)
                     ->usingFileName($fileName)
                     ->toMediaCollection($collectionName);
 

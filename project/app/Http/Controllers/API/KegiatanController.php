@@ -459,9 +459,9 @@ class KegiatanController extends Controller
     public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
     {
         $request->validate([
-            'dokumen_pendukung'     => 'nullable|array|max:20',
+            'dokumen_pendukung'     => 'nullable|array|max:50',
             'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:40960',
-            'media_pendukung'       => 'nullable|array|max:20',
+            'media_pendukung'       => 'nullable|array|max:50',
             'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:40960',
         ]);
 
@@ -470,11 +470,12 @@ class KegiatanController extends Controller
             $fileCount = 1;
 
             foreach ($files as $index => $file) {
-                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $originalDisplayName = $file->getClientOriginalName();
+                $originalName = pathinfo($originalDisplayName, PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
                 $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan'); // Fallback if nama is null
                 $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
-                $keterangan = $captions[$index] ?? $fileName;
+                $keterangan = $captions[$index] ?? $originalDisplayName;
 
                 $media = $kegiatan
                     ->addMedia($file)
@@ -482,9 +483,10 @@ class KegiatanController extends Controller
                         'keterangan' => $keterangan,
                         'user_id' => auth()->user()->id,
                         'original_name' => $originalName,
-                        'extension' => $extension
+                        'extension' => $extension,
+                        'updated_by' => auth()->user()->id
                     ])
-                    ->usingName("{$kegiatanName}_{$originalName}_{$fileCount}")
+                    ->usingName($originalDisplayName)
                     ->usingFileName($fileName)
                     ->toMediaCollection($collectionName);
 
@@ -521,7 +523,7 @@ class KegiatanController extends Controller
             }
 
             $collections = array_fill(0, count($tempPaths), 'dokumen_pendukung');
-            
+
             ProcessKegiatanFiles::dispatch(
                 $kegiatan,
                 $tempPaths,
@@ -538,7 +540,7 @@ class KegiatanController extends Controller
             }
 
             $collections = array_fill(0, count($tempPaths), 'media_pendukung');
-            
+
             ProcessKegiatanFiles::dispatch(
                 $kegiatan,
                 $tempPaths,

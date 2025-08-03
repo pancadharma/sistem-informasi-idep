@@ -368,14 +368,31 @@ class KegiatanController extends Controller
         $desaList = collect([]);
 
         // Dokumen
+        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
         $dokumen_initialPreview = [];
         $dokumen_initialPreviewConfig = [];
-        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+
+        $imageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $officeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+        ];
 
         foreach ($dokumen_files as $file) {
             $dokumen_initialPreview[] = $file->getUrl();
             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
             $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
 
             $dokumen_initialPreviewConfig[] = [
                 'caption'       => $caption,
@@ -383,26 +400,36 @@ class KegiatanController extends Controller
                 'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
                 'key'           => $file->id,
                 'size'          => $file->size,
-                'type'          => $mimeType,
+                'type'          => $type,
                 'downloadUrl'   => $file->getUrl(),
                 'thumbnailUrl'  => $file->getUrl(),
                 'filename'      => $caption,
                 'extra'         => [
                     '_token'    => csrf_token(),
-                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                    'keterangan' => $file->getCustomProperty('keterangan', '' ?? $file->name)
                 ]
             ];
         }
 
         // Media
+        $media_files = $kegiatan->getMedia('media_pendukung');
         $media_initialPreview = [];
         $media_initialPreviewConfig = [];
-        $media_files = $kegiatan->getMedia('media_pendukung');
 
         foreach ($media_files as $file) {
             $media_initialPreview[] = $file->getUrl();
             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
             $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
 
             $media_initialPreviewConfig[] = [
                 'caption'       => $caption,
@@ -410,7 +437,7 @@ class KegiatanController extends Controller
                 'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
                 'key'           => $file->id,
                 'size'          => $file->size,
-                'type'          => $mimeType,
+                'type'          => $type,
                 'downloadUrl'   => $file->getUrl(),
                 'thumbnailUrl'  => $file->getUrl(),
                 'filename'      => $caption,
@@ -421,6 +448,7 @@ class KegiatanController extends Controller
             ];
         }
 
+        // return $dokumen_initialPreviewConfig;
 
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
@@ -1013,13 +1041,14 @@ class KegiatanController extends Controller
             ]);
 
             $file = $request->file('file');
+            $name = $file->getClientOriginalName();
             $collection = $request->input('collection');
-            
+
             // Define allowed MIME types based on collection
-            $allowedMimes = $collection === 'dokumen_pendukung' 
+            $allowedMimes = $collection === 'dokumen_pendukung'
                 ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx']
                 : ['jpg', 'jpeg', 'png'];
-            
+
             // Validate file type
             $extension = strtolower($file->getClientOriginalExtension());
             if (!in_array($extension, $allowedMimes)) {
@@ -1036,9 +1065,12 @@ class KegiatanController extends Controller
             }
 
             // Generate unique filename
-            $fileName = uniqid() . '_' . time() . '.' . $extension;
+
+            // user original name file,
+
+            $fileName = $name . '_' . time() . '.' . $extension;
             $filePath = $tempPath . '/' . $fileName;
-            
+
             // Move file to temp location
             $file->move($tempPath, $fileName);
 
@@ -1068,7 +1100,7 @@ class KegiatanController extends Controller
             ]);
 
             $filePath = $request->input('file_path');
-            
+
             // Security check - ensure file is in temp directory
             if (strpos($filePath, storage_path('app/temp/uploads')) !== 0) {
                 return response()->json([
