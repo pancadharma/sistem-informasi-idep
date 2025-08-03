@@ -92,10 +92,12 @@
             uploadAsync: false,
             browseOnZoneClick: true,
             maxFileSize: 25096,
+            maxFileCount: 50,
             allowedFileExtensions: [ 'jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls',
                 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
+            msgFilesTooMany: 'You can upload a maximum of {m} files. You have selected {n} files.',
             previewFileIconSettings: {
                 'doc': '<i class="fas fa-file-word text-primary"></i>',
                 'docx': '<i class="fas fa-file-word text-primary"></i>',
@@ -146,7 +148,8 @@
                     </div>`
             );
             // Store the unique identifier in the file preview element
-            $(`#${previewId}`).attr('data-unique-id', uniqueId);
+            $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+            // $(`#${previewId}`).attr('data-unique-id', uniqueId);
         }).on('fileremoved', function (event, id) {
             // Remove the corresponding caption input
             var uniqueId = $(`#${id}`).attr('data-unique-id');
@@ -276,6 +279,32 @@
 
         $('#createProgram').on('submit', function (e) {
             e.preventDefault();
+
+            // Validate file quantity before submission
+            const fileInput = document.getElementById('file_pendukung');
+            const maxFiles = 50;
+            const fileCount = fileInput.files ? fileInput.files.length : 0;
+
+            if (fileCount > maxFiles) {
+                Swal.fire({
+                    title: "File Upload Limit Exceeded!",
+                    html: `
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                            </div>
+                            <p><strong>You have uploaded ${fileCount} files.</strong></p>
+                            <p class="text-muted">Maximum allowed files: ${maxFiles}</p>
+                            <p class="text-danger">Please remove ${fileCount - maxFiles} file(s) and try again.</p>
+                        </div>
+                    `,
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3085d6"
+                });
+                return;
+            }
+
             $('#outcomeTemplate').find('textarea, input').attr('disabled', true);
             const $form = $(this);
             $form.find('button[type="submit"]').attr('disabled', true);
@@ -346,12 +375,12 @@
             }
 
             // Check if we have large file upload (50+ files)
-            const fileCount = formData.getAll('file_pendukung').length;
-            const isBulkUpload = fileCount >= 10;
+            const fileCounts = formData.getAll('file_pendukung').length;
+            const isBulkUpload = fileCounts >= 10;
 
             if (isBulkUpload) {
                 // Show bulk upload progress modal
-                showBulkUploadProgress(fileCount);
+                showBulkUploadProgress(fileCounts);
             } else {
                 // Show regular processing toast
                 Swal.fire({
@@ -455,17 +484,68 @@
                     if (isBulkUpload) {
                         failBulkUpload();
                     }
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.errors) {
-                        addInvalidClassToFields(response.errors);
+                    // const response = JSON.parse(xhr.responseText);
+                    // const errorMessage = getErrorMessage(xhr) || 'An error occurred.';
+
+                    let response;
+                    let errorMessage = 'An error occurred.';
+
+                    try {
+                        // Try to parse as JSON
+                        response = JSON.parse(xhr.responseText);
+                        errorMessage = getErrorMessage(xhr) || 'An error occurred.';
+                    } catch (e) {
+                        // If parsing fails, it's HTML or some other format
+                        console.error('Server returned non-JSON response:', xhr.responseText);
+
+                        // Try to extract error message from HTML if possible
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = xhr.responseText;
+                        const errorElements = tempDiv.querySelectorAll('h1, h2, h3, h4, p, .error, .message');
+                        if (errorElements.length > 0) {
+                            errorMessage = errorElements[0].textContent;
+                        }
                     }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: getErrorMessage(xhr) || 'An error occurred.',
-                        confirmButtonText: 'Okay'
-                    });
+
+                    // Check for file quantity validation errors
+                    if (errorMessage.includes('Too many files') ||
+                        errorMessage.includes('Maximum') ||
+                        (response && response.errors && response.errors['file_pendukung'])) {
+                        Swal.fire({
+                            title: "File Upload Limit Exceeded!",
+                            html: `
+                                <div class="text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                                    </div>
+                                    <p><strong>File upload validation failed.</strong></p>
+                                    <p class="text-muted">${errorMessage}</p>
+                                    <p class="text-info">Maximum allowed: 50 files per upload</p>
+                                    <p class="text-danger">Please reduce the number of files and try again.</p>
+                                </div>
+                            `,
+                            icon: "warning",
+                            confirmButtonText: "OK",
+                            confirmButtonColor: "#3085d6"
+                        });
+                    } else if (response && response.errors) {
+                        addInvalidClassToFields(response.errors);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
                 },
+
                 complete: function () {
                     setTimeout(() => {
                         $form.find('button[type="submit"]').removeAttr('disabled');
