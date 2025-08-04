@@ -112,7 +112,13 @@ class ProgramController extends Controller
 
     public function show(Program $program)
     {
-        // $program = Program::findOrFail($id);
+        // Load program structure data with eager loading
+        $program->load([
+            'goal',
+            'objektif',
+            'outcome.output.activities',
+            'targetProgresses.details.targetable'
+        ]);
 
         $totalBeneficiaries = $program->getTotalBeneficiaries();
         $durationInDays = $program->getDurationInDays();
