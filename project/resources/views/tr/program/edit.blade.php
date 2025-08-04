@@ -98,7 +98,7 @@
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}"
                                         placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        oninput="this.value = Math.max(0, this.value)" readonly>
 
                                     @if ($errors->has('ekspektasipenerimamanfaat'))
                                         <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaat') }}</span>
@@ -406,4 +406,34 @@
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
 @include('tr.program.js.detail-edit.partner')
+<script>
+    $(document).ready(function() {
+        const benefitInputs = [
+            '#pria',
+            '#wanita',
+            '#laki',
+            '#perempuan',
+            '#total'
+        ];
+        const totalInput = $('#ekspektasipenerimamanfaat');
+
+        function calculateTotal() {
+            let total = 0;
+            benefitInputs.forEach(function(selector) {
+                const value = parseInt($(selector).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            totalInput.val(total);
+        }
+
+        benefitInputs.forEach(function(selector) {
+            $(selector).on('input', calculateTotal);
+        });
+
+        // Initial calculation on page load
+        calculateTotal();
+    });
+</script>
 @endpush

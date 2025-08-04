@@ -131,12 +131,13 @@
                                 <!-- jenis kegiatan-->
                                 <div class="form-group row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                                        <label for="jeniskegiatan_id" class="input-group col-form-label">
+                                        <label for="jeniskegiatan" class="input-group col-form-label">
                                             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
                                         </label>
                                         <div class="select2-purple">
-                                            <select name="jeniskegiatan_id" id="jeniskegiatan_id"
-                                                class="form-control select2">
+                                            <input type="hidden" name="jeniskegiatan_id" value="{{ $kegiatan->jeniskegiatan->id ?? '' }}">
+                                            <select name="jeniskegiatan" id="jeniskegiatan"
+                                                class="form-control select2" readonly>
                                                 @if ($kegiatan->jeniskegiatan)
                                                     <option value="{{ $kegiatan->jeniskegiatan->id }}" selected>{{ $kegiatan->jeniskegiatan->nama }}</option>
                                                 @endif
@@ -230,7 +231,7 @@
                                         </div>
                                     </div>
                                     <!-- status kegiatan-->
-                                    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                    <div class="col-sm-12 col-md-3 col-lg-3 order-1 order-md-1">
                                         <label for="status" class="input-group col-form-label">
                                             <strong>{{ __('cruds.status.title') }}</strong>
                                         </label>
@@ -814,8 +815,8 @@
                                 </div>
 
                                 <div class="form-group row col-md-12" id="list_penulis_edit">
-                                    @if (!empty($kegiatan->penulis) && $kegiatan->penulis->isNotEmpty())
-                                        @foreach ($kegiatan->penulis as $penulis)
+                                    @if (!empty($kegiatan->datapenulis) && $kegiatan->datapenulis->isNotEmpty())
+                                        @foreach ($kegiatan->datapenulis as $penulis)
                                             <div class="row penulis-row col-12">
                                                 <div class="col-lg-5 form-group mb-0">
                                                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
@@ -823,7 +824,8 @@
                                                         <select class="form-control select2 penulis-select"
                                                             name="penulis[]" data-selected="{{ $penulis->id }}">
                                                             <option value="{{ $penulis->id }}" selected>
-                                                                {{ $penulis->nama }}</option>
+                                                                {{ $penulis->nama }}
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -836,7 +838,7 @@
                                                                 name="jabatan[]"
                                                                 data-selected="{{ $penulis->pivot->peran_id }}">
                                                                 <option value="{{ $penulis->pivot->peran_id }}" selected>
-                                                                    {{ $penulis->peran->find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
+                                                                    {{ App\Models\Peran::find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -850,7 +852,27 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        {{-- <p class="text-muted"></p> --}}
+                                        <div class="row penulis-row col-12">
+                                            <div class="col-lg-5 form-group mb-0">
+                                                <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
+                                                <div class="select2-orange">
+                                                    <select class="form-control select2 penulis-select" name="penulis[]"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5 form-group d-flex align-items-end">
+                                                <div class="flex-grow-1">
+                                                    <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+                                                    <div class="select2-orange">
+                                                        <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <button type="button" class="btn btn-danger remove-penulis-row">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -1011,6 +1033,24 @@
         });
     }
 
+    const setupSelect2 = (selector, placeholder, url, dataCallback) => {
+        $(selector).select2({
+            placeholder: placeholder,
+            allowClear: true,
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 250,
+                data: dataCallback,
+                processResults: (data, params) => ({
+                    results: data.results,
+                    pagination: { more: (params.page || 1) < data.last_page }
+                }),
+                cache: true
+            }
+        });
+    };
+
     function select2Single(fieldId) {
         var select2Field = $('#' + fieldId);
         var apiUrl = select2Field.data('api-url');
@@ -1058,8 +1098,9 @@
         });
 
         // select2 jenis kegiatan
-        $('#jeniskegiatan_id').select2({
+        $('#jeniskegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kegiatan.basic.jenis_kegiatan') }}',
+
             ajax: {
                 url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
                 dataType: 'json',
@@ -1083,15 +1124,11 @@
                     };
                 }
             }
-        });
+        }).prop('disabled', true);
 
-        // start grok
-        $('#provinsi_id, #kabupaten_id').select2({
-            placeholder: function() {
-                return $(this).data('placeholder');
-            },
-            allowClear: true
-        });
+        // Setup dynamic select2 for province and kabupaten
+        setupSelect2('#provinsi_id', '{{ __('cruds.kegiatan.basic.select_provinsi') }}', "{{ route('api.kegiatan.provinsi') }}", params => ({ search: params.term, page: params.page || 1 }));
+        setupSelect2('#kabupaten_id', '{{ __('cruds.kegiatan.basic.select_kabupaten') }}', "{{ route('api.kegiatan.kabupaten') }}", params => ({ search: params.term, provinsi_id: $('#provinsi_id').val(), page: params.page || 1 }));
 
         // Initial load of dynamic form based on existing jenis_kegiatan
         const initialJenisKegiatan = $('#jeniskegiatan_id').val();
@@ -1257,6 +1294,50 @@
         });
 
         let isProgrammaticChange = false;
+        let isProvinsiProgrammaticChange = false;
+
+        $('#provinsi_id').on('change', function() {
+            if (isProvinsiProgrammaticChange) {
+                isProvinsiProgrammaticChange = false; // Reset flag setelah diproses
+                return; // Hentikan eksekusi jika ini perubahan terprogram
+            }
+
+            const newProvinsiId = $(this).val();
+            const previousProvinsiId = {{ $preselectedProvinsiId ?? 'null' }};
+
+            Swal.fire({
+                title: "{{ __('global.warning') }}",
+                text: "{{ __('cruds.kegiatan.validate.prov_change') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "{{ __('global.yes') }}",
+                cancelButtonText: "{{ __('global.no') }}",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna setuju, kosongkan kabupaten dan lokasi
+                    isProgrammaticChange = true;
+                    $('#kabupaten_id').val(null).trigger('change');
+                    $('.list-lokasi-kegiatan').empty();
+                    // Simpan nilai baru sebagai previous-value
+                    $('#provinsi_id').data('previous-value', newProvinsiId);
+                } else {
+                    // Jika pengguna membatalkan, kembalikan ke nilai sebelumnya tanpa memicu loop
+                    isProvinsiProgrammaticChange = true; // Set flag untuk perubahan terprogram
+                    $(this).val(previousProvinsiId).trigger('change'); // Kembali ke nilai sebelumnya
+                }
+            });
+
+            // Simpan nilai saat ini sebagai previous-value sebelum perubahan diterapkan
+            if (!$(this).data('previous-value')) {
+                $(this).data('previous-value', $(this).val());
+            }
+        });
+
+        // Trigger kabupaten select2 to reload when province changes
+        $('#provinsi_id').on('change', function() {
+            $('#kabupaten_id').val(null).trigger('change.select2');
+        });
 
         $('#kabupaten_id').on('change', function() {
             if (isProgrammaticChange) {
@@ -1535,106 +1616,110 @@
         // Preview button click handler
         $('#btn-preview-kegiatan').on('click', function() {
             const formData = collectFormData();
-            // const errors = validateFormData(formData);
-
-            // if (errors.length > 0) {
-            //     // Display validation errors
-            //     let errorHtml = '<ul>';
-            //     errors.forEach(error => {
-            //         errorHtml += `<li>${error}</li>`;
-            //     });
-            //     errorHtml += '</ul>';
-
-            //     $('#validation-errors').html(errorHtml).show();
-            // } else {
-            //     // Hide any previous errors
-            //     $('#validation-errors').hide();
-
-            //     // Display the preview
             displayPreview(formData);
-            // }
-
-            // Show the modal
             $('#previewModal').modal('show');
         });
 
-        // Submit button in modal click handler
-        // $('#btn-submit-preview').on('click', function() {
-        //     // Get form data
-        //     const formData = collectFormData();
-
-        //     // Send data via AJAX
-        //     $.ajax({
-        //         url: '{{ route('api.kegiatan.update', [$kegiatan->id]) }}',
-        //         type: 'POST',
-        //         data: {
-        //             _token: $('meta[name="csrf-token"]').attr('content'),
-        //             _method: 'PUT',
-        //             ...formData
-        //         },
-        //         success: function(response) {
-        //             // Close the modal
-        //             $('#previewModal').modal('hide');
-
-        //             // Show success message
-        //             Swal.fire({
-        //                 icon: 'success',
-        //                 title: 'Success',
-        //                 text: 'Data has been saved successfully',
-        //                 timer: 2000,
-        //                 showConfirmButton: false
-        //             });
-
-        //             // Optionally redirect or refresh
-        //             // window.location.href = '{{ route('kegiatan.index') }}';
-        //         },
-        //         error: function(xhr) {
-        //             // Handle errors
-        //             let errorMessage = 'An error occurred while saving the data.';
-
-        //             if (xhr.responseJSON && xhr.responseJSON.message) {
-        //                 errorMessage = xhr.responseJSON.message;
-        //             }
-
-        //             Swal.fire({
-        //                 icon: 'error',
-        //                 title: 'Error',
-        //                 text: errorMessage
-        //             });
-        //         }
-        //     });
-        // });
     });
 
 
-    // $('#previewModal').on('show.bs.modal', function () {
-    //     let tableBody = $('#lokasiPreview tbody');
-    //     tableBody.empty();
+</script>
+@include('tr.kegiatan.js._penulis')
+<script>
+    // $(document).ready(function() {
+    //     const penulisApiUrl = "{{ route('api.kegiatan.penulis') }}";
+    //     const peranApiUrl = "{{ route('api.kegiatan.jabatan') }}";
 
-    //     $('.lokasi-row').each(function () {
-    //         const kecamatanSelect = $(this).find('.kecamatan_id');
-    //         const desaSelect = $(this).find('.desa_id');
+    //     function initializeRow(row) {
+    //         const penulisSelect = row.find('.penulis-select');
+    //         const jabatanSelect = row.find('.jabatan-select');
 
-    //         const kecamatanText = kecamatanSelect.find('option:selected').text().trim() || '-';
-    //         const desaData = desaSelect.select2('data');
-    //         const desaText = desaData.length ? desaData[0].text : '-';
+    //         penulisSelect.select2({
+    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.nama") }}',
+    //             allowClear: true,
+    //             ajax: {
+    //                 url: penulisApiUrl,
+    //                 dataType: 'json',
+    //                 delay: 250,
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data.data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.nama
+    //                             };
+    //                         })
+    //                     };
+    //                 }
+    //             }
+    //         });
 
-    //         const lokasi = $(this).find('input[name="lokasi[]"]').val() || '-';
-    //         const lat = $(this).find('input[name="lat[]"]').val() || '-';
-    //         const long = $(this).find('input[name="long[]"]').val() || '-';
+    //         jabatanSelect.select2({
+    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.jabatan") }}',
+    //             allowClear: true,
+    //             ajax: {
+    //                 url: peranApiUrl,
+    //                 dataType: 'json',
+    //                 delay: 250,
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data.data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.nama
+    //                             };
+    //                         })
+    //                     };
+    //                 }
+    //             }
+    //         });
+    //     }
 
-    //         tableBody.append(`
-    //             <tr>
-    //                 <td>${kecamatanText}</td>
-    //                 <td>${desaText}</td>
-    //                 <td>${lokasi}</td>
-    //                 <td>${lat}</td>
-    //                 <td>${long}</td>
-    //             </tr>
-    //         `);
+    //     // Initialize existing rows
+    //     $('.penulis-row').each(function() {
+    //         initializeRow($(this));
+    //     });
+
+    //     // Add new row
+    //     $('#addPenulis').on('click', function() {
+    //         const newRow = `
+    //             <div class="row penulis-row col-12">
+    //                 <div class="col-lg-5 form-group mb-0">
+    //                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
+    //                     <div class="select2-orange">
+    //                         <select class="form-control select2 penulis-select" name="penulis[]"></select>
+    //                     </div>
+    //                 </div>
+    //                 <div class="col-lg-5 form-group d-flex align-items-end">
+    //                     <div class="flex-grow-1">
+    //                         <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+    //                         <div class="select2-orange">
+    //                             <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
+    //                         </div>
+    //                     </div>
+    //                     <div class="ml-2">
+    //                         <button type="button" class="btn btn-danger remove-penulis-row">
+    //                             <i class="bi bi-trash"></i>
+    //                         </button>
+    //                     </div>
+    //                 </div>
+    //             </div>`;
+    //         $('#list_penulis_edit').append(newRow);
+    //         initializeRow($('.penulis-row').last());
+    //     });
+
+    //     // Remove row
+    //     $('#list_penulis_edit').on('click', '.remove-penulis-row', function() {
+    //         if ($('.penulis-row').length > 1) {
+    //             $(this).closest('.penulis-row').remove();
+    //         } else {
+    //             // Optionally, clear the fields instead of removing the last row
+    //             const row = $(this).closest('.penulis-row');
+    //             row.find('.penulis-select').val(null).trigger('change');
+    //             row.find('.jabatan-select').val(null).trigger('change');
+    //         }
     //     });
     // });
 </script>
-
 @include('tr.kegiatan.js._validasi')
 @endpush

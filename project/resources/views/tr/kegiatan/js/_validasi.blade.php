@@ -551,4 +551,58 @@
 
 
     });
+
+        $(document).on('paste', '.lat-input, .lang-input', function(e) {
+            e.preventDefault();
+            const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+            const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
+
+            if (coords.length === 2) {
+                const lat = parseFloat(coords[0]);
+                const lng = parseFloat(coords[1]);
+
+                if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                    const row = $(this).closest('.lokasi-kegiatan');
+                    const latInput = row.find('.lat-input');
+                    const lngInput = row.find('.lang-input');
+
+                    // Determine which input was pasted into and fill accordingly
+                    if ($(this).hasClass('lat-input')) {
+                        latInput.val(lat.toFixed(6));
+                        lngInput.val(lng.toFixed(6));
+                    } else {
+                        latInput.val(lat.toFixed(6));
+                        lngInput.val(lng.toFixed(6));
+                    }
+
+                    // Trigger change events to update map markers
+                    latInput.trigger('change');
+                    lngInput.trigger('change');
+
+                    // Show success feedback
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Coordinates filled successfully',
+                        timer: 1500,
+                        position: 'top-end'
+                    });
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Invalid coordinates format',
+                        text: 'Please use format: latitude, longitude (e.g., -8.49779174444027, 115.27579431731596)',
+                        timer: 3000,
+                        position: 'top-end'
+                    });
+                }
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Invalid coordinates format',
+                    text: 'Please paste exactly 2 coordinates separated by comma or space',
+                    timer: 3000,
+                    position: 'top-end'
+                });
+            }
+        });
 </script>
