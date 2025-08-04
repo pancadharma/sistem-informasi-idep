@@ -48,6 +48,17 @@ class ProgramController extends Controller
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
     }
 
+    public function dashboard()
+    {
+        // Calculate dashboard statistics
+        $totalPrograms = Program::count();
+        $activePrograms = Program::whereIn('status', ['running', 'submit'])->count();
+        $totalBeneficiaries = Program::sum('ekspektasipenerimamanfaat');
+        $completionRate = $totalPrograms > 0 ? round(($activePrograms / $totalPrograms) * 100) : 0;
+
+        return view('tr.program.dashboard', compact('totalPrograms', 'activePrograms', 'totalBeneficiaries', 'completionRate'));
+    }
+
     public function details(Program $program)
     {
         if (auth()->user()->id == 1 || auth()->user()->can('program_details_edit')) {
