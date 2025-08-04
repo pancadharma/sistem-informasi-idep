@@ -80,17 +80,13 @@ class StoreKegiatanRequest extends FormRequest
             'long'              => ['array'],
             'long.*'            => ['nullable', 'string'],
 
-            // lokasi validations
-            // 'desa_id'           => ['array'],
-            // 'desa_id.*'         => ['nullable', 'integer', 'exists:kelurahan,id'],
-            // 'kecamatan_id'      => ['array'],
-            // 'kecamatan_id.*'    => ['nullable', 'integer', 'exists:kecamatan,id'],
-            // 'lokasi'            => ['array'],
-            // 'lokasi.*'          => ['nullable', 'string'],
-            // 'lat'               => ['array'],
-            // 'lat.*'             => ['nullable', 'string'],
-            // 'long'              => ['array'],
-            // 'long.*'            => ['nullable', 'string'],
+            // media validations
+            'dokumen_pendukung'                         => ['nullable', 'array', 'max:50'],
+            'dokumen_pendukung.*'                       => ['file', 'mimes:pdf,doc,docx,xls,xlsx,pptx', 'max:48960'],
+            'media_pendukung'                           => ['nullable', 'array', 'max:50'],
+            'media_pendukung.*'                         => ['file', 'mimes:jpg,jpeg,png', 'max:48960'],
+            'keterangan'                                => ['nullable', 'array'],
+            'keterangan.*'                              => ['nullable', 'string'],
         ];
 
         $jenisKegiatan = (int)$this->input('jeniskegiatan_id');

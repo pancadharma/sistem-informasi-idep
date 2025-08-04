@@ -15,6 +15,7 @@ use App\Models\TargetReinstra;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\UpdateProgramRequest;
+use App\Jobs\ProcessProgramFiles;
 use App\Models\KaitanSdg;
 use App\Models\Kelompok_Marjinal;
 use App\Models\MPendonor;
@@ -29,6 +30,7 @@ use App\Models\ProgramObjektif;
 use App\Models\Program_Report_Schedule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
@@ -44,6 +46,17 @@ class ProgramController extends Controller
         // $programs = Program::all();
         // return view('tr.program.index', compact('programs')); // Assuming a view exists at resources/views/trprogram/index.blade.php
         return view('tr.program.index'); // Assuming a view exists at resources/views/trprogram/index.blade.php
+    }
+
+    public function dashboard()
+    {
+        // Calculate dashboard statistics
+        $totalPrograms = Program::count();
+        $activePrograms = Program::whereIn('status', ['running', 'submit'])->count();
+        $totalBeneficiaries = Program::sum('ekspektasipenerimamanfaat');
+        $completionRate = $totalPrograms > 0 ? round(($activePrograms / $totalPrograms) * 100) : 0;
+
+        return view('tr.program.dashboard', compact('totalPrograms', 'activePrograms', 'totalBeneficiaries', 'completionRate'));
     }
 
     public function details(Program $program)
@@ -99,7 +112,13 @@ class ProgramController extends Controller
 
     public function show(Program $program)
     {
-        // $program = Program::findOrFail($id);
+        // Load program structure data with eager loading
+        $program->load([
+            'goal',
+            'objektif',
+            'outcome.output.activities',
+            'targetProgresses.details.targetable'
+        ]);
 
         $totalBeneficiaries = $program->getTotalBeneficiaries();
         $durationInDays = $program->getDurationInDays();
@@ -118,130 +137,130 @@ class ProgramController extends Controller
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
 
-    public function store(StoreProgramRequest $request, Program $program)
-    {
-        DB::beginTransaction();
-        try {
-            // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
-            $data = $request->validated();
-            $program = Program::create($data);
-            $program->targetReinstra()->sync($request->input('targetreinstra', []));
-            $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
-            $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+    // public function store(StoreProgramRequest $request, Program $program)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
+    //         $data = $request->validated();
+    //         $program = Program::create($data);
+    //         $program->targetReinstra()->sync($request->input('targetreinstra', []));
+    //         $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+    //         $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
-            // Sync staff and peran
-            $this->storeStaffPeran($program, $request);
-            // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
-
-
-
-            // Unggah dan simpan berkas menggunakan Spatie Media Library
-            if ($request->hasFile('file_pendukung')) {
-                $timestamp = now()->format('Ymd_His');
-                $fileCount = 1;
-
-                foreach ($request->file('file_pendukung') as $index => $file) {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $extension = $file->getClientOriginalExtension();
-                    $programName = str_replace(' ', '_', $program->nama);
-                    $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
-                    $keterangan = $request->input('captions')[$index] ?? "{$fileName}";
-
-                    \Log::info('Uploading file: ' . $fileName . ' Orignal Name: ' . $originalName . ' User ID: ' . auth()->user()->nama);
-                    $program->addMedia($file)
-                        ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
-                        ->usingName("{$programName}_{$originalName}_{$fileCount}")
-                        ->usingFileName($fileName)
-                        // ->toMediaCollection('file_pendukung_program', 'program_uploads');
-                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
-
-                    $fileCount++;
-                }
-            } else {
-                if (!$request->has('file_pendukung')) {
-                    \Log::info('No file_pendukung key found in the request.');
-                } elseif (empty($request->file('file_pendukung'))) {
-                    \Log::info('file_pendukung key is present but no files were uploaded.');
-                } else {
-                    \Log::info('No files found in the request.');
-                }
-            }
-
-            // save program partner
-            $program->partner()->sync($request->input('partner', []));
-            // save program lokasi
-            $program->lokasi()->sync($request->input('lokasi', []));
-            // save report schedule
-            $this->storeReportSchedule($request, $program);
-
-            $newPendonor = $request->input('pendonor_id', []);
-            $nilaiD = $request->input('nilaidonasi', []);
-
-            if (count($newPendonor) !== count($nilaiD)) {
-                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-            }
-            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
-                if (empty($donation_value)) {
-                    throw new Exception("Missing donation value for donor ID $pendonor_id");
-                }
-                return [
-                    'pendonor_id' => $pendonor_id,
-                    'nilaidonasi' => $donation_value,
-                ];
-            }, $newPendonor, $nilaiD);
-            foreach ($newDonasi as $donation) {
-                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-            }
-
-            // create program outcome
-            $this->storeOutcome($request, $program);
-            $this->storeGoal($request, $program);
-            $this->storeObjective($request, $program);
+    //         // Sync staff and peran
+    //         $this->storeStaffPeran($program, $request);
+    //         // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
 
 
 
+    //         // Unggah dan simpan berkas menggunakan Spatie Media Library
+    //         if ($request->hasFile('file_pendukung')) {
+    //             $timestamp = now()->format('Ymd_His');
+    //             $fileCount = 1;
+
+    //             foreach ($request->file('file_pendukung') as $index => $file) {
+    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    //                 $extension = $file->getClientOriginalExtension();
+    //                 $programName = str_replace(' ', '_', $program->nama);
+    //                 $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
+    //                 $keterangan = $request->input('captions')[$index] ?? "{$fileName}";
+
+    //                 \Log::info('Uploading file: ' . $fileName . ' Orignal Name: ' . $originalName . ' User ID: ' . auth()->user()->nama);
+    //                 $program->addMedia($file)
+    //                     ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
+    //                     ->usingName("{$programName}_{$originalName}_{$fileCount}")
+    //                     ->usingFileName($fileName)
+    //                     // ->toMediaCollection('file_pendukung_program', 'program_uploads');
+    //                     ->toMediaCollection('program_' . $program->id, 'program_uploads');
+
+    //                 $fileCount++;
+    //             }
+    //         } else {
+    //             if (!$request->has('file_pendukung')) {
+    //                 \Log::info('No file_pendukung key found in the request.');
+    //             } elseif (empty($request->file('file_pendukung'))) {
+    //                 \Log::info('file_pendukung key is present but no files were uploaded.');
+    //             } else {
+    //                 \Log::info('No files found in the request.');
+    //             }
+    //         }
+
+    //         // save program partner
+    //         $program->partner()->sync($request->input('partner', []));
+    //         // save program lokasi
+    //         $program->lokasi()->sync($request->input('lokasi', []));
+    //         // save report schedule
+    //         $this->storeReportSchedule($request, $program);
+
+    //         $newPendonor = $request->input('pendonor_id', []);
+    //         $nilaiD = $request->input('nilaidonasi', []);
+
+    //         if (count($newPendonor) !== count($nilaiD)) {
+    //             throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+    //         }
+    //         $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+    //             if (empty($donation_value)) {
+    //                 throw new Exception("Missing donation value for donor ID $pendonor_id");
+    //             }
+    //             return [
+    //                 'pendonor_id' => $pendonor_id,
+    //                 'nilaidonasi' => $donation_value,
+    //             ];
+    //         }, $newPendonor, $nilaiD);
+    //         foreach ($newDonasi as $donation) {
+    //             $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+    //         }
+
+    //         // create program outcome
+    //         $this->storeOutcome($request, $program);
+    //         $this->storeGoal($request, $program);
+    //         $this->storeObjective($request, $program);
 
 
-            //COMMIT THE QUERY IF NO ERROR
-            DB::commit();
-            return response()->json([
-                'success' => true,
-                'data' => $program,
-                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
-            ], Response::HTTP_CREATED);
 
-            //ERROR CATCH
 
-        } catch (ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'errors'  => $e->errors(),
-            ], 422);
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Resource not found.',
-            ], 404);
-        } catch (HttpException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-            ], $e->getStatusCode());
-        } catch (Exception $e) {
-            DB::rollBack();
 
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred.',
-                'error'   => $e->getMessage(),
-                'request_data' => $request->all(),
-            ], 500);
-        }
-    }
+    //         //COMMIT THE QUERY IF NO ERROR
+    //         DB::commit();
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $program,
+    //             "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
+    //         ], Response::HTTP_CREATED);
+
+    //         //ERROR CATCH
+
+    //     } catch (ValidationException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Validation failed.',
+    //             'errors'  => $e->errors(),
+    //         ], 422);
+    //     } catch (ModelNotFoundException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Resource not found.',
+    //         ], 404);
+    //     } catch (HttpException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], $e->getStatusCode());
+    //     } catch (Exception $e) {
+    //         DB::rollBack();
+
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred.',
+    //             'error'   => $e->getMessage(),
+    //             'request_data' => $request->all(),
+    //         ], 500);
+    //     }
+    // }
 
     public function edit(Program $program)
     {
@@ -306,50 +325,220 @@ class ProgramController extends Controller
         return 'other';
     }
 
-    public function update(UpdateProgramRequest $request, Program $program)
+    // public function update(UpdateProgramRequest $request, Program $program)
+    // {
+    //     DB::beginTransaction();
+    //     try {
+    //         $data = $request->validated();
+    //         $program->update($data);
+    //         $program->targetReinstra()->sync($request->input('targetreinstra', []));
+    //         $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+    //         $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+
+    //         $newFiles = $request->file('file_pendukung', []);
+    //         $newFileNames = array_map(function ($file) {
+    //             return $file->getClientOriginalName();
+    //         }, $newFiles);
+    //         // \Log::info($newFileNames);
+
+    //         if (is_countable($program->media) && count($program->media) > 0) {
+    //             foreach ($program->media as $media) {
+    //                 if (in_array($media->name, $newFileNames)) {
+    //                     // \Log::info('Deleting Media: ' . $media->name);
+    //                     $media->delete();
+    //                 }
+    //             }
+    //         }
+
+    //         if ($request->hasFile('file_pendukung')) {
+    //             foreach ($newFiles as $index => $file) {
+    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    //                 $extension = $file->getClientOriginalExtension();
+    //                 $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
+
+    //                 $program->addMedia($file)
+    //                     ->usingName("{$originalName}.{$extension}")
+    //                     ->withCustomProperties([
+    //                         'keterangan' => $caption,
+    //                         'user_id' => auth()->user()->id,
+    //                         'original_name' => $originalName,
+    //                         'extension' => $extension,
+    //                         'updated_by' => auth()->user()->id
+    //                     ])
+    //                     ->toMediaCollection('program_' . $program->id, 'program_uploads');
+    //                 // ->toMediaCollection('file_pendukung_program', 'program_uploads');
+    //             }
+    //         }
+    //         // update program lokasi
+    //         $program->lokasi()->sync($request->input('lokasi', []));
+
+    //         // update program partner
+    //         $program->partner()->sync($request->input('partner', []));
+
+    //         // Update staff and peran
+    //         $this->updateProgramStaff($program, $request);
+
+    //         // update program donatur
+    //         $this->updateProgramDonatur($program, $request);
+    //         $this->updateProgramOutcomes($program, $request);
+    //         $this->updateJadwalReport($program, $request);
+    //         $this->storeObjective($request, $program);
+    //         $this->storeGoal($request, $program);
+
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $program,
+    //             "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.updated'),
+    //         ], Response::HTTP_CREATED);
+    //     } catch (ValidationException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Validation failed.',
+    //             'errors'  => $e->errors(),
+    //         ], 422);
+    //     } catch (ModelNotFoundException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Resource not found.',
+    //         ], 404);
+    //     } catch (HttpException $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], $e->getStatusCode());
+    //     } catch (Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success'   => false,
+    //             'error'     => 'An error occurred.',
+    //             'message'   => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
+    public function store(StoreProgramRequest $request, Program $program)
     {
+        // Set execution time and memory limits for large uploads
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
         DB::beginTransaction();
         try {
+            // Validate file uploads early
+            $this->validateFileUploads($request);
+
+            // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
+            $data = $request->validated();
+            $program = Program::create($data);
+            $program->targetReinstra()->sync($request->input('targetreinstra', []));
+            $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
+            $program->kaitanSDG()->sync($request->input('kaitansdg', []));
+
+            // Sync staff and peran
+            $this->storeStaffPeran($program, $request);
+
+            // Handle file uploads with better error handling and batch processing
+            $this->handleFileUploads($program, $request);
+
+            // save program partner
+            $program->partner()->sync($request->input('partner', []));
+            // save program lokasi
+            $program->lokasi()->sync($request->input('lokasi', []));
+            // save report schedule
+            $this->storeReportSchedule($request, $program);
+
+            $newPendonor = $request->input('pendonor_id', []);
+            $nilaiD = $request->input('nilaidonasi', []);
+
+            if (count($newPendonor) !== count($nilaiD)) {
+                throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
+            }
+
+            $newDonasi = array_map(function ($pendonor_id, $donation_value) {
+                if (empty($donation_value)) {
+                    throw new Exception("Missing donation value for donor ID $pendonor_id");
+                }
+                return [
+                    'pendonor_id' => $pendonor_id,
+                    'nilaidonasi' => $donation_value,
+                ];
+            }, $newPendonor, $nilaiD);
+
+            foreach ($newDonasi as $donation) {
+                $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
+            }
+
+            // create program outcome
+            $this->storeOutcome($request, $program);
+            $this->storeGoal($request, $program);
+            $this->storeObjective($request, $program);
+
+            //COMMIT THE QUERY IF NO ERROR
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'data' => $program,
+                "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added') . '. Files are being processed in background.',
+            ], Response::HTTP_CREATED);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors'  => $e->errors(),
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource not found.',
+            ], 404);
+        } catch (HttpException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        } catch (Exception $e) {
+            DB::rollBack();
+            \Log::error('Program store error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->except(['file_pendukung']) // Exclude files from logging
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred during program creation.',
+                'error'   => config('app.debug') ? $e->getMessage() : 'Internal server error',
+            ], 500);
+        }
+    }
+
+    public function update(UpdateProgramRequest $request, Program $program)
+    {
+        // Set execution time and memory limits for large uploads
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
+        DB::beginTransaction();
+        try {
+            // Validate file uploads early
+            $this->validateFileUploads($request);
+
             $data = $request->validated();
             $program->update($data);
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
             $program->kaitanSDG()->sync($request->input('kaitansdg', []));
 
-            $newFiles = $request->file('file_pendukung', []);
-            $newFileNames = array_map(function ($file) {
-                return $file->getClientOriginalName();
-            }, $newFiles);
-            // \Log::info($newFileNames);
+            // Handle file updates with better error handling
+            $this->handleFileUpdates($program, $request);
 
-            if (is_countable($program->media) && count($program->media) > 0) {
-                foreach ($program->media as $media) {
-                    if (in_array($media->name, $newFileNames)) {
-                        // \Log::info('Deleting Media: ' . $media->name);
-                        $media->delete();
-                    }
-                }
-            }
-
-            if ($request->hasFile('file_pendukung')) {
-                foreach ($newFiles as $index => $file) {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                    $extension = $file->getClientOriginalExtension();
-                    $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
-
-                    $program->addMedia($file)
-                        ->usingName("{$originalName}.{$extension}")
-                        ->withCustomProperties([
-                            'keterangan' => $caption,
-                            'user_id' => auth()->user()->id,
-                            'original_name' => $originalName,
-                            'extension' => $extension,
-                            'updated_by' => auth()->user()->id
-                        ])
-                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
-                    // ->toMediaCollection('file_pendukung_program', 'program_uploads');
-                }
-            }
             // update program lokasi
             $program->lokasi()->sync($request->input('lokasi', []));
 
@@ -394,11 +583,152 @@ class ProgramController extends Controller
             ], $e->getStatusCode());
         } catch (Exception $e) {
             DB::rollBack();
+            \Log::error('Program update error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'program_id' => $program->id,
+                'request_data' => $request->except(['file_pendukung'])
+            ]);
+
             return response()->json([
                 'success'   => false,
-                'error'     => 'An error occurred.',
-                'message'   => $e->getMessage(),
+                'error'     => 'An error occurred during program update.',
+                'message'   => config('app.debug') ? $e->getMessage() : 'Internal server error',
             ], 500);
+        }
+    }
+
+    /**
+     * Validate file uploads before processing
+     */
+    private function validateFileUploads(Request $request)
+    {
+        if (!$request->hasFile('file_pendukung')) {
+            return;
+        }
+
+        $files = $request->file('file_pendukung');
+
+        // Check maximum number of files
+        if (count($files) > 150) { // Adjust limit as needed
+            throw new Exception('Too many files uploaded. Maximum 150 files allowed.');
+        }
+
+        $totalSize = 0;
+        $allowedMimeTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        ];
+
+        foreach ($files as $file) {
+            // Check file size (50MB per file)
+            if ($file->getSize() > 50 * 1024 * 1024) {
+                throw new Exception("File {$file->getClientOriginalName()} is too large. Maximum 50MB per file.");
+            }
+
+            // Check mime type
+            if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
+                throw new Exception("File {$file->getClientOriginalName()} has unsupported format.");
+            }
+
+            $totalSize += $file->getSize();
+        }
+
+        // Check total upload size (200MB total)
+        if ($totalSize > 200 * 1024 * 1024) {
+            throw new Exception('Total file size too large. Maximum 200MB total.');
+        }
+    }
+
+    /**
+     * Handle file uploads with job queue processing
+     */
+    private function handleFileUploads(Program $program, Request $request)
+    {
+        if (!$request->hasFile('file_pendukung')) {
+            \Log::info('No files uploaded for program: ' . $program->id);
+            return;
+        }
+
+        // Store files temporarily and queue processing
+        $tempPaths = [];
+        $files = $request->file('file_pendukung');
+        
+        foreach ($files as $file) {
+            $tempPath = $file->store('temp');
+            $tempPaths[] = storage_path('app/' . $tempPath);
+        }
+
+        // Dispatch job for processing
+        ProcessProgramFiles::dispatch(
+            $program,
+            $tempPaths,
+            $request->input('captions', [])
+        );
+
+        \Log::info("Queued " . count($files) . " files for processing for program: " . $program->id);
+    }
+
+    private function handleFileUpdates(Program $program, Request $request)
+    {
+        if (!$request->hasFile('file_pendukung')) {
+            return;
+        }
+
+        $newFiles = $request->file('file_pendukung', []);
+        $newFileNames = array_map(function ($file) {
+            return $file->getClientOriginalName();
+        }, $newFiles);
+
+        // Remove duplicate files
+        if (is_countable($program->media) && count($program->media) > 0) {
+            foreach ($program->media as $media) {
+                if (in_array($media->name, $newFileNames)) {
+                    Log::info('Deleting duplicate media: ' . $media->name);
+                    $media->delete();
+                }
+            }
+        }
+
+        // Process new files in batches
+        $batchSize = 10;
+        $batches = array_chunk($newFiles, $batchSize, true);
+        $keteranganArray = $request->input('keterangan', []);
+
+        foreach ($batches as $batchIndex => $batch) {
+            foreach ($batch as $index => $file) {
+                try {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension = $file->getClientOriginalExtension();
+                    $caption = $keteranganArray[$index] ?? "{$originalName}.{$extension}";
+
+                    $program->addMedia($file)
+                        ->usingName("{$originalName}.{$extension}")
+                        ->withCustomProperties([
+                            'keterangan' => $caption,
+                            'user_id' => auth()->user()->id,
+                            'original_name' => $originalName,
+                            'extension' => $extension,
+                            'updated_by' => auth()->user()->id,
+                            'update_batch' => $batchIndex + 1
+                        ])
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
+                } catch (Exception $e) {
+                    \Log::error("Failed to update file {$file->getClientOriginalName()}: " . $e->getMessage());
+                    throw new Exception("Failed to update file {$file->getClientOriginalName()}: " . $e->getMessage());
+                }
+            }
+
+            // Clear memory after each batch
+            gc_collect_cycles();
         }
     }
 

@@ -36,7 +36,7 @@
                     {{-- Informasi Dasar --}}
                     <div class="card-body pb-0">
                         <div class="row">
-                                <div class="col-lg-9">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
                                         <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required oninput="this.value = this.value.toUpperCase();">
@@ -45,7 +45,7 @@
                                         <span class="text-danger">{{ $errors->first('kode') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-9">
                                     <div class="form-group">
                                         <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
                                         <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
@@ -98,7 +98,7 @@
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}"
                                         placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        oninput="this.value = Math.max(0, this.value)" readonly>
 
                                     @if ($errors->has('ekspektasipenerimamanfaat'))
                                         <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaat') }}</span>
@@ -406,4 +406,34 @@
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
 @include('tr.program.js.detail-edit.partner')
+<script>
+    $(document).ready(function() {
+        const benefitInputs = [
+            '#pria',
+            '#wanita',
+            '#laki',
+            '#perempuan',
+            '#total'
+        ];
+        const totalInput = $('#ekspektasipenerimamanfaat');
+
+        function calculateTotal() {
+            let total = 0;
+            benefitInputs.forEach(function(selector) {
+                const value = parseInt($(selector).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            totalInput.val(total);
+        }
+
+        benefitInputs.forEach(function(selector) {
+            $(selector).on('input', calculateTotal);
+        });
+
+        // Initial calculation on page load
+        calculateTotal();
+    });
+</script>
 @endpush

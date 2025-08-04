@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\MealsTargetProgressController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
+use App\Http\Controllers\Admin\PrintController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Monolog\Handler\RotatingFileHandler;
@@ -272,6 +273,7 @@ Route::get('program/details/modal', [ProgramController::class, 'detailsModal'])-
 Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
 Route::get('program/api/output/{outcome}', [ProgramController::class, 'apiOutput'])->name('api.program.output');
 Route::get('program/api/objektif/{objektif}', [ProgramController::class, 'apiObjektif'])->name('api.program.objektif');
+Route::get('program/dashboard', [ProgramController::class, 'dashboard'])->name('program.dashboard');
 Route::resource('program', ProgramController::class);
 
 Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
@@ -279,7 +281,29 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 
 
 // Route Untuk Kegiatan
-Route::resource('kegiatan', KegiatanController::class);
+// Route::resource('kegiatan', KegiatanController::class);
+Route::get('kegiatan', [KegiatanController::class, 'index'])
+    ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
+Route::get('kegiatan/create', [KegiatanController::class, 'create'])
+    ->name('kegiatan.create')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::post('kegiatan',  [KegiatanController::class, 'store'])
+    ->name('kegiatan.store')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::get('kegiatan/{kegiatan}', [KegiatanController::class, 'show'])
+    ->name('kegiatan.show')
+    ->middleware('check.kegiatan:kegiatan_show');
+Route::get('kegiatan/{kegiatan}/edit',  [KegiatanController::class, 'edit'])
+    ->name('kegiatan.edit')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::put('kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
+    ->name('kegiatan.update')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
+    ->name('kegiatan.destroy')
+    ->middleware('check.kegiatan:kegiatan_delete');
+
+
 
 //bentuk or sektor kegiatan
 Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
@@ -348,7 +372,7 @@ Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
     // using api to store / create kegiatan
     Route::post('kegiatan/store',               [App\Http\Controllers\API\KegiatanController::class, 'storeApi'])->name('kegiatan.store');
     Route::GET('kegiatan/edit/{id}',            [App\Http\Controllers\API\KegiatanController::class, 'edit'])->name('kegiatan.edit');
-    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'updateAPI'])->name('kegiatan.update');
     // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
     Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
