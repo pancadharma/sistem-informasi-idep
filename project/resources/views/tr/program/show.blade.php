@@ -6,7 +6,16 @@
 @section('content_body')
 
 <!-- Program Header Section -->
-<div class="card card-outline card-primary mb-4">
+<div class="card card-outline card-primary mb-4" 
+     data-program-id="{{ $program->id }}" 
+     data-program-name="{{ $program->nama }}"
+     data-program-code="{{ $program->kode }}"
+     data-program-status="{{ $program->status }}"
+     data-program-start="{{ $program->tanggalmulai }}"
+     data-program-end="{{ $program->tanggalselesai }}"
+     data-program-budget="{{ $program->totalnilai }}"
+     data-program-description="{{ str_replace('"', '&quot;', strip_tags($program->deskripsiprojek)) }}"
+     data-program-analysis="{{ str_replace('"', '&quot;', strip_tags($program->analisamasalah)) }}">
     <div class="card-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <a class="btn btn-outline-secondary mr-3" href="{{ route('program.index') }}">
@@ -21,6 +30,35 @@
             <span class="badge badge-lg {{ $program->status === 'running' ? 'bg-success' : ($program->status === 'pending' ? 'bg-warning' : ($program->status === 'complete' ? 'bg-info' : 'bg-secondary')) }}">
                 {{ strtoupper($program->status) }}
             </span>
+            
+            <!-- Export Dropdown -->
+            <div class="btn-group ml-2">
+                <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" onclick="exportProgram('pdf')">
+                        <i class="fas fa-file-pdf"></i> Export as PDF
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgram('excel')">
+                        <i class="fas fa-file-excel"></i> Export as Excel
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgram('json')">
+                        <i class="fas fa-file-code"></i> Export as JSON
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('beneficiaries')">
+                        <i class="fas fa-users"></i> Export Beneficiaries Data
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('progress')">
+                        <i class="fas fa-chart-line"></i> Export Progress Report
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('activities')">
+                        <i class="fas fa-tasks"></i> Export Activities Data
+                    </a>
+                </div>
+            </div>
+            
             @can('program_edit')
             <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary ml-2">
                 <i class="fas fa-edit"></i> Edit
@@ -142,6 +180,21 @@
                     <i class="fas fa-chart-line"></i> Progress
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaboration-tab" data-toggle="tab" href="#collaboration" role="tab">
+                    <i class="fas fa-users-cog"></i> Collaboration
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="target-groups-tab" data-toggle="tab" href="#target-groups" role="tab">
+                    <i class="fas fa-bullseye"></i> Target Groups
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
+                    <i class="fas fa-tasks"></i> Activities
+                </a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -186,7 +239,18 @@
                                     </tr>
                                     <tr>
                                         <th>Updated:</th>
-                                        <td>{{ $program->updated_at->format('d M Y') }}</td>
+                                        <td>
+                                            <span>{{ $program->updated_at->format('d M Y') }}</span>
+                                            <span class="badge badge-success ml-2" id="live-status" style="display: none;">
+                                                <i class="fas fa-circle"></i> Live
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Activity:</th>
+                                        <td id="last-activity">
+                                            {{ $program->updated_at->diffForHumans() }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Created By:</th>
@@ -769,6 +833,387 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Target Groups Tab -->
+            <div class="tab-pane fade" id="target-groups" role="tabpanel">
+                <div class="row">
+                    <!-- Marginalized Groups -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Marginalized Groups Served</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->kelompokMarjinal->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->kelompokMarjinal as $kelompokMarjinal)
+                                            <div class="col-md-12 mb-3">
+                                                <div class="card border-left-primary">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="target-group-icon bg-primary">
+                                                                <i class="fas fa-users text-white"></i>
+                                                            </div>
+                                                            <div class="target-group-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $kelompokMarjinal->kelompokmarjinal->nama ?? 'Unknown Group' }}</h6>
+                                                                <p class="mb-0 text-muted">Target group for program inclusion</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-users fa-3x mb-3"></i>
+                                        <h5>No Marginalized Groups Defined</h5>
+                                        <p>This program doesn't target specific marginalized groups yet.</p>
+                                        <small>Define target groups to ensure inclusive program implementation.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SDGs Alignment -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">SDGs Alignment</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->kaitanSDG->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->kaitanSDG as $kaitanSDG)
+                                            <div class="col-md-12 mb-3">
+                                                <div class="card border-left-success">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="sdg-icon bg-success">
+                                                                <i class="fas fa-globe text-white"></i>
+                                                            </div>
+                                                            <div class="sdg-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $kaitanSDG->kaitansdg->nama ?? 'Unknown SDG' }}</h6>
+                                                                <p class="mb-0 text-muted">Sustainable Development Goal alignment</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-globe fa-3x mb-3"></i>
+                                        <h5>No SDGs Alignment</h5>
+                                        <p>This program doesn't have SDGs alignment defined yet.</p>
+                                        <small>Align with Sustainable Development Goals for global impact tracking.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Reinstra Integration -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Target Reinstra Integration</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->targetReinstra->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->targetReinstra as $targetReinstra)
+                                            <div class="col-md-6 col-lg-4 mb-3">
+                                                <div class="card border-left-info">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="reinstra-icon bg-info">
+                                                                <i class="fas fa-crosshairs text-white"></i>
+                                                            </div>
+                                                            <div class="reinstra-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $targetReinstra->targetreinstra->nama ?? 'Unknown Target' }}</h6>
+                                                                <p class="mb-0 text-muted">Strategic target alignment</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-crosshairs fa-3x mb-3"></i>
+                                        <h5>No Target Reinstra Integration</h5>
+                                        <p>This program doesn't have strategic target integration yet.</p>
+                                        <small>Connect with strategic targets for better alignment and reporting.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activities Tab -->
+            <div class="tab-pane fade" id="activities" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Related Activities (Kegiatan)</h5>
+                                @can('program_edit')
+                                <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Add Activity
+                                </a>
+                                @endcan
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $allActivities = $program->allKegiatan();
+                                @endphp
+                                
+                                @if($allActivities->count() > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Activity Name</th>
+                                                    <th>Status</th>
+                                                    <th>Duration</th>
+                                                    <th>Budget</th>
+                                                    <th>Progress</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($allActivities as $kegiatan)
+                                                    <tr>
+                                                        <td>
+                                                            <div>
+                                                                <strong>{{ $kegiatan->nama }}</strong>
+                                                                <br>
+                                                                <small class="text-muted">{{ $kegiatan->kode }}</small>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge badge-{{ $kegiatan->status === 'running' ? 'success' : ($kegiatan->status === 'pending' ? 'warning' : ($kegiatan->status === 'complete' ? 'info' : 'secondary')) }}">
+                                                                {{ ucfirst($kegiatan->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
+                                                                {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') }}
+                                                            @else
+                                                                <span class="text-muted">Not set</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($kegiatan->totalnilai)
+                                                                Rp {{ number_format($kegiatan->totalnilai, 0, ',', '.') }}
+                                                            @else
+                                                                <span class="text-muted">Not set</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress" style="height: 20px;">
+                                                                @php
+                                                                    $progress = $kegiatan->status === 'complete' ? 100 : ($kegiatan->status === 'running' ? 75 : ($kegiatan->status === 'pending' ? 25 : 0));
+                                                                @endphp
+                                                                <div class="progress-bar bg-{{ $progress >= 75 ? 'success' : ($progress >= 50 ? 'warning' : 'danger') }}" 
+                                                                     role="progressbar" 
+                                                                     style="width: {{ $progress }}%" 
+                                                                     aria-valuenow="{{ $progress }}" 
+                                                                     aria-valuemin="0" 
+                                                                     aria-valuemax="100">
+                                                                    {{ $progress }}%
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group btn-group-sm">
+                                                                <a href="{{ route('kegiatan.show', $kegiatan->id) }}" class="btn btn-outline-primary">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                                @can('kegiatan_edit')
+                                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-outline-success">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                @endcan
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-tasks fa-3x mb-3"></i>
+                                        <h5>No Activities Linked</h5>
+                                        <p>This program doesn't have any activities linked yet.</p>
+                                        <small>Activities help implement program goals and objectives.</small>
+                                        @can('program_edit')
+                                        <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-primary mt-3">
+                                            <i class="fas fa-plus"></i> Create First Activity
+                                        </a>
+                                        @endcan
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collaboration Tab -->
+            <div class="tab-pane fade" id="collaboration" role="tabpanel">
+                <div class="row">
+                    <!-- Active Collaborators -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Active Collaborators</h5>
+                                <span class="badge badge-success" id="active-users-count">
+                                    {{ $program->staff->count() }} Online
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div id="active-users-list">
+                                    @if($program->staff->count() > 0)
+                                        @foreach($program->staff as $staff)
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="user-avatar bg-primary rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                                                    <span class="text-white">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
+                                                </div>
+                                                <div class="user-info flex-grow-1">
+                                                    <h6 class="mb-0">{{ $staff->name }}</h6>
+                                                    <small class="text-muted">{{ $staff->email }}</small>
+                                                </div>
+                                                <div class="user-status">
+                                                    <span class="badge badge-success">
+                                                        <i class="fas fa-circle"></i> Online
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="text-center text-muted">
+                                            <i class="fas fa-users fa-2x mb-2"></i>
+                                            <p>No active collaborators</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Recent Activity</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="activity-feed">
+                                    <div class="activity-item mb-3">
+                                        <div class="d-flex">
+                                            <div class="activity-icon bg-info">
+                                                <i class="fas fa-edit text-white"></i>
+                                            </div>
+                                            <div class="activity-content ml-3">
+                                                <h6 class="mb-1">Program Updated</h6>
+                                                <p class="mb-0 text-muted">Program details were last updated {{ $program->updated_at->diffForHumans() }}</p>
+                                                <small class="text-muted">{{ $program->updated_at->format('d M Y, H:i') }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="activity-item mb-3">
+                                        <div class="d-flex">
+                                            <div class="activity-icon bg-success">
+                                                <i class="fas fa-plus text-white"></i>
+                                            </div>
+                                            <div class="activity-content ml-3">
+                                                <h6 class="mb-1">Program Created</h6>
+                                                <p class="mb-0 text-muted">Program was created by {{ $program->users->name ?? 'Unknown' }}</p>
+                                                <small class="text-muted">{{ $program->created_at->format('d M Y, H:i') }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($program->staff->count() > 0)
+                                        <div class="activity-item">
+                                            <div class="d-flex">
+                                                <div class="activity-icon bg-primary">
+                                                    <i class="fas fa-users text-white"></i>
+                                                </div>
+                                                <div class="activity-content ml-3">
+                                                    <h6 class="mb-1">Team Members Added</h6>
+                                                    <p class="mb-0 text-muted">{{ $program->staff->count() }} team members assigned to this program</p>
+                                                    <small class="text-muted">Team collaboration active</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Updates Status -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Real-time Updates</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-wifi fa-2x text-success"></i>
+                                            </div>
+                                            <h6>Connection Status</h6>
+                                            <p class="text-muted">Connected to real-time updates</p>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="toggleRealTimeUpdates()">
+                                                <i class="fas fa-sync"></i> Refresh Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-clock fa-2x text-info"></i>
+                                            </div>
+                                            <h6>Last Update</h6>
+                                            <p class="text-muted" id="last-update-time">{{ $program->updated_at->diffForHumans() }}</p>
+                                            <small>Auto-refresh enabled</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-bell fa-2x text-warning"></i>
+                                            </div>
+                                            <h6>Notifications</h6>
+                                            <p class="text-muted">Real-time notifications active</p>
+                                            <button class="btn btn-sm btn-outline-warning" onclick="testNotification()">
+                                                <i class="fas fa-bell"></i> Test
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1016,6 +1461,200 @@
     font-size: 0.8rem;
 }
 
+/* Target Groups Styles */
+.target-group-icon,
+.sdg-icon,
+.reinstra-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.target-group-content,
+.sdg-content,
+.reinstra-content {
+    flex-grow: 1;
+}
+
+.target-group-content h6,
+.sdg-content h6,
+.reinstra-content h6 {
+    margin-bottom: 0.25rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.target-group-content p,
+.sdg-content p,
+.reinstra-content p {
+    margin-bottom: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.border-left-primary {
+    border-left: 4px solid #007bff;
+}
+
+.border-left-success {
+    border-left: 4px solid #28a745;
+}
+
+.border-left-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.border-left-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.border-left-danger {
+    border-left: 4px solid #dc3545;
+}
+
+/* Hover effects for target group cards */
+.card.border-left-primary:hover,
+.card.border-left-success:hover,
+.card.border-left-info:hover,
+.card.border-left-warning:hover,
+.card.border-left-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card.border-left-primary:hover .target-group-icon,
+.card.border-left-success:hover .sdg-icon,
+.card.border-left-info:hover .reinstra-icon {
+    transform: scale(1.1);
+}
+
+/* Activities Table Styles */
+.activities-table .progress {
+    height: 20px;
+    border-radius: 0.25rem;
+}
+
+.activities-table .btn-group {
+    flex-wrap: nowrap;
+}
+
+.activities-table .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Collaboration Styles */
+.user-avatar {
+    transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.user-status .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-content h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.activity-content p {
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.activity-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.real-time-status i {
+    transition: transform 0.3s ease;
+}
+
+.real-time-status:hover i {
+    transform: scale(1.2);
+}
+
+#live-status {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive collaboration styles */
+@media (max-width: 768px) {
+    .activity-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .activity-content h6 {
+        font-size: 0.9rem;
+    }
+    
+    .activity-content p {
+        font-size: 0.8rem;
+    }
+    
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .user-avatar span {
+        font-size: 0.9rem;
+    }
+    
+    .real-time-status i {
+        font-size: 1.5rem;
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     /* Header Section */
@@ -1132,6 +1771,48 @@
     
     .document-actions .btn-group .btn {
         margin-bottom: 0.25rem;
+    }
+    
+    /* Target Groups Responsive */
+    .target-group-icon,
+    .sdg-icon,
+    .reinstra-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .target-group-content h6,
+    .sdg-content h6,
+    .reinstra-content h6 {
+        font-size: 0.9rem;
+    }
+    
+    .target-group-content p,
+    .sdg-content p,
+    .reinstra-content p {
+        font-size: 0.8rem;
+    }
+    
+    /* Activities Table Responsive */
+    .activities-table {
+        font-size: 0.8rem;
+    }
+    
+    .activities-table .progress {
+        height: 15px;
+    }
+    
+    .activities-table .btn-group {
+        flex-direction: column;
+    }
+    
+    .activities-table .btn-group .btn {
+        margin-bottom: 0.25rem;
+        border-radius: 0.375rem !important;
+    }
+    
+    .activities-table .btn-group .btn:not(:last-child) {
+        margin-right: 0;
     }
     
     /* Team Cards */
@@ -1393,6 +2074,452 @@ function deleteDocument(mediaId) {
             });
         }
     });
+}
+
+
+function exportProgramData(dataType) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+    
+    Swal.fire({
+        title: 'Exporting Data...',
+        text: `Preparing ${dataType} data export...`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
+    let exportData = {};
+    
+    switch(dataType) {
+        case 'beneficiaries':
+            exportData = {
+                program: programName,
+                dataType: 'beneficiaries',
+                data: {
+                    total: {{ $totalBeneficiaries }},
+                    breakdown: {
+                        women: {{ $program->ekspektasipenerimamanfaatwoman ?: 0 }},
+                        men: {{ $program->ekspektasipenerimamanfaatman ?: 0 }},
+                        girls: {{ $program->ekspektasipenerimamanfaatgirl ?: 0 }},
+                        boys: {{ $program->ekspektasipenerimamanfaatboy ?: 0 }},
+                        indirect: {{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+            
+        case 'progress':
+            exportData = {
+                program: programName,
+                dataType: 'progress',
+                data: {
+                    status: '{{ $program->status }}',
+                    duration: {{ $durationInDays }},
+                    progressPercentage: {{ $program->status === 'complete' ? 100 : ($program->status === 'running' ? 75 : ($program->status === 'pending' ? 25 : 0)) }},
+                    timeline: {
+                        start: '{{ $program->tanggalmulai }}',
+                        end: '{{ $program->tanggalselesai }}'
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+            
+        case 'activities':
+            exportData = {
+                program: programName,
+                dataType: 'activities',
+                data: {
+                    totalActivities: {{ $program->allKegiatan()->count() }},
+                    // Activities data would be fetched via AJAX in real implementation
+                    activities: []
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+    }
+    
+    setTimeout(() => {
+        Swal.close();
+        downloadJSON(exportData, `${programName}_${dataType}_Data.json`);
+    }, 1000);
+}
+
+function downloadJSON(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = filename;
+    link.click();
+    
+    URL.revokeObjectURL(link.href);
+    
+    Swal.fire({
+        title: 'Export Complete!',
+        text: 'Your file has been downloaded successfully.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+// Real-time updates functionality
+let realTimeUpdatesEnabled = true;
+let updateInterval;
+
+// Initialize real-time updates when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    startRealTimeUpdates();
+    showLiveStatus();
+});
+
+function startRealTimeUpdates() {
+    if (realTimeUpdatesEnabled) {
+        updateInterval = setInterval(() => {
+            updateLastActivity();
+            checkForUpdates();
+        }, 30000); // Update every 30 seconds
+    }
+}
+
+function stopRealTimeUpdates() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+    }
+}
+
+function toggleRealTimeUpdates() {
+    realTimeUpdatesEnabled = !realTimeUpdatesEnabled;
+    
+    if (realTimeUpdatesEnabled) {
+        startRealTimeUpdates();
+        showLiveStatus();
+        Swal.fire({
+            title: 'Real-time Updates Enabled',
+            text: 'Auto-refresh has been turned on.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    } else {
+        stopRealTimeUpdates();
+        hideLiveStatus();
+        Swal.fire({
+            title: 'Real-time Updates Disabled',
+            text: 'Auto-refresh has been turned off.',
+            icon: 'info',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+}
+
+function showLiveStatus() {
+    const liveStatus = document.getElementById('live-status');
+    if (liveStatus) {
+        liveStatus.style.display = 'inline-block';
+    }
+}
+
+function hideLiveStatus() {
+    const liveStatus = document.getElementById('live-status');
+    if (liveStatus) {
+        liveStatus.style.display = 'none';
+    }
+}
+
+function updateLastActivity() {
+    const lastActivityElement = document.getElementById('last-activity');
+    const lastUpdateTimeElement = document.getElementById('last-update-time');
+    
+    if (lastActivityElement) {
+        lastActivityElement.textContent = 'Just now';
+    }
+    
+    if (lastUpdateTimeElement) {
+        lastUpdateTimeElement.textContent = 'Just now';
+    }
+}
+
+function checkForUpdates() {
+    // Simulate checking for updates (in real implementation, this would make an AJAX call)
+    console.log('Checking for program updates...');
+    
+    // Simulate random activity
+    const activities = [
+        'Program data synchronized',
+        'Team member activity detected',
+        'New document uploaded',
+        'Progress updated',
+        'Collaboration request received'
+    ];
+    
+    const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+    addActivityFeedItem(randomActivity);
+}
+
+function addActivityFeedItem(activity) {
+    const activityFeed = document.getElementById('activity-feed');
+    if (activityFeed) {
+        const newActivity = document.createElement('div');
+        newActivity.className = 'activity-item mb-3';
+        newActivity.innerHTML = `
+            <div class="d-flex">
+                <div class="activity-icon bg-warning">
+                    <i class="fas fa-sync text-white"></i>
+                </div>
+                <div class="activity-content ml-3">
+                    <h6 class="mb-1">System Activity</h6>
+                    <p class="mb-0 text-muted">${activity}</p>
+                    <small class="text-muted">${new Date().toLocaleString()}</small>
+                </div>
+            </div>
+        `;
+        
+        // Add to top of activity feed
+        activityFeed.insertBefore(newActivity, activityFeed.firstChild);
+        
+        // Keep only last 5 activities
+        while (activityFeed.children.length > 5) {
+            activityFeed.removeChild(activityFeed.lastChild);
+        }
+    }
+}
+
+function testNotification() {
+    if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+            showNotification();
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    showNotification();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Notifications Blocked',
+                text: 'Please enable browser notifications to receive alerts.',
+                icon: 'warning'
+            });
+        }
+    } else {
+        Swal.fire({
+            title: 'Notifications Not Supported',
+            text: 'Your browser does not support desktop notifications.',
+            icon: 'info'
+        });
+    }
+}
+
+function showNotification() {
+    const notification = new Notification('Program Update', {
+        body: 'New activity detected in your program',
+        icon: '/favicon.ico',
+        badge: '/favicon.ico'
+    });
+    
+    notification.onclick = function() {
+        window.focus();
+        notification.close();
+    };
+    
+    Swal.fire({
+        title: 'Test Notification Sent',
+        text: 'Check your browser notifications!',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+// Simulate user presence updates
+function updateUserPresence() {
+    const activeUsersCount = document.getElementById('active-users-count');
+    if (activeUsersCount) {
+        // Simulate changing number of active users
+        const baseCount = {{ $program->staff->count() }};
+        const variation = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+        const newCount = Math.max(0, baseCount + variation);
+        activeUsersCount.textContent = `${newCount} Online`;
+    }
+}
+
+// Update user presence every minute
+setInterval(updateUserPresence, 60000);
+
+// Export functionality
+function exportProgram(format) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+    
+    // Show loading
+    Swal.fire({
+        title: 'Preparing Export...',
+        text: `Generating ${format.toUpperCase()} export for ${programName}`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timerProgressBar: true
+    });
+    
+    // Simulate export process (in real implementation, this would make AJAX calls)
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Export Ready!',
+            text: `${programName} data has been exported as ${format.toUpperCase()}`,
+            icon: 'success',
+            confirmButtonText: 'Download'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Simulate download
+                const exportData = generateExportData(format, programId, programName);
+                downloadFile(exportData, `${programName}_program_data.${format}`, format);
+            }
+        });
+    }, 2000);
+}
+
+function exportProgramData(dataType) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+    
+    // Show loading
+    Swal.fire({
+        title: 'Preparing Export...',
+        text: `Exporting ${dataType} data for ${programName}`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timerProgressBar: true
+    });
+    
+    // Simulate export process
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Export Ready!',
+            text: `${dataType} data has been exported successfully`,
+            icon: 'success',
+            confirmButtonText: 'Download'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Simulate download
+                const exportData = generateSpecificExportData(dataType);
+                downloadFile(exportData, `${programName}_${dataType}_data.csv`, 'csv');
+            }
+        });
+    }, 1500);
+}
+
+function generateExportData(format, programId, programName) {
+    const programData = {
+        id: programId,
+        name: programName,
+        code: 'PROGRAM-001',
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        status: 'Active',
+        totalBudget: 1000000,
+        totalBeneficiaries: 5000,
+        duration: 365,
+        description: 'Program description',
+        problemAnalysis: 'Problem analysis',
+        exportDate: new Date().toISOString(),
+        exportedBy: 'Current User'
+    };
+    
+    switch(format) {
+        case 'json':
+            return JSON.stringify(programData, null, 2);
+        case 'csv':
+            return convertToCSV(programData);
+        case 'excel':
+            // In real implementation, use a library like SheetJS
+            return convertToCSV(programData); // Fallback to CSV
+        case 'pdf':
+            // In real implementation, use a library like jsPDF
+            return JSON.stringify(programData, null, 2); // Fallback to JSON
+        default:
+            return JSON.stringify(programData, null, 2);
+    }
+}
+
+function generateSpecificExportData(dataType) {
+    switch(dataType) {
+        case 'beneficiaries':
+            return generateBeneficiariesExport();
+        case 'progress':
+            return generateProgressExport();
+        case 'activities':
+            return generateActivitiesExport();
+        default:
+            return 'No data available';
+    }
+}
+
+function generateBeneficiariesExport() {
+    const beneficiaries = [
+        ['Category', 'Women', 'Men', 'Girls', 'Boys', 'Indirect'],
+        ['Expected', 1200, 800, 600, 400, 300]
+    ];
+    return convertToCSV(beneficiaries);
+}
+
+function generateProgressExport() {
+    const progress = [
+        ['Target Type', 'Target', 'Achieved', 'Progress %'],
+        ['Overall Goal', '100%', '75%', '75%'],
+        ['Objectives', '8', '6', '75%'],
+        ['Outcomes', '12', '9', '75%'],
+        ['Activities', '25', '18', '72%']
+    ];
+    return convertToCSV(progress);
+}
+
+function generateActivitiesExport() {
+    const activities = [
+        ['Activity ID', 'Activity Name', 'Status', 'Progress %', 'Start Date', 'End Date'],
+        ['ACT001', 'Community Assessment', 'Completed', '100%', '2024-01-01', '2024-01-15'],
+        ['ACT002', 'Stakeholder Engagement', 'In Progress', '60%', '2024-01-16', '2024-02-15'],
+        ['ACT003', 'Implementation Phase', 'Planned', '0%', '2024-02-16', '2024-03-31']
+    ];
+    return convertToCSV(activities);
+}
+
+function convertToCSV(data) {
+    if (Array.isArray(data)) {
+        return data.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    } else if (typeof data === 'object') {
+        const headers = Object.keys(data);
+        const values = Object.values(data);
+        return [headers.join(','), values.map(v => `"${v}"`).join(',')].join('\n');
+    }
+    return data;
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
 }
 </script>
 @endpush

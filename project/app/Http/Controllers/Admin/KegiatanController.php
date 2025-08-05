@@ -1065,11 +1065,13 @@ class KegiatanController extends Controller
             }
 
             // Generate unique filename
-
             // user original name file,
-
             $fileName = $name . '_' . time() . '.' . $extension;
             $filePath = $tempPath . '/' . $fileName;
+
+            // Get file info before moving
+            $fileSize = $file->getSize();
+            $mimeType = $file->getMimeType();
 
             // Move file to temp location
             $file->move($tempPath, $fileName);
@@ -1079,8 +1081,8 @@ class KegiatanController extends Controller
                 'file_path' => $filePath,
                 'file_name' => $fileName,
                 'original_name' => $file->getClientOriginalName(),
-                'file_size' => $file->getSize(),
-                'mime_type' => $file->getMimeType(),
+                'file_size' => $fileSize,
+                'mime_type' => $mimeType,
                 'collection' => $collection
             ]);
 
