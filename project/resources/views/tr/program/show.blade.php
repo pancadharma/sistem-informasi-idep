@@ -6,8 +6,8 @@
 @section('content_body')
 
 <!-- Program Header Section -->
-<div class="card card-outline card-primary mb-4" 
-     data-program-id="{{ $program->id }}" 
+<div class="card card-outline card-primary mb-4"
+     data-program-id="{{ $program->id }}"
      data-program-name="{{ $program->nama }}"
      data-program-code="{{ $program->kode }}"
      data-program-status="{{ $program->status }}"
@@ -30,7 +30,7 @@
             <span class="badge badge-lg {{ $program->status === 'running' ? 'bg-success' : ($program->status === 'pending' ? 'bg-warning' : ($program->status === 'complete' ? 'bg-info' : 'bg-secondary')) }}">
                 {{ strtoupper($program->status) }}
             </span>
-            
+
             <!-- Export Dropdown -->
             <div class="btn-group ml-2">
                 <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
@@ -58,7 +58,7 @@
                     </a>
                 </div>
             </div>
-            
+
             @can('program_edit')
             <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary ml-2">
                 <i class="fas fa-edit"></i> Edit
@@ -83,8 +83,7 @@
                     <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Duration</span>
-                        <span class="info-box-number">{{ $durationInDays }}</span>
-                        <span class="info-box-text">days</span>
+                        <span class="info-box-number">{{ $durationInDays }} Days</span>
                     </div>
                 </div>
             </div>
@@ -211,7 +210,7 @@
                                 <p>{{ $program->deskripsiprojek ?: 'No description available' }}</p>
                             </div>
                         </div>
-                        
+
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Problem Analysis</h5>
@@ -221,7 +220,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">
@@ -328,7 +327,7 @@
                                         <div class="card">
                                             <div class="card-body text-center">
                                                 <div class="mb-3">
-                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" 
+                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center"
                                                          style="width: 64px; height: 64px;">
                                                         <span class="text-white h4 mb-0">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
                                                     </div>
@@ -589,94 +588,101 @@
 
             <!-- Documents Tab -->
             <div class="tab-pane fade" id="documents" role="tabpanel">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Program Documents</h5>
-                                @can('program_edit')
-                                <button class="btn btn-sm btn-primary" onclick="uploadDocument()">
-                                    <i class="fas fa-upload"></i> Upload Document
-                                </button>
-                                @endcan
-                            </div>
-                            <div class="card-body">
-                                @php
-                                    $mediaFiles = $program->getMedia('file_pendukung_program');
-                                @endphp
-                                
-                                @if($mediaFiles->count() > 0)
-                                    <div class="row">
-                                        @foreach($mediaFiles as $media)
-                                            <div class="col-md-6 col-lg-4 mb-3">
-                                                <div class="card document-card">
-                                                    <div class="card-body">
-                                                        <div class="document-icon text-center mb-3">
-                                                            @if(str_starts_with($media->mime_type, 'image/'))
-                                                                <i class="fas fa-image fa-3x text-primary"></i>
-                                                            @elseif($media->mime_type === 'application/pdf')
-                                                                <i class="fas fa-file-pdf fa-3x text-danger"></i>
-                                                            @elseif(in_array($media->mime_type, ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']))
-                                                                <i class="fas fa-file-powerpoint fa-3x text-warning"></i>
-                                                            @elseif(in_array($media->mime_type, ['application/vnd.openxmlformats-officedocument.wordprocessingml.document']))
-                                                                <i class="fas fa-file-word fa-3x text-info"></i>
-                                                            @elseif(in_array($media->mime_type, ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']))
-                                                                <i class="fas fa-file-excel fa-3x text-success"></i>
-                                                            @else
-                                                                <i class="fas fa-file fa-3x text-secondary"></i>
-                                                            @endif
-                                                        </div>
-                                                        <h6 class="card-title text-truncate" title="{{ $media->name }}">
-                                                            {{ $media->name }}
-                                                        </h6>
-                                                        <p class="card-text">
-                                                            <small class="text-muted">
-                                                                {{ $media->getCustomProperty('keterangan') ?: 'No description' }}
-                                                            </small>
-                                                        </p>
-                                                        <div class="document-meta">
-                                                            <small class="text-muted d-block">
-                                                                <i class="fas fa-calendar"></i> {{ $media->created_at->format('d M Y') }}
-                                                            </small>
-                                                            <small class="text-muted d-block">
-                                                                <i class="fas fa-hdd"></i> {{ $media->human_readable_size }}
-                                                            </small>
-                                                        </div>
-                                                        <div class="document-actions mt-3">
-                                                            <div class="btn-group btn-group-sm w-100">
-                                                                <a href="{{ $media->getUrl() }}" class="btn btn-outline-primary" target="_blank">
-                                                                    <i class="fas fa-eye"></i> View
-                                                                </a>
-                                                                <a href="{{ $media->getUrl() }}" class="btn btn-outline-success" download>
-                                                                    <i class="fas fa-download"></i> Download
-                                                                </a>
-                                                                @can('program_edit')
-                                                                <button class="btn btn-outline-danger" onclick="deleteDocument({{ $media->id }})">
-                                                                    <i class="fas fa-trash"></i>
-                                                                </button>
-                                                                @endcan
-                                                            </div>
-                                                        </div>
+                <div class="card">
+                    <div class="card-body border-top">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="text-info mb-0"><i class="fas fa-folder-open me-2"></i>{{ __('Program Documents & Files') }}</h5>
+                            @can('program_edit')
+                            <button type="button" class="btn btn-primary btn-sm" onclick="uploadProgramFile()">
+                                <i class="fas fa-plus me-1"></i>{{ __('Upload Files') }}
+                            </button>
+                            @endcan
+                        </div>
+                        
+                        <!-- Files Section -->
+                        <div class="files-section">
+                            @php
+                                $programFiles = $program->getMedia('program_' . $program->id);
+                            @endphp
+                            @if($programFiles && $programFiles->count() > 0)
+                                <div class="row g-3">
+                                    @foreach($programFiles as $media)
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <div class="card file-card h-100 shadow-sm hover-shadow transition-all">
+                                                <div class="card-body p-3">
+                                                    <div class="file-icon text-center mb-3">
+                                                        @if(strstr($media->mime_type, "image/"))
+                                                            <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 120px; object-fit: cover;">
+                                                        @elseif(strstr($media->mime_type, "pdf"))
+                                                            <i class="fas fa-file-pdf fa-4x text-danger"></i>
+                                                        @elseif(strstr($media->mime_type, "word"))
+                                                            <i class="fas fa-file-word fa-4x text-primary"></i>
+                                                        @elseif(strstr($media->mime_type, "excel") || strstr($media->mime_type, "spreadsheet"))
+                                                            <i class="fas fa-file-excel fa-4x text-success"></i>
+                                                        @elseif(strstr($media->mime_type, "powerpoint"))
+                                                            <i class="fas fa-file-powerpoint fa-4x text-warning"></i>
+                                                        @else
+                                                            <i class="fas fa-file fa-4x text-secondary"></i>
+                                                        @endif
+                                                    </div>
+                                                    <h6 class="card-title text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
+                                                        {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
+                                                    </h6>
+                                                    <div class="file-meta">
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}
+                                                        </small>
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer bg-transparent border-top-0 p-2">
+                                                    <div class="btn-group w-100" role="group">
+                                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="previewProgramFile('{{ $media->getUrl() }}', '{{ $media->mime_type }}')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download>
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                        @can('program_edit')
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteProgramFile({{ $media->id }})">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                        @endcan
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-folder-open fa-3x mb-3"></i>
-                                        <h5>No Documents Available</h5>
-                                        <p>This program doesn't have any supporting documents yet.</p>
-                                        <small>Upload documents to support program implementation and reporting.</small>
-                                        @can('program_edit')
-                                        <button class="btn btn-primary mt-3" onclick="uploadDocument()">
-                                            <i class="fas fa-upload"></i> Upload First Document
-                                        </button>
-                                        @endcan
-                                    </div>
-                                @endif
-                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-5">
+                                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                                    <h6 class="text-muted">{{ __('No supporting documents uploaded yet') }}</h6>
+                                    <p class="text-muted small">{{ __('Upload documents to support this program') }}</p>
+                                    @can('program_edit')
+                                    <button class="btn btn-primary" onclick="uploadProgramDocument('file_pendukung_program')">
+                                        <i class="fas fa-plus me-2"></i>{{ __('Upload Document') }}
+                                    </button>
+                                    @endcan
+                                </div>
+                            @endif
                         </div>
+                        
+                        <!-- If no files at all -->
+                        @if($programFiles->count() == 0)
+                            <div class="text-center py-5">
+                                <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                                <h6 class="text-muted">{{ __('No files uploaded yet') }}</h6>
+                                <p class="text-muted small">{{ __('Upload documents and media to support this program') }}</p>
+                                @can('program_edit')
+                                <button class="btn btn-primary" onclick="uploadProgramFile()">
+                                    <i class="fas fa-plus me-2"></i>{{ __('Upload Files') }}
+                                </button>
+                                @endcan
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -749,14 +755,14 @@
                                                                     @php
                                                                         $targetValue = (float)($detail->targetable->target ?? 0);
                                                                         $actualValue = (float)($detail->actual ?? 0);
-                                                                        $percentage = ($targetValue > 0) ? 
+                                                                        $percentage = ($targetValue > 0) ?
                                                                             min(($actualValue / $targetValue) * 100, 100) : 0;
                                                                     @endphp
-                                                                    <div class="progress-bar bg-{{ $percentage >= 100 ? 'success' : ($percentage >= 50 ? 'warning' : 'danger') }}" 
-                                                                         role="progressbar" 
-                                                                         style="width: {{ $percentage }}%" 
-                                                                         aria-valuenow="{{ $percentage }}" 
-                                                                         aria-valuemin="0" 
+                                                                    <div class="progress-bar bg-{{ $percentage >= 100 ? 'success' : ($percentage >= 50 ? 'warning' : 'danger') }}"
+                                                                         role="progressbar"
+                                                                         style="width: {{ $percentage }}%"
+                                                                         aria-valuenow="{{ $percentage }}"
+                                                                         aria-valuemin="0"
                                                                          aria-valuemax="100">
                                                                         {{ round($percentage) }}%
                                                                     </div>
@@ -805,7 +811,7 @@
                                             <small>Program officially began</small>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="timeline-item">
                                         <div class="timeline-marker bg-{{ $program->status === 'running' ? 'warning' : 'secondary' }}">
                                             <i class="fas fa-clock"></i>
@@ -816,7 +822,7 @@
                                             <small>Program is currently in this phase</small>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="timeline-item">
                                         <div class="timeline-marker bg-{{ $program->status === 'complete' ? 'success' : 'secondary' }}">
                                             <i class="fas fa-flag-checkered"></i>
@@ -975,7 +981,7 @@
                                 @php
                                     $allActivities = $program->allKegiatan();
                                 @endphp
-                                
+
                                 @if($allActivities->count() > 0)
                                     <div class="table-responsive">
                                         <table class="table table-striped">
@@ -1023,11 +1029,11 @@
                                                                 @php
                                                                     $progress = $kegiatan->status === 'complete' ? 100 : ($kegiatan->status === 'running' ? 75 : ($kegiatan->status === 'pending' ? 25 : 0));
                                                                 @endphp
-                                                                <div class="progress-bar bg-{{ $progress >= 75 ? 'success' : ($progress >= 50 ? 'warning' : 'danger') }}" 
-                                                                     role="progressbar" 
-                                                                     style="width: {{ $progress }}%" 
-                                                                     aria-valuenow="{{ $progress }}" 
-                                                                     aria-valuemin="0" 
+                                                                <div class="progress-bar bg-{{ $progress >= 75 ? 'success' : ($progress >= 50 ? 'warning' : 'danger') }}"
+                                                                     role="progressbar"
+                                                                     style="width: {{ $progress }}%"
+                                                                     aria-valuenow="{{ $progress }}"
+                                                                     aria-valuemin="0"
                                                                      aria-valuemax="100">
                                                                     {{ $progress }}%
                                                                 </div>
@@ -1131,7 +1137,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="activity-item mb-3">
                                         <div class="d-flex">
                                             <div class="activity-icon bg-success">
@@ -1144,7 +1150,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     @if($program->staff->count() > 0)
                                         <div class="activity-item">
                                             <div class="d-flex">
@@ -1461,6 +1467,47 @@
     font-size: 0.8rem;
 }
 
+/* File Cards Styles */
+.file-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+}
+
+.file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.file-icon {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.file-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.file-meta {
+    font-size: 0.8rem;
+}
+
+.file-card .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
 /* Target Groups Styles */
 .target-group-icon,
 .sdg-icon,
@@ -1632,24 +1679,24 @@
         width: 28px;
         height: 28px;
     }
-    
+
     .activity-content h6 {
         font-size: 0.9rem;
     }
-    
+
     .activity-content p {
         font-size: 0.8rem;
     }
-    
+
     .user-avatar {
         width: 32px;
         height: 32px;
     }
-    
+
     .user-avatar span {
         font-size: 0.9rem;
     }
-    
+
     .real-time-status i {
         font-size: 1.5rem;
     }
@@ -1662,26 +1709,26 @@
         flex-direction: column;
         align-items: flex-start !important;
     }
-    
+
     .card-header .card-tools {
         margin-top: 1rem;
         width: 100%;
     }
-    
+
     .card-header .btn {
         font-size: 0.8rem;
         padding: 0.25rem 0.5rem;
     }
-    
+
     /* Quick Stats */
     .info-box {
         margin-bottom: 1rem;
     }
-    
+
     .info-box .info-box-number {
         font-size: 1.5rem;
     }
-    
+
     /* Tabs Navigation */
     .nav-tabs {
         flex-wrap: nowrap;
@@ -1689,90 +1736,90 @@
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     .nav-tabs .nav-link {
         font-size: 0.8rem;
         padding: 0.5rem 0.75rem;
         min-width: auto;
     }
-    
+
     .nav-tabs .nav-link i {
         display: block;
         margin-bottom: 0.25rem;
         font-size: 1rem;
     }
-    
+
     /* Structure Styles */
     .structure-icon {
         width: 32px;
         height: 32px;
     }
-    
+
     .structure-content {
         margin-left: 0.5rem;
     }
-    
+
     .structure-item {
         padding-left: 0.5rem;
     }
-    
+
     .outputs-section,
     .activities-section {
         margin-left: 1rem !important;
     }
-    
+
     /* Timeline Styles */
     .timeline {
         padding-left: 1.5rem;
     }
-    
+
     .timeline-marker {
         left: -1rem;
         width: 1.5rem;
         height: 1.5rem;
     }
-    
+
     .timeline-content {
         padding: 0.75rem;
     }
-    
+
     /* Progress Section */
     .progress-circle canvas {
         width: 150px !important;
         height: 150px !important;
     }
-    
+
     .table-responsive {
         font-size: 0.8rem;
     }
-    
+
     .table .btn {
         font-size: 0.7rem;
         padding: 0.25rem 0.5rem;
     }
-    
+
     /* Document Cards */
     .document-card {
         margin-bottom: 1rem;
     }
-    
+
     .document-icon i {
         font-size: 2rem;
     }
-    
+
     .document-actions .btn {
         font-size: 0.7rem;
         padding: 0.25rem 0.5rem;
     }
-    
+
     .document-actions .btn-group {
         flex-direction: column;
     }
-    
+
     .document-actions .btn-group .btn {
         margin-bottom: 0.25rem;
     }
-    
+
     /* Target Groups Responsive */
     .target-group-icon,
     .sdg-icon,
@@ -1780,90 +1827,90 @@
         width: 40px;
         height: 40px;
     }
-    
+
     .target-group-content h6,
     .sdg-content h6,
     .reinstra-content h6 {
         font-size: 0.9rem;
     }
-    
+
     .target-group-content p,
     .sdg-content p,
     .reinstra-content p {
         font-size: 0.8rem;
     }
-    
+
     /* Activities Table Responsive */
     .activities-table {
         font-size: 0.8rem;
     }
-    
+
     .activities-table .progress {
         height: 15px;
     }
-    
+
     .activities-table .btn-group {
         flex-direction: column;
     }
-    
+
     .activities-table .btn-group .btn {
         margin-bottom: 0.25rem;
         border-radius: 0.375rem !important;
     }
-    
+
     .activities-table .btn-group .btn:not(:last-child) {
         margin-right: 0;
     }
-    
+
     /* Team Cards */
     .team-card .card-body {
         padding: 1rem;
     }
-    
+
     .team-card .rounded-circle {
         width: 48px;
         height: 48px;
     }
-    
+
     .team-card .rounded-circle span {
         font-size: 1.2rem;
     }
-    
+
     /* Partners and Donors */
     .partner-card, .donor-card {
         margin-bottom: 1rem;
     }
-    
+
     /* Location Cards */
     .location-card {
         margin-bottom: 1rem;
     }
-    
+
     /* Chart Containers */
     #beneficiariesChart {
         height: 250px !important;
     }
-    
+
     /* Mobile-specific adjustments */
     .d-md-none {
         display: block !important;
     }
-    
+
     .d-none.d-md-block {
         display: none !important;
     }
-    
+
     /* Button Groups */
     .btn-group {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .btn-group .btn {
         margin-bottom: 0.25rem;
         border-radius: 0.375rem !important;
     }
-    
+
     .btn-group .btn:not(:last-child) {
         margin-right: 0;
     }
@@ -1874,40 +1921,40 @@
     .card-header h2 {
         font-size: 1.5rem;
     }
-    
+
     .card-header p {
         font-size: 0.9rem;
     }
-    
+
     .info-box .info-box-text {
         font-size: 0.8rem;
     }
-    
+
     .info-box .info-box-number {
         font-size: 1.25rem;
     }
-    
+
     .nav-tabs .nav-link {
         font-size: 0.7rem;
         padding: 0.4rem 0.6rem;
     }
-    
+
     .nav-tabs .nav-link i {
         font-size: 0.9rem;
     }
-    
+
     .table-responsive {
         font-size: 0.75rem;
     }
-    
+
     .progress {
         height: 15px;
     }
-    
+
     .timeline-content h6 {
         font-size: 0.9rem;
     }
-    
+
     .timeline-content p {
         font-size: 0.8rem;
     }
@@ -1922,6 +1969,8 @@
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1982,7 +2031,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const progressCtx = document.getElementById('progressChart');
     if (progressCtx) {
         const progressPercentage = {{ $program->status === 'complete' ? 100 : ($program->status === 'running' ? 75 : ($program->status === 'pending' ? 25 : 0)) }};
-        
+
         new Chart(progressCtx, {
             type: 'doughnut',
             data: {
@@ -2082,9 +2131,10 @@ function exportProgramData(dataType) {
     const programElement = document.querySelector('[data-program-id]');
     const programId = programElement ? programElement.dataset.programId : '1';
     const programName = programElement ? programElement.dataset.programName : 'Program';
-    
+
     Swal.fire({
-        title: 'Exporting Data...',
+        // title: 'Exporting Data...',
+        title: `Exporting Data...`,
         text: `Preparing ${dataType} data export...`,
         icon: 'info',
         allowOutsideClick: false,
@@ -2093,9 +2143,9 @@ function exportProgramData(dataType) {
             Swal.showLoading();
         }
     });
-    
+
     let exportData = {};
-    
+
     switch(dataType) {
         case 'beneficiaries':
             exportData = {
@@ -2114,7 +2164,7 @@ function exportProgramData(dataType) {
                 exportDate: new Date().toISOString()
             };
             break;
-            
+
         case 'progress':
             exportData = {
                 program: programName,
@@ -2131,7 +2181,7 @@ function exportProgramData(dataType) {
                 exportDate: new Date().toISOString()
             };
             break;
-            
+
         case 'activities':
             exportData = {
                 program: programName,
@@ -2145,7 +2195,7 @@ function exportProgramData(dataType) {
             };
             break;
     }
-    
+
     setTimeout(() => {
         Swal.close();
         downloadJSON(exportData, `${programName}_${dataType}_Data.json`);
@@ -2155,14 +2205,14 @@ function exportProgramData(dataType) {
 function downloadJSON(data, filename) {
     const dataStr = JSON.stringify(data, null, 2);
     const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
+
     const link = document.createElement('a');
     link.href = URL.createObjectURL(dataBlob);
     link.download = filename;
     link.click();
-    
+
     URL.revokeObjectURL(link.href);
-    
+
     Swal.fire({
         title: 'Export Complete!',
         text: 'Your file has been downloaded successfully.',
@@ -2199,7 +2249,7 @@ function stopRealTimeUpdates() {
 
 function toggleRealTimeUpdates() {
     realTimeUpdatesEnabled = !realTimeUpdatesEnabled;
-    
+
     if (realTimeUpdatesEnabled) {
         startRealTimeUpdates();
         showLiveStatus();
@@ -2240,11 +2290,11 @@ function hideLiveStatus() {
 function updateLastActivity() {
     const lastActivityElement = document.getElementById('last-activity');
     const lastUpdateTimeElement = document.getElementById('last-update-time');
-    
+
     if (lastActivityElement) {
         lastActivityElement.textContent = 'Just now';
     }
-    
+
     if (lastUpdateTimeElement) {
         lastUpdateTimeElement.textContent = 'Just now';
     }
@@ -2253,7 +2303,7 @@ function updateLastActivity() {
 function checkForUpdates() {
     // Simulate checking for updates (in real implementation, this would make an AJAX call)
     console.log('Checking for program updates...');
-    
+
     // Simulate random activity
     const activities = [
         'Program data synchronized',
@@ -2262,7 +2312,7 @@ function checkForUpdates() {
         'Progress updated',
         'Collaboration request received'
     ];
-    
+
     const randomActivity = activities[Math.floor(Math.random() * activities.length)];
     addActivityFeedItem(randomActivity);
 }
@@ -2284,10 +2334,10 @@ function addActivityFeedItem(activity) {
                 </div>
             </div>
         `;
-        
+
         // Add to top of activity feed
         activityFeed.insertBefore(newActivity, activityFeed.firstChild);
-        
+
         // Keep only last 5 activities
         while (activityFeed.children.length > 5) {
             activityFeed.removeChild(activityFeed.lastChild);
@@ -2327,12 +2377,12 @@ function showNotification() {
         icon: '/favicon.ico',
         badge: '/favicon.ico'
     });
-    
+
     notification.onclick = function() {
         window.focus();
         notification.close();
     };
-    
+
     Swal.fire({
         title: 'Test Notification Sent',
         text: 'Check your browser notifications!',
@@ -2363,7 +2413,11 @@ function exportProgram(format) {
     const programElement = document.querySelector('[data-program-id]');
     const programId = programElement ? programElement.dataset.programId : '1';
     const programName = programElement ? programElement.dataset.programName : 'Program';
-    
+
+    if(format === "pdf"){
+        exportProgramPDF(programId, programName);
+        return;
+    }
     // Show loading
     Swal.fire({
         title: 'Preparing Export...',
@@ -2373,7 +2427,7 @@ function exportProgram(format) {
         showConfirmButton: false,
         timerProgressBar: true
     });
-    
+
     // Simulate export process (in real implementation, this would make AJAX calls)
     setTimeout(() => {
         Swal.fire({
@@ -2382,6 +2436,7 @@ function exportProgram(format) {
             icon: 'success',
             confirmButtonText: 'Download'
         }).then((result) => {
+
             if (result.isConfirmed) {
                 // Simulate download
                 const exportData = generateExportData(format, programId, programName);
@@ -2396,7 +2451,7 @@ function exportProgramData(dataType) {
     const programElement = document.querySelector('[data-program-id]');
     const programId = programElement ? programElement.dataset.programId : '1';
     const programName = programElement ? programElement.dataset.programName : 'Program';
-    
+
     // Show loading
     Swal.fire({
         title: 'Preparing Export...',
@@ -2406,7 +2461,7 @@ function exportProgramData(dataType) {
         showConfirmButton: false,
         timerProgressBar: true
     });
-    
+
     // Simulate export process
     setTimeout(() => {
         Swal.fire({
@@ -2425,22 +2480,21 @@ function exportProgramData(dataType) {
 }
 
 function generateExportData(format, programId, programName) {
+    const programElement = document.querySelector('[data-program-id]');
     const programData = {
         id: programId,
         name: programName,
-        code: 'PROGRAM-001',
-        startDate: '2024-01-01',
-        endDate: '2024-12-31',
-        status: 'Active',
-        totalBudget: 1000000,
-        totalBeneficiaries: 5000,
-        duration: 365,
-        description: 'Program description',
-        problemAnalysis: 'Problem analysis',
+        code: programElement ? programElement.dataset.programCode : 'PROGRAM-001',
+        startDate: programElement ? programElement.dataset.programStart : '2024-01-01',
+        endDate: programElement ? programElement.dataset.programEnd : '2024-12-31',
+        status: programElement ? programElement.dataset.programStatus : 'Active',
+        totalBudget: programElement ? programElement.dataset.programBudget : 1000000,
+        description: programElement ? programElement.dataset.programDescription : 'Program description',
+        problemAnalysis: programElement ? programElement.dataset.programAnalysis : 'Problem analysis',
         exportDate: new Date().toISOString(),
         exportedBy: 'Current User'
     };
-    
+
     switch(format) {
         case 'json':
             return JSON.stringify(programData, null, 2);
@@ -2450,8 +2504,9 @@ function generateExportData(format, programId, programName) {
             // In real implementation, use a library like SheetJS
             return convertToCSV(programData); // Fallback to CSV
         case 'pdf':
-            // In real implementation, use a library like jsPDF
-            return JSON.stringify(programData, null, 2); // Fallback to JSON
+            // For PDF, we'll use the dedicated exportProgramPDF function
+            exportProgramPDF(programId, programName);
+            return null; // Handled separately
         default:
             return JSON.stringify(programData, null, 2);
     }
@@ -2520,6 +2575,363 @@ function downloadFile(content, filename, contentType) {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+}
+
+// Program Document Functions
+function uploadProgramFile() {
+    Swal.fire({
+        title: '{{ __('Upload Files') }}',
+        html: `
+            <input type="file" id="programFile" class="form-control mb-3" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov,.mp3,.wav" multiple>
+            <input type="text" id="fileName" class="form-control" placeholder="{{ __('File Name') }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: '{{ __('Upload') }}',
+        cancelButtonText: '{{ __('Cancel') }}',
+        preConfirm: () => {
+            const files = document.getElementById('programFile').files;
+            const name = document.getElementById('fileName').value;
+            
+            if (files.length === 0) {
+                Swal.showValidationMessage('{{ __('Please select a file') }}');
+                return false;
+            }
+            
+            if (!name) {
+                Swal.showValidationMessage('{{ __('Please enter file name') }}');
+                return false;
+            }
+            
+            return { files: Array.from(files), name };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            result.value.files.forEach((file, index) => {
+                formData.append('files[]', file);
+                formData.append('captions[]', result.value.name + (index > 0 ? ` ${index + 1}` : ''));
+            });
+            formData.append('program_id', {{ $program->id }});
+            
+            fetch('{{ route('program.docs') }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('{{ __('Success!') }}', '{{ __('Files uploaded successfully') }}', 'success');
+                    // Reload the page to refresh the file list
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('{{ __('Error!') }}', '{{ __('Upload failed') }}', 'error');
+            });
+        }
+    });
+}
+
+function previewProgramFile(url, mimeType) {
+    if (mimeType.startsWith('image/')) {
+        Swal.fire({
+            title: '{{ __('Image Preview') }}',
+            html: `<img src="${url}" class="img-fluid" style="max-width: 100%; height: auto;">`,
+            width: '80%',
+            showCloseButton: true,
+            showConfirmButton: false
+        });
+    } else if (mimeType === 'application/pdf') {
+        Swal.fire({
+            title: '{{ __('PDF Preview') }}',
+            html: `<iframe src="${url}" style="width: 100%; height: 600px; border: none;"></iframe>`,
+            width: '90%',
+            height: '600px',
+            showCloseButton: true,
+            showConfirmButton: false
+        });
+    } else {
+        // For other file types, open in new tab
+        window.open(url, '_blank');
+    }
+}
+
+function deleteProgramFile(mediaId) {
+    Swal.fire({
+        title: '{{ __('Are you sure?') }}',
+        text: "{{ __('You won\'t be able to revert this!') }}",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#3085d6',
+        confirmButtonColor: '#d33',
+        confirmButtonText: '{{ __('Yes, delete it!') }}',
+        cancelButtonText: '{{ __('Cancel') }}'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Make AJAX request to delete file
+            fetch(`/program/media/${mediaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                    // Reload the page to refresh the file list
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+            });
+        }
+    });
+}
+
+// PDF Export Function
+function exportProgramPDF(programId, programName) {
+    Swal.fire({
+        title: 'Generating PDF...',
+        text: 'Converting program data to PDF format. This may take a moment.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Create a hidden container for PDF content
+    const pdfContainer = document.createElement('div');
+    pdfContainer.style.position = 'absolute';
+    pdfContainer.style.left = '-9999px';
+    pdfContainer.style.width = '210mm'; // A4 width
+    pdfContainer.style.padding = '20px';
+    pdfContainer.style.fontFamily = 'Arial, sans-serif';
+    pdfContainer.style.fontSize = '12px';
+    pdfContainer.style.lineHeight = '1.4';
+    pdfContainer.style.backgroundColor = 'white';
+    pdfContainer.style.color = 'black';
+
+    // Generate PDF content with vertical tabs
+    pdfContainer.innerHTML = generatePDFContent(programId, programName);
+    document.body.appendChild(pdfContainer);
+
+    // Use html2canvas to capture the content
+    html2canvas(pdfContainer, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+    }).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 295; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // Add first page
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // Add additional pages if needed
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        // Save the PDF
+        pdf.save(`${programName}_Program_Report.pdf`);
+
+        // Clean up
+        document.body.removeChild(pdfContainer);
+
+        Swal.fire({
+            title: 'PDF Generated!',
+            text: 'Your program report has been downloaded successfully.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }).catch(error => {
+        console.error('PDF generation error:', error);
+        document.body.removeChild(pdfContainer);
+
+        Swal.fire({
+            title: 'PDF Generation Failed',
+            text: 'There was an error generating the PDF. Please try again.',
+            icon: 'error'
+        });
+    });
+}
+
+function generatePDFContent(programId, programName) {
+    const programElement = document.querySelector('[data-program-id]');
+    const currentDate = new Date().toLocaleDateString();
+
+    return `
+        <div style="margin-bottom: 30px;">
+            <h1 style="text-align: center; margin-bottom: 10px; color: #333; font-size: 24px;">
+                ${programName}
+            </h1>
+            <p style="text-align: center; margin-bottom: 30px; color: #666; font-size: 14px;">
+                Program Report - Generated on ${currentDate}
+            </p>
+
+            <!-- Program Header Information -->
+            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Program Information</h2>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 30%; padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Program Code:</td>
+                        <td style="width: 70%; padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programCode : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Status:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programStatus : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Start Date:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programStart : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">End Date:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programEnd : 'N/A'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Total Budget:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programBudget : 'N/A'}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Program Description -->
+            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Program Description</h2>
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    ${programElement ? programElement.dataset.programDescription : 'No description available.'}
+                </p>
+            </div>
+
+            <!-- Problem Analysis -->
+            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Problem Analysis</h2>
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    ${programElement ? programElement.dataset.programAnalysis : 'No analysis available.'}
+                </p>
+            </div>
+
+            <!-- Vertical Tabs Layout for All Sections -->
+            <div style="margin-bottom: 30px;">
+                <h2 style="margin-bottom: 20px; color: #333; font-size: 18px;">Program Details</h2>
+
+                <!-- Overview Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #007bff; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #007bff; font-size: 16px;">1. Program Overview</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        This section contains comprehensive program information including objectives,
+                        expected outcomes, and implementation strategy.
+                    </p>
+                </div>
+
+                <!-- Team Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #28a745; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #28a745; font-size: 16px;">2. Team Members</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Program staff and team members with their roles and responsibilities.
+                    </p>
+                </div>
+
+                <!-- Partners Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #ffc107; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #ffc107; font-size: 16px;">3. Partners & Donors</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Partner organizations and donors supporting the program implementation.
+                    </p>
+                </div>
+
+                <!-- Locations Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #17a2b8; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #17a2b8; font-size: 16px;">4. Implementation Locations</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Geographic areas and regions where the program is being implemented.
+                    </p>
+                </div>
+
+                <!-- Beneficiaries Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #dc3545; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #dc3545; font-size: 16px;">5. Beneficiaries</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Expected beneficiaries breakdown by demographic categories and target groups.
+                    </p>
+                </div>
+
+                <!-- Budget Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6f42c1; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #6f42c1; font-size: 16px;">6. Budget & Timeline</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Financial information and project timeline with key milestones.
+                    </p>
+                </div>
+
+                <!-- Structure Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #e83e8c; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #e83e8c; font-size: 16px;">7. Program Structure</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Program goals, objectives, outcomes, and activities hierarchy.
+                    </p>
+                </div>
+
+                <!-- Progress Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #fd7e14; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #fd7e14; font-size: 16px;">8. Progress Tracking</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Current progress, achievements, and performance metrics.
+                    </p>
+                </div>
+
+                <!-- Target Groups Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #20c997; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #20c997; font-size: 16px;">9. Target Groups</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Marginalized groups served and SDGs alignment information.
+                    </p>
+                </div>
+
+                <!-- Activities Section -->
+                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6610f2; background-color: #f8f9fa;">
+                    <h3 style="margin-bottom: 10px; color: #6610f2; font-size: 16px;">10. Related Activities</h3>
+                    <p style="margin-bottom: 10px; line-height: 1.6;">
+                        Linked activities (kegiatan) and their current status.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;">
+                <p>This report was generated automatically from the Program Management System.</p>
+                <p>For more information, please contact the program administrator.</p>
+            </div>
+        </div>
+    `;
 }
 </script>
 @endpush
