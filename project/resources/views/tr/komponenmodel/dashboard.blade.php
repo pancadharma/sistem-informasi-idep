@@ -100,7 +100,7 @@
                     <h3 class="card-title">Komponen per Sektor</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="sektorChart"></canvas>
+                    <canvas id="sektorChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                     <h3 class="card-title">Jumlah per Program</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="programChart"></canvas>
+                    <canvas id="programChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
                 </div>
             </div>
         </div>

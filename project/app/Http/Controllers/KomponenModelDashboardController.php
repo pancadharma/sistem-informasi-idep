@@ -66,7 +66,7 @@ class KomponenModelDashboardController extends Controller
     public function getSektorChartData(Request $request)
     {
         $query = DB::table('trmeals_komponen_model_targetreinstra as kms')
-            ->join('msektor as s', 'kms.targetreinstra_id', '=', 's.id')
+            ->join('mtargetreinstra as s', 'kms.targetreinstra_id', '=', 's.id')
             ->join('trmeals_komponen_model as km', 'kms.mealskomponenmodel_id', '=', 'km.id')
             ->select('s.nama as sektor_name', DB::raw('count(km.id) as total'))
             ->groupBy('s.nama');
@@ -118,15 +118,15 @@ class KomponenModelDashboardController extends Controller
 
     public function getSummaryData(Request $request)
     {
-        $komponenQuery = TrMealsKomponenModel::query();
+        $komponenQuery = Meals_Komponen_Model::query();
 
         if ($request->filled('program_id')) {
             $komponenQuery->where('program_id', $request->program_id);
         }
 
-        if ($request->filled('sektor_id')) {
+        if ($request->filled('targetreinstra_id')) {
             $komponenQuery->whereHas('sektors', function ($q) use ($request) {
-                $q->where('msektor.id', $request->sektor_id);
+                $q->where('trmeals_komponen_model_targetreinstra.id', $request->sektor_id);
             });
         }
 
