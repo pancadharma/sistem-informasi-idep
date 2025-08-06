@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Program;
 use App\Models\Meals_Komponen_Moldel_Target_Reinstra as Sektor;
 use App\Models\KomponenModel as Model;
+use App\Models\Meals;
 use App\Models\Meals_Komponen_Model;
+use App\Models\TargetReinstra;
 use Illuminate\Support\Facades\DB;
 
 class KomponenModelDashboardController extends Controller
@@ -14,7 +16,17 @@ class KomponenModelDashboardController extends Controller
     public function index()
     {
         $programs = Program::all();
-        $sektors = Sektor::all();
+        // $sektors = Sektor::all();
+        $sektors =  TargetReinstra::all()->map(function ($sektor) {
+            return [
+                'id' => $sektor->id,
+                'nama' => $sektor->nama,
+            ];
+        })->toArray(); // sesuaikan dengan model Sektor yang digunakan
+        // $models = Model::all()->pluck('id')->toArray(); // sesuaikan juga disini
+        // 'sektorTerpilih'  => $komodel->sektors->pluck('id')->toArray(), // sesuaikan juga disini
+
+        // return $sektors;
         $models = Model::all();
         $years = Meals_Komponen_Model::select(DB::raw('YEAR(created_at) as year'))
             ->distinct()
@@ -95,7 +107,11 @@ class KomponenModelDashboardController extends Controller
             ->select('p.nama as program_name', DB::raw('sum(km.totaljumlah) as total'))
             ->groupBy('p.nama');
 
-        if ($request->has('targetreinstra_id') && $request->sektor_id) {
+        if ($request->filled('program_id')) {
+            $query->where('km.program_id', $request->program_id);
+        }
+
+        if ($request->filled('sektor_id')) {
             $query->whereIn('km.id', function ($subquery) use ($request) {
                 $subquery->select('mealskomponenmodel_id')
                     ->from('trmeals_komponen_model_targetreinstra')
@@ -103,11 +119,11 @@ class KomponenModelDashboardController extends Controller
             });
         }
 
-        if ($request->has('komponenmodel_id') && $request->model_id) {
+        if ($request->filled('model_id')) {
             $query->where('km.komponenmodel_id', $request->model_id);
         }
 
-        if ($request->has('tahun') && $request->tahun) {
+        if ($request->filled('tahun')) {
             $query->whereYear('km.created_at', $request->tahun);
         }
 

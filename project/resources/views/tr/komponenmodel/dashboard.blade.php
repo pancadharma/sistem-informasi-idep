@@ -6,7 +6,7 @@
 @section('content_body')
     <!-- Filter Section -->
     <div class="row mb-3">
-        <div class="col-md-3">
+        <div class="col-md-3 order-1">
             <label for="programFilter">Program:</label>
             <select id="programFilter" class="form-control select2">
                 <option value="">Semua Program</option>
@@ -15,16 +15,16 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 d-none">
             <label for="sektorFilter">Sektor:</label>
             <select id="sektorFilter" class="form-control select2">
                 <option value="">Semua Sektor</option>
                 @foreach ($sektors as $sektor)
-                    <option value="{{ $sektor->id }}">{{ $sektor->nama }}</option>
+                    <option value="{{ $sektor['id'] }}">{{ $sektor['nama'] }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 order-3">
             <label for="modelFilter">Model:</label>
             <select id="modelFilter" class="form-control select2">
                 <option value="">Semua Model</option>
@@ -33,7 +33,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 order-2">
             <label for="tahunFilter">Tahun:</label>
             <select id="tahunFilter" class="form-control select2">
                 <option value="">Semua Tahun</option>
