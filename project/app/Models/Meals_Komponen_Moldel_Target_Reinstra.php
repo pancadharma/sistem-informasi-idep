@@ -17,7 +17,7 @@ class Meals_Komponen_Moldel_Target_Reinstra extends Model
     protected $table = 'trmeals_komponen_model_targetreinstra';
 
     protected $fillable = [
-        'trmeals_komponen_model_id',
+        'komponenmodel_id',
         'targetreinstra_id',
         'created_at',
         'updated_at',
@@ -43,7 +43,7 @@ class Meals_Komponen_Moldel_Target_Reinstra extends Model
 
     public function komponenModel()
     {
-        return $this->belongsTo(Meals_Komponen_Model::class, 'trmeals_komponen_model_id');
+        return $this->belongsTo(Meals_Komponen_Model::class, 'komponenmodel_id');
     }
 
     public function targetReinstra()
