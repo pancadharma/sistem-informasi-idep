@@ -117,7 +117,15 @@ class ProgramController extends Controller
             'goal',
             'objektif',
             'outcome.output.activities',
-            'targetProgresses.details.targetable'
+            'targetProgresses.details.targetable',
+            'kelompokMarjinal',
+            'kaitanSDG',
+            'targetReinstra',
+            'staff',
+            'partner',
+            'pendonor',
+            'lokasi',
+            'users'
         ]);
 
         $totalBeneficiaries = $program->getTotalBeneficiaries();

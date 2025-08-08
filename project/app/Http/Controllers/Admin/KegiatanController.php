@@ -48,6 +48,7 @@ use App\Models\Program_Outcome_Output_Activity;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
 
 class KegiatanController extends Controller
@@ -1022,33 +1023,30 @@ class KegiatanController extends Controller
         ]);
     }
 
-    public function deleteMedia(Request $request, $media_id)
-    {
-        $media = Media::find($media_id);
-        if ($media) {
-            $media->delete();
-            return response()->json(['message' => 'File deleted successfully']);
-        }
-        return response()->json(['message' => 'File not found'], 404);
-    }
-
+  
     public function uploadTempFile(Request $request)
     {
         try {
             $request->validate([
                 'file' => 'required|file|max:51200',
-                'collection' => 'required|string|in:dokumen_pendukung,media_pendukung'
+                'collection' => 'required|string|in:dokumen_pendukung,media_pendukung',
+                'name' => 'required|string|max:255',
+                'kegiatan_id' => 'required|integer|exists:trkegiatan,id'
             ]);
-
+            
             $file = $request->file('file');
-            $name = $file->getClientOriginalName();
+            $name = $request->input('name');
             $collection = $request->input('collection');
-
+            $kegiatanId = $request->input('kegiatan_id');
+            
+            // Find the kegiatan
+            $kegiatan = Kegiatan::findOrFail($kegiatanId);
+            
             // Define allowed MIME types based on collection
             $allowedMimes = $collection === 'dokumen_pendukung'
-                ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx']
-                : ['jpg', 'jpeg', 'png'];
-
+                ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx', 'txt']
+                : ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi', 'mp3', 'wav'];
+            
             // Validate file type
             $extension = strtolower($file->getClientOriginalExtension());
             if (!in_array($extension, $allowedMimes)) {
@@ -1057,37 +1055,67 @@ class KegiatanController extends Controller
                     'message' => 'File type not allowed for this collection'
                 ], 422);
             }
-
-            // Create temp directory if it doesn't exist
-            $tempPath = storage_path('app/temp/uploads');
-            if (!file_exists($tempPath)) {
-                mkdir($tempPath, 0755, true);
-            }
-
-            // Generate unique filename
-
-            // user original name file,
-
-            $fileName = $name . '_' . time() . '.' . $extension;
-            $filePath = $tempPath . '/' . $fileName;
-
-            // Move file to temp location
-            $file->move($tempPath, $fileName);
-
+            
+            // Generate filename with timestamp
+            $timestamp = now()->format('Ymd_His');
+            $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan');
+            $fileName = "{$kegiatanName}_{$timestamp}." . $extension;
+            
+            // Add media to kegiatan with custom name as caption
+            $media = $kegiatan
+                ->addMedia($file)
+                ->withCustomProperties([
+                    'keterangan' => $name,
+                    'user_id' => auth()->user()->id,
+                    'original_name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'extension' => $extension,
+                    'updated_by' => auth()->user()->id
+                ])
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($fileName)
+                ->toMediaCollection($collection);
+            
             return response()->json([
                 'success' => true,
-                'file_path' => $filePath,
+                'message' => 'File uploaded successfully',
+                'media_id' => $media->id,
                 'file_name' => $fileName,
                 'original_name' => $file->getClientOriginalName(),
-                'file_size' => $file->getSize(),
-                'mime_type' => $file->getMimeType(),
-                'collection' => $collection
+                'collection' => $collection,
+                'url' => $media->getUrl(),
+                'size' => $media->size,
+                'mime_type' => $media->mime_type
             ]);
-
+            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to upload file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteMedia(Media $media)
+    {
+        try {
+            // Check if user has permission to delete this media
+            if (!auth()->user()->hasRole('admin') && $media->getCustomProperty('user_id') != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to delete this file'
+                ], 403);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
             ], 500);
         }
     }

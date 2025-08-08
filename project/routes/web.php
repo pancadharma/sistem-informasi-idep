@@ -308,6 +308,8 @@ Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
 //bentuk or sektor kegiatan
 Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
 Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
+Route::post('kegiatan/upload-document', [KegiatanController::class, 'uploadTempFile'])->name('kegiatan.upload-document');
+    Route::delete('kegiatan/media/{media}', [KegiatanController::class, 'deleteMedia'])->name('kegiatan.media.delete');
 
 Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
 Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
