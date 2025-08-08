@@ -26,7 +26,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($program as $program)
+                            @foreach ($program as $program)
                             <tr data-program-id="{{ $program->id }}" data-program-kode="{{ $program->kode }}" data-program-nama="{{ $program->nama }}" class="align-middle select-program">
                                 <td>{{ $program->kode }}</td>
                                 <td>{{ $program->nama }}</td>
@@ -70,12 +70,13 @@
  --}}
 
 <!-- Modal -->
-<div class="modal fade" id="ModalDaftarProgram" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="TitleModalDaftarProgram" theme="danger">
+<div class="modal fade" id="ModalDaftarProgram" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="TitleModalDaftarProgram" theme="danger">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
                 <h5 class="modal-title" id="TitleModalDaftarProgram">
-                    {{ __('global.list') .' '. __('cruds.program.title') }}
+                    {{ __('global.list') . ' ' . __('cruds.program.title') }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('global.close') }}">
                     <span>&times;</span>
@@ -108,69 +109,5 @@
 </div>
 
 @push('basic_tab_js')
-
-<script>
-    $(document).ready(function() {
-        let programTable;
-        $('#kode_program').on('click', function(e) {
-            e.preventDefault();
-            if ($("#dataTable tbody tr").length > 0) {
-                showConfirmationModal();
-                return false;
-            } else {
-                setTimeout(() => {
-                    if (!programTable) {
-                        programTable = $('#list_program_kegiatan').DataTable({
-                            processing: true,
-                            serverSide: true,
-                            width: '100%',
-                            ajax: {
-                                url: "{{ route('api.data.program.kegiatan') }}",
-                                type: "GET"
-                            },
-                            columns: [
-                                { data: 'kode', name: 'kode', className: "align-self text-left", width: "20%", },
-                                { data: 'nama', name: 'nama', className: "align-self text-left", width: "50%" },
-                                { data: 'activities', name: 'activities', className: "align-self text-left", width: "30%" },
-                                { data: 'action', name: 'action', width: "10%", className: "align-self text-center", orderable: false, searchable: false }
-                            ],
-                            responsive: true,
-                            language: {
-                                processing: " Memuat..."
-                            },
-                            lengthMenu: [5, 10, 25, 50, 100],
-                            bDestroy: true // Important to re-initialize datatable
-                        });
-                    }
-                }, 500);
-                $('#ModalDaftarProgram').removeAttr('inert');
-                $('#ModalDaftarProgram').modal('show');
-            }
-        });
-
-        $('#ModalDaftarProgram').on('hidden.bs.modal', function (e) {
-            if (programTable) {
-                programTable.destroy();
-                programTable = null;
-            }
-            $(this).attr('inert', '');
-        });
-
-
-        $(document).on('click', '.select-program', function() {
-            const id = $(this).data('id');
-            const kode = $(this).data('kode');
-            const nama = $(this).data('nama');
-            const url = "{{ route('api.program.kegiatan', ':id') }}".replace(':id', id);
-
-            $('#program_id').val(id);
-            $('#kode_program').val(kode);
-            $('#nama_program').val(nama).prop('disabled', true);
-            $('#ModalDaftarProgram').modal('hide');
-        });
-
-    });
-
-
-</script>
+    @include('tr.kegiatan.js._program')
 @endpush

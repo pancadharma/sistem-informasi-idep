@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
 use App\Http\Requests\UpdateKegiatanRequest;
+use App\Jobs\ProcessKegiatanFiles;
 use App\Models\Dusun;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
@@ -37,8 +38,21 @@ use Illuminate\Support\Facades\Log;
 use PHPUnit\Event\Code\Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 class KegiatanController extends Controller
 {
+    public function delete_media(Request $request)
+    {
+        try {
+            $media = Media::findOrFail($request->media_id);
+            $media->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
 
     public function dataTable(Request $request)
     {
@@ -53,23 +67,23 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-        ->select('trkegiatan.*')
-        ->get()
-        ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $item->penerimamanfaattotal;
-            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $item->penerimamanfaattotal;
+                $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-            return $item;
-        });
+                return $item;
+            });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
@@ -420,16 +434,17 @@ class KegiatanController extends Controller
             $this->storeHasilKegiatan($request, $kegiatan);
             $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
-            $this->storeMediaDokumen($request, $kegiatan);
 
-
+            // Handle file uploads asynchronously for large files
+            $this->queueMediaUploads($request, $kegiatan);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'data'    => $data,
-                'created by' => $user->nama,
-                'message' => __('global.create_success'),
+                'created by' => $user->nama ?? 'Unknown',
+                'message' => __('global.create_success') . ' Files are being processed in background.',
             ], 201);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -438,14 +453,18 @@ class KegiatanController extends Controller
                 'message' => 'Failed to create record: ' . $th->getMessage(),
                 'error'   => $th->getMessage(),
             ], 500);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
         }
     }
 
     public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
     {
+        $request->validate([
+            'dokumen_pendukung'     => 'nullable|array|max:25',
+            'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:51200',
+            'media_pendukung'       => 'nullable|array|max:25',
+            'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:51200',
+        ]);
+
         $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {
             $timestamp = now()->format('Ymd_His');
             $fileCount = 1;
@@ -453,7 +472,7 @@ class KegiatanController extends Controller
             foreach ($files as $index => $file) {
                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
-                $kegiatanName = str_replace(' ', '_', $kegiatan->nama);
+                $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan'); // Fallback if nama is null
                 $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
                 $keterangan = $captions[$index] ?? $fileName;
 
@@ -484,6 +503,41 @@ class KegiatanController extends Controller
         if ($request->hasFile('media_pendukung')) {
             $handleFileUploads(
                 $request->file('media_pendukung'),
+                $request->input('keterangan', []),
+                'media_pendukung'
+            );
+        }
+    }
+
+
+    private function queueMediaUploads(Request $request, Kegiatan $kegiatan)
+    {
+        // Store files temporarily and queue processing
+        if ($request->hasFile('dokumen_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('dokumen_pendukung') as $file) {
+                $tempPath = $file->store('temp');
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
+                $request->input('keterangan', []),
+                'dokumen_pendukung'
+            );
+        }
+
+        if ($request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('media_pendukung') as $file) {
+                $tempPath = $file->store('temp');
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
                 $request->input('keterangan', []),
                 'media_pendukung'
             );

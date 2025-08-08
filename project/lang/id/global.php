@@ -354,6 +354,12 @@ return [
         'update_failed'             => 'Gagal memperbarui Data',
         'delete_success'            => 'Berhasil menghapus Data',
         'delete_failed'             => 'Gagal menghapus Data',
+        'confirm'                   => 'Konfirmasi',
+        'confirm_text'              => 'Apakah anda yakin ingin menyimpan data ini?',
+        'cancel'                    => 'Batal',
+        'delete'                    => 'Hapus',
+        'yes'                       => 'Ya',
+        'no'                        => 'Tidak',
     ],
     'print'                         => 'Cetak'
 
