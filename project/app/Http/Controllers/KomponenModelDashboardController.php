@@ -70,6 +70,25 @@ class KomponenModelDashboardController extends Controller
             $query->whereYear('km.created_at', $request->tahun);
         }
 
+        if ($request->filled('model_name')) {
+            $query->where('mm.nama', $request->model_name);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function getProgramsByModel(Request $request)
+    {
+        $query = Program::query();
+
+        if ($request->filled('model_id')) {
+            $query->whereHas('komponenModels', function ($q) use ($request) {
+                $q->where('komponenmodel_id', $request->model_id);
+            });
+        }
+
         $data = $query->get();
 
         return response()->json($data);
@@ -95,6 +114,10 @@ class KomponenModelDashboardController extends Controller
             $query->whereYear('km.created_at', $request->tahun);
         }
 
+        if ($request->filled('model_name')) {
+            $query->where('mm.nama', $request->model_name);
+        }
+
         $data = $query->get();
 
         return response()->json($data);
@@ -106,6 +129,38 @@ class KomponenModelDashboardController extends Controller
             ->join('trprogram as p', 'km.program_id', '=', 'p.id')
             ->select('p.nama as program_name', DB::raw('sum(km.totaljumlah) as total'))
             ->groupBy('p.nama');
+
+        if ($request->filled('program_id')) {
+            $query->where('km.program_id', $request->program_id);
+        }
+
+        if ($request->filled('sektor_id')) {
+            $query->whereIn('km.id', function ($subquery) use ($request) {
+                $subquery->select('mealskomponenmodel_id')
+                    ->from('trmeals_komponen_model_targetreinstra')
+                    ->where('targetreinstra_id', $request->sektor_id);
+            });
+        }
+
+        if ($request->filled('model_id')) {
+            $query->where('km.komponenmodel_id', $request->model_id);
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('km.created_at', $request->tahun);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
+    public function getModelChartData(Request $request)
+    {
+        $query = DB::table('trmeals_komponen_model as km')
+            ->join('mkomponenmodel as m', 'km.komponenmodel_id', '=', 'm.id')
+            ->select('m.nama as model_name', DB::raw('count(km.id) as total'))
+            ->groupBy('m.nama');
 
         if ($request->filled('program_id')) {
             $query->where('km.program_id', $request->program_id);

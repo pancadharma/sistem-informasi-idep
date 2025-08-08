@@ -405,6 +405,8 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
     Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');
     Route::get('/summary-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSummaryData'])->name('summary_data');
+    Route::get('/model-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getModelChartData'])->name('model_chart_data');
+    Route::get('/programs-by-model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramsByModel'])->name('programs_by_model');
 });
 
 Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {

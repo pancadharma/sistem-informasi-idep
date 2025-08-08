@@ -94,23 +94,33 @@
 
     <!-- Charts -->
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Komponen per Sektor</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="sektorChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
+                    <canvas id="sektorChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Jumlah per Program</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="programChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
+                    <canvas id="programChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Komponen per Model</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="modelChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
                 </div>
             </div>
         </div>
@@ -143,14 +153,14 @@
     <script>
         let map;
         let markers = [];
-        let sektorChart, programChart;
+        let sektorChart, programChart, modelChart;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: -2.5489, lng: 118.0149 },
                 zoom: 5,
             });
-            updateDashboard();
+            updateDashboard(); // Initial load after map is ready
         }
 
         function clearMarkers() {
@@ -160,20 +170,7 @@
             markers = [];
         }
 
-        function updateDashboard() {
-            const programId = $('#programFilter').val();
-            const sektorId = $('#sektorFilter').val();
-            const modelId = $('#modelFilter').val();
-            const tahun = $('#tahunFilter').val();
-
-            const filters = {
-                program_id: programId,
-                sektor_id: sektorId,
-                model_id: modelId,
-                tahun: tahun
-            };
-
-            // Update Map
+        function updateMap(filters) {
             $.ajax({
                 url: '{{ route('komodel.map_markers') }}',
                 data: filters,
@@ -197,11 +194,6 @@
                     });
                 }
             });
-
-            // Update Charts and Summary
-            updateSektorChart(filters);
-            updateProgramChart(filters);
-            updateSummaryData(filters);
         }
 
         function updateSektorChart(filters) {
@@ -232,6 +224,20 @@
             });
         }
 
+        function updateModelChart(filters) {
+            $.ajax({
+                url: '{{ route("komodel.model_chart_data") }}',
+                data: filters,
+                success: function(data) {
+                    let labels = data.map(item => item.model_name);
+                    let totals = data.map(item => item.total);
+                    modelChart.data.labels = labels;
+                    modelChart.data.datasets[0].data = totals;
+                    modelChart.update();
+                }
+            });
+        }
+
         function updateSummaryData(filters) {
             $.ajax({
                 url: '{{ route("komodel.summary_data") }}',
@@ -243,6 +249,21 @@
                     $('#totalJumlah').text(data.totalJumlah);
                 }
             });
+        }
+
+        function updateDashboard() {
+            const filters = {
+                program_id: $('#programFilter').val(),
+                sektor_id: $('#sektorFilter').val(),
+                model_id: $('#modelFilter').val(),
+                tahun: $('#tahunFilter').val()
+            };
+
+            updateMap(filters);
+            updateSektorChart(filters);
+            updateProgramChart(filters);
+            updateModelChart(filters);
+            updateSummaryData(filters);
         }
 
         $(document).ready(function() {
@@ -258,8 +279,44 @@
                 data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'], borderWidth: 1 }] }
             });
 
+            modelChart = new Chart(document.getElementById('modelChart').getContext('2d'), {
+                type: 'doughnut',
+                data: { labels: [], datasets: [{ label: 'Jumlah Komponen', data: [], backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'], borderWidth: 1 }] },
+                options: {
+                    onClick: function(evt, elements) {
+                        if (elements.length > 0) {
+                            const chartElement = elements[0];
+                            const modelName = this.data.labels[chartElement.index];
+                            updateMap({ model_name: modelName });
+                        }
+                    }
+                }
+            });
+
             $('#programFilter, #sektorFilter, #modelFilter, #tahunFilter').on('change', function() {
                 updateDashboard();
+            });
+
+            $('#modelFilter').on('change', function() {
+                const modelId = $(this).val();
+                if (modelId) {
+                    $.ajax({
+                        url: '{{ route('komodel.programs_by_model') }}',
+                        data: { model_id: modelId },
+                        success: function(data) {
+                            let programFilter = $('#programFilter');
+                            programFilter.empty();
+                            programFilter.append(new Option('Semua Program', ''));
+                            data.forEach(function(program) {
+                                programFilter.append(new Option(program.nama, program.id));
+                            });
+                            programFilter.trigger('change');
+                        }
+                    });
+                } else {
+                    // If no model is selected, reset program filter to all programs
+                    $('#programFilter').empty().append(new Option('Semua Program', '')).trigger('change');
+                }
             });
         });
     </script>
