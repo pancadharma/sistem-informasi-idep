@@ -919,7 +919,10 @@ return [
             'program_activity'                   => 'Silahkan pilih Program dan Kegiatan.',
             'program'                            => 'Silahkan pilih Program.',
             'activity'                           => 'Silahkan pilih Kegiatan.',
-            'kab_change'                         => 'Apakah anda yakin ingin mengubah Kabupaten? Ini akan mereset input lokasi.'
+            'kab_change'                         => 'Apakah anda yakin ingin mengubah Kabupaten? Ini akan mereset input lokasi.',
+            'prov_change'                        => 'Apakah anda yakin ingin mengubah Provinsi? Ini akan mereset input Kabupaten dan lokasi.',
+            'update_kegiatan'                    => 'Apakah anda yakin ingin memperbarui Kegiatan?',
+            'store_kegiatan'                     => 'Apakah anda yakin ingin menyimpan Kegiatan?',
         ],
     ],
 

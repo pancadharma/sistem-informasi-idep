@@ -2,55 +2,60 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+use Exception;
 use Carbon\Carbon;
-use App\Models\Program;
-use App\Models\Kegiatan;
-use Illuminate\Http\Request;
-use App\Models\Program_Outcome;
-use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreKegiatanRequest;
-use App\Http\Resources\KegiatanResource;
+use App\Models\User;
 use App\Models\Dusun;
-use App\Models\Jenis_Bantuan;
-use App\Models\Jenis_Kegiatan;
-use App\Models\Kabupaten;
-use App\Models\Kecamatan;
-use App\Models\Kegiatan_Assessment;
-use App\Models\Kegiatan_Kampanye;
-use App\Models\Kegiatan_Konsultasi;
-use App\Models\Kegiatan_Kunjungan;
-use App\Models\Kegiatan_Lainnya;
-use App\Models\Kegiatan_Lokasi;
-use App\Models\Kegiatan_Monitoring;
-use App\Models\Kegiatan_Pelatihan;
-use App\Models\Kegiatan_Pembelanjaan;
-use App\Models\Kegiatan_Pemetaan;
-use App\Models\Kegiatan_Pengembangan;
-use App\Models\Kegiatan_Penulis;
-use App\Models\Kegiatan_Sosialisasi;
-use App\Models\Kelurahan;
+use App\Models\Peran;
+use App\Models\Satuan;
 use App\Models\mSektor;
 use App\Models\Partner;
-use App\Models\Peran;
+use App\Models\Program;
+use App\Models\Kegiatan;
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+use Illuminate\Http\Request;
+use App\Models\Jenis_Bantuan;
+use App\Models\Jenis_Kegiatan;
+use App\Models\TargetReinstra;
+use App\Models\Kegiatan_Lokasi;
+use App\Models\Program_Outcome;
+use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Penulis;
+use Yajra\DataTables\DataTables;
+use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Pemetaan;
+use App\Models\Kegiatan_Kunjungan;
+use App\Models\Kegiatan_Pelatihan;
+use App\Models\Kegiatan_Assessment;
+use App\Models\Kegiatan_Konsultasi;
+use App\Models\Kegiatan_Monitoring;
+use App\Http\Controllers\Controller;
+use App\Models\Kegiatan_Sosialisasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Kegiatan_Pembelanjaan;
+use App\Models\Kegiatan_Pengembangan;
 use App\Models\Program_Outcome_Output;
+use App\Http\Resources\KegiatanResource;
+use Dotenv\Exception\ValidationException;
+use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Requests\UpdateKegiatanRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\Program_Outcome_Output_Activity;
-use App\Models\Provinsi;
-use App\Models\Satuan;
-use App\Models\TargetReinstra;
-use App\Models\User;
-use Dotenv\Exception\ValidationException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Html;
+
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+
 
 class KegiatanController extends Controller
 {
@@ -201,24 +206,50 @@ class KegiatanController extends Controller
         abort(404);
     }
 
+    // public function create()
+    // {
+    //     if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
+    //         // $program = Program::all();
+    //         $statusOptions = Kegiatan::STATUS_SELECT;
+    //         $kegiatan = new Kegiatan(); // Empty instance
+    //         $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
+
+    //         // $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
+
+    //         return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
+    //     }
+    //     return response()->json([
+    //         'success' => false,
+    //         'status' => 'error',
+    //         'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
+    //     ], Response::HTTP_FORBIDDEN);
+    // }
+
     public function create()
     {
-        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-            // $program = Program::all();
-            $statusOptions = Kegiatan::STATUS_SELECT;
-            $kegiatan = new Kegiatan(); // Empty instance
-            $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
-
-            // $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-
-            return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
+        // If user is not logged in
+        if (!auth()->check()) {
+            return redirect()->route('login'); // or any named login route
         }
-        return response()->json([
-            'success' => false,
-            'status' => 'error',
-            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-        ], Response::HTTP_FORBIDDEN);
+        if (!auth()->check() || !(auth()->id() === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create'))) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'status' => 'error',
+                    'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access this Page',
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            abort(403, 'Unauthorized Permission');
+        }
+
+        $statusOptions = Kegiatan::STATUS_SELECT;
+        $kegiatan = new Kegiatan();
+        $kegiatan->setRelation('penulis', collect([]));
+
+        return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
     }
+
 
     public function store(StoreKegiatanRequest $request)
     {
@@ -323,117 +354,17 @@ class KegiatanController extends Controller
         $modelClass = $modelMapping[$jenisKegiatan];
         return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
     }
-
-    // public function edit($id)
-    // {
-    //     // $kegiatan = Kegiatan::with('programoutcomeoutputactivity.program_outcome_output.program_outcome.program')->findOrFail($id);
-    //     $kegiatan = Kegiatan::with([
-    //         'programOutcomeOutputActivity',
-    //         'sektor',
-    //         'mitra',
-    //         'user',
-    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
-    //         'jenisKegiatan',
-    //         'lokasi_kegiatan',
-    //         'kegiatan_penulis.peran',
-
-    //         'kegiatan_penulis.user',
-    //         'assessment',
-    //         'sosialisasi',
-    //         'pelatihan',
-    //         'pembelanjaan',
-    //         'pengembangan',
-    //         'kampanye',
-    //         'pemetaan',
-    //         'monitoring',
-    //         'kunjungan',
-    //         'konsultasi',
-    //         'lainnya'
-    //     ])->findOrFail($id);
-    //     $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
-    //     $ProvinsiList = Provinsi::select('id', 'nama')->get();
-    //     $sektorList = TargetReinstra::select('id', 'nama')->get();
-
-    //     $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
-    //     $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
-    //     $statusOptions = Kegiatan::STATUS_SELECT;
-
-    //     $kabupatenList = collect([]);
-    //     $kecamatanList = collect([]);
-    //     $desaList = collect([]);
-
-    //     // Process location data if exists
-    //     if (!$kegiatan->lokasi->isEmpty()) {
-    //         // Get the first location for initial dropdown population
-    //         $firstLokasi = $kegiatan->lokasi->first();
-
-    //         if (
-    //             $firstLokasi && $firstLokasi->desa && $firstLokasi->desa->kecamatan &&
-    //             $firstLokasi->desa->kecamatan->kabupaten && $firstLokasi->desa->kecamatan->kabupaten->provinsi
-    //         ) {
-
-    //             $provinsiId = $firstLokasi->desa->kecamatan->kabupaten->provinsi->id;
-    //             $kabupatenId = $firstLokasi->desa->kecamatan->kabupaten->id;
-    //             $kecamatanId = $firstLokasi->desa->kecamatan->id;
-
-    //             // Load location hierarchies for all locations
-    //             $kabupatenList = Kabupaten::select('id', 'nama')
-    //                 ->where('provinsi_id', $provinsiId)
-    //                 ->get();
-
-    //             $kecamatanList = Kecamatan::select('id', 'nama')
-    //                 ->where('kabupaten_id', $kabupatenId)
-    //                 ->get();
-
-    //             //each desa_id might have different kecamatan and the desa list should not depend to kecamatanID instead in this , kecamartan list should depend on desa_id at kegiatan_lokasi while merge with master kecamatan depend on kabupaten_id
-    //             $desaList = Kelurahan::select('id', 'nama')
-    //                 ->where('kecamatan_id', $kecamatanId)
-    //                 ->get();
-    //             // Kegiatan_Lokasi::with('desa.kecamatan')->where('kegiatan_id', $kegiatan->id)->get();
-    //             //');
-    //         }
-    //     }
-
-    //     foreach ($kegiatan->lokasi as $lokasi) {
-    //         $lokasi->desa = Kelurahan::find($lokasi->desa_id);
-    //         // $lokasi->kecamatan = Kecamatan::find($lokasi->desa->kecamatan_id);
-    //         // $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan->kabupaten_id);
-    //         $lokasi->kecamatan = Kecamatan::find($lokasi->desa ? $lokasi->desa->kecamatan_id : null);
-    //         $lokasi->kabupaten = Kabupaten::find($lokasi->desa->kecamatan ? $lokasi->desa->kecamatan->kabupaten_id : null);
-    //         $lokasi->provinsi = Provinsi::find($lokasi->desa->kecamatan->kabupaten->provinsi_id);
-    //     }
-    //     // if (!$kegiatan->lokasi->isEmpty()) {
-    //     //     $provinsiId = $lokasi->desa->kecamatan->kabupaten->provinsi->id;
-    //     //     // $kabupatenId = $lokasi->desa->kecamatan->kabupaten->id;
-    //     //     // $kecamatanId = $lokasi->desa->kecamatan->id;
-    //     //     // $desaId = $lokasi->desa->id;
-
-    //     //     // $ProvinsiList = Provinsi::select('id', 'nama')->where('id', $provinsiId)->get();
-    //     //     // $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();
-    //     //     // $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $kabupatenId)->get();
-    //     //     // $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $kecamatanId)->get();
-    //     //     $kabupatenList = Kabupaten::select('id', 'nama')->where('provinsi_id', $provinsiId)->get();
-    //     //     $kecamatanList = Kecamatan::select('id', 'nama')->where('kabupaten_id', $lokasi->kabupaten->id)->get();
-    //     //     $desaList = Kelurahan::select('id', 'nama')->where('kecamatan_id', $lokasi->kecamatan->id)->get();
-    //     // }
-
-    //     // return $desaList;
-    //     return view('tr.kegiatan.edit', compact(
-    //         'kegiatan',
-    //         'statusOptions',
-    //         'jenisKegiatanList',
-    //         'sektorList',
-    //         'ProvinsiList',
-    //         'kabupatenList',
-    //         'kecamatanList',
-    //         'desaList',
-    //     ));
-    // }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     public function edit($id)
     {
         $kegiatan = Kegiatan::with([
-            'programOutcomeOutputActivity',
+            'programoutcomeoutputactivity.program_outcome_output.program_outcome.program',
             'sektor',
             'mitra',
             'user',
@@ -473,33 +404,87 @@ class KegiatanController extends Controller
         $desaList = collect([]);
 
         // Dokumen
+        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
         $dokumen_initialPreview = [];
         $dokumen_initialPreviewConfig = [];
-        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+
+        $imageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $officeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+        ];
+
         foreach ($dokumen_files as $file) {
             $dokumen_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
+
             $dokumen_initialPreviewConfig[] = [
-                'caption' => $file->name,
-                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
-                'key' => $file->id,
-                'extra' => ['_token' => csrf_token()]
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $type,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '' ?? $file->name)
+                ]
             ];
         }
 
         // Media
+        $media_files = $kegiatan->getMedia('media_pendukung');
         $media_initialPreview = [];
         $media_initialPreviewConfig = [];
-        $media_files = $kegiatan->getMedia('media_pendukung');
+
         foreach ($media_files as $file) {
             $media_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
+
             $media_initialPreviewConfig[] = [
-                'caption' => $file->name,
-                'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
-                'key' => $file->id,
-                'extra' => ['_token' => csrf_token()]
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $type,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                ]
             ];
         }
 
+        // return $dokumen_initialPreviewConfig;
 
         return view('tr.kegiatan.edit', compact(
             'kegiatan',
@@ -515,65 +500,185 @@ class KegiatanController extends Controller
             'dokumen_initialPreview',
             'dokumen_initialPreviewConfig',
             'media_initialPreview',
-            'media_initialPreviewConfig'
+            'media_initialPreviewConfig',
+
         ));
     }
 
-    public function update(Request $request, $id)
+    // public function edit($id)
+    // {
+    //     $kegiatan = Kegiatan::with([
+    //         'programoutcomeoutputactivity.program_outcome_output.program_outcome.program',
+    //         'sektor',
+    //         'mitra',
+    //         'user',
+    //         'lokasi.desa.kecamatan.kabupaten.provinsi',
+    //         'jenisKegiatan',
+    //         'lokasi_kegiatan',
+    //         'kegiatan_penulis.peran',
+    //         'kegiatan_penulis.user',
+    //         'assessment',
+    //         'sosialisasi',
+    //         'pelatihan',
+    //         'pembelanjaan',
+    //         'pengembangan',
+    //         'kampanye',
+    //         'pemetaan',
+    //         'monitoring',
+    //         'kunjungan',
+    //         'konsultasi',
+    //         'lainnya'
+    //     ])->findOrFail($id);
+
+    //     $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+    //     $provinsiList = Provinsi::select('id', 'nama')->get();
+    //     $sektorList = TargetReinstra::select('id', 'nama')->get();
+
+    //     $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+    //     $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
+    //     $statusOptions = Kegiatan::STATUS_SELECT;
+
+    //     $preselectedProvinsiId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->provinsi->id ?? null;
+    //     $preselectedKabupatenId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->id ?? null;
+
+    //     $kabupatenList = collect([]);
+    //     $kecamatanList = collect([]);
+    //     $desaList = collect([]);
+
+    //     // Define allowed extensions
+    //     $allowedDocExtensions = ['docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'];
+    //     $allowedMediaExtensions = ['jpg', 'png', 'jpeg'];
+
+    //     // Dokumen
+    //     $dokumen_initialPreview = [];
+    //     $dokumen_initialPreviewConfig = [];
+    //     $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+    //     foreach ($dokumen_files as $file) {
+    //         try {
+    //             $extension = strtolower($file->getExtension());
+    //             if (!in_array($extension, $allowedDocExtensions)) {
+    //                 \Log::warning("Invalid extension for dokumen file ID {$file->id}: {$extension}");
+    //                 continue;
+    //             }
+    //         $dokumen_initialPreview[] = $file->getUrl();
+    //             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+    //         $dokumen_initialPreviewConfig[] = [
+    //                 'caption' => $caption, // Avoid HTML in config, handle in JS
+    //                 'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+    //             'key' => $file->id,
+    //                 'extra' => [
+    //                     '_token' => csrf_token(),
+    //                     'keterangan' => $file->getCustomProperty('keterangan', '')
+    //                 ]
+    //         ];
+    //         } catch (\Exception $e) {
+    //             \Log::error("Failed to process dokumen file ID {$file->id}: {$e->getMessage()}");
+    //         }
+    //     }
+
+    //     // Media
+    //     $media_initialPreview = [];
+    //     $media_initialPreviewConfig = [];
+    //     $media_files = $kegiatan->getMedia('media_pendukung');
+    //     foreach ($media_files as $file) {
+    //         try {
+    //             $extension = strtolower($file->getExtension());
+    //             if (!in_array($extension, $allowedMediaExtensions)) {
+    //                 \Log::warning("Invalid extension for media file ID {$file->id}: {$extension}");
+    //                 continue;
+    //             }
+    //         $media_initialPreview[] = $file->getUrl();
+    //             $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+    //         $media_initialPreviewConfig[] = [
+    //                 'caption' => $caption,
+    //             'url' => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+    //             'key' => $file->id,
+    //                 'extra' => [
+    //                     '_token' => csrf_token(),
+    //                     'keterangan' => $file->getCustomProperty('keterangan', '')
+    //                 ]
+    //         ];
+    //         } catch (\Exception $e) {
+    //             \Log::error("Failed to process media file ID {$file->id}: {$e->getMessage()}");
+    //         }
+    //     }
+
+    //     return view('tr.kegiatan.edit', compact(
+    //         'kegiatan',
+    //         'statusOptions',
+    //         'jenisKegiatanList',
+    //         'sektorList',
+    //         'provinsiList',
+    //         'kabupatenList',
+    //         'kecamatanList',
+    //         'desaList',
+    //         'preselectedProvinsiId',
+    //         'preselectedKabupatenId',
+    //         'dokumen_initialPreview',
+    //         'dokumen_initialPreviewConfig',
+    //         'media_initialPreview',
+    //         'media_initialPreviewConfig'
+    //     ));
+    // }
+
+
+    // public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    // {
+    //     try {
+    //         $kegiatanController = new APIKegiatanController();
+    //         $response = $kegiatanController->updateAPI($request, $kegiatan);
+    //         return response()->json([
+    //             'success' => true,
+    //             'status' => 'success',
+    //             'data' => $response['data'],
+    //             'message' => 'Kegiatan update by UpdateAPI'
+    //         ], Response::HTTP_CREATED);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     } catch (ValidationException $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     } catch (HttpException $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'status' => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], $e->getStatusCode());
+    //     }
+    // }
+
+    public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        $kegiatan = Kegiatan::findOrFail($id);
-        $validated = $request->validate([
-            'programoutcomeoutputactivity_id' => 'required|exists:trprogramoutcomeoutputactivity,id',
-            'jeniskegiatan_id' => 'required|exists:mjeniskegiatan,id',
-            'tanggalmulai' => 'required|date',
-            'tanggalselesai' => 'required|date|after:tanggalmulai',
-            'status' => 'required|in:Planned,Ongoing,Completed',
-            'deskripsilatarbelakang' => 'nullable|string',
-            'deskripsitujuan' => 'nullable|string',
-            'deskripsikeluaran' => 'nullable|string',
-            'deskripsiyangdikaji' => 'nullable|string',
-            'penerimamanfaatdewasaperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatdewasalakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatremajaperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatremajalakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatanakperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatanaklakilaki' => 'nullable|integer|min:0',
-            'penerimamanfaatdisabilitasperempuan' => 'nullable|integer|min:0',
-            'penerimamanfaatdisabilitaslakilaki' => 'nullable|integer|min:0',
-            'desa_id' => 'nullable|exists:kelurahan,id',
-            'lokasi' => 'nullable|string',
-            'long' => 'nullable|numeric',
-            'lat' => 'nullable|numeric',
-            'mitra' => 'nullable|array',
-            'mitra.*' => 'exists:mpartner,id',
-            'penulis' => 'nullable|array',
-            'penulis.*' => 'exists:users,id',
-        ]);
+        try {
+            $kegiatanController = new APIKegiatanController();
+            $response = $kegiatanController->updateAPI($request, $kegiatan);
 
-        $kegiatan->update($validated);
+            if ($response->getStatusCode() === 200) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('global.update_success'),
+                    'redirect' => route('kegiatan.index')
+                ], 200);
+            }
 
-        // Sync mitra
-        $kegiatan->mitra()->sync($request->input('mitra', []));
-
-        // Sync penulis (assuming peran_id is handled separately or defaults to a specific role)
-        $kegiatan->penulis()->sync($request->input('penulis', []));
-
-        // Update or create location
-        if ($request->filled('desa_id') || $request->filled('lokasi') || $request->filled('long') || $request->filled('lat')) {
-            $kegiatan->lokasi()->updateOrCreate(
-                ['kegiatan_id' => $kegiatan->id],
-                [
-                    'desa_id' => $request->desa_id,
-                    'lokasi' => $request->lokasi,
-                    'long' => $request->long,
-                    'lat' => $request->lat,
-                ]
-            );
+            return response()->json([
+                'success' => false,
+                'message' => $response->getData()->message ?? 'Failed to update kegiatan.'
+            ], 400);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update kegiatan: ' . $th->getMessage()
+            ], 500);
         }
-
-        return redirect()->route('tr.kegiatan.index')->with('success', 'Kegiatan updated successfully.');
     }
-
 
     public function destroy($id)
     {
@@ -935,5 +1040,156 @@ class KegiatanController extends Controller
     //     }
     // }
 
-    //method to store kegiatan basic tab data
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path('tmp/uploads');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file('file');
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            'name'          => $name,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
+    }
+
+  
+    public function uploadTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|max:51200',
+                'collection' => 'required|string|in:dokumen_pendukung,media_pendukung',
+                'name' => 'required|string|max:255',
+                'kegiatan_id' => 'required|integer|exists:trkegiatan,id'
+            ]);
+            
+            $file = $request->file('file');
+            $name = $request->input('name');
+            $collection = $request->input('collection');
+            $kegiatanId = $request->input('kegiatan_id');
+            
+            // Find the kegiatan
+            $kegiatan = Kegiatan::findOrFail($kegiatanId);
+            
+            // Define allowed MIME types based on collection
+            $allowedMimes = $collection === 'dokumen_pendukung'
+                ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx', 'txt']
+                : ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi', 'mp3', 'wav'];
+            
+            // Validate file type
+            $extension = strtolower($file->getClientOriginalExtension());
+            if (!in_array($extension, $allowedMimes)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File type not allowed for this collection'
+                ], 422);
+            }
+            
+            // Generate filename with timestamp
+            $timestamp = now()->format('Ymd_His');
+            $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan');
+            $fileName = "{$kegiatanName}_{$timestamp}." . $extension;
+            
+            // Add media to kegiatan with custom name as caption
+            $media = $kegiatan
+                ->addMedia($file)
+                ->withCustomProperties([
+                    'keterangan' => $name,
+                    'user_id' => auth()->user()->id,
+                    'original_name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'extension' => $extension,
+                    'updated_by' => auth()->user()->id
+                ])
+                ->usingName($file->getClientOriginalName())
+                ->usingFileName($fileName)
+                ->toMediaCollection($collection);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'File uploaded successfully',
+                'media_id' => $media->id,
+                'file_name' => $fileName,
+                'original_name' => $file->getClientOriginalName(),
+                'collection' => $collection,
+                'url' => $media->getUrl(),
+                'size' => $media->size,
+                'mime_type' => $media->mime_type
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to upload file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteMedia(Media $media)
+    {
+        try {
+            // Check if user has permission to delete this media
+            if (!auth()->user()->hasRole('admin') && $media->getCustomProperty('user_id') != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to delete this file'
+                ], 403);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file_path' => 'required|string'
+            ]);
+
+            $filePath = $request->input('file_path');
+
+            // Security check - ensure file is in temp directory
+            if (strpos($filePath, storage_path('app/temp/uploads')) !== 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid file path'
+                ], 400);
+            }
+
+            if (file_exists($filePath)) {
+                unlink($filePath);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Temporary file deleted successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
