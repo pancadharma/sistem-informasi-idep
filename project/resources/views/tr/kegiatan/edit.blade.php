@@ -19,17 +19,17 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
+    <form id="updateKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
         action="{{ route('kegiatan.update', [$kegiatan->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
             <div class="col-12 col-sm-12">
-                <div class="card card-primary card-tabs">
+                <div class="card card-info card-tabs">
                     <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-                        <button type="button" class="btn btn-danger float-right mr-2 mt-1"
-                            id="simpan_kegiatan">{{ __('global.save') }}</button>
-                        <ul class="nav nav-tabs border-bottom-1 border-primary kegiatan-border pt-2"
+                        <button type="button" class="btn btn-warning float-right mr-2 mt-1"
+                            id="update_kegiatan">{{ __('global.update') }}</button>
+                        <ul class="nav nav-tabs border-bottom-1 border-danger kegiatan-border pt-2"
                             id="details-kegiatan-tab" role="tablist">
                             <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse"
                                 title="Minimize">
@@ -131,19 +131,16 @@
                                 <!-- jenis kegiatan-->
                                 <div class="form-group row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                                        <label for="jeniskegiatan_id" class="input-group col-form-label">
+                                        <label for="jeniskegiatan" class="input-group col-form-label">
                                             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
                                         </label>
                                         <div class="select2-purple">
-                                            <select name="jeniskegiatan_id" id="jeniskegiatan_id"
-                                                class="form-control select2">
-                                                <option value="">{{ __('global.pleaseSelect') }}</option>
-                                                @foreach ($jenisKegiatanList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ old('jeniskegiatan_id', $kegiatan->jeniskegiatan_id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
-                                                @endforeach
+                                            <input type="hidden" name="jeniskegiatan_id" value="{{ $kegiatan->jeniskegiatan->id ?? '' }}">
+                                            <select name="jeniskegiatan" id="jeniskegiatan"
+                                                class="form-control select2" readonly>
+                                                @if ($kegiatan->jeniskegiatan)
+                                                    <option value="{{ $kegiatan->jeniskegiatan->id }}" selected>{{ $kegiatan->jeniskegiatan->nama }}</option>
+                                                @endif
                                             </select>
 
                                         </div>
@@ -156,11 +153,8 @@
                                         <div class="select2-purple">
                                             <select name="sektor_id[]" id="sektor_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
-                                                @foreach ($sektorList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('sektor_id', $kegiatan->sektor->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                @foreach ($kegiatan->sektor as $item)
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
 
@@ -231,16 +225,13 @@
                                             <select name="mitra_id[]" id="mitra_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.mitra') }}">
                                                 @foreach ($kegiatan->mitra as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('mitra_id', $kegiatan->mitra->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <!-- status kegiatan-->
-                                    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                    <div class="col-sm-12 col-md-3 col-lg-3 order-1 order-md-1">
                                         <label for="status" class="input-group col-form-label">
                                             <strong>{{ __('cruds.status.title') }}</strong>
                                         </label>
@@ -435,7 +426,7 @@
                                         </label>
                                         <textarea name="deskripsilatarbelakang" id="deskripsilatarbelakang"
                                             placeholder=" {{ __('cruds.kegiatan.description.latar_belakang_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsilatarbelakang', $kegiatan->deskripsilatarbelakang) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- tujuan kegiatan -->
@@ -448,7 +439,7 @@
                                         </label>
                                         <textarea name="deskripsitujuan" id="deskripsitujuan"
                                             placeholder=" {{ __('cruds.kegiatan.description.tujuan_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsitujuan', $kegiatan->deskripsitujuan) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- siapa deskripsi keluaran kegiatan -->
@@ -462,7 +453,7 @@
 
                                         <textarea name="deskripsikeluaran" id="deskripsikeluaran"
                                             placeholder=" {{ __('cruds.kegiatan.description.keluaran_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsikeluaran', $kegiatan->deskripsikeluaran) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- Peserta yang terlibat -->
@@ -510,18 +501,18 @@
                                                             <input type="number" id="penerimamanfaatdewasaperempuan"
                                                                 name="penerimamanfaatdewasaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasaperempuan', $kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatdewasalakilaki"
                                                                 name="penerimamanfaatdewasalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasalakilaki', $kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatdewasatotal"
                                                                 name="penerimamanfaatdewasatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatdewasatotal', $kegiatan->penerimamanfaatdewasatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--lansia row-->
@@ -534,18 +525,18 @@
                                                             <input type="number" id="penerimamanfaatlansiaperempuan"
                                                                 name="penerimamanfaatlansiaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansiaperempuan', $kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatlansialakilaki"
                                                                 name="penerimamanfaatlansialakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansialakilaki', $kegiatan->penerimamanfaatlansialakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatlansiatotal"
                                                                 name="penerimamanfaatlansiatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlansiatotal', $kegiatan->penerimamanfaatlansiatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--remaja row-->
@@ -558,18 +549,18 @@
                                                             <input type="number" id="penerimamanfaatremajaperempuan"
                                                                 name="penerimamanfaatremajaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajaperempuan', $kegiatan->penerimamanfaatremajaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatremajalakilaki"
                                                                 name="penerimamanfaatremajalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajalakilaki', $kegiatan->penerimamanfaatremajalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatremajatotal"
                                                                 name="penerimamanfaatremajatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatremajatotal', $kegiatan->penerimamanfaatremajatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--anak-anak row-->
@@ -582,18 +573,18 @@
                                                             <input type="number" id="penerimamanfaatanakperempuan"
                                                                 name="penerimamanfaatanakperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanakperempuan', $kegiatan->penerimamanfaatanakperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatanaklakilaki"
                                                                 name="penerimamanfaatanaklakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanaklakilaki', $kegiatan->penerimamanfaatanaklakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatanaktotal"
                                                                 name="penerimamanfaatanaktotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatanaktotal', $kegiatan->penerimamanfaatanaktotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <tr class="align-middle text-center text-nowrap">
@@ -603,18 +594,18 @@
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatperempuantotal"
                                                                 name="penerimamanfaatperempuantotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatperempuantotal', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1">
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatlakilakitotal"
                                                                 name="penerimamanfaatlakilakitotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlakilakitotal', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaattotal"
                                                                 name="penerimamanfaattotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaattotal', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </th>
                                                     </tr>
                                                 </tbody>
@@ -659,19 +650,19 @@
                                                             <input type="number" id="penerimamanfaatdisabilitasperempuan"
                                                                 name="penerimamanfaatdisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitasperempuan', $kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatdisabilitaslakilaki"
                                                                 name="penerimamanfaatdisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitaslakilaki', $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatdisabilitastotal"
                                                                 name="penerimamanfaatdisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatdisabilitastotal', $kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--non_disabilitas row-->
@@ -685,20 +676,20 @@
                                                                 id="penerimamanfaatnondisabilitasperempuan"
                                                                 name="penerimamanfaatnondisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitasperempuan', $kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number"
                                                                 id="penerimamanfaatnondisabilitaslakilaki"
                                                                 name="penerimamanfaatnondisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitaslakilaki', $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatnondisabilitastotal"
                                                                 name="penerimamanfaatnondisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatnondisabilitastotal', $kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--marjinal row-->
@@ -711,19 +702,19 @@
                                                             <input type="number" id="penerimamanfaatmarjinalperempuan"
                                                                 name="penerimamanfaatmarjinalperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinalperempuan', $kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatmarjinallakilaki"
                                                                 name="penerimamanfaatmarjinallakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinallakilaki', $kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatmarjinaltotal"
                                                                 name="penerimamanfaatmarjinaltotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatmarjinaltotal', $kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--total beneficiaries difabel-->
@@ -736,19 +727,19 @@
                                                             <input type="number" id="total_beneficiaries_perempuan"
                                                                 name="total_beneficiaries_perempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_perempuan', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="total_beneficiaries_lakilaki"
                                                                 name="total_beneficiaries_lakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_lakilaki', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="beneficiaries_difable_total"
                                                                 name="beneficiaries_difable_total"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('beneficiaries_difable_total', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </td>
                                                     </tr>
 
@@ -762,9 +753,11 @@
                             <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
                                 <div id="dynamic-form-container"></div>
                             </div>
-                            {{-- File Uplaods Load --}}
+                            <!-- File Uploads Tabs -->
                             <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                                {{-- Document Uploads --}}
+                                @include('tr.kegiatan.tabs._edit_uploads')
+{{--
+                                <!-- Document Uploads -->
                                 <div class="card-body pt-0">
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -773,22 +766,17 @@
                                                     {{ __('cruds.kegiatan.file.upload') }}
                                                 </strong>
                                                 <span class="text-red">
-                                                    {{-- ONLY FOR DOCUMENT FILES ONLY --}}
-                                                    (
-                                                    {{ __('allowed file: .pdf, .doc, .docx, .xls, .xlsx, .pptx | max: 50 MB') }}
-                                                    )
+                                                    ( {{ __('allowed file: .pdf, .doc, .docx, .xls, .xlsx, .pptx | max: 50 MB') }} )
                                                 </span>
                                             </label>
                                             <div class="form-group file-loading">
-                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
+                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file" class="form-control" multiple
+                                                    data-show-upload="false" data-show-caption="true">
                                             </div>
                                             <div id="captions-container-docs"></div>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- Media Photo/Video Uploads --}}
                                 <div class="card-body pt-0">
                                     <div class="row">
                                         <div class="col-lg-12">
@@ -797,19 +785,23 @@
                                                     {{ __('cruds.kegiatan.file.upload_media') }}
                                                 </strong>
                                                 <span class="text-red">
-                                                    {{-- ONLY FOR MEDIA FILES ONLY --}}
                                                     ( {{ __('allowed file: .jpg, .png, .jpeg | max: 50 MB') }} )
                                                 </span>
                                             </label>
                                             <div class="form-group file-loading">
-                                                <input id="media_pendukung" name="media_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
+                                                <input id="media_pendukung" name="media_pendukung[]" type="file" class="form-control" multiple
+                                                    data-show-upload="false" data-show-caption="true">
                                             </div>
                                             <div id="captions-container-media"></div>
                                         </div>
                                     </div>
                                 </div>
+
+                                @push('basic_tab_js')
+                                    @include('tr.kegiatan.js._file_upload_scripts')
+                                @endpush
+--}}
+
                             </div>
 
                             {{-- Penulis Laporan Kegiatan --}}
@@ -823,8 +815,8 @@
                                 </div>
 
                                 <div class="form-group row col-md-12" id="list_penulis_edit">
-                                    @if (!empty($kegiatan->penulis) && $kegiatan->penulis->isNotEmpty())
-                                        @foreach ($kegiatan->penulis as $penulis)
+                                    @if (!empty($kegiatan->datapenulis) && $kegiatan->datapenulis->isNotEmpty())
+                                        @foreach ($kegiatan->datapenulis as $penulis)
                                             <div class="row penulis-row col-12">
                                                 <div class="col-lg-5 form-group mb-0">
                                                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
@@ -832,7 +824,8 @@
                                                         <select class="form-control select2 penulis-select"
                                                             name="penulis[]" data-selected="{{ $penulis->id }}">
                                                             <option value="{{ $penulis->id }}" selected>
-                                                                {{ $penulis->nama }}</option>
+                                                                {{ $penulis->nama }}
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -845,7 +838,7 @@
                                                                 name="jabatan[]"
                                                                 data-selected="{{ $penulis->pivot->peran_id }}">
                                                                 <option value="{{ $penulis->pivot->peran_id }}" selected>
-                                                                    {{ $penulis->peran->find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
+                                                                    {{ App\Models\Peran::find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -859,7 +852,27 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        {{-- <p class="text-muted"></p> --}}
+                                        <div class="row penulis-row col-12">
+                                            <div class="col-lg-5 form-group mb-0">
+                                                <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
+                                                <div class="select2-orange">
+                                                    <select class="form-control select2 penulis-select" name="penulis[]"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5 form-group d-flex align-items-end">
+                                                <div class="flex-grow-1">
+                                                    <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+                                                    <div class="select2-orange">
+                                                        <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <button type="button" class="btn btn-danger remove-penulis-row">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -875,9 +888,11 @@
 @stop
 
 @include('tr.kegiatan.modal._preview')
+
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
+
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
@@ -955,7 +970,10 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @stack('basic_tab_js')
-{{-- @include('tr.kegiatan.js.tabs.basic') --}}
+
+<script>
+    @include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
+</script>
 <script>
     let uniqueId = Date.now();
     var provinsiLayer = null;
@@ -1015,6 +1033,24 @@
         });
     }
 
+    const setupSelect2 = (selector, placeholder, url, dataCallback) => {
+        $(selector).select2({
+            placeholder: placeholder,
+            allowClear: true,
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 250,
+                data: dataCallback,
+                processResults: (data, params) => ({
+                    results: data.results,
+                    pagination: { more: (params.page || 1) < data.last_page }
+                }),
+                cache: true
+            }
+        });
+    };
+
     function select2Single(fieldId) {
         var select2Field = $('#' + fieldId);
         var apiUrl = select2Field.data('api-url');
@@ -1062,8 +1098,9 @@
         });
 
         // select2 jenis kegiatan
-        $('#jeniskegiatan_id').select2({
+        $('#jeniskegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kegiatan.basic.jenis_kegiatan') }}',
+
             ajax: {
                 url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
                 dataType: 'json',
@@ -1087,93 +1124,33 @@
                     };
                 }
             }
-        });
+        }).prop('disabled', true);
 
-        // $(`#kabupaten_id`).select2({
-        //     placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
-        //     allowClear: true,
-        //     ajax: {
-        //         url: "{{ route('api.kegiatan.kabupaten') }}",
-        //         dataType: 'json',
-        //         delay: 250,
-        //         data: function(params) {
-        //             const provinsiId = $(`#provinsi_id`).val();
-        //             return {
-        //                 search: params.term,
-        //                 provinsi_id: provinsiId,
-        //                 page: params.page || 1
-        //             };
-        //         },
-        //         processResults: function(data, params) {
-        //             params.page = params.page || 1;
-        //             return {
-        //                 results: data.results,
-        //                 pagination: {
-        //                     more: data.pagination.more
-        //                 }
-        //             };
-        //         },
-        //         cache: true,
-        //         error: function(jqXHR, textStatus, errorThrown) {
-        //             const provinsiId = $(`#provinsi_id`).val();
-        //             let errorMessage = "";
-        //             if (jqXHR.responseText) {
-        //                 try {
-        //                     const response = JSON.parse(jqXHR.responseText);
-        //                     if (response.message) {
-        //                         errorMessage = response
-        //                             .message; // Use message from the server if available
-        //                     }
-        //                 } catch (e) {
-        //                     console.warn("Could not parse JSON response:", jqXHR.responseText);
-        //                 }
-        //             }
-        //             if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
-        //                 Swal.fire({
-        //                     icon: 'warning' ?? textStatus,
-        //                     title: 'Failed to load Kabupaten data',
-        //                     text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
-        //                     timer: 1500,
-        //                 })
-        //                 setTimeout(() => {
-        //                     $(`#provinsi_id`).focus();
-        //                 }, 1000);
-        //                 return;
-        //             } else {
-        //                 // Handle other AJAX errors
-        //                 let errorMessage =
-        //                     '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
-        //                 Swal.fire({
-        //                     icon: 'error', // Always use 'error' for AJAX failures
-        //                     title: errorThrown ||
-        //                         'Error', // Use errorThrown if available, otherwise generic 'Error'
-        //                     text: errorMessage,
-        //                     timer: 2500, // Slightly longer timer for general errors
-        //                     showConfirmButton: false // Hide confirm button
-        //                 });
+        // Setup dynamic select2 for province and kabupaten
+        setupSelect2('#provinsi_id', '{{ __('cruds.kegiatan.basic.select_provinsi') }}', "{{ route('api.kegiatan.provinsi') }}", params => ({ search: params.term, page: params.page || 1 }));
+        setupSelect2('#kabupaten_id', '{{ __('cruds.kegiatan.basic.select_kabupaten') }}', "{{ route('api.kegiatan.kabupaten') }}", params => ({ search: params.term, provinsi_id: $('#provinsi_id').val(), page: params.page || 1 }));
 
-        //             }
-        //         }
-        //     }
-        // }).on('select2:open', function(e) {
-        //     $('.select2-container').css('z-index', 1035);
-        // }).on('select2:close', function(e) {
-        //     $('.select2-container').css('z-index', 999);
-        // });
+        // Initial load of dynamic form based on existing jenis_kegiatan
+        const initialJenisKegiatan = $('#jeniskegiatan_id').val();
+        if (initialJenisKegiatan) {
+            const initialFieldPrefix = formFieldMap[initialJenisKegiatan];
+            const formContainer = $('#dynamic-form-container');
+            if (initialFieldPrefix) {
+                const initialFormFields = getFormFields(initialFieldPrefix, {{ Js::from($kegiatan->kegiatanHasil) }});
+                formContainer.append(initialFormFields);
 
-
-        // initializeSelect2WithDynamicUrl("provinsi_id");
-        // initializeSelect2WithDynamicUrl("kabupaten_id");
-
-
-
-        // start grok
-        $('#provinsi_id, #kabupaten_id').select2({
-            placeholder: function() {
-                return $(this).data('placeholder');
-            },
-            allowClear: true
-        });
+                $('.summernote').each(function() {
+                    const placeholder = $(this).attr('placeholder');
+                    $(this).summernote({
+                        inheritPlaceholder: true,
+                        height: 150,
+                        width: '100%',
+                        codeviewFilter: false,
+                    });
+                    $(this).summernote('placeholder', placeholder);
+                });
+            }
+        }
 
         $('.list-lokasi-kegiatan .lokasi-kegiatan').each(function() {
             const uniqueId = $(this).data('unique-id');
@@ -1311,7 +1288,56 @@
             initializeLocationSelect2(newUniqueId, $(`#kecamatan-${newUniqueId}`), $(`#kelurahan-${newUniqueId}`));
         });
 
+        $('#status, #fasepelaporan').select2({
+            width: 'resolve',
+            minimumResultsForSearch: -1 // Disable search for static dropdowns
+        });
+
         let isProgrammaticChange = false;
+        let isProvinsiProgrammaticChange = false;
+
+        $('#provinsi_id').on('change', function() {
+            if (isProvinsiProgrammaticChange) {
+                isProvinsiProgrammaticChange = false; // Reset flag setelah diproses
+                return; // Hentikan eksekusi jika ini perubahan terprogram
+            }
+
+            const newProvinsiId = $(this).val();
+            const previousProvinsiId = {{ $preselectedProvinsiId ?? 'null' }};
+
+            Swal.fire({
+                title: "{{ __('global.warning') }}",
+                text: "{{ __('cruds.kegiatan.validate.prov_change') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "{{ __('global.yes') }}",
+                cancelButtonText: "{{ __('global.no') }}",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna setuju, kosongkan kabupaten dan lokasi
+                    isProgrammaticChange = true;
+                    $('#kabupaten_id').val(null).trigger('change');
+                    $('.list-lokasi-kegiatan').empty();
+                    // Simpan nilai baru sebagai previous-value
+                    $('#provinsi_id').data('previous-value', newProvinsiId);
+                } else {
+                    // Jika pengguna membatalkan, kembalikan ke nilai sebelumnya tanpa memicu loop
+                    isProvinsiProgrammaticChange = true; // Set flag untuk perubahan terprogram
+                    $(this).val(previousProvinsiId).trigger('change'); // Kembali ke nilai sebelumnya
+                }
+            });
+
+            // Simpan nilai saat ini sebagai previous-value sebelum perubahan diterapkan
+            if (!$(this).data('previous-value')) {
+                $(this).data('previous-value', $(this).val());
+            }
+        });
+
+        // Trigger kabupaten select2 to reload when province changes
+        $('#provinsi_id').on('change', function() {
+            $('#kabupaten_id').val(null).trigger('change.select2');
+        });
 
         $('#kabupaten_id').on('change', function() {
             if (isProgrammaticChange) {
@@ -1590,106 +1616,110 @@
         // Preview button click handler
         $('#btn-preview-kegiatan').on('click', function() {
             const formData = collectFormData();
-            // const errors = validateFormData(formData);
-
-            // if (errors.length > 0) {
-            //     // Display validation errors
-            //     let errorHtml = '<ul>';
-            //     errors.forEach(error => {
-            //         errorHtml += `<li>${error}</li>`;
-            //     });
-            //     errorHtml += '</ul>';
-
-            //     $('#validation-errors').html(errorHtml).show();
-            // } else {
-            //     // Hide any previous errors
-            //     $('#validation-errors').hide();
-
-            //     // Display the preview
             displayPreview(formData);
-            // }
-
-            // Show the modal
             $('#previewModal').modal('show');
         });
 
-        // Submit button in modal click handler
-        $('#btn-submit-preview').on('click', function() {
-            // Get form data
-            const formData = collectFormData();
-
-            // Send data via AJAX
-            $.ajax({
-                url: '{{ route('kegiatan.update', [$kegiatan->id]) }}',
-                type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    _method: 'PUT',
-                    ...formData
-                },
-                success: function(response) {
-                    // Close the modal
-                    $('#previewModal').modal('hide');
-
-                    // Show success message
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Data has been saved successfully',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
-                    // Optionally redirect or refresh
-                    // window.location.href = '{{ route('kegiatan.index') }}';
-                },
-                error: function(xhr) {
-                    // Handle errors
-                    let errorMessage = 'An error occurred while saving the data.';
-
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessage
-                    });
-                }
-            });
-        });
     });
 
 
-    // $('#previewModal').on('show.bs.modal', function () {
-    //     let tableBody = $('#lokasiPreview tbody');
-    //     tableBody.empty();
+</script>
+@include('tr.kegiatan.js._penulis')
+<script>
+    // $(document).ready(function() {
+    //     const penulisApiUrl = "{{ route('api.kegiatan.penulis') }}";
+    //     const peranApiUrl = "{{ route('api.kegiatan.jabatan') }}";
 
-    //     $('.lokasi-row').each(function () {
-    //         const kecamatanSelect = $(this).find('.kecamatan_id');
-    //         const desaSelect = $(this).find('.desa_id');
+    //     function initializeRow(row) {
+    //         const penulisSelect = row.find('.penulis-select');
+    //         const jabatanSelect = row.find('.jabatan-select');
 
-    //         const kecamatanText = kecamatanSelect.find('option:selected').text().trim() || '-';
-    //         const desaData = desaSelect.select2('data');
-    //         const desaText = desaData.length ? desaData[0].text : '-';
+    //         penulisSelect.select2({
+    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.nama") }}',
+    //             allowClear: true,
+    //             ajax: {
+    //                 url: penulisApiUrl,
+    //                 dataType: 'json',
+    //                 delay: 250,
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data.data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.nama
+    //                             };
+    //                         })
+    //                     };
+    //                 }
+    //             }
+    //         });
 
-    //         const lokasi = $(this).find('input[name="lokasi[]"]').val() || '-';
-    //         const lat = $(this).find('input[name="lat[]"]').val() || '-';
-    //         const long = $(this).find('input[name="long[]"]').val() || '-';
+    //         jabatanSelect.select2({
+    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.jabatan") }}',
+    //             allowClear: true,
+    //             ajax: {
+    //                 url: peranApiUrl,
+    //                 dataType: 'json',
+    //                 delay: 250,
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data.data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.nama
+    //                             };
+    //                         })
+    //                     };
+    //                 }
+    //             }
+    //         });
+    //     }
 
-    //         tableBody.append(`
-    //             <tr>
-    //                 <td>${kecamatanText}</td>
-    //                 <td>${desaText}</td>
-    //                 <td>${lokasi}</td>
-    //                 <td>${lat}</td>
-    //                 <td>${long}</td>
-    //             </tr>
-    //         `);
+    //     // Initialize existing rows
+    //     $('.penulis-row').each(function() {
+    //         initializeRow($(this));
+    //     });
+
+    //     // Add new row
+    //     $('#addPenulis').on('click', function() {
+    //         const newRow = `
+    //             <div class="row penulis-row col-12">
+    //                 <div class="col-lg-5 form-group mb-0">
+    //                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
+    //                     <div class="select2-orange">
+    //                         <select class="form-control select2 penulis-select" name="penulis[]"></select>
+    //                     </div>
+    //                 </div>
+    //                 <div class="col-lg-5 form-group d-flex align-items-end">
+    //                     <div class="flex-grow-1">
+    //                         <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+    //                         <div class="select2-orange">
+    //                             <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
+    //                         </div>
+    //                     </div>
+    //                     <div class="ml-2">
+    //                         <button type="button" class="btn btn-danger remove-penulis-row">
+    //                             <i class="bi bi-trash"></i>
+    //                         </button>
+    //                     </div>
+    //                 </div>
+    //             </div>`;
+    //         $('#list_penulis_edit').append(newRow);
+    //         initializeRow($('.penulis-row').last());
+    //     });
+
+    //     // Remove row
+    //     $('#list_penulis_edit').on('click', '.remove-penulis-row', function() {
+    //         if ($('.penulis-row').length > 1) {
+    //             $(this).closest('.penulis-row').remove();
+    //         } else {
+    //             // Optionally, clear the fields instead of removing the last row
+    //             const row = $(this).closest('.penulis-row');
+    //             row.find('.penulis-select').val(null).trigger('change');
+    //             row.find('.jabatan-select').val(null).trigger('change');
+    //         }
     //     });
     // });
 </script>
-
 @include('tr.kegiatan.js._validasi')
 @endpush
