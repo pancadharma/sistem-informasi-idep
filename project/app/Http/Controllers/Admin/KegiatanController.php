@@ -48,8 +48,14 @@ use App\Models\Program_Outcome_Output_Activity;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
+use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\Html;
+
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+
 
 class KegiatanController extends Controller
 {
@@ -119,6 +125,7 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
+                $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -155,6 +162,10 @@ class KegiatanController extends Controller
 
     private function generateButton($type, $color, $icon, $label, $id)
     {
+        if ($type === 'export') {
+            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+        }
+
         $url = '';
         switch ($type) {
             case 'edit':
@@ -168,7 +179,31 @@ class KegiatanController extends Controller
                 break;
         }
 
-        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
+        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
+    }
+
+    public function export(Kegiatan $kegiatan, $format)
+    {
+        $format = strtolower($format);
+        $data = compact('kegiatan');
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('tr.kegiatan.export', $data);
+            return $pdf->download('kegiatan-' . $kegiatan->id . '.pdf');
+        }
+
+        if ($format === 'docx') {
+            $phpWord = new PhpWord();
+            $phpWord->setDefaultFontName('Times New Roman');
+            $section = $phpWord->addSection();
+            $html = view('tr.kegiatan.export', $data)->render();
+            Html::addHtml($section, $html, false, false);
+            $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan');
+            $phpWord->save($tempFile, 'Word2007', true);
+            return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')->deleteFileAfterSend(true);
+        }
+
+        abort(404);
     }
 
     // public function create()
