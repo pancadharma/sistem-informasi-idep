@@ -283,7 +283,7 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 // Route Untuk Kegiatan
 Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
 Route::resource('kegiatan', KegiatanController::class);
-=======
+
 // Route::resource('kegiatan', KegiatanController::class);
 Route::get('kegiatan', [KegiatanController::class, 'index'])
     ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
