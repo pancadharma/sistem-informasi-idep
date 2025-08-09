@@ -279,6 +279,7 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 
 
 // Route Untuk Kegiatan
+Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
 Route::resource('kegiatan', KegiatanController::class);
 
 //bentuk or sektor kegiatan
