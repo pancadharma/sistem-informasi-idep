@@ -1,23 +1,32 @@
-## Project Analysis
+### 2025-07-28: Centralized File Upload Scripts for Kegiatan Create/Edit Pages
 
-### Task: Implement dynamic location behavior in `edit.blade.php`
+- **Task**: Refactored file upload logic to a new Blade file (`_file_upload_scripts.blade.php`) to ensure consistency between `create.blade.php` and `edit.blade.php` for Kegiatan module.
+- **Changes**:
+    - Created `resources/views/tr/kegiatan/js/_file_upload_scripts.blade.php` containing Krajee FileInput initialization and common AJAX submission logic for file uploads.
+    - Modified `resources/views/tr/kegiatan/create.blade.php` to include the new centralized file upload script.
+    - Modified `resources/views/tr/kegiatan/edit.blade.php` to remove redundant Krajee FileInput script includes and `_dropzone_scripts.blade.php` inclusion, and instead include the new centralized file upload script.
+- **Impact**: Both create and edit pages for Kegiatan now utilize the same file upload mechanism, ensuring consistent behavior and easier maintenance.
 
-**Date:** 2025-07-02 10:30:00
+### 2025-07-28: Confirmed Centralized File Upload Scripts for Kegiatan Create/Edit Pages
 
-**Description:** Modified `resources/views/tr/kegiatan/edit.blade.php` to replicate the dynamic behavior of `provinsi_id` and `kabupaten_id` dropdowns, including GeoJSON triggering and the clearing/re-initialization of location inputs, as seen in `resources/views/tr/kegiatan/create.blade.php`. This involved updating the JavaScript section to include relevant functions for Select2 initialization, dynamic location row management, and map marker handling.
+- **Task**: Verified that both `create.blade.php` and `edit.blade.php` for the Kegiatan module are now correctly using the centralized file upload script (`_file_upload_scripts.blade.php`).
+- **Changes**: Confirmed the removal of old, redundant file upload script inclusions and the correct inclusion of the new centralized script in both files.
+- **Impact**: Ensures consistent and maintainable file upload functionality across the Kegiatan creation and editing interfaces.
 
-### Task: Fix preview button and double location row issue in `edit.blade.php`
+### 2025-07-28: Added Missing API Routes for Temporary File Uploads
 
-**Date:** 2025-07-02 10:45:00
+- **Task**: Resolved "Route [api.kegiatan.upload_temp_file] not defined" error by adding missing API routes.
+- **Changes**: Added `api.kegiatan.upload_temp_file` and `api.kegiatan.delete_temp_file` routes to `routes/api.php`, pointing to `uploadTempFile` and `deleteTempFile` methods in `App\Http\Controllers\Admin\KegiatanController`.
+- **Impact**: Enabled proper functioning of temporary file upload and deletion features used by the Krajee FileInput in Kegiatan create and edit forms.
 
-**Description:**
-- Removed redundant JavaScript code from `resources/views/tr/kegiatan/_google_map.blade.php` that was causing duplicate location rows to be added.
-- Corrected the `collectFormData` function in `resources/views/tr/kegiatan/edit.blade.php` to properly retrieve text values from Select2 elements for accurate preview display.
-- Added a conditional message in `displayPreview` to indicate when no locations have been added.
-- Added console logs for debugging the preview functionality.
+### 2025-07-28: Centralized File Upload Script Inclusion in Create Page
 
-### Task: Create CRUD functionality for managing permissions
+- **Task**: Ensured `create.blade.php` consistently uses the centralized file upload script.
+- **Changes**: Replaced direct Krajee FileInput script inclusions in `resources/views/tr/kegiatan/create.blade.php` with `@include('tr.kegiatan.js._file_upload_scripts')`.
+- **Impact**: Further centralizes file upload logic, improving maintainability and consistency across the application.
 
-**Date:** 2025-07-04 14:00:00
+### 2025-07-28: Confirmed File Upload Consistency in Create and Edit Pages
 
-**Description:** Created CRUD functionality for managing permissions using the Spatie Laravel Permission package with AJAX for dynamic operations. Generated a `Permission` model, a `PermissionController` with CRUD methods, API routes for AJAX requests, a Blade view with a Bootstrap 5 table and modal forms, and a JavaScript file for AJAX handling with jQuery. Ensured the code follows PSR-12, uses the `role:admin` middleware, includes CSRF tokens for AJAX, and integrates with Spatie's permission system.
+- **Task**: Re-analyzed `create.blade.php` (after restoration) and `edit.blade.php` to confirm consistent file upload implementation.
+- **Changes**: Verified that both `create.blade.php` and `edit.blade.php` now directly include Krajee FileInput scripts and use the same methods for file uploads, including proper handling of `initialPreview` and `initialPreviewConfig` for existing files in `edit.blade.php`.
+- **Impact**: Ensures full consistency and correct functionality of file uploads across both create and edit forms for Kegiatan.

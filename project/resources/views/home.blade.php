@@ -144,6 +144,11 @@
                 @endforeach
             </select>
         </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button id="printButton" class="btn btn-primary">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
     </div>
     <!-- End Filter Section -->
 
@@ -311,6 +316,75 @@
         .map-bubble-marker.dusun::after {
             border-top: 8px solid rgba(234, 67, 53, 0.9);
             /* Same color as dusun bubble */
+        }
+
+                @media print {
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .main-sidebar, .main-header, .content-header, .row.mb-3, .small-box-footer, #printButton, .main-footer, .dataTables_filter, .dataTables_length, .dataTables_info, .dataTables_paginate {
+                display: none !important;
+            }
+            .content-wrapper {
+                margin-left: 0 !important;
+                padding-top: 0 !important;
+                background-color: #fff !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #dee2e6 !important;
+                break-inside: avoid;
+            }
+            .row {
+                display: flex !important;
+                flex-wrap: wrap !important;
+            }
+            /* Bootstrap Grid for Print */
+            .col-sm-12, .col-md-12, .col-lg-6, .col-lg-3, .col-6 {
+                float: left !important;
+            }
+            .col-lg-6 { width: 50% !important; }
+            .col-lg-3 { width: 25% !important; }
+            .col-6 { width: 50% !important; }
+
+            #dashboardCards .col-lg-3 { /* More specific for stat boxes */
+                width: 25% !important;
+            }
+
+            #map {
+                height: 500px !important;
+                width: 100% !important;
+                page-break-inside: avoid;
+            }
+            .small-box {
+                break-inside: avoid;
+            }
+            .small-box .inner h3, .small-box .inner p {
+                color: #000 !important;
+            }
+            .small-box .icon {
+                color: rgba(0, 0, 0, 0.5) !important;
+                display: block !important;
+            }
+            .small-box .icon > i:before,
+            .small-box .icon > i.fas:before,
+            .small-box .icon > i.bi:before {
+                text-shadow: none !important;
+                box-shadow: none !important;
+                color: inherit !important;
+            }
+
+            /* DataTables Print Styles */
+            #tableDesa, #tableDesa th, #tableDesa td {
+                border: 1px solid #dee2e6 !important;
+            }
+            #tableDesa thead {
+                background-color: #f2f2f2 !important;
+            }
+            #tableDesa th {
+                font-weight: bold !important;
+            }
         }
     </style>
 @endpush
@@ -1261,13 +1335,25 @@
 
     //
     // reusable function
-    function generateInfoContent(prov) {
-        return `
+            function generateInfoContent(prov) {
+            return `
                 <div style="font-family: sans-serif; font-size: 14px;">
                     <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
                     <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
                     <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
                 </div>`;
     }
+
+    $('#printButton').on('click', function() {
+        const table = $('#tableDesa').DataTable();
+        const originalLength = table.page.len();
+
+        table.page.len(-1).draw();
+
+        window.print();
+
+        table.page.len(originalLength).draw();
+    });
+</script>
 </script>
 @endpush
