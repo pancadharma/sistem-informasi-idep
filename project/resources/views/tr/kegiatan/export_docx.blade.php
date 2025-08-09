@@ -1,56 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kegiatan Export</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12px;
-        }
-        .container {
-            width: 100%;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        .header p {
-            margin: 0;
-        }
-        .content {
-            margin-bottom: 20px;
-        }
-        .content table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .content th, .content td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
-        .content th {
-            background-color: #f2f2f2;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 5px;
-        }
-        .description {
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
     <div class="container">
         <div class="header">
             <h1>BACK TO OFFICE REPORT</h1>
@@ -332,5 +279,3 @@
             @endif
         </div>
     </div>
-</body>
-</html>

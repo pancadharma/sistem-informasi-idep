@@ -138,10 +138,6 @@
         });
     });
 
-
-</script>
-
-<script>
     let selectedKegiatanId = null;
     $(document).on('click', '.export-kegiatan-btn', function (e) {
         e.preventDefault();

@@ -185,7 +185,8 @@ class KegiatanController extends Controller
     public function export(Kegiatan $kegiatan, $format)
     {
         $format = strtolower($format);
-        $data = compact('kegiatan');
+        $durationInDays = $kegiatan->getDurationInDays();
+        $data = compact('kegiatan', 'durationInDays');
 
         if ($format === 'pdf') {
             $pdf = Pdf::loadView('tr.kegiatan.export', $data);
@@ -194,12 +195,35 @@ class KegiatanController extends Controller
 
         if ($format === 'docx') {
             $phpWord = new PhpWord();
-            $phpWord->setDefaultFontName('Times New Roman');
             $section = $phpWord->addSection();
+            $phpWord->setDefaultFontName('Times New Roman');
+            $fontStyleName = 'oneUserDefinedStyle';
+            $phpWord->addFontStyle(
+                $fontStyleName,
+                array('name' => 'Tahoma', 'size' => 12, 'color' => '1B2232', 'bold' => true)
+            );
+
+            $fontStyle = new \PhpOffice\PhpWord\Style\Font();
+            $fontStyle->setBold(true);
+            $fontStyle->setName('Tahoma');
+            $fontStyle->setSize(13);
+
             $html = view('tr.kegiatan.export', $data)->render();
-            Html::addHtml($section, $html, false, false);
+            Html::addHtml($section, $html, true, false);
+            
             $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan');
-            $phpWord->save($tempFile, 'Word2007', true);
+            $tempFilePath = pathinfo($tempFile, PATHINFO_DIRNAME);
+            $tempFileName = pathinfo($tempFile, PATHINFO_BASENAME);
+            
+            $phpWord->setDefaultFontSize(12);
+            $phpWord->setDefaultFontName('Times New Roman');
+            $phpWord->setDefaultParagraphStyle([
+                'fontSize' => 12,
+                'fontName' => 'Times New Roman',
+            ]);
+
+            $tempFile = $tempFilePath . '/' . $tempFileName . '.docx';
+            $phpWord->save($tempFile, 'Word2007', true); // save the document and download it
             return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')->deleteFileAfterSend(true);
         }
 

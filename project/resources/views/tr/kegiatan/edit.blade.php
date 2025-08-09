@@ -1722,4 +1722,150 @@
     // });
 </script>
 @include('tr.kegiatan.js._validasi')
+
+<script>
+    // Tab switching functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.getElementById('documents-content').style.display = 'none';
+        document.getElementById('media-content').style.display = 'none';
+        
+        // Remove active class from all tabs
+        document.getElementById('documents-tab').classList.remove('active');
+        document.getElementById('media-tab').classList.remove('active');
+        
+        // Show selected tab content
+        document.getElementById(tabName + '-content').style.display = 'block';
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // File preview functionality
+    function previewFile(url, mimeType) {
+        if (mimeType.startsWith('image/')) {
+            Swal.fire({
+                title: '{{ __('Image Preview') }}',
+                html: `<img src="${url}" class="img-fluid" style="max-width: 100%; height: auto;">`,
+                width: '80%',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else if (mimeType === 'application/pdf') {
+            Swal.fire({
+                title: '{{ __('PDF Preview') }}',
+                html: `<iframe src="${url}" style="width: 100%; height: 500px; border: none;"></iframe>`,
+                width: '80%',
+                height: '600px',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else {
+            // For other file types, open in new tab
+            window.open(url, '_blank');
+        }
+    }
+
+    // File delete functionality
+    function deleteFile(mediaId) {
+        Swal.fire({
+            title: '{{ __('Are you sure?') }}',
+            text: "{{ __('You won\'t be able to revert this!') }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: '{{ __('Yes, delete it!') }}',
+            cancelButtonText: '{{ __('Cancel') }}'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make AJAX request to delete file
+                fetch(`/kegiatan/media/${mediaId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                        // Reload the page to refresh the file list
+                        location.reload();
+                    } else {
+                        Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+                });
+            }
+        });
+    }
+    
+    function uploadDocument(collection) {
+        const isDocument = collection === 'dokumen_pendukung';
+        const title = isDocument ? '{{ __('Upload Document') }}' : '{{ __('Upload Media') }}';
+        const accept = isDocument ? '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt' : '.jpg,.jpeg,.png,.gif,.mp4,.mov,.avi,.mp3,.wav';
+        const placeholder = isDocument ? '{{ __('Document Name') }}' : '{{ __('Media Name') }}';
+        
+        Swal.fire({
+            title: title,
+            html: `
+                <input type="file" id="documentFile" class="form-control mb-3" accept="${accept}">
+                <input type="text" id="documentName" class="form-control" placeholder="${placeholder}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: '{{ __('Upload') }}',
+            cancelButtonText: '{{ __('Cancel') }}',
+            preConfirm: () => {
+                const file = document.getElementById('documentFile').files[0];
+                const name = document.getElementById('documentName').value;
+                
+                if (!file) {
+                    Swal.showValidationMessage('{{ __('Please select a file') }}');
+                    return false;
+                }
+                
+                if (!name) {
+                    Swal.showValidationMessage(isDocument ? '{{ __('Please enter document name') }}' : '{{ __('Please enter media name') }}');
+                    return false;
+                }
+                
+                return { file, name };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('file', result.value.file);
+                formData.append('name', result.value.name);
+                formData.append('collection', collection);
+                formData.append('kegiatan_id', {{ $kegiatan->id }});
+                
+                fetch('{{ route('kegiatan.upload-document') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const successMessage = isDocument ? '{{ __('Document uploaded successfully') }}' : '{{ __('Media uploaded successfully') }}';
+                        Swal.fire('{{ __('Success') }}', successMessage, 'success')
+                            .then(() => {
+                                location.reload();
+                            });
+                    } else {
+                        Swal.fire('{{ __('Error') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('{{ __('Error') }}', '{{ __('Upload failed') }}', 'error');
+                });
+            }
+        });
+    }
+</script>
 @endpush

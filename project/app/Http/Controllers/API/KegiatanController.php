@@ -111,6 +111,11 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
+                // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_export')) {
+                //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
+                //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+                // }
+                $buttons[] = $this->generateButton('export', 'success', 'printer', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -121,6 +126,10 @@ class KegiatanController extends Controller
 
     private function generateButton($type, $color, $icon, $label, $id)
     {
+        if ($type === 'export') {
+            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+        }
+
         $url = '';
         switch ($type) {
             case 'edit':
@@ -132,6 +141,10 @@ class KegiatanController extends Controller
             case 'details':
                 $url = route('kegiatan.show', $id);
                 break;
+            // case 'export':
+            //     $url = route('kegiatan.export', $id);
+            //     // $url = route('kegiatan.export', ['kegiatan' => $id, 'format' => 'pdf']);
+            //     break;
         }
 
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";

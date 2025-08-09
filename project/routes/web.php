@@ -42,6 +42,8 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
+Route::get('/phpinfo-gd', fn() => phpinfo());
+
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
