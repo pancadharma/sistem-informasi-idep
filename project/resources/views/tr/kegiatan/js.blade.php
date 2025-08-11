@@ -138,6 +138,19 @@
         });
     });
 
+    let selectedKegiatanId = null;
+    $(document).on('click', '.export-kegiatan-btn', function (e) {
+        e.preventDefault();
+        selectedKegiatanId = $(this).data('id');
+        $('#exportKegiatanModal').modal('show');
+    });
 
+    $('.confirm-export').on('click', function () {
+        if (!selectedKegiatanId) return;
+        const format = $('input[name="export_format"]:checked').val();
+        let url = "{{ route('kegiatan.export', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
+        url = url.replace('__id__', selectedKegiatanId).replace('__format__', format);
+        window.location.href = url;
+    });
 </script>
 

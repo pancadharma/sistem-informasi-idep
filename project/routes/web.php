@@ -42,6 +42,8 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
+Route::get('/phpinfo-gd', fn() => phpinfo());
+
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -281,6 +283,9 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 
 
 // Route Untuk Kegiatan
+Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
+Route::resource('kegiatan', KegiatanController::class);
+
 // Route::resource('kegiatan', KegiatanController::class);
 Route::get('kegiatan', [KegiatanController::class, 'index'])
     ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
@@ -304,7 +309,6 @@ Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
     ->middleware('check.kegiatan:kegiatan_delete');
 
 
-
 //bentuk or sektor kegiatan
 Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
 Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
@@ -323,6 +327,7 @@ Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () 
     Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
     Route::get('/upload_media', [App\Http\Controllers\API\KegiatanController::class, 'upload_media'])->name('upload_media');
     Route::DELETE('/delete_media', [App\Http\Controllers\API\KegiatanController::class, 'delete_media'])->name('delete_media');
+    Route::get('/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanController::class, 'getHasilKegiatan'])->name('hasil');
 });
 
 //

@@ -111,6 +111,11 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
+                // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_export')) {
+                //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
+                //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+                // }
+                $buttons[] = $this->generateButton('export', 'success', 'printer', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -121,6 +126,10 @@ class KegiatanController extends Controller
 
     private function generateButton($type, $color, $icon, $label, $id)
     {
+        if ($type === 'export') {
+            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+        }
+
         $url = '';
         switch ($type) {
             case 'edit':
@@ -132,6 +141,10 @@ class KegiatanController extends Controller
             case 'details':
                 $url = route('kegiatan.show', $id);
                 break;
+            // case 'export':
+            //     $url = route('kegiatan.export', $id);
+            //     // $url = route('kegiatan.export', ['kegiatan' => $id, 'format' => 'pdf']);
+            //     break;
         }
 
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
@@ -909,5 +922,54 @@ class KegiatanController extends Controller
     public function getPeran()
     {
         return Peran::where('aktif', 1)->select('id', 'nama')->get();
+    }
+
+    public function getHasilKegiatan(Kegiatan $kegiatan)
+    {
+        try {
+            $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+            $relationMap = [
+                1 => 'assessment',
+                2 => 'sosialisasi',
+                3 => 'pelatihan',
+                4 => 'pembelanjaan',
+                5 => 'pengembangan',
+                6 => 'kampanye',
+                7 => 'pemetaan',
+                8 => 'monitoring',
+                9 => 'kunjungan',
+                10 => 'konsultasi',
+                11 => 'lainnya',
+            ];
+
+            if (!isset($relationMap[$jenisKegiatan])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid jenis kegiatan',
+                    'data' => null
+                ], 400);
+            }
+
+            $relationName = $relationMap[$jenisKegiatan];
+            $hasilData = $kegiatan->$relationName;
+
+            if ($hasilData) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $hasilData->toArray()
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => null
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error getting hasil data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
     }
 }

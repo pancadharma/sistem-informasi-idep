@@ -53,6 +53,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="exportKegiatanModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Kegiatan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="icheck-primary">
+                            <input type="radio" id="exportPdf" name="export_format" value="pdf" checked>
+                            <label for="exportPdf">PDF</label>
+                        </div>
+                        <div class="icheck-primary">
+                            <input type="radio" id="exportDocx" name="export_format" value="docx">
+                            <label for="exportDocx">DOCX</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.cancel') }}</button>
+                    <button type="button" class="btn btn-primary confirm-export">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @push('css')
