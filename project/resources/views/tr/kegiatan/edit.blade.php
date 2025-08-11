@@ -1097,6 +1097,22 @@
             initializeSelect2WithDynamicUrl(fieldId);
         });
 
+        // Initialize Summernote for description tab textareas
+        $('.summernote').each(function() {
+            if (!$(this).data('initialized')) {
+                const placeholder = $(this).attr('placeholder');
+                $(this).summernote({
+                    height: 120,
+                    width: '100%',
+                    inheritPlaceholder: true,
+                    tabDisable: true,
+                    codeviewFilter: false,
+                });
+                $(this).summernote('placeholder', placeholder);
+                $(this).data('initialized', true);
+            }
+        });
+
         // select2 jenis kegiatan
         $('#jeniskegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kegiatan.basic.jenis_kegiatan') }}',
@@ -1130,27 +1146,81 @@
         setupSelect2('#provinsi_id', '{{ __('cruds.kegiatan.basic.select_provinsi') }}', "{{ route('api.kegiatan.provinsi') }}", params => ({ search: params.term, page: params.page || 1 }));
         setupSelect2('#kabupaten_id', '{{ __('cruds.kegiatan.basic.select_kabupaten') }}', "{{ route('api.kegiatan.kabupaten') }}", params => ({ search: params.term, provinsi_id: $('#provinsi_id').val(), page: params.page || 1 }));
 
-        // Initial load of dynamic form based on existing jenis_kegiatan
-        const initialJenisKegiatan = $('#jeniskegiatan_id').val();
-        if (initialJenisKegiatan) {
-            const initialFieldPrefix = formFieldMap[initialJenisKegiatan];
-            const formContainer = $('#dynamic-form-container');
-            if (initialFieldPrefix) {
-                const initialFormFields = getFormFields(initialFieldPrefix, {{ Js::from($kegiatan->kegiatanHasil) }});
-                formContainer.append(initialFormFields);
+        // Load hasil data via AJAX and populate dynamic form
+        async function loadHasilKegiatanData() {
+            const kegiatanId = {{ $kegiatan->id }};
+            const initialJenisKegiatan = $('#jeniskegiatan_id').val() || {{ $kegiatan->jeniskegiatan_id }};
 
-                $('.summernote').each(function() {
-                    const placeholder = $(this).attr('placeholder');
-                    $(this).summernote({
-                        inheritPlaceholder: true,
-                        height: 150,
-                        width: '100%',
-                        codeviewFilter: false,
-                    });
-                    $(this).summernote('placeholder', placeholder);
-                });
+            console.log('DEBUG: Loading hasil data for kegiatan:', kegiatanId);
+            console.log('DEBUG: Initial jenis kegiatan:', initialJenisKegiatan);
+            console.log('DEBUG: Available form field map:', formFieldMap);
+
+            if (!initialJenisKegiatan) {
+                console.warn('DEBUG: No jenis kegiatan found, skipping dynamic form loading');
+                return;
+            }
+
+            if (!formFieldMap[initialJenisKegiatan]) {
+                console.warn('DEBUG: No field mapping found for jenis kegiatan:', initialJenisKegiatan);
+                return;
+            }
+
+            try {
+                console.log('DEBUG: Fetching data from API:', `/api/kegiatan/${kegiatanId}/hasil`);
+                const response = await fetch(`/api/kegiatan/${kegiatanId}/hasil`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('DEBUG: API response:', result);
+
+                if (result.success) {
+                    const initialFieldPrefix = formFieldMap[initialJenisKegiatan];
+                    const formContainer = $('#dynamic-form-container');
+
+                    console.log('DEBUG: Field prefix:', initialFieldPrefix);
+                    console.log('DEBUG: Form container:', formContainer);
+
+                    if (initialFieldPrefix) {
+                        const initialFormFields = getFormFields(initialFieldPrefix, result.data || {});
+                        console.log('DEBUG: Generated form fields length:', initialFormFields.length);
+
+                        formContainer.append(initialFormFields);
+                        console.log('DEBUG: Form fields appended to container');
+
+                        // Initialize Summernote for dynamically added fields
+                        formContainer.find('.summernote').each(function() {
+                            if (!$(this).data('initialized')) {
+                                const placeholder = $(this).attr('placeholder');
+                                $(this).summernote({
+                                    inheritPlaceholder: true,
+                                    height: 150,
+                                    width: '100%',
+                                    codeviewFilter: false,
+                                });
+                                $(this).summernote('placeholder', placeholder);
+                                $(this).data('initialized', true);
+                                console.log('DEBUG: Initialized Summernote for field:', $(this).attr('id'));
+                            }
+                        });
+                    } else {
+                        console.error('DEBUG: No field prefix found for:', initialJenisKegiatan);
+                    }
+                } else {
+                    console.error('DEBUG: API returned unsuccessful response:', result);
+                }
+            } catch (error) {
+                console.error('DEBUG: Error loading hasil data:', error);
+                // Show user-friendly error message
+                const formContainer = $('#dynamic-form-container');
+                formContainer.html('<div class="alert alert-warning">Failed to load form fields. Please refresh the page or contact support.</div>');
             }
         }
+
+        // Initial load of dynamic form
+        loadHasilKegiatanData();
 
         $('.list-lokasi-kegiatan .lokasi-kegiatan').each(function() {
             const uniqueId = $(this).data('unique-id');
@@ -1722,4 +1792,150 @@
     // });
 </script>
 @include('tr.kegiatan.js._validasi')
+
+<script>
+    // Tab switching functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.getElementById('documents-content').style.display = 'none';
+        document.getElementById('media-content').style.display = 'none';
+
+        // Remove active class from all tabs
+        document.getElementById('documents-tab').classList.remove('active');
+        document.getElementById('media-tab').classList.remove('active');
+
+        // Show selected tab content
+        document.getElementById(tabName + '-content').style.display = 'block';
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // File preview functionality
+    function previewFile(url, mimeType) {
+        if (mimeType.startsWith('image/')) {
+            Swal.fire({
+                title: '{{ __('Image Preview') }}',
+                html: `<img src="${url}" class="img-fluid" style="max-width: 100%; height: auto;">`,
+                width: '80%',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else if (mimeType === 'application/pdf') {
+            Swal.fire({
+                title: '{{ __('PDF Preview') }}',
+                html: `<iframe src="${url}" style="width: 100%; height: 500px; border: none;"></iframe>`,
+                width: '80%',
+                height: '600px',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else {
+            // For other file types, open in new tab
+            window.open(url, '_blank');
+        }
+    }
+
+    // File delete functionality
+    function deleteFile(mediaId) {
+        Swal.fire({
+            title: '{{ __('Are you sure?') }}',
+            text: "{{ __('You won\'t be able to revert this!') }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: '{{ __('Yes, delete it!') }}',
+            cancelButtonText: '{{ __('Cancel') }}'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make AJAX request to delete file
+                fetch(`/kegiatan/media/${mediaId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                        // Reload the page to refresh the file list
+                        location.reload();
+                    } else {
+                        Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+                });
+            }
+        });
+    }
+
+    function uploadDocument(collection) {
+        const isDocument = collection === 'dokumen_pendukung';
+        const title = isDocument ? '{{ __('Upload Document') }}' : '{{ __('Upload Media') }}';
+        const accept = isDocument ? '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt' : '.jpg,.jpeg,.png,.gif,.mp4,.mov,.avi,.mp3,.wav';
+        const placeholder = isDocument ? '{{ __('Document Name') }}' : '{{ __('Media Name') }}';
+
+        Swal.fire({
+            title: title,
+            html: `
+                <input type="file" id="documentFile" class="form-control mb-3" accept="${accept}">
+                <input type="text" id="documentName" class="form-control" placeholder="${placeholder}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: '{{ __('Upload') }}',
+            cancelButtonText: '{{ __('Cancel') }}',
+            preConfirm: () => {
+                const file = document.getElementById('documentFile').files[0];
+                const name = document.getElementById('documentName').value;
+
+                if (!file) {
+                    Swal.showValidationMessage('{{ __('Please select a file') }}');
+                    return false;
+                }
+
+                if (!name) {
+                    Swal.showValidationMessage(isDocument ? '{{ __('Please enter document name') }}' : '{{ __('Please enter media name') }}');
+                    return false;
+                }
+
+                return { file, name };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('file', result.value.file);
+                formData.append('name', result.value.name);
+                formData.append('collection', collection);
+                formData.append('kegiatan_id', {{ $kegiatan->id }});
+
+                fetch('{{ route('kegiatan.upload-document') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const successMessage = isDocument ? '{{ __('Document uploaded successfully') }}' : '{{ __('Media uploaded successfully') }}';
+                        Swal.fire('{{ __('Success') }}', successMessage, 'success')
+                            .then(() => {
+                                location.reload();
+                            });
+                    } else {
+                        Swal.fire('{{ __('Error') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('{{ __('Error') }}', '{{ __('Upload failed') }}', 'error');
+                });
+            }
+        });
+    }
+</script>
 @endpush
