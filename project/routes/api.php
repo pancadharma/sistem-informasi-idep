@@ -28,3 +28,5 @@ Route::delete('kegiatan/deleteMedia/{media_id}', [App\Http\Controllers\Admin\Keg
 
 Route::post('kegiatan/uploadTempFile', [App\Http\Controllers\Admin\KegiatanController::class, 'uploadTempFile'])->name('api.kegiatan.upload_temp_file');
 Route::delete('kegiatan/deleteTempFile', [App\Http\Controllers\Admin\KegiatanController::class, 'deleteTempFile'])->name('api.kegiatan.delete_temp_file');
+
+Route::get('kegiatan/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanController::class, 'getHasilKegiatan'])->name('api.kegiatan.get_hasil');

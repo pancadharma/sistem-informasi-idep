@@ -284,6 +284,10 @@
                 <strong>Keluaran</strong>
                 <div>{!! $kegiatan->deskripsikeluaran ?? '' !!}</div>
             </div>
+            <div class="description">
+                <strong>Yang Dikaji</strong>
+                <div>{!! $kegiatan->deskripsiyangdikaji ?? '' !!}</div>
+            </div>
 
             @if ($kegiatan->jeniskegiatan_id == 1 && $kegiatan->assessment)
                 @include('tr.kegiatan.export_assessment')

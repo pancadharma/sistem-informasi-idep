@@ -923,4 +923,53 @@ class KegiatanController extends Controller
     {
         return Peran::where('aktif', 1)->select('id', 'nama')->get();
     }
+
+    public function getHasilKegiatan(Kegiatan $kegiatan)
+    {
+        try {
+            $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+            $relationMap = [
+                1 => 'assessment',
+                2 => 'sosialisasi',
+                3 => 'pelatihan',
+                4 => 'pembelanjaan',
+                5 => 'pengembangan',
+                6 => 'kampanye',
+                7 => 'pemetaan',
+                8 => 'monitoring',
+                9 => 'kunjungan',
+                10 => 'konsultasi',
+                11 => 'lainnya',
+            ];
+
+            if (!isset($relationMap[$jenisKegiatan])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid jenis kegiatan',
+                    'data' => null
+                ], 400);
+            }
+
+            $relationName = $relationMap[$jenisKegiatan];
+            $hasilData = $kegiatan->$relationName;
+
+            if ($hasilData) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $hasilData->toArray()
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => null
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error getting hasil data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
+    }
 }
