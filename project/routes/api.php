@@ -19,6 +19,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
-    Route::resource('permissions', 'App\Http\Controllers\Admin\PermissionController')->except(['create', 'edit']);
+        Route::resource('permissions', 'App\Http\Controllers\Admin\PermissionsController')->except(['create', 'edit']);
     Route::resource('roles2', 'App\Http\Controllers\Admin\RoleController2')->except(['create', 'edit']);
 });
+
+Route::post('kegiatan/storeMedia', [App\Http\Controllers\Admin\KegiatanController::class, 'storeMedia'])->name('api.kegiatan.storeMedia');
+Route::delete('kegiatan/deleteMedia/{media_id}', [App\Http\Controllers\Admin\KegiatanController::class, 'deleteMedia'])->name('api.kegiatan.delete_media');
+
+Route::post('kegiatan/uploadTempFile', [App\Http\Controllers\Admin\KegiatanController::class, 'uploadTempFile'])->name('api.kegiatan.upload_temp_file');
+Route::delete('kegiatan/deleteTempFile', [App\Http\Controllers\Admin\KegiatanController::class, 'deleteTempFile'])->name('api.kegiatan.delete_temp_file');
+
+Route::get('kegiatan/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanController::class, 'getHasilKegiatan'])->name('api.kegiatan.get_hasil');

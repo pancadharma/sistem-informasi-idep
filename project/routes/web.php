@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\KelompokmarjinalController;
 use App\Http\Controllers\Admin\MealsTargetProgressController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
+use App\Http\Controllers\Admin\PrintController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use Monolog\Handler\RotatingFileHandler;
@@ -41,6 +42,8 @@ use Symfony\Component\Translation\Catalogue\TargetOperation;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
+Route::get('/phpinfo-gd', fn() => phpinfo());
+
 
 Route::get('/', function () {
     $title = "LOGIN IDEP SERVER";
@@ -272,6 +275,7 @@ Route::get('program/details/modal', [ProgramController::class, 'detailsModal'])-
 Route::get('program/api/outcome/{outcome}', [ProgramController::class, 'apiOutcome'])->name('api.program.outcome');
 Route::get('program/api/output/{outcome}', [ProgramController::class, 'apiOutput'])->name('api.program.output');
 Route::get('program/api/objektif/{objektif}', [ProgramController::class, 'apiObjektif'])->name('api.program.objektif');
+Route::get('program/dashboard', [ProgramController::class, 'dashboard'])->name('program.dashboard');
 Route::resource('program', ProgramController::class);
 
 Route::get('program/{id}/media', [ProgramController::class, 'getProgramFilesPendukung'])->name('program.files.pendukung');
@@ -279,11 +283,37 @@ Route::delete('program/media/{media}', [ProgramController::class, 'ProgramMediaD
 
 
 // Route Untuk Kegiatan
+Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
 Route::resource('kegiatan', KegiatanController::class);
+
+// Route::resource('kegiatan', KegiatanController::class);
+Route::get('kegiatan', [KegiatanController::class, 'index'])
+    ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
+Route::get('kegiatan/create', [KegiatanController::class, 'create'])
+    ->name('kegiatan.create')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::post('kegiatan',  [KegiatanController::class, 'store'])
+    ->name('kegiatan.store')
+    ->middleware('check.kegiatan:kegiatan_create');
+Route::get('kegiatan/{kegiatan}', [KegiatanController::class, 'show'])
+    ->name('kegiatan.show')
+    ->middleware('check.kegiatan:kegiatan_show');
+Route::get('kegiatan/{kegiatan}/edit',  [KegiatanController::class, 'edit'])
+    ->name('kegiatan.edit')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::put('kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
+    ->name('kegiatan.update')
+    ->middleware('check.kegiatan:kegiatan_edit');
+Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])
+    ->name('kegiatan.destroy')
+    ->middleware('check.kegiatan:kegiatan_delete');
+
 
 //bentuk or sektor kegiatan
 Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
 Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
+Route::post('kegiatan/upload-document', [KegiatanController::class, 'uploadTempFile'])->name('kegiatan.upload-document');
+    Route::delete('kegiatan/media/{media}', [KegiatanController::class, 'deleteMedia'])->name('kegiatan.media.delete');
 
 Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
 Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
@@ -297,6 +327,7 @@ Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () 
     Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
     Route::get('/upload_media', [App\Http\Controllers\API\KegiatanController::class, 'upload_media'])->name('upload_media');
     Route::DELETE('/delete_media', [App\Http\Controllers\API\KegiatanController::class, 'delete_media'])->name('delete_media');
+    Route::get('/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanController::class, 'getHasilKegiatan'])->name('hasil');
 });
 
 //
@@ -348,7 +379,7 @@ Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
     // using api to store / create kegiatan
     Route::post('kegiatan/store',               [App\Http\Controllers\API\KegiatanController::class, 'storeApi'])->name('kegiatan.store');
     Route::GET('kegiatan/edit/{id}',            [App\Http\Controllers\API\KegiatanController::class, 'edit'])->name('kegiatan.edit');
-    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'updateAPI'])->name('kegiatan.update');
     // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
     Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
@@ -374,6 +405,13 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
     Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
     Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
+    Route::get('/dashboard', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/map-markers', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getMapMarkers'])->name('map_markers');
+    Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
+    Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');
+    Route::get('/summary-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSummaryData'])->name('summary_data');
+    Route::get('/model-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getModelChartData'])->name('model_chart_data');
+    Route::get('/programs-by-model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramsByModel'])->name('programs_by_model');
 });
 
 Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {

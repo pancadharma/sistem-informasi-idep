@@ -77,7 +77,7 @@
                                 <div class="form-group">
                                     <label for="ekspektasipenerimamanfaat" class="control-label small mb-0">{{ __('cruds.program.expektasi') }}</label>
                                     <input type="number" id="ekspektasipenerimamanfaat" name="ekspektasipenerimamanfaat" class="form-control" placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        oninput="this.value = Math.max(0, this.value)" readonly>
                                 </div>
                             </div>
                             <div class="col-lg-1">
@@ -315,4 +315,35 @@
 @include('tr.program.js.detail-create.outcome')
 @include('tr.program.js.detail-create.partner')
 {{-- @include('tr.program.js.validate') --}}
+
+<script>
+    $(document).ready(function() {
+        const benefitInputs = [
+            '#ekspektasipenerimamanfaatman',
+            '#ekspektasipenerimamanfaatwoman',
+            '#ekspektasipenerimamanfaatboy',
+            '#ekspektasipenerimamanfaatgirl',
+            '#ekspektasipenerimamanfaattidaklangsung'
+        ];
+        const totalInput = $('#ekspektasipenerimamanfaat');
+
+        function calculateTotal() {
+            let total = 0;
+            benefitInputs.forEach(function(selector) {
+                const value = parseInt($(selector).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            totalInput.val(total);
+        }
+
+        benefitInputs.forEach(function(selector) {
+            $(selector).on('input', calculateTotal);
+        });
+
+        // Initial calculation on page load
+        calculateTotal();
+    });
+</script>
 @endpush

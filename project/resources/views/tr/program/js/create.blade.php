@@ -91,11 +91,13 @@
             showDrag: true,
             uploadAsync: false,
             browseOnZoneClick: true,
-            maxFileSize: 4096,
+            maxFileSize: 25096,
+            maxFileCount: 50,
             allowedFileExtensions: [ 'jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls',
                 'xlsx',
                 'csv', 'gif', 'pdf',
             ],
+            msgFilesTooMany: 'You can upload a maximum of {m} files. You have selected {n} files.',
             previewFileIconSettings: {
                 'doc': '<i class="fas fa-file-word text-primary"></i>',
                 'docx': '<i class="fas fa-file-word text-primary"></i>',
@@ -146,7 +148,8 @@
                     </div>`
             );
             // Store the unique identifier in the file preview element
-            $(`#${previewId}`).attr('data-unique-id', uniqueId);
+            $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+            // $(`#${previewId}`).attr('data-unique-id', uniqueId);
         }).on('fileremoved', function (event, id) {
             // Remove the corresponding caption input
             var uniqueId = $(`#${id}`).attr('data-unique-id');
@@ -276,6 +279,32 @@
 
         $('#createProgram').on('submit', function (e) {
             e.preventDefault();
+
+            // Validate file quantity before submission
+            const fileInput = document.getElementById('file_pendukung');
+            const maxFiles = 50;
+            const fileCount = fileInput.files ? fileInput.files.length : 0;
+
+            if (fileCount > maxFiles) {
+                Swal.fire({
+                    title: "File Upload Limit Exceeded!",
+                    html: `
+                        <div class="text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                            </div>
+                            <p><strong>You have uploaded ${fileCount} files.</strong></p>
+                            <p class="text-muted">Maximum allowed files: ${maxFiles}</p>
+                            <p class="text-danger">Please remove ${fileCount - maxFiles} file(s) and try again.</p>
+                        </div>
+                    `,
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#3085d6"
+                });
+                return;
+            }
+
             $('#outcomeTemplate').find('textarea, input').attr('disabled', true);
             const $form = $(this);
             $form.find('button[type="submit"]').attr('disabled', true);
@@ -344,9 +373,26 @@
                 });
                 return; // Prevent form submission
             }
-            // Detailed logging
-            for (var pair of formData.entries()) {
-                console.log(`${pair[ 0 ]}: ${pair[ 1 ]}`);
+
+            // Check if we have large file upload (50+ files)
+            const fileCounts = formData.getAll('file_pendukung').length;
+            const isBulkUpload = fileCounts >= 10;
+
+            if (isBulkUpload) {
+                // Show bulk upload progress modal
+                showBulkUploadProgress(fileCounts);
+            } else {
+                // Show regular processing toast
+                Swal.fire({
+                    title: "Processing...",
+                    icon: "info",
+                    html: "Please wait while we save your data. This may take a few minutes for large files...",
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                });
             }
 
             $.ajax({
@@ -355,6 +401,20 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                cache: false,
+                timeout: 300000, // 5 minutes timeout
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    if (isBulkUpload) {
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                updateBulkUploadProgress(percentComplete, evt.loaded, evt.total);
+                            }
+                        }, false);
+                    }
+                    return xhr;
+                },
                 beforeSend: function () {
                     // Prepare JSON for preview
                     const jsonPreview = {};
@@ -368,46 +428,124 @@
                     jsonPreview[ 'nilaidonasi[]' ] = nilaidonasiValues;
 
                     console.log("log before send", jsonPreview);
-
-                    Toast.fire({
-                        icon: "info",
-                        title: "Processing...",
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-
                 },
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            title: "{{ __('global.success') }}",
-                            text: response.message,
-                            icon: "success",
-                            timer: 500,
-                            timerProgressBar: true,
-                        }).then(() => {
-                            $form[ 0 ].reset();
-                            $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
-                            $('#pendonor-container').empty(); // Clear dynamically added rows
-                            $('#donor').val(null).trigger('change'); // Reset Select2 dropdown
-                            window.location.href = "{{ route('program.index') }}";
-                        });
+                        if (isBulkUpload) {
+                            completeBulkUpload();
+                        }
+
+                        // Check if files are being processed in background
+                        if (response.message && response.message.includes('Files are being processed')) {
+                            Swal.fire({
+                                title: "{{ __('global.success') }}",
+                                html: `
+                                    <div class="text-center">
+                                        <div class="mb-3">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
+                                        </div>
+                                        <p><strong>${response.message}</strong></p>
+                                        <div class="progress mb-3" style="height: 20px;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                                 role="progressbar" style="width: 100%">Processing...</div>
+                                        </div>
+                                        <p class="text-muted small">You will be redirected shortly...</p>
+                                    </div>
+                                `,
+                                icon: "success",
+                                timer: 5000,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                                allowOutsideClick: false,
+                                allowEscapeKey: false
+                            }).then(() => {
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "{{ __('global.success') }}",
+                                text: response.message,
+                                icon: "success",
+                                timer: 500,
+                                timerProgressBar: true,
+                            }).then(() => {
+                                $form[ 0 ].reset();
+                                $('#outcomeContainer .row').not("#outcomeTemplate").remove(); // Clear dynamically added outcomes
+                                $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
+                                $('#pendonor-container').empty(); // Clear dynamically added rows
+                                $('#donor').val(null).trigger('change'); // Reset Select2 dropdown
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        }
                     }
                 },
                 error: function (xhr) {
                     $form.find('button[type="submit"]').removeAttr('disabled');
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.errors) {
-                        addInvalidClassToFields(response.errors);
+                    if (isBulkUpload) {
+                        failBulkUpload();
                     }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: getErrorMessage(xhr) || 'An error occurred.',
-                        confirmButtonText: 'Okay'
-                    });
+                    // const response = JSON.parse(xhr.responseText);
+                    // const errorMessage = getErrorMessage(xhr) || 'An error occurred.';
+
+                    let response;
+                    let errorMessage = 'An error occurred.';
+
+                    try {
+                        // Try to parse as JSON
+                        response = JSON.parse(xhr.responseText);
+                        errorMessage = getErrorMessage(xhr) || 'An error occurred.';
+                    } catch (e) {
+                        // If parsing fails, it's HTML or some other format
+                        console.error('Server returned non-JSON response:', xhr.responseText);
+
+                        // Try to extract error message from HTML if possible
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = xhr.responseText;
+                        const errorElements = tempDiv.querySelectorAll('h1, h2, h3, h4, p, .error, .message');
+                        if (errorElements.length > 0) {
+                            errorMessage = errorElements[0].textContent;
+                        }
+                    }
+
+                    // Check for file quantity validation errors
+                    if (errorMessage.includes('Too many files') ||
+                        errorMessage.includes('Maximum') ||
+                        (response && response.errors && response.errors['file_pendukung'])) {
+                        Swal.fire({
+                            title: "File Upload Limit Exceeded!",
+                            html: `
+                                <div class="text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+                                    </div>
+                                    <p><strong>File upload validation failed.</strong></p>
+                                    <p class="text-muted">${errorMessage}</p>
+                                    <p class="text-info">Maximum allowed: 50 files per upload</p>
+                                    <p class="text-danger">Please reduce the number of files and try again.</p>
+                                </div>
+                            `,
+                            icon: "warning",
+                            confirmButtonText: "OK",
+                            confirmButtonColor: "#3085d6"
+                        });
+                    } else if (response && response.errors) {
+                        addInvalidClassToFields(response.errors);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
                 },
+
                 complete: function () {
                     setTimeout(() => {
                         $form.find('button[type="submit"]').removeAttr('disabled');
@@ -415,6 +553,78 @@
                 }
             });
         });
+
+        // Bulk upload progress functions
+        function showBulkUploadProgress(fileCount) {
+            Swal.fire({
+                title: 'Uploading Files',
+                html: `
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary"></i>
+                        </div>
+                        <p><strong>Uploading ${fileCount} files...</strong></p>
+                        <div class="progress mb-2" style="height: 20px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                 role="progressbar" style="width: 0%" id="bulkUploadProgress">0%</div>
+                        </div>
+                        <div class="small text-muted">
+                            <span id="uploadStatus">Preparing upload...</span>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="cancelBulkUpload()" id="cancelUploadBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCloseButton: false
+            });
+        }
+
+        function updateBulkUploadProgress(percentComplete, loaded, total) {
+            const progressBar = $('#bulkUploadProgress');
+            const statusText = $('#uploadStatus');
+
+            progressBar.css('width', percentComplete + '%');
+            progressBar.text(Math.round(percentComplete) + '%');
+
+            // Format file sizes
+            const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
+            const totalMB = (total / (1024 * 1024)).toFixed(1);
+
+            if (percentComplete < 100) {
+                statusText.html(`Uploaded: ${loadedMB} MB / ${totalMB} MB`);
+            } else {
+                statusText.html('Processing files on server...');
+            }
+        }
+
+        function completeBulkUpload() {
+            $('#bulkUploadProgress').removeClass('progress-bar-animated').addClass('bg-success');
+            $('#uploadStatus').html('<i class="fas fa-check-circle text-success"></i> Upload complete! Processing data...');
+            $('#cancelUploadBtn').hide();
+        }
+
+        function failBulkUpload() {
+            $('#bulkUploadProgress').removeClass('progress-bar-animated').addClass('bg-danger');
+            $('#uploadStatus').html('<i class="fas fa-exclamation-triangle text-danger"></i> Upload failed!');
+            $('#cancelUploadBtn').hide();
+        }
+
+        function cancelBulkUpload() {
+            // This would need to be implemented with proper XHR abort
+            Swal.fire({
+                title: 'Upload Cancelled',
+                text: 'File upload has been cancelled.',
+                icon: 'info',
+                timer: 2000,
+                timerProgressBar: true
+            });
+        }
 
 
     });
