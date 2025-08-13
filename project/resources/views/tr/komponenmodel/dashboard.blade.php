@@ -24,7 +24,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 order-3">
+        <div class="col-md-3 order-2">
             <label for="modelFilter">Model:</label>
             <select id="modelFilter" class="form-control select2">
                 <option value="">Semua Model</option>
@@ -33,7 +33,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 order-2">
+        <div class="col-md-3 order-3">
             <label for="tahunFilter">Tahun:</label>
             <select id="tahunFilter" class="form-control select2">
                 <option value="">Semua Tahun</option>
@@ -41,6 +41,22 @@
                     <option value="{{ $year }}">{{ $year }}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="col-md-3 order-4 text-right">
+            <label style="display: block;">&nbsp;</label> <!-- Spacer for alignment -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" id="exportPdf">
+                        <i class="fas fa-file-pdf text-danger mr-2"></i> PDF
+                    </a>
+                    <a class="dropdown-item" href="#" id="exportDocx">
+                        <i class="fas fa-file-word text-primary mr-2"></i> DOCX
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -318,6 +334,76 @@
                     $('#programFilter').empty().append(new Option('Semua Program', '')).trigger('change');
                 }
             });
+
+            // Export functionality
+            $('#exportPdf').on('click', function(e) {
+                e.preventDefault();
+                exportDashboard('pdf');
+            });
+
+            $('#exportDocx').on('click', function(e) {
+                e.preventDefault();
+                exportDashboard('docx');
+            });
+
+            function exportDashboard(format) {
+                const filters = {
+                    program_id: $('#programFilter').val(),
+                    sektor_id: $('#sektorFilter').val(),
+                    model_id: $('#modelFilter').val(),
+                    tahun: $('#tahunFilter').val()
+                };
+
+                // Get chart images as base64
+                const sektorChartImage = sektorChart.toBase64Image();
+                const programChartImage = programChart.toBase64Image();
+                const modelChartImage = modelChart.toBase64Image();
+
+                // Create a form and submit
+                const form = $('<form>', {
+                    action: format === 'pdf' ? '{{ route('komodel.export.pdf') }}' : '{{ route('komodel.export.docx') }}',
+                    method: 'POST',
+                    target: '_blank', // Open in new tab
+                    style: 'display:none;'
+                });
+
+                // Add CSRF token
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: '_token',
+                    value: '{{ csrf_token() }}'
+                }));
+
+                // Add filters
+                for (const key in filters) {
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: key,
+                        value: filters[key]
+                    }));
+                }
+
+                // Add chart images
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'sektorChart',
+                    value: sektorChartImage
+                }));
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'programChart',
+                    value: programChartImage
+                }));
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'modelChart',
+                    value: modelChartImage
+                }));
+
+                $('body').append(form);
+                form.submit();
+                form.remove(); // Clean up the form
+            }
         });
     </script>
 @endpush

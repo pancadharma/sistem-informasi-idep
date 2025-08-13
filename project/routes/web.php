@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\Admin\PrintController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
+use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
@@ -412,6 +413,10 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::get('/summary-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSummaryData'])->name('summary_data');
     Route::get('/model-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getModelChartData'])->name('model_chart_data');
     Route::get('/programs-by-model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramsByModel'])->name('programs_by_model');
+
+    Route::POST('/export/pdf', [KomodelDashboardExport::class, 'exportPDF'])->name('export.pdf');
+    Route::POST('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
+
 });
 
 Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
