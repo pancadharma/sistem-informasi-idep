@@ -45,13 +45,13 @@
     @endif
 
     <div class="cards">
-        <div class="card bg-primary"><div>Total</div><div><strong>{{ $cards['semua'] }}</strong></div></div>
-        <div class="card bg-success"><div>Laki</div><div><strong>{{ $cards['laki'] }}</strong></div></div>
-        <div class="card bg-warning"><div>Perempuan</div><div><strong>{{ $cards['perempuan'] }}</strong></div></div>
-        <div class="card bg-info"><div>Anak L</div><div><strong>{{ $cards['anak_laki'] }}</strong></div></div>
-        <div class="card bg-info"><div>Anak P</div><div><strong>{{ $cards['anak_perempuan'] }}</strong></div></div>
-        <div class="card bg-danger"><div>Disabilitas</div><div><strong>{{ $cards['disabilitas'] }}</strong></div></div>
-        <div class="card bg-secondary"><div>Keluarga</div><div><strong>{{ $cards['keluarga'] }}</strong></div></div>
+        <div class="card bg-primary"><div>Total {{ __('cruds.beneficiary.title') }}</div><div style="font-size: 20px"><strong>{{ $cards['semua'] }}</strong></div></div>
+        <div class="card bg-success"><div>{{ __('cruds.beneficiary.penerima.laki') }}</div><div style="font-size: 20px"><strong>{{ $cards['laki'] }}</strong></div></div>
+        <div class="card bg-warning"><div>{{ __('cruds.beneficiary.penerima.perempuan') }}</div><div style="font-size: 20px"><strong>{{ $cards['perempuan'] }}</strong></div></div>
+        <div class="card bg-info"><div>{{ __('cruds.beneficiary.penerima.boy') }}</div><div style="font-size: 20px"><strong>{{ $cards['anak_laki'] }}</strong></div></div>
+        <div class="card bg-info"><div>{{ __('cruds.beneficiary.penerima.girl') }}</div><div style="font-size: 20px"><strong>{{ $cards['anak_perempuan'] }}</strong></div></div>
+        <div class="card bg-danger"><div>{{ __('cruds.beneficiary.penerima.disability') }}</div><div style="font-size: 20px"><strong>{{ $cards['disabilitas'] }}</strong></div></div>
+        <div class="card bg-secondary"><div>{{ __('cruds.beneficiary.penerima.keluarga') }}</div><div style="font-size: 20px"><strong>{{ $cards['keluarga'] }}</strong></div></div>
     </div>
 
     @if(!empty($snapshots['barChart']))
@@ -89,6 +89,19 @@
     @endif
 
     <div class="section-title">Table Desa Penerima Manfaat</div>
+    @php
+        $totals = [
+            'total_penerima' => 0,
+            'laki' => 0,
+            'perempuan' => 0,
+            'anak_laki' => 0,
+            'anak_perempuan' => 0,
+            'disabilitas' => 0,
+        ];
+        foreach ($tableData as $row) {
+            foreach ($totals as $k => $v) { $totals[$k] += (int)($row[$k] ?? 0); }
+        }
+    @endphp
     <table>
         <thead>
             <tr>
@@ -126,6 +139,17 @@
                 <tr><td colspan="12">No data</td></tr>
             @endforelse
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="5" style="text-align:right">Total</th>
+                <th>{{ $totals['total_penerima'] }}</th>
+                <th>{{ $totals['laki'] }}</th>
+                <th>{{ $totals['perempuan'] }}</th>
+                <th>{{ $totals['anak_laki'] }}</th>
+                <th>{{ $totals['anak_perempuan'] }}</th>
+                <th>{{ $totals['disabilitas'] }}</th>
+            </tr>
+        </tfoot>
     </table>
 
     <div class="footer">© {{ date('Y') }} IDEP Foundation</div>

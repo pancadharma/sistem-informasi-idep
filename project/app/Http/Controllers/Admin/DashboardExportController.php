@@ -115,7 +115,9 @@ class DashboardExportController extends Controller
         ];
 
         if ($format === 'pdf') {
-            $pdf = Pdf::loadView('dashboard.export', $data)->setPaper('a4', 'landscape');
+            $pdf = Pdf::loadView('dashboard.export', $data)
+                ->setPaper('a4', 'landscape')
+                ->setOption('isRemoteEnabled', true);
             return $pdf->download('dashboard-export.pdf');
         }
 
@@ -132,7 +134,7 @@ class DashboardExportController extends Controller
             ), ['size' => 10]);
 
             // Charts & Map images if provided
-            foreach (['barChart' => 'Bar Chart', 'pieChart' => 'Pie Chart', 'map' => 'Map'] as $key => $label) {
+            foreach (['barChart' => 'Bar Chart', 'pieChart' => 'Pie Chart', 'kabupatenPie' => 'Kabupaten Pie Chart', 'map' => 'Map'] as $key => $label) {
                 $img = $data['snapshots'][$key] ?? null;
                 if ($img && str_starts_with($img, 'data:image')) {
                     $tmp = tempnam(sys_get_temp_dir(), 'dash_');
@@ -149,7 +151,8 @@ class DashboardExportController extends Controller
                 $table = $section->addTable(['borderSize' => 6, 'borderColor' => '999999']);
                 $table->addRow();
                 foreach (['Dusun','Desa','Kecamatan','Kabupaten','Provinsi',
-                'Program', 'Total','Laki','Perempuan','Anak L','Anak P','Disabilitas'] as $h) {
+                // 'Program',
+                'Total','Laki','Perempuan','Anak L','Anak P','Disabilitas'] as $h) {
                     $table->addCell(1200)->addText($h, ['bold' => true]);
                 }
                 foreach ($tableData as $row) {
@@ -159,7 +162,7 @@ class DashboardExportController extends Controller
                     $table->addCell(1200)->addText($row['kecamatan']);
                     $table->addCell(1200)->addText($row['kabupaten']);
                     $table->addCell(1200)->addText($row['provinsi']);
-                    $table->addCell(1200)->addText($row['program']);
+                    // $table->addCell(1200)->addText($row['program']);
                     $table->addCell(1200)->addText((string)$row['total_penerima']);
                     $table->addCell(1200)->addText((string)$row['laki']);
                     $table->addCell(1200)->addText((string)$row['perempuan']);
