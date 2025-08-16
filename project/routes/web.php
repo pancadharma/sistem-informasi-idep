@@ -91,6 +91,14 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard export (PDF/DOCX)
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
     });
+
+    // Komponen Model Dashboard routes
+    Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
+        Route::get('/', [KomodelDashboardExport::class, 'index'])->name('index');
+        Route::post('/export/pdf', [KomodelDashboardExport::class, 'exportPdf'])->name('export.pdf');
+        Route::post('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
+        Route::get('/aggregates', [KomodelDashboardExport::class, 'aggregates'])->name('aggregates');
+    });
 });
 // Permissions
 // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');

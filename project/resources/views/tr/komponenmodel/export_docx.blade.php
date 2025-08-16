@@ -67,11 +67,12 @@
 
     <div class="filters-info">
         <h2>Filters Applied:</h2>
+        @php $labels = $filter_labels ?? []; @endphp
         <ul>
-            <li><strong>Program:</strong> {{ $filters['program_id'] ?? 'All' }}</li>
-            <li><strong>Sektor:</strong> {{ $filters['sektor_id'] ?? 'All' }}</li>
-            <li><strong>Model:</strong> {{ $filters['model_id'] ?? 'All' }}</li>
-            <li><strong>Tahun:</strong> {{ $filters['tahun'] ?? 'All' }}</li>
+            <li><strong>Program:</strong> {{ $labels['program'] ?? 'All' }}</li>
+            <li><strong>Sektor:</strong> {{ $labels['sektor'] ?? 'All' }}</li>
+            <li><strong>Model:</strong> {{ $labels['model'] ?? 'All' }}</li>
+            <li><strong>Tahun:</strong> {{ $labels['tahun'] ?? 'All' }}</li>
         </ul>
     </div>
 
@@ -110,6 +111,60 @@
     </div>
 
     {{-- You might want to add a table for map data here if needed --}}
+
+    @php $ag = $aggregates ?? []; @endphp
+    @if(!empty($ag))
+        <h2>Ringkasan Tambahan</h2>
+        <h3>Jumlah per Program</h3>
+        <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+            <thead><tr style="background:#f5f5f5"><th align="left">Program</th><th align="right">Jumlah</th><th align="right">Lokasi</th></tr></thead>
+            <tbody>
+            @foreach(($ag['perProgram'] ?? []) as $row)
+                <tr><td>{{ $row->program }}</td><td align="right">{{ number_format($row->total_jumlah) }}</td><td align="right">{{ number_format($row->total_lokasi) }}</td></tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        <h3>Jumlah per Model</h3>
+        <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+            <thead><tr style="background:#f5f5f5"><th align="left">Model</th><th align="right">Jumlah</th><th align="right">Lokasi</th></tr></thead>
+            <tbody>
+            @foreach(($ag['perModel'] ?? []) as $row)
+                <tr><td>{{ $row->model }}</td><td align="right">{{ number_format($row->total_jumlah) }}</td><td align="right">{{ number_format($row->total_lokasi) }}</td></tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        <h3>Jumlah per Provinsi</h3>
+        <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+            <thead><tr style="background:#f5f5f5"><th align="left">Provinsi</th><th align="right">Jumlah</th><th align="right">Lokasi</th></tr></thead>
+            <tbody>
+            @foreach(($ag['perProvinsi'] ?? []) as $row)
+                <tr><td>{{ $row->provinsi }}</td><td align="right">{{ number_format($row->total_jumlah) }}</td><td align="right">{{ number_format($row->total_lokasi) }}</td></tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        <h3>Jumlah per Satuan</h3>
+        <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+            <thead><tr style="background:#f5f5f5"><th align="left">Satuan</th><th align="right">Jumlah</th><th align="right">Lokasi</th></tr></thead>
+            <tbody>
+            @foreach(($ag['perSatuan'] ?? []) as $row)
+                <tr><td>{{ $row->satuan }}</td><td align="right">{{ number_format($row->total_jumlah) }}</td><td align="right">{{ number_format($row->total_lokasi) }}</td></tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        <h3>Top Kabupaten (10 Teratas)</h3>
+        <table width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
+            <thead><tr style="background:#f5f5f5"><th align="left">Kabupaten</th><th align="right">Jumlah</th><th align="right">Lokasi</th></tr></thead>
+            <tbody>
+            @foreach(($ag['topKabupaten'] ?? []) as $row)
+                <tr><td>{{ $row->kabupaten ?? '-' }}</td><td align="right">{{ number_format($row->total_jumlah) }}</td><td align="right">{{ number_format($row->total_lokasi) }}</td></tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
 
 </body>
 </html>

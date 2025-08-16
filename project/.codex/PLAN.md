@@ -15,6 +15,12 @@ This living plan tracks export/print/dashboard tasks. Update it as features ship
 - [x] Use program/provinsi names (not IDs) in export header
 - [ ] Optionally switch PDF orientation to portrait to match printed view
 
+## Komponen Model Dashboard
+
+- [x] Replace filter IDs with readable names in export (PDF/DOCX)
+- [x] Add "Save as PDF (Browser)" option to export dropdown
+- [ ] Consider adding map snapshot export if needed
+
 ## Notes
 
 - Keep `GOOGLE_MAPS_API_KEY` set for Static Maps fallback.

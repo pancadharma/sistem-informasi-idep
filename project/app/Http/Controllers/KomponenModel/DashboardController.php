@@ -34,12 +34,22 @@ class DashboardController extends Controller
         ];
 
         $summary = $this->getSummaryData($filters);
+        $aggregates = $this->getAggregates($filters);
+
+        $filterLabels = [
+            'program' => optional(Program::select('nama')->find($filters['program_id'] ?? null))->nama,
+            'sektor'  => optional(mSektor::select('nama')->find($filters['sektor_id'] ?? null))->nama,
+            'model'   => optional(KomponenModel::select('nama')->find($filters['model_id'] ?? null))->nama,
+            'tahun'   => $filters['tahun'] ?? null,
+        ];
 
         $pdf = Pdf::loadView('tr.komponenmodel.export_pdf', [
             'summary' => $summary,
             'charts' => $charts,
             'filters' => $request->all(),
-        ]);
+            'filter_labels' => $filterLabels,
+            'aggregates' => $aggregates,
+        ])->setPaper('a4', 'landscape')->setOption('isRemoteEnabled', true);
 
         return $pdf->download('komponen-model-dashboard.pdf');
     }
@@ -54,6 +64,14 @@ class DashboardController extends Controller
         ];
 
         $summary = $this->getSummaryData($filters);
+        $aggregates = $this->getAggregates($filters);
+
+        $filterLabels = [
+            'program' => optional(Program::select('nama')->find($filters['program_id'] ?? null))->nama,
+            'sektor'  => optional(mSektor::select('nama')->find($filters['sektor_id'] ?? null))->nama,
+            'model'   => optional(KomponenModel::select('nama')->find($filters['model_id'] ?? null))->nama,
+            'tahun'   => $filters['tahun'] ?? null,
+        ];
 
         $headers = [
             'Content-Type' => 'application/vnd.ms-word',
@@ -64,7 +82,16 @@ class DashboardController extends Controller
             'summary' => $summary,
             'charts' => $charts,
             'filters' => $request->all(),
+            'filter_labels' => $filterLabels,
+            'aggregates' => $aggregates,
         ]), 200, $headers);
+    }
+
+    public function aggregates(Request $request)
+    {
+        $filters = $request->only(['program_id', 'sektor_id', 'model_id', 'tahun']);
+        $data = $this->getAggregates($filters);
+        return response()->json($data);
     }
 
     private function getSummaryData(array $filters)
@@ -121,6 +148,78 @@ class DashboardController extends Controller
             'totalProgram' => number_format($totalProgram),
             'totalLokasi' => number_format($totalLokasi),
             'totalJumlah' => number_format($totalJumlah),
+        ];
+    }
+
+    private function getAggregates(array $filters): array
+    {
+        // Base builder joining lokasi to parent komodel and lookups
+        $base = \DB::table('trmeals_komponen_model_lokasi as l')
+            ->join('trmeals_komponen_model as m', 'm.id', '=', 'l.mealskomponenmodel_id');
+
+        // Filters
+        if (!empty($filters['program_id'])) {
+            $base->where('m.program_id', $filters['program_id']);
+        }
+        if (!empty($filters['model_id'])) {
+            $base->where('m.komponenmodel_id', $filters['model_id']);
+        }
+        if (!empty($filters['tahun'])) {
+            $base->whereYear('m.created_at', $filters['tahun']);
+        }
+        if (!empty($filters['sektor_id'])) {
+            $base->join('trmeals_komponen_model_targetreinstra as mt', 'mt.mealskomponenmodel_id', '=', 'm.id')
+                 ->where('mt.targetreinstra_id', $filters['sektor_id']);
+        }
+
+        // Clone builders for different groupings
+        $perProgram = (clone $base)
+            ->join('trprogram as p', 'p.id', '=', 'm.program_id')
+            ->select('p.nama as program')
+            ->selectRaw('SUM(l.jumlah) as total_jumlah, COUNT(l.id) as total_lokasi')
+            ->groupBy('p.nama')
+            ->orderByDesc('total_jumlah')
+            ->get();
+
+        $perModel = (clone $base)
+            ->join('mkomponenmodel as km', 'km.id', '=', 'm.komponenmodel_id')
+            ->select('km.nama as model')
+            ->selectRaw('SUM(l.jumlah) as total_jumlah, COUNT(l.id) as total_lokasi')
+            ->groupBy('km.nama')
+            ->orderByDesc('total_jumlah')
+            ->get();
+
+        $perProvinsi = (clone $base)
+            ->join('provinsi as pr', 'pr.id', '=', 'l.provinsi_id')
+            ->select('pr.nama as provinsi')
+            ->selectRaw('SUM(l.jumlah) as total_jumlah, COUNT(l.id) as total_lokasi')
+            ->groupBy('pr.nama')
+            ->orderByDesc('total_jumlah')
+            ->get();
+
+        $perSatuan = (clone $base)
+            ->leftJoin('msatuan as s', 's.id', '=', 'l.satuan_id')
+            ->selectRaw('COALESCE(s.nama, "-") as satuan')
+            ->selectRaw('SUM(l.jumlah) as total_jumlah, COUNT(l.id) as total_lokasi')
+            ->groupBy('s.nama')
+            ->orderByDesc('total_jumlah')
+            ->get();
+
+        $topKabupaten = (clone $base)
+            ->leftJoin('kabupaten as k', 'k.id', '=', 'l.kabupaten_id')
+            ->select('k.nama as kabupaten')
+            ->selectRaw('SUM(l.jumlah) as total_jumlah, COUNT(l.id) as total_lokasi')
+            ->groupBy('k.nama')
+            ->orderByDesc('total_jumlah')
+            ->limit(10)
+            ->get();
+
+        return [
+            'perProgram' => $perProgram,
+            'perModel' => $perModel,
+            'perProvinsi' => $perProvinsi,
+            'perSatuan' => $perSatuan,
+            'topKabupaten' => $topKabupaten,
         ];
     }
 }

@@ -55,6 +55,10 @@
                     <a class="dropdown-item" href="#" id="exportDocx">
                         <i class="fas fa-file-word text-primary mr-2"></i> DOCX
                     </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" id="exportPrintBrowser">
+                        <i class="fas fa-print mr-2"></i> Save as PDF (Browser)
+                    </a>
                 </div>
             </div>
         </div>
@@ -151,6 +155,47 @@
                 </div>
                 <div class="card-body">
                     <div id="map" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header"><h3 class="card-title">Jumlah per Program</h3></div>
+                <div class="card-body">
+                    <canvas id="aggProgramChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header"><h3 class="card-title">Jumlah per Provinsi</h3></div>
+                <div class="card-body">
+                    <canvas id="aggProvinsiChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-outline card-info">
+                <div class="card-header"><h3 class="card-title">Jumlah per Satuan</h3></div>
+                <div class="card-body">
+                    <canvas id="aggSatuanChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-outline card-info">
+                <div class="card-header"><h3 class="card-title">Top 10 Kabupaten</h3></div>
+                <div class="card-body">
+                    <table class="table table-sm table-bordered">
+                        <thead><tr><th>Kabupaten</th><th class="text-right">Jumlah</th><th class="text-right">Lokasi</th></tr></thead>
+                        <tbody id="topKabupatenBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -280,6 +325,7 @@
             updateProgramChart(filters);
             updateModelChart(filters);
             updateSummaryData(filters);
+            updateAggregates(filters);
         }
 
         $(document).ready(function() {
@@ -403,6 +449,41 @@
                 $('body').append(form);
                 form.submit();
                 form.remove(); // Clean up the form
+            }
+
+            function triggerPrint() {
+                window.print();
+            }
+            $('#exportPrintBrowser').on('click', function(e){ e.preventDefault(); triggerPrint(); });
+
+            // Aggregates charts
+            const aggProgramCtx = document.getElementById('aggProgramChart').getContext('2d');
+            const aggProvinsiCtx = document.getElementById('aggProvinsiChart').getContext('2d');
+            const aggSatuanCtx = document.getElementById('aggSatuanChart').getContext('2d');
+            let aggProgramChart = new Chart(aggProgramCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#4e79a7' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+            let aggProvinsiChart = new Chart(aggProvinsiCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#f28e2b' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+            let aggSatuanChart = new Chart(aggSatuanCtx, { type: 'doughnut', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: ['#59a14f','#e15759','#76b7b2','#edc948','#b07aa1','#ff9da7'] }] }, options: { responsive: true } });
+
+            function updateAggregates(filters) {
+                $.getJSON('{{ route('komodel.aggregates') }}', filters, function(ag) {
+                    // Program
+                    const pLabels = (ag.perProgram || []).map(r => r.program);
+                    const pData = (ag.perProgram || []).map(r => r.total_jumlah);
+                    aggProgramChart.data.labels = pLabels; aggProgramChart.data.datasets[0].data = pData; aggProgramChart.update();
+                    // Provinsi
+                    const provLabels = (ag.perProvinsi || []).map(r => r.provinsi);
+                    const provData = (ag.perProvinsi || []).map(r => r.total_jumlah);
+                    aggProvinsiChart.data.labels = provLabels; aggProvinsiChart.data.datasets[0].data = provData; aggProvinsiChart.update();
+                    // Satuan
+                    const sLabels = (ag.perSatuan || []).map(r => r.satuan);
+                    const sData = (ag.perSatuan || []).map(r => r.total_jumlah);
+                    aggSatuanChart.data.labels = sLabels; aggSatuanChart.data.datasets[0].data = sData; aggSatuanChart.update();
+                    // Top Kabupaten table
+                    const body = $('#topKabupatenBody'); body.empty();
+                    (ag.topKabupaten || []).forEach(r => {
+                        body.append(`<tr><td>${r.kabupaten || '-'}</td><td class="text-right">${Number(r.total_jumlah).toLocaleString()}</td><td class="text-right">${Number(r.total_lokasi).toLocaleString()}</td></tr>`);
+                    });
+                });
             }
         });
     </script>
