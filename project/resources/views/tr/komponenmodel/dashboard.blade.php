@@ -1,33 +1,33 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Komponen Model Dashboard')
-@section('content_header_title', 'Komponen Model Dashboard')
+@section('subtitle', __('cruds.komponenmodel.dashboard'))
+@section('content_header_title', __('cruds.komponenmodel.dashboard'))
 
 @section('content_body')
     <!-- Filter Section -->
     <div class="row mb-3">
         <div class="col-md-3 order-1">
-            <label for="programFilter">Program:</label>
+            <label for="programFilter">{{ __('cruds.komponenmodel.program_name') }}:</label>
             <select id="programFilter" class="form-control select2">
-                <option value="">Semua Program</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.program.title') }}</option>
                 @foreach ($programs as $program)
                     <option value="{{ $program->id }}">{{ $program->nama }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-md-3 d-none">
-            <label for="sektorFilter">Sektor:</label>
+            <label for="sektorFilter">{{ __('cruds.komponenmodel.sector') }}:</label>
             <select id="sektorFilter" class="form-control select2">
-                <option value="">Semua Sektor</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.komponenmodel.sector') }}</option>
                 @foreach ($sektors as $sektor)
                     <option value="{{ $sektor['id'] }}">{{ $sektor['nama'] }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-md-3 order-2">
-            <label for="modelFilter">Model:</label>
+            <label for="modelFilter">{{ __('cruds.komponenmodel.title') }}:</label>
             <select id="modelFilter" class="form-control select2">
-                <option value="">Semua Model</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.komponenmodel.title') }}</option>
                 @foreach ($models as $model)
                     <option value="{{ $model->id }}">{{ $model->nama }}</option>
                 @endforeach

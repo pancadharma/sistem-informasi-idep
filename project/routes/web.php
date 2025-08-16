@@ -34,6 +34,7 @@ use App\Http\Controllers\Admin\MealsTargetProgressController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\Admin\PrintController;
+use App\Http\Controllers\Admin\DashboardExportController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
@@ -86,6 +87,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/data/get-data-desa/{id?}',             [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
         Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
+        // Dashboard export (PDF/DOCX)
+        Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
     });
 });
 // Permissions
