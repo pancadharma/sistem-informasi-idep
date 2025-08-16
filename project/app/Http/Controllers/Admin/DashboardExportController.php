@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Meals_Penerima_Manfaat;
+use App\Models\Program;
+use App\Models\Provinsi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -37,6 +39,16 @@ class DashboardExportController extends Controller
             'mapMeta.centerLng' => 'nullable|numeric',
             'mapMeta.zoom' => 'nullable|integer',
         ]);
+
+        // Resolve filter labels (names instead of IDs)
+        $programName = null;
+        $provinsiName = null;
+        if (!empty($filters['program_id'])) {
+            $programName = optional(Program::select('nama')->find($filters['program_id']))->nama;
+        }
+        if (!empty($filters['provinsi_id'])) {
+            $provinsiName = optional(Provinsi::select('nama')->find($filters['provinsi_id']))->nama;
+        }
 
         // Recompute stats to match on-screen cards (server-trusted)
         $statsQuery = Meals_Penerima_Manfaat::query()
@@ -105,11 +117,39 @@ class DashboardExportController extends Controller
                     $snapshots['map_static_url'] = $staticUrl;
                 }
             }
+            // OpenStreetMap Static fallback (no API key required)
+            if (empty($snapshots['map'])) {
+                $center = $mapMeta['centerLat'] . ',' . $mapMeta['centerLng'];
+                $zoom = (int)($mapMeta['zoom'] ?? 6);
+                $size = '1024x512';
+                $osmUrl = 'https://staticmap.openstreetmap.de/staticmap.php?center=' . urlencode($center)
+                    . '&zoom=' . $zoom . '&size=' . $size . '&maptype=mapnik';
+                try {
+                    $img = @file_get_contents($osmUrl);
+                    if ($img !== false) {
+                        $snapshots['map'] = 'data:image/png;base64,' . base64_encode($img);
+                    } else {
+                        $snapshots['map_static_url'] = $osmUrl;
+                    }
+                } catch (\Throwable $e) {
+                    $snapshots['map_static_url'] = $osmUrl;
+                }
+            }
+        }
+
+        // If only a static URL is available for map, mirror it into 'map' so DOCX handler embeds it
+        if (empty($snapshots['map']) && !empty($snapshots['map_static_url'])) {
+            $snapshots['map'] = $snapshots['map_static_url'];
         }
 
         $data = [
             'cards' => $cards,
             'filters' => $filters,
+            'filter_labels' => [
+                'program' => $programName,
+                'provinsi' => $provinsiName,
+                'tahun' => $filters['tahun'] ?? null,
+            ],
             'snapshots' => $snapshots ?? [],
             'tableData' => $tableData,
         ];
@@ -136,12 +176,28 @@ class DashboardExportController extends Controller
             // Charts & Map images if provided
             foreach (['barChart' => 'Bar Chart', 'pieChart' => 'Pie Chart', 'kabupatenPie' => 'Kabupaten Pie Chart', 'map' => 'Map'] as $key => $label) {
                 $img = $data['snapshots'][$key] ?? null;
-                if ($img && str_starts_with($img, 'data:image')) {
-                    $tmp = tempnam(sys_get_temp_dir(), 'dash_');
-                    $raw = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $img));
-                    file_put_contents($tmp, $raw);
-                    $section->addText($label, ['bold' => true]);
-                    $section->addImage($tmp, ['width' => 500]);
+                if ($img) {
+                    $tmp = null;
+                    if (str_starts_with($img, 'data:image')) {
+                        $tmp = tempnam(sys_get_temp_dir(), 'dash_');
+                        $raw = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $img));
+                        file_put_contents($tmp, $raw);
+                    } elseif (str_starts_with($img, 'http')) {
+                        // Download remote image to temp and embed
+                        $tmp = tempnam(sys_get_temp_dir(), 'dash_');
+                        try {
+                            $raw = @file_get_contents($img);
+                            if ($raw !== false) {
+                                file_put_contents($tmp, $raw);
+                            } else {
+                                $tmp = null;
+                            }
+                        } catch (\Throwable $e) { $tmp = null; }
+                    }
+                    if ($tmp) {
+                        $section->addText($label, ['bold' => true]);
+                        $section->addImage($tmp, ['width' => 500]);
+                    }
                 }
             }
 

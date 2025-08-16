@@ -36,13 +36,13 @@
         <div class="subtitle">Generated at: {{ now()->format('Y-m-d H:i') }}</div>
     </div>
 
-    @if(!empty($filters))
-        <div>Filters:
-            @if(!empty($filters['program_id'])) Program ID: {{ $filters['program_id'] }} @endif
-            @if(!empty($filters['tahun'])) | Tahun: {{ $filters['tahun'] }} @endif
-            @if(!empty($filters['provinsi_id'])) | Provinsi ID: {{ $filters['provinsi_id'] }} @endif
-        </div>
-    @endif
+    @php $labels = $filter_labels ?? []; @endphp
+    <div>
+        Filters:
+        @if(!empty($labels['program'])) Program: {{ $labels['program'] }} @endif
+        @if(!empty($labels['tahun'])) | Tahun: {{ $labels['tahun'] }} @endif
+        @if(!empty($labels['provinsi'])) | Provinsi: {{ $labels['provinsi'] }} @endif
+    </div>
 
     <div class="cards">
         <div class="card bg-primary"><div>Total {{ __('cruds.beneficiary.title') }}</div><div style="font-size: 20px"><strong>{{ $cards['semua'] }}</strong></div></div>

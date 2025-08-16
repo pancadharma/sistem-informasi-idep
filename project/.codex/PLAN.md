@@ -12,7 +12,7 @@ This living plan tracks export/print/dashboard tasks. Update it as features ship
 - [x] Ensure DataTable prints without pagination, search, or length controls
 - [x] Include kabupaten pie chart in DOCX export
 - [x] Add icons to export PDF/DOCX stat blocks
-- [ ] Use program/provinsi names (not IDs) in export header
+- [x] Use program/provinsi names (not IDs) in export header
 - [ ] Optionally switch PDF orientation to portrait to match printed view
 
 ## Notes

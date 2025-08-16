@@ -414,7 +414,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
     integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5Z8j4qJwV57JKgqC3tM3m6l3cQZQlpH4m2Yb5i2Z4p3v1k8h8GAwqk8V8M1w8t8bN8q3H4OZKXbV0u1QeQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 <!-- prettier-ignore -->
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
@@ -1361,16 +1361,14 @@
                 </div>`;
     }
 
-    $('#printButton').on('click', function() {
+    function triggerPrint() {
         const table = $('#tableDesa').DataTable();
         const originalLength = table.page.len();
-
         table.page.len(-1).draw();
-
         window.print();
-
         table.page.len(originalLength).draw();
-    });
+    }
+    $('#printButton').on('click', triggerPrint);
 
     // Export modal and handlers
     const exportModalHtml = `
@@ -1388,6 +1386,7 @@
             <div class="btn-group">
               <button type="button" class="btn btn-outline-secondary" id="exportPdfBtn"><i class="far fa-file-pdf"></i> PDF</button>
               <button type="button" class="btn btn-outline-secondary" id="exportDocxBtn"><i class="far fa-file-word"></i> DOCX</button>
+              <button type="button" class="btn btn-primary" id="exportBrowserPdfBtn"><i class="fas fa-print"></i> Save as PDF (Browser)</button>
             </div>
           </div>
         </div>
@@ -1399,9 +1398,28 @@
     $('#exportOpenModal').on('click', function() {
         $('#exportModal').modal('show');
     });
+    $(document).on('click', '#exportBrowserPdfBtn', function(){ $('#exportModal').modal('hide'); setTimeout(triggerPrint, 300); });
 
+    // Auto-print mode for /dashboard/print
+    window.__AUTO_PRINT__ = {{ isset($autoPrint) && $autoPrint ? 'true' : 'false' }};
+    if (window.__AUTO_PRINT__) {
+        setTimeout(triggerPrint, 1500);
+    }
+
+    async function ensureHtml2Canvas() {
+        if (typeof html2canvas !== 'undefined') return true;
+        return new Promise((resolve) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            s.onload = () => resolve(true);
+            s.onerror = () => resolve(false);
+            document.head.appendChild(s);
+        });
+    }
     async function captureMap() {
         try {
+            await ensureHtml2Canvas();
+            if (typeof html2canvas === 'undefined') throw new Error('html2canvas not available');
             const node = document.getElementById('map');
             const canvas = await html2canvas(node, {useCORS: true, allowTaint: true, backgroundColor: '#ffffff', scale: 2});
             return canvas.toDataURL('image/png');
