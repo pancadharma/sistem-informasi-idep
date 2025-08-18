@@ -366,6 +366,10 @@ return [
 
     'program' => [
         'title_singular'                         => 'Program',
+        'all'                                    => 'All Program',
+        'all_years'                              => 'All Years',
+        'years'                                  => 'Years',
+        'periode'                                => 'Period (Year)',
         'title'                                  => 'Program',
         'nama'                                   => 'Program Name',
         'kode'                                   => 'Code',
@@ -419,6 +423,8 @@ return [
         ],
         'lokasi'                                 => [
             'label'                              => 'Location',
+            'all_provinsi'                       => 'All Provinces',
+            'all_kabupaten'                      => 'All Districts',
             'pro'                                => 'Province',
             'sel_pro'                            => 'Select Province',
             'kab'                                => 'District',
@@ -1029,6 +1035,12 @@ return [
         'label_sektor'                  => 'Sector',
         'label_location'                => 'Location',
         'jumlah'                        => 'Quantity',
+        'dashboard'                     => 'Dashboard Komponen/Model',
+        'export'                        => 'Export',
+        'export_pdf'                    => 'Export PDF',
+        'export_docx'                   => 'Export DOCX',
+        'export_csv'                    => 'Export CSV',
+        'export_excel'                  => 'Export Excel',
     ],
     'benchmark'                                    => [
         'title'                         => 'Benchmark',

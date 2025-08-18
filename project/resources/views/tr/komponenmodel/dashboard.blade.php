@@ -1,39 +1,39 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Komponen Model Dashboard')
-@section('content_header_title', 'Komponen Model Dashboard')
+@section('subtitle', __('cruds.komponenmodel.dashboard'))
+@section('content_header_title', __('cruds.komponenmodel.dashboard'))
 
 @section('content_body')
     <!-- Filter Section -->
     <div class="row mb-3">
         <div class="col-md-3 order-1">
-            <label for="programFilter">Program:</label>
+            <label for="programFilter">{{ __('cruds.komponenmodel.program_name') }}:</label>
             <select id="programFilter" class="form-control select2">
-                <option value="">Semua Program</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.program.title') }}</option>
                 @foreach ($programs as $program)
                     <option value="{{ $program->id }}">{{ $program->nama }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-md-3 d-none">
-            <label for="sektorFilter">Sektor:</label>
+            <label for="sektorFilter">{{ __('cruds.komponenmodel.sector') }}:</label>
             <select id="sektorFilter" class="form-control select2">
-                <option value="">Semua Sektor</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.komponenmodel.sector') }}</option>
                 @foreach ($sektors as $sektor)
                     <option value="{{ $sektor['id'] }}">{{ $sektor['nama'] }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 order-3">
-            <label for="modelFilter">Model:</label>
+        <div class="col-md-3 order-2">
+            <label for="modelFilter">{{ __('cruds.komponenmodel.title') }}:</label>
             <select id="modelFilter" class="form-control select2">
-                <option value="">Semua Model</option>
+                <option value="">{{ __('global.pleaseSelect') . " ". __('cruds.komponenmodel.title') }}</option>
                 @foreach ($models as $model)
                     <option value="{{ $model->id }}">{{ $model->nama }}</option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 order-2">
+        <div class="col-md-3 order-3">
             <label for="tahunFilter">Tahun:</label>
             <select id="tahunFilter" class="form-control select2">
                 <option value="">Semua Tahun</option>
@@ -41,6 +41,26 @@
                     <option value="{{ $year }}">{{ $year }}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="col-md-3 order-4 text-right">
+            <label style="display: block;">&nbsp;</label> <!-- Spacer for alignment -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" id="exportPdf">
+                        <i class="fas fa-file-pdf text-danger mr-2"></i> PDF
+                    </a>
+                    <a class="dropdown-item" href="#" id="exportDocx">
+                        <i class="fas fa-file-word text-primary mr-2"></i> DOCX
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" id="exportPrintBrowser">
+                        <i class="fas fa-print mr-2"></i> Save as PDF (Browser)
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -135,6 +155,47 @@
                 </div>
                 <div class="card-body">
                     <div id="map" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header"><h3 class="card-title">Jumlah per Program</h3></div>
+                <div class="card-body">
+                    <canvas id="aggProgramChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-outline card-primary">
+                <div class="card-header"><h3 class="card-title">Jumlah per Provinsi</h3></div>
+                <div class="card-body">
+                    <canvas id="aggProvinsiChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card card-outline card-info">
+                <div class="card-header"><h3 class="card-title">Jumlah per Satuan</h3></div>
+                <div class="card-body">
+                    <canvas id="aggSatuanChart" style="min-height:250px;height:250px"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card card-outline card-info">
+                <div class="card-header"><h3 class="card-title">Top 10 Kabupaten</h3></div>
+                <div class="card-body">
+                    <table class="table table-sm table-bordered">
+                        <thead><tr><th>Kabupaten</th><th class="text-right">Jumlah</th><th class="text-right">Lokasi</th></tr></thead>
+                        <tbody id="topKabupatenBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -264,6 +325,7 @@
             updateProgramChart(filters);
             updateModelChart(filters);
             updateSummaryData(filters);
+            updateAggregates(filters);
         }
 
         $(document).ready(function() {
@@ -318,6 +380,111 @@
                     $('#programFilter').empty().append(new Option('Semua Program', '')).trigger('change');
                 }
             });
+
+            // Export functionality
+            $('#exportPdf').on('click', function(e) {
+                e.preventDefault();
+                exportDashboard('pdf');
+            });
+
+            $('#exportDocx').on('click', function(e) {
+                e.preventDefault();
+                exportDashboard('docx');
+            });
+
+            function exportDashboard(format) {
+                const filters = {
+                    program_id: $('#programFilter').val(),
+                    sektor_id: $('#sektorFilter').val(),
+                    model_id: $('#modelFilter').val(),
+                    tahun: $('#tahunFilter').val()
+                };
+
+                // Get chart images as base64
+                const sektorChartImage = sektorChart.toBase64Image();
+                const programChartImage = programChart.toBase64Image();
+                const modelChartImage = modelChart.toBase64Image();
+
+                // Create a form and submit
+                const form = $('<form>', {
+                    action: format === 'pdf' ? '{{ route('komodel.export.pdf') }}' : '{{ route('komodel.export.docx') }}',
+                    method: 'POST',
+                    target: '_blank', // Open in new tab
+                    style: 'display:none;'
+                });
+
+                // Add CSRF token
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: '_token',
+                    value: '{{ csrf_token() }}'
+                }));
+
+                // Add filters
+                for (const key in filters) {
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: key,
+                        value: filters[key]
+                    }));
+                }
+
+                // Add chart images
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'sektorChart',
+                    value: sektorChartImage
+                }));
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'programChart',
+                    value: programChartImage
+                }));
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'modelChart',
+                    value: modelChartImage
+                }));
+
+                $('body').append(form);
+                form.submit();
+                form.remove(); // Clean up the form
+            }
+
+            function triggerPrint() {
+                window.print();
+            }
+            $('#exportPrintBrowser').on('click', function(e){ e.preventDefault(); triggerPrint(); });
+
+            // Aggregates charts
+            const aggProgramCtx = document.getElementById('aggProgramChart').getContext('2d');
+            const aggProvinsiCtx = document.getElementById('aggProvinsiChart').getContext('2d');
+            const aggSatuanCtx = document.getElementById('aggSatuanChart').getContext('2d');
+            let aggProgramChart = new Chart(aggProgramCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#4e79a7' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+            let aggProvinsiChart = new Chart(aggProvinsiCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#f28e2b' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+            let aggSatuanChart = new Chart(aggSatuanCtx, { type: 'doughnut', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: ['#59a14f','#e15759','#76b7b2','#edc948','#b07aa1','#ff9da7'] }] }, options: { responsive: true } });
+
+            function updateAggregates(filters) {
+                $.getJSON('{{ route('komodel.aggregates') }}', filters, function(ag) {
+                    // Program
+                    const pLabels = (ag.perProgram || []).map(r => r.program);
+                    const pData = (ag.perProgram || []).map(r => r.total_jumlah);
+                    aggProgramChart.data.labels = pLabels; aggProgramChart.data.datasets[0].data = pData; aggProgramChart.update();
+                    // Provinsi
+                    const provLabels = (ag.perProvinsi || []).map(r => r.provinsi);
+                    const provData = (ag.perProvinsi || []).map(r => r.total_jumlah);
+                    aggProvinsiChart.data.labels = provLabels; aggProvinsiChart.data.datasets[0].data = provData; aggProvinsiChart.update();
+                    // Satuan
+                    const sLabels = (ag.perSatuan || []).map(r => r.satuan);
+                    const sData = (ag.perSatuan || []).map(r => r.total_jumlah);
+                    aggSatuanChart.data.labels = sLabels; aggSatuanChart.data.datasets[0].data = sData; aggSatuanChart.update();
+                    // Top Kabupaten table
+                    const body = $('#topKabupatenBody'); body.empty();
+                    (ag.topKabupaten || []).forEach(r => {
+                        body.append(`<tr><td>${r.kabupaten || '-'}</td><td class="text-right">${Number(r.total_jumlah).toLocaleString()}</td><td class="text-right">${Number(r.total_lokasi).toLocaleString()}</td></tr>`);
+                    });
+                });
+            }
         });
     </script>
 @endpush

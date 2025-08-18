@@ -111,30 +111,30 @@
 
     <!-- Filter Section -->
     <div class="row mb-3 ">
-        <div class="col-md-4">
-            <label for="programFilter">Program:</label>
+        <div class="col-md-3">
+            <label for="programFilter">{{ __('cruds.program.title') }}:</label>
             <select id="programFilter" class="form-control">
-                <option value="">Semua Program</option>
+                <option value="">{{ __('cruds.program.all') }}</option>
                 @foreach ($programs as $program)
                     <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}
                     </option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-4">
-            <label for="tahunFilter">Periode (Tahun):</label>
+        <div class="col-md-3">
+            <label for="tahunFilter">{{ __('cruds.program.periode') }} :</label>
             <select id="tahunFilter" class="form-control">
-                <option value="">Semua Tahun</option>
+                <option value="">{{ __('cruds.program.all_years') }}</option>
                 @foreach ($years as $year)
                     <option value="{{ $year }}">{{ $year }}</option>
                 @endforeach
             </select>
         </div>
 
-        <div class="col-md-4">
-            <label for="provinsiFilter">Provinsi:</label>
+        <div class="col-md-3">
+            <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
             <select id="provinsiFilter" class="form-control">
-                <option value="">Semua Provinsi</option>
+                <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
                 {{-- IMPORTANT: Add data-lat and data-lng to provinsi options for map centering --}}
                 @foreach ($provinsis as $provinsi)
                     <option value="{{ $provinsi->id }}" data-lat="{{ $provinsi->latitude }}"
@@ -144,7 +144,10 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-3 d-flex align-items-end gap-2">
+            <button id="exportOpenModal" class="btn btn-outline-primary">
+                <i class="fas fa-file-export"></i> Export
+            </button>
             <button id="printButton" class="btn btn-primary">
                 <i class="fas fa-print"></i> Print
             </button>
@@ -220,6 +223,22 @@
         <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
+                    <h3 class="card-title">Chart Kabupaten Penerima Manfaat</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="pieChartCanvas"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
                     <h3 class="card-title">Table Data Desa Penerima Manfaat</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
@@ -234,23 +253,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-6">
-            <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">Chart Kabupaten Penerima Manfaat</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <canvas id="pieChartCanvas"
-                        style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%"></canvas>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 @endsection
@@ -318,18 +320,32 @@
             /* Same color as dusun bubble */
         }
 
-                @media print {
+        @media print {
             body {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            .main-sidebar, .main-header, .content-header, .row.mb-3, .small-box-footer, #printButton, .main-footer, .dataTables_filter, .dataTables_length, .dataTables_info, .dataTables_paginate {
+            .main-sidebar, .main-header, .content-header, .row.mb-3, .small-box-footer, #printButton, .main-footer, .dataTables_filter, .dataTables_length, .dataTables_info, .dataTables_paginate, .dt-buttons,
+            /* Ensure any wrapper columns that only hold filter/length also vanish */
+            .dataTables_wrapper .row > [class*="col-"] .dataTables_filter,
+            .dataTables_wrapper .row > [class*="col-"] .dataTables_length {
+                display: none !important;
+            }
+
+            .small-box .icon>i{
+                font-size: 70px!important;
+            }
+            .dt-length, .dt-search, .dt-paging, .paging_full_number, .pagination, .dt-info, .card-tools, .small-box-footer {
                 display: none !important;
             }
             .content-wrapper {
                 margin-left: 0 !important;
                 padding-top: 0 !important;
                 background-color: #fff !important;
+            }
+            /* Expand table to full width when controls are hidden */
+            .dataTables_wrapper .row {
+                display: block !important;
             }
             .card {
                 box-shadow: none !important;
@@ -398,6 +414,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
     integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 <!-- prettier-ignore -->
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
@@ -1344,15 +1361,146 @@
                 </div>`;
     }
 
-    $('#printButton').on('click', function() {
+    function triggerPrint() {
         const table = $('#tableDesa').DataTable();
         const originalLength = table.page.len();
-
         table.page.len(-1).draw();
-
         window.print();
-
         table.page.len(originalLength).draw();
+    }
+    $('#printButton').on('click', triggerPrint);
+
+    // Export modal and handlers
+    const exportModalHtml = `
+    <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exportModalLabel">Export Dashboard</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Select export format. Charts and map will be captured as images to match the current view.</p>
+            <div class="btn-group">
+              <button type="button" class="btn btn-outline-secondary" id="exportPdfBtn"><i class="far fa-file-pdf"></i> PDF</button>
+              <button type="button" class="btn btn-outline-secondary" id="exportDocxBtn"><i class="far fa-file-word"></i> DOCX</button>
+              <button type="button" class="btn btn-primary" id="exportBrowserPdfBtn"><i class="fas fa-print"></i> Save as PDF (Browser)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    if (!document.getElementById('exportModal')) {
+        $('body').append(exportModalHtml);
+    }
+    $('#exportOpenModal').on('click', function() {
+        $('#exportModal').modal('show');
+    });
+    $(document).on('click', '#exportBrowserPdfBtn', function(){ $('#exportModal').modal('hide'); setTimeout(triggerPrint, 300); });
+
+    // Auto-print mode for /dashboard/print
+    window.__AUTO_PRINT__ = {{ isset($autoPrint) && $autoPrint ? 'true' : 'false' }};
+    if (window.__AUTO_PRINT__) {
+        setTimeout(triggerPrint, 1500);
+    }
+
+    async function ensureHtml2Canvas() {
+        if (typeof html2canvas !== 'undefined') return true;
+        return new Promise((resolve) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            s.onload = () => resolve(true);
+            s.onerror = () => resolve(false);
+            document.head.appendChild(s);
+        });
+    }
+    async function captureMap() {
+        try {
+            await ensureHtml2Canvas();
+            if (typeof html2canvas === 'undefined') throw new Error('html2canvas not available');
+            const node = document.getElementById('map');
+            const canvas = await html2canvas(node, {useCORS: true, allowTaint: true, backgroundColor: '#ffffff', scale: 2});
+            return canvas.toDataURL('image/png');
+        } catch (e) {
+            console.warn('Map capture failed', e);
+            return null;
+        }
+    }
+    function getChartImage(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        try { return el.toDataURL('image/png'); } catch { return null; }
+    }
+    function buildExportForm(action, payload) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = action;
+        const token = document.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden'; csrf.name = '_token'; csrf.value = token.getAttribute('content');
+            form.appendChild(csrf);
+        }
+        const input = document.createElement('input');
+        input.type = 'hidden'; input.name = 'payload'; input.value = JSON.stringify(payload);
+        form.appendChild(input);
+        document.body.appendChild(form);
+        return form;
+    }
+    function currentFilters() {
+        return {
+            program_id: $('#programFilter').val() || null,
+            provinsi_id: $('#provinsiFilter').val() || null,
+            tahun: $('#tahunFilter').val() || null,
+        };
+    }
+    async function doExport(format) {
+        const [mapImg, barImg, pieImg, kabPieImg] = await Promise.all([
+            captureMap(),
+            getChartImage('barChart'),
+            getChartImage('pieChart'),
+            getChartImage('pieChartCanvas'),
+        ]);
+        let mapMeta = null;
+        try {
+            if (typeof map !== 'undefined' && map) {
+                const c = map.getCenter();
+                mapMeta = { centerLat: c.lat(), centerLng: c.lng(), zoom: map.getZoom() };
+            }
+        } catch (e) { /* ignore */ }
+        const payload = {
+            format,
+            filters: currentFilters(),
+            snapshots: { map: mapImg, barChart: barImg, pieChart: pieImg, kabupatenPie: kabPieImg },
+            mapMeta,
+        };
+        const action = `{{ route('dashboard.export') }}`;
+        // Unwrap payload server-side since we're sending one field
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = action;
+        const token = document.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            const csrf = document.createElement('input'); csrf.type = 'hidden'; csrf.name = '_token'; csrf.value = token.getAttribute('content'); form.appendChild(csrf);
+        }
+        Object.entries(payload).forEach(([k,v]) => {
+            const inp = document.createElement('input'); inp.type = 'hidden'; inp.name = k;
+            inp.value = typeof v === 'string' ? v : JSON.stringify(v);
+            form.appendChild(inp);
+        });
+        document.body.appendChild(form);
+        form.submit();
+        setTimeout(() => form.remove(), 3000);
+    }
+    $('#exportPdfBtn').on('click', async function() {
+        $('#exportModal').modal('hide');
+        await doExport('pdf');
+    });
+    $('#exportDocxBtn').on('click', async function() {
+        $('#exportModal').modal('hide');
+        await doExport('docx');
     });
 </script>
 </script>

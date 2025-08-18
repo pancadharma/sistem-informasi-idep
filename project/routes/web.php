@@ -34,8 +34,10 @@ use App\Http\Controllers\Admin\MealsTargetProgressController;
 use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\Admin\PrintController;
+use App\Http\Controllers\Admin\DashboardExportController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
+use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
@@ -68,6 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/',                                     [HomeController::class, 'index'])->name('index');
+        Route::get('/print',                                [HomeController::class, 'index'])->name('print');
         Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
         Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
@@ -85,6 +88,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/data/get-data-desa/{id?}',             [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
         Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
+        // Dashboard export (PDF/DOCX)
+        Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
+    });
+
+    // Komponen Model Dashboard routes
+    Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
+        Route::get('/', [KomodelDashboardExport::class, 'index'])->name('index');
+        Route::post('/export/pdf', [KomodelDashboardExport::class, 'exportPdf'])->name('export.pdf');
+        Route::post('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
+        Route::get('/aggregates', [KomodelDashboardExport::class, 'aggregates'])->name('aggregates');
     });
 });
 // Permissions
@@ -412,6 +425,10 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::get('/summary-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSummaryData'])->name('summary_data');
     Route::get('/model-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getModelChartData'])->name('model_chart_data');
     Route::get('/programs-by-model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramsByModel'])->name('programs_by_model');
+
+    Route::POST('/export/pdf', [KomodelDashboardExport::class, 'exportPDF'])->name('export.pdf');
+    Route::POST('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
+
 });
 
 Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
