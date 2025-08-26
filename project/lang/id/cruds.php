@@ -365,6 +365,9 @@ return [
     'program'                                       => [
         'list'                                      => 'Daftar Program',
         'title_singular'                            => 'Program',
+        'all'                                       => 'Semua Program',
+        'all_years'                                 => 'Semua Tahun',
+        'periode'                                   => 'Periode (Tahun)',
         'title'                                     => 'Program',
         'nama'                                      => 'Nama Program',
         'kode'                                      => 'Kode',
@@ -416,6 +419,8 @@ return [
         ],
         'lokasi'            => [
             'label'         => 'Lokasi',
+            'all_provinsi'  => 'Semua Provinsi',
+            'all_kabupaten' => 'Semua Kabupaten/Kota',
             'pro'           => 'Provinsi',
             'sel_pro'       => 'Pilih Provinsi',
             'kab'           => 'Kabupaten',
@@ -919,7 +924,10 @@ return [
             'program_activity'                   => 'Silahkan pilih Program dan Kegiatan.',
             'program'                            => 'Silahkan pilih Program.',
             'activity'                           => 'Silahkan pilih Kegiatan.',
-            'kab_change'                         => 'Apakah anda yakin ingin mengubah Kabupaten? Ini akan mereset input lokasi.'
+            'kab_change'                         => 'Apakah anda yakin ingin mengubah Kabupaten? Ini akan mereset input lokasi.',
+            'prov_change'                        => 'Apakah anda yakin ingin mengubah Provinsi? Ini akan mereset input Kabupaten dan lokasi.',
+            'update_kegiatan'                    => 'Apakah anda yakin ingin memperbarui Kegiatan?',
+            'store_kegiatan'                     => 'Apakah anda yakin ingin menyimpan Kegiatan?',
         ],
     ],
 
@@ -1022,6 +1030,12 @@ return [
         'label_sektor'                  => 'Sektor',
         'label_lokasi'                  => 'Lokasi',
         'jumlah'                        => 'Jumlah',
+        'dashboard'                     => 'Dashboard Komponen/Model',
+        'export'                        => 'Export',
+        'export_pdf'                    => 'Export PDF',
+        'export_docx'                   => 'Export DOCX',
+        'export_csv'                    => 'Export CSV',
+        'export_excel'                  => 'Export Excel',
     ],
 
     'benchmark'                                      => [

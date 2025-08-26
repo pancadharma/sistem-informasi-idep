@@ -267,7 +267,7 @@ class Kegiatan extends Model implements HasMedia
 
     public function konsultasi()
     {
-        return $this->hasMany(Kegiatan_Konsultasi::class, 'kegiatan_id');
+        return $this->hasOne(Kegiatan_Konsultasi::class, 'kegiatan_id');
     }
 
     public function kunjungan()

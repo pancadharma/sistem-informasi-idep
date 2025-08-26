@@ -40,8 +40,9 @@ class HomeController extends Controller
             ->pluck('year');
 
         $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+        $autoPrint = request()->routeIs('dashboard.print');
 
-        return view('home', compact('programs', 'provinsis', 'years', 'googleMapsApiKey'));
+        return view('home', compact('programs', 'provinsis', 'years', 'googleMapsApiKey', 'autoPrint'));
     }
     function getDashboardData(Request $request)
     {

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^3.1",
         "bensampo/laravel-enum": "^6.12",
         "gedeadisurya/laravel-permission": "dev-gedeadi",
         "guzzlehttp/guzzle": "^7.2",
@@ -15,6 +16,7 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
         "laraveldaily/laravel-charts": "^0.2.3",
+        "phpoffice/phpword": "1.1",
         "spatie/laravel-activitylog": "^4.9",
         "spatie/laravel-ignition": "^2.8",
         "spatie/laravel-medialibrary": "^11.7",
