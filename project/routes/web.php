@@ -202,6 +202,7 @@ Route::get('kegiatan/api/desa', [KegiatanController::class, 'getKegiatanDesa'])-
 Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
+Route::get('kegiatan/show2/{id}', [KegiatanController::class, 'show2'])->name('kegiatan.show2');
 //Master Jenis Bantuan
 Route::resource('jenisbantuan', JenisbantuanController::class);
 Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');

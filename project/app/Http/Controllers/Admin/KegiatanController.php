@@ -36,18 +36,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Kegiatan_Sosialisasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Kegiatan_Pembelanjaan;
-use App\Models\Kegiatan_Pengembangan;
-use App\Models\Program_Outcome_Output;
-use App\Http\Resources\KegiatanResource;
-use Dotenv\Exception\ValidationException;
-use App\Http\Requests\StoreKegiatanRequest;
-use App\Http\Requests\UpdateKegiatanRequest;
-use Symfony\Component\HttpFoundation\Response;
-use App\Models\Program_Outcome_Output_Activity;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Lang;
+// Helper functions
+use function view;
+use function route;
+use function collect;
+use function csrf_token;
+use function __;
+use function response;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use PhpOffice\PhpWord\PhpWord;
@@ -210,11 +207,11 @@ class KegiatanController extends Controller
 
             $html = view('tr.kegiatan.export', $data)->render();
             Html::addHtml($section, $html, true, false);
-            
+
             $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan');
             $tempFilePath = pathinfo($tempFile, PATHINFO_DIRNAME);
             $tempFileName = pathinfo($tempFile, PATHINFO_BASENAME);
-            
+
             $phpWord->setDefaultFontSize(12);
             $phpWord->setDefaultFontName('Times New Roman');
             $phpWord->setDefaultParagraphStyle([
@@ -350,6 +347,45 @@ class KegiatanController extends Controller
         // return $kegiatan->datapenulis;
 
         return view('tr.kegiatan.show', compact(
+            'kegiatan',
+            'dokumenPendukung',
+            'mediaPendukung',
+            'kegiatanRelation',
+            'durationInDays'
+        ));
+    }
+
+    public function show2($id)
+    {
+        // Reuse the logic from show, but render the new view
+        $kegiatan = Kegiatan::with([
+            'programOutcomeOutputActivity',
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+        ])->findOrFail($id);
+
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+        $durationInDays = $kegiatan->getDurationInDays();
+
+        $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+        $relationMap = Kegiatan::getJenisKegiatanRelationMap();
+        $kegiatanRelation = null;
+        if (isset($relationMap[$jenisKegiatanId])) {
+            $relationName = $relationMap[$jenisKegiatanId];
+            $kegiatanRelation = $kegiatan->$relationName;
+        }
+
+        foreach ($kegiatan->datapenulis as $penulis) {
+            $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
+        }
+
+        return view('tr.kegiatan.show2', compact(
             'kegiatan',
             'dokumenPendukung',
             'mediaPendukung',
@@ -1082,7 +1118,7 @@ class KegiatanController extends Controller
         ]);
     }
 
-  
+
     public function uploadTempFile(Request $request)
     {
         try {
@@ -1092,20 +1128,20 @@ class KegiatanController extends Controller
                 'name' => 'required|string|max:255',
                 'kegiatan_id' => 'required|integer|exists:trkegiatan,id'
             ]);
-            
+
             $file = $request->file('file');
             $name = $request->input('name');
             $collection = $request->input('collection');
             $kegiatanId = $request->input('kegiatan_id');
-            
+
             // Find the kegiatan
             $kegiatan = Kegiatan::findOrFail($kegiatanId);
-            
+
             // Define allowed MIME types based on collection
             $allowedMimes = $collection === 'dokumen_pendukung'
                 ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx', 'txt']
                 : ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi', 'mp3', 'wav'];
-            
+
             // Validate file type
             $extension = strtolower($file->getClientOriginalExtension());
             if (!in_array($extension, $allowedMimes)) {
@@ -1114,12 +1150,12 @@ class KegiatanController extends Controller
                     'message' => 'File type not allowed for this collection'
                 ], 422);
             }
-            
+
             // Generate filename with timestamp
             $timestamp = now()->format('Ymd_His');
             $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan');
             $fileName = "{$kegiatanName}_{$timestamp}." . $extension;
-            
+
             // Add media to kegiatan with custom name as caption
             $media = $kegiatan
                 ->addMedia($file)
@@ -1133,7 +1169,7 @@ class KegiatanController extends Controller
                 ->usingName($file->getClientOriginalName())
                 ->usingFileName($fileName)
                 ->toMediaCollection($collection);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'File uploaded successfully',
@@ -1145,7 +1181,7 @@ class KegiatanController extends Controller
                 'size' => $media->size,
                 'mime_type' => $media->mime_type
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
