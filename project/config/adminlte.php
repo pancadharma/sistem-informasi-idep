@@ -145,9 +145,19 @@ return [
 
         [
             'text'          => 'Dashboard',
-            'url'           => 'dashboard',
             'icon'          => 'fas fa-tachometer-alt',
-            'active'        => ['dashboard', 'dashboard', 'dashboard*', 'regex:@^dashboard/[0-9]+$@']
+            'submenu'       => [
+                [
+                    'text'          => 'Main Dashboard',
+                    'url'           => 'dashboard',
+                    'icon'          => 'fas fa-tachometer-alt',
+                ],
+                [
+                    'text'          => 'Komodel Dashboard',
+                    'route'         => 'komodel.dashboard',
+                    'icon'          => 'fas fa-chart-pie',
+                ],
+            ]
         ],
         [
             'header'        => 'Master Data',
