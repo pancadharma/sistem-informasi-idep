@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
 use App\Http\Controllers\Admin\KegiatanController;
+use App\Http\Controllers\Admin\KegiatanControllerBeta;
 use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
@@ -305,6 +306,8 @@ Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'e
 Route::resource('kegiatan', KegiatanController::class);
 
 // Route::resource('kegiatan', KegiatanController::class);
+// Beta detail view (uses redesigned Blade)
+Route::get('kegiatan/{id}/beta', [KegiatanControllerBeta::class, 'show'])->name('kegiatan.beta.show');
 Route::get('kegiatan', [KegiatanController::class, 'index'])
     ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
 Route::get('kegiatan/create', [KegiatanController::class, 'create'])
