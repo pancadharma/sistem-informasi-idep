@@ -196,7 +196,7 @@
                                             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
                                         </label>
                                         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai"
-                                            value="{{ old('tanggalmulai', $kegiatan->tanggalmulai) }}">
+                                            value="{{ old('tanggalmulai', $tanggalmulai) }}">
                                     </div>
                                     <!-- tgl selesai-->
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
@@ -205,7 +205,7 @@
                                         </label>
                                         <input type="date" class="form-control" id="tanggalselesai"
                                             name="tanggalselesai"
-                                            value="{{ old('tanggalselesai', $kegiatan->tanggalselesai) }}">
+                                            value="{{ old('tanggalselesai', $tanggalselesai) }}">
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
                                         <label for="durasi" class="input-group col-form-label">

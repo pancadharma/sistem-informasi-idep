@@ -308,6 +308,8 @@ Route::resource('kegiatan', KegiatanController::class);
 // Route::resource('kegiatan', KegiatanController::class);
 // Beta detail view (uses redesigned Blade)
 Route::get('kegiatan/{id}/beta', [KegiatanControllerBeta::class, 'show'])->name('kegiatan.beta.show');
+// Export BTOR (docx) from redesigned Blade
+Route::post('export/activity/report', [KegiatanControllerBeta::class, 'exportReport'])->name('export.activity.report');
 Route::get('kegiatan', [KegiatanController::class, 'index'])
     ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
 Route::get('kegiatan/create', [KegiatanController::class, 'create'])
