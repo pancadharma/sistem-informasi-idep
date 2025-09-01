@@ -269,4 +269,9 @@ class Program extends Model implements HasMedia
                 });
             });
     }
+
+    public function mealsKomponenModel()
+    {
+        return $this->hasMany(Meals_Komponen_Model::class, 'program_id');
+    }
 }

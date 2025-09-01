@@ -90,6 +90,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
         // Dashboard export (PDF/DOCX)
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
+
+        // Komodel Dashboards
+        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
+        Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
     });
 
     // Komponen Model Dashboard routes
@@ -419,7 +423,7 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
     Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
     Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
-    Route::get('/dashboard', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('/map-markers', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getMapMarkers'])->name('map_markers');
     Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
     Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');

@@ -154,7 +154,7 @@ return [
                 ],
                 [
                     'text'          => 'Komodel Dashboard',
-                    'route'         => 'komodel.dashboard',
+                    'route'         => 'dashboard.komodel_v2',
                     'icon'          => 'fas fa-chart-pie',
                 ],
             ]

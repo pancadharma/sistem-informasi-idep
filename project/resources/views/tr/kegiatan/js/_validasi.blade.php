@@ -557,52 +557,66 @@
             const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
             const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
 
+            const isLatField = $(this).hasClass('lat-input');
+            const isLngField = $(this).hasClass('lang-input');
+            const row = $(this).closest('.lokasi-kegiatan');
+            const latInput = row.find('.lat-input');
+            const lngInput = row.find('.lang-input');
+
+            // Case 1: Pair "lat, lng"
             if (coords.length === 2) {
                 const lat = parseFloat(coords[0]);
                 const lng = parseFloat(coords[1]);
-
                 if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                    const row = $(this).closest('.lokasi-kegiatan');
-                    const latInput = row.find('.lat-input');
-                    const lngInput = row.find('.lang-input');
-
-                    // Determine which input was pasted into and fill accordingly
-                    if ($(this).hasClass('lat-input')) {
-                        latInput.val(lat.toFixed(6));
-                        lngInput.val(lng.toFixed(6));
-                    } else {
-                        latInput.val(lat.toFixed(6));
-                        lngInput.val(lng.toFixed(6));
-                    }
-
-                    // Trigger change events to update map markers
+                    latInput.val(lat.toFixed(6));
+                    lngInput.val(lng.toFixed(6));
                     latInput.trigger('change');
                     lngInput.trigger('change');
-
-                    // Show success feedback
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Coordinates filled successfully',
-                        timer: 1500,
-                        position: 'top-end'
-                    });
+                    Toast.fire({ icon: 'success', title: 'Coordinates filled successfully', timer: 1500, position: 'top-end' });
                 } else {
                     Toast.fire({
                         icon: 'error',
                         title: 'Invalid coordinates format',
-                        text: 'Please use format: latitude, longitude (e.g., -8.49779174444027, 115.27579431731596)',
+                        text: 'Use: latitude, longitude (e.g., -8.497791, 115.275794)',
                         timer: 3000,
                         position: 'top-end'
                     });
                 }
-            } else {
+                return;
+            }
+
+            // Case 2: Single value pasted (fill only the active field if valid)
+            if (coords.length === 1) {
+                const value = parseFloat(coords[0]);
+                if (isLatField && !isNaN(value) && value >= -90 && value <= 90) {
+                    latInput.val(value.toFixed(6));
+                    latInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Latitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
+                if (isLngField && !isNaN(value) && value >= -180 && value <= 180) {
+                    lngInput.val(value.toFixed(6));
+                    lngInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Longitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
                 Toast.fire({
                     icon: 'error',
-                    title: 'Invalid coordinates format',
-                    text: 'Please paste exactly 2 coordinates separated by comma or space',
-                    timer: 3000,
+                    title: 'Invalid coordinate',
+                    text: isLatField ? 'Latitude must be between -90 and 90' : 'Longitude must be between -180 and 180',
+                    timer: 2500,
                     position: 'top-end'
                 });
+                return;
             }
+
+            // Case 3: Unsupported format
+            Toast.fire({
+                icon: 'error',
+                title: 'Invalid coordinates format',
+                text: 'Paste a single value or "lat, lng"',
+                timer: 3000,
+                position: 'top-end'
+            });
         });
 </script>
