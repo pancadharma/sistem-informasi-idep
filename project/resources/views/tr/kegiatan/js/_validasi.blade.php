@@ -280,175 +280,400 @@
                 message: message
             };
         }
-        // submision if all validated
-
-        // $('#simpan_kegiatan').on('click', function(e) {
-        //     e.preventDefault();
-        //     if (!validateForm()) {
-        //         return false;
-        //     }
-        //     // Get form data
-        //     let formData = new FormData($('#createKegiatan')[0]);
-        //     let serializedData = $("#createKegiatan").serializeArray();
-        //     let url_update = "{{ route('kegiatan.update', $kegiatan->id) }}";
-
-        //     // Convert serialized data to a readable format for display
-        //     let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
-        //     console.log(`pre ${displayData}`);
-
-        //     Swal.fire({
-        //         title: 'Konfirmasi',
-        //         text: 'Apakah anda yakin ingin menyimpan data ini?',
-        //         // html: `<pre>${displayData}</pre>`,
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: '{{ __('global.yes') }}' + ', ' +
-        //             '{{ __('global.save') }}' + ' ! '
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             // Show loading state
-        //             Swal.fire({
-        //                 title: 'Processing...',
-        //                 html: 'Please wait while we save your data.',
-        //                 allowOutsideClick: false,
-        //                 didOpen: () => {
-        //                     Swal.showLoading();
-        //                 }
-        //             });
-
-        //             $.ajax({
-        //                 // url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
-        //                 url: url_update,
-        //                 type: 'PUT',
-        //                 data: formData,
-        //                 processData: false,
-        //                 contentType: false,
-        //                 cache: false,
-        //                 beforeSend: function() {
-        //                     Swal.fire({
-        //                         title: 'Processing...',
-        //                         text: 'Please wait while we save your data.',
-        //                         allowOutsideClick: false,
-        //                         timer: 10000,
-        //                         showLoading: true
-        //                     });
-        //                 },
-        //                 success: function(data) {
-        //                     Swal.fire({
-        //                         title: '{{ __('global.response.success') }}',
-        //                         text: '{{ __('global.response.save_success') }}',
-        //                         icon: 'success'
-        //                     }).then((result) => {
-        //                         if (result.isConfirmed) {
-        //                             // Optionally redirect or reset form here
-        //                             // redirect to route kegiatan index
-        //                             window.location.href =
-        //                                 "{{ route('kegiatan.index') }}";
-        //                             // location.reload(); // Example to reload page
-        //                             // $('#createKegiatan')[0].reset(); // Reset form
-        //                         }
-        //                     });
-        //                 },
-        //                 error: function(data) {
-        //                     Swal.fire({
-        //                         title: '{{ __('global.error') }}',
-        //                         text: '{{ __('global.response.save_failed') }}',
-        //                         icon: 'error'
-        //                     });
-        //                 }
-        //             });
-        //         }
-        //     });
-        // });
 
 
-        // $('#update_kegiatan').on('click', function(e) {
-        //     e.preventDefault();
-        //     if (!validateForm()) {
-        //         return false;
-        //     }
-        //     // Get form data
-        //     let formData = new FormData($('#updateKegiatan')[0]);
-        //     let serializedData = $("#updateKegiatan").serializeArray();
-        //     let url_update = "{{ route('kegiatan.update', $kegiatan->id) }}";
+        function validateStatusComplete(){
+            const fieldNameMapping = {
+                'jeniskegiatan': 'Jenis Kegiatan',
+                'sektor_id': 'Sektor Kegiatan',
+                'fasepelaporan': 'Fase Pelaporan',
+                'tanggalmulai': 'Tanggal Mulai',
+                'tanggalselesai': 'Tanggal Selesai',
+                'mitra_id': 'Nama Mitra',
+                'status': 'Status',
+                'provinsi_id': 'Provinsi',
+                'kabupaten_id': 'Kabupaten',
+                // 'deskripsilatarbelakang': 'Latar Belakang',
+                // 'deskripsitujuan': 'Tujuan Kegiatan',
+                // 'deskripsikeluaran': 'Deskripsi Keluaran',
+                'penerimamanfaatdewasaperempuan': 'Penerima Manfaat Dewasa Perempuan',
+                'penerimamanfaatdewasalakilaki': 'Penerima Manfaat Dewasa Laki-laki',
+                'penerimamanfaatlansiaperempuan': 'Penerima Manfaat Lansia Perempuan',
+                'penerimamanfaatlansialakilaki': 'Penerima Manfaat Lansia Laki-laki',
+                'penerimamanfaatremajaperempuan': 'Penerima Manfaat Remaja Perempuan',
+                'penerimamanfaatremajalakilaki': 'Penerima Manfaat Remaja Laki-laki',
+                'penerimamanfaatanakperempuan': 'Penerima Manfaat Anak Perempuan',
+                'penerimamanfaatanaklakilaki': 'Penerima Manfaat Anak Laki-laki'
+            };
 
-        //     // Convert serialized data to a readable format for display
-        //     let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
-        //     console.log(`pre ${displayData}`);
+            if ($('#status').val() === 'completed') {
+                let isValid = true;
+                let errorMessages = [];
 
-        //     Swal.fire({
-        //         title: '{{ __('global.areYouSure') }}',
-        //         text: '{{ __('cruds.kegiatan.validate.update_kegiatan') }}',
-        //         // html: `<pre>${displayData}</pre>`,
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: '{{ __('global.yes') }}' + ', ' +
-        //             '{{ __('global.save') }}' + ' ! '
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             // Show loading state
-        //             Swal.fire({
-        //                 title: 'Processing...',
-        //                 html: 'Please wait while we save your data.',
-        //                 allowOutsideClick: false,
-        //                 didOpen: () => {
-        //                     Swal.showLoading();
-        //                 }
-        //             });
+                // Helper function to get clean field name
+                function getCleanFieldName(element) {
+                    const fieldId = element.attr('id') || element.attr('name');
+                    return fieldNameMapping[fieldId] || fieldId || 'Field';
+                }
 
-        //             $.ajax({
-        //                 // url: "{{ route('api.kegiatan.store') }}", // Ensure this is the correct route
-        //                 url: url_update,
-        //                 type: 'PUT',
-        //                 data: formData,
-        //                 processData: false,
-        //                 contentType: false,
-        //                 cache: false,
-        //                 beforeSend: function() {
-        //                     Swal.fire({
-        //                         title: 'Processing...',
-        //                         text: 'Please wait while we save your data.',
-        //                         allowOutsideClick: false,
-        //                         timer: 10000,
-        //                         // showLoading: true
-        //                     });
-        //                 },
-        //                 success: function(data) {
-        //                     Swal.fire({
-        //                         title: '{{ __('global.response.success') }}',
-        //                         text: '{{ __('global.response.save_success') }}',
-        //                         icon: 'success'
-        //                     }).then((result) => {
-        //                         if (result.isConfirmed) {
-        //                             // Optionally redirect or reset form here
-        //                             // redirect to route kegiatan index
-        //                             window.location.href =
-        //                                 "{{ route('kegiatan.index') }}";
-        //                             // location.reload(); // Example to reload page
-        //                             // $('#updateKegiatan')[0].reset(); // Reset form
-        //                         }
-        //                     });
-        //                 },
-        //                 error: function(data) {
-        //                     Swal.fire({
-        //                         title: '{{ __('global.error') }}',
-        //                         text: '{{ __('global.response.save_failed') }}',
-        //                         icon: 'error'
-        //                     });
-        //                 }
-        //             });
-        //         }
-        //     });
-        // });
+                // Helper function to check if content is empty (for rich text editors)
+                function isEmptyContent(html) {
+                    if (!html) return true;
+                    const textContent = html.replace(/<[^>]*>/g, '').trim();
+                    return textContent === '' || html === '<p><br></p>' || html === '<p></p>' || html === '<br>';
+                }
+
+                // Validate specific required fields (existing logic)
+                const requiredFields = [
+                    { selector: '#jeniskegiatan', type: 'select2' },
+                    { selector: '#sektor_id', type: 'select2' },
+                    { selector: '#fasepelaporan', type: 'select2' },
+                    { selector: '#tanggalmulai', type: 'input' },
+                    { selector: '#tanggalselesai', type: 'input' },
+                    { selector: '#mitra_id', type: 'select2' },
+                    { selector: '#status', type: 'select2' },
+                    { selector: '#provinsi_id', type: 'select2' },
+                    { selector: '#kabupaten_id', type: 'select2' },
+                    // { selector: '#deskripsilatarbelakang', type: 'summernote' },
+                    // { selector: '#deskripsitujuan', type: 'summernote' },
+                    // { selector: '#deskripsikeluaran', type: 'summernote' }
+                ];
+
+                // Validate each required field (existing logic)
+                requiredFields.forEach(field => {
+                    const $element = $(field.selector);
+                    if ($element.length === 0) return; // Skip if element doesn't exist
+
+                    const fieldName = getCleanFieldName($element);
+                    let value;
+                    let isEmpty = false;
+
+                    switch (field.type) {
+                        case 'summernote':
+                            if ($element.data('summernote')) {
+                                try {
+                                    value = $element.summernote('code');
+                                } catch (e) {
+                                    value = $element.val();
+                                }
+                            } else {
+                                value = $element.val();
+                            }
+                            isEmpty = isEmptyContent(value);
+
+                            if (isEmpty) {
+                                let noteEditor = $element.siblings('.note-editor').first();
+                                if (noteEditor.length === 0) {
+                                    noteEditor = $element.next('.note-editor');
+                                }
+                                noteEditor.addClass('is-invalid');
+                            } else {
+                                let noteEditor = $element.siblings('.note-editor').first();
+                                if (noteEditor.length === 0) {
+                                    noteEditor = $element.next('.note-editor');
+                                }
+                                noteEditor.removeClass('is-invalid');
+                            }
+                            break;
+
+                        case 'select2':
+                            value = $element.val();
+                            isEmpty = !value || (Array.isArray(value) && value.length === 0) || value === '';
+
+                            if (isEmpty) {
+                                $element.next('.select2-container').find('.select2-selection').addClass('is-invalid-select2');
+                            } else {
+                                $element.next('.select2-container').find('.select2-selection').removeClass('is-invalid-select2');
+                            }
+                            break;
+
+                        case 'input':
+                            value = $element.val();
+                            isEmpty = !value || value.trim() === '';
+
+                            if (isEmpty) {
+                                $element.addClass('is-invalid');
+                            } else {
+                                $element.removeClass('is-invalid');
+                            }
+                            break;
+                    }
+
+                    if (isEmpty) {
+                        isValid = false;
+                        errorMessages.push(`${fieldName} tidak boleh kosong`);
+                    }
+                });
+
+                // NEW: Validate dynamic Summernote fields in #dynamic-form-container
+                const $dynamicContainer = $('#dynamic-form-container');
+                const $descriptionContainer = $('#description-tab');
+                if ($dynamicContainer.length > 0) {
+                    $dynamicContainer.find('.summernote').each(function(index) {
+                        const $dynamicElement = $(this);
+                        let dynamicValue;
+                        let dynamicIsEmpty = false;
+
+                        // Get field name from id, name, or placeholder
+                        let dynamicFieldName = 'Dynamic Field';
+                        if ($dynamicElement.attr('id')) {
+                            // Convert camelCase or snake_case to readable format
+                            dynamicFieldName =  $dynamicElement.attr('placeholder') || $dynamicElement.attr('id')
+                                .replace(/([A-Z])/g, ' $1') // camelCase to space
+                                .replace(/_/g, ' ') // snake_case to space
+                                .replace(/\b\w/g, l => l.toUpperCase()) // capitalize first letters
+                                .trim();
+                                console.log("Test 1");
+                            } else if ($dynamicElement.attr('placeholder')) {
+                                dynamicFieldName = $dynamicElement.attr('placeholder');
+                                // console.log("Test 2");
+                            } else if ($dynamicElement.attr('name')) {
+                                dynamicFieldName = $dynamicElement.attr('placeholder') || $dynamicElement.attr('name')
+                                .replace(/([A-Z])/g, ' $1')
+                                .replace(/_/g, ' ')
+                                .replace(/\b\w/g, l => l.toUpperCase())
+                                .trim();
+                                // console.log("Test 3");
+                            }
+
+                        // Check if it's initialized as Summernote
+                        if ($dynamicElement.data('summernote')) {
+                            try {
+                                dynamicValue = $dynamicElement.summernote('code');
+                            } catch (e) {
+                                console.warn('Error getting Summernote content:', e);
+                                dynamicValue = $dynamicElement.val();
+                            }
+                        } else {
+                            dynamicValue = $dynamicElement.val();
+                        }
+
+                        dynamicIsEmpty = isEmptyContent(dynamicValue);
+
+                        // console.table(dynamicValue);
+                        // Apply visual validation
+                        if (dynamicIsEmpty) {
+                            let noteEditor = $dynamicElement.siblings('.note-editor').first();
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.next('.note-editor');
+                            }
+                            if (noteEditor.length === 0) {
+                                // Fallback: find note-editor in parent
+                                noteEditor = $dynamicElement.closest('.form-group, .col, div').find('.note-editor');
+                            }
+                            noteEditor.addClass('is-invalid');
+
+                            isValid = false;
+                            errorMessages.push(`${dynamicFieldName} tidak boleh kosong`);
+                        } else {
+                            let noteEditor = $dynamicElement.siblings('.note-editor').first();
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.next('.note-editor');
+                            }
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.closest('.form-group, .col, div').find('.note-editor');
+                            }
+                            noteEditor.removeClass('is-invalid');
+                        }
+                    });
+                }
+                if ($descriptionContainer.length > 0) {
+                    $descriptionContainer.find('.summernote').each(function(index) {
+                        const $dynamicElement = $(this);
+                        let dynamicValue;
+                        let dynamicIsEmpty = false;
+
+                        // Get field name from id, name, or placeholder
+                        let dynamicFieldName = 'Dynamic Field';
+                        if ($dynamicElement.attr('id')) {
+                            // Convert camelCase or snake_case to readable format
+                            dynamicFieldName =  $dynamicElement.attr('placeholder') || $dynamicElement.attr('id')
+                                .replace(/([A-Z])/g, ' $1') // camelCase to space
+                                .replace(/_/g, ' ') // snake_case to space
+                                .replace(/\b\w/g, l => l.toUpperCase()) // capitalize first letters
+                                .trim();
+                                console.log("Test 1");
+                            } else if ($dynamicElement.attr('placeholder')) {
+                                dynamicFieldName = $dynamicElement.attr('placeholder');
+                                // console.log("Test 2");
+                            } else if ($dynamicElement.attr('name')) {
+                                dynamicFieldName = $dynamicElement.attr('placeholder') || $dynamicElement.attr('name')
+                                .replace(/([A-Z])/g, ' $1')
+                                .replace(/_/g, ' ')
+                                .replace(/\b\w/g, l => l.toUpperCase())
+                                .trim();
+                                // console.log("Test 3");
+                            }
+
+                        // Check if it's initialized as Summernote
+                        if ($dynamicElement.data('summernote')) {
+                            try {
+                                dynamicValue = $dynamicElement.summernote('code');
+                            } catch (e) {
+                                console.warn('Error getting Summernote content:', e);
+                                dynamicValue = $dynamicElement.val();
+                            }
+                        } else {
+                            dynamicValue = $dynamicElement.val();
+                        }
+
+                        dynamicIsEmpty = isEmptyContent(dynamicValue);
+
+                        // console.table(dynamicValue);
+                        // Apply visual validation
+                        if (dynamicIsEmpty) {
+                            let noteEditor = $dynamicElement.siblings('.note-editor').first();
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.next('.note-editor');
+                            }
+                            if (noteEditor.length === 0) {
+                                // Fallback: find note-editor in parent
+                                noteEditor = $dynamicElement.closest('.form-group, .col, div').find('.note-editor');
+                            }
+                            noteEditor.addClass('is-invalid');
+
+                            isValid = false;
+                            errorMessages.push(`${dynamicFieldName} tidak boleh kosong`);
+                        } else {
+                            let noteEditor = $dynamicElement.siblings('.note-editor').first();
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.next('.note-editor');
+                            }
+                            if (noteEditor.length === 0) {
+                                noteEditor = $dynamicElement.closest('.form-group, .col, div').find('.note-editor');
+                            }
+                            noteEditor.removeClass('is-invalid');
+                        }
+                    });
+                }
+
+                // Validate beneficiary data (existing logic)
+                const beneficiaryFields = [
+                    '#penerimamanfaatdewasaperempuan',
+                    '#penerimamanfaatdewasalakilaki',
+                    '#penerimamanfaatlansiaperempuan',
+                    '#penerimamanfaatlansialakilaki',
+                    '#penerimamanfaatremajaperempuan',
+                    '#penerimamanfaatremajalakilaki',
+                    '#penerimamanfaatanakperempuan',
+                    '#penerimamanfaatanaklakilaki'
+                ];
+
+                let hasBeneficiaryData = false;
+                beneficiaryFields.forEach(selector => {
+                    const value = parseInt($(selector).val()) || 0;
+                    if (value > 0) {
+                        hasBeneficiaryData = true;
+                    }
+                });
+
+                if (!hasBeneficiaryData) {
+                    isValid = false;
+                    errorMessages.push('Data penerima manfaat harus diisi minimal satu kategori');
+                }
+
+                // Validate locations (existing logic)
+                let hasValidLocation = false;
+                $('.lokasi-kegiatan').each(function() {
+                    const kecamatan = $(this).find('select[name="kecamatan_id[]"]').val();
+                    const kelurahan = $(this).find('select[name="kelurahan_id[]"]').val();
+                    const lokasi = $(this).find('input[name="lokasi[]"]').val();
+
+                    if (kecamatan && kelurahan && lokasi && lokasi.trim() !== '') {
+                        hasValidLocation = true;
+                        return false; // break the loop
+                    }
+                });
+
+                if (!hasValidLocation) {
+                    isValid = false;
+                    errorMessages.push('Setidaknya satu lokasi kegiatan harus diisi dengan lengkap');
+                }
+
+                // Validate penulis data (existing logic)
+                let hasValidPenulis = false;
+                $('.penulis-row').each(function() {
+                    const penulis = $(this).find('select[name="penulis[]"]').val();
+                    const jabatan = $(this).find('select[name="jabatan[]"]').val();
+
+                    if (penulis && jabatan) {
+                        hasValidPenulis = true;
+                        return false; // break the loop
+                    }
+                });
+
+                if (!hasValidPenulis) {
+                    isValid = false;
+                    errorMessages.push('Data penulis laporan harus diisi minimal satu orang');
+                }
+
+                // Show validation results
+                if (!isValid) {
+                    Swal.fire({
+                        title: '{{ __("global.error") }}',
+                        html: `<div style="text-align: left;"><ul style="padding-left: 20px;">${errorMessages.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        width: '600px'
+                    });
+
+                    // Focus on first invalid element
+                    const firstInvalid = $('#updateKegiatan').find('.is-invalid, .is-invalid-select2').first();
+                    if (firstInvalid.length) {
+                        firstInvalid.focus();
+                        // Scroll to the invalid field
+                        $('html, body').animate({
+                            scrollTop: firstInvalid.offset().top - 100
+                        }, 500);
+                    }
+                } else {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Memproses...',
+                        text: 'Sedang menyimpan data',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $('#updateKegiatan').submit();
+                }
+            }
+
+            // Ensure validation styles are added
+            if (!$('#validation-styles').length) {
+                $('<style id="validation-styles">')
+                    .text(`
+                        .is-invalid-select2 {
+                            border-color: #dc3545 !important;
+                            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+                        }
+                        .note-editor.is-invalid {
+                            border-color: #dc3545 !important;
+                            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+                        }
+                        .note-editor.is-invalid .note-toolbar {
+                            border-bottom: 1px solid #dc3545 !important;
+                        }
+                        .note-editor.is-invalid .note-editable {
+                            border-color: #dc3545 !important;
+                        }
+                    `)
+                    .appendTo('head');
+            }
+        }
 
         $('#update_kegiatan').on('click', function(e) {
             e.preventDefault();
 
+            if ($('#status').val() === 'completed') {
+                validateStatusComplete();
+                return;
+            }
             // Validate form (define or adjust as needed)
+
             if (!validateForm()) {
                 Swal.fire({
                     title: '{{ __('global.error') }}',
@@ -557,52 +782,66 @@
             const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
             const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
 
+            const isLatField = $(this).hasClass('lat-input');
+            const isLngField = $(this).hasClass('lang-input');
+            const row = $(this).closest('.lokasi-kegiatan');
+            const latInput = row.find('.lat-input');
+            const lngInput = row.find('.lang-input');
+
+            // Case 1: Pair "lat, lng"
             if (coords.length === 2) {
                 const lat = parseFloat(coords[0]);
                 const lng = parseFloat(coords[1]);
-
                 if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                    const row = $(this).closest('.lokasi-kegiatan');
-                    const latInput = row.find('.lat-input');
-                    const lngInput = row.find('.lang-input');
-
-                    // Determine which input was pasted into and fill accordingly
-                    if ($(this).hasClass('lat-input')) {
-                        latInput.val(lat.toFixed(6));
-                        lngInput.val(lng.toFixed(6));
-                    } else {
-                        latInput.val(lat.toFixed(6));
-                        lngInput.val(lng.toFixed(6));
-                    }
-
-                    // Trigger change events to update map markers
+                    latInput.val(lat.toFixed(6));
+                    lngInput.val(lng.toFixed(6));
                     latInput.trigger('change');
                     lngInput.trigger('change');
-
-                    // Show success feedback
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Coordinates filled successfully',
-                        timer: 1500,
-                        position: 'top-end'
-                    });
+                    Toast.fire({ icon: 'success', title: 'Coordinates filled successfully', timer: 1500, position: 'top-end' });
                 } else {
                     Toast.fire({
                         icon: 'error',
                         title: 'Invalid coordinates format',
-                        text: 'Please use format: latitude, longitude (e.g., -8.49779174444027, 115.27579431731596)',
+                        text: 'Use: latitude, longitude (e.g., -8.497791, 115.275794)',
                         timer: 3000,
                         position: 'top-end'
                     });
                 }
-            } else {
+                return;
+            }
+
+            // Case 2: Single value pasted (fill only the active field if valid)
+            if (coords.length === 1) {
+                const value = parseFloat(coords[0]);
+                if (isLatField && !isNaN(value) && value >= -90 && value <= 90) {
+                    latInput.val(value.toFixed(6));
+                    latInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Latitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
+                if (isLngField && !isNaN(value) && value >= -180 && value <= 180) {
+                    lngInput.val(value.toFixed(6));
+                    lngInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Longitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
                 Toast.fire({
                     icon: 'error',
-                    title: 'Invalid coordinates format',
-                    text: 'Please paste exactly 2 coordinates separated by comma or space',
-                    timer: 3000,
+                    title: 'Invalid coordinate',
+                    text: isLatField ? 'Latitude must be between -90 and 90' : 'Longitude must be between -180 and 180',
+                    timer: 2500,
                     position: 'top-end'
                 });
+                return;
             }
+
+            // Case 3: Unsupported format
+            Toast.fire({
+                icon: 'error',
+                title: 'Invalid coordinates format',
+                text: 'Paste a single value or "lat, lng"',
+                timer: 3000,
+                position: 'top-end'
+            });
         });
 </script>

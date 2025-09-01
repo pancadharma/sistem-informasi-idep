@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
 use App\Http\Controllers\Admin\KegiatanController;
+use App\Http\Controllers\Admin\KegiatanControllerBeta;
 use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
@@ -90,6 +91,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
         // Dashboard export (PDF/DOCX)
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
+
+        // Komodel Dashboards
+        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
+        Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
     });
 
     // Komponen Model Dashboard routes
@@ -202,6 +207,7 @@ Route::get('kegiatan/api/desa', [KegiatanController::class, 'getKegiatanDesa'])-
 Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 Route::delete('kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
+Route::get('kegiatan/show2/{id}', [KegiatanController::class, 'show2'])->name('kegiatan.show2');
 //Master Jenis Bantuan
 Route::resource('jenisbantuan', JenisbantuanController::class);
 Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
@@ -300,6 +306,10 @@ Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'e
 Route::resource('kegiatan', KegiatanController::class);
 
 // Route::resource('kegiatan', KegiatanController::class);
+// Beta detail view (uses redesigned Blade)
+Route::get('kegiatan/{id}/beta', [KegiatanControllerBeta::class, 'show'])->name('kegiatan.beta.show');
+// Export BTOR (docx) from redesigned Blade
+Route::post('export/activity/report', [KegiatanControllerBeta::class, 'exportReport'])->name('export.activity.report');
 Route::get('kegiatan', [KegiatanController::class, 'index'])
     ->name('kegiatan.index')->middleware('check.kegiatan:kegiatan_access');
 Route::get('kegiatan/create', [KegiatanController::class, 'create'])
@@ -418,7 +428,7 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
     Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
     Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
-    Route::get('/dashboard', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('/map-markers', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getMapMarkers'])->name('map_markers');
     Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
     Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');

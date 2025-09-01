@@ -89,7 +89,7 @@ class ProgramCreationRefactorTest extends TestCase
 
         // Call the store endpoint
         // Note: Ensure the route name 'admin.program.store' is correct. Check your routes/web.php.
-        $response = $this->post(route('admin.program.store'), array_merge($programData, $fileData));
+        $response = $this->post(route('program.store'), array_merge($programData, $fileData));
 
 
         // 3. Assert
@@ -144,7 +144,7 @@ class ProgramCreationRefactorTest extends TestCase
         ];
 
         // 2. Act
-        $response = $this->postJson(route('admin.program.store'), $invalidData);
+        $response = $this->postJson(route('program.store'), $invalidData);
 
         // 3. Assert
         $response->assertStatus(422) // HTTP 422 Unprocessable Entity
