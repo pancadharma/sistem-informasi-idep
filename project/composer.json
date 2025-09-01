@@ -9,7 +9,7 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "bensampo/laravel-enum": "^6.12",
         "gedeadisurya/laravel-permission": "dev-gedeadi",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "7.9",
         "jeroennoten/laravel-adminlte": "^3.11",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",

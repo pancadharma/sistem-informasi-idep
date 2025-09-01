@@ -230,21 +230,91 @@
         $(`#kecamatan-${uniqueId}`).on('change', () => $(`#kelurahan-${uniqueId}`).val(null).trigger('change'));
 
         // Add paste event listener for lat/lng inputs
-        $(`#lat-${uniqueId}, #long-${uniqueId}`).on('paste', function(e) {
+        // $(`#lat-${uniqueId}, #long-${uniqueId}`).on('paste', function(e) {
+        //     e.preventDefault();
+        //     const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+        //     const coords = pasteData.split(/[,;\s]+/);
+        //     if (coords.length === 2) {
+        //         const lat = parseFloat(coords[0]);
+        //         const lng = parseFloat(coords[1]);
+        //         if (!isNaN(lat) && !isNaN(lng)) {
+        //             const row = $(this).closest('.lokasi-kegiatan');
+        //             row.find('.lat-input').val(lat.toFixed(6));
+        //             row.find('.lang-input').val(lng.toFixed(6));
+        //             row.find('.lat-input').trigger('change'); // Trigger change to update marker
+        //         }
+        //     }
+        // });
+
+        //  update paste long lat method
+        $(document).on('paste', '.lat-input, .lang-input', function(e) {
             e.preventDefault();
             const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
-            const coords = pasteData.split(/[,;\s]+/);
+            const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
+
+            const isLatField = $(this).hasClass('lat-input');
+            const isLngField = $(this).hasClass('lang-input');
+            const row = $(this).closest('.lokasi-kegiatan');
+            const latInput = row.find('.lat-input');
+            const lngInput = row.find('.lang-input');
+
+            // Case 1: Pair "lat, lng"
             if (coords.length === 2) {
                 const lat = parseFloat(coords[0]);
                 const lng = parseFloat(coords[1]);
-                if (!isNaN(lat) && !isNaN(lng)) {
-                    const row = $(this).closest('.lokasi-kegiatan');
-                    row.find('.lat-input').val(lat.toFixed(6));
-                    row.find('.lang-input').val(lng.toFixed(6));
-                    row.find('.lat-input').trigger('change'); // Trigger change to update marker
+                if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                    latInput.val(lat.toFixed(6));
+                    lngInput.val(lng.toFixed(6));
+                    latInput.trigger('change');
+                    lngInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Coordinates filled successfully', timer: 1500, position: 'top-end' });
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Invalid coordinates format',
+                        text: 'Use: latitude, longitude (e.g., -8.497791, 115.275794)',
+                        timer: 3000,
+                        position: 'top-end'
+                    });
                 }
+                return;
             }
+
+            // Case 2: Single value pasted (fill only the active field if valid)
+            if (coords.length === 1) {
+                const value = parseFloat(coords[0]);
+                if (isLatField && !isNaN(value) && value >= -90 && value <= 90) {
+                    latInput.val(value.toFixed(6));
+                    latInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Latitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
+                if (isLngField && !isNaN(value) && value >= -180 && value <= 180) {
+                    lngInput.val(value.toFixed(6));
+                    lngInput.trigger('change');
+                    Toast.fire({ icon: 'success', title: 'Longitude set', timer: 1200, position: 'top-end' });
+                    return;
+                }
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Invalid coordinate',
+                    text: isLatField ? 'Latitude must be between -90 and 90' : 'Longitude must be between -180 and 180',
+                    timer: 2500,
+                    position: 'top-end'
+                });
+                return;
+            }
+
+            // Case 3: Unsupported format
+            Toast.fire({
+                icon: 'error',
+                title: 'Invalid coordinates format',
+                text: 'Paste a single value or "lat, lng"',
+                timer: 3000,
+                position: 'top-end'
+            });
         });
+
     }
 
     function initMap() {

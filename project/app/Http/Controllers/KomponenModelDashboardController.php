@@ -37,6 +37,33 @@ class KomponenModelDashboardController extends Controller
         return view('tr.komponenmodel.dashboard', compact('programs', 'sektors', 'models', 'years', 'googleMapsApiKey'));
     }
 
+    public function indexV2()
+    {
+        $programs = Program::all();
+        $sektors =  TargetReinstra::all()->map(function ($sektor) {
+            return [
+                'id' => $sektor->id,
+                'nama' => $sektor->nama,
+            ];
+        })->toArray();
+        $models = Model::all();
+        $years = Meals_Komponen_Model::select(DB::raw('YEAR(created_at) as year'))
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+
+        $trendData = Meals_Komponen_Model::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(id) as total')
+        )
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+        return view('tr.komponenmodel.dashboard_v2', compact('programs', 'sektors', 'models', 'years', 'googleMapsApiKey', 'trendData'));
+    }
+
     public function getMapMarkers(Request $request)
     {
         $query = DB::table('trmeals_komponen_model_lokasi as l')
@@ -84,7 +111,7 @@ class KomponenModelDashboardController extends Controller
         $query = Program::query();
 
         if ($request->filled('model_id')) {
-            $query->whereHas('komponenModels', function ($q) use ($request) {
+            $query->whereHas('mealsKomponenModel', function ($q) use ($request) {
                 $q->where('komponenmodel_id', $request->model_id);
             });
         }
