@@ -95,7 +95,12 @@ Route::middleware(['auth'])->group(function () {
         // Komodel Dashboards
         Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
         Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
+        Route::get('/komodel-v3', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
+
     });
+Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
+// This route provides filtered data when the user applies filters.
+Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
 
     // Komponen Model Dashboard routes
     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
@@ -428,7 +433,7 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
     Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
     Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
-    
+
     Route::get('/map-markers', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getMapMarkers'])->name('map_markers');
     Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
     Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');
