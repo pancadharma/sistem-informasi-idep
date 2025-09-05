@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\DashboardExportController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
+use App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
@@ -96,6 +97,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
         Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
         Route::get('/komodel-v3', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
+
+        Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
+        Route::post('/komodel-v4/export/pdf', [DashboardKomponenModelV4Controller::class, 'exportPdf'])->name('komodel_v4.export.pdf');
+        Route::post('/komodel-v4/export/xls', [DashboardKomponenModelV4Controller::class, 'exportXls'])->name('komodel_v4.export.xls');
 
     });
 Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);

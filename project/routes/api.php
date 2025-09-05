@@ -30,3 +30,8 @@ Route::post('kegiatan/uploadTempFile', [App\Http\Controllers\Admin\KegiatanContr
 Route::delete('kegiatan/deleteTempFile', [App\Http\Controllers\Admin\KegiatanController::class, 'deleteTempFile'])->name('api.kegiatan.delete_temp_file');
 
 Route::get('kegiatan/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanController::class, 'getHasilKegiatan'])->name('api.kegiatan.get_hasil');
+
+Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+    Route::get('komodel-v4', [App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller::class, 'index'])->name('komodel-v4.index');
+    Route::get('komodel-v4/data', [App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller::class, 'index']);
+});
