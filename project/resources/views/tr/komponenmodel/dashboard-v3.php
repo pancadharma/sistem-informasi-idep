@@ -62,10 +62,11 @@
                     <div class="card-header"><h3 class="card-title"><i class="fas fa-filter mr-1"></i>Filter Data</h3></div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3"><div class="form-group"><label for="program_id">Program</label><select id="program_id" class="form-control"><option value="all">Semua Program</option></select></div></div>
-                            <div class="col-md-3"><div class="form-group"><label for="komponenmodel_id">Tipe Komponen</label><select id="komponenmodel_id" class="form-control"><option value="all">Semua Tipe</option></select></div></div>
-                            <div class="col-md-3"><div class="form-group"><label for="tahun">Tahun</label><select id="tahun" class="form-control"><option value="all">Semua Tahun</option></select></div></div>
-                            <div class="col-md-3 align-self-end"><div class="form-group"><button id="applyFilters" class="btn btn-primary btn-block"><i class="fas fa-check mr-1"></i> Terapkan Filter</button></div></div>
+                            <div class="col-md-2"><div class="form-group"><label for="program_id">Program</label><select id="program_id" class="form-control"><option value="all">Semua Program</option></select></div></div>
+                            <div class="col-md-2"><div class="form-group"><label for="komponenmodel_id">Tipe Komponen</label><select id="komponenmodel_id" class="form-control"><option value="all">Semua Tipe</option></select></div></div>
+                            <div class="col-md-2"><div class="form-group"><label for="provinsi_id">Provinsi</label><select id="provinsi_id" class="form-control"><option value="all">Semua Provinsi</option></select></div></div>
+                            <div class="col-md-2"><div class="form-group"><label for="tahun">Tahun</label><select id="tahun" class="form-control"><option value="all">Semua Tahun</option></select></div></div>
+                            <div class="col-md-4 align-self-end"><div class="form-group"><button id="applyFilters" class="btn btn-primary btn-block"><i class="fas fa-check mr-1"></i> Terapkan Filter</button></div></div>
                         </div>
                     </div>
                 </div>
@@ -236,12 +237,14 @@
         const params = new URLSearchParams({
             program_id: $('#program_id').val(),
             komponenmodel_id: $('#komponenmodel_id').val(),
+            provinsi_id: $('#provinsi_id').val(),
             tahun: $('#tahun').val(),
         });
 
         console.log('Sending filter params:', {
             program_id: $('#program_id').val(),
             komponenmodel_id: $('#komponenmodel_id').val(),
+            provinsi_id: $('#provinsi_id').val(),
             tahun: $('#tahun').val(),
         });
 
@@ -269,6 +272,7 @@
 
             initData.filters.programs.forEach(p => $('#program_id').append(`<option value="${p.id}">${p.nama}</option>`));
             initData.filters.komponen_models.forEach(k => $('#komponenmodel_id').append(`<option value="${k.id}">${k.nama}</option>`));
+            initData.filters.provinces.forEach(p => $('#provinsi_id').append(`<option value="${p.id}">${p.nama}</option>`));
             initData.filters.years.forEach(y => $('#tahun').append(`<option value="${y}">${y}</option>`));
 
             allData = initData.dashboard_data;

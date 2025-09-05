@@ -269,6 +269,7 @@ class KomponenModelDashboardController extends Controller
             // Fetch data for filters
             $programs = Program::select('id', 'nama')->orderBy('nama')->get();
             $komponen_models = Model::select('id', 'nama')->orderBy('nama')->get();
+            $provinces = DB::table('provinsi')->select('id', 'nama')->orderBy('nama')->get();
             // Extract unique years from the 'tanggalmulai' field of all programs
             $years = Program::select(DB::raw('YEAR(tanggalmulai) as year'))
                 ->distinct()
@@ -279,6 +280,7 @@ class KomponenModelDashboardController extends Controller
                 'filters' => [
                     'programs' => $programs,
                     'komponen_models' => $komponen_models,
+                    'provinces' => $provinces,
                     'years' => $years,
                 ],
                 'dashboard_data' => $dashboard_data
@@ -360,6 +362,9 @@ class KomponenModelDashboardController extends Controller
             }
             if ($request->filled('komponenmodel_id') && $request->komponenmodel_id !== 'all') {
                 $query->where('tkm.komponenmodel_id', $request->komponenmodel_id);
+            }
+            if ($request->filled('provinsi_id') && $request->provinsi_id !== 'all') {
+                $query->where('tkml.provinsi_id', $request->provinsi_id);
             }
             if ($request->filled('tahun') && $request->tahun !== 'all') {
                 $query->whereYear('tp.tanggalmulai', $request->tahun);
