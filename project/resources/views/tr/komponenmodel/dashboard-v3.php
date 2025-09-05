@@ -73,15 +73,65 @@
 
                 <div id="stats-cards" class="row"></div>
 
+                <!-- Charts Row -->
                 <div class="row">
-                    <div class="col-lg-4 d-flex flex-column">
-                        <div class="card flex-grow-1"><div class="card-header"><h3 class="card-title">Distribusi Tipe Komponen</h3></div><div class="card-body"><canvas id="komponenPieChart"></canvas></div></div>
-                        <div class="card flex-grow-1"><div class="card-header"><h3 class="card-title">Peta Sebaran Lokasi</h3></div><div class="card-body p-0"><div id="map"></div></div></div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribusi Tipe Komponen (Pie)</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="komponenPieChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-8 d-flex">
-                        <div class="card flex-grow-1">
-                            <div class="card-header"><h3 class="card-title">Rincian Komponen Program</h3></div>
-                            <div class="card-body table-responsive p-0"><table class="table table-hover text-nowrap"><thead><tr><th>Program</th><th>Tipe Komponen</th><th>Total Unit</th><th>Jml. Lokasi</th><th>Status</th></tr></thead><tbody id="komponen-table-body"></tbody></table></div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Distribusi Tipe Komponen (Bar)</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="komponenBarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Rincian Komponen Program</h3>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Program</th>
+                                            <th>Tipe Komponen</th>
+                                            <th>Total Unit</th>
+                                            <th>Jml. Lokasi</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="komponen-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Row -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Peta Sebaran Lokasi</h3>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="map"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,7 +165,7 @@
 
 <script>
     // --- GLOBAL VARIABLES ---
-    let komponenPieChart, map;
+    let komponenPieChart, komponenBarChart, map;
     let allData = [];
     // Use Laravel's URL helper to dynamically set the base API path
     const API_BASE_URL = '{{ url("/") }}';
@@ -173,6 +223,40 @@
         });
     };
 
+    const renderBarChart = (data) => {
+        const ctx = document.getElementById('komponenBarChart').getContext('2d');
+        const distribution = groupDataByKomponen(data).reduce((acc, item) => {
+            acc[item.komponen_tipe] = (acc[item.komponen_tipe] || 0) + 1;
+            return acc;
+        }, {});
+        if (komponenBarChart) komponenBarChart.destroy();
+        komponenBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(distribution),
+                datasets: [{
+                    label: 'Jumlah Komponen',
+                    data: Object.values(distribution),
+                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6c757d'],
+                    borderColor: ['#0056b3', '#1e7e34', '#d39e00', '#bd2130', '#138496', '#545b62'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    };
+
     const renderMap = (data) => {
         if (!map) {
             map = L.map('map').setView([-8.409518, 115.188919], 10);
@@ -192,8 +276,6 @@
         const tableBody = $('#komponen-table-body');
         tableBody.empty();
         const groupedData = groupDataByKomponen(data);
-        console.log('Grouped data count:', groupedData.length);
-        console.log('Raw data count:', data.length);
 
         if (groupedData.length === 0) {
             tableBody.html(`<tr><td colspan="5" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>`);
@@ -201,10 +283,11 @@
         }
         groupedData.forEach(item => {
             const statusClass = item.status_program === 'Active' ? 'badge-success' : 'badge-warning';
+            const locationCount = item.locations ? item.locations.length : 0;
             const row = $(`<tr style="cursor: pointer;" data-komponen-id="${item.komponen_id}"></tr>`).html(`
                 <td>${item.nama_program || '-'}</td><td><strong>${item.komponen_tipe || '-'}</strong></td>
                 <td>${(item.total_unit || 0).toLocaleString('id-ID')} ${item.satuan_unit || ''}</td>
-                <td>${item.locations ? item.locations.length : 0}</td><td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>
+                <td>${locationCount}</td><td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>
             `);
             row.on('click', () => showDetailModal(item.komponen_id));
             tableBody.append(row);
@@ -214,6 +297,7 @@
     const renderDashboard = (data) => {
         renderStatsCards(data);
         renderPieChart(data);
+        renderBarChart(data);
         renderMap(data);
         renderTable(data);
     };
@@ -241,18 +325,10 @@
             tahun: $('#tahun').val(),
         });
 
-        console.log('Sending filter params:', {
-            program_id: $('#program_id').val(),
-            komponenmodel_id: $('#komponenmodel_id').val(),
-            provinsi_id: $('#provinsi_id').val(),
-            tahun: $('#tahun').val(),
-        });
-
         try {
             const response = await fetch(`/api/dashboard-data?${params.toString()}`);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
-            console.log('Received dashboard data:', data);
             allData = data.dashboard_data || [];
             renderDashboard(allData);
         } catch (error) {
