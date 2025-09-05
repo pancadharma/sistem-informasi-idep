@@ -191,6 +191,9 @@
         const tableBody = $('#komponen-table-body');
         tableBody.empty();
         const groupedData = groupDataByKomponen(data);
+        console.log('Grouped data count:', groupedData.length);
+        console.log('Raw data count:', data.length);
+
         if (groupedData.length === 0) {
             tableBody.html(`<tr><td colspan="5" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>`);
             return;
@@ -198,9 +201,9 @@
         groupedData.forEach(item => {
             const statusClass = item.status_program === 'Active' ? 'badge-success' : 'badge-warning';
             const row = $(`<tr style="cursor: pointer;" data-komponen-id="${item.komponen_id}"></tr>`).html(`
-                <td>${item.nama_program}</td><td><strong>${item.komponen_tipe}</strong></td>
+                <td>${item.nama_program || '-'}</td><td><strong>${item.komponen_tipe || '-'}</strong></td>
                 <td>${(item.total_unit || 0).toLocaleString('id-ID')} ${item.satuan_unit || ''}</td>
-                <td>${item.locations.length}</td><td><span class="badge ${statusClass}">${item.status_program}</span></td>
+                <td>${item.locations ? item.locations.length : 0}</td><td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>
             `);
             row.on('click', () => showDetailModal(item.komponen_id));
             tableBody.append(row);
@@ -235,15 +238,23 @@
             komponenmodel_id: $('#komponenmodel_id').val(),
             tahun: $('#tahun').val(),
         });
+
+        console.log('Sending filter params:', {
+            program_id: $('#program_id').val(),
+            komponenmodel_id: $('#komponenmodel_id').val(),
+            tahun: $('#tahun').val(),
+        });
+
         try {
             const response = await fetch(`/api/dashboard-data?${params.toString()}`);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
-            allData = data.dashboard_data;
+            console.log('Received dashboard data:', data);
+            allData = data.dashboard_data || [];
             renderDashboard(allData);
         } catch (error) {
             console.error("Could not fetch dashboard data:", error);
-            $('#komponen-table-body').html(`<tr><td colspan="5" class="text-center py-4 text-danger">Gagal memuat data.</td></tr>`);
+            $('#komponen-table-body').html(`<tr><td colspan="5" class="text-center py-4 text-danger">Gagal memuat data: ${error.message}</td></tr>`);
         } finally {
             hideLoading();
         }

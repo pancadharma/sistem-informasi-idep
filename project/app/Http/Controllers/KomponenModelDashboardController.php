@@ -318,11 +318,12 @@ class KomponenModelDashboardController extends Controller
      */
     private function fetchData(Request $request = null)
     {
-        // Start building the query
+
+        // Start building the query - Changed to LEFT JOIN for locations to include komponen models without locations
         $query = DB::table('trmeals_komponen_model as tkm')
             ->join('trprogram as tp', 'tkm.program_id', '=', 'tp.id')
             ->join('mkomponenmodel as mkm', 'tkm.komponenmodel_id', '=', 'mkm.id')
-            ->join('trmeals_komponen_model_lokasi as tkml', 'tkm.id', '=', 'tkml.mealskomponenmodel_id')
+            ->leftJoin('trmeals_komponen_model_lokasi as tkml', 'tkm.id', '=', 'tkml.mealskomponenmodel_id')
             ->leftJoin('msatuan as ms', 'tkml.satuan_id', '=', 'ms.id')
             ->leftJoin('provinsi as p', 'tkml.provinsi_id', '=', 'p.id')
             ->leftJoin('kabupaten as kab', 'tkml.kabupaten_id', '=', 'kab.id')
@@ -347,17 +348,20 @@ class KomponenModelDashboardController extends Controller
                 'tkml.long'
             )
             ->whereNull('tkm.deleted_at')
-            ->whereNull('tkml.deleted_at');
+            ->where(function ($q) {
+                $q->whereNull('tkml.deleted_at')
+                  ->orWhereNull('tkml.id'); // Include komponen models without locations
+            });
 
         // Apply filters if a request object is provided
         if ($request) {
-            if ($request->filled('program_id')) {
+            if ($request->filled('program_id') && $request->program_id !== 'all') {
                 $query->where('tkm.program_id', $request->program_id);
             }
-            if ($request->filled('komponenmodel_id')) {
+            if ($request->filled('komponenmodel_id') && $request->komponenmodel_id !== 'all') {
                 $query->where('tkm.komponenmodel_id', $request->komponenmodel_id);
             }
-            if ($request->filled('tahun')) {
+            if ($request->filled('tahun') && $request->tahun !== 'all') {
                 $query->whereYear('tp.tanggalmulai', $request->tahun);
             }
         }
@@ -367,13 +371,17 @@ class KomponenModelDashboardController extends Controller
 
         // Get all related strategic targets (reinstra) in a separate efficient query
         $komponenIds = $results->pluck('komponen_id')->unique();
-        $targets = DB::table('trmeals_komponen_model_targetreinstra as tkmtr')
-            ->join('mtargetreinstra as mtr', 'tkmtr.targetreinstra_id', '=', 'mtr.id')
-            ->whereIn('tkmtr.mealskomponenmodel_id', $komponenIds)
-            ->whereNull('tkmtr.deleted_at')
-            ->select('tkmtr.mealskomponenmodel_id as komponen_id', 'mtr.nama as target_reinstra')
-            ->get()
-            ->groupBy('komponen_id');
+        if ($komponenIds->isNotEmpty()) {
+            $targets = DB::table('trmeals_komponen_model_targetreinstra as tkmtr')
+                ->join('mtargetreinstra as mtr', 'tkmtr.targetreinstra_id', '=', 'mtr.id')
+                ->whereIn('tkmtr.mealskomponenmodel_id', $komponenIds)
+                ->whereNull('tkmtr.deleted_at')
+                ->select('tkmtr.mealskomponenmodel_id as komponen_id', 'mtr.nama as target_reinstra')
+                ->get()
+                ->groupBy('komponen_id');
+        } else {
+            $targets = collect();
+        }
 
         // Map the targets back to the main results
         return $results->map(function ($item) use ($targets) {
