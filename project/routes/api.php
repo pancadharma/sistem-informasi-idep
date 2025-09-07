@@ -34,4 +34,10 @@ Route::get('kegiatan/{kegiatan}/hasil', [App\Http\Controllers\API\KegiatanContro
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('komodel-v4', [App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller::class, 'index'])->name('komodel-v4.index');
     Route::get('komodel-v4/data', [App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller::class, 'index']);
+
+    Route::get('/kpi', [App\Http\Controllers\MealsDashboardController::class, 'getKpiData'])->name('kpi');
+    Route::get('/geographic', [App\Http\Controllers\MealsDashboardController::class, 'getGeographicData'])->name('geographic');
+    Route::get('/components', [App\Http\Controllers\MealsDashboardController::class, 'getComponentData'])->name('components');
+    Route::post('/filter', [App\Http\Controllers\MealsDashboardController::class, 'getFilteredData'])->name('filter');
+    Route::get('/export/pdf', [App\Http\Controllers\MealsDashboardController::class, 'exportPdf'])->name('export.pdf');
 });
