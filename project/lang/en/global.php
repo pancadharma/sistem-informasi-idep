@@ -361,6 +361,8 @@ return [
         'delete'                     => 'Delete',
         'yes'                        => 'Yes',
         'no'                         => 'No',
+        'processing'                 => 'Processing',
+        'please_wait'                => 'Please wait...',
     ],
     'print'                         => 'Print'
 

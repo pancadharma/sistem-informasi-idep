@@ -360,6 +360,8 @@ return [
         'delete'                    => 'Hapus',
         'yes'                       => 'Ya',
         'no'                        => 'Tidak',
+        'processing'                => 'Memproses',
+        'please_wait'               => 'Mohon tunggu...',
     ],
     'print'                         => 'Cetak'
 

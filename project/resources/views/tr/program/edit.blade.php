@@ -363,7 +363,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
-                                    <button type="submit" class="btn btn-info btn-block float-right">
+                                    <button type="button" id="updateProgramBtn" class="btn btn-info btn-block float-right">
                                         {{ __('global.update') . ' ' . __('cruds.program.title_singular') }}
                                     </button>
                                 </div>
@@ -406,6 +406,7 @@
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
 @include('tr.program.js.detail-edit.partner')
+@include('tr.program.js._validation')
 <script>
     $(document).ready(function() {
         const benefitInputs = [
@@ -434,6 +435,86 @@
 
         // Initial calculation on page load
         calculateTotal();
+
+        $('#updateProgramBtn').on('click', function(e) {
+            e.preventDefault();
+
+            if ($('#status').val() === 'complete') {
+                if (!validateProgramComplete()) {
+                    return; // Stop if client-side validation fails
+                }
+            }
+
+            Swal.fire({
+                title: '{{ __("global.areYouSure") }}',
+                // text: '{{ __("global.response.confirm_text") }}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ __("global.yes") }}',
+                cancelButtonText: '{{ __("global.cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: '{{ __("global.response.processing") }}',
+                        text: '{{ __("global.response.please_wait") }}',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    let formData = new FormData($('#editProgram')[0]);
+
+                    // Get unformatted value from AutoNumeric field
+                    const totalNilaiAN = AutoNumeric.getAutoNumericElement('#totalnilai');
+                    if (totalNilaiAN) {
+                        formData.set('totalnilai', totalNilaiAN.getNumericString());
+                    }
+
+                    $.ajax({
+                        url: $('#editProgram').attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: '{{ __("global.success") }}',
+                                text: '{{ __("global.response.save_success") }}',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.close();
+                            let errorMessages = [];
+                            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                const errors = xhr.responseJSON.errors;
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        errors[key].forEach(message => {
+                                            errorMessages.push(message);
+                                        });
+                                    }
+                                }
+                            } else {
+                                errorMessages.push('{{ __("global.response.save_failed") }}');
+                            }
+
+                            Swal.fire({
+                                title: '{{ __("global.error") }}',
+                                html: `<div style="text-align: left;"><ul style="padding-left: 20px;">${errorMessages.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>
 @endpush
