@@ -61,4 +61,49 @@ class UpdateProgramRequest extends FormRequest
 
         ];
     }
+
+    /**
+     * Normalize currency-like inputs before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $normalizeCurrency = function ($value) {
+            if ($value === null) {
+                return null;
+            }
+            if (is_numeric($value)) {
+                return $value;
+            }
+            if (is_string($value)) {
+                // Remove currency text and thousand separators, convert decimal comma to dot
+                $s = str_ireplace(['rp', 'idr'], '', $value);
+                $s = str_replace([' ', "\u{00A0}"], '', $s); // strip spaces incl. NBSP
+                $s = str_replace('.', '', $s); // drop thousands separator
+                $s = str_replace(',', '.', $s); // convert decimal comma to dot
+                // Keep only valid number characters
+                $s = preg_replace('/[^0-9.\-]/', '', $s);
+                // Avoid strings like '.' or '-'
+                if ($s === '' || $s === '.' || $s === '-' || $s === '-.') {
+                    return null;
+                }
+                return $s;
+            }
+            return $value;
+        };
+
+        // Normalize array of donation values
+        $nilaiDonasi = $this->input('nilaidonasi', []);
+        if (is_array($nilaiDonasi)) {
+            $nilaiDonasi = array_map($normalizeCurrency, $nilaiDonasi);
+        }
+
+        // Normalize totalnilai if present
+        $totalNilai = $this->input('totalnilai');
+        $totalNilai = $normalizeCurrency($totalNilai);
+
+        $this->merge([
+            'nilaidonasi' => $nilaiDonasi,
+            'totalnilai'  => $totalNilai,
+        ]);
+    }
 }
