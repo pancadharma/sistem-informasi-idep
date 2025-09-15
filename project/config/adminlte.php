@@ -406,6 +406,12 @@ return [
             'icon_color' => 'cyan',
             'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
         ],
+        [
+            'text'   => 'Report IDEP',
+            'route'  => 'report.index',
+            'icon'   => 'fas fa-file-alt',
+            'active' => ['report', 'report*'],
+        ],
     ],
 
     /*

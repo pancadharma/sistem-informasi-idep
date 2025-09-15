@@ -192,4 +192,8 @@ class User extends Authenticatable implements HasMedia
         return $this->belongsTo(Mjabatan::class, 'jabatan_id');
     }
 
+    public function trmealsKomponenModels()
+    {
+        return $this->hasMany(Meals_Komponen_Model::class, 'user_id');
+    }
 }

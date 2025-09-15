@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Laporan Kegiatan IDEP-LTE</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .report-config {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-section {
+            margin-bottom: 25px;
+        }
+
+        .config-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .report-preview {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .report-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .report-meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .report-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .report-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .report-table tr:hover {
+            background-color: #e8f4fd;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .summary-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .summary-label {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+        }
+
+        .chart-section {
+            margin: 30px 0;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .export-buttons {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .report-config,
+            .export-buttons {
+                display: none;
+            }
+
+            .report-preview {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Sistem Laporan Kegiatan</h1>
+            <p>Generator laporan komprehensif untuk analisis program dan kegiatan IDEP-LTE</p>
+        </div>
+
+        <!-- Report Configuration -->
+        <div class="report-config">
+            <div class="config-section">
+                <h3 class="config-title">Parameter Laporan</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Program</label>
+                        <select class="form-control" id="program_id">
+                            <option value="">Semua Program</option>
+                            <option value="1">Program Pemberdayaan Masyarakat</option>
+                            <option value="2">Program Pendidikan Lingkungan</option>
+                            <option value="3">Program Kesehatan Komunitas</option>
+                            <option value="4">Program Ekonomi Kreatif</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Jenis Kegiatan</label>
+                        <select class="form-control" id="jeniskegiatan_id">
+                            <option value="">Semua Jenis</option>
+                            <option value="1">Pelatihan</option>
+                            <option value="2">Sosialisasi</option>
+                            <option value="3">Monitoring</option>
+                            <option value="4">Assessment</option>
+                            <option value="5">Konsultasi</option>
+                            <option value="6">Kunjungan</option>
+                            <option value="7">Kampanye</option>
+                            <option value="8">Pembelanjaan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kegiatan Spesifik</label>
+                        <select class="form-control" id="kegiatan_id">
+                            <option value="">Semua Kegiatan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Periode Mulai</label>
+                        <input type="date" class="form-control" id="tanggal_mulai">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Periode Selesai</label>
+                        <input type="date" class="form-control" id="tanggal_selesai">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-control" id="status">
+                            <option value="">Semua Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="selesai">Selesai</option>
+                            <option value="dibatalkan">Dibatalkan</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h3 class="config-title">Kolom yang Ditampilkan</h3>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_program" checked>
+                        <label for="col_program">Program</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_jenis" checked>
+                        <label for="col_jenis">Jenis Kegiatan</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_periode" checked>
+                        <label for="col_periode">Periode</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_lokasi" checked>
+                        <label for="col_lokasi">Lokasi</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_status" checked>
+                        <label for="col_status">Status</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_penerima_manfaat" checked>
+                        <label for="col_penerima_manfaat">Penerima Manfaat</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_gender" checked>
+                        <label for="col_gender">Gender Breakdown</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_age_group">
+                        <label for="col_age_group">Kelompok Umur</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_disability">
+                        <label for="col_disability">Disabilitas</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="col_marjinal">
+                        <label for="col_marjinal">Kelompok Marjinal</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h3 class="config-title">Tipe Output & Agregasi</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Format Output</label>
+                        <select class="form-control" id="output_format">
+                            <option value="html">HTML Preview</option>
+                            <option value="excel">Excel (.xlsx)</option>
+                            <option value="csv">CSV</option>
+                            <option value="pdf">PDF</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Grup By</label>
+                        <select class="form-control" id="group_by">
+                            <option value="">Tanpa Pengelompokan</option>
+                            <option value="program">Per Program</option>
+                            <option value="jenis">Per Jenis Kegiatan</option>
+                            <option value="provinsi">Per Provinsi</option>
+                            <option value="bulan">Per Bulan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tampilkan Summary</label>
+                        <select class="form-control" id="show_summary">
+                            <option value="true">Ya</option>
+                            <option value="false">Tidak</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tampilkan Chart</label>
+                        <select class="form-control" id="show_chart">
+                            <option value="true">Ya</option>
+                            <option value="false">Tidak</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <button class="btn btn-primary" onclick="generateReport()">🔍 Preview Laporan</button>
+                <button class="btn btn-success" onclick="generateAndDownload()">📥 Download Laporan</button>
+                <button class="btn btn-info" onclick="scheduleReport()">⏰ Jadwalkan Laporan</button>
+                <button class="btn btn-secondary" onclick="resetForm()">🔄 Reset</button>
+            </div>
+        </div>
+
+        <!-- Report Preview -->
+        <div class="report-preview" id="reportPreview">
+            <div class="report-header">
+                <h2 class="report-title" id="reportTitle">Laporan Kegiatan</h2>
+                <div class="report-meta" id="reportMeta"></div>
+            </div>
+
+            <div class="summary-cards" id="summaryCards"></div>
+
+            <div class="chart-section" id="chartSection" style="display: none;">
+                <canvas id="reportChart" class="chart-container"></canvas>
+            </div>
+
+            <div id="reportContent"></div>
+
+            <div class="export-buttons">
+                <button class="btn btn-success" onclick="exportToExcel()">📊 Export Excel</button>
+                <button class="btn btn-info" onclick="exportToPDF()">📄 Export PDF</button>
+                <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data untuk simulasi
+        const sampleData = {
+            programs: [
+                { id: 1, nama: 'Program Pemberdayaan Masyarakat', kode: 'PRG001' },
+                { id: 2, nama: 'Program Pendidikan Lingkungan', kode: 'PRG002' },
+                { id: 3, nama: 'Program Kesehatan Komunitas', kode: 'PRG003' },
+                { id: 4, nama: 'Program Ekonomi Kreatif', kode: 'PRG004' }
+            ],
+            jenisKegiatan: [
+                { id: 1, nama: 'Pelatihan' },
+                { id: 2, nama: 'Sosialisasi' },
+                { id: 3, nama: 'Monitoring' },
+                { id: 4, nama: 'Assessment' },
+                { id: 5, nama: 'Konsultasi' },
+                { id: 6, nama: 'Kunjungan' },
+                { id: 7, nama: 'Kampanye' },
+                { id: 8, nama: 'Pembelanjaan' }
+            ],
+            kegiatan: [
+                {
+                    id: 1, program_id: 1, jeniskegiatan_id: 1,
+                    tanggalmulai: '2024-01-15', tanggalselesai: '2024-01-17',
+                    status: 'selesai', lokasi: 'Denpasar, Bali',
+                    penerimamanfaattotal: 45, penerimamanfaatperempuantotal: 28, penerimamanfaatlakilakitotal: 17,
+                    penerimamanfaatdewasatotal: 35, penerimamanfaatremajatotal: 8, penerimamanfaatanaktotal: 2,
+                    penerimamanfaatdisabilitastotal: 3, penerimamanfaatmarjinaltotal: 12
+                },
+                {
+                    id: 2, program_id: 1, jeniskegiatan_id: 2,
+                    tanggalmulai: '2024-02-01', tanggalselesai: '2024-02-03',
+                    status: 'aktif', lokasi: 'Ubud, Bali',
+                    penerimamanfaattotal: 80, penerimamanfaatperempuantotal: 48, penerimamanfaatlakilakitotal: 32,
+                    penerimamanfaatdewasatotal: 65, penerimamanfaatremajatotal: 12, penerimamanfaatanaktotal: 3,
+                    penerimamanfaatdisabilitastotal: 5, penerimamanfaatmarjinaltotal: 18
+                },
+                {
+                    id: 3, program_id: 2, jeniskegiatan_id: 1,
+                    tanggalmulai: '2024-01-20', tanggalselesai: '2024-01-25',
+                    status: 'selesai', lokasi: 'Tabanan, Bali',
+                    penerimamanfaattotal: 60, penerimamanfaatperempuantotal: 35, penerimamanfaatlakilakitotal: 25,
+                    penerimamanfaatdewasatotal: 45, penerimamanfaatremajatotal: 10, penerimamanfaatanaktotal: 5,
+                    penerimamanfaatdisabilitastotal: 7, penerimamanfaatmarjinaltotal: 15
+                }
+            ]
+        };
+
+        // Populate kegiatan dropdown based on selected jenis
+        function updateKegiatanDropdown() {
+            const jenisId = document.getElementById('jeniskegiatan_id').value;
+            const kegiatanSelect = document.getElementById('kegiatan_id');
+
+            kegiatanSelect.innerHTML = '<option value="">Semua Kegiatan</option>';
+
+            if (jenisId) {
+                const filteredKegiatan = sampleData.kegiatan.filter(k => k.jeniskegiatan_id == jenisId);
+                filteredKegiatan.forEach(kegiatan => {
+                    const option = document.createElement('option');
+                    option.value = kegiatan.id;
+                    option.textContent = `KEG${kegiatan.id.toString().padStart(3, '0')} - ${kegiatan.lokasi}`;
+                    kegiatanSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Generate report based on selected parameters
+        function generateReport() {
+            const config = getReportConfig();
+            const filteredData = applyFilters(config);
+
+            displayReport(filteredData, config);
+            document.getElementById('reportPreview').style.display = 'block';
+            document.getElementById('reportPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getReportConfig() {
+            return {
+                program_id: document.getElementById('program_id').value,
+                jeniskegiatan_id: document.getElementById('jeniskegiatan_id').value,
+                kegiatan_id: document.getElementById('kegiatan_id').value,
+                tanggal_mulai: document.getElementById('tanggal_mulai').value,
+                tanggal_selesai: document.getElementById('tanggal_selesai').value,
+                status: document.getElementById('status').value,
+                output_format: document.getElementById('output_format').value,
+                group_by: document.getElementById('group_by').value,
+                show_summary: document.getElementById('show_summary').value === 'true',
+                show_chart: document.getElementById('show_chart').value === 'true',
+                columns: getSelectedColumns()
+            };
+        }
+
+        function getSelectedColumns() {
+            const columns = [];
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(cb => {
+                columns.push(cb.id.replace('col_', ''));
+            });
+            return columns;
+        }
+
+        function applyFilters(config) {
+            let filtered = [...sampleData.kegiatan];
+
+            if (config.program_id) {
+                filtered = filtered.filter(k => k.program_id == config.program_id);
+            }
+
+            if (config.jeniskegiatan_id) {
+                filtered = filtered.filter(k => k.jeniskegiatan_id == config.jeniskegiatan_id);
+            }
+
+            if (config.kegiatan_id) {
+                filtered = filtered.filter(k => k.id == config.kegiatan_id);
+            }
+
+            if (config.status) {
+                filtered = filtered.filter(k => k.status === config.status);
+            }
+
+            if (config.tanggal_mulai) {
+                filtered = filtered.filter(k => k.tanggalmulai >= config.tanggal_mulai);
+            }
+
+            if (config.tanggal_selesai) {
+                filtered = filtered.filter(k => k.tanggalselesai <= config.tanggal_selesai);
+            }
+
+            return filtered;
+        }
+
+        function displayReport(data, config) {
+            // Update title and meta
+            document.getElementById('reportTitle').textContent = generateReportTitle(config);
+            document.getElementById('reportMeta').innerHTML = generateReportMeta(config, data);
+
+            // Display summary if enabled
+            if (config.show_summary) {
+                displaySummaryCards(data);
+            }
+
+            // Display chart if enabled
+            if (config.show_chart) {
+                displayChart(data, config);
+            }
+
+            // Display main data table
+            displayDataTable(data, config);
+        }
+
+        function generateReportTitle(config) {
+            let title = 'Laporan Kegiatan';
+
+            if (config.program_id) {
+                const program = sampleData.programs.find(p => p.id == config.program_id);
+                title += ` - ${program.nama}`;
+            }
+
+            if (config.jeniskegiatan_id) {
+                const jenis = sampleData.jenisKegiatan.find(j => j.id == config.jeniskegiatan_id);
+                title += ` - ${jenis.nama}`;
+            }
+
+            return title;
+        }
+
+        function generateReportMeta(config, data) {
+            const now = new Date();
+            const periode = config.tanggal_mulai && config.tanggal_selesai ?
+                `${config.tanggal_mulai} s/d ${config.tanggal_selesai}` : 'Semua Periode';
+
+            return `
+                <strong>Periode:</strong> ${periode} |
+                <strong>Total Kegiatan:</strong> ${data.length} |
+                <strong>Dibuat:</strong> ${now.toLocaleString('id-ID')}
+            `;
+        }
+
+        function displaySummaryCards(data) {
+            const summaryCards = document.getElementById('summaryCards');
+            const totalKegiatan = data.length;
+            const totalPenerima = data.reduce((sum, k) => sum + k.penerimamanfaattotal, 0);
+            const totalPerempuan = data.reduce((sum, k) => sum + k.penerimamanfaatperempuantotal, 0);
+            const totalLakiLaki = data.reduce((sum, k) => sum + k.penerimamanfaatlakilakitotal, 0);
+            const totalDisabilitas = data.reduce((sum, k) => sum + k.penerimamanfaatdisabilitastotal, 0);
+
+            summaryCards.innerHTML = `
+                <div class="summary-card">
+                    <div class="summary-number">${totalKegiatan}</div>
+                    <div class="summary-label">Total Kegiatan</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number">${totalPenerima.toLocaleString()}</div>
+                    <div class="summary-label">Total Penerima Manfaat</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number">${totalPerempuan.toLocaleString()}</div>
+                    <div class="summary-label">Perempuan</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number">${totalLakiLaki.toLocaleString()}</div>
+                    <div class="summary-label">Laki-laki</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-number">${totalDisabilitas.toLocaleString()}</div>
+                    <div class="summary-label">Penyandang Disabilitas</div>
+                </div>
+            `;
+        }
+
+        function displayChart(data, config) {
+            const chartSection = document.getElementById('chartSection');
+            chartSection.style.display = 'block';
+
+            const ctx = document.getElementById('reportChart').getContext('2d');
+
+            // Clear previous chart
+            if (window.reportChart instanceof Chart) {
+                window.reportChart.destroy();
+            }
+
+            let chartData;
+            let chartType = 'bar';
+
+            if (config.group_by === 'jenis') {
+                const jenisData = {};
+                data.forEach(k => {
+                    const jenis = sampleData.jenisKegiatan.find(j => j.id === k.jeniskegiatan_id).nama;
+                    jenisData[jenis] = (jenisData[jenis] || 0) + k.penerimamanfaattotal;
+                });
+
+                chartData = {
+                    labels: Object.keys(jenisData),
+                    datasets: [{
+                        label: 'Penerima Manfaat',
+                        data: Object.values(jenisData),
+                        backgroundColor: '#667eea',
+                        borderColor: '#764ba2',
+                        borderWidth: 1
+                    }]
+                };
+            } else {
+                // Default: kegiatan by beneficiaries
+                chartData = {
+                    labels: data.map(k => `KEG${k.id.toString().padStart(3, '0')}`),
+                    datasets: [{
+                        label: 'Penerima Manfaat',
+                        data: data.map(k => k.penerimamanfaattotal),
+                        backgroundColor: '#667eea',
+                        borderColor: '#764ba2',
+                        borderWidth: 1
+                    }]
+                };
+            }
+
+            window.reportChart = new Chart(ctx, {
+                type: chartType,
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribusi Penerima Manfaat'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function displayDataTable(data, config) {
+            const reportContent = document.getElementById('reportContent');
+
+            if (data.length === 0) {
+                reportContent.innerHTML = '<p style="text-align: center; color: #7f8c8d;">Tidak ada data yang sesuai dengan kriteria filter.</p>';
+                return;
+            }
+
+            let tableHTML = '<table class="report-table"><thead><tr>';
+
+            // Build table headers based on selected columns
+            if (config.columns.includes('program')) tableHTML += '<th>Program</th>';
+            if (config.columns.includes('jenis')) tableHTML += '<th>Jenis Kegiatan</th>';
+            if (config.columns.includes('periode')) {
+                tableHTML += '<th>Tanggal Mulai</th>';
+                tableHTML += '<th>Tanggal Selesai</th>';
+            }
+            if (config.columns.includes('lokasi')) tableHTML += '<th>Lokasi</th>';
+            if (config.columns.includes('status')) tableHTML += '<th>Status</th>';
+            if (config.columns.includes('penerima_manfaat')) tableHTML += '<th>Total Penerima</th>';
+            if (config.columns.includes('gender')) {
+                tableHTML += '<th>Perempuan</th>';
+                tableHTML += '<th>Laki-laki</th>';
+            }
+            if (config.columns.includes('age_group')) {
+                tableHTML += '<th>Dewasa</th>';
+                tableHTML += '<th>Remaja</th>';
+                tableHTML += '<th>Anak</th>';
+            }
+            if (config.columns.includes('disability')) tableHTML += '<th>Disabilitas</th>';
+            if (config.columns.includes('marjinal')) tableHTML += '<th>Kelompok Marjinal</th>';
+
+            tableHTML += '</tr></thead><tbody>';
+
+            // Build table rows
+            data.forEach(kegiatan => {
+                tableHTML += '<tr>';
+
+                if (config.columns.includes('program')) {
+                    const program = sampleData.programs.find(p => p.id === kegiatan.program_id);
+                    tableHTML += `<td>${program ? program.nama : '-'}</td>`;
+                }
+
+                if (config.columns.includes('jenis')) {
+                    const jenis = sampleData.jenisKegiatan.find(j => j.id === kegiatan.jeniskegiatan_id);
+                    tableHTML += `<td>${jenis ? jenis.nama : '-'}</td>`;
+                }
+
+                if (config.columns.includes('periode')) {
+                    tableHTML += `<td>${formatDate(kegiatan.tanggalmulai)}</td>`;
+                    tableHTML += `<td>${formatDate(kegiatan.tanggalselesai)}</td>`;
+                }
+
+                if (config.columns.includes('lokasi')) {
+                    tableHTML += `<td>${kegiatan.lokasi || '-'}</td>`;
+                }
+
+                if (config.columns.includes('status')) {
+                    tableHTML += `<td><span class="status-badge status-${kegiatan.status}">${kegiatan.status}</span></td>`;
+                }
+
+                if (config.columns.includes('penerima_manfaat')) {
+                    tableHTML += `<td>${kegiatan.penerimamanfaattotal.toLocaleString()}</td>`;
+                }
+
+                if (config.columns.includes('gender')) {
+                    tableHTML += `<td>${kegiatan.penerimamanfaatperempuantotal.toLocaleString()}</td>`;
+                    tableHTML += `<td>${kegiatan.penerimamanfaatlakilakitotal.toLocaleString()}</td>`;
+                }
+
+                if (config.columns.includes('age_group')) {
+                    tableHTML += `<td>${kegiatan.penerimamanfaatdewasatotal.toLocaleString()}</td>`;
+                    tableHTML += `<td>${kegiatan.penerimamanfaatremajatotal.toLocaleString()}</td>`;
+                    tableHTML += `<td>${kegiatan.penerimamanfaatanaktotal.toLocaleString()}</td>`;
+                }
+
+                if (config.columns.includes('disability')) {
+                    tableHTML += `<td>${kegiatan.penerimamanfaatdisabilitastotal.toLocaleString()}</td>`;
+                }
+
+                if (config.columns.includes('marjinal')) {
+                    tableHTML += `<td>${kegiatan.penerimamanfaatmarjinaltotal.toLocaleString()}</td>`;
+                }
+
+                tableHTML += '</tr>';
+            });
+
+            tableHTML += '</tbody></table>';
+
+            // Add subtotals if grouping is enabled
+            if (config.group_by && config.group_by !== '') {
+                tableHTML += generateSubtotals(data, config);
+            }
+
+            reportContent.innerHTML = tableHTML;
+        }
+
+        function generateSubtotals(data, config) {
+            let subtotalsHTML = '<div style="margin-top: 30px;"><h3>Ringkasan per ' +
+                (config.group_by === 'program' ? 'Program' :
+                    config.group_by === 'jenis' ? 'Jenis Kegiatan' :
+                        config.group_by === 'provinsi' ? 'Provinsi' : 'Bulan') + '</h3>';
+
+            const groups = {};
+
+            data.forEach(kegiatan => {
+                let groupKey;
+
+                switch (config.group_by) {
+                    case 'program':
+                        const program = sampleData.programs.find(p => p.id === kegiatan.program_id);
+                        groupKey = program ? program.nama : 'Program Tidak Diketahui';
+                        break;
+                    case 'jenis':
+                        const jenis = sampleData.jenisKegiatan.find(j => j.id === kegiatan.jeniskegiatan_id);
+                        groupKey = jenis ? jenis.nama : 'Jenis Tidak Diketahui';
+                        break;
+                    case 'bulan':
+                        const date = new Date(kegiatan.tanggalmulai);
+                        groupKey = date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+                        break;
+                    default:
+                        groupKey = 'Lainnya';
+                }
+
+                if (!groups[groupKey]) {
+                    groups[groupKey] = {
+                        count: 0,
+                        totalPenerima: 0,
+                        totalPerempuan: 0,
+                        totalLakiLaki: 0,
+                        totalDisabilitas: 0,
+                        totalMarjinal: 0
+                    };
+                }
+
+                groups[groupKey].count++;
+                groups[groupKey].totalPenerima += kegiatan.penerimamanfaattotal;
+                groups[groupKey].totalPerempuan += kegiatan.penerimamanfaatperempuantotal;
+                groups[groupKey].totalLakiLaki += kegiatan.penerimamanfaatlakilakitotal;
+                groups[groupKey].totalDisabilitas += kegiatan.penerimamanfaatdisabilitastotal;
+                groups[groupKey].totalMarjinal += kegiatan.penerimamanfaatmarjinaltotal;
+            });
+
+            subtotalsHTML += '<table class="report-table"><thead><tr>';
+            subtotalsHTML += '<th>' + (config.group_by === 'program' ? 'Program' :
+                config.group_by === 'jenis' ? 'Jenis Kegiatan' :
+                    config.group_by === 'provinsi' ? 'Provinsi' : 'Bulan') + '</th>';
+            subtotalsHTML += '<th>Jumlah Kegiatan</th>';
+            subtotalsHTML += '<th>Total Penerima</th>';
+            subtotalsHTML += '<th>Perempuan</th>';
+            subtotalsHTML += '<th>Laki-laki</th>';
+            subtotalsHTML += '<th>Disabilitas</th>';
+            subtotalsHTML += '<th>Kelompok Marjinal</th>';
+            subtotalsHTML += '</tr></thead><tbody>';
+
+            Object.entries(groups).forEach(([key, values]) => {
+                subtotalsHTML += `<tr>
+                    <td><strong>${key}</strong></td>
+                    <td>${values.count}</td>
+                    <td>${values.totalPenerima.toLocaleString()}</td>
+                    <td>${values.totalPerempuan.toLocaleString()}</td>
+                    <td>${values.totalLakiLaki.toLocaleString()}</td>
+                    <td>${values.totalDisabilitas.toLocaleString()}</td>
+                    <td>${values.totalMarjinal.toLocaleString()}</td>
+                </tr>`;
+            });
+
+            subtotalsHTML += '</tbody></table></div>';
+            return subtotalsHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID');
+        }
+
+        function generateAndDownload() {
+            const config = getReportConfig();
+            const filteredData = applyFilters(config);
+
+            switch (config.output_format) {
+                case 'excel':
+                    exportToExcel(filteredData, config);
+                    break;
+                case 'csv':
+                    exportToCSV(filteredData, config);
+                    break;
+                case 'pdf':
+                    exportToPDF(filteredData, config);
+                    break;
+                default:
+                    generateReport(); // Show HTML preview
+            }
+        }
+
+        function exportToExcel(data = null, config = null) {
+            if (!data) {
+                const currentConfig = getReportConfig();
+                data = applyFilters(currentConfig);
+                config = currentConfig;
+            }
+
+            // Simulate Excel export
+            const csvContent = generateCSVContent(data, config);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `laporan_kegiatan_${getCurrentTimestamp()}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            showNotification('File Excel telah didownload!', 'success');
+        }
+
+        function exportToCSV(data, config) {
+            const csvContent = generateCSVContent(data, config);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `laporan_kegiatan_${getCurrentTimestamp()}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            showNotification('File CSV telah didownload!', 'success');
+        }
+
+        function generateCSVContent(data, config) {
+            let csv = '';
+
+            // Add headers
+            const headers = [];
+            if (config.columns.includes('program')) headers.push('Program');
+            if (config.columns.includes('jenis')) headers.push('Jenis Kegiatan');
+            if (config.columns.includes('periode')) {
+                headers.push('Tanggal Mulai');
+                headers.push('Tanggal Selesai');
+            }
+            if (config.columns.includes('lokasi')) headers.push('Lokasi');
+            if (config.columns.includes('status')) headers.push('Status');
+            if (config.columns.includes('penerima_manfaat')) headers.push('Total Penerima');
+            if (config.columns.includes('gender')) {
+                headers.push('Perempuan');
+                headers.push('Laki-laki');
+            }
+            if (config.columns.includes('age_group')) {
+                headers.push('Dewasa');
+                headers.push('Remaja');
+                headers.push('Anak');
+            }
+            if (config.columns.includes('disability')) headers.push('Disabilitas');
+            if (config.columns.includes('marjinal')) headers.push('Kelompok Marjinal');
+
+            csv += headers.join(',') + '\n';
+
+            // Add data rows
+            data.forEach(kegiatan => {
+                const row = [];
+
+                if (config.columns.includes('program')) {
+                    const program = sampleData.programs.find(p => p.id === kegiatan.program_id);
+                    row.push(`"${program ? program.nama : '-'}"`);
+                }
+
+                if (config.columns.includes('jenis')) {
+                    const jenis = sampleData.jenisKegiatan.find(j => j.id === kegiatan.jeniskegiatan_id);
+                    row.push(`"${jenis ? jenis.nama : '-'}"`);
+                }
+
+                if (config.columns.includes('periode')) {
+                    row.push(`"${formatDate(kegiatan.tanggalmulai)}"`);
+                    row.push(`"${formatDate(kegiatan.tanggalselesai)}"`);
+                }
+
+                if (config.columns.includes('lokasi')) {
+                    row.push(`"${kegiatan.lokasi || '-'}"`);
+                }
+
+                if (config.columns.includes('status')) {
+                    row.push(`"${kegiatan.status}"`);
+                }
+
+                if (config.columns.includes('penerima_manfaat')) {
+                    row.push(kegiatan.penerimamanfaattotal);
+                }
+
+                if (config.columns.includes('gender')) {
+                    row.push(kegiatan.penerimamanfaatperempuantotal);
+                    row.push(kegiatan.penerimamanfaatlakilakitotal);
+                }
+
+                if (config.columns.includes('age_group')) {
+                    row.push(kegiatan.penerimamanfaatdewasatotal);
+                    row.push(kegiatan.penerimamanfaatremajatotal);
+                    row.push(kegiatan.penerimamanfaatanaktotal);
+                }
+
+                if (config.columns.includes('disability')) {
+                    row.push(kegiatan.penerimamanfaatdisabilitastotal);
+                }
+
+                if (config.columns.includes('marjinal')) {
+                    row.push(kegiatan.penerimamanfaatmarjinaltotal);
+                }
+
+                csv += row.join(',') + '\n';
+            });
+
+            return csv;
+        }
+
+        function exportToPDF() {
+            // Simulate PDF generation
+            showNotification('Fitur PDF akan segera tersedia! Gunakan Print untuk sementara.', 'info');
+            setTimeout(() => {
+                window.print();
+            }, 1000);
+        }
+
+        function scheduleReport() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 1000; display: flex;
+                justify-content: center; align-items: center;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
+                    <h3>Jadwalkan Laporan Otomatis</h3>
+                    <div style="margin: 20px 0;">
+                        <label>Frekuensi:</label>
+                        <select style="width: 100%; padding: 10px; margin-top: 5px;">
+                            <option>Harian</option>
+                            <option>Mingguan</option>
+                            <option>Bulanan</option>
+                        </select>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <label>Email Tujuan:</label>
+                        <input type="email" placeholder="admin@idep.org" style="width: 100%; padding: 10px; margin-top: 5px;">
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="this.closest('[style*=position]').remove(); showNotification('Jadwal laporan berhasil disimpan!', 'success');"
+                                style="padding: 10px 20px; background: #2ecc71; color: white; border: none; border-radius: 5px; margin-right: 10px;">
+                            Simpan Jadwal
+                        </button>
+                        <button onclick="this.closest('[style*=position]').remove()"
+                                style="padding: 10px 20px; background: #95a5a6; color: white; border: none; border-radius: 5px;">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        function resetForm() {
+            document.getElementById('program_id').value = '';
+            document.getElementById('jeniskegiatan_id').value = '';
+            document.getElementById('kegiatan_id').value = '';
+            document.getElementById('tanggal_mulai').value = '';
+            document.getElementById('tanggal_selesai').value = '';
+            document.getElementById('status').value = '';
+            document.getElementById('output_format').value = 'html';
+            document.getElementById('group_by').value = '';
+            document.getElementById('show_summary').value = 'true';
+            document.getElementById('show_chart').value = 'true';
+
+            // Reset all checkboxes to checked
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                if (['col_program', 'col_jenis', 'col_periode', 'col_lokasi', 'col_status', 'col_penerima_manfaat', 'col_gender'].includes(cb.id)) {
+                    cb.checked = true;
+                } else {
+                    cb.checked = false;
+                }
+            });
+
+            document.getElementById('reportPreview').style.display = 'none';
+            updateKegiatanDropdown();
+        }
+
+        function getCurrentTimestamp() {
+            const now = new Date();
+            return now.toISOString().slice(0, 19).replace(/:/g, '-');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1000;
+                padding: 15px 20px; border-radius: 10px; color: white; font-weight: 600;
+                background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#e74c3c' : '#3498db'};
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Event listeners
+        document.getElementById('jeniskegiatan_id').addEventListener('change', updateKegiatanDropdown);
+
+        // Initialize with default data
+        document.addEventListener('DOMContentLoaded', function () {
+            updateKegiatanDropdown();
+        });
+
+        // Add CSS for status badges
+        const additionalCSS = document.createElement('style');
+        additionalCSS.textContent = `
+            .status-badge {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            .status-aktif { background: #d4edda; color: #155724; }
+            .status-selesai { background: #cce5ff; color: #004085; }
+            .status-draft { background: #fff3cd; color: #856404; }
+            .status-dibatalkan { background: #f8d7da; color: #721c24; }
+
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(additionalCSS);
+    </script>
+</body>
+
+</html>
