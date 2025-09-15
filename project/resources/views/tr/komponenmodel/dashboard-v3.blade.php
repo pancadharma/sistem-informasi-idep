@@ -85,23 +85,23 @@
                     <div class="card-header">
                         <h3 class="card-title">Rincian Komponen Program</h3>
                     </div>
-                    <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap" id="komponenTableV3">
-                                    <thead>
-                                        <tr>
-                                            <th>Program</th>
-                                            <th>Tipe Komponen</th>
-                                            <th>Total</th>
-                                            <th>Satuan</th>
-                                            <th>Tahun</th>
-                                            <th>Jml. Lokasi</th>
-                                            <th>Status</th>
-                                            <th class="text-center" title="Lihat Detail">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="komponen-table-body"></tbody>
-                                </table>
-                            </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover text-nowrap" id="komponenTableV3">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Tipe Komponen</th>
+                                    <th>Total</th>
+                                    <th>Satuan</th>
+                                    <th>Tahun</th>
+                                    <th>Jml. Lokasi</th>
+                                    <th>Status</th>
+                                    <th class="text-center" title="Lihat Detail">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="komponen-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,6 +139,11 @@
         </div>
 @endsection
 @push('js')
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Select2', true)
+@section('plugins.Toastr', true)
+@section('plugins.Validation', true)
 <style type="text/css">
     @media print {
         .no-print {
@@ -190,11 +195,6 @@
         gap: 6px;
     }
 </style>
-@section('plugins.Sweetalert2', true)
-@section('plugins.DatatablesNew', true)
-@section('plugins.Select2', true)
-@section('plugins.Toastr', true)
-@section('plugins.Validation', true)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap" defer></script>
 
@@ -436,21 +436,28 @@
         // Initialize DataTable with sorting and search
         komponenDT = $('#komponenTableV3').DataTable({
             order: [[4, 'desc'], [2, 'desc']],
-            pageLength: 10,
             lengthChange: true,
             autoWidth: false,
             responsive: true,
             columnDefs: [
                 { orderable: false, targets: [7] },
             ],
-            language: {
-                search: 'Cari:',
-                lengthMenu: 'Tampilkan _MENU_ baris',
-                info: 'Menampilkan _START_–_END_ dari _TOTAL_ entri',
-                infoEmpty: 'Tidak ada data',
-                zeroRecords: 'Tidak ditemukan data yang cocok',
-                paginate: { first: 'Pertama', last: 'Terakhir', next: 'Berikutnya', previous: 'Sebelumnya' }
-            }
+            layout: {
+                bottomStart: {
+                    pageLength: 10,
+                },
+                topStart: {
+                    buttons: ['excel', 'print', 'colvis']
+                },
+            },
+            // language: {
+            //     search: 'Cari:',
+            //     lengthMenu: 'Tampilkan _MENU_ baris',
+            //     info: 'Menampilkan _START_–_END_ dari _TOTAL_ entri',
+            //     infoEmpty: 'Tidak ada data',
+            //     zeroRecords: 'Tidak ditemukan data yang cocok',
+            //     paginate: { first: 'Pertama', last: 'Terakhir', next: 'Berikutnya', previous: 'Sebelumnya' }
+            // }
         });
     };
 
