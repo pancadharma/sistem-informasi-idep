@@ -257,7 +257,8 @@ class KomponenModelDashboardController extends Controller
     // New method for indexV3
     public function indexV3()
     {
-        return view('tr.komponenmodel.dashboard-v3');
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+        return view('tr.komponenmodel.dashboard-v3', compact('googleMapsApiKey'));
     }
 
     public function getInitialData()

@@ -37,3 +37,5 @@ cline_mcp_settings.json
 .trae/.ignore
 .kilocodemodes
 .kilocode/mcp.json
+.continue/mcpServers/new-mcp-server-1.yaml
+.continue/*

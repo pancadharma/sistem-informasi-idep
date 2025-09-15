@@ -30,7 +30,7 @@
                 <option value="all">Semua Tahun</option>
             </select>
         </div>
-        <div class="col-md-2">
+        {{-- <div class="col-md-2">
             <label>&nbsp;</label>
             <button id="applyFilters" class="btn btn-primary btn-block">
                 <i class="fas fa-check mr-1"></i> Terapkan Filter
@@ -48,98 +48,102 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <div id="loading-overlay" class="position-fixed w-100 h-100" style="background-color: rgba(0,0,0,0.5); z-index: 1055; top: 0; left: 0; display: flex; justify-content: center; align-items: center;">
         <div class="loader"></div>
     </div>
-
-                <div id="stats-cards" class="row"></div>
-
-                <!-- Charts Row -->
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Distribusi Tipe Komponen (Pie)</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="komponenPieChart"></canvas>
-                            </div>
-                        </div>
+    {{-- <div id="stats-cards" class="row"></div> --}}
+    <!-- Charts Row -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Distribusi Tipe Komponen (Pie)</h3>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Distribusi Tipe Komponen (Bar)</h3>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="komponenBarChart"></canvas>
-                            </div>
+                    <div class="card-body">
+                        <canvas id="komponenPieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Distribusi Tipe Komponen (Bar)</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="komponenBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Table Row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Rincian Komponen Program</h3>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover text-nowrap" id="komponenTableV3">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Tipe Komponen</th>
+                                    <th>Total</th>
+                                    <th>Satuan</th>
+                                    <th>Tahun</th>
+                                    <th>Jml. Lokasi</th>
+                                    <th>Status</th>
+                                    <th class="text-center" title="Lihat Detail">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="komponen-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Map Row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Peta Komponen Model</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Detail Modal -->
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="modal-title-heading" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div><h5 class="modal-title" id="modal-title-heading">Detail Komponen</h5><p id="modal-subtitle" class="text-muted mb-0"></p></div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="callout callout-info"><p id="modal-key-info" class="mb-0"></p></div>
+                        <div class="mb-3"><h5 class="mb-2">Target Reinstra yang Didukung</h5><ul id="modal-targets" class="list-unstyled"></ul></div>
+                        <div>
+                            <h5>Rincian Lokasi Implementasi</h5>
+                            <div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Provinsi</th><th>Kabupaten</th><th>Kecamatan</th><th>Desa</th><th>Jumlah</th></tr></thead><tbody id="modal-locations-body"></tbody></table></div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Table Row -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Rincian Komponen Program</h3>
-                            </div>
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>Program</th>
-                                            <th>Tipe Komponen</th>
-                                            <th>Total Unit</th>
-                                            <th>Jml. Lokasi</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="komponen-table-body"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Map Row -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Peta Sebaran Lokasi</h3>
-                            </div>
-                            <div class="card-body p-0">
-                                <div id="map"></div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- Detail Modal -->
-                <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="modal-title-heading" aria-hidden="true">
-                    <div class="modal-dialog modal-xl" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <div><h5 class="modal-title" id="modal-title-heading">Detail Komponen</h5><p id="modal-subtitle" class="text-muted mb-0"></p></div>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="callout callout-info"><p id="modal-key-info" class="mb-0"></p></div>
-                                <div class="mb-3"><h5 class="mb-2">Target Reinstra yang Didukung</h5><ul id="modal-targets" class="list-unstyled"></ul></div>
-                                <div>
-                                    <h5>Rincian Lokasi Implementasi</h5>
-                                    <div class="table-responsive"><table class="table table-bordered table-striped"><thead><tr><th>Provinsi</th><th>Kabupaten</th><th>Kecamatan</th><th>Desa</th><th>Jumlah</th></tr></thead><tbody id="modal-locations-body"></tbody></table></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endsection
-
+            </div>
+        </div>
+@endsection
 @push('js')
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Select2', true)
+@section('plugins.Toastr', true)
+@section('plugins.Validation', true)
 <style type="text/css">
     @media print {
         .no-print {
@@ -161,19 +165,47 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+    /* Map sizing and in-map filter control styles to mirror v2 look */
+    #map {
+        height: 500px;
+        width: 100%;
+        border-radius: 0.25rem;
+    }
+    .marker-filter-control {
+        background: #fff;
+        padding: 8px 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        color: #333;
+        min-width: 200px;
+    }
+    .marker-filter-control .filter-header {
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    .marker-filter-control .checkbox {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+    }
+    .marker-filter-control .filter-actions {
+        margin-top: 6px;
+        display: flex;
+        gap: 6px;
+    }
 </style>
-@section('plugins.Sweetalert2', true)
-@section('plugins.DatatablesNew', true)
-@section('plugins.Select2', true)
-@section('plugins.Toastr', true)
-@section('plugins.Validation', true)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap" defer></script>
 
 <script>
     // --- GLOBAL VARIABLES ---
     let komponenPieChart, komponenBarChart, map;
     let allData = [];
+    let markerGroups = {}; // tipe -> array of google.maps.Marker
+    let allMarkers = [];
+    let markerControlDiv = null; // custom control DOM element
+    let komponenDT = null; // DataTable instance
 
     // --- UI HELPER FUNCTIONS ---
     const showLoading = () => $('#loading-overlay').css('display', 'flex');
@@ -262,51 +294,170 @@
         });
     };
 
-    const renderMap = (data) => {
-        if (!map) {
-            map = L.map('map').setView([-8.409518, 115.188919], 10);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap'
-            }).addTo(map);
+    const clearAllMarkers = () => {
+        allMarkers.forEach(m => m.setMap(null));
+        allMarkers = [];
+        markerGroups = {};
+    };
 
-            // Disable default marker shadow to avoid 404 errors
-            delete L.Icon.Default.prototype._getIconUrl;
-            L.Icon.Default.mergeOptions({
-                iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/dist/images/marker-icon-2x.png',
-                iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/dist/images/marker-icon.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/dist/images/marker-shadow.png'
+    const renderMap = (data) => {
+        if (!map) return; // Wait for Google Maps to initialize via callback
+
+        clearAllMarkers();
+
+        const validLocations = (data || []).filter(item => item.lat && item.long);
+        const infoWindow = new google.maps.InfoWindow();
+        validLocations.forEach(item => {
+            const tipe = item.komponen_tipe || 'Lainnya';
+            if (!markerGroups[tipe]) markerGroups[tipe] = [];
+            const position = new google.maps.LatLng(parseFloat(item.lat), parseFloat(item.long));
+            const marker = new google.maps.Marker({ position, map });
+            const html = `<b>${item.komponen_tipe || '-'}</b><br>${item.provinsi || '-'}${item.desa ? ' - ' + item.desa : ''}`;
+            marker.addListener('click', () => {
+                infoWindow.setContent(html);
+                infoWindow.open(map, marker);
             });
-        }
-        setTimeout(() => map.invalidateSize(), 200);
-        map.eachLayer(layer => { if (layer instanceof L.Marker) map.removeLayer(layer); });
-        const validLocations = data.filter(item => item.lat && item.long);
-        if (validLocations.length > 0) {
-            const markers = validLocations.map(item => L.marker([item.lat, item.long]).bindPopup(`<b>${item.desa}</b><br>${item.komponen_tipe}`));
-            const group = new L.featureGroup(markers).addTo(map);
-            map.fitBounds(group.getBounds().pad(0.5));
+            markerGroups[tipe].push(marker);
+            allMarkers.push(marker);
+        });
+
+        buildMarkerFilterControl();
+
+        // Keep current center/zoom; do not auto-fit to markers
+        if (allMarkers.length === 0) {
+            map.setCenter({ lat: -2.5489, lng: 118.0149 });
+            map.setZoom(5);
         }
     };
+
+    const buildMarkerFilterControl = () => {
+        const tipos = Object.keys(markerGroups);
+        if (!markerControlDiv) {
+            markerControlDiv = document.createElement('div');
+            markerControlDiv.className = 'marker-filter-control';
+            ['click','dblclick','contextmenu','wheel','mousedown','touchstart','pointerdown'].forEach(evt => {
+                markerControlDiv.addEventListener(evt, e => e.stopPropagation());
+            });
+            map.controls[google.maps.ControlPosition.TOP_RIGHT].push(markerControlDiv);
+        }
+        markerControlDiv.innerHTML = `
+            <div class="filter-header">Filter Marker</div>
+            <div class="filter-body">
+                ${tipos.map(t => `<label class=\"checkbox\"><input type=\"checkbox\" class=\"marker-type-toggle\" data-type=\"${t}\" checked> ${t}</label>`).join('')}
+                <div class="filter-actions">
+                    <button type="button" class="btn btn-xs btn-primary" id="showAllMarkers">Semua</button>
+                    <button type="button" class="btn btn-xs btn-secondary" id="hideAllMarkers">Sembunyikan</button>
+                    <button type="button" class="btn btn-xs btn-info" id="fitToMarkers">Zoom Data</button>
+                    <button type="button" class="btn btn-xs btn-light" id="resetView">Reset Indo</button>
+                </div>
+            </div>`;
+
+        $(markerControlDiv).find('.marker-type-toggle').off('change').on('change', function() {
+            const tipe = this.dataset.type;
+            const arr = markerGroups[tipe] || [];
+            if (this.checked) {
+                arr.forEach(m => m.setMap(map));
+            } else {
+                arr.forEach(m => m.setMap(null));
+            }
+        });
+        $(markerControlDiv).find('#showAllMarkers').off('click').on('click', function() {
+            $(markerControlDiv).find('.marker-type-toggle').prop('checked', true).trigger('change');
+        });
+        $(markerControlDiv).find('#hideAllMarkers').off('click').on('click', function() {
+            $(markerControlDiv).find('.marker-type-toggle').prop('checked', false).trigger('change');
+        });
+        $(markerControlDiv).find('#fitToMarkers').off('click').on('click', function() {
+            const visibleMarkers = [];
+            Object.keys(markerGroups).forEach(t => {
+                const checked = $(markerControlDiv).find(`.marker-type-toggle[data-type="${t}"]`).is(':checked');
+                if (!checked) return;
+                (markerGroups[t] || []).forEach(m => { if (m.getMap()) visibleMarkers.push(m); });
+            });
+            if (visibleMarkers.length > 0) {
+                const bounds = new google.maps.LatLngBounds();
+                visibleMarkers.forEach(m => bounds.extend(m.getPosition()));
+                map.fitBounds(bounds);
+            }
+        });
+        $(markerControlDiv).find('#resetView').off('click').on('click', function() {
+            map.setCenter({ lat: -2.5489, lng: 118.0149 });
+            map.setZoom(5);
+        });
+    };
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -2.5489, lng: 118.0149 },
+            zoom: 5
+        });
+        if (allData && allData.length) {
+            renderMap(allData);
+        }
+    }
+    window.initMap = initMap;
 
     const renderTable = (data) => {
         const tableBody = $('#komponen-table-body');
         tableBody.empty();
         const groupedData = groupDataByKomponen(data);
 
+        // Re-init DataTable cleanly
+        if (komponenDT) {
+            komponenDT.destroy();
+            komponenDT = null;
+        }
+
         if (groupedData.length === 0) {
-            tableBody.html(`<tr><td colspan="5" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>`);
+            tableBody.html('<tr><td colspan="8" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>');
             return;
         }
         groupedData.forEach(item => {
             const statusClass = item.status_program === 'Active' ? 'badge-success' : 'badge-warning';
             const locationCount = item.locations ? item.locations.length : 0;
-            const row = $(`<tr style="cursor: pointer;" data-komponen-id="${item.komponen_id}"></tr>`).html(`
-                <td>${item.nama_program || '-'}</td><td><strong>${item.komponen_tipe || '-'}</strong></td>
-                <td>${(item.total_unit || 0).toLocaleString('id-ID')} ${item.satuan_unit || ''}</td>
-                <td>${locationCount}</td><td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>
-            `);
+            const total = (item.total_unit || 0).toLocaleString('id-ID');
+            const satuan = item.satuan_unit || '';
+            const tahun = item.tahun_program || '';
+            const rawTotal = Number(item.total_unit) || 0;
+            const row = $(`<tr style="cursor: pointer;" data-komponen-id="${item.komponen_id}"></tr>`).html(
+                `<td>${item.nama_program || '-'}</td>` +
+                `<td><strong>${item.komponen_tipe || '-'}</strong></td>` +
+                `<td class="text-right" data-order="${rawTotal}">${total}</td>` +
+                `<td>${satuan}</td>` +
+                `<td data-order="${tahun}">${tahun || '-'}</td>` +
+                `<td class="text-right" data-order="${locationCount}">${locationCount}</td>` +
+                `<td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>` +
+                `<td class="text-center" title="Lihat Detail"><i class="fas fa-eye text-primary"></i></td>`
+            );
             row.on('click', () => showDetailModal(item.komponen_id));
             tableBody.append(row);
+        });
+
+        // Initialize DataTable with sorting and search
+        komponenDT = $('#komponenTableV3').DataTable({
+            order: [[4, 'desc'], [2, 'desc']],
+            lengthChange: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [7] },
+            ],
+            layout: {
+                bottomStart: {
+                    pageLength: 10,
+                },
+                topStart: {
+                    buttons: ['excel', 'print', 'colvis']
+                },
+            },
+            // language: {
+            //     search: 'Cari:',
+            //     lengthMenu: 'Tampilkan _MENU_ baris',
+            //     info: 'Menampilkan _START_–_END_ dari _TOTAL_ entri',
+            //     infoEmpty: 'Tidak ada data',
+            //     zeroRecords: 'Tidak ditemukan data yang cocok',
+            //     paginate: { first: 'Pertama', last: 'Terakhir', next: 'Berikutnya', previous: 'Sebelumnya' }
+            // }
         });
     };
 
@@ -323,7 +474,33 @@
         if (!data) return;
         $('#modal-title-heading').text(data.komponen_tipe);
         $('#modal-subtitle').text(`Bagian dari ${data.nama_program} (Tahun ${data.tahun_program})`);
-        $('#modal-key-info').text(`Total ${(data.total_unit || 0).toLocaleString('id-ID')} ${data.satuan_unit || ''} diimplementasikan di ${data.locations.length} lokasi.`);
+        const locs = data.locations || [];
+        const unitAgg = {};
+        locs.forEach(loc => {
+            const u = (loc.satuan_per_lokasi || data.satuan_unit || '').trim();
+            const val = parseFloat(loc.jumlah_per_lokasi) || 0;
+            if (!unitAgg[u]) unitAgg[u] = { total: 0, count: 0 };
+            unitAgg[u].total += val;
+            unitAgg[u].count += 1;
+        });
+        const units = Object.keys(unitAgg).filter(u => u.length > 0);
+        let keyInfo = '';
+        if (units.length === 1) {
+            const u = units[0];
+            const sumLoc = unitAgg[u].total;
+            const sum = sumLoc > 0 ? sumLoc : (Number(data.total_unit) || 0);
+            keyInfo = `Total ${Number(sum).toLocaleString('id-ID')} ${u} diimplementasikan di ${locs.length} lokasi.`;
+        } else if (units.length > 1) {
+            const parts = units.map(u => `${Number(unitAgg[u].total).toLocaleString('id-ID')} ${u} (${unitAgg[u].count} lokasi)`);
+            keyInfo = `Ringkasan kuantitas per satuan: ${parts.join(' • ')}`;
+        } else {
+            const sum = Number(data.total_unit) || 0;
+            const u = data.satuan_unit || '';
+            keyInfo = u
+                ? `Total ${sum.toLocaleString('id-ID')} ${u} diimplementasikan di ${locs.length} lokasi.`
+                : `Diimplementasikan di ${locs.length} lokasi.`;
+        }
+        $('#modal-key-info').html(keyInfo);
         $('#modal-targets').html(data.targets.map(t => `<li><i class="fas fa-check-circle text-success mr-2"></i>${t}</li>`).join('') || '<li>Tidak ada target yang terhubung.</li>');
         $('#modal-locations-body').html(data.locations.map(loc => `
             <tr><td>${loc.provinsi||'-'}</td><td>${loc.kabupaten||'-'}</td><td>${loc.kecamatan||'-'}</td><td>${loc.desa||'-'}</td><td>${(loc.jumlah_per_lokasi||0).toLocaleString('id-ID')} ${loc.satuan_per_lokasi||''}</td></tr>
@@ -386,6 +563,8 @@
         $('.select2').select2();
         initializeDashboard();
         $('#applyFilters').on('click', applyFiltersAndFetch);
+        // Dynamic fetch on filter change
+        $('#program_id, #komponenmodel_id, #provinsi_id, #tahun').on('change', applyFiltersAndFetch);
         $('#exportPrint').on('click', function(e) {
             e.preventDefault();
             exportDashboard();
