@@ -403,7 +403,7 @@ return [
             'id'                                    => 'ID',
             'title'                                 => 'Informasi Program',
             'list'                                  => 'Daftar Program',
-            'nama'                                  => 'Nama',
+            'nama'                                  => 'Nama Program',
             'kode'                                  => 'Kode',
             'tgl_mulai'                             => 'Tgl Mulai',
             'tgl_selesai'                           => 'Tgl Selesai',

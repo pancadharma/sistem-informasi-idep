@@ -154,8 +154,9 @@ return [
                 ],
                 [
                     'text'          => 'Komodel Dashboard',
-                    'route'         => 'dashboard.komodel_v2',
+                    'route'         => 'dashboard.komodel_v3',
                     'icon'          => 'fas fa-chart-pie',
+                    'active'        => ['dashboard', 'regex:@^dashboard/[0-9]+$@', 'dashboard*'],
                 ],
             ]
         ],
@@ -405,6 +406,12 @@ return [
             'icon' => 'fas fa-file',
             'icon_color' => 'cyan',
             'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+        ],
+        [
+            'text'   => 'Report IDEP',
+            'route'  => 'report.index',
+            'icon'   => 'fas fa-file-alt',
+            'active' => ['report', 'report*'],
         ],
     ],
 
