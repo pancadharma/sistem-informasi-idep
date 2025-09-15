@@ -108,9 +108,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
         // Komodel Dashboards
-        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
+        Route::get('/komodel-old', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
         Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
-        Route::get('/komodel-v3', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
+        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
 
         Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
         Route::post('/komodel-v4/export/pdf', [DashboardKomponenModelV4Controller::class, 'exportPdf'])->name('komodel_v4.export.pdf');
@@ -119,9 +119,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/meals-dashboard', [\App\Http\Controllers\MealsDashboardController::class, 'index'])->name('meals_dashboard');
         Route::post('/meals-dashboard/filter', [\App\Http\Controllers\MealsDashboardController::class, 'filterDashboardData'])->name('dashboard.filter');
     });
-Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
-// This route provides filtered data when the user applies filters.
-Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
+        Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
+        // This route provides filtered data when the user applies filters.
+        Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
 
     // Komponen Model Dashboard routes
     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
