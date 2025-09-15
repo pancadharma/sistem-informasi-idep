@@ -40,6 +40,11 @@ class Kegiatan extends Model implements HasMedia
         'tanggalselesai'
     ];
 
+    protected $casts = [
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+    ];
+
     protected $fillable = [
         'programoutcomeoutputactivity_id',
         'jeniskegiatan_id',

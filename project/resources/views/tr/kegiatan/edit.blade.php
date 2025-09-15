@@ -196,7 +196,7 @@
                                             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
                                         </label>
                                         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai"
-                                            value="{{ old('tanggalmulai', $kegiatan->tanggalmulai) }}">
+                                            value="{{ old('tanggalmulai', $tanggalmulai) }}">
                                     </div>
                                     <!-- tgl selesai-->
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
@@ -205,7 +205,7 @@
                                         </label>
                                         <input type="date" class="form-control" id="tanggalselesai"
                                             name="tanggalselesai"
-                                            value="{{ old('tanggalselesai', $kegiatan->tanggalselesai) }}">
+                                            value="{{ old('tanggalselesai', $tanggalselesai) }}">
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
                                         <label for="durasi" class="input-group col-form-label">
@@ -756,52 +756,6 @@
                             <!-- File Uploads Tabs -->
                             <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
                                 @include('tr.kegiatan.tabs._edit_uploads')
-{{--
-                                <!-- Document Uploads -->
-                                <div class="card-body pt-0">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <label for="dokumen_pendukung" class="control-label mb-0">
-                                                <strong>
-                                                    {{ __('cruds.kegiatan.file.upload') }}
-                                                </strong>
-                                                <span class="text-red">
-                                                    ( {{ __('allowed file: .pdf, .doc, .docx, .xls, .xlsx, .pptx | max: 50 MB') }} )
-                                                </span>
-                                            </label>
-                                            <div class="form-group file-loading">
-                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file" class="form-control" multiple
-                                                    data-show-upload="false" data-show-caption="true">
-                                            </div>
-                                            <div id="captions-container-docs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body pt-0">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <label for="media_pendukung" class="control-label mb-0">
-                                                <strong>
-                                                    {{ __('cruds.kegiatan.file.upload_media') }}
-                                                </strong>
-                                                <span class="text-red">
-                                                    ( {{ __('allowed file: .jpg, .png, .jpeg | max: 50 MB') }} )
-                                                </span>
-                                            </label>
-                                            <div class="form-group file-loading">
-                                                <input id="media_pendukung" name="media_pendukung[]" type="file" class="form-control" multiple
-                                                    data-show-upload="false" data-show-caption="true">
-                                            </div>
-                                            <div id="captions-container-media"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @push('basic_tab_js')
-                                    @include('tr.kegiatan.js._file_upload_scripts')
-                                @endpush
---}}
-
                             </div>
 
                             {{-- Penulis Laporan Kegiatan --}}
@@ -1696,102 +1650,143 @@
 </script>
 @include('tr.kegiatan.js._penulis')
 <script>
-    // $(document).ready(function() {
-    //     const penulisApiUrl = "{{ route('api.kegiatan.penulis') }}";
-    //     const peranApiUrl = "{{ route('api.kegiatan.jabatan') }}";
+    $(document).ready(function() {
+        function calculateTotals() {
+            // Calculate totals for each row in the first table
+            $('tr').each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
 
-    //     function initializeRow(row) {
-    //         const penulisSelect = row.find('.penulis-select');
-    //         const jabatanSelect = row.find('.jabatan-select');
+            // Calculate overall totals for the first table
+            let totalPerempuan = 0;
+            let totalLakilaki = 0;
+            let totalAll = 0;
 
-    //         penulisSelect.select2({
-    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.nama") }}',
-    //             allowClear: true,
-    //             ajax: {
-    //                 url: penulisApiUrl,
-    //                 dataType: 'json',
-    //                 delay: 250,
-    //                 processResults: function(data) {
-    //                     return {
-    //                         results: $.map(data.data, function(item) {
-    //                             return {
-    //                                 id: item.id,
-    //                                 text: item.nama
-    //                             };
-    //                         })
-    //                     };
-    //                 }
-    //             }
-    //         });
+            totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
 
-    //         jabatanSelect.select2({
-    //             placeholder: '{{ __("global.pleaseSelect") . " " . __("cruds.kegiatan.penulis.jabatan") }}',
-    //             allowClear: true,
-    //             ajax: {
-    //                 url: peranApiUrl,
-    //                 dataType: 'json',
-    //                 delay: 250,
-    //                 processResults: function(data) {
-    //                     return {
-    //                         results: $.map(data.data, function(item) {
-    //                             return {
-    //                                 id: item.id,
-    //                                 text: item.nama
-    //                             };
-    //                         })
-    //                     };
-    //                 }
-    //             }
-    //         });
-    //     }
+            totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
 
-    //     // Initialize existing rows
-    //     $('.penulis-row').each(function() {
-    //         initializeRow($(this));
-    //     });
+            totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
 
-    //     // Add new row
-    //     $('#addPenulis').on('click', function() {
-    //         const newRow = `
-    //             <div class="row penulis-row col-12">
-    //                 <div class="col-lg-5 form-group mb-0">
-    //                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
-    //                     <div class="select2-orange">
-    //                         <select class="form-control select2 penulis-select" name="penulis[]"></select>
-    //                     </div>
-    //                 </div>
-    //                 <div class="col-lg-5 form-group d-flex align-items-end">
-    //                     <div class="flex-grow-1">
-    //                         <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
-    //                         <div class="select2-orange">
-    //                             <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
-    //                         </div>
-    //                     </div>
-    //                     <div class="ml-2">
-    //                         <button type="button" class="btn btn-danger remove-penulis-row">
-    //                             <i class="bi bi-trash"></i>
-    //                         </button>
-    //                     </div>
-    //                 </div>
-    //             </div>`;
-    //         $('#list_penulis_edit').append(newRow);
-    //         initializeRow($('.penulis-row').last());
-    //     });
+            // Update overall total fields for the first table
+            $('#penerimamanfaatperempuantotal').val(totalPerempuan);
+            $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaattotal').val(totalAll);
 
-    //     // Remove row
-    //     $('#list_penulis_edit').on('click', '.remove-penulis-row', function() {
-    //         if ($('.penulis-row').length > 1) {
-    //             $(this).closest('.penulis-row').remove();
-    //         } else {
-    //             // Optionally, clear the fields instead of removing the last row
-    //             const row = $(this).closest('.penulis-row');
-    //             row.find('.penulis-select').val(null).trigger('change');
-    //             row.find('.jabatan-select').val(null).trigger('change');
-    //         }
-    //     });
-    // });
+            // Calculate totals for each row in the second table (difabel table)
+            $('tr', $('#penerima_manfaat_difabel')).each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
+
+            // Calculate totals for each row in the second table (difabel table)
+            let totalBeneficiariesPerempuan = 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+            $('#total_beneficiaries_perempuan').val(totalBeneficiariesPerempuan);
+
+            let totalBeneficiariesLakilaki = 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+            $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
+
+            let totalBeneficiariesTotal = 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+            $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
+        }
+
+        // Validation for second table inputs
+        $('.hitung-difabel').on('input', function() {
+            let maxPerempuan = parseInt($('#penerimamanfaatperempuantotal').val()) || 0;
+            let maxLakilaki = parseInt($('#penerimamanfaatlakilakitotal').val()) || 0;
+            let maxTotal = parseInt($('#penerimamanfaattotal').val()) || 0;
+
+            let totalPerempuanSoFar = 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+
+            let totalLakilakiSoFar = 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            let totalAllSoFar = 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+
+            let id = this.id;
+            let value = parseInt($(this).val()) || 0;
+
+            if (id.includes('perempuan')) {
+                if (totalPerempuanSoFar > maxPerempuan) {
+                    $(this).val(value - (totalPerempuanSoFar - maxPerempuan));
+                }
+            } else if (id.includes('lakilaki')) {
+                if (totalLakilakiSoFar > maxLakilaki) {
+                    $(this).val(value - (totalLakilakiSoFar - maxLakilaki));
+                }
+            } else if (id.includes('total')) {
+                if (totalAllSoFar > maxTotal) {
+                    $(this).val(value - (totalAllSoFar - maxTotal));
+                }
+            }
+            calculateTotals(); // Recalculate totals after validation
+        });
+
+        // Trigger calculateTotals on input change for first table
+        $('.calculate').on('input', function() {
+            calculateTotals();
+        });
+
+        // Trigger calculateTotals on input change for second table
+
+        // Initial calculation
+        calculateTotals();
+
+        $('.calculate, .hitung-difabel').on('input', function() {
+            let value = parseInt($(this).val()) || 0;
+            if (value < 0) {
+                Toast.fire({
+                    icon: "error",
+                    title: "Number cannot be negative",
+                    timer: 600,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        // Swal.showLoading();
+                    },
+                });
+                $(this).val(0);
+                value = 0;
+            }
+            $(this).val(value);
+            calculateTotals($(this).closest('tr'));
+        });
+
+    });
 </script>
 @include('tr.kegiatan.js._validasi')
+{{-- @include('tr.kegiatan.js.complete') --}}
 
 <script>
     // Tab switching functionality

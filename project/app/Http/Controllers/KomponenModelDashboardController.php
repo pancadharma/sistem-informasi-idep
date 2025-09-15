@@ -37,6 +37,33 @@ class KomponenModelDashboardController extends Controller
         return view('tr.komponenmodel.dashboard', compact('programs', 'sektors', 'models', 'years', 'googleMapsApiKey'));
     }
 
+    public function indexV2()
+    {
+        $programs = Program::all();
+        $sektors =  TargetReinstra::all()->map(function ($sektor) {
+            return [
+                'id' => $sektor->id,
+                'nama' => $sektor->nama,
+            ];
+        })->toArray();
+        $models = Model::all();
+        $years = Meals_Komponen_Model::select(DB::raw('YEAR(created_at) as year'))
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+
+        $trendData = Meals_Komponen_Model::select(
+            DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
+            DB::raw('COUNT(id) as total')
+        )
+        ->groupBy('month')
+        ->orderBy('month', 'asc')
+        ->get();
+
+        return view('tr.komponenmodel.dashboard_v2', compact('programs', 'sektors', 'models', 'years', 'googleMapsApiKey', 'trendData'));
+    }
+
     public function getMapMarkers(Request $request)
     {
         $query = DB::table('trmeals_komponen_model_lokasi as l')
@@ -84,7 +111,7 @@ class KomponenModelDashboardController extends Controller
         $query = Program::query();
 
         if ($request->filled('model_id')) {
-            $query->whereHas('komponenModels', function ($q) use ($request) {
+            $query->whereHas('mealsKomponenModel', function ($q) use ($request) {
                 $q->where('komponenmodel_id', $request->model_id);
             });
         }
@@ -224,5 +251,148 @@ class KomponenModelDashboardController extends Controller
             'totalLokasi' => $totalLokasi,
             'totalJumlah' => number_format($totalJumlah),
         ]);
+    }
+
+
+    // New method for indexV3
+    public function indexV3()
+    {
+        return view('tr.komponenmodel.dashboard-v3');
+    }
+
+    public function getInitialData()
+    {
+        try {
+            // Fetch all data required for the dashboard view
+            $dashboard_data = $this->fetchData();
+
+            // Fetch data for filters
+            $programs = Program::select('id', 'nama')->orderBy('nama')->get();
+            $komponen_models = Model::select('id', 'nama')->orderBy('nama')->get();
+            $provinces = DB::table('provinsi')->select('id', 'nama')->orderBy('nama')->get();
+            // Extract unique years from the 'tanggalmulai' field of all programs
+            $years = Program::select(DB::raw('YEAR(tanggalmulai) as year'))
+                ->distinct()
+                ->orderBy('year', 'desc')
+                ->pluck('year');
+
+            return response()->json([
+                'filters' => [
+                    'programs' => $programs,
+                    'komponen_models' => $komponen_models,
+                    'provinces' => $provinces,
+                    'years' => $years,
+                ],
+                'dashboard_data' => $dashboard_data
+            ]);
+        } catch (\Exception $e) {
+            // Log the error and return an error response
+            \Log::error('Dashboard Initialization Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not initialize dashboard data.'], 500);
+        }
+    }
+
+    /**
+     * Provides filtered dashboard data based on request parameters.
+     */
+    public function getDashboardData(Request $request)
+    {
+        try {
+            // Fetch data using the reusable fetchData method with request filters
+            $dashboard_data = $this->fetchData($request);
+
+            return response()->json([
+                'dashboard_data' => $dashboard_data
+            ]);
+        } catch (\Exception $e) {
+            // Log the error and return an error response
+            \Log::error('Dashboard Data Fetch Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not retrieve dashboard data.'], 500);
+        }
+    }
+
+    /**
+     * A reusable private method to fetch and structure dashboard data.
+     * It can accept an optional request object for filtering.
+     *
+     * @param Request|null $request
+     * @return \Illuminate\Support\Collection
+     */
+    private function fetchData(Request $request = null)
+    {
+
+        // Start building the query - Changed to LEFT JOIN for locations to include komponen models without locations
+        $query = DB::table('trmeals_komponen_model as tkm')
+            ->join('trprogram as tp', 'tkm.program_id', '=', 'tp.id')
+            ->join('mkomponenmodel as mkm', 'tkm.komponenmodel_id', '=', 'mkm.id')
+            ->leftJoin('trmeals_komponen_model_lokasi as tkml', 'tkm.id', '=', 'tkml.mealskomponenmodel_id')
+            ->leftJoin('msatuan as ms', 'tkml.satuan_id', '=', 'ms.id')
+            ->leftJoin('provinsi as p', 'tkml.provinsi_id', '=', 'p.id')
+            ->leftJoin('kabupaten as kab', 'tkml.kabupaten_id', '=', 'kab.id')
+            ->leftJoin('kecamatan as kec', 'tkml.kecamatan_id', '=', 'kec.id')
+            ->leftJoin('kelurahan as kel', 'tkml.desa_id', '=', 'kel.id')
+            ->select(
+                'tkm.id as komponen_id',
+                'mkm.nama as komponen_tipe',
+                'tkm.totaljumlah as total_unit',
+                'ms.nama as satuan_unit', // Assuming the main unit is tied to the location's unit
+                'tp.id as program_id',
+                'tp.nama as nama_program',
+                'tp.status as status_program',
+                DB::raw('YEAR(tp.tanggalmulai) as tahun_program'),
+                'p.nama as provinsi',
+                'kab.nama as kabupaten',
+                'kec.nama as kecamatan',
+                'kel.nama as desa',
+                'tkml.jumlah as jumlah_per_lokasi',
+                'ms.nama as satuan_per_lokasi',
+                'tkml.lat',
+                'tkml.long'
+            )
+            ->whereNull('tkm.deleted_at')
+            ->where(function ($q) {
+                $q->whereNull('tkml.deleted_at')
+                  ->orWhereNull('tkml.id'); // Include komponen models without locations
+            });
+
+        // Apply filters if a request object is provided
+        if ($request) {
+            if ($request->filled('program_id') && $request->program_id !== 'all') {
+                $query->where('tkm.program_id', $request->program_id);
+            }
+            if ($request->filled('komponenmodel_id') && $request->komponenmodel_id !== 'all') {
+                $query->where('tkm.komponenmodel_id', $request->komponenmodel_id);
+            }
+            if ($request->filled('provinsi_id') && $request->provinsi_id !== 'all') {
+                $query->where('tkml.provinsi_id', $request->provinsi_id);
+            }
+            if ($request->filled('tahun') && $request->tahun !== 'all') {
+                $query->whereYear('tp.tanggalmulai', $request->tahun);
+            }
+        }
+
+        // Execute the main query
+        $results = $query->get();
+
+        // Get all related strategic targets (reinstra) in a separate efficient query
+        $komponenIds = $results->pluck('komponen_id')->unique();
+        if ($komponenIds->isNotEmpty()) {
+            $targets = DB::table('trmeals_komponen_model_targetreinstra as tkmtr')
+                ->join('mtargetreinstra as mtr', 'tkmtr.targetreinstra_id', '=', 'mtr.id')
+                ->whereIn('tkmtr.mealskomponenmodel_id', $komponenIds)
+                ->whereNull('tkmtr.deleted_at')
+                ->select('tkmtr.mealskomponenmodel_id as komponen_id', 'mtr.nama as target_reinstra')
+                ->get()
+                ->groupBy('komponen_id');
+        } else {
+            $targets = collect();
+        }
+
+        // Map the targets back to the main results
+        return $results->map(function ($item) use ($targets) {
+            $itemTargets = $targets->get($item->komponen_id);
+            $item->target_reinstra = $itemTargets ? $itemTargets->pluck('target_reinstra')->implode(';') : null;
+            return $item;
+        });
     }
 }

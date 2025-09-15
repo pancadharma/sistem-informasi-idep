@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-3 order-4 text-right">
             <label style="display: block;">&nbsp;</label> <!-- Spacer for alignment -->
-            <div class="btn-group">
+            <div class="btn-group no-print">
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-file-export"></i> Export
                 </button>
@@ -203,6 +203,16 @@
 @endsection
 
 @push('js')
+<style type="text/css">
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        .col-md-3.order-4.text-right{
+            display: none !important;
+        }
+    }
+</style>
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
