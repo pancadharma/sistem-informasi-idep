@@ -407,7 +407,7 @@ return [
             'id'                                 => 'ID',
             'title'                              => 'Program Information',
             'list'                               => 'Program List',
-            'nama'                               => 'Name',
+            'nama'                               => 'Program Name',
             'kode'                               => 'Code',
             'tgl_mulai'                          => 'Start Date',
             'tgl_selesai'                        => 'Finish Date',

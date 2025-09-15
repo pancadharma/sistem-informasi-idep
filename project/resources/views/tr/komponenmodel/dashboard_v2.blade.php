@@ -42,26 +42,6 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 order-4 text-right">
-            <label style="display: block;">&nbsp;</label> <!-- Spacer for alignment -->
-            <div class="btn-group no-print">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-file-export"></i> Export
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="#" id="exportPdf">
-                        <i class="fas fa-file-pdf text-danger mr-2"></i> PDF
-                    </a>
-                    <a class="dropdown-item" href="#" id="exportDocx">
-                        <i class="fas fa-file-word text-primary mr-2"></i> DOCX
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#" id="exportPrintBrowser">
-                        <i class="fas fa-print mr-2"></i> Save as PDF (Browser)
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Summary Cards -->
@@ -112,47 +92,83 @@
         </div>
     </div>
 
-    <!-- Charts -->
+    <!-- Komponen Model Table -->
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Tren Implementasi Komponen per Bulan</h3>
+                    <h3 class="card-title">Daftar Komponen Model</h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="trendChart" style="min-height: 250px; height: 250px; max-height: 350px; max-width: 100%;"></canvas>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="komponenTable">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Tipe Komponen</th>
+                                    <th>Total Unit</th>
+                                    <th>Satuan</th>
+                                    <th>Tahun</th>
+                                    <th>Status</th>
+                                    <th>Lokasi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="komponenTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Pilih filter untuk menampilkan data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
+
+    <!-- Program Details (shown after filter selection) -->
+    <div class="row" id="programDetailsSection" style="display: none;">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Total Kuantitas per Sektor</h3>
+                    <h3 class="card-title">Detail Program: <span id="selectedProgramName"></span></h3>
                 </div>
                 <div class="card-body">
-                    <canvas id="sektorChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Total Kuantitas per Program</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="programChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Jumlah Komponen per Model</h3>
-                </div>
-                <div class="card-body">
-                    <canvas id="modelChart"  style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; box-sizing: border-box; width: 763px;" width="763" height="250"></canvas>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Informasi Program</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Nama Program:</strong></td>
+                                    <td id="programName">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td id="programStatus">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tahun Mulai:</strong></td>
+                                    <td id="programStartYear">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Statistik Program</h5>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Total Komponen:</strong></td>
+                                    <td id="programTotalKomponen">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Lokasi:</strong></td>
+                                    <td id="programTotalLokasi">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Unit:</strong></td>
+                                    <td id="programTotalUnit">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,7 +252,6 @@
     <script>
         let map;
         let markers = [];
-        let sektorChart, programChart, modelChart, trendChart, aggProgramChart, aggProvinsiChart, aggSatuanChart;
 
         // Moved initMap to global scope
         function initMap() {
@@ -283,44 +298,121 @@
             });
         }
 
-        function updateSektorChart(filters) {
+        function updateKomponenTable(filters) {
+            // Use the existing dashboard data endpoint to get komponen data
             $.ajax({
-                url: '{{ route("komodel.sektor_chart_data") }}',
+                url: '/api/dashboard-data',
                 data: filters,
                 success: function(data) {
-                    let labels = data.map(item => item.sektor_name);
-                    let totals = data.map(item => item.total);
-                    sektorChart.data.labels = labels;
-                    sektorChart.data.datasets[0].data = totals;
-                    sektorChart.update();
+                    const tableBody = $('#komponenTableBody');
+                    tableBody.empty();
+
+                    if (data.dashboard_data && data.dashboard_data.length > 0) {
+                        // Group data by komponen for display
+                        const groupedData = data.dashboard_data.reduce((acc, item) => {
+                            const key = item.komponen_id;
+                            if (!acc[key]) {
+                                acc[key] = {
+                                    komponen_id: item.komponen_id,
+                                    komponen_tipe: item.komponen_tipe,
+                                    nama_program: item.nama_program,
+                                    status_program: item.status_program,
+                                    tahun_program: item.tahun_program,
+                                    total_unit: item.total_unit,
+                                    satuan_unit: item.satuan_unit,
+                                    locations: []
+                                };
+                            }
+                            if (item.provinsi) {
+                                acc[key].locations.push({
+                                    provinsi: item.provinsi,
+                                    kabupaten: item.kabupaten,
+                                    kecamatan: item.kecamatan,
+                                    desa: item.desa
+                                });
+                            }
+                            return acc;
+                        }, {});
+
+                        Object.values(groupedData).forEach(item => {
+                            const locationText = item.locations.length > 0
+                                ? `${item.locations.length} lokasi`
+                                : 'Tidak ada lokasi';
+
+                            const statusBadge = item.status_program === 'Active'
+                                ? '<span class="badge badge-success">Aktif</span>'
+                                : '<span class="badge badge-warning">Tidak Aktif</span>';
+
+                            const row = `
+                                <tr>
+                                    <td>${item.nama_program || '-'}</td>
+                                    <td>${item.komponen_tipe || '-'}</td>
+                                    <td>${(item.total_unit || 0).toLocaleString('id-ID')}</td>
+                                    <td>${item.satuan_unit || '-'}</td>
+                                    <td>${item.tahun_program || '-'}</td>
+                                    <td>${statusBadge}</td>
+                                    <td>${locationText}</td>
+                                </tr>
+                            `;
+                            tableBody.append(row);
+                        });
+                    } else {
+                        tableBody.html('<tr><td colspan="7" class="text-center">Tidak ada data yang sesuai dengan filter</td></tr>');
+                    }
+                },
+                error: function() {
+                    $('#komponenTableBody').html('<tr><td colspan="7" class="text-center text-danger">Gagal memuat data</td></tr>');
                 }
             });
         }
 
-        function updateProgramChart(filters) {
-            $.ajax({
-                url: '{{ route("komodel.program_chart_data") }}',
-                data: filters,
-                success: function(data) {
-                    let labels = data.map(item => item.program_name);
-                    let totals = data.map(item => item.total);
-                    programChart.data.labels = labels;
-                    programChart.data.datasets[0].data = totals;
-                    programChart.update();
-                }
-            });
-        }
+        function updateProgramDetails(filters) {
+            const programId = filters.program_id;
+            if (!programId) {
+                $('#programDetailsSection').hide();
+                return;
+            }
 
-        function updateModelChart(filters) {
+            // Get program details
             $.ajax({
-                url: '{{ route("komodel.model_chart_data") }}',
+                url: '/api/dashboard-data',
                 data: filters,
                 success: function(data) {
-                    let labels = data.map(item => item.model_name);
-                    let totals = data.map(item => item.total);
-                    modelChart.data.labels = labels;
-                    modelChart.data.datasets[0].data = totals;
-                    modelChart.update();
+                    if (data.dashboard_data && data.dashboard_data.length > 0) {
+                        const firstItem = data.dashboard_data[0];
+                        $('#selectedProgramName').text(firstItem.nama_program || '-');
+                        $('#programName').text(firstItem.nama_program || '-');
+                        $('#programStatus').text(firstItem.status_program || '-');
+                        $('#programStartYear').text(firstItem.tahun_program || '-');
+
+                        // Calculate program statistics
+                        const groupedData = data.dashboard_data.reduce((acc, item) => {
+                            const key = item.komponen_id;
+                            if (!acc[key]) {
+                                acc[key] = {
+                                    komponen_id: item.komponen_id,
+                                    total_unit: item.total_unit || 0,
+                                    locations: []
+                                };
+                            }
+                            if (item.provinsi) {
+                                acc[key].locations.push(item);
+                            }
+                            return acc;
+                        }, {});
+
+                        const totalKomponen = Object.keys(groupedData).length;
+                        const totalLokasi = data.dashboard_data.length;
+                        const totalUnit = Object.values(groupedData).reduce((sum, item) => sum + item.total_unit, 0);
+
+                        $('#programTotalKomponen').text(totalKomponen);
+                        $('#programTotalLokasi').text(totalLokasi);
+                        $('#programTotalUnit').text(totalUnit.toLocaleString('id-ID'));
+
+                        $('#programDetailsSection').show();
+                    } else {
+                        $('#programDetailsSection').hide();
+                    }
                 }
             });
         }
@@ -338,108 +430,24 @@
             });
         }
 
-        function updateAggregates(filters) {
-            $.getJSON('{{ route('komodel.aggregates') }}', filters, function(ag) {
-                // Program
-                const pLabels = (ag.perProgram || []).map(r => r.program);
-                const pData = (ag.perProgram || []).map(r => r.total_jumlah);
-                aggProgramChart.data.labels = pLabels; aggProgramChart.data.datasets[0].data = pData; aggProgramChart.update();
-                // Provinsi
-                const provLabels = (ag.perProvinsi || []).map(r => r.provinsi);
-                const provData = (ag.perProvinsi || []).map(r => r.total_jumlah);
-                aggProvinsiChart.data.labels = provLabels; aggProvinsiChart.data.datasets[0].data = provData; aggProvinsiChart.update();
-                // Satuan
-                const sLabels = (ag.perSatuan || []).map(r => r.satuan);
-                const sData = (ag.perSatuan || []).map(r => r.total_jumlah);
-                aggSatuanChart.data.labels = sLabels; aggSatuanChart.data.datasets[0].data = sData; aggSatuanChart.update();
-                // Top Kabupaten table
-                const body = $('#topKabupatenBody'); body.empty();
-                (ag.topKabupaten || []).forEach(r => {
-                    body.append(`<tr><td>${r.kabupaten || '-'}</td><td class="text-right">${Number(r.total_jumlah).toLocaleString()}</td><td class="text-right">${Number(r.total_lokasi).toLocaleString()}</td></tr>`);
-                });
-            });
-        }
-
         function updateDashboard() {
             const filters = {
                 program_id: $('#programFilter').val(),
-                sektor_id: $('#sektorFilter').val(),
                 model_id: $('#modelFilter').val(),
                 tahun: $('#tahunFilter').val()
             };
 
             updateMap(filters);
-            updateSektorChart(filters);
-            updateProgramChart(filters);
-            updateModelChart(filters);
+            updateKomponenTable(filters);
+            updateProgramDetails(filters);
             updateSummaryData(filters);
-            updateAggregates(filters);
         }
 
         $(document).ready(function() {
             $('.select2').select2();
 
-            // Initialize Trend Chart
-            const trendCtx = document.getElementById('trendChart').getContext('2d');
-            trendChart = new Chart(trendCtx, {
-                type: 'line',
-                data: {
-                    labels: {!! json_encode($trendData->pluck('month')) !!},
-                    datasets: [{
-                        label: 'Jumlah Komponen Dibuat',
-                        data: {!! json_encode($trendData->pluck('total')) !!},
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Initialize other charts
-            sektorChart = new Chart(document.getElementById('sektorChart').getContext('2d'), {
-                type: 'bar',
-                data: { labels: [], datasets: [{ label: 'Jumlah Komponen', data: [], backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }] }
-            });
-
-            programChart = new Chart(document.getElementById('programChart').getContext('2d'), {
-                type: 'pie',
-                data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'], borderWidth: 1 }] }
-            });
-
-            modelChart = new Chart(document.getElementById('modelChart').getContext('2d'), {
-                type: 'doughnut',
-                data: { labels: [], datasets: [{ label: 'Jumlah Komponen', data: [], backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'], borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'], borderWidth: 1 }] },
-                options: {
-                    onClick: function(evt, elements) {
-                        if (elements.length > 0) {
-                            const chartElement = elements[0];
-                            const modelName = this.data.labels[chartElement.index];
-                            updateMap({ model_name: modelName });
-                        }
-                    }
-                }
-            });
-
-            // Initialize Aggregates charts
-            const aggProgramCtx = document.getElementById('aggProgramChart').getContext('2d');
-            aggProgramChart = new Chart(aggProgramCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#4e79a7' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
-
-            const aggProvinsiCtx = document.getElementById('aggProvinsiChart').getContext('2d');
-            aggProvinsiChart = new Chart(aggProvinsiCtx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: '#f28e2b' }] }, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
-
-            const aggSatuanCtx = document.getElementById('aggSatuanChart').getContext('2d');
-            aggSatuanChart = new Chart(aggSatuanCtx, { type: 'doughnut', data: { labels: [], datasets: [{ label: 'Jumlah', data: [], backgroundColor: ['#59a14f','#e15759','#76b7b2','#edc948','#b07aa1','#ff9da7'] }] }, options: { responsive: true } });
-
             // Event Listeners
-            $('#programFilter, #sektorFilter, #modelFilter, #tahunFilter').on('change', function() {
+            $('#programFilter, #modelFilter, #tahunFilter').on('change', function() {
                 updateDashboard();
             });
 
@@ -464,81 +472,6 @@
                     $('#programFilter').empty().append(new Option('Semua Program', '')).trigger('change');
                 }
             });
-
-            // Export functionality
-            $('#exportPdf').on('click', function(e) {
-                e.preventDefault();
-                exportDashboard('pdf');
-            });
-
-            $('#exportDocx').on('click', function(e) {
-                e.preventDefault();
-                exportDashboard('docx');
-            });
-
-            function exportDashboard(format) {
-                const filters = {
-                    program_id: $('#programFilter').val(),
-                    sektor_id: $('#sektorFilter').val(),
-                    model_id: $('#modelFilter').val(),
-                    tahun: $('#tahunFilter').val()
-                };
-
-                // Get chart images as base64
-                const sektorChartImage = sektorChart.toBase64Image();
-                const programChartImage = programChart.toBase64Image();
-                const modelChartImage = modelChart.toBase64Image();
-
-                // Create a form and submit
-                const form = $('<form>', {
-                    action: format === 'pdf' ? '{{ route('komodel.export.pdf') }}' : '{{ route('komodel.export.docx') }}',
-                    method: 'POST',
-                    target: '_blank', // Open in new tab
-                    style: 'display:none;'
-                });
-
-                // Add CSRF token
-                form.append($('<input>', {
-                    type: 'hidden',
-                    name: '_token',
-                    value: '{{ csrf_token() }}'
-                }));
-
-                // Add filters
-                for (const key in filters) {
-                    form.append($('<input>', {
-                        type: 'hidden',
-                        name: key,
-                        value: filters[key]
-                    }));
-                }
-
-                // Add chart images
-                form.append($('<input>', {
-                    type: 'hidden',
-                    name: 'sektorChart',
-                    value: sektorChartImage
-                }));
-                form.append($('<input>', {
-                    type: 'hidden',
-                    name: 'programChart',
-                    value: programChartImage
-                }));
-                form.append($('<input>', {
-                    type: 'hidden',
-                    name: 'modelChart',
-                    value: modelChartImage
-                }));
-
-                $('body').append(form);
-                form.submit();
-                form.remove(); // Clean up the form
-            }
-
-            function triggerPrint() {
-                window.print();
-            }
-            $('#exportPrintBrowser').on('click', function(e){ e.preventDefault(); triggerPrint(); });
         });
     </script>
 @endpush

@@ -36,9 +36,11 @@ use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
 use App\Http\Controllers\Admin\PrintController;
 use App\Http\Controllers\Admin\DashboardExportController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
+use App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
@@ -69,6 +71,19 @@ Auth::routes(['register' => false]);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Report
+    Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::post('/generate', [ReportController::class, 'generate'])->name('generate');
+        Route::get('/export', [ReportController::class, 'export'])->name('export');
+        Route::get('/test', function () {
+            return view('report.report-test');
+        })->name('test');
+    });
+    Route::group(['prefix' => 'report/api', 'as' => 'report.api.'], function () {
+        Route::get('/programs', [ReportController::class, 'getPrograms'])->name('programs');
+        Route::get('/jenis-kegiatan', [ReportController::class, 'getJenisKegiatan'])->name('jenis_kegiatan');
+    });
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
         Route::get('/',                                     [HomeController::class, 'index'])->name('index');
         Route::get('/print',                                [HomeController::class, 'index'])->name('print');
@@ -93,9 +108,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
         // Komodel Dashboards
-        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
+        Route::get('/komodel-old', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
         Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
+        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
+
+        Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
+        Route::post('/komodel-v4/export/pdf', [DashboardKomponenModelV4Controller::class, 'exportPdf'])->name('komodel_v4.export.pdf');
+        Route::post('/komodel-v4/export/xls', [DashboardKomponenModelV4Controller::class, 'exportXls'])->name('komodel_v4.export.xls');
+
+        Route::get('/meals-dashboard', [\App\Http\Controllers\MealsDashboardController::class, 'index'])->name('meals_dashboard');
+        Route::post('/meals-dashboard/filter', [\App\Http\Controllers\MealsDashboardController::class, 'filterDashboardData'])->name('dashboard.filter');
     });
+        Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
+        // This route provides filtered data when the user applies filters.
+        Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
 
     // Komponen Model Dashboard routes
     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
@@ -428,7 +454,7 @@ Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::put('/{id}/update', [KomponenModelController::class, 'updateSingleLokasi'])->name('update.lokindi'); // update data lokasi berdasarkan id ketika edit
     Route::post('/{id}/update-model-sektor', [KomponenModelController::class, 'updateModelSektor'])->name('update.modelsektor'); // update data model sektor
     Route::delete('/lokasi/{id}', [KomponenModelController::class, 'deleteLokasi'])->name('lokasi.delete');
-    
+
     Route::get('/map-markers', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getMapMarkers'])->name('map_markers');
     Route::get('/sektor-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getSektorChartData'])->name('sektor_chart_data');
     Route::get('/program-chart-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getProgramChartData'])->name('program_chart_data');

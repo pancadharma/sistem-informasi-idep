@@ -44,6 +44,11 @@ class Meals_Komponen_Model extends Model
         return $this->belongsTo(Program::class, 'program_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function komponenmodel()
     {
         return $this->belongsTo(KomponenModel::class, 'komponenmodel_id');
