@@ -30,7 +30,7 @@
                 <option value="all">Semua Tahun</option>
             </select>
         </div>
-        <div class="col-md-2">
+        {{-- <div class="col-md-2">
             <label>&nbsp;</label>
             <button id="applyFilters" class="btn btn-primary btn-block">
                 <i class="fas fa-check mr-1"></i> Terapkan Filter
@@ -48,7 +48,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <div id="loading-overlay" class="position-fixed w-100 h-100" style="background-color: rgba(0,0,0,0.5); z-index: 1055; top: 0; left: 0; display: flex; justify-content: center; align-items: center;">
