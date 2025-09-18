@@ -474,7 +474,10 @@ class KegiatanController extends Controller
 
         foreach ($dokumen_files as $file) {
             $dokumen_initialPreview[] = $file->getUrl();
-            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $caption = $file->getCustomProperty('keterangan')
+                ?: $file->name
+                ?: $file->getCustomProperty('original_name')
+                ?: pathinfo($file->file_name, PATHINFO_FILENAME);
             $mimeType = $file->mime_type;
 
             if (in_array($file->mime_type, $imageTypes)) {
@@ -499,7 +502,7 @@ class KegiatanController extends Controller
                 'filename'      => $caption,
                 'extra'         => [
                     '_token'    => csrf_token(),
-                    'keterangan' => $file->getCustomProperty('keterangan', '' ?? $file->name)
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
                 ]
             ];
         }
@@ -511,7 +514,10 @@ class KegiatanController extends Controller
 
         foreach ($media_files as $file) {
             $media_initialPreview[] = $file->getUrl();
-            $caption = $file->getCustomProperty('keterangan') ?: $file->name;
+            $caption = $file->getCustomProperty('keterangan')
+                ?: $file->name
+                ?: $file->getCustomProperty('original_name')
+                ?: pathinfo($file->file_name, PATHINFO_FILENAME);
             $mimeType = $file->mime_type;
 
             if (in_array($file->mime_type, $imageTypes)) {
@@ -571,21 +577,40 @@ class KegiatanController extends Controller
     public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
         try {
+            // Server-side guard: only protect status change
+            $user = auth()->user();
+            $isPrivileged = ($user && ($user->id == 1 || (method_exists($user, 'hasRole') && $user->hasRole('Administrator')) || $user->can('kegiatan_status_edit')));
+
+            // Guard status change specifically
+            $newStatus = $request->input('status');
+            if (!is_null($newStatus) && $newStatus !== $kegiatan->status && !$isPrivileged) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You are not authorized to change kegiatan status.'
+                ], Response::HTTP_FORBIDDEN);
+            }
+
             $kegiatanController = new APIKegiatanController();
             $response = $kegiatanController->updateAPI($request, $kegiatan);
 
             if ($response->getStatusCode() === 200) {
-                return response()->json([
-                    'success' => true,
-                    'message' => __('global.update_success'),
-                    'redirect' => route('kegiatan.index')
-                ], 200);
+                if ($request->ajax() || $request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => __('global.update_success'),
+                        'redirect' => route('kegiatan.index')
+                    ], 200);
+                }
+                return redirect()->route('kegiatan.index')->with('status', __('global.update_success'));
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => $response->getData()->message ?? 'Failed to update kegiatan.'
-            ], 400);
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $response->getData()->message ?? 'Failed to update kegiatan.'
+                ], 400);
+            }
+            return redirect()->back()->withErrors(['error' => $response->getData()->message ?? 'Failed to update kegiatan.']);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -984,7 +1009,7 @@ class KegiatanController extends Controller
             ]);
 
             $file = $request->file('file');
-            $name = $request->input('name');
+            $name = trim((string) $request->input('name'));
             $collection = $request->input('collection');
             $kegiatanId = $request->input('kegiatan_id');
 
@@ -1005,22 +1030,33 @@ class KegiatanController extends Controller
                 ], 422);
             }
 
+            // Determine a human-friendly base name: user caption or original name
+            $baseName = $name !== ''
+                ? $name
+                : pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+            // Sanitize base name for filesystem
+            $sanitizedBase = preg_replace('/[^A-Za-z0-9_-]+/', '_', $baseName);
+            $sanitizedBase = trim($sanitizedBase, '_');
+            if ($sanitizedBase === '') {
+                $sanitizedBase = 'file';
+            }
+
             // Generate filename with timestamp
             $timestamp = now()->format('Ymd_His');
-            $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan');
-            $fileName = "{$kegiatanName}_{$timestamp}." . $extension;
+            $fileName = "{$sanitizedBase}_{$timestamp}.{$extension}";
 
             // Add media to kegiatan with custom name as caption
             $media = $kegiatan
                 ->addMedia($file)
                 ->withCustomProperties([
-                    'keterangan' => $name,
+                    'keterangan' => $name !== '' ? $name : null,
                     'user_id' => auth()->user()->id,
                     'original_name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
                     'extension' => $extension,
                     'updated_by' => auth()->user()->id
                 ])
-                ->usingName($file->getClientOriginalName())
+                ->usingName($sanitizedBase)
                 ->usingFileName($fileName)
                 ->toMediaCollection($collection);
 
@@ -1029,7 +1065,7 @@ class KegiatanController extends Controller
                 'message' => 'File uploaded successfully',
                 'media_id' => $media->id,
                 'file_name' => $fileName,
-                'original_name' => $file->getClientOriginalName(),
+                'original_name' => $baseName,
                 'collection' => $collection,
                 'url' => $media->getUrl(),
                 'size' => $media->size,

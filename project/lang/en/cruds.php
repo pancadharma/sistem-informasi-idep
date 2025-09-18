@@ -852,7 +852,9 @@ return [
         'peserta'                                => [
             'label'                              => 'Beneficiaries of the Activity',
             'helper'                             => 'Fill in the 2 tables below as a receipt/beneficiary of the activity, please note the form absense',
+            'helper_disabilitas'                 => 'Please fill in the number of beneficiaries with disabilities based on the table above, if none please fill in 0',
             'peserta'                            => 'Beneficiaries',
+            'disabilitas'                        => 'Disabilities Beneficiaries',
             'nama'                               => 'Beneficiaries Name',
             'pria'                               => 'Men',
             'wanita'                             => 'Women',

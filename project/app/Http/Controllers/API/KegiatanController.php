@@ -45,7 +45,8 @@ class KegiatanController extends Controller
     public function delete_media(Request $request)
     {
         try {
-            $media = Media::findOrFail($request->media_id);
+            $mediaId = $request->input('media_id', $request->input('key'));
+            $media = Media::findOrFail($mediaId);
             $media->delete();
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
@@ -531,7 +532,7 @@ class KegiatanController extends Controller
         if ($request->hasFile('dokumen_pendukung')) {
             $tempPaths = [];
             foreach ($request->file('dokumen_pendukung') as $file) {
-                $tempPath = $file->store('temp');
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
@@ -548,7 +549,7 @@ class KegiatanController extends Controller
         if ($request->hasFile('media_pendukung')) {
             $tempPaths = [];
             foreach ($request->file('media_pendukung') as $file) {
-                $tempPath = $file->store('temp');
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
@@ -821,7 +822,7 @@ class KegiatanController extends Controller
 
             if ($request->hasFile('dokumen_pendukung')) {
                 foreach ($request->file('dokumen_pendukung') as $index => $file) {
-                    $tempPath = $file->store('temp');
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'dokumen_pendukung';
                 }
@@ -829,7 +830,7 @@ class KegiatanController extends Controller
 
             if ($request->hasFile('media_pendukung')) {
                 foreach ($request->file('media_pendukung') as $index => $file) {
-                    $tempPath = $file->store('temp');
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'media_pendukung';
                 }

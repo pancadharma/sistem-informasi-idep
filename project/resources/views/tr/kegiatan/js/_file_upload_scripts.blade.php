@@ -51,6 +51,8 @@ $(document).ready(function() {
             // initialPreview: {!! json_encode($media_initialPreview) !!} || [],
             initialPreviewConfig: initialPreviewConfig || [],
             removeFromPreviewOnError: true,
+            ajaxDeleteSettings: { type: 'DELETE' },
+            deleteExtraData: function() { return { _token: '{{ csrf_token() }}' }; },
             // initialPreviewConfig: {!! json_encode($media_initialPreviewConfig) !!} || [],
 
             previewFileIconSettings: {

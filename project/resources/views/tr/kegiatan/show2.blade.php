@@ -681,13 +681,78 @@
             <!-- Activities Tab -->
             <div class="tab-pane fade" id="activities" role="tabpanel">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Activities</h5>
+                        @if($kegiatan->programOutcomeOutputActivity)
+                            @php
+                                $act = $kegiatan->programOutcomeOutputActivity;
+                                $out = optional($act->program_outcome_output);
+                                $oc  = optional($out->program_outcome);
+                                $prg = optional($oc->program);
+                            @endphp
+                            <span class="text-muted small">
+                                {{ $prg->kode ?? '-' }} › {{ $prg->nama ?? '-' }}
+                            </span>
+                        @endif
                     </div>
                     <div class="card-body">
-
                         @if($kegiatan->programOutcomeOutputActivity)
-                            <pre>{{ json_encode($kegiatan->programOutcomeOutputActivity, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                            @php
+                                $act = $kegiatan->programOutcomeOutputActivity;
+                                $out = optional($act->program_outcome_output);
+                                $oc  = optional($out->program_outcome);
+                                $prg = optional($oc->program);
+                            @endphp
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table table-sm table-striped mb-3">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:35%">Program</th>
+                                                <td>{{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Outcome</th>
+                                                <td>{{ $oc->deskripsi ?? ($oc->nama ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Output</th>
+                                                <td>{{ $out->deskripsi ?? ($out->nama ?? '-') }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-sm table-striped mb-3">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:35%">Activity Code</th>
+                                                <td>{{ $act->kode ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Activity Name</th>
+                                                <td>{{ $act->nama ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Indicator</th>
+                                                <td>{{ $act->indikator ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Target</th>
+                                                <td>{{ $act->target ?? '-' }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            @if(!empty($act->deskripsi))
+                                <div class="mt-2">
+                                    <h6 class="text-secondary mb-2"><i class="fas fa-align-left mr-1"></i> Description</h6>
+                                    <div class="border rounded p-2 bg-light">{!! nl2br(e($act->deskripsi)) !!}</div>
+                                </div>
+                            @endif
                         @else
                             <div class="text-center text-muted">
                                 <i class="fas fa-tasks fa-3x mb-3"></i>
