@@ -1,4 +1,7 @@
 <script>
+    // Permission flags derived from backend
+    const CAN_EDIT_STATUS = {{ (auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('program_status_edit')) ? 'true' : 'false' }};
+
     let statusProgram = 'draft'; // default status
     let isComplete = false;
     let isDraft = true;
@@ -141,4 +144,48 @@
 
         return isValid;
     }
+
+    // Lock status field if user has no access
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const $form = $('#editProgram');
+            const $status = $('#status');
+            if ($form.length && $status.length && !CAN_EDIT_STATUS) {
+                const currentVal = $status.val();
+
+                // Disable UI interaction
+                $status.prop('disabled', true).addClass('is-readonly');
+                const s2 = $status.data('select2');
+                if (s2 && s2.$container) {
+                    s2.$container.addClass('select2-container--disabled');
+                }
+
+                // Ensure value still posted
+                if ($form.find('input[type="hidden"][name="status"]').length === 0) {
+                    $('<input>', { type: 'hidden', name: 'status', value: currentVal }).appendTo($form);
+                } else {
+                    $form.find('input[type="hidden"][name="status"]').val(currentVal);
+                }
+
+                // Defensive: revert any programmatic changes
+                $status.on('change', function() {
+                    $(this).val(currentVal).trigger('change.select2');
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning('You do not have permission to change status.');
+                    } else if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'You do not have permission to change status.',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    }
+                });
+            }
+        } catch (e) {
+            // no-op fail-safe
+        }
+    });
 </script>
