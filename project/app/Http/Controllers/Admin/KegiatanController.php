@@ -356,7 +356,8 @@ class KegiatanController extends Controller
     {
         // Reuse the logic from show, but render the new view
         $kegiatan = Kegiatan::with([
-            'programOutcomeOutputActivity',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
+            'programOutcomeOutputActivity.kegiatan',
             'sektor',
             'mitra',
             'user',
@@ -364,6 +365,7 @@ class KegiatanController extends Controller
             'jenisKegiatan',
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
         ])->findOrFail($id);
 
         $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');

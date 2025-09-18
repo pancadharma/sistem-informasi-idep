@@ -14,23 +14,22 @@
      data-kegiatan-end="{{ $kegiatan->tanggalselesai ?? '-' }}"
      data-kegiatan-budget="{{ $kegiatan->totalnilai ?? '-' }}"
      data-kegiatan-description="{{ str_replace('"', '&quot;', strip_tags($kegiatan->deskripsi ?? $kegiatan->activity->deskripsi ?? '')) }}">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <a class="btn btn-outline-secondary mr-3" href="{{ route('kegiatan.index') }}">
-                <i class="fas fa-arrow-left"></i> {{ __('global.back') }}
-            </a>
-            <div>
-                <h2 class="mb-0">{{ $kegiatan->activity->nama ?? $kegiatan->nama }}</h2>
-                <p class="mb-0 text-muted">Code: {{ $kegiatan->activity->kode ?? $kegiatan->kode }}</p>
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ $kegiatan->activity->nama ?? $kegiatan->nama }}</h3>
+                    <p class="mb-0 text-muted">{{ __('cruds.form.kode') }}: {{ $kegiatan->activity->kode ?? $kegiatan->kode }}</p>
+                </div>
             </div>
-        </div>
-        <div class="card-tools">
-            <span class="badge badge-lg bg-info">{{ strtoupper($kegiatan->status ?? '-') }}</span>
-            @can('kegiatan_edit')
-            <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-outline-primary ml-2">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            @endcan
+            <div class="card-tools">
+                <span class="badge badge-lg bg-info">{{ strtoupper($kegiatan->status ?? '-') }}</span>
+                @can('kegiatan_edit')
+                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-outline-primary ml-2">
+                    <i class="fas fa-edit"></i> {{ __('global.edit') }}
+                </a>
+                @endcan
+            </div>
         </div>
     </div>
     <div class="card-body">
@@ -127,7 +126,7 @@
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Kegiatan Description</h5>
@@ -145,34 +144,215 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-outline card-primary">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Kegiatan Details</h5>
+                                <h5 class="card-title mb-0">Kegiatan Summary</h5>
                             </div>
                             <div class="card-body">
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>Status:</th>
-                                        <td><span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created:</th>
-                                        <td>{{ $kegiatan->created_at->format('d M Y') ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Updated:</th>
-                                        <td>{{ $kegiatan->updated_at->format('d M Y') ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Last Activity:</th>
-                                        <td>{{ $kegiatan->updated_at->diffForHumans() ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created By:</th>
-                                        <td>{{ $kegiatan->user->name ?? 'Unknown' }}</td>
-                                    </tr>
+                                @php
+                                    $act = $kegiatan->programOutcomeOutputActivity;
+                                    $out = optional($act)->program_outcome_output;
+                                    $oc  = optional($out)->program_outcome;
+                                    $prg = optional($oc)->program;
+                                    $docsCount  = is_countable($dokumenPendukung ?? []) ? $dokumenPendukung->count() : 0;
+                                    $mediaCount = is_countable($mediaPendukung ?? []) ? $mediaPendukung->count() : 0;
+                                @endphp
+                                <div class="invoice p-2 mb-0">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <h6 class="mb-1"><i class="fas fa-project-diagram mr-1"></i>{{ $act->nama ?? '-' }} <small class="text-muted">{{ $act->kode ? '— '.$act->kode : '' }}</small></h6>
+                                            <div class="text-muted small">Program: {{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</div>
+                                        </div>
+                                        <div class="col-sm-4 text-right">
+                                            <span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span>
+                                            <div class="mt-1 small text-muted">By {{ $kegiatan->user->nama ?? 'Unknown' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                @php
+                                    $act = $kegiatan->programOutcomeOutputActivity;
+                                    $out = optional($act)->program_outcome_output;
+                                    $oc  = optional($out)->program_outcome;
+                                    $prg = optional($oc)->program;
+                                    $docsCount  = is_countable($dokumenPendukung ?? []) ? $dokumenPendukung->count() : 0;
+                                    $mediaCount = is_countable($mediaPendukung ?? []) ? $mediaPendukung->count() : 0;
+                                @endphp
+                                <table class="table table-sm mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <th style="width:35%">Kegiatan ID</th>
+                                            <td>#{{ $kegiatan->id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td><span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Created By</th>
+                                            <td>{{ $kegiatan->user->nama ?? 'Unknown' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Created / Updated</th>
+                                            <td>
+                                                {{ optional($kegiatan->created_at)->format('Y-m-d') ?? '-' }} /
+                                                {{ optional($kegiatan->updated_at)->format('Y-m-d') ?? '-' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Program Activity</th>
+                                            <td>{{ $act->kode ?? '-' }} — {{ $act->nama ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Program</th>
+                                            <td>{{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Outcome / Output</th>
+                                            <td>
+                                                {{ $oc->deskripsi ?? ($oc->nama ?? '-') }} /
+                                                {{ $out->deskripsi ?? ($out->nama ?? '-') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Jenis Kegiatan</th>
+                                            <td>{{ $kegiatan->jenisKegiatan->nama ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fase Pelaporan</th>
+                                            <td>{{ $kegiatan->fasepelaporan ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tgl Mulai / Selesai</th>
+                                            <td>
+                                                {{ optional($kegiatan->tanggalmulai)->format('Y-m-d') ?? '-' }} /
+                                                {{ optional($kegiatan->tanggalselesai)->format('Y-m-d') ?? '-' }}
+                                                <small class="text-muted ml-1">({{ $durationInDays ?? '-' }} days)</small>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Mitra</th>
+                                            <td>
+                                                @if($kegiatan->mitra && $kegiatan->mitra->count())
+                                                    {{ $kegiatan->mitra->pluck('nama')->take(3)->implode(', ') }}
+                                                    @if($kegiatan->mitra->count() > 3)
+                                                        <span class="text-muted">+{{ $kegiatan->mitra->count() - 3 }} more</span>
+                                                    @endif
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Sektor (Reinstra)</th>
+                                            <td>
+                                                @if($kegiatan->sektor && $kegiatan->sektor->count())
+                                                    {{ $kegiatan->sektor->pluck('nama')->take(3)->implode(', ') }}
+                                                    @if($kegiatan->sektor->count() > 3)
+                                                        <span class="text-muted">+{{ $kegiatan->sektor->count() - 3 }} more</span>
+                                                    @endif
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Lokasi</th>
+                                            <td>
+                                                @if($kegiatan->lokasi && $kegiatan->lokasi->count())
+                                                    {{ $kegiatan->lokasi->count() }} locations
+                                                    @php $first = $kegiatan->lokasi->first(); @endphp
+                                                    @if($first)
+                                                        <small class="text-muted d-block">
+                                                            {{ $first->desa->nama ?? '-' }},
+                                                            {{ $first->desa->kecamatan->nama ?? '-' }},
+                                                            {{ $first->desa->kecamatan->kabupaten->nama ?? '-' }},
+                                                            {{ $first->desa->kecamatan->kabupaten->provinsi->nama ?? '-' }}
+                                                        </small>
+                                                    @endif
+                                                    <a href="#locations" class="small">See Locations</a>
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Attachments</th>
+                                            <td>Docs: {{ $docsCount }}, Media: {{ $mediaCount }}</td>
+                                        </tr>
+                                    </tbody>
                                 </table>
+                            </div>
+
+                                    {{-- <div class="row invoice-info mt-2">
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Program Hierarchy</strong>
+                                            <address class="mb-1">
+                                                Outcome: {{ $oc->deskripsi ?? ($oc->nama ?? '-') }}<br>
+                                                Output: {{ $out->deskripsi ?? ($out->nama ?? '-') }}
+                                            </address>
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Schedule</strong>
+                                            <p class="mb-1">
+                                                {{ optional($kegiatan->tanggalmulai)->format('Y-m-d') ?? '-' }} → {{ optional($kegiatan->tanggalselesai)->format('Y-m-d') ?? '-' }}
+                                                <small class="text-muted d-block">Duration: {{ $durationInDays ?? '-' }} days</small>
+                                            </p>
+                                            @if($kegiatan->lokasi && $kegiatan->lokasi->count())
+                                                @php $first = $kegiatan->lokasi->first(); @endphp
+                                                <small class="text-muted d-block">
+                                                    {{ $first->desa->nama ?? '-' }}, {{ $first->desa->kecamatan->nama ?? '-' }}
+                                                </small>
+                                                <a href="#locations" class="small">See all locations ({{ $kegiatan->lokasi->count() }})</a>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Classification</strong>
+                                            <p class="mb-1">
+                                                Jenis: <span class="badge badge-primary">{{ $kegiatan->jenisKegiatan->nama ?? '-' }}</span>
+                                            </p>
+                                            <p class="mb-1">
+                                                Fase: <span class="badge badge-secondary">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
+                                            </p>
+                                            <p class="mb-0 small text-muted">Attachments — Docs: {{ $docsCount }}, Media: {{ $mediaCount }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6">
+                                            <strong>Mitra</strong>
+                                            @if($kegiatan->mitra && $kegiatan->mitra->count())
+                                                <ul class="list-unstyled small mb-0">
+                                                    @foreach($kegiatan->mitra->take(5) as $m)
+                                                        <li>{{ $m->nama }}</li>
+                                                    @endforeach
+                                                    @if($kegiatan->mitra->count() > 5)
+                                                        <li class="text-muted">+{{ $kegiatan->mitra->count() - 5 }} more</li>
+                                                    @endif
+                                                </ul>
+                                            @else
+                                                <div class="small text-muted">—</div>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <strong>Sektor (Reinstra)</strong>
+                                            @if($kegiatan->sektor && $kegiatan->sektor->count())
+                                                <ul class="list-unstyled small mb-0">
+                                                    @foreach($kegiatan->sektor->take(5) as $s)
+                                                        <li>{{ $s->nama }}</li>
+                                                    @endforeach
+                                                    @if($kegiatan->sektor->count() > 5)
+                                                        <li class="text-muted">+{{ $kegiatan->sektor->count() - 5 }} more</li>
+                                                    @endif
+                                                </ul>
+                                            @else
+                                                <div class="small text-muted">—</div>
+                                            @endif
+                                        </div>
+                                    </div> --}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -681,19 +861,21 @@
             <!-- Activities Tab -->
             <div class="tab-pane fade" id="activities" role="tabpanel">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Activities</h5>
-                        @if($kegiatan->programOutcomeOutputActivity)
-                            @php
-                                $act = $kegiatan->programOutcomeOutputActivity;
-                                $out = optional($act->program_outcome_output);
-                                $oc  = optional($out->program_outcome);
-                                $prg = optional($oc->program);
-                            @endphp
-                            <span class="text-muted small">
-                                {{ $prg->kode ?? '-' }} › {{ $prg->nama ?? '-' }}
-                            </span>
-                        @endif
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Activities</h5>
+                            @if($kegiatan->programOutcomeOutputActivity)
+                                @php
+                                    $act = $kegiatan->programOutcomeOutputActivity;
+                                    $out = optional($act->program_outcome_output);
+                                    $oc  = optional($out->program_outcome);
+                                    $prg = optional($oc->program);
+                                @endphp
+                                <span class="text-muted small">
+                                    {{ $prg->kode ?? '-' }} › {{ $prg->nama ?? '-' }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
                         @if($kegiatan->programOutcomeOutputActivity)
@@ -753,6 +935,87 @@
                                     <div class="border rounded p-2 bg-light">{!! nl2br(e($act->deskripsi)) !!}</div>
                                 </div>
                             @endif
+
+                            {{-- Peer Kegiatan under the same Activity --}}
+                            @php
+                                $peers = optional($act)->kegiatan ? $act->kegiatan->where('id', '!=', $kegiatan->id) : collect();
+                            @endphp
+                            @if($peers && $peers->count() > 0)
+                                <div class="mt-4">
+                                    <h6 class="mb-2"><i class="fas fa-link mr-1"></i> Other Activities Under This Output Activity</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:10%">ID</th>
+                                                    <th>Name</th>
+                                                    <th style="width:20%">Status</th>
+                                                    <th style="width:15%">Start</th>
+                                                    <th style="width:15%">End</th>
+                                                    <th style="width:10%" class="text-right">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($peers as $p)
+                                                    <tr>
+                                                        <td>#{{ $p->id }}</td>
+                                                        <td>{{ $p->nama ?? $p->activity->nama ?? '-' }}</td>
+                                                        <td><span class="badge badge-secondary">{{ ucfirst($p->status ?? '-') }}</span></td>
+                                                        <td>{{ optional($p->tanggalmulai)->format('Y-m-d') ?? '-' }}</td>
+                                                        <td>{{ optional($p->tanggalselesai)->format('Y-m-d') ?? '-' }}</td>
+                                                        <td class="text-right">
+                                                            <a href="{{ route('kegiatan.show', $p->id) }}" class="btn btn-xs btn-outline-primary">View</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Related Files --}}
+                            @php
+                                $docs = $dokumenPendukung ?? [];
+                                $media = $mediaPendukung ?? [];
+                            @endphp
+                            @if((is_countable($docs) && count($docs) > 0) || (is_countable($media) && count($media) > 0))
+                                <div class="mt-4">
+                                    <h6 class="mb-2"><i class="fas fa-paperclip mr-1"></i> Attachments</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-muted">Documents</h6>
+                                            @if(is_countable($docs) && count($docs) > 0)
+                                                <ul class="mb-3" style="list-style: disc; padding-left: 1.25rem;">
+                                                    @foreach($docs as $doc)
+                                                        <li>
+                                                            <a href="{{ $doc->getUrl() }}" target="_blank">{{ $doc->getCustomProperty('keterangan') ?: $doc->name }}</a>
+                                                            <small class="text-muted"> ({{ number_format($doc->size/1024, 0) }} KB)</small>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">No documents</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-muted">Media</h6>
+                                            @if(is_countable($media) && count($media) > 0)
+                                                <ul class="mb-0" style="list-style: disc; padding-left: 1.25rem;">
+                                                    @foreach($media as $m)
+                                                        <li>
+                                                            <a href="{{ $m->getUrl() }}" target="_blank">{{ $m->getCustomProperty('keterangan') ?: $m->name }}</a>
+                                                            <small class="text-muted"> ({{ number_format($m->size/1024, 0) }} KB)</small>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">No media</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         @else
                             <div class="text-center text-muted">
                                 <i class="fas fa-tasks fa-3x mb-3"></i>
@@ -762,6 +1025,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -855,5 +1120,18 @@
                 }
             });
         });
+    </script>
+    <script>
+        // Activate tab from hash and keep URL updated for better navigation
+        (function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const $tab = $("a[href='" + hash + "']");
+                if ($tab.length) { $tab.tab('show'); }
+            }
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                history.replaceState(null, null, e.target.getAttribute('href'));
+            });
+        })();
     </script>
 @endpush
