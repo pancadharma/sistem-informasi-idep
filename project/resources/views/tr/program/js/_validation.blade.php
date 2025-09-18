@@ -1,4 +1,19 @@
 <script>
+    let statusProgram = 'draft'; // default status
+    let isComplete = false;
+    let isDraft = true;
+    let isSubmit = false;
+
+    function validateProgramStatus() {
+        if (isComplete) {
+            statusProgram = 'complete';
+        } else if (isDraft) {
+            statusProgram = 'draft';
+        } else if (isSubmit) {
+            statusProgram = 'submitted';
+        }
+    }
+
     function validateProgramComplete() {
         const fieldNameMapping = {
             'kode_program': '{{ __("cruds.program.form.kode") }}',
@@ -95,7 +110,7 @@
             beneficiaries.forEach(s => $(s).removeClass('is-invalid').addClass('is-valid'));
         }
 
-        checkDynamicRows('#staffContainerEdit', '.staff-row', 1, 'Minimal harus ada satu Staff.');
+        checkDynamicRows('#staffContainer, #staffContainerEdit', '.staff-row', 1, 'Minimal harus ada satu Staff.');
         checkDynamicRows('#outcomeContainer', '.row', 1, 'Minimal harus ada satu Outcome.');
 
         if ($('#outcomeContainer .row').length > 0) {
