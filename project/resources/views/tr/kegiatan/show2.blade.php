@@ -116,7 +116,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
-                    <i class="fas fa-tasks"></i> Activities
+                    <i class="fas fa-tasks"></i> Outputs & Activities Data
                 </a>
             </li>
         </ul>
@@ -126,21 +126,23 @@
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4">
+                    <div class="col-6">
+                        <div class="card card-outline card-danger">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Kegiatan Description</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.kegiatan.tabs.description') }}</h5>
                             </div>
                             <div class="card-body">
                                 <p>{{ $kegiatan->deskripsi ?? $kegiatan->activity->deskripsi ?? 'No description available' }}</p>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Problem Analysis</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.program.output.indicator') . ' '. __('cruds.program.output.label') }}</h5>
                             </div>
                             <div class="card-body">
-                                <p>{{ $kegiatan->analisamasalah ?? 'No problem analysis available' }}</p>
+                                <p>{{ $kegiatan->analisamasalah ?? $kegiatan->activity->indikator ?? 'No problem analysis available' }}</p>
                             </div>
                         </div>
                     </div>
@@ -160,7 +162,6 @@
                                     $docsCount  = is_countable($dokumenPendukung ?? []) ? $dokumenPendukung->count() : 0;
                                     $mediaCount = is_countable($mediaPendukung ?? []) ? $mediaPendukung->count() : 0;
                                 @endphp
-                                <div class="invoice p-2 mb-0">
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <h6 class="mb-1"><i class="fas fa-project-diagram mr-1"></i>{{ $act->nama ?? '-' }} <small class="text-muted">{{ $act->kode ? '— '.$act->kode : '' }}</small></h6>
@@ -168,125 +169,11 @@
                                         </div>
                                         <div class="col-sm-4 text-right">
                                             <span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span>
-                                            <div class="mt-1 small text-muted">By {{ $kegiatan->user->nama ?? 'Unknown' }}</div>
+                                            <div class="mt-1 small text-muted">By {{ $kegiatan->user->nama ?? '-' }}</div>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                @php
-                                    $act = $kegiatan->programOutcomeOutputActivity;
-                                    $out = optional($act)->program_outcome_output;
-                                    $oc  = optional($out)->program_outcome;
-                                    $prg = optional($oc)->program;
-                                    $docsCount  = is_countable($dokumenPendukung ?? []) ? $dokumenPendukung->count() : 0;
-                                    $mediaCount = is_countable($mediaPendukung ?? []) ? $mediaPendukung->count() : 0;
-                                @endphp
-                                <table class="table table-sm mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <th style="width:35%">Kegiatan ID</th>
-                                            <td>#{{ $kegiatan->id }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Status</th>
-                                            <td><span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Created By</th>
-                                            <td>{{ $kegiatan->user->nama ?? 'Unknown' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Created / Updated</th>
-                                            <td>
-                                                {{ optional($kegiatan->created_at)->format('Y-m-d') ?? '-' }} /
-                                                {{ optional($kegiatan->updated_at)->format('Y-m-d') ?? '-' }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Program Activity</th>
-                                            <td>{{ $act->kode ?? '-' }} — {{ $act->nama ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Program</th>
-                                            <td>{{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Outcome / Output</th>
-                                            <td>
-                                                {{ $oc->deskripsi ?? ($oc->nama ?? '-') }} /
-                                                {{ $out->deskripsi ?? ($out->nama ?? '-') }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Jenis Kegiatan</th>
-                                            <td>{{ $kegiatan->jenisKegiatan->nama ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Fase Pelaporan</th>
-                                            <td>{{ $kegiatan->fasepelaporan ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tgl Mulai / Selesai</th>
-                                            <td>
-                                                {{ optional($kegiatan->tanggalmulai)->format('Y-m-d') ?? '-' }} /
-                                                {{ optional($kegiatan->tanggalselesai)->format('Y-m-d') ?? '-' }}
-                                                <small class="text-muted ml-1">({{ $durationInDays ?? '-' }} days)</small>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Mitra</th>
-                                            <td>
-                                                @if($kegiatan->mitra && $kegiatan->mitra->count())
-                                                    {{ $kegiatan->mitra->pluck('nama')->take(3)->implode(', ') }}
-                                                    @if($kegiatan->mitra->count() > 3)
-                                                        <span class="text-muted">+{{ $kegiatan->mitra->count() - 3 }} more</span>
-                                                    @endif
-                                                @else
-                                                    <span class="text-muted">—</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Sektor (Reinstra)</th>
-                                            <td>
-                                                @if($kegiatan->sektor && $kegiatan->sektor->count())
-                                                    {{ $kegiatan->sektor->pluck('nama')->take(3)->implode(', ') }}
-                                                    @if($kegiatan->sektor->count() > 3)
-                                                        <span class="text-muted">+{{ $kegiatan->sektor->count() - 3 }} more</span>
-                                                    @endif
-                                                @else
-                                                    <span class="text-muted">—</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Lokasi</th>
-                                            <td>
-                                                @if($kegiatan->lokasi && $kegiatan->lokasi->count())
-                                                    {{ $kegiatan->lokasi->count() }} locations
-                                                    @php $first = $kegiatan->lokasi->first(); @endphp
-                                                    @if($first)
-                                                        <small class="text-muted d-block">
-                                                            {{ $first->desa->nama ?? '-' }},
-                                                            {{ $first->desa->kecamatan->nama ?? '-' }},
-                                                            {{ $first->desa->kecamatan->kabupaten->nama ?? '-' }},
-                                                            {{ $first->desa->kecamatan->kabupaten->provinsi->nama ?? '-' }}
-                                                        </small>
-                                                    @endif
-                                                    <a href="#locations" class="small">See Locations</a>
-                                                @else
-                                                    <span class="text-muted">—</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Attachments</th>
-                                            <td>Docs: {{ $docsCount }}, Media: {{ $mediaCount }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
 
-                                    {{-- <div class="row invoice-info mt-2">
+                                    <div class="row invoice-info mt-2">
                                         <div class="col-sm-4 invoice-col">
                                             <strong>Program Hierarchy</strong>
                                             <address class="mb-1">
@@ -351,8 +238,7 @@
                                                 <div class="small text-muted">—</div>
                                             @endif
                                         </div>
-                                    </div> --}}
-                                </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
