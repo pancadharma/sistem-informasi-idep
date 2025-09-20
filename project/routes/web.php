@@ -119,9 +119,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/meals-dashboard', [\App\Http\Controllers\MealsDashboardController::class, 'index'])->name('meals_dashboard');
         Route::post('/meals-dashboard/filter', [\App\Http\Controllers\MealsDashboardController::class, 'filterDashboardData'])->name('dashboard.filter');
     });
-        Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
-        // This route provides filtered data when the user applies filters.
-        Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
+    Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
+    // This route provides filtered data when the user applies filters.
+    Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
 
     // Komponen Model Dashboard routes
     Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
@@ -130,7 +130,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
         Route::get('/aggregates', [KomodelDashboardExport::class, 'aggregates'])->name('aggregates');
     });
-});
+// });
 // Permissions
 // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
 Route::resource('permissions', PermissionsController::class);
@@ -529,4 +529,5 @@ Route::group(['prefix' => 'benchmark/api/', 'as' => 'api.benchmark.'], function 
     Route::get('jenis-kegiatan', [App\Http\Controllers\API\BenchmarkController::class, 'getJenisKegiatan'])->name('jenis-kegiatan');
     Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
     Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
+});
 });

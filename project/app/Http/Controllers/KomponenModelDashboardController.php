@@ -284,13 +284,67 @@ class KomponenModelDashboardController extends Controller
                     'provinces' => $provinces,
                     'years' => $years,
                 ],
-                'dashboard_data' => $dashboard_data
+                'dashboard_data' => $dashboard_data,
+                'komponen_model_distribution' => $this->fetchKomponenModelDistribution()
             ]);
         } catch (\Exception $e) {
             // Log the error and return an error response
             \Log::error('Dashboard Initialization Error: ' . $e->getMessage());
             return response()->json(['error' => 'Could not initialize dashboard data.'], 500);
         }
+    }
+
+    /**
+     * Aggregated komponen-model distribution for charting (program count per komponen model).
+     */
+    private function fetchKomponenModelDistribution(Request $request = null)
+    {
+        $query = DB::table('mkomponenmodel as mk')
+            ->leftJoin('trmeals_komponen_model as tkm', function ($join) {
+                $join->on('mk.id', '=', 'tkm.komponenmodel_id')
+                    ->whereNull('tkm.deleted_at');
+            })
+            ->leftJoin('trprogram as tp', 'tkm.program_id', '=', 'tp.id')
+            ->leftJoin('trmeals_komponen_model_lokasi as tkml', function ($join) {
+                $join->on('tkm.id', '=', 'tkml.mealskomponenmodel_id')
+                    ->whereNull('tkml.deleted_at');
+            })
+            ->select(
+                'mk.id as komponenmodel_id',
+                'mk.nama as komponen_model_name',
+                DB::raw('COUNT(DISTINCT tp.id) as total_programs')
+            )
+            ->groupBy('mk.id', 'mk.nama')
+            ->orderBy('mk.nama');
+
+        if ($request) {
+            if ($request->filled('komponenmodel_id') && $request->komponenmodel_id !== 'all') {
+                $query->where('mk.id', $request->komponenmodel_id);
+            }
+
+            if ($request->filled('program_id') && $request->program_id !== 'all') {
+                $query->where(function ($q) use ($request) {
+                    $q->where('tkm.program_id', $request->program_id)
+                        ->orWhereNull('tkm.id');
+                });
+            }
+
+            if ($request->filled('provinsi_id') && $request->provinsi_id !== 'all') {
+                $query->where(function ($q) use ($request) {
+                    $q->where('tkml.provinsi_id', $request->provinsi_id)
+                        ->orWhereNull('tkml.id');
+                });
+            }
+
+            if ($request->filled('tahun') && $request->tahun !== 'all') {
+                $query->where(function ($q) use ($request) {
+                    $q->whereYear('tp.tanggalmulai', $request->tahun)
+                        ->orWhereNull('tp.id');
+                });
+            }
+        }
+
+        return $query->get();
     }
 
     /**
@@ -301,9 +355,11 @@ class KomponenModelDashboardController extends Controller
         try {
             // Fetch data using the reusable fetchData method with request filters
             $dashboard_data = $this->fetchData($request);
+            $distribution = $this->fetchKomponenModelDistribution($request);
 
             return response()->json([
-                'dashboard_data' => $dashboard_data
+                'dashboard_data' => $dashboard_data,
+                'komponen_model_distribution' => $distribution
             ]);
         } catch (\Exception $e) {
             // Log the error and return an error response
@@ -397,3 +453,4 @@ class KomponenModelDashboardController extends Controller
         });
     }
 }
+
