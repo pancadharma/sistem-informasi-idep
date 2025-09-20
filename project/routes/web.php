@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
         Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+        Route::get('/data/age-group-chart',                 [HomeController::class, 'getAgeGroupChartData'])->name('age-group-chart');
 
         // NEW ROUTE FOR COMBINED DESA MAP DATA
         Route::get('/api/combined-desa-map-data/{provinsi_id?}', [HomeController::class, 'getCombinedDesaMapData'])->name('api.combined_desa_map_data');
