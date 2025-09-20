@@ -13,7 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class KomponenModelDashboardController extends Controller
 {
+
+
+        // New method for indexV3
     public function index()
+    {
+        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
+        return view('tr.komponenmodel.dashboard-v3', compact('googleMapsApiKey'));
+    }
+
+    public function index_old()
     {
         $programs = Program::all();
         // $sektors = Sektor::all();
@@ -36,6 +45,7 @@ class KomponenModelDashboardController extends Controller
 
         return view('tr.komponenmodel.dashboard', compact('programs', 'sektors', 'models', 'years', 'googleMapsApiKey'));
     }
+
 
     public function indexV2()
     {
@@ -254,13 +264,6 @@ class KomponenModelDashboardController extends Controller
     }
 
 
-    // New method for indexV3
-    public function indexV3()
-    {
-        $googleMapsApiKey = env('GOOGLE_MAPS_API_KEY');
-        return view('tr.komponenmodel.dashboard-v3', compact('googleMapsApiKey'));
-    }
-
     public function getInitialData()
     {
         try {
@@ -453,4 +456,3 @@ class KomponenModelDashboardController extends Controller
         });
     }
 }
-

@@ -108,13 +108,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
         // Komodel Dashboards
-        Route::get('/komodel-old', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel');
+        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
         Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
-        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV3'])->name('komodel_v3');
 
         Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
         Route::post('/komodel-v4/export/pdf', [DashboardKomponenModelV4Controller::class, 'exportPdf'])->name('komodel_v4.export.pdf');
         Route::post('/komodel-v4/export/xls', [DashboardKomponenModelV4Controller::class, 'exportXls'])->name('komodel_v4.export.xls');
+        Route::get('/komodel-old', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index_old'])->name('komodel_old');
 
         Route::get('/meals-dashboard', [\App\Http\Controllers\MealsDashboardController::class, 'index'])->name('meals_dashboard');
         Route::post('/meals-dashboard/filter', [\App\Http\Controllers\MealsDashboardController::class, 'filterDashboardData'])->name('dashboard.filter');
@@ -444,6 +444,7 @@ Route::get('/logs/{id}', [ActivityLogController::class, 'show'])->name('logs.sho
 // MEALS Komponen Model
 Route::get('komodel/api/sektor', [KomponenModelController::class, 'getSektor'])->name('api.komodel.sektor');
 Route::get('komodel/api/model', [KomponenModelController::class, 'getModel'])->name('api.komodel.model');
+
 Route::group(['prefix' => 'komodel', 'as' => 'komodel.'], function () {
     Route::get('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'index'])->name('index');
     Route::post('/', [App\Http\Controllers\Admin\KomponenModelController::class, 'store'])->name('store');

@@ -78,7 +78,7 @@ class HomeController extends Controller
             'perempuan'       => $data->where('jenis_kelamin', 'perempuan')->count(),
             'anak_laki'       => $data->where('jenis_kelamin', 'laki')->where('umur', '<', 17)->count(),
             'anak_perempuan'  => $data->where('jenis_kelamin', 'perempuan')->where('umur', '<', 17)->count(),
-            'disabilitas'     => $data->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(),
+            'disabilitas'     => $data->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(), // disabilitas id=3
             'keluarga'        => $uniqueFamilies,
         ]);
     }
