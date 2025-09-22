@@ -132,7 +132,7 @@
                                 <h5 class="card-title mb-0">{{ __('cruds.kegiatan.tabs.description') }}</h5>
                             </div>
                             <div class="card-body">
-                                <p>{{ $kegiatan->deskripsi ?? $kegiatan->activity->deskripsi ?? 'No description available' }}</p>
+                                <p>{{ $kegiatan->deskripsilatarbelakang ?? 'No description available' }}</p>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,34 @@
                                 <h5 class="card-title mb-0">{{ __('cruds.program.output.indicator') . ' '. __('cruds.program.output.label') }}</h5>
                             </div>
                             <div class="card-body">
-                                <p>{{ $kegiatan->analisamasalah ?? $kegiatan->activity->indikator ?? 'No problem analysis available' }}</p>
+                                <p>{{ $kegiatan->deskripsiyangdikaji ?? $kegiatan->activity->indikator ?? 'No problem analysis available' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information from trkegiatan -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card card-outline card-info">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Informasi Kegiatan Lengkap</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-bullseye mr-1"></i> Tujuan Kegiatan</strong>
+                                        <p class="text-muted">{{ $kegiatan->deskripsitujuan ?? 'No target specified' }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-trophy mr-1"></i> Keluaran Kegiatan</strong>
+                                        <p class="text-muted">{{ $kegiatan->deskripsikeluaran ?? 'No output specified' }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-user mr-1"></i> Penanggung Jawab</strong>
+                                        <p class="text-muted">{{ $kegiatan->user->nama ?? 'No assignee' }}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -246,6 +273,46 @@
             </div>
             <!-- Beneficiaries Tab -->
             <div class="tab-pane fade" id="beneficiaries" role="tabpanel">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="info-box bg-success">
+                            <span class="info-box-icon"><i class="fas fa-female"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Wanita</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-primary">
+                            <span class="info-box-icon"><i class="fas fa-male"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Pria</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-info">
+                            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Beneficiaries</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-warning">
+                            <span class="info-box-icon"><i class="fas fa-wheelchair"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Disabilitas</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -689,51 +756,267 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
+                                <?php
+                                    $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+                                    // Define the relation map locally since we can't access the Kegiatan class directly in Blade
+                                    $relationMap = [
+                                        1 => 'assessment',
+                                        2 => 'sosialisasi',
+                                        3 => 'pelatihan',
+                                        4 => 'pembelanjaan',
+                                        5 => 'pengembangan',
+                                        6 => 'kampanye',
+                                        7 => 'pemetaan',
+                                        8 => 'monitoring',
+                                        9 => 'kunjungan',
+                                        10 => 'konsultasi',
+                                        11 => 'lainnya'
+                                    ];
+                                    $relationName = isset($relationMap[$jenisKegiatanId]) ? $relationMap[$jenisKegiatanId] : null;
+                                ?>
 
-                                <strong><i class="fas fa-building mr-1"></i> Lembaga Terlibat</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganlembaga !!}</p>
-                                <hr>
+                                @if($jenisKegiatanId == 9) <!-- Kunjungan -->
+                                    @if(property_exists($kegiatanRelation, 'kunjunganlembaga') && $kegiatanRelation->kunjunganlembaga)
+                                        <strong><i class="fas fa-building mr-1"></i> Lembaga Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganlembaga !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-users mr-1"></i> Peserta Kegiatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpeserta !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpeserta') && $kegiatanRelation->kunjunganpeserta)
+                                        <strong><i class="fas fa-users mr-1"></i> Peserta Kegiatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpeserta !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-tasks mr-1"></i> Kegiatan yang Dilakukan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganyangdilakukan !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganyangdilakukan') && $kegiatanRelation->kunjunganyangdilakukan)
+                                        <strong><i class="fas fa-tasks mr-1"></i> Kegiatan yang Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganyangdilakukan !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-flag-checkered mr-1"></i> Hasil Kegiatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganhasil !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganhasil') && $kegiatanRelation->kunjunganhasil)
+                                        <strong><i class="fas fa-flag-checkered mr-1"></i> Hasil Kegiatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganhasil !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-coins mr-1"></i> Potensi Pendapatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpotensipendapatan !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpotensipendapatan') && $kegiatanRelation->kunjunganpotensipendapatan)
+                                        <strong><i class="fas fa-coins mr-1"></i> Potensi Pendapatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpotensipendapatan !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-calendar-check mr-1"></i> Rencana Tindak Lanjut</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganrencana !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganrencana') && $kegiatanRelation->kunjunganrencana)
+                                        <strong><i class="fas fa-calendar-check mr-1"></i> Rencana Tindak Lanjut</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganrencana !!}</p>
+                                        <hr>
+                                    @endif
 
-                                @if($kegiatanRelation->kunjungankendala)
-                                    <strong><i class="fas fa-exclamation-triangle mr-1"></i> Kendala</strong>
-                                    <p class="text-muted">{!! $kegiatanRelation->kunjungankendala !!}</p>
-                                    <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjungankendala') && $kegiatanRelation->kunjungankendala)
+                                        <strong><i class="fas fa-exclamation-triangle mr-1"></i> Kendala</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjungankendala !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kunjunganisu') && $kegiatanRelation->kunjunganisu)
+                                        <strong><i class="fas fa-lightbulb mr-1"></i> Isu & Rekomendasi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganisu !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpembelajaran') && $kegiatanRelation->kunjunganpembelajaran)
+                                        <strong><i class="fas fa-book-reader mr-1"></i> Pembelajaran</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpembelajaran !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 1) <!-- Assessment -->
+                                    @if(property_exists($kegiatanRelation, 'assessmentyangterlibat') && $kegiatanRelation->assessmentyangterlibat)
+                                        <strong><i class="fas fa-clipboard-check mr-1"></i> Assessment Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmentyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'assessmenttemuan') && $kegiatanRelation->assessmenttemuan)
+                                        <strong><i class="fas fa-search mr-1"></i> Assessment Temuan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmenttemuan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'assessmenttambahan') && $kegiatanRelation->assessmenttambahan)
+                                        <strong><i class="fas fa-plus-circle mr-1"></i> Assessment Tambahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmenttambahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 2) <!-- Sosialisasi -->
+                                    @if(property_exists($kegiatanRelation, 'sosialisasiyangterlibat') && $kegiatanRelation->sosialisasiyangterlibat)
+                                        <strong><i class="fas fa-bullhorn mr-1"></i> Sosialisasi Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasiyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'sosialisasitemuan') && $kegiatanRelation->sosialisasitemuan)
+                                        <strong><i class="fas fa-search mr-1"></i> Sosialisasi Temuan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasitemuan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'sosialisasitambahan') && $kegiatanRelation->sosialisasitambahan)
+                                        <strong><i class="fas fa-plus-circle mr-1"></i> Sosialisasi Tambahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasitambahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 3) <!-- Pelatihan -->
+                                    @if(property_exists($kegiatanRelation, 'pelatihanpelatih') && $kegiatanRelation->pelatihanpelatih)
+                                        <strong><i class="fas fa-graduation-cap mr-1"></i> Pelatihan Pelatih</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanpelatih !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pelatihanhasil') && $kegiatanRelation->pelatihanhasil)
+                                        <strong><i class="fas fa-users mr-1"></i> Pelatihan Hasil</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanhasil !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pelatihanunggahan') && $kegiatanRelation->pelatihanunggahan)
+                                        <strong><i class="fas fa-certificate mr-1"></i> Pelatihan Uggahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanunggahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 4) <!-- Pembelanjaan -->
+                                    @if(property_exists($kegiatanRelation, 'pembelanjaandetailbarang') && $kegiatanRelation->pembelanjaandetailbarang)
+                                        <strong><i class="fas fa-shopping-cart mr-1"></i> Detail Barang</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pembelanjaandetailbarang !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pembelanjaanterdistribusi') && $kegiatanRelation->pembelanjaanterdistribusi)
+                                        <strong><i class="fas fa-receipt mr-1"></i> Terdistribusi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pembelanjaanterdistribusi !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'realisasi') && $kegiatanRelation->realisasi)
+                                        <strong><i class="fas fa-check-circle mr-1"></i> Realisasi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->realisasi !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 5) <!-- Pengembangan -->
+                                    @if(property_exists($kegiatanRelation, 'pengembanganjeniskomponen') && $kegiatanRelation->pengembanganjeniskomponen)
+                                        <strong><i class="fas fa-tools mr-1"></i> Jenis Komponen</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pengembanganjeniskomponen !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pengembanganyangterlibat') && $kegiatanRelation->pengembanganyangterlibat)
+                                        <strong><i class="fas fa-users mr-1"></i> Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pengembanganyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'hasil_pengembangan') && $kegiatanRelation->hasil_pengembangan)
+                                        <strong><i class="fas fa-star mr-1"></i> Hasil Pengembangan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->hasil_pengembangan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 6) <!-- Kampanye -->
+                                    @if(property_exists($kegiatanRelation, 'kampanyeyangdikampanyekan') && $kegiatanRelation->kampanyeyangdikampanyekan)
+                                        <strong><i class="fas fa-bullhorn mr-1"></i> Yang Di Kampanyekan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kampanyeyangdikampanyekan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kampanyeyangdisasar') && $kegiatanRelation->kampanyeyangdisasar)
+                                        <strong><i class="fas fa-users mr-1"></i> Sasaran Kampanye</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kampanyeyangdisasar !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'dampak_kampanye') && $kegiatanRelation->dampak_kampanye)
+                                        <strong><i class="fas fa-eye mr-1"></i> Dampak Kampanye</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->dampak_kampanye !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 7) <!-- Pemetaan -->
+                                    @if(property_exists($kegiatanRelation, 'pemetaanyangdihasilkan') && $kegiatanRelation->pemetaanyangdihasilkan)
+                                        <strong><i class="fas fa-map-marked-alt mr-1"></i> Yang Dihasilkan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pemetaanyangdihasilkan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pemetaanunit') && $kegiatanRelation->pemetaanunit)
+                                        <strong><i class="fas fa-satellite mr-1"></i> Pemetaan Unit</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pemetaanunit !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'hasil_pemetaan') && $kegiatanRelation->hasil_pemetaan)
+                                        <strong><i class="fas fa-map mr-1"></i> Hasil Pemetaan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->hasil_pemetaan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 8) <!-- Monitoring -->
+                                    @if(property_exists($kegiatanRelation, 'monitoringyangdipantau') && $kegiatanRelation->monitoringyangdipantau)
+                                        <strong><i class="fas fa-search mr-1"></i> Aspek Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringyangdipantau !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'monitoringmetode') && $kegiatanRelation->monitoringmetode)
+                                        <strong><i class="fas fa-calendar mr-1"></i> Metode Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringmetode !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'monitoringhasil') && $kegiatanRelation->monitoringhasil)
+                                        <strong><i class="fas fa-chart-bar mr-1"></i> Hasil Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringhasil !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 10) <!-- Konsultasi -->
+                                    @if(property_exists($kegiatanRelation, 'konsultasilembaga') && $kegiatanRelation->konsultasilembaga)
+                                        <strong><i class="fas fa-building mr-1"></i> Konsultasi Lembaga</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasilembaga !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'konsultasikomponen') && $kegiatanRelation->konsultasikomponen)
+                                        <strong><i class="fas fa-cogs mr-1"></i> Konsultasi Komponen</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasikomponen !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'konsultasiyangdilakukan') && $kegiatanRelation->konsultasiyangdilakukan)
+                                        <strong><i class="fas fa-tasks mr-1"></i> Konsultasi Yang Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasiyangdilakukan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 11) <!-- Lainnya -->
+                                    @if(property_exists($kegiatanRelation, 'lainnyamengapadilakukan') && $kegiatanRelation->lainnyamengapadilakukan)
+                                        <strong><i class="fas fa-question-circle mr-1"></i> Mengapa Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyamengapadilakukan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'lainnyadampak') && $kegiatanRelation->lainnyadampak)
+                                        <strong><i class="fas fa-chart-line mr-1"></i> Dampak</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyadampak !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'lainnyayangterlibat') && $kegiatanRelation->lainnyayangterlibat)
+                                        <strong><i class="fas fa-users mr-1"></i> Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyayangterlibat !!}</p>
+                                    @endif
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-info-circle fa-2x mb-2"></i>
+                                        <p>Tidak ada data hasil kegiatan spesifik untuk jenis kegiatan ini.</p>
+                                        <small class="text-muted">Jenis kegiatan: {{ $kegiatan->jenisKegiatan->nama ?? 'Unknown' }} (ID: {{ $jenisKegiatanId }})</small>
+                                    </div>
                                 @endif
-
-                                <strong><i class="fas fa-lightbulb mr-1"></i> Isu & Rekomendasi</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganisu !!}</p>
-                                <hr>
-
-                                <strong><i class="fas fa-book-reader mr-1"></i> Pembelajaran</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpembelajaran !!}</p>
 
                             </div>
                             <!-- /.card-body -->
                             {{-- <hr> --}}
                         </div>
                         <small class="text-muted">
-                            Dibuat: {{ \Carbon\Carbon::parse($kegiatanRelation->created_at)->translatedFormat('d F Y H:i') }}<br>
-                            Diperbarui: {{ \Carbon\Carbon::parse($kegiatanRelation->updated_at)->translatedFormat('d F Y H:i') }}
+                            @if(property_exists($kegiatanRelation, 'created_at') && $kegiatanRelation->created_at)
+                                Dibuat: {{ \Carbon\Carbon::parse($kegiatanRelation->created_at)->translatedFormat('d F Y H:i') }}<br>
+                            @endif
+                            @if(property_exists($kegiatanRelation, 'updated_at') && $kegiatanRelation->updated_at)
+                                Diperbarui: {{ \Carbon\Carbon::parse($kegiatanRelation->updated_at)->translatedFormat('d F Y H:i') }}
+                            @endif
                         </small>
                         @else
                         <div class="text-center text-muted">

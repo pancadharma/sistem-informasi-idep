@@ -242,6 +242,24 @@ class KegiatanController extends Controller
         abort(404);
     }
 
+    public function exportV2(Kegiatan $kegiatan, $format)
+    {
+        $format = strtolower($format);
+        $durationInDays = $kegiatan->getDurationInDays();
+        $data = compact('kegiatan', 'durationInDays');
+
+        if ($format === 'md') {
+            return response()->streamDownload(function () use ($kegiatan, $durationInDays) {
+                echo view('tr.kegiatan.export_v2', compact('kegiatan', 'durationInDays'))->render();
+            }, 'kegiatan-' . $kegiatan->id . '.md', [
+                'Content-Type' => 'text/markdown',
+            ]);
+        }
+
+        // Fallback to original export if format not handled by V2
+        return $this->export($kegiatan, $format);
+    }
+
 
     public function create()
     {
