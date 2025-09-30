@@ -286,7 +286,7 @@ class Kegiatan extends Model implements HasMedia
 
     public function monitoring()
     {
-        return $this->hasMany(Kegiatan_Monitoring::class, 'kegiatan_id');
+        return $this->hasOne(Kegiatan_Monitoring::class, 'kegiatan_id');
     }
     public function pelatihan()
     {

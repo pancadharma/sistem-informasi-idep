@@ -56,13 +56,13 @@ php artisan queue:work           # Process queued jobs
 
 ### Core Business Logic
 The application follows a hierarchical program structure:
-- **Program** ’ **Program_Goal** ’ **Program_Objektif** ’ **Program_Outcome** ’ **Program_Outcome_Output** ’ **Program_Outcome_Output_Activity** ’ **Kegiatan**
+- **Program** ï¿½ **Program_Goal** ï¿½ **Program_Objektif** ï¿½ **Program_Outcome** ï¿½ **Program_Outcome_Output** ï¿½ **Program_Outcome_Output_Activity** ï¿½ **Kegiatan**
 
 ### Key Models & Relationships
 - **Program**: Central entity with file uploads, donor relationships, geographic coverage
 - **Kegiatan**: Activities with multiple specialized types (Training, Assessment, etc.)
 - **User**: Role-based access control with permissions
-- **Geographic Hierarchy**: Country ’ Province ’ District ’ Sub-district ’ Village ’ Hamlet
+- **Geographic Hierarchy**: Country ï¿½ Province ï¿½ District ï¿½ Sub-district ï¿½ Village ï¿½ Hamlet
 
 ### File Management
 - Uses Spatie Media Library with custom disks
@@ -151,6 +151,11 @@ Controllers follow these patterns:
 - Test files in `tests/Feature/` and `tests/Unit/`
 - Database transactions for test isolation
 - SQLite for testing database
+
+### Known Issues & Solutions
+- **Property Access in show2.blade.php**: Using `property_exists()` with Eloquent models returns `false` even when attributes exist. Replace with proper Laravel attribute existence checks.
+- **Dynamic Form Field Mapping**: Form uses JavaScript formFieldMap to map jenis kegiatan IDs to field prefixes. Controller uses getTypeSpecificFields() to validate and filter update fields.
+- **Field Validation**: Controller properly updates jenis kegiatan specific tables using model mapping and updateOrCreate() method.
 
 ### Frontend Development
 - Vite for asset compilation

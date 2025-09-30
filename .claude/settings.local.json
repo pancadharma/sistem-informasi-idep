@@ -3,7 +3,8 @@
     "allow": [
       "Bash(grep:*)",
       "Bash(php artisan view:clear:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "Read(//t/**)"
     ],
     "deny": [],
     "ask": []
