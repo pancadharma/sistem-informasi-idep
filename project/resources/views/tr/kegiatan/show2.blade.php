@@ -14,23 +14,22 @@
      data-kegiatan-end="{{ $kegiatan->tanggalselesai ?? '-' }}"
      data-kegiatan-budget="{{ $kegiatan->totalnilai ?? '-' }}"
      data-kegiatan-description="{{ str_replace('"', '&quot;', strip_tags($kegiatan->deskripsi ?? $kegiatan->activity->deskripsi ?? '')) }}">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <a class="btn btn-outline-secondary mr-3" href="{{ route('kegiatan.index') }}">
-                <i class="fas fa-arrow-left"></i> {{ __('global.back') }}
-            </a>
-            <div>
-                <h2 class="mb-0">{{ $kegiatan->activity->nama ?? $kegiatan->nama }}</h2>
-                <p class="mb-0 text-muted">Code: {{ $kegiatan->activity->kode ?? $kegiatan->kode }}</p>
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div>
+                    <h3 class="mb-0">{{ $kegiatan->activity->nama ?? $kegiatan->nama }}</h3>
+                    <p class="mb-0 text-muted">{{ __('cruds.form.kode') }}: {{ $kegiatan->activity->kode ?? $kegiatan->kode }}</p>
+                </div>
             </div>
-        </div>
-        <div class="card-tools">
-            <span class="badge badge-lg bg-info">{{ strtoupper($kegiatan->status ?? '-') }}</span>
-            @can('kegiatan_edit')
-            <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-outline-primary ml-2">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            @endcan
+            <div class="card-tools">
+                <span class="badge badge-lg bg-info">{{ strtoupper($kegiatan->status ?? '-') }}</span>
+                @can('kegiatan_edit')
+                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-outline-primary ml-2">
+                    <i class="fas fa-edit"></i> {{ __('global.edit') }}
+                </a>
+                @endcan
+            </div>
         </div>
     </div>
     <div class="card-body">
@@ -117,7 +116,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
-                    <i class="fas fa-tasks"></i> Activities
+                    <i class="fas fa-tasks"></i> Outputs & Activities Data
                 </a>
             </li>
         </ul>
@@ -127,52 +126,146 @@
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                 <div class="row">
-                    <div class="col-md-8">
-                        <div class="card mb-4">
+                    <div class="col-6">
+                        <div class="card card-outline card-danger">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Kegiatan Description</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.kegiatan.tabs.description') }}</h5>
                             </div>
                             <div class="card-body">
-                                <p>{{ $kegiatan->deskripsi ?? $kegiatan->activity->deskripsi ?? 'No description available' }}</p>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Problem Analysis</h5>
-                            </div>
-                            <div class="card-body">
-                                <p>{{ $kegiatan->analisamasalah ?? 'No problem analysis available' }}</p>
+                                <p>{{ $kegiatan->deskripsilatarbelakang ?? 'No description available' }}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Kegiatan Details</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.program.output.indicator') . ' '. __('cruds.program.output.label') }}</h5>
                             </div>
                             <div class="card-body">
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>Status:</th>
-                                        <td><span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created:</th>
-                                        <td>{{ $kegiatan->created_at->format('d M Y') ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Updated:</th>
-                                        <td>{{ $kegiatan->updated_at->format('d M Y') ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Last Activity:</th>
-                                        <td>{{ $kegiatan->updated_at->diffForHumans() ?? '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Created By:</th>
-                                        <td>{{ $kegiatan->user->name ?? 'Unknown' }}</td>
-                                    </tr>
-                                </table>
+                                <p>{{ $kegiatan->deskripsiyangdikaji ?? $kegiatan->activity->indikator ?? 'No problem analysis available' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information from trkegiatan -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card card-outline card-info">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Informasi Kegiatan Lengkap</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-bullseye mr-1"></i> Tujuan Kegiatan</strong>
+                                        <p class="text-muted">{{ $kegiatan->deskripsitujuan ?? 'No target specified' }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-trophy mr-1"></i> Keluaran Kegiatan</strong>
+                                        <p class="text-muted">{{ $kegiatan->deskripsikeluaran ?? 'No output specified' }}</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong><i class="fas fa-user mr-1"></i> Penanggung Jawab</strong>
+                                        <p class="text-muted">{{ $kegiatan->user->nama ?? 'No assignee' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Kegiatan Summary</h5>
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $act = $kegiatan->programOutcomeOutputActivity;
+                                    $out = optional($act)->program_outcome_output;
+                                    $oc  = optional($out)->program_outcome;
+                                    $prg = optional($oc)->program;
+                                    $docsCount  = is_countable($dokumenPendukung ?? []) ? $dokumenPendukung->count() : 0;
+                                    $mediaCount = is_countable($mediaPendukung ?? []) ? $mediaPendukung->count() : 0;
+                                @endphp
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <h6 class="mb-1"><i class="fas fa-project-diagram mr-1"></i>{{ $act->nama ?? '-' }} <small class="text-muted">{{ $act->kode ? '— '.$act->kode : '' }}</small></h6>
+                                            <div class="text-muted small">Program: {{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</div>
+                                        </div>
+                                        <div class="col-sm-4 text-right">
+                                            <span class="badge badge-info">{{ $kegiatan->status ?? '-' }}</span>
+                                            <div class="mt-1 small text-muted">By {{ $kegiatan->user->nama ?? '-' }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row invoice-info mt-2">
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Program Hierarchy</strong>
+                                            <address class="mb-1">
+                                                Outcome: {{ $oc->deskripsi ?? ($oc->nama ?? '-') }}<br>
+                                                Output: {{ $out->deskripsi ?? ($out->nama ?? '-') }}
+                                            </address>
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Schedule</strong>
+                                            <p class="mb-1">
+                                                {{ optional($kegiatan->tanggalmulai)->format('Y-m-d') ?? '-' }} → {{ optional($kegiatan->tanggalselesai)->format('Y-m-d') ?? '-' }}
+                                                <small class="text-muted d-block">Duration: {{ $durationInDays ?? '-' }} days</small>
+                                            </p>
+                                            @if($kegiatan->lokasi && $kegiatan->lokasi->count())
+                                                @php $first = $kegiatan->lokasi->first(); @endphp
+                                                <small class="text-muted d-block">
+                                                    {{ $first->desa->nama ?? '-' }}, {{ $first->desa->kecamatan->nama ?? '-' }}
+                                                </small>
+                                                <a href="#locations" class="small">See all locations ({{ $kegiatan->lokasi->count() }})</a>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <strong>Classification</strong>
+                                            <p class="mb-1">
+                                                Jenis: <span class="badge badge-primary">{{ $kegiatan->jenisKegiatan->nama ?? '-' }}</span>
+                                            </p>
+                                            <p class="mb-1">
+                                                Fase: <span class="badge badge-secondary">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
+                                            </p>
+                                            <p class="mb-0 small text-muted">Attachments — Docs: {{ $docsCount }}, Media: {{ $mediaCount }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-sm-6">
+                                            <strong>Mitra</strong>
+                                            @if($kegiatan->mitra && $kegiatan->mitra->count())
+                                                <ul class="list-unstyled small mb-0">
+                                                    @foreach($kegiatan->mitra->take(5) as $m)
+                                                        <li>{{ $m->nama }}</li>
+                                                    @endforeach
+                                                    @if($kegiatan->mitra->count() > 5)
+                                                        <li class="text-muted">+{{ $kegiatan->mitra->count() - 5 }} more</li>
+                                                    @endif
+                                                </ul>
+                                            @else
+                                                <div class="small text-muted">—</div>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <strong>Sektor (Reinstra)</strong>
+                                            @if($kegiatan->sektor && $kegiatan->sektor->count())
+                                                <ul class="list-unstyled small mb-0">
+                                                    @foreach($kegiatan->sektor->take(5) as $s)
+                                                        <li>{{ $s->nama }}</li>
+                                                    @endforeach
+                                                    @if($kegiatan->sektor->count() > 5)
+                                                        <li class="text-muted">+{{ $kegiatan->sektor->count() - 5 }} more</li>
+                                                    @endif
+                                                </ul>
+                                            @else
+                                                <div class="small text-muted">—</div>
+                                            @endif
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -180,6 +273,46 @@
             </div>
             <!-- Beneficiaries Tab -->
             <div class="tab-pane fade" id="beneficiaries" role="tabpanel">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="info-box bg-success">
+                            <span class="info-box-icon"><i class="fas fa-female"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Wanita</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-primary">
+                            <span class="info-box-icon"><i class="fas fa-male"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Pria</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-info">
+                            <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Beneficiaries</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-box bg-warning">
+                            <span class="info-box-icon"><i class="fas fa-wheelchair"></i></span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Disabilitas</span>
+                                <span class="info-box-number">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -623,51 +756,267 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
+                                <?php
+                                    $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+                                    // Define the relation map locally since we can't access the Kegiatan class directly in Blade
+                                    $relationMap = [
+                                        1 => 'assessment',
+                                        2 => 'sosialisasi',
+                                        3 => 'pelatihan',
+                                        4 => 'pembelanjaan',
+                                        5 => 'pengembangan',
+                                        6 => 'kampanye',
+                                        7 => 'pemetaan',
+                                        8 => 'monitoring',
+                                        9 => 'kunjungan',
+                                        10 => 'konsultasi',
+                                        11 => 'lainnya'
+                                    ];
+                                    $relationName = isset($relationMap[$jenisKegiatanId]) ? $relationMap[$jenisKegiatanId] : null;
+                                ?>
 
-                                <strong><i class="fas fa-building mr-1"></i> Lembaga Terlibat</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganlembaga !!}</p>
-                                <hr>
+                                @if($jenisKegiatanId == 9) <!-- Kunjungan -->
+                                    @if(property_exists($kegiatanRelation, 'kunjunganlembaga') && $kegiatanRelation->kunjunganlembaga)
+                                        <strong><i class="fas fa-building mr-1"></i> Lembaga Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganlembaga !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-users mr-1"></i> Peserta Kegiatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpeserta !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpeserta') && $kegiatanRelation->kunjunganpeserta)
+                                        <strong><i class="fas fa-users mr-1"></i> Peserta Kegiatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpeserta !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-tasks mr-1"></i> Kegiatan yang Dilakukan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganyangdilakukan !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganyangdilakukan') && $kegiatanRelation->kunjunganyangdilakukan)
+                                        <strong><i class="fas fa-tasks mr-1"></i> Kegiatan yang Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganyangdilakukan !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-flag-checkered mr-1"></i> Hasil Kegiatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganhasil !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganhasil') && $kegiatanRelation->kunjunganhasil)
+                                        <strong><i class="fas fa-flag-checkered mr-1"></i> Hasil Kegiatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganhasil !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-coins mr-1"></i> Potensi Pendapatan</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpotensipendapatan !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpotensipendapatan') && $kegiatanRelation->kunjunganpotensipendapatan)
+                                        <strong><i class="fas fa-coins mr-1"></i> Potensi Pendapatan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpotensipendapatan !!}</p>
+                                        <hr>
+                                    @endif
 
-                                <strong><i class="fas fa-calendar-check mr-1"></i> Rencana Tindak Lanjut</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganrencana !!}</p>
-                                <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjunganrencana') && $kegiatanRelation->kunjunganrencana)
+                                        <strong><i class="fas fa-calendar-check mr-1"></i> Rencana Tindak Lanjut</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganrencana !!}</p>
+                                        <hr>
+                                    @endif
 
-                                @if($kegiatanRelation->kunjungankendala)
-                                    <strong><i class="fas fa-exclamation-triangle mr-1"></i> Kendala</strong>
-                                    <p class="text-muted">{!! $kegiatanRelation->kunjungankendala !!}</p>
-                                    <hr>
+                                    @if(property_exists($kegiatanRelation, 'kunjungankendala') && $kegiatanRelation->kunjungankendala)
+                                        <strong><i class="fas fa-exclamation-triangle mr-1"></i> Kendala</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjungankendala !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kunjunganisu') && $kegiatanRelation->kunjunganisu)
+                                        <strong><i class="fas fa-lightbulb mr-1"></i> Isu & Rekomendasi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganisu !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kunjunganpembelajaran') && $kegiatanRelation->kunjunganpembelajaran)
+                                        <strong><i class="fas fa-book-reader mr-1"></i> Pembelajaran</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kunjunganpembelajaran !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 1) <!-- Assessment -->
+                                    @if(property_exists($kegiatanRelation, 'assessmentyangterlibat') && $kegiatanRelation->assessmentyangterlibat)
+                                        <strong><i class="fas fa-clipboard-check mr-1"></i> Assessment Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmentyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'assessmenttemuan') && $kegiatanRelation->assessmenttemuan)
+                                        <strong><i class="fas fa-search mr-1"></i> Assessment Temuan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmenttemuan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'assessmenttambahan') && $kegiatanRelation->assessmenttambahan)
+                                        <strong><i class="fas fa-plus-circle mr-1"></i> Assessment Tambahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->assessmenttambahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 2) <!-- Sosialisasi -->
+                                    @if(property_exists($kegiatanRelation, 'sosialisasiyangterlibat') && $kegiatanRelation->sosialisasiyangterlibat)
+                                        <strong><i class="fas fa-bullhorn mr-1"></i> Sosialisasi Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasiyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'sosialisasitemuan') && $kegiatanRelation->sosialisasitemuan)
+                                        <strong><i class="fas fa-search mr-1"></i> Sosialisasi Temuan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasitemuan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'sosialisasitambahan') && $kegiatanRelation->sosialisasitambahan)
+                                        <strong><i class="fas fa-plus-circle mr-1"></i> Sosialisasi Tambahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->sosialisasitambahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 3) <!-- Pelatihan -->
+                                    @if(property_exists($kegiatanRelation, 'pelatihanpelatih') && $kegiatanRelation->pelatihanpelatih)
+                                        <strong><i class="fas fa-graduation-cap mr-1"></i> Pelatihan Pelatih</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanpelatih !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pelatihanhasil') && $kegiatanRelation->pelatihanhasil)
+                                        <strong><i class="fas fa-users mr-1"></i> Pelatihan Hasil</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanhasil !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pelatihanunggahan') && $kegiatanRelation->pelatihanunggahan)
+                                        <strong><i class="fas fa-certificate mr-1"></i> Pelatihan Uggahan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pelatihanunggahan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 4) <!-- Pembelanjaan -->
+                                    @if(property_exists($kegiatanRelation, 'pembelanjaandetailbarang') && $kegiatanRelation->pembelanjaandetailbarang)
+                                        <strong><i class="fas fa-shopping-cart mr-1"></i> Detail Barang</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pembelanjaandetailbarang !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pembelanjaanterdistribusi') && $kegiatanRelation->pembelanjaanterdistribusi)
+                                        <strong><i class="fas fa-receipt mr-1"></i> Terdistribusi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pembelanjaanterdistribusi !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'realisasi') && $kegiatanRelation->realisasi)
+                                        <strong><i class="fas fa-check-circle mr-1"></i> Realisasi</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->realisasi !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 5) <!-- Pengembangan -->
+                                    @if(property_exists($kegiatanRelation, 'pengembanganjeniskomponen') && $kegiatanRelation->pengembanganjeniskomponen)
+                                        <strong><i class="fas fa-tools mr-1"></i> Jenis Komponen</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pengembanganjeniskomponen !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pengembanganyangterlibat') && $kegiatanRelation->pengembanganyangterlibat)
+                                        <strong><i class="fas fa-users mr-1"></i> Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pengembanganyangterlibat !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'hasil_pengembangan') && $kegiatanRelation->hasil_pengembangan)
+                                        <strong><i class="fas fa-star mr-1"></i> Hasil Pengembangan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->hasil_pengembangan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 6) <!-- Kampanye -->
+                                    @if(property_exists($kegiatanRelation, 'kampanyeyangdikampanyekan') && $kegiatanRelation->kampanyeyangdikampanyekan)
+                                        <strong><i class="fas fa-bullhorn mr-1"></i> Yang Di Kampanyekan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kampanyeyangdikampanyekan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'kampanyeyangdisasar') && $kegiatanRelation->kampanyeyangdisasar)
+                                        <strong><i class="fas fa-users mr-1"></i> Sasaran Kampanye</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->kampanyeyangdisasar !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'dampak_kampanye') && $kegiatanRelation->dampak_kampanye)
+                                        <strong><i class="fas fa-eye mr-1"></i> Dampak Kampanye</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->dampak_kampanye !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 7) <!-- Pemetaan -->
+                                    @if(property_exists($kegiatanRelation, 'pemetaanyangdihasilkan') && $kegiatanRelation->pemetaanyangdihasilkan)
+                                        <strong><i class="fas fa-map-marked-alt mr-1"></i> Yang Dihasilkan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pemetaanyangdihasilkan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'pemetaanunit') && $kegiatanRelation->pemetaanunit)
+                                        <strong><i class="fas fa-satellite mr-1"></i> Pemetaan Unit</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->pemetaanunit !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'hasil_pemetaan') && $kegiatanRelation->hasil_pemetaan)
+                                        <strong><i class="fas fa-map mr-1"></i> Hasil Pemetaan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->hasil_pemetaan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 8) <!-- Monitoring -->
+                                    @if(property_exists($kegiatanRelation, 'monitoringyangdipantau') && $kegiatanRelation->monitoringyangdipantau)
+                                        <strong><i class="fas fa-search mr-1"></i> Aspek Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringyangdipantau !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'monitoringmetode') && $kegiatanRelation->monitoringmetode)
+                                        <strong><i class="fas fa-calendar mr-1"></i> Metode Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringmetode !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'monitoringhasil') && $kegiatanRelation->monitoringhasil)
+                                        <strong><i class="fas fa-chart-bar mr-1"></i> Hasil Monitoring</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->monitoringhasil !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 10) <!-- Konsultasi -->
+                                    @if(property_exists($kegiatanRelation, 'konsultasilembaga') && $kegiatanRelation->konsultasilembaga)
+                                        <strong><i class="fas fa-building mr-1"></i> Konsultasi Lembaga</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasilembaga !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'konsultasikomponen') && $kegiatanRelation->konsultasikomponen)
+                                        <strong><i class="fas fa-cogs mr-1"></i> Konsultasi Komponen</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasikomponen !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'konsultasiyangdilakukan') && $kegiatanRelation->konsultasiyangdilakukan)
+                                        <strong><i class="fas fa-tasks mr-1"></i> Konsultasi Yang Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->konsultasiyangdilakukan !!}</p>
+                                    @endif
+                                @elseif($jenisKegiatanId == 11) <!-- Lainnya -->
+                                    @if(property_exists($kegiatanRelation, 'lainnyamengapadilakukan') && $kegiatanRelation->lainnyamengapadilakukan)
+                                        <strong><i class="fas fa-question-circle mr-1"></i> Mengapa Dilakukan</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyamengapadilakukan !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'lainnyadampak') && $kegiatanRelation->lainnyadampak)
+                                        <strong><i class="fas fa-chart-line mr-1"></i> Dampak</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyadampak !!}</p>
+                                        <hr>
+                                    @endif
+
+                                    @if(property_exists($kegiatanRelation, 'lainnyayangterlibat') && $kegiatanRelation->lainnyayangterlibat)
+                                        <strong><i class="fas fa-users mr-1"></i> Yang Terlibat</strong>
+                                        <p class="text-muted">{!! $kegiatanRelation->lainnyayangterlibat !!}</p>
+                                    @endif
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-info-circle fa-2x mb-2"></i>
+                                        <p>Tidak ada data hasil kegiatan spesifik untuk jenis kegiatan ini.</p>
+                                        <small class="text-muted">Jenis kegiatan: {{ $kegiatan->jenisKegiatan->nama ?? 'Unknown' }} (ID: {{ $jenisKegiatanId }})</small>
+                                    </div>
                                 @endif
-
-                                <strong><i class="fas fa-lightbulb mr-1"></i> Isu & Rekomendasi</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganisu !!}</p>
-                                <hr>
-
-                                <strong><i class="fas fa-book-reader mr-1"></i> Pembelajaran</strong>
-                                <p class="text-muted">{!! $kegiatanRelation->kunjunganpembelajaran !!}</p>
 
                             </div>
                             <!-- /.card-body -->
                             {{-- <hr> --}}
                         </div>
                         <small class="text-muted">
-                            Dibuat: {{ \Carbon\Carbon::parse($kegiatanRelation->created_at)->translatedFormat('d F Y H:i') }}<br>
-                            Diperbarui: {{ \Carbon\Carbon::parse($kegiatanRelation->updated_at)->translatedFormat('d F Y H:i') }}
+                            @if(property_exists($kegiatanRelation, 'created_at') && $kegiatanRelation->created_at)
+                                Dibuat: {{ \Carbon\Carbon::parse($kegiatanRelation->created_at)->translatedFormat('d F Y H:i') }}<br>
+                            @endif
+                            @if(property_exists($kegiatanRelation, 'updated_at') && $kegiatanRelation->updated_at)
+                                Diperbarui: {{ \Carbon\Carbon::parse($kegiatanRelation->updated_at)->translatedFormat('d F Y H:i') }}
+                            @endif
                         </small>
                         @else
                         <div class="text-center text-muted">
@@ -682,12 +1031,160 @@
             <div class="tab-pane fade" id="activities" role="tabpanel">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Activities</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Activities</h5>
+                            @if($kegiatan->programOutcomeOutputActivity)
+                                @php
+                                    $act = $kegiatan->programOutcomeOutputActivity;
+                                    $out = optional($act->program_outcome_output);
+                                    $oc  = optional($out->program_outcome);
+                                    $prg = optional($oc->program);
+                                @endphp
+                                <span class="text-muted small">
+                                    {{ $prg->kode ?? '-' }} › {{ $prg->nama ?? '-' }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
-
                         @if($kegiatan->programOutcomeOutputActivity)
-                            <pre>{{ json_encode($kegiatan->programOutcomeOutputActivity, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
+                            @php
+                                $act = $kegiatan->programOutcomeOutputActivity;
+                                $out = optional($act->program_outcome_output);
+                                $oc  = optional($out->program_outcome);
+                                $prg = optional($oc->program);
+                            @endphp
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table class="table table-sm table-striped mb-3">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:35%">Program</th>
+                                                <td>{{ ($prg->kode ? $prg->kode.' — ' : '') . ($prg->nama ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Outcome</th>
+                                                <td>{{ $oc->deskripsi ?? ($oc->nama ?? '-') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Output</th>
+                                                <td>{{ $out->deskripsi ?? ($out->nama ?? '-') }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table class="table table-sm table-striped mb-3">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width:35%">Activity Code</th>
+                                                <td>{{ $act->kode ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Activity Name</th>
+                                                <td>{{ $act->nama ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Indicator</th>
+                                                <td>{{ $act->indikator ?? '-' }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Target</th>
+                                                <td>{{ $act->target ?? '-' }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            @if(!empty($act->deskripsi))
+                                <div class="mt-2">
+                                    <h6 class="text-secondary mb-2"><i class="fas fa-align-left mr-1"></i> Description</h6>
+                                    <div class="border rounded p-2 bg-light">{!! nl2br(e($act->deskripsi)) !!}</div>
+                                </div>
+                            @endif
+
+                            {{-- Peer Kegiatan under the same Activity --}}
+                            @php
+                                $peers = optional($act)->kegiatan ? $act->kegiatan->where('id', '!=', $kegiatan->id) : collect();
+                            @endphp
+                            @if($peers && $peers->count() > 0)
+                                <div class="mt-4">
+                                    <h6 class="mb-2"><i class="fas fa-link mr-1"></i> Other Activities Under This Output Activity</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:10%">ID</th>
+                                                    <th>Name</th>
+                                                    <th style="width:20%">Status</th>
+                                                    <th style="width:15%">Start</th>
+                                                    <th style="width:15%">End</th>
+                                                    <th style="width:10%" class="text-right">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($peers as $p)
+                                                    <tr>
+                                                        <td>#{{ $p->id }}</td>
+                                                        <td>{{ $p->nama ?? $p->activity->nama ?? '-' }}</td>
+                                                        <td><span class="badge badge-secondary">{{ ucfirst($p->status ?? '-') }}</span></td>
+                                                        <td>{{ optional($p->tanggalmulai)->format('Y-m-d') ?? '-' }}</td>
+                                                        <td>{{ optional($p->tanggalselesai)->format('Y-m-d') ?? '-' }}</td>
+                                                        <td class="text-right">
+                                                            <a href="{{ route('kegiatan.show', $p->id) }}" class="btn btn-xs btn-outline-primary">View</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Related Files --}}
+                            @php
+                                $docs = $dokumenPendukung ?? [];
+                                $media = $mediaPendukung ?? [];
+                            @endphp
+                            @if((is_countable($docs) && count($docs) > 0) || (is_countable($media) && count($media) > 0))
+                                <div class="mt-4">
+                                    <h6 class="mb-2"><i class="fas fa-paperclip mr-1"></i> Attachments</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-muted">Documents</h6>
+                                            @if(is_countable($docs) && count($docs) > 0)
+                                                <ul class="mb-3" style="list-style: disc; padding-left: 1.25rem;">
+                                                    @foreach($docs as $doc)
+                                                        <li>
+                                                            <a href="{{ $doc->getUrl() }}" target="_blank">{{ $doc->getCustomProperty('keterangan') ?: $doc->name }}</a>
+                                                            <small class="text-muted"> ({{ number_format($doc->size/1024, 0) }} KB)</small>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">No documents</span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-muted">Media</h6>
+                                            @if(is_countable($media) && count($media) > 0)
+                                                <ul class="mb-0" style="list-style: disc; padding-left: 1.25rem;">
+                                                    @foreach($media as $m)
+                                                        <li>
+                                                            <a href="{{ $m->getUrl() }}" target="_blank">{{ $m->getCustomProperty('keterangan') ?: $m->name }}</a>
+                                                            <small class="text-muted"> ({{ number_format($m->size/1024, 0) }} KB)</small>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-muted">No media</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         @else
                             <div class="text-center text-muted">
                                 <i class="fas fa-tasks fa-3x mb-3"></i>
@@ -697,6 +1194,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -790,5 +1289,18 @@
                 }
             });
         });
+    </script>
+    <script>
+        // Activate tab from hash and keep URL updated for better navigation
+        (function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const $tab = $("a[href='" + hash + "']");
+                if ($tab.length) { $tab.tab('show'); }
+            }
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                history.replaceState(null, null, e.target.getAttribute('href'));
+            });
+        })();
     </script>
 @endpush

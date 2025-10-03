@@ -1,4 +1,5 @@
 <?php
+// <!-- this is unused controller -->
 
 namespace App\Http\Controllers;
 
@@ -17,22 +18,7 @@ use Carbon\Carbon;
 
 class MealsDashboardController extends Controller
 {
-    public function index(Request $request)
-    {
-        // Initial Data Load
-        $data = $this->getDashboardData($request);
 
-        // Data for Filters
-        $programs = Program::orderBy('nama')->get();
-        $provinces_for_filter = Provinsi::where('aktif', 1)->orderBy('nama')->get();
-        $komponen_models = KomponenModel::orderBy('nama')->get();
-
-        return view('dashboard.meals_dashboard', array_merge($data, [
-            'programs' => $programs,
-            'provinces_for_filter' => $provinces_for_filter,
-            'komponen_models' => $komponen_models,
-        ]));
-    }
 
     public function filterDashboardData(Request $request)
     {
@@ -146,7 +132,7 @@ class MealsDashboardController extends Controller
         $beneficiary_by_gender = (clone $beneficiaryQuery)
             ->select('jenis_kelamin', DB::raw('count(*) as count'))
             ->groupBy('jenis_kelamin')->get()->pluck('count', 'jenis_kelamin');
-        
+
         $beneficiary_vulnerable = (clone $beneficiaryQuery)->has('kelompokMarjinal')->count();
 
         $beneficiary_by_age = (clone $beneficiaryQuery)->select('umur')->get()->pluck('umur');
@@ -191,5 +177,21 @@ class MealsDashboardController extends Controller
     {
         // In a real application, you would generate and return a PDF
         return response()->json(['message' => 'PDF export initiated (dummy action)']);
+    }
+    public function index(Request $request)
+    {
+        // Initial Data Load
+        $data = $this->getDashboardData($request);
+
+        // Data for Filters
+        $programs = Program::orderBy('nama')->get();
+        $provinces_for_filter = Provinsi::where('aktif', 1)->orderBy('nama')->get();
+        $komponen_models = KomponenModel::orderBy('nama')->get();
+
+        return view('dashboard.meals_dashboard', array_merge($data, [
+            'programs' => $programs,
+            'provinces_for_filter' => $provinces_for_filter,
+            'komponen_models' => $komponen_models,
+        ]));
     }
 }

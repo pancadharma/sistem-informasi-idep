@@ -442,6 +442,20 @@ class ProgramController extends Controller
 
             // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
             $data = $request->validated();
+
+            // Guard: only privileged users can change status
+            if (array_key_exists('status', $data) && $program->status !== $data['status']) {
+                $user = auth()->user();
+                $canChangeStatus = ($user->id == 1)
+                    || (method_exists($user, 'hasRole') && $user->hasRole('Administrator'))
+                    || $user->can('program_status_edit');
+                if (!$canChangeStatus) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You are not authorized to change program status.',
+                    ], Response::HTTP_FORBIDDEN);
+                }
+            }
             $program = Program::create($data);
             $program->targetReinstra()->sync($request->input('targetreinstra', []));
             $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));

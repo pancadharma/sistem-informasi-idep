@@ -156,7 +156,7 @@ return [
                     'text'          => 'Komodel Dashboard',
                     'route'         => 'dashboard.komodel_v3',
                     'icon'          => 'fas fa-chart-pie',
-                    'active'        => ['dashboard', 'regex:@^dashboard/[0-9]+$@', 'dashboard*'],
+                    'active'        => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],
                 ],
             ]
         ],

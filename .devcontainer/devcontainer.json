@@ -1,0 +1,46 @@
+{
+  "name": "Laravel PHP Development Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss",
+        "onecentlin.laravel-blade",
+        "onecentlin.laravel5-snippets",
+        "ryannaddy.laravel-artisan",
+        "codingyu.laravel-goto-view",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "ms-vscode.vscode-typescript-next",
+        "esbenp.prettier-vscode",
+        "formulahendry.auto-rename-tag",
+        "ms-vscode-remote.remote-containers"
+      ],
+      "settings": {
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "php.suggest.basic": false,
+        "intelephense.files.maxSize": 5000000,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  },
+  "forwardPorts": [8000, 3306, 8080],
+  "portsAttributes": {
+    "8000": {
+      "label": "Laravel App",
+      "onAutoForward": "notify"
+    },
+    "3306": {
+      "label": "MySQL Database"
+    },
+    "8080": {
+      "label": "phpMyAdmin"
+    }
+  }
+}
