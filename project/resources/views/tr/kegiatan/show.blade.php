@@ -709,7 +709,7 @@
                         <div>
                             <i class="fas fa-eye bg-warning"></i>
                             <div class="timeline-item">
-                                <span class="time"><i class="fas fa-clock"></i> {{ optional($monitoring->tanggal_monitoring)->format('d M Y') ?? 'N/A' }}</span>
+                                <span class="time"><i class="fas fa-clock"></i> {{ optional($monitoring->created_at)->format('d M Y') ?? 'N/A' }}</span>
                                 <h3 class="timeline-header">{{ __('Monitoring Visit') }}</h3>
                                 <div class="timeline-body">
                                     {{ Str::limit($monitoring->hasil_monitoring, 100) }}
@@ -819,7 +819,7 @@
                         <li>
                             <i class="fas fa-eye bg-warning"></i>
                             <div class="timeline-item">
-                                <span class="time"><i class="fas fa-clock"></i> {{ optional($monitoring->tanggal_monitoring)->format('d M Y') ?? 'N/A' }}</span>
+                                <span class="time"><i class="fas fa-clock"></i> {{ optional($monitoring->created_at)->format('d M Y') ?? 'N/A' }}</span>
                                 <h3 class="timeline-header">{{ __('Monitoring Visit') }}</h3>
                                 <div class="timeline-body">
                                     {{ Str::limit($monitoring->hasil_monitoring, 100) }}
@@ -1908,7 +1908,7 @@
                         @if($kegiatan->monitoring && $kegiatan->monitoring->count() > 0)
                             @foreach($kegiatan->monitoring as $monitoring)
                                 <div class="border-bottom pb-3 mb-3">
-                                    <h6>{{ optional($monitoring->tanggal_monitoring)->format('d M Y') }}</h6>
+                                    <h6>{{ optional($monitoring->created_at)->format('d M Y') }}</h6>
                                     <p class="mb-1">{{ $monitoring->hasil_monitoring }}</p>
                                     @if($monitoring->user)
                                         <small class="text-muted">{{ __('By') }}: {{ $monitoring->user->name }}</small>

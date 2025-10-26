@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Permission;
@@ -16,7 +15,8 @@ class PermissionsTableSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
-            $permissions = [
+            // Define permissions once; IDs are not hardcoded to avoid collisions
+            $definitions = [
                 ['id' => 1, 'nama' => 'user_management_access'],
                 ['id' => 2, 'nama' => 'permission_create'],
                 ['id' => 3, 'nama' => 'permission_edit'],
@@ -85,82 +85,95 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 66, 'nama' => 'program_create'],
                 ['id' => 67, 'nama' => 'program_edit'],
                 ['id' => 68, 'nama' => 'program_delete'],
-                ['id' => 68, 'nama' => 'program_details_access'],
-                ['id' => 68, 'nama' => 'program_details_edit'],
-                ['id' => 69, 'nama' => 'program_outcome_access'],
-                ['id' => 70, 'nama' => 'program_outcome_create'],
-                ['id' => 71, 'nama' => 'program_outcome_edit'],
-                ['id' => 72, 'nama' => 'program_outcome_delete'],
-                ['id' => 73, 'nama' => 'program_outcome_details_access'],
-                ['id' => 73, 'nama' => 'program_outcome_details_edit'],
-                ['id' => 74, 'nama' => 'program_outcome_details_delete'],
-                ['id' => 75, 'nama' => 'program_outcome_details_show'],
-                ['id' => 76, 'nama' => 'program_outcome_details_create'],
-                ['id' => 77, 'nama' => 'program_output_create'],
-                ['id' => 78, 'nama' => 'program_output_edit'],
-                ['id' => 79, 'nama' => 'program_output_delete'],
-                ['id' => 80, 'nama' => 'program_output_show'],
-                ['id' => 81, 'nama' => 'program_output_access'],
-                ['id' => 82, 'nama' => 'program_output_details_access'],
-                ['id' => 82, 'nama' => 'program_output_details_edit'],
-                ['id' => 83, 'nama' => 'program_output_details_delete'],
-                ['id' => 84, 'nama' => 'program_output_details_show'],
-                ['id' => 85, 'nama' => 'kegiatan_create'],
-                ['id' => 86, 'nama' => 'kegiatan_edit'],
-                ['id' => 87, 'nama' => 'kegiatan_delete'],
-                ['id' => 88, 'nama' => 'kegiatan_show'],
-                ['id' => 89, 'nama' => 'kegiatan_access'],
-                ['id' => 90, 'nama' => 'kegiatan_details_access'],
-                ['id' => 90, 'nama' => 'kegiatan_details_edit'],
-                ['id' => 91, 'nama' => 'kegiatan_details_delete'],
-                ['id' => 92, 'nama' => 'kegiatan_details_show'],
-                ['id' => 93, 'nama' => 'kegiatan_report'],
-                ['id' => 94, 'nama' => 'meals_access'],
-                ['id' => 95, 'nama' => 'meals_create'],
-                ['id' => 96, 'nama' => 'meals_index'],
-                ['id' => 97, 'nama' => 'meals_show'],
-                ['id' => 98, 'nama' => 'meals_edit'],
-                ['id' => 99, 'nama' => 'beneficiary'],
-                ['id' => 100, 'nama' => 'beneficiary_access'],
-                ['id' => 101, 'nama' => 'beneficiary_index'],
-                ['id' => 102, 'nama' => 'beneficiary_create'],
-                ['id' => 103, 'nama' => 'beneficiary_edit'],
-                ['id' => 104, 'nama' => 'beneficiary_show'],
-                ['id' => 105, 'nama' => 'komponenmodel_access'],
-                ['id' => 106, 'nama' => 'komponenmodel_create'],
-                ['id' => 107, 'nama' => 'komponenmodel_index'],
-                ['id' => 108, 'nama' => 'komponenmodel_show'],
-                ['id' => 109, 'nama' => 'komponenmodel_edit'],
-                ['id' => 110, 'nama' => 'komponenmodel_delete'],
-                ['id' => 111, 'nama' => 'prepostl_access'],
-                ['id' => 112, 'nama' => 'prepostl_create'],
-                ['id' => 113, 'nama' => 'prepostl_index'],
-                ['id' => 114, 'nama' => 'prepostl_show'],
-                ['id' => 115, 'nama' => 'prepostl_edit'],
-                ['id' => 116, 'nama' => 'prepostl_delete'],
+                ['id' => 69, 'nama' => 'program_details_access'],
+                ['id' => 70, 'nama' => 'program_details_edit'],
+                ['id' => 71, 'nama' => 'program_outcome_access'],
+                ['id' => 72, 'nama' => 'program_outcome_create'],
+                ['id' => 73, 'nama' => 'program_outcome_edit'],
+                ['id' => 74, 'nama' => 'program_outcome_delete'],
+                ['id' => 75, 'nama' => 'program_outcome_details_access'],
+                ['id' => 76, 'nama' => 'program_outcome_details_edit'],
+                ['id' => 77, 'nama' => 'program_outcome_details_delete'],
+                ['id' => 78, 'nama' => 'program_outcome_details_show'],
+                ['id' => 79, 'nama' => 'program_outcome_details_create'],
+                ['id' => 80, 'nama' => 'program_output_create'],
+                ['id' => 81, 'nama' => 'program_output_edit'],
+                ['id' => 82, 'nama' => 'program_output_delete'],
+                ['id' => 83, 'nama' => 'program_output_show'],
+                ['id' => 84, 'nama' => 'program_output_access'],
+                ['id' => 85, 'nama' => 'program_output_details_access'],
+                ['id' => 86, 'nama' => 'program_output_details_edit'],
+                ['id' => 87, 'nama' => 'program_output_details_delete'],
+                ['id' => 88, 'nama' => 'program_output_details_show'],
+                ['id' => 89, 'nama' => 'kegiatan_create'],
+                ['id' => 90, 'nama' => 'kegiatan_edit'],
+                ['id' => 91, 'nama' => 'kegiatan_delete'],
+                ['id' => 92, 'nama' => 'kegiatan_show'],
+                ['id' => 93, 'nama' => 'kegiatan_access'],
+                ['id' => 94, 'nama' => 'kegiatan_details_access'],
+                ['id' => 95, 'nama' => 'kegiatan_details_edit'],
+                ['id' => 96, 'nama' => 'kegiatan_details_delete'],
+                ['id' => 97, 'nama' => 'kegiatan_details_show'],
+                ['id' => 98, 'nama' => 'kegiatan_report'],
+                ['id' => 99, 'nama' => 'meals_access'],
+                ['id' => 100, 'nama' => 'meals_create'],
+                ['id' => 101, 'nama' => 'meals_index'],
+                ['id' => 102, 'nama' => 'meals_show'],
+                ['id' => 103, 'nama' => 'meals_edit'],
+                ['id' => 104, 'nama' => 'beneficiary'],
+                ['id' => 105, 'nama' => 'beneficiary_access'],
+                ['id' => 106, 'nama' => 'beneficiary_index'],
+                ['id' => 107, 'nama' => 'beneficiary_create'],
+                ['id' => 108, 'nama' => 'beneficiary_edit'],
+                ['id' => 109, 'nama' => 'beneficiary_show'],
+                ['id' => 110, 'nama' => 'komponenmodel_access'],
+                ['id' => 111, 'nama' => 'komponenmodel_create'],
+                ['id' => 112, 'nama' => 'komponenmodel_index'],
+                ['id' => 113, 'nama' => 'komponenmodel_show'],
+                ['id' => 114, 'nama' => 'komponenmodel_edit'],
+                ['id' => 115, 'nama' => 'komponenmodel_delete'],
+                ['id' => 116, 'nama' => 'prepostl_access'],
+                ['id' => 117, 'nama' => 'prepostl_create'],
+                ['id' => 118, 'nama' => 'prepostl_index'],
+                ['id' => 119, 'nama' => 'prepostl_show'],
+                ['id' => 120, 'nama' => 'prepostl_edit'],
+                ['id' => 121, 'nama' => 'prepostl_delete'],
+                ['id' => 122, 'nama' => 'program_status_edit'],
+                ['id' => 123, 'nama' => 'kegiatan_status_edit'],
+
             ];
 
-            $now = Carbon::now();
-            $permissions = array_map(function ($permission) use ($now) {
-                return array_merge($permission, [
-                    'created_at' => $now,
-                    'aktif' => 1,
-                    'updated_at' => $now
-                ]);
-            }, $permissions);
+            // Use 'nama' as the natural unique key; deduplicate by name
+            $names = array_values(array_unique(array_map(function ($row) {
+                return $row['nama'];
+            }, $definitions)));
 
-            $limit = 5000;
-            $chunks = array_chunk($permissions, $limit);
-            $startTime = microtime(true);
-            foreach ($chunks as $chunk) {
-                Permission::upsert($chunk, 'id', ['nama', 'updated_at']);
-                gc_collect_cycles();
-                unset($chunk);
-                sleep(1);
+            $now = Carbon::now();
+            $rows = array_map(function ($name) use ($now) {
+                return [
+                    'nama' => $name,
+                    'aktif' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }, $names);
+
+            // Idempotent insert/update by 'nama' without requiring a DB unique index
+            foreach ($rows as $row) {
+                $exists = DB::table('permissions')->where('nama', $row['nama'])->exists();
+                if ($exists) {
+                    DB::table('permissions')->where('nama', $row['nama'])->update([
+                        'aktif' => 1,
+                        'updated_at' => $now,
+                    ]);
+                } else {
+                    DB::table('permissions')->insert($row);
+                }
             }
-            $endTime = microtime(true);
-            $upsertTime = $endTime - $startTime;
-            echo "Permission Seeder done in: $upsertTime seconds\n";
+
+            if (isset($this->command)) {
+                $this->command->info('Permissions seeded: ' . count($rows));
+            }
         });
     }
 }

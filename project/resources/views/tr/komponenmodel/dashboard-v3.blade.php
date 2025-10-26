@@ -202,6 +202,7 @@
     // --- GLOBAL VARIABLES ---
     let komponenPieChart, komponenBarChart, map;
     let allData = [];
+    let komponenDistribution = [];
     let markerGroups = {}; // tipe -> array of google.maps.Marker
     let allMarkers = [];
     let markerControlDiv = null; // custom control DOM element
@@ -260,23 +261,37 @@
         });
     };
 
-    const renderBarChart = (data) => {
+    const renderBarChart = (data, distributionData = []) => {
         const ctx = document.getElementById('komponenBarChart').getContext('2d');
-        const distribution = groupDataByKomponen(data).reduce((acc, item) => {
-            acc[item.komponen_tipe] = (acc[item.komponen_tipe] || 0) + 1;
-            return acc;
-        }, {});
+        const palette = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6c757d'];
+        const source = Array.isArray(distributionData) && distributionData.length > 0
+            ? distributionData.map(item => ({
+                label: item.komponen_model_name || item.komponen_tipe || 'Lainnya',
+                value: Number(item.total_programs) || 0,
+            }))
+            : Object.entries(groupDataByKomponen(data).reduce((acc, item) => {
+                const tipe = item.komponen_tipe || 'Lainnya';
+                acc[tipe] = (acc[tipe] || 0) + 1;
+                return acc;
+            }, {})).map(([label, count]) => ({ label, value: count }));
+
+        const labels = source.map(entry => entry.label);
+        const values = source.map(entry => entry.value);
+        const backgroundColor = labels.map((_, idx) => palette[idx % palette.length]);
+        const borderPalette = ['#0056b3', '#1e7e34', '#d39e00', '#bd2130', '#138496', '#545b62'];
+        const borderColor = labels.map((_, idx) => borderPalette[idx % borderPalette.length]);
+
         if (komponenBarChart) komponenBarChart.destroy();
         komponenBarChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: Object.keys(distribution),
+                labels,
                 datasets: [{
-                    label: 'Jumlah Komponen',
-                    data: Object.values(distribution),
-                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6c757d'],
-                    borderColor: ['#0056b3', '#1e7e34', '#d39e00', '#bd2130', '#138496', '#545b62'],
-                    borderWidth: 1
+                    label: 'Jumlah Program',
+                    data: values,
+                    backgroundColor,
+                    borderColor,
+                    borderWidth: 1,
                 }]
             },
             options: {
@@ -286,7 +301,14 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 1
+                            precision: 0,
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.parsed.y}`,
                         }
                     }
                 }
@@ -464,7 +486,7 @@
     const renderDashboard = (data) => {
         renderStatsCards(data);
         renderPieChart(data);
-        renderBarChart(data);
+        renderBarChart(data, komponenDistribution);
         renderMap(data);
         renderTable(data);
     };
@@ -523,6 +545,7 @@
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             allData = data.dashboard_data || [];
+            komponenDistribution = data.komponen_model_distribution || [];
             renderDashboard(allData);
         } catch (error) {
             console.error("Could not fetch dashboard data:", error);
@@ -545,6 +568,7 @@
             initData.filters.years.forEach(y => $('#tahun').append(`<option value="${y}">${y}</option>`));
 
             allData = initData.dashboard_data;
+            komponenDistribution = initData.komponen_model_distribution || [];
             renderDashboard(allData);
         } catch(error) {
             console.error("Could not initialize dashboard:", error);

@@ -148,7 +148,12 @@
     $('.confirm-export').on('click', function () {
         if (!selectedKegiatanId) return;
         const format = $('input[name="export_format"]:checked').val();
-        let url = "{{ route('kegiatan.export', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
+        let url;
+        if (format === 'md') {
+            url = "{{ route('kegiatan.exportV2', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
+        } else {
+            url = "{{ route('kegiatan.export', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
+        }
         url = url.replace('__id__', selectedKegiatanId).replace('__format__', format);
         window.location.href = url;
     });

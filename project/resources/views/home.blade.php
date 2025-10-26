@@ -239,7 +239,7 @@
         <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card card-primary card-outline">
                 <div class="card-header">
-                    <h3 class="card-title">Table Data Desa Penerima Manfaat</h3>
+                    <h3 class="card-title">Age Group Distribution</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -247,12 +247,31 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress"
-                        width="100%">
-                    </table>
+                    <canvas id="ageGroupChart"
+                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%"></canvas>
+                </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Table Data Desa Penerima Manfaat</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-sm" data-card-widget="collapse" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="tableDesa" class="table responsive-table table-bordered datatable-target_progress"
+                    width="100%">
+                </table>
+            </div>
+        </div>
+    </div>
     </div>
 
 @endsection
@@ -551,9 +570,164 @@
                 })
                 .catch(error => console.error('Error fetching chart data:', error));
         }
+        //make the input into select2
+        $('#programFilter, #tahunFilter, #provinsiFilter').select2();
+        let ageGroupChart; // Declare ageGroupChart
+
+        function loadChartData() {
+            const filters = {
+                provinsi_id: $('#provinsiFilter').val(),
+                program_id: $('#programFilter').val(),
+                tahun: $('#tahunFilter').val()
+            };
+
+            fetch('/dashboard/data/get-desa-chart-data?' + new URLSearchParams(filters))
+                .then(res => res.json())
+                .then(data => {
+                    const provinsiLabels = data.map(item => item.provinsi);
+                    const desaCounts = data.map(item => item.total_desa);
+
+                    // Destroy existing charts if they exist
+                    if (barChart) barChart.destroy();
+                    if (pieChart) pieChart.destroy();
+
+                    // Create Bar Chart
+                    barChart = new Chart(document.getElementById('barChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: provinsiLabels,
+                            datasets: [{
+                                label: 'Jumlah Desa Penerima Manfaat',
+                                data: desaCounts,
+                                backgroundColor: generateColors(desaCounts.length),
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.raw} Desa`
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Create Pie Chart
+                    pieChart = new Chart(document.getElementById('pieChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: provinsiLabels,
+                            datasets: [{
+                                data: desaCounts,
+                                backgroundColor: generateColors(desaCounts.length),
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            const value = ctx.raw;
+                                            const total = ctx.chart._metasets[ctx.datasetIndex]
+                                                .total;
+                                            const percentage = ((value / total) * 100).toFixed(
+                                                1);
+                                            return `${ctx.label}: ${value} desa (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        // New function for Age Group Chart
+        function loadAgeGroupChartData() {
+            const filters = {
+                provinsi_id: $('#provinsiFilter').val(),
+                program_id: $('#programFilter').val(),
+                tahun: $('#tahunFilter').val()
+            };
+
+            fetch('{{ route('dashboard.age-group-chart') }}?' + new URLSearchParams(filters))
+                .then(res => res.json())
+                .then(data => {
+                    if (ageGroupChart) ageGroupChart.destroy(); // Destroy existing chart
+
+                    ageGroupChart = new Chart(document.getElementById('ageGroupChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Distribusi Usia Penerima Manfaat',
+                                data: data.data,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.5)',
+                                    'rgba(54, 162, 235, 0.5)',
+                                    'rgba(255, 206, 86, 0.5)',
+                                    'rgba(75, 192, 192, 0.5)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Jumlah Penerima'
+                                    }
+                                },
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Kelompok Usia'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching age group chart data:', error));
+        }
+
         // Load initial data
         loadDashboardData();
         loadChartData();
+        loadAgeGroupChartData(); // Load age group chart data initially
 
 
         function generateColors(count) {
@@ -591,10 +765,11 @@
         $('#programFilter, #provinsiFilter, #tahunFilter').change(function() {
             loadDashboardData();
             loadChartData();
+            loadAgeGroupChartData(); // Also reload age group chart data
         });
         // });
 
-        // // Jalankan initMap saat dokumen siap
+        // Jalankan initMap saat dokumen siap
         // $(document).ready(function() {
         // Pastikan Google Maps API script sudah dimuat SEBELUM initMap dipanggil
         // Initialize Map
@@ -934,113 +1109,6 @@
     ];
     // --- END STYLE DEFINITION ---
 
-    // async function initMap() {
-    //     const { Map } = await google.maps.importLibrary("maps");
-    //     ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-
-    //     map = new Map(document.getElementById("map"), {
-    //         center: { lat: centerLat, lng: centerLng },
-    //         zoom: initialZoom,
-    //         mapId: "7e7fb1bfd929ec61",
-    //     });
-
-    //     infoWindow = new google.maps.InfoWindow();
-
-    //     map.addListener('rightclick', (e) => {
-    //         const lat = e.latLng.lat();
-    //         const lng = e.latLng.lng();
-    //         Swal.fire({
-    //             title: 'Koordinat Lokasi',
-    //             html: `Latitude: <strong>${lat.toFixed(6)}</strong><br>Longitude: <strong>${lng.toFixed(6)}</strong>`,
-    //             icon: 'info',
-    //             confirmButtonText: 'OK'
-    //         });
-    //     });
-
-    //     let zoomChangeTimeout = null;
-
-    //     map.addListener('zoom_changed', () => {
-    //         console.log('Zoom changed to:', map.getZoom());
-
-    //         // Clear any existing timeout to debounce the zoom_changed event
-    //         if (zoomChangeTimeout) {
-    //             clearTimeout(zoomChangeTimeout);
-    //         }
-
-    //         // Delay the call to loadMapMarkers to avoid rapid consecutive calls
-    //         zoomChangeTimeout = setTimeout(() => {
-    //             const currentZoom = map.getZoom();
-    //             const provinsiId = $('#provinsiFilter').val();
-
-    //             // Only reload markers if the zoom level is appropriate for the current view
-    //             if (provinsiId && currentZoom >= DETAIL_ZOOM_THRESHOLD) {
-    //                 loadMapMarkers(); // Load dusun markers
-    //             } else if (!provinsiId && currentZoom < DETAIL_ZOOM_THRESHOLD) {
-    //                 loadMapMarkers(); // Load province markers
-    //             }
-    //         }, 500); // 500ms debounce
-    //     });
-
-    //     if (typeof AdvancedMarkerElement === 'undefined') {
-    //         console.error("Failed to import AdvancedMarkerElement from Google Maps Library.");
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Gagal memuat komponen peta',
-    //             text: 'Terjadi masalah saat memuat peta. Silakan refresh halaman.',
-    //             timer: 5000,
-    //             timerProgressBar: true,
-    //             showConfirmButton: false,
-    //             position: 'top-end',
-    //         });
-    //         return;
-    //     }
-
-    //     markerClusterer = new markerClusterer.MarkerClusterer({
-    //         map: map,
-    //         markers: [],
-    //         renderer: {
-    //             render: ({ count, position }) => {
-    //                 return new google.maps.Marker({
-    //                     position: position,
-    //                     icon: {
-    //                         url: `https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m${Math.min(Math.floor(count / 10) + 1, 5)}.png`,
-    //                         scaledSize: new google.maps.Size(50, 50),
-    //                     },
-    //                     label: {
-    //                         text: String(count),
-    //                         color: 'white',
-    //                         fontSize: '12',
-    //                     },
-    //                     zIndex: 1000,
-    //                 });
-    //             },
-    //         },
-    //     });
-
-    //     markerClusterer.addListener('clusterclick', (cluster) => {
-    //         const hasDusunMarker = cluster.markers.some(marker => marker.isDusun);
-
-    //         if (hasDusunMarker) {
-    //             const bounds = new google.maps.LatLngBounds();
-    //             cluster.markers.forEach(marker => {
-    //                 bounds.extend(marker.position);
-    //             });
-
-    //             // Fit the map to the bounds with padding
-    //             map.fitBounds(bounds, { padding: 50 });
-
-    //             // Cap the zoom level to a maximum of 14
-    //             const currentZoom = map.getZoom();
-    //             if (currentZoom > 14) {
-    //                 map.setZoom(14);
-    //             } else if (currentZoom < DETAIL_ZOOM_THRESHOLD) {
-    //                 map.setZoom(DETAIL_ZOOM_THRESHOLD); // Ensure at least DETAIL_ZOOM_THRESHOLD (10)
-    //             }
-    //         }
-    //     });
-
-    //     loadMapMarkers();
-    // }
 
     async function initMap() {
         const { Map } = await google.maps.importLibrary("maps");
@@ -1151,8 +1219,6 @@
         }
         markers = [];
     }
-
-
 
     async function loadMapMarkers() {
         const programId = $('#programFilter').val();
@@ -1352,13 +1418,13 @@
 
     //
     // reusable function
-            function generateInfoContent(prov) {
-            return `
-                <div style="font-family: sans-serif; font-size: 14px;">
-                    <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
-                    <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
-                    <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
-                </div>`;
+    function generateInfoContent(prov) {
+        return `
+            <div style="font-family: sans-serif; font-size: 14px;">
+                <h4 style="margin: 0 0 5px 0;">${prov.nama}</h4>
+                <p style="margin: 0;">🧩Desa Penerima Manfaat: ${prov.total_desa} Desa </p>
+                <p style="margin: 0;">👥Total Penerima: ${prov.total_penerima} Orang</p>
+        </div>`;
     }
 
     function triggerPrint() {

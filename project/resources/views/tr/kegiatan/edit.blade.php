@@ -235,8 +235,11 @@
                                         <label for="status" class="input-group col-form-label">
                                             <strong>{{ __('cruds.status.title') }}</strong>
                                         </label>
+                                        @php
+                                            $canEditKegiatanStatus = auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('kegiatan_status_edit');
+                                        @endphp
                                         <div class="select2-purple">
-                                            <select name="status" id="status" class="form-control select2">
+                                            <select name="status" id="status" class="form-control select2" @if(!$canEditKegiatanStatus) disabled @endif>
                                                 @foreach (['draft', 'ongoing', 'completed', 'cancelled'] as $status)
                                                     <option value="{{ $status }}"
                                                         {{ old('status', $kegiatan->status ?? '') == $status ? 'selected' : '' }}>
@@ -244,6 +247,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @if(!$canEditKegiatanStatus)
+                                                <input type="hidden" name="status" value="{{ old('status', $kegiatan->status ?? '') }}">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -616,7 +622,16 @@
 
                                     </div>
                                 </div>
-
+                                <!-- Detail Peserta Yang Disabilitas berdasarkan input peserta_kegiatan_summary -->
+                                <div class="form-group row mb-0">
+                                    <div class="col-sm col-md col-lg self-center">
+                                        <label class="mb-0 self-center input-group">
+                                            {{ __('cruds.kegiatan.peserta.disabilitas') }}
+                                            <i class="fas fa-info-circle text-success" data-toggle="tooltip"
+                                                title="{{ __('cruds.kegiatan.peserta.helper_disabilitas') }}"></i>
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="form-group row mb-0">
                                     <div class="col-sm col-md col-lg self-center">
                                         <div class="card-body table-responsive p-0">
