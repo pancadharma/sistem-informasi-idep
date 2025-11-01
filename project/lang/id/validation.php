@@ -117,6 +117,9 @@ return [
     'dont_allow_first_letter_number' => 'Kolom \":input\" tidak boleh diawali dengan nomor.',
     'exceeds_maximum_number'         => ':attribute melebihi batas maksimal model.',
     'db_column'                      => ':attribute hanya boleh berisi huruf alfabet, nomor,  tanda garis Latin ISO dan tidak dimulai dengan nomor',
-    'attributes'                     => [],
-
+    'attributes'                     => [
+        'target_progress.tanggal' => 'Tanggal',
+        'target_progress.details.*.persentase_complete' => '% to complete (Detail #:position)',
+        'target_progress.details.*.progress' => 'Progress (Detail #:position)',
+    ],
 ];

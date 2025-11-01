@@ -88,7 +88,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'dashboard',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -121,8 +121,8 @@ return [
         [
             'text'          => 'User Profile',
             'route'         => 'user.profile',
-            'icon'          => 'fas fa-fw fa-user',
-            'icon_color'    => 'primary',
+            'icon'          => 'fas fa-fw fa-user-alt',
+            'active'        => ['profile/admin', 'profile/admin', 'profile/admin*', 'regex:@^profile/admin/[0-9]+$@']
         ],
         [
             'type'          => 'navbar-search',
@@ -143,16 +143,22 @@ return [
             'topnav_right'  => false,
         ],
 
-        // Sidebar items:
-        // [
-        //     'type' => 'sidebar-menu-search',
-        //     'text' => 'search',
-        // ],
         [
             'text'          => 'Dashboard',
-            'url'           => 'home',
             'icon'          => 'fas fa-tachometer-alt',
-            'active'        => ['home', 'dashboard', 'home*', 'regex:@^home/[0-9]+$@']
+            'submenu'       => [
+                [
+                    'text'          => 'Main Dashboard',
+                    'url'           => 'dashboard',
+                    'icon'          => 'fas fa-tachometer-alt',
+                ],
+                [
+                    'text'          => 'Komodel Dashboard',
+                    'route'         => 'dashboard.komodel_v3',
+                    'icon'          => 'fas fa-chart-pie',
+                    'active'        => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],
+                ],
+            ]
         ],
         [
             'header'        => 'Master Data',
@@ -219,19 +225,11 @@ return [
             'submenu' => [
                 [
                     'text'      => 'role',
-                    'can'       => ['role_create', 'role_show'],
+                    'can'       => ['role_create', 'role_show', 'role_edit', 'role_access'],
                     'icon'      => 'far fa-check-circle',
                     'active'    => ['role', 'role*', 'regex:@^role/[0-9]+$@'],
                     'route'     => 'roles.index',
                     // 'can'       => ['_access','_edit', '_show', '_create'],
-                ],
-                [
-                    'text'  => 'roles',
-                    'route'   => 'mjabatan.index',
-                    // 'can' => 'view_jabatan',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
-                    'icon' => 'fas fa-user-tie',
-                    'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
                 ],
                 [
                     'text'      => 'user',
@@ -243,11 +241,15 @@ return [
                     'active'    => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
                 ],
                 [
-                    'text'  => 'peran',
-                    'route'   => 'peran.index',
-                    // 'can' => 'view_jabatan',
-                    // 'route' => ['admin.profile', ['userID' => '673']],
-                    'icon' => 'fas fa-users',
+                    'text'      => 'roles',
+                    'route'     => 'mjabatan.index',
+                    'icon'      => 'fas fa-user-tie',
+                    'active'    => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
+                ],
+                [
+                    'text'      => 'peran',
+                    'route'     => 'peran.index',
+                    'icon'      => 'fas fa-users',
                     // 'active' => ['jabatan', 'jabatan*', 'regex:@^jabatan/[0-9]+$@'],
                 ],
             ],
@@ -257,23 +259,23 @@ return [
             'icon' => 'fas fa-cog',
             'submenu' => [
                 [
-                    'text' => 'kelompok_rentan',
+                    'text'      => 'kelompok_rentan',
                     //'url' => '#',
-                    'route' => 'kelompokmarjinal.index',
-                    'icon' => 'fas fa-people-arrows',
-                    'active' => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
+                    'route'     => 'kelompokmarjinal.index',
+                    'icon'      => 'fas fa-people-arrows',
+                    'active'    => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'kategoripendonor',
-                    'route' => 'kategoripendonor.index',
-                    'icon' => 'fas fa-medkit',
-                    'active' => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
+                    'text'      => 'kategoripendonor',
+                    'route'     => 'kategoripendonor.index',
+                    'icon'      => 'fas fa-medkit',
+                    'active'    => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'pendonor',
-                    'route' => 'pendonor.index',
-                    'icon' => 'fas fa-hand-holding-medical',
-                    'active' => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
+                    'text'      => 'pendonor',
+                    'route'     => 'pendonor.index',
+                    'icon'      => 'fas fa-hand-holding-medical',
+                    'active'    => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
                 ],
                 [
                     'text'      => 'partner',
@@ -329,11 +331,13 @@ return [
                     'active'    => ['program', 'program*', 'regex:@^program/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'kegiatan',
-                    'icon' => 'nav-icon fa fa-user-graduate',
-                    // 'route' => 'kegiatan',
-                    'url' => 'kegiatan',
-                    'active' => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
+                    'text'      => 'kegiatan',
+                    'icon'      => 'nav-icon fas fa-tasks',
+                    'icon_text' => 'nav-icon fa fa-user-graduate',
+                    'can'       => ['kegiatan_access'],
+                    'url'       => 'kegiatan',
+                    'active'    => ['kegiatan', 'kegiatan*', 'regex:@^kegiatan/[0-9]+$@'],
+                    // 'route'  => 'kegiatan',
                 ],
             ],
         ],
@@ -352,15 +356,36 @@ return [
                 ],
                 [
                     'text'      => 'komponenmodel',
-                    'icon'      => 'nav-icon bi bi-puzzle', 
+                    'icon'      => 'nav-icon bi bi-puzzle',
                     'icon_text' => 'monitoring',
                     'route'     => 'komodel.index',
                     'can'       => ['komponenmodel_access'],
                     'active'    => ['komodel', 'komodel*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
-                    'url' => '#',
-                    'text' => 'Hehe',
+
+                    'text'      => 'benchmark',
+                    'icon'      => 'nav-icon bi bi-person-raised-hand',
+                    // 'icon_text' => 'monitoring',
+                    'route'     => 'benchmark.index',
+                    // 'can'       => ['benchmark_access'],
+                    'active'    => ['benchmark', 'benchmark*', 'regex:@^benchmark/[0-9]+$@'],
+                ],
+                [
+                    'text'      => 'prepost',
+                    'icon'      => 'nav-icon bi bi-clipboard-check',
+                    'icon_text' => 'prepost',
+                    'route'     => 'prepost.index',
+                    // 'can'       => ['komponenmodel_access'],
+                    'active'    => ['prepost', 'prepost*', 'regex:@^komodel/[0-9]+$@'],
+                ],
+                [
+                    'text'      => 'target_progress',
+                    'icon'      => 'nav-icon bi bi-bar-chart-steps',
+                    'icon_text' => 'monitoring',
+                    'route'     => 'target_progress.index',
+                    // 'can'       => ['target_progress_access'],
+                    'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
                 ],
                 [
                     'text'      => 'FRM',
@@ -388,6 +413,12 @@ return [
             'icon' => 'fas fa-file',
             'icon_color' => 'cyan',
             'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+        ],
+        [
+            'text'   => 'Report IDEP',
+            'route'  => 'report.index',
+            'icon'   => 'fas fa-file-alt',
+            'active' => ['report', 'report*'],
         ],
     ],
 
@@ -465,9 +496,39 @@ return [
                     'location' => '/vendor/datatables-new/vfs_fonts.js',
                 ],
                 [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.fixedHeader.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.fixedColumns.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/dataTables.rowGroup.min.js',
+                ],
+                [
                     'type' => 'css',
                     'asset' => true,
                     'location' => '/vendor/datatables-new/datatables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/fixedHeader.dataTables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/fixedColumns.dataTables.min.css',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/datatables-new/plugins/rowGroup.dataTables.min.css',
                 ],
             ],
         ],

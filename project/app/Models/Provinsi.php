@@ -47,12 +47,20 @@ class Provinsi extends Model
     {
         return $this->belongsTo(Country::class, 'negara_id');
     }
+    public function negara()
+    {
+        return $this->belongsTo(Country::class, 'negara_id');
+    }
 
     public function kabupaten_kota()
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }
     public function kab()
+    {
+        return $this->hasMany(Kabupaten::class, 'provinsi_id');
+    }
+    public function kabupaten()
     {
         return $this->hasMany(Kabupaten::class, 'provinsi_id');
     }
@@ -75,4 +83,33 @@ class Provinsi extends Model
     {
         return $this->belongsToMany(Program::class, 'trprogramlokasi', 'provinsi_id', 'program_id');
     }
+
+    // digunakan untuk relasi many to many dengan model program
+    public function penerimaManfaat2()
+    {
+        return $this->hasManyThrough(
+            Meals_Penerima_Manfaat::class,
+            Dusun::class,
+            'desa_id', // Dusun.desa_id = Kelurahan.id
+            'dusun_id', // Meals_Penerima_Manfaat.dusun_id = Dusun.id
+            'id', // Provinsi.id
+            'id' // Dusun.id
+        )->join('kelurahan', 'dusun.desa_id', '=', 'kelurahan.id')
+         ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id')
+         ->join('kabupaten', 'kecamatan.kabupaten_id', '=', 'kabupaten.id')
+         ->whereColumn('kabupaten.provinsi_id', 'provinsi.id');
+    }
+
+    public function desa()
+    {
+        return $this->hasManyThrough(Kelurahan::class, Kabupaten::class, 'provinsi_id', 'kecamatan_id', 'id', 'id')
+                    ->join('kecamatan', 'kelurahan.kecamatan_id', '=', 'kecamatan.id');
+    }
+
+    public function penerimaManfaat()
+    {
+        return $this->hasManyThrough(Meals_Penerima_Manfaat::class, Kelurahan::class, 'kecamatan_id', 'dusun_id', 'id', 'id')
+                    ->join('dusun', 'trmeals_penerima_manfaat.dusun_id', '=', 'dusun.id');
+    }
+
 }

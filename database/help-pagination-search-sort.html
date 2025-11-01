@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Peserta</title>
+    <!-- Add jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* Sorting indicators */
+        th.asc::after {
+            content: ' ▲';
+            color: #333;
+        }
+
+        th.desc::after {
+            content: ' ▼';
+            color: #333;
+        }
+
+        /* Search input styling */
+        .search_peserta .form-control {
+            border-radius: 4px;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .search_peserta .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        /* Table header styling for sortable columns */
+        th:not([colspan]):not([data-dt-order]) {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:not([colspan]):not([data-dt-order]):hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Additional styles for better table appearance */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            vertical-align: middle;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .badge {
+            padding: 0.25em 0.4em;
+            border-radius: 0.25rem;
+            display: inline-block;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            margin: 0.2rem;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+            cursor: pointer;
+            margin: 0 0.2rem;
+        }
+
+        .btn-info {
+            color: #fff;
+            background-color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .pagination li {
+            margin: 0 2px;
+        }
+
+        .pagination .page-link {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+
+        .pagination .page-link:hover {
+            color: #0056b3;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .pagination .active .page-link {
+            z-index: 1;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .pagination .disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #fff;
+            border-color: #dee2e6;
+        }
+
+        /* Items per page selector */
+        .items-per-page {
+            margin: 1rem 0;
+            text-align: right;
+        }
+
+        .items-per-page select {
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row search_peserta" id="">
+        <div class="col mb-1 mt-2">
+            <input type="text" class="form-control" id="search_peserta" placeholder="Cari..." name="search_peserta">
+        </div>
+    </div>
+    <div class="row responsive list_peserta">
+        <div class="col-12 table-responsive">
+            <table id="peserta" class="table table-sm table-bordered table-hover display">
+                <thead style="background-color: rgba(255, 255, 255, 0) !important" class="text-sm">
+                    <tr class="align-middle text-center display nowrap">
+                        <th rowspan="2" class="text-center align-middle d-none">#</th>
+                        <th rowspan="2" class="align-middle text-nowrap">Nama Lengkap</th>
+                        <th rowspan="2" class="align-middle text-wrap">Jenis Kelamin</th>
+                        <th rowspan="2" class="align-middle text-wrap">Kelompok Marjinal</th>
+                        <th colspan="4" class="text-center align-middle">Alamat</th>
+                        <th rowspan="2" class="align-middle">No. HP</th>
+                        <th rowspan="2" class="align-middle text-wrap">Jenis Kelompok</th>
+                        <th rowspan="2" class="align-middle">Usia</th>
+                        <th colspan="4" data-dt-order="disable" class="text-center align-middle">Kelompok Usia</th>
+                        <th rowspan="1" class="text-center align-middle text-nowrap" id="headerActivityProgram"
+                            colspan="2">Activity</th>
+                        <th rowspan="2" class="text-center align-middle text-nowrap" id="header_is_non_activity">Non-AC
+                        </th>
+                        <th rowspan="2" class="text-center align-middle">Opsi</th>
+                    </tr>
+                    <tr id="activityHeaders" class="text-sm">
+                        <th class="align-middle text-center">RT</th>
+                        <th class="align-middle text-center">RW</th>
+                        <th class="align-middle text-center">Dusun</th>
+                        <th class="align-middle text-center">Desa</th>
+                        <th colspan="1" class="align-middle text-center bg-cyan" title="Anak (Umur <18 tahun kebawah)">
+                            0-17</th>
+                        <th colspan="1" class="align-middle text-center bg-teal" title="Remaja (Umur 18 - 24 tahun)">
+                            18-24</th>
+                        <th colspan="1" class="align-middle text-center bg-yellow" title="Dewasa (Umur 25 - 59 tahun)">
+                            25-59</th>
+                        <th colspan="1" class="align-middle text-center bg-pink"
+                            title="Lansia (Umur > 60 tahun keatas)"> &gt; 60 </th>
+                        <th class="align-middle text-center activity-header" data-activity-id="18">#1.1.1</th>
+                        <th class="align-middle text-center activity-header" data-activity-id="19">#1.1.2</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="display nowrap">
+                    <!-- Table body content will be dynamically populated -->
+                </tbody>
+            </table>
+            <!-- Items per page selector -->
+            <div class="items-per-page">
+                Show
+                <select id="itemsPerPage">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                entries
+            </div>
+            <!-- Pagination container -->
+            <div id="pagination" class="pagination">
+                <!-- Pagination links will be dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            let currentPage = 1;
+            let itemsPerPage = 10;
+            let filteredData = [];
+
+            // Search functionality
+            $('#search_peserta').on('input', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                filteredData = sampleData.filter(item => {
+                    return Object.values(item).some(value => {
+                        if (Array.isArray(value)) {
+                            return value.some(v => v.text.toLowerCase().includes(searchTerm));
+                        }
+                        return String(value).toLowerCase().includes(searchTerm);
+                    });
+                });
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+            });
+
+            // Items per page change handler
+            $('#itemsPerPage').on('change', function () {
+                itemsPerPage = parseInt($(this).val());
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+            });
+
+            // Sorting functionality
+            let sortDirection = 1;
+            let lastSortedTh = null;
+
+            $('th').not('[colspan], [data-dt-order]').css('cursor', 'pointer').click(function () {
+                const th = $(this);
+                const index = th.index();
+
+                // Update sort direction
+                if (lastSortedTh && lastSortedTh[0] === th[0]) {
+                    sortDirection *= -1;
+                } else {
+                    sortDirection = 1;
+                    if (lastSortedTh) {
+                        lastSortedTh.removeClass('asc desc');
+                    }
+                }
+                lastSortedTh = th;
+
+                // Update sort indicator
+                th.removeClass('asc desc').addClass(sortDirection === 1 ? 'asc' : 'desc');
+
+                // Sort data
+                filteredData.sort((a, b) => {
+                    let aValue, bValue;
+
+                    // Determine which property to sort by based on the column index
+                    switch (index) {
+                        case 1: // Nama Lengkap
+                            aValue = a.nama;
+                            bValue = b.nama;
+                            break;
+                        case 2: // Jenis Kelamin
+                            aValue = a.gender;
+                            bValue = b.gender;
+                            break;
+                        case 4: // RT
+                            aValue = parseInt(a.rt);
+                            bValue = parseInt(b.rt);
+                            break;
+                        case 5: // RW
+                            aValue = parseInt(a.rw);
+                            bValue = parseInt(b.rw);
+                            break;
+                        case 6: // Dusun
+                            aValue = a.dusun;
+                            bValue = b.dusun;
+                            break;
+                        case 7: // Desa
+                            aValue = a.desa;
+                            bValue = b.desa;
+                            break;
+                        case 10: // Usia
+                            aValue = a.usia;
+                            bValue = b.usia;
+                            break;
+                        default:
+                            aValue = a.nama;
+                            bValue = b.nama;
+                    }
+
+                    if (typeof aValue === 'number' && typeof bValue === 'number') {
+                        return (aValue - bValue) * sortDirection;
+                    }
+                    return String(aValue).localeCompare(String(bValue)) * sortDirection;
+                });
+
+                renderTable();
+            });
+
+            // Render pagination
+            function renderPagination() {
+                const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+                let paginationHtml = `
+                    <li class="${currentPage === 1 ? 'disabled' : ''}">
+                        <span class="page-link" data-page="prev">Previous</span>
+                    </li>`;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHtml += `
+                        <li class="${currentPage === i ? 'active' : ''}">
+                            <span class="page-link" data-page="${i}">${i}</span>
+                        </li>`;
+                }
+
+                paginationHtml += `
+                    <li class="${currentPage === totalPages ? 'disabled' : ''}">
+                        <span class="page-link" data-page="next">Next</span>
+                    </li>`;
+
+                $('#pagination').html(paginationHtml);
+
+                // Add click handlers for pagination
+                $('.page-link').click(function () {
+                    const page = $(this).data('page');
+                    if (page === 'prev' && currentPage > 1) {
+                        currentPage--;
+                    } else if (page === 'next' && currentPage < totalPages) {
+                        currentPage++;
+                    } else if (typeof page === 'number') {
+                        currentPage = page;
+                    }
+                    renderTable();
+                    renderPagination();
+                });
+            }
+
+            // Render table with current page data
+            function renderTable() {
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const pageData = filteredData.slice(start, end);
+
+                $('#tableBody').empty();
+                pageData.forEach(data => {
+                    const row = $('<tr>').html(`
+                        <td class="text-center align-middle d-none">${data.id}</td>
+                        <td data-nama="${data.nama}" class="text-left align-middle">${data.nama}</td>
+                        <td data-gender="${data.gender.toLowerCase()}" class="text-center align-middle text-nowrap">${data.gender}</td>
+                        <td class="text-left align-middle text-wrap">
+                            ${data.kelompok_rentan.map(k => `<span class="badge badge-primary">${k.text}</span>`).join(' ')}
+                        </td>
+                        <td data-rt="${data.rt}" class="text-center align-middle">${data.rt}</td>
+                        <td data-rw="${data.rw}" class="text-center align-middle">${data.rw}</td>
+                        <td class="text-center align-middle">${data.dusun}</td>
+                        <td class="text-center align-middle">${data.desa}</td>
+                        <td data-no_telp="${data.no_telp}" class="text-center align-middle">${data.no_telp}</td>
+                        <td class="text-center align-middle">${data.jenis_kelompok}</td>
+                        <td data-usia="${data.usia}" class="text-center align-middle">${data.usia}</td>
+                        <td class="text-center align-middle">${data.usia < 18 ? '✔️' : ''}</td>
+                        <td class="text-center align-middle">${data.usia >= 18 && data.usia <= 24 ? '✔️' : ''}</td>
+                        <td class="text-center align-middle">${data.usia >= 25 && data.usia <= 59 ? '✔️' : ''}</td>
+                        <td class="text-center align-middle">${data.usia >= 60 ? '✔️' : ''}</td>
+                        <td class="text-center align-middle">✔️</td>
+                        <td class="text-center align-middle">✔️</td>
+                        <td class="text-center align-middle">✔️</td>
+                        <td class="text-center align-middle">
+                            <button class="btn btn-info edit-btn"><i class="bi bi-pencil-square"></i>Edit</button>
+                            <button class="btn btn-danger delete-btn"><i class="bi bi-trash3"></i>Delete</button>
+                        </td>
+                    `);
+                    $('#tableBody').append(row);
+                });
+            }
+
+            // Sample data
+            const sampleData = [
+                {
+                    "id": 1,
+                    "nama": "Ni Komang Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }, { "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "005",
+                    "rw": "002",
+                    "dusun": "Cemenggaon",
+                    "desa": "Gianyar",
+                    "no_telp": "0878881234",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 68
+                },
+                {
+                    "id": 2,
+                    "nama": "I Made Wirawan",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "010",
+                    "rw": "003",
+                    "dusun": "Sema",
+                    "desa": "Gianyar",
+                    "no_telp": "0856554321",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 35
+                },
+                {
+                    "id": 3,
+                    "nama": "Ni Luh Putu Dewi",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }, { "id": "11", "text": "Pengungsi" }],
+                    "rt": "002",
+                    "rw": "001",
+                    "dusun": "Beng",
+                    "desa": "Gianyar",
+                    "no_telp": "0822998765",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 29
+                },
+                {
+                    "id": 4,
+                    "nama": "Wayan Surya Pratama",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Temesi",
+                    "desa": "Gianyar",
+                    "no_telp": "0812345678",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 45
+                },
+                {
+                    "id": 5,
+                    "nama": "Kadek Wulandari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "003",
+                    "rw": "002",
+                    "dusun": "Tulikup",
+                    "desa": "Gianyar",
+                    "no_telp": "0897654321",
+                    "jenis_kelompok": "Kelompok Usaha, Stakeholder Nasional",
+                    "usia": 8
+                },
+                {
+                    "id": 6,
+                    "nama": "Nyoman Putra",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }, { "id": "8", "text": "Korban Bencana Alam" }],
+                    "rt": "009",
+                    "rw": "005",
+                    "dusun": "Singapadu",
+                    "desa": "Gianyar",
+                    "no_telp": "0838765432",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 52
+                },
+                {
+                    "id": 7,
+                    "nama": "Ketut Sari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Petulu",
+                    "desa": "Gianyar",
+                    "no_telp": "0857432109",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 78
+                },
+                {
+                    "id": 8,
+                    "nama": "Gede Dharmawan",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Ubud",
+                    "desa": "Gianyar",
+                    "no_telp": "0819283746",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 40
+                },
+                {
+                    "id": 9,
+                    "nama": "Made Ayu Lestari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Sukawati",
+                    "desa": "Gianyar",
+                    "no_telp": "0821304958",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 15
+                },
+                {
+                    "id": 10,
+                    "nama": "Putu Joni",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }, { "id": "12", "text": "Disabilitas" }],
+                    "rt": "008",
+                    "rw": "004",
+                    "dusun": "Batuan",
+                    "desa": "Gianyar",
+                    "no_telp": "0831672839",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 25
+                },
+                {
+                    "id": 11,
+                    "nama": "Ni Wayan Santi",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "002",
+                    "rw": "001",
+                    "dusun": "Singakerta",
+                    "desa": "Gianyar",
+                    "no_telp": "0852493028",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 72
+                },
+                {
+                    "id": 12,
+                    "nama": "I Kadek Agus",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }, { "id": "8", "text": "Korban Bencana Alam" }],
+                    "rt": "009",
+                    "rw": "005",
+                    "dusun": "Mas",
+                    "desa": "Gianyar",
+                    "no_telp": "0896382910",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 38
+                },
+                {
+                    "id": 13,
+                    "nama": "Ni Nyoman Rika",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "005",
+                    "rw": "003",
+                    "dusun": "Peliatan",
+                    "desa": "Gianyar",
+                    "no_telp": "0817261509",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 31
+                },
+                {
+                    "id": 14,
+                    "nama": "I Ketut Adi",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }, { "id": "12", "text": "Disabilitas" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Celuk",
+                    "desa": "Gianyar",
+                    "no_telp": "0839170892",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 10
+                },
+                {
+                    "id": 15,
+                    "nama": "Ni Gede Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Guwang",
+                    "desa": "Gianyar",
+                    "no_telp": "0853901786",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 58
+                },
+                {
+                    "id": 16,
+                    "nama": "Wayan Joni Saputra",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }, { "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "003",
+                    "rw": "002",
+                    "dusun": "Bedulu",
+                    "desa": "Gianyar",
+                    "no_telp": "0812879654",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 48
+                },
+                {
+                    "id": 17,
+                    "nama": "Kadek Sri Wahyuni",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Pejeng",
+                    "desa": "Gianyar",
+                    "no_telp": "0897564321",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 22
+                },
+                {
+                    "id": 18,
+                    "nama": "Nyoman Ari Wibowo",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "004",
+                    "rw": "003",
+                    "dusun": "Sidan",
+                    "desa": "Gianyar",
+                    "no_telp": "0821435678",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 60
+                },
+                {
+                    "id": 19,
+                    "nama": "Ketut Dewi Ratna",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }, { "id": "11", "text": "Pengungsi" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Manukaya",
+                    "desa": "Gianyar",
+                    "no_telp": "0856789012",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 75
+                },
+                {
+                    "id": 20,
+                    "nama": "Gede Surya Atmaja",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Kenderan",
+                    "desa": "Gianyar",
+                    "no_telp": "0813245789",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 33
+                },
+                {
+                    "id": 21,
+                    "nama": "Made Wiratama",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "011",
+                    "rw": "006",
+                    "dusun": "Petemon",
+                    "desa": "Gianyar",
+                    "no_telp": "0877123456",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 41
+                },
+                {
+                    "id": 22,
+                    "nama": "Ni Luh Sekarini",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }, { "id": "8", "text": "Korban Bencana Alam" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Tegallalang",
+                    "desa": "Gianyar",
+                    "no_telp": "0823456789",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 27
+                },
+                {
+                    "id": 23,
+                    "nama": "Wayan Sujana",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "003",
+                    "rw": "002",
+                    "dusun": "Kedewatan",
+                    "desa": "Gianyar",
+                    "no_telp": "0898765432",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 12
+                },
+                {
+                    "id": 24,
+                    "nama": "Kadek Maharani",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }, { "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "008",
+                    "rw": "004",
+                    "dusun": "Bukit Batu",
+                    "desa": "Gianyar",
+                    "no_telp": "0812987654",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 55
+                },
+                {
+                    "id": 25,
+                    "nama": "Nyoman Oka",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "004",
+                    "rw": "003",
+                    "dusun": "Sebatu",
+                    "desa": "Gianyar",
+                    "no_telp": "0857654321",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 62
+                },
+                {
+                    "id": 26,
+                    "nama": "Ketut Wirya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }, { "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "009",
+                    "rw": "005",
+                    "dusun": "Pejeng Kangin",
+                    "desa": "Gianyar",
+                    "no_telp": "0821543210",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 17
+                },
+                {
+                    "id": 27,
+                    "nama": "Gede Yudi",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Sumita",
+                    "desa": "Gianyar",
+                    "no_telp": "0853432109",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 80
+                },
+                {
+                    "id": 28,
+                    "nama": "Made Rai",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }, { "id": "12", "text": "Disabilitas" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Pupuan",
+                    "desa": "Gianyar",
+                    "no_telp": "0819543210",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 36
+                },
+                {
+                    "id": 29,
+                    "nama": "Ni Wayan Eka",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Melinggih",
+                    "desa": "Gianyar",
+                    "no_telp": "0878654321",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 44
+                },
+                {
+                    "id": 30,
+                    "nama": "I Kadek Jaya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Payangan",
+                    "desa": "Gianyar",
+                    "no_telp": "0822765432",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 30
+                },
+                {
+                    "id": 31,
+                    "nama": "Ni Nyoman Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "004",
+                    "rw": "003",
+                    "dusun": "Puhu",
+                    "desa": "Gianyar",
+                    "no_telp": "0896876543",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 9
+                },
+                {
+                    "id": 32,
+                    "nama": "I Ketut Agus",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Buahan",
+                    "desa": "Gianyar",
+                    "no_telp": "0812765432",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 50
+                },
+                {
+                    "id": 33,
+                    "nama": "Ni Gede Reni",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "001",
+                    "rw": "002",
+                    "dusun": "Tampaksiring",
+                    "desa": "Gianyar",
+                    "no_telp": "0857876543",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 65
+                },
+                {
+                    "id": 34,
+                    "nama": "Wayan Adi Putra",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Sandakan",
+                    "desa": "Gianyar",
+                    "no_telp": "0823987654",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 47
+                },
+                {
+                    "id": 35,
+                    "nama": "Kadek Intan Sari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Siangan",
+                    "desa": "Gianyar",
+                    "no_telp": "0897098765",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 28
+                },
+                {
+                    "id": 36,
+                    "nama": "Nyoman Suardika",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Bengkel",
+                    "desa": "Gianyar",
+                    "no_telp": "0812098765",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 53
+                },
+                {
+                    "id": 37,
+                    "nama": "Ketut Widya",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Kutuh",
+                    "desa": "Gianyar",
+                    "no_telp": "0856109876",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 70
+                },
+                {
+                    "id": 38,
+                    "nama": "Gede Pratama",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Singapadu Kaler",
+                    "desa": "Gianyar",
+                    "no_telp": "0823210987",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 39
+                },
+                {
+                    "id": 39,
+                    "nama": "Made Ratnasari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Serongga",
+                    "desa": "Gianyar",
+                    "no_telp": "0897321098",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 42
+                },
+                {
+                    "id": 40,
+                    "nama": "Putu Arya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Lodtunduh",
+                    "desa": "Gianyar",
+                    "no_telp": "0812432109",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 34
+                },
+                {
+                    "id": 41,
+                    "nama": "Ni Komang Mira",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Sayan",
+                    "desa": "Gianyar",
+                    "no_telp": "0856543210",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 32
+                },
+                {
+                    "id": 42,
+                    "nama": "I Made Joni",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Singapadu Tengah",
+                    "desa": "Gianyar",
+                    "no_telp": "0823654321",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 11
+                },
+                {
+                    "id": 43,
+                    "nama": "Ni Luh Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Petak Kaja",
+                    "desa": "Gianyar",
+                    "no_telp": "0897765432",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 59
+                },
+                {
+                    "id": 44,
+                    "nama": "Wayan Agus",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Bona",
+                    "desa": "Gianyar",
+                    "no_telp": "0812678901",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 67
+                },
+                {
+                    "id": 45,
+                    "nama": "Kadek Ariani",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Melati",
+                    "desa": "Gianyar",
+                    "no_telp": "0857789012",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 46
+                },
+                {
+                    "id": 46,
+                    "nama": "Nyoman Giri",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Kelusa",
+                    "desa": "Gianyar",
+                    "no_telp": "0821890123",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 20
+                },
+                {
+                    "id": 47,
+                    "nama": "Ketut Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Bukian",
+                    "desa": "Gianyar",
+                    "no_telp": "0853901234",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 78
+                },
+                {
+                    "id": 48,
+                    "nama": "Gede Surya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Sebudi",
+                    "desa": "Gianyar",
+                    "no_telp": "0819012345",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 63
+                },
+                {
+                    "id": 49,
+                    "nama": "Made Dwi",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Taro",
+                    "desa": "Gianyar",
+                    "no_telp": "0877234567",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 37
+                },
+                {
+                    "id": 50,
+                    "nama": "Ni Wayan Sari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Pujungan",
+                    "desa": "Gianyar",
+                    "no_telp": "0823345678",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 49
+                },
+                {
+                    "id": 51,
+                    "nama": "I Kadek Yoga",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Sanding",
+                    "desa": "Gianyar",
+                    "no_telp": "0898456789",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 43
+                },
+                {
+                    "id": 52,
+                    "nama": "Ni Nyoman Sinta",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Peninjoan",
+                    "desa": "Gianyar",
+                    "no_telp": "0812567890",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 29
+                },
+                {
+                    "id": 53,
+                    "nama": "I Ketut Widi",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Temesi Miring",
+                    "desa": "Gianyar",
+                    "no_telp": "0856678901",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 7
+                },
+                {
+                    "id": 54,
+                    "nama": "Ni Gede Komala",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Tulikup Kauh",
+                    "desa": "Gianyar",
+                    "no_telp": "0823789012",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 57
+                },
+                {
+                    "id": 55,
+                    "nama": "Wayan Suartama",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Siasem",
+                    "desa": "Gianyar",
+                    "no_telp": "0897890123",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 69
+                },
+                {
+                    "id": 56,
+                    "nama": "Kadek Puspita",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Tegalalang",
+                    "desa": "Gianyar",
+                    "no_telp": "0812901234",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 40
+                },
+                {
+                    "id": 57,
+                    "nama": "Nyoman Juni",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Kedisan",
+                    "desa": "Gianyar",
+                    "no_telp": "0856012345",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 16
+                },
+                {
+                    "id": 58,
+                    "nama": "Ketut Padma",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Manikliyu",
+                    "desa": "Gianyar",
+                    "no_telp": "0823123456",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 82
+                },
+                {
+                    "id": 59,
+                    "nama": "Gede Bayu",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Pujung",
+                    "desa": "Gianyar",
+                    "no_telp": "0897234567",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 71
+                },
+                {
+                    "id": 60,
+                    "nama": "Made Candra",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Penarungan",
+                    "desa": "Gianyar",
+                    "no_telp": "0812345678",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 35
+                },
+                {
+                    "id": 61,
+                    "nama": "Ni Wayan Indriani",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Suwat",
+                    "desa": "Gianyar",
+                    "no_telp": "0856456789",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 45
+                },
+                {
+                    "id": 62,
+                    "nama": "I Kadek Krisna",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Siangan Kangin",
+                    "desa": "Gianyar",
+                    "no_telp": "0823567890",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 42
+                },
+                {
+                    "id": 63,
+                    "nama": "Ni Nyoman Widiastuti",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Bukit Jati",
+                    "desa": "Gianyar",
+                    "no_telp": "0897678901",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 31
+                },
+                {
+                    "id": 64,
+                    "nama": "I Ketut Suwandi",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Sakih",
+                    "desa": "Gianyar",
+                    "no_telp": "0812789012",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 13
+                },
+                {
+                    "id": 65,
+                    "nama": "Ni Gede Padmawati",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Singapadu Kawan",
+                    "desa": "Gianyar",
+                    "no_telp": "0857890123",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 54
+                },
+                {
+                    "id": 66,
+                    "nama": "Wayan Agus Wijaya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Teges",
+                    "desa": "Gianyar",
+                    "no_telp": "0823901234",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 61
+                },
+                {
+                    "id": 67,
+                    "nama": "Kadek Sri Utari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Bongkasa Pertiwi",
+                    "desa": "Gianyar",
+                    "no_telp": "0897012345",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 48
+                },
+                {
+                    "id": 68,
+                    "nama": "Nyoman Wirawan",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Guama",
+                    "desa": "Gianyar",
+                    "no_telp": "0812123456",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 19
+                },
+                {
+                    "id": 69,
+                    "nama": "Ketut Ratna",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Blahkiuh",
+                    "desa": "Gianyar",
+                    "no_telp": "0856234567",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 76
+                },
+                {
+                    "id": 70,
+                    "nama": "Gede Ari",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Mas Ubud",
+                    "desa": "Gianyar",
+                    "no_telp": "0823345678",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 70
+                },
+                {
+                    "id": 71,
+                    "nama": "Made Surya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Selat",
+                    "desa": "Gianyar",
+                    "no_telp": "0897456789",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 33
+                },
+                {
+                    "id": 72,
+                    "nama": "Ni Wayan Santiari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Singapadu Tengah",
+                    "desa": "Gianyar",
+                    "no_telp": "0812567890",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 41
+                },
+                {
+                    "id": 73,
+                    "nama": "I Kadek Adi Putra",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Petak",
+                    "desa": "Gianyar",
+                    "no_telp": "0856678901",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 44
+                },
+                {
+                    "id": 74,
+                    "nama": "Ni Nyoman Sari",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Timbul",
+                    "desa": "Gianyar",
+                    "no_telp": "0823789012",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 28
+                },
+                {
+                    "id": 75,
+                    "nama": "I Ketut Joni",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Bongkasa",
+                    "desa": "Gianyar",
+                    "no_telp": "0897890123",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 14
+                },
+                {
+                    "id": 76,
+                    "nama": "Ni Gede Ayu Putri",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Sebali",
+                    "desa": "Gianyar",
+                    "no_telp": "0812901234",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 51
+                },
+                {
+                    "id": 77,
+                    "nama": "Wayan Arta",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Selemadeg",
+                    "desa": "Gianyar",
+                    "no_telp": "0857012345",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 66
+                },
+                {
+                    "id": 78,
+                    "nama": "Kadek Wira",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Sangeh",
+                    "desa": "Gianyar",
+                    "no_telp": "0821123456",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 47
+                },
+                {
+                    "id": 79,
+                    "nama": "Nyoman Dewi",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Pengosekan",
+                    "desa": "Gianyar",
+                    "no_telp": "0853234567",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 21
+                },
+                {
+                    "id": 80,
+                    "nama": "Ketut Surya",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Petemon Kaja",
+                    "desa": "Gianyar",
+                    "no_telp": "0819345678",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 79
+                },
+                {
+                    "id": 81,
+                    "nama": "Gede Agung",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Bakbakan",
+                    "desa": "Gianyar",
+                    "no_telp": "0877456789",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 64
+                },
+                {
+                    "id": 82,
+                    "nama": "Made Wiryawan",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Gunung Sari",
+                    "desa": "Gianyar",
+                    "no_telp": "0823567890",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 38
+                },
+                {
+                    "id": 83,
+                    "nama": "Ni Wayan Sri",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Ubud Kaja",
+                    "desa": "Gianyar",
+                    "no_telp": "0898678901",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 46
+                },
+                {
+                    "id": 84,
+                    "nama": "I Kadek Dharma",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Singakerta Kangin",
+                    "desa": "Gianyar",
+                    "no_telp": "0812789012",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 43
+                },
+                {
+                    "id": 85,
+                    "nama": "Ni Nyoman Kartika",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Bengkel Kawan",
+                    "desa": "Gianyar",
+                    "no_telp": "0857890123",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 30
+                },
+                {
+                    "id": 86,
+                    "nama": "I Ketut Ariawan",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Tegal Tumbu",
+                    "desa": "Gianyar",
+                    "no_telp": "0823901234",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 10
+                },
+                {
+                    "id": 87,
+                    "nama": "Ni Gede Yuni",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Pejeng Kawan",
+                    "desa": "Gianyar",
+                    "no_telp": "0897012345",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 56
+                },
+                {
+                    "id": 88,
+                    "nama": "Wayan Suanda",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Sidan Kaja",
+                    "desa": "Gianyar",
+                    "no_telp": "0812123456",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 63
+                },
+                {
+                    "id": 89,
+                    "nama": "Kadek Rani",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Bukit Ancak",
+                    "desa": "Gianyar",
+                    "no_telp": "0856234567",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 49
+                },
+                {
+                    "id": 90,
+                    "nama": "Nyoman Rai",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "10", "text": "Anak-anak di Zona Konflik" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Kerta",
+                    "desa": "Gianyar",
+                    "no_telp": "0823345678",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 18
+                },
+                {
+                    "id": 91,
+                    "nama": "Ketut Mira",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "1", "text": "Fakir Miskin" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Singapadu Tengah",
+                    "desa": "Gianyar",
+                    "no_telp": "0897456789",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 81
+                },
+                {
+                    "id": 92,
+                    "nama": "Gede Joni",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "3", "text": "Lansia" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Petulu Ubud",
+                    "desa": "Gianyar",
+                    "no_telp": "0812567890",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha",
+                    "usia": 73
+                },
+                {
+                    "id": 93,
+                    "nama": "Made Ayu",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "11", "text": "Pengungsi" }],
+                    "rt": "004",
+                    "rw": "002",
+                    "dusun": "Sebatu Tegalalang",
+                    "desa": "Gianyar",
+                    "no_telp": "0856678901",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 39
+                },
+                {
+                    "id": 94,
+                    "nama": "Putu Wira",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "12", "text": "Disabilitas" }],
+                    "rt": "009",
+                    "rw": "001",
+                    "dusun": "Ubud Tengah",
+                    "desa": "Gianyar",
+                    "no_telp": "0823789012",
+                    "jenis_kelompok": "KMPB",
+                    "usia": 40
+                },
+                {
+                    "id": 95,
+                    "nama": "Ni Komang Putri",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "7", "text": "Korban Kekerasan" }],
+                    "rt": "001",
+                    "rw": "001",
+                    "dusun": "Singapadu Kaler",
+                    "desa": "Gianyar",
+                    "no_telp": "0897890123",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 45
+                },
+                {
+                    "id": 96,
+                    "nama": "I Made Agus",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "5", "text": "Wanita Hamil" }],
+                    "rt": "006",
+                    "rw": "003",
+                    "dusun": "Pejeng Kauh",
+                    "desa": "Gianyar",
+                    "no_telp": "0812901234",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 31
+                },
+                {
+                    "id": 97,
+                    "nama": "Ni Luh Made",
+                    "gender": "Perempuan",
+                    "kelompok_rentan": [{ "id": "2", "text": "Anak-anak" }],
+                    "rt": "002",
+                    "rw": "002",
+                    "dusun": "Sumampan",
+                    "desa": "Gianyar",
+                    "no_telp": "0857012345",
+                    "jenis_kelompok": "KMPB, Stakeholder Nasional",
+                    "usia": 15
+                },
+                {
+                    "id": 98,
+                    "nama": "Wayan Ketut",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "4", "text": "Minoritas" }],
+                    "rt": "007",
+                    "rw": "004",
+                    "dusun": "Tegalalang",
+                    "desa": "Gianyar",
+                    "no_telp": "0823123456",
+                    "jenis_kelompok": "Kelompok Usaha",
+                    "usia": 52
+                },
+                {
+                    "id": 99,
+                    "nama": "Kadek Nyoman",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "6", "text": "Suku Terasing" }],
+                    "rt": "003",
+                    "rw": "003",
+                    "dusun": "Melinggih Kelod",
+                    "desa": "Gianyar",
+                    "no_telp": "0897234567",
+                    "jenis_kelompok": "Stakeholder Nasional",
+                    "usia": 68
+                },
+                {
+                    "id": 100,
+                    "nama": "Nyoman Gede",
+                    "gender": "Laki-Laki",
+                    "kelompok_rentan": [{ "id": "9", "text": "Orang dengan HIV/AIDS" }],
+                    "rt": "008",
+                    "rw": "005",
+                    "dusun": "Sukawati",
+                    "desa": "Gianyar",
+                    "no_telp": "0812345678",
+                    "jenis_kelompok": "KMPB, Kelompok Usaha, Stakeholder Nasional",
+                    "usia": 37
+                }
+            ];
+
+            // Initialize
+            filteredData = [...sampleData];
+            renderTable();
+            renderPagination();
+        });
+    </script>
+</body>
+
+</html>

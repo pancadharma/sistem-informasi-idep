@@ -2,47 +2,73 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+use Exception;
 use Carbon\Carbon;
-use App\Models\Program;
-use App\Models\Kegiatan;
-use Illuminate\Http\Request;
-use App\Models\Program_Outcome;
-use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreKegiatanRequest;
-use App\Models\Jenis_Kegiatan;
-use App\Models\Kabupaten;
-use App\Models\Kecamatan;
-use App\Models\Kegiatan_Assessment;
-use App\Models\Kegiatan_Kampanye;
-use App\Models\Kegiatan_Kunjungan;
-use App\Models\Kegiatan_Lainnya;
-use App\Models\Kegiatan_Lokasi;
-use App\Models\Kegiatan_Monitoring;
-use App\Models\Kegiatan_Pelatihan;
-use App\Models\Kegiatan_Pembelanjaan;
-use App\Models\Kegiatan_Pemetaan;
-use App\Models\Kegiatan_Pengembangan;
-use App\Models\Kegiatan_Penulis;
-use App\Models\Kegiatan_Sosialisasi;
-use App\Models\Kelurahan;
+use App\Models\User;
+use App\Models\Dusun;
+use App\Models\Peran;
+use App\Models\Satuan;
 use App\Models\mSektor;
 use App\Models\Partner;
-use App\Models\Peran;
+use App\Models\Program;
+use App\Models\Kegiatan;
+use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+use Illuminate\Http\Request;
+use App\Models\Jenis_Bantuan;
+use App\Models\Jenis_Kegiatan;
+use App\Models\TargetReinstra;
+use App\Models\Kegiatan_Lokasi;
+use App\Models\Program_Outcome;
+use App\Models\Kegiatan_Lainnya;
+use App\Models\Kegiatan_Penulis;
+use Yajra\DataTables\DataTables;
+use App\Models\Kegiatan_Kampanye;
+use App\Models\Kegiatan_Pemetaan;
+use App\Models\Kegiatan_Kunjungan;
+use App\Models\Kegiatan_Pelatihan;
+use App\Models\Kegiatan_Assessment;
+use App\Models\Kegiatan_Konsultasi;
+use App\Models\Kegiatan_Monitoring;
+use App\Http\Controllers\Controller;
+use App\Models\Kegiatan_Sosialisasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Program_Outcome_Output;
+// use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Program_Outcome_Output_Activity;
-use App\Models\Provinsi;
-use App\Models\Satuan;
-use App\Models\TargetReinstra;
+
+use Illuminate\Support\Facades\Lang;
+// Helper functions
+use App\Models\Kegiatan_Pembelanjaan;
+use App\Models\Kegiatan_Pengembangan;
+use App\Models\Program_Outcome_Output;
+use App\Http\Resources\KegiatanResource;
 use Dotenv\Exception\ValidationException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\StoreKegiatanRequest;
+use App\Http\Requests\UpdateKegiatanRequest;
+// use Symfony\Component\HttpFoundation\Response;
+use App\Models\Program_Outcome_Output_Activity;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+
+// use function view;
+// use function route;
+// use function collect;
+// use function csrf_token;
+// use function __;
+// use function response;
+
+use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\Html;
+
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Http\Controllers\API\KegiatanController as APIKegiatanController;
+
+
 class KegiatanController extends Controller
 {
     public function index()
@@ -50,68 +76,6 @@ class KegiatanController extends Controller
         abort_if(Gate::denies('kegiatan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('tr.kegiatan.index');
     }
-
-    // public function list_kegiatan(Request $request)
-    // {
-    //     if (!$request->ajax() && !$request->isJson()) {
-    //         return "Not an Ajax Request & JSON REQUEST";
-    //     }
-
-    //     $kegiatan = Kegiatan::with('dusun', 'users', 'kategori_lokasi', 'activity.program_outcome_output.program_outcome.program', 'satuan', 'jenis_bantuan')
-    //         ->select('trkegiatan.*')
-    //         ->get()
-    //         ->map(function ($item) {
-    //             // Calculate duration before formatting
-    //             $item->duration_in_days = $item->getDurationInDays();
-
-    //             // Format dates after calculating duration
-    //             $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-    //             $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
-
-    //             // Add calculated values
-    //             $program = $item->activity->program_outcome_output->program_outcome->program;
-    //             $item->total_beneficiaries = $program->getTotalBeneficiaries();
-
-    //             return $item;
-    //         });
-
-    //     $data = DataTables::of($kegiatan)
-    //         ->addIndexColumn()
-    //         ->addColumn('program_name', function ($kegiatan) {
-    //             return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
-    //         })
-    //         ->addColumn('duration_in_days', function ($kegiatan) {
-    //             return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';
-    //         })
-    //         ->addColumn('action', function ($kegiatan) {
-    //             $buttons = [];
-
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
-    //                 $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_details_edit') || auth()->user()->can('kegiatan_edit')) {
-    //                 $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-    //             }
-    //             return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
-    //         })
-    //         ->rawColumns(['action'])
-    //         ->make(true);
-
-    //     return $data;
-    // }
-
-
-    // private function generateButton($action, $class, $icon, $title, $kegiatanId)
-    // {
-    //     return '<button type="button" title="' . $title . '" class="btn btn-sm btn-' . $class . ' ' . $action . '-kegiatan-btn" data-action="' . $action . '"
-    //             data-kegiatan-id="' . $kegiatanId . '" data-toggle="tooltip" data-placement="top">
-    //                 <i class="bi bi-' . $icon . '"></i>
-    //                 <span class="d-none d-sm-inline"></span>
-    //             </button>';
-    // }
 
     public function list_kegiatan(Request $request)
     {
@@ -126,23 +90,23 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-        ->select('trkegiatan.*')
-        ->get()
-        ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $item->penerimamanfaattotal;
-            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $item->penerimamanfaattotal;
+                $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-            return $item;
-        });
+                return $item;
+            });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
@@ -173,6 +137,7 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
+                $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -209,6 +174,10 @@ class KegiatanController extends Controller
 
     private function generateButton($type, $color, $icon, $label, $id)
     {
+        if ($type === 'export') {
+            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+        }
+
         $url = '';
         switch ($type) {
             case 'edit':
@@ -222,37 +191,137 @@ class KegiatanController extends Controller
                 break;
         }
 
-        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
+        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
     }
+
+    public function export(Kegiatan $kegiatan, $format)
+    {
+        $format = strtolower($format);
+        $durationInDays = $kegiatan->getDurationInDays();
+        $data = compact('kegiatan', 'durationInDays');
+
+        if ($format === 'pdf') {
+            $pdf = Pdf::loadView('tr.kegiatan.export', $data);
+            return $pdf->download('kegiatan-' . $kegiatan->id . '.pdf');
+        }
+
+        if ($format === 'docx') {
+            $phpWord = new PhpWord();
+            $section = $phpWord->addSection();
+            $phpWord->setDefaultFontName('Times New Roman');
+            $fontStyleName = 'oneUserDefinedStyle';
+            $phpWord->addFontStyle(
+                $fontStyleName,
+                array('name' => 'Tahoma', 'size' => 12, 'color' => '1B2232', 'bold' => true)
+            );
+
+            $fontStyle = new \PhpOffice\PhpWord\Style\Font();
+            $fontStyle->setBold(true);
+            $fontStyle->setName('Tahoma');
+            $fontStyle->setSize(13);
+
+            $html = view('tr.kegiatan.export', $data)->render();
+            Html::addHtml($section, $html, true, false);
+
+            $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan');
+            $tempFilePath = pathinfo($tempFile, PATHINFO_DIRNAME);
+            $tempFileName = pathinfo($tempFile, PATHINFO_BASENAME);
+
+            $phpWord->setDefaultFontSize(12);
+            $phpWord->setDefaultFontName('Times New Roman');
+            $phpWord->setDefaultParagraphStyle([
+                'fontSize' => 12,
+                'fontName' => 'Times New Roman',
+            ]);
+
+            $tempFile = $tempFilePath . '/' . $tempFileName . '.docx';
+            $phpWord->save($tempFile, 'Word2007', true); // save the document and download it
+            return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')->deleteFileAfterSend(true);
+        }
+
+        abort(404);
+    }
+
+    public function exportV2(Kegiatan $kegiatan, $format)
+    {
+        $format = strtolower($format);
+        $durationInDays = $kegiatan->getDurationInDays();
+        $data = compact('kegiatan', 'durationInDays');
+
+        if ($format === 'md') {
+            return response()->streamDownload(function () use ($kegiatan, $durationInDays) {
+                echo view('tr.kegiatan.export_v2', compact('kegiatan', 'durationInDays'))->render();
+            }, 'kegiatan-' . $kegiatan->id . '.md', [
+                'Content-Type' => 'text/markdown',
+            ]);
+        }
+
+        // Fallback to original export if format not handled by V2
+        return $this->export($kegiatan, $format);
+    }
+
 
     public function create()
     {
-        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create')) {
-            $program = Program::all();
-            $statusOptions = Kegiatan::STATUS_SELECT;
-            $kegiatan = new Kegiatan(); // Empty instance
-            $kegiatan->setRelation('penulis', collect([])); // Ensure an empty collection
-
-            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-
-            return view('tr.kegiatan.create', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan'));
+        // If user is not logged in
+        if (!auth()->check()) {
+            return redirect()->route('login'); // or any named login route
         }
-        return response()->json([
-            'success' => false,
-            'status' => 'error',
-            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-        ], Response::HTTP_FORBIDDEN);
+        if (!auth()->check() || !(auth()->id() === 1 || auth()->user()->can('kegiatan_edit') || auth()->user()->can('kegiatan_create'))) {
+            if (request()->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'status' => 'error',
+                    'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access this Page',
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            abort(403, 'Unauthorized Permission');
+        }
+
+        $statusOptions = Kegiatan::STATUS_SELECT;
+        $kegiatan = new Kegiatan();
+        $kegiatan->setRelation('penulis', collect([]));
+
+        return view('tr.kegiatan.create', compact('statusOptions', 'kegiatan'));
     }
+
 
     public function store(StoreKegiatanRequest $request)
     {
-        $kegiatanController = new APIKegiatanController();
-
-        $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
-        $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
-
-        // Optionally return a response or redirect
-        return response()->json(['message' => 'Kegiatan processed by storeApi']);
+        // $kegiatanController = new APIKegiatanController();
+        // $kegiatan = new Kegiatan(); // Create a new Kegiatan instance.
+        // $kegiatanController->storeApi($request, $kegiatan); // Pass both request and the new Kegiatan instance.
+        // // Optionally return a response or redirect
+        // return response()->json(['message' => 'Kegiatan processed by storeApi']);
+        try {
+            $kegiatanController = new APIKegiatanController();
+            $response = $kegiatanController->storeApi($request, new Kegiatan());
+            return response()->json([
+                'success' => true,
+                'status' => 'success',
+                'data' => $response['data'],
+                'message' => 'Kegiatan processed by storeApi'
+            ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (HttpException $e) {
+            return response()->json([
+                'success' => false,
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $e->getStatusCode());
+        }
     }
 
     public function show($id)
@@ -285,14 +354,55 @@ class KegiatanController extends Controller
             $kegiatanRelation = $kegiatan->$relationName;
         }
 
-        foreach ($kegiatan->kegiatan_penulis as $penulis) {
+        foreach ($kegiatan->datapenulis as $penulis) {
             $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
         }
 
         // $lokasi = $kegiatan->lokasi;
-        // return $lokasi;
+        // return $kegiatan->datapenulis;
 
         return view('tr.kegiatan.show', compact(
+            'kegiatan',
+            'dokumenPendukung',
+            'mediaPendukung',
+            'kegiatanRelation',
+            'durationInDays'
+        ));
+    }
+
+    public function show2($id)
+    {
+        // Reuse the logic from show, but render the new view
+        $kegiatan = Kegiatan::with([
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
+            'programOutcomeOutputActivity.kegiatan',
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
+        ])->findOrFail($id);
+
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+        $durationInDays = $kegiatan->getDurationInDays();
+
+        $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
+        $relationMap = Kegiatan::getJenisKegiatanRelationMap();
+        $kegiatanRelation = null;
+        if (isset($relationMap[$jenisKegiatanId])) {
+            $relationName = $relationMap[$jenisKegiatanId];
+            $kegiatanRelation = $kegiatan->$relationName;
+        }
+
+        foreach ($kegiatan->datapenulis as $penulis) {
+            $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
+        }
+
+        return view('tr.kegiatan.show2', compact(
             'kegiatan',
             'dokumenPendukung',
             'mediaPendukung',
@@ -321,35 +431,212 @@ class KegiatanController extends Controller
         $modelClass = $modelMapping[$jenisKegiatan];
         return $modelClass::where('kegiatan_id', $kegiatan->id)->get();
     }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
-
-
-
-
-
-
-
-
-    public function edit(Kegiatan $kegiatan)
+    public function edit($id)
     {
-        if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
-            $program = Program::all();
-            $statusOptions = Kegiatan::STATUS_SELECT;
-            $programoutcomeoutputactivities = Program_Outcome_Output_Activity::all();
-            $kegiatanPenulis = $kegiatan->penulis()->get(); // Load related penulis
+        $kegiatan = Kegiatan::with([
+            'programoutcomeoutputactivity.program_outcome_output.program_outcome.program',
+            'sektor',
+            'mitra',
+            'user',
+            'lokasi.desa.kecamatan.kabupaten.provinsi',
+            'jenisKegiatan',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
+            'assessment',
+            'sosialisasi',
+            'pelatihan',
+            'pembelanjaan',
+            'pengembangan',
+            'kampanye',
+            'pemetaan',
+            'monitoring',
+            'kunjungan',
+            'konsultasi',
+            'lainnya'
+        ])->findOrFail($id);
 
-            return view('tr.kegiatan.edit', compact('program', 'statusOptions', 'programoutcomeoutputactivities', 'kegiatan', 'kegiatanPenulis'));
+        $jenisKegiatanList = Jenis_Kegiatan::select('id', 'nama')->get();
+        $provinsiList = Provinsi::select('id', 'nama')->get();
+        $sektorList = TargetReinstra::select('id', 'nama')->get();
+
+        $kegiatan->tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+        $kegiatan->tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
+        $statusOptions = Kegiatan::STATUS_SELECT;
+
+        // Determine preselected provinsi and kabupaten from the first lokasi, if available
+        $preselectedProvinsiId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->provinsi->id ?? null;
+        $preselectedKabupatenId = $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->id ?? null;
+
+        // Initialize empty collections for location dropdowns (to be populated dynamically via JS)
+        $kabupatenList = collect([]);
+        $kecamatanList = collect([]);
+        $desaList = collect([]);
+
+        // Dokumen
+        $dokumen_files = $kegiatan->getMedia('dokumen_pendukung');
+        $dokumen_initialPreview = [];
+        $dokumen_initialPreviewConfig = [];
+
+        $imageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $officeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint',
+        ];
+
+        foreach ($dokumen_files as $file) {
+            $dokumen_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan')
+                ?: $file->name
+                ?: $file->getCustomProperty('original_name')
+                ?: pathinfo($file->file_name, PATHINFO_FILENAME);
+            $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
+
+            $dokumen_initialPreviewConfig[] = [
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $type,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                ]
+            ];
         }
-        return response()->json([
-            'success' => false,
-            'status' => 'error',
-            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to access details of this Page',
-        ], Response::HTTP_FORBIDDEN);
+
+        // Media
+        $media_files = $kegiatan->getMedia('media_pendukung');
+        $media_initialPreview = [];
+        $media_initialPreviewConfig = [];
+
+        foreach ($media_files as $file) {
+            $media_initialPreview[] = $file->getUrl();
+            $caption = $file->getCustomProperty('keterangan')
+                ?: $file->name
+                ?: $file->getCustomProperty('original_name')
+                ?: pathinfo($file->file_name, PATHINFO_FILENAME);
+            $mimeType = $file->mime_type;
+
+            if (in_array($file->mime_type, $imageTypes)) {
+                $type = 'image';
+            } elseif ($file->mime_type === 'application/pdf') {
+                $type = 'pdf';
+            } elseif (in_array($file->mime_type, $officeTypes)) {
+                $type = 'office';
+            } else {
+                $type = 'unknown'; // Default type for other mime types
+            }
+
+            $media_initialPreviewConfig[] = [
+                'caption'       => $caption,
+                'description'   => $caption,
+                'url'           => route('api.kegiatan.delete_media', ['media_id' => $file->id]),
+                'key'           => $file->id,
+                'size'          => $file->size,
+                'type'          => $type,
+                'downloadUrl'   => $file->getUrl(),
+                'thumbnailUrl'  => $file->getUrl(),
+                'filename'      => $caption,
+                'extra'         => [
+                    '_token'    => csrf_token(),
+                    'keterangan' => $file->getCustomProperty('keterangan', '')
+                ]
+            ];
+        }
+
+        // return $dokumen_initialPreviewConfig;
+
+        $tanggalmulai = Carbon::parse($kegiatan->tanggalmulai)->format('Y-m-d');
+        $tanggalselesai = Carbon::parse($kegiatan->tanggalselesai)->format('Y-m-d');
+
+
+        return view('tr.kegiatan.edit', compact(
+            'kegiatan',
+            'tanggalmulai',
+            'tanggalselesai',
+            'statusOptions',
+            'jenisKegiatanList',
+            'sektorList',
+            'provinsiList',
+            'kabupatenList',
+            'kecamatanList',
+            'desaList',
+            'preselectedProvinsiId',
+            'preselectedKabupatenId',
+            'dokumen_initialPreview',
+            'dokumen_initialPreviewConfig',
+            'media_initialPreview',
+            'media_initialPreviewConfig',
+
+        ));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        return view('tr.kegiatan.edit');
+        try {
+            // Server-side guard: only protect status change
+            $user = auth()->user();
+            $isPrivileged = ($user && ($user->id == 1 || (method_exists($user, 'hasRole') && $user->hasRole('Administrator')) || $user->can('kegiatan_status_edit')));
+
+            // Guard status change specifically
+            $newStatus = $request->input('status');
+            if (!is_null($newStatus) && $newStatus !== $kegiatan->status && !$isPrivileged) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You are not authorized to change kegiatan status.'
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            $kegiatanController = new APIKegiatanController();
+            $response = $kegiatanController->updateAPI($request, $kegiatan);
+
+            if ($response->getStatusCode() === 200) {
+                if ($request->ajax() || $request->expectsJson()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => __('global.update_success'),
+                        'redirect' => route('kegiatan.index')
+                    ], 200);
+                }
+                return redirect()->route('kegiatan.index')->with('status', __('global.update_success'));
+            }
+
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $response->getData()->message ?? 'Failed to update kegiatan.'
+                ], 400);
+            }
+            return redirect()->back()->withErrors(['error' => $response->getData()->message ?? 'Failed to update kegiatan.']);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update kegiatan: ' . $th->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
@@ -560,157 +847,319 @@ class KegiatanController extends Controller
 
     // method to save kegiatan ->hasil based on selected jenis kegiatan
 
-    public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
+    // public function storeKegiatanHasil(Request $request, Kegiatan $kegiatan)
+    // {
+    //     $jenisKegiatan = $request->input('jeniskegiatan_id');
+    //     $idKegiatan = $kegiatan->id;
+
+    //     switch ($jenisKegiatan) {
+    //         case 1: // Assessment
+    //             Kegiatan_Assessment::create(array_merge($request->only([
+    //                 'assessmentyangterlibat',
+    //                 'assessmenttemuan',
+    //                 'assessmenttambahan',
+    //                 'assessmenttambahan_ket',
+    //                 'assessmentkendala',
+    //                 'assessmentisu',
+    //                 'assessmentpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 2: // Sosialisasi
+    //             Kegiatan_Sosialisasi::create(array_merge($request->only([
+    //                 'sosialisasiyangterlibat',
+    //                 'sosialisasitemuan',
+    //                 'sosialisasitambahan',
+    //                 'sosialisasitambahan_ket',
+    //                 'sosialisasikendala',
+    //                 'sosialisasiisu',
+    //                 'sosialisasipembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 3: // Pelatihan
+    //             Kegiatan_Pelatihan::create(array_merge($request->only([
+    //                 'pelatihanpelatih',
+    //                 'pelatihanhasil',
+    //                 'pelatihandistribusi',
+    //                 'pelatihandistribusi_ket',
+    //                 'pelatihanrencana',
+    //                 'pelatihanunggahan',
+    //                 'pelatihanisu',
+    //                 'pelatihanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 4: // Pembelanjaan
+    //             Kegiatan_Pembelanjaan::create(array_merge($request->only([
+    //                 'pembelanjaandetailbarang',
+    //                 'pembelanjaanmulai',
+    //                 'pembelanjaanselesai',
+    //                 'pembelanjaandistribusimulai',
+    //                 'pembelanjaandistribusiselesai',
+    //                 'pembelanjaanterdistribusi',
+    //                 'pembelanjaanakandistribusi',
+    //                 'pembelanjaanakandistribusi_ket',
+    //                 'pembelanjaankendala',
+    //                 'pembelanjaanisu',
+    //                 'pembelanjaanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 5: // Pengembangan
+    //             Kegiatan_Pengembangan::create(array_merge($request->only([
+    //                 'pengembanganjeniskomponen',
+    //                 'pengembanganberapakomponen',
+    //                 'pengembanganlokasikomponen',
+    //                 'pengembanganyangterlibat',
+    //                 'pengembanganrencana',
+    //                 'pengembangankendala',
+    //                 'pengembanganisu',
+    //                 'pengembanganpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 6: // Kampanye
+    //             Kegiatan_Kampanye::create(array_merge($request->only([
+    //                 'kampanyeyangdikampanyekan',
+    //                 'kampanyejenis',
+    //                 'kampanyebentukkegiatan',
+    //                 'kampanyeyangterlibat',
+    //                 'kampanyeyangdisasar',
+    //                 'kampanyejangkauan',
+    //                 'kampanyerencana',
+    //                 'kampanyekendala',
+    //                 'kampanyeisu',
+    //                 'kampanyepembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 7: // Pemetaan
+    //             Kegiatan_Pemetaan::create(array_merge($request->only([
+    //                 'pemetaanyangdihasilkan',
+    //                 'pemetaanluasan',
+    //                 'pemetaanunit',
+    //                 'pemetaanyangterlibat',
+    //                 'pemetaanrencana',
+    //                 'pemetaanisu',
+    //                 'pemetaanpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 8: // Monitoring
+    //             Kegiatan_Monitoring::create(array_merge($request->only([
+    //                 'monitoringyangdipantau',
+    //                 'monitoringdata',
+    //                 'monitoringyangterlibat',
+    //                 'monitoringmetode',
+    //                 'monitoringhasil',
+    //                 'monitoringkegiatanselanjutnya',
+    //                 'monitoringkegiatanselanjutnya_ket',
+    //                 'monitoringkendala',
+    //                 'monitoringisu',
+    //                 'monitoringpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 9: // Kunjungan
+    //             Kegiatan_Kunjungan::create(array_merge($request->only([
+    //                 'kunjunganlembaga',
+    //                 'kunjunganpeserta',
+
+    //                 'kunjunganyangdilakukan',
+    //                 'kunjunganhasil',
+    //                 'kunjunganpotensipendapatan',
+    //                 'kunjunganrencana',
+    //                 'kunjungankendala',
+    //                 'kunjunganisu',
+    //                 'kunjunganpembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 10: // Konsultasi
+    //             Kegiatan_Konsultasi::create(array_merge($request->only([
+    //                 'konsultasilembaga',
+    //                 'konsultasikomponen',
+    //                 'konsultasiyangdilakukan',
+    //                 'konsultasihasil',
+    //                 'konsultasipotensipendapatan',
+    //                 'konsultasirencana',
+    //                 'konsultasikendala',
+    //                 'konsultasiisu',
+    //                 'konsultasipembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         case 11: // Lainnya
+    //             Kegiatan_Lainnya::create(array_merge($request->only([
+    //                 'lainnyamengapadilakukan',
+    //                 'lainnyadampak',
+    //                 'lainnyasumberpendanaan',
+    //                 'lainnyasumberpendanaan_ket',
+    //                 'lainnyayangterlibat',
+    //                 'lainnyarencana',
+    //                 'lainnyakendala',
+    //                 'lainnyaisu',
+    //                 'lainnyapembelajaran'
+    //             ]), ['kegiatan_id' => $idKegiatan]));
+    //             break;
+    //         default:
+    //             // Handle invalid jenisKegiatan (e.g., throw an exception)
+    //             throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
+    //     }
+    // }
+
+    public function storeMedia(Request $request)
     {
-        $jenisKegiatan = $request->input('jeniskegiatan_id');
-        $idKegiatan = $kegiatan->id;
+        $path = storage_path('tmp/uploads');
 
-        switch ($jenisKegiatan) {
-            case 1: // Assessment
-                Kegiatan_Assessment::create(array_merge($request->only([
-                    'assessmentyangterlibat',
-                    'assessmenttemuan',
-                    'assessmenttambahan',
-                    'assessmenttambahan_ket',
-                    'assessmentkendala',
-                    'assessmentisu',
-                    'assessmentpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 2: // Sosialisasi
-                Kegiatan_Sosialisasi::create(array_merge($request->only([
-                    'sosialisasiyangterlibat',
-                    'sosialisasitemuan',
-                    'sosialisasitambahan',
-                    'sosialisasitambahan_ket',
-                    'sosialisasikendala',
-                    'sosialisasiisu',
-                    'sosialisasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 3: // Pelatihan
-                Kegiatan_Pelatihan::create(array_merge($request->only([
-                    'pelatihanpelatih',
-                    'pelatihanhasil',
-                    'pelatihandistribusi',
-                    'pelatihandistribusi_ket',
-                    'pelatihanrencana',
-                    'pelatihanunggahan',
-                    'pelatihanisu',
-                    'pelatihanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 4: // Pembelanjaan
-                Kegiatan_Pembelanjaan::create(array_merge($request->only([
-                    'pembelanjaandetailbarang',
-                    'pembelanjaanmulai',
-                    'pembelanjaanselesai',
-                    'pembelanjaandistribusimulai',
-                    'pembelanjaandistribusiselesai',
-                    'pembelanjaanterdistribusi',
-                    'pembelanjaanakandistribusi',
-                    'pembelanjaanakandistribusi_ket',
-                    'pembelanjaankendala',
-                    'pembelanjaanisu',
-                    'pembelanjaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 5: // Pengembangan
-                Kegiatan_Pengembangan::create(array_merge($request->only([
-                    'pengembanganjeniskomponen',
-                    'pengembanganberapakomponen',
-                    'pengembanganlokasikomponen',
-                    'pengembanganyangterlibat',
-                    'pengembanganrencana',
-                    'pengembangankendala',
-                    'pengembanganisu',
-                    'pengembanganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 6: // Kampanye
-                Kegiatan_Kampanye::create(array_merge($request->only([
-                    'kampanyeyangdikampanyekan',
-                    'kampanyejenis',
-                    'kampanyebentukkegiatan',
-                    'kampanyeyangterlibat',
-                    'kampanyeyangdisasar',
-                    'kampanyejangkauan',
-                    'kampanyerencana',
-                    'kampanyekendala',
-                    'kampanyeisu',
-                    'kampanyepembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 7: // Pemetaan
-                Kegiatan_Pemetaan::create(array_merge($request->only([
-                    'pemetaanyangdihasilkan',
-                    'pemetaanluasan',
-                    'pemetaanunit',
-                    'pemetaanyangterlibat',
-                    'pemetaanrencana',
-                    'pemetaanisu',
-                    'pemetaanpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 8: // Monitoring
-                Kegiatan_Monitoring::create(array_merge($request->only([
-                    'monitoringyangdipantau',
-                    'monitoringdata',
-                    'monitoringyangterlibat',
-                    'monitoringmetode',
-                    'monitoringhasil',
-                    'monitoringkegiatanselanjutnya',
-                    'monitoringkegiatanselanjutnya_ket',
-                    'monitoringkendala',
-                    'monitoringisu',
-                    'monitoringpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 9: // Kunjungan
-                Kegiatan_Kunjungan::create(array_merge($request->only([
-                    'kunjunganlembaga',
-                    'kunjunganpeserta',
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
-                   'kunjunganyangdilakukan',
-                    'kunjunganhasil',
-                    'kunjunganpotensipendapatan',
-                    'kunjunganrencana',
-                    'kunjungankendala',
-                    'kunjunganisu',
-                    'kunjunganpembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 10: // Konsultasi
-                Kegiatana_Konsultasi::create(array_merge($request->only([
-                    'konsultasilembaga',
-                    'konsultasikomponen',
-                    'konsultasiyangdilakukan',
-                    'konsultasihasil',
-                    'konsultasipotensipendapatan',
-                    'konsultasirencana',
-                    'konsultasikendala',
-                    'konsultasiisu',
-                    'konsultasipembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            case 11: // Lainnya
-                Kegiatan_Lainnya::create(array_merge($request->only([
-                    'lainnyamengapadilakukan',
-                    'lainnyadampak',
-                    'lainnyasumberpendanaan',
-                    'lainnyasumberpendanaan_ket',
-                    'lainnyayangterlibat',
-                    'lainnyarencana',
-                    'lainnyakendala',
-                    'lainnyaisu',
-                    'lainnyapembelajaran'
-                ]), ['kegiatan_id' => $idKegiatan]));
-                break;
-            default:
-                // Handle invalid jenisKegiatan (e.g., throw an exception)
-                throw new \Exception("Invalid jenisKegiatan: " . $jenisKegiatan);
+        $file = $request->file('file');
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            'name'          => $name,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
+    }
+
+
+    public function uploadTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file' => 'required|file|max:51200',
+                'collection' => 'required|string|in:dokumen_pendukung,media_pendukung',
+                'name' => 'required|string|max:255',
+                'kegiatan_id' => 'required|integer|exists:trkegiatan,id'
+            ]);
+
+            $file = $request->file('file');
+            $name = trim((string) $request->input('name'));
+            $collection = $request->input('collection');
+            $kegiatanId = $request->input('kegiatan_id');
+
+            // Find the kegiatan
+            $kegiatan = Kegiatan::findOrFail($kegiatanId);
+
+            // Define allowed MIME types based on collection
+            $allowedMimes = $collection === 'dokumen_pendukung'
+                ? ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'pptx', 'txt']
+                : ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'avi', 'mp3', 'wav'];
+
+            // Validate file type
+            $extension = strtolower($file->getClientOriginalExtension());
+            if (!in_array($extension, $allowedMimes)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'File type not allowed for this collection'
+                ], 422);
+            }
+
+            // Determine a human-friendly base name: user caption or original name
+            $baseName = $name !== ''
+                ? $name
+                : pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+
+            // Sanitize base name for filesystem
+            $sanitizedBase = preg_replace('/[^A-Za-z0-9_-]+/', '_', $baseName);
+            $sanitizedBase = trim($sanitizedBase, '_');
+            if ($sanitizedBase === '') {
+                $sanitizedBase = 'file';
+            }
+
+            // Generate filename with timestamp
+            $timestamp = now()->format('Ymd_His');
+            $fileName = "{$sanitizedBase}_{$timestamp}.{$extension}";
+
+            // Add media to kegiatan with custom name as caption
+            $media = $kegiatan
+                ->addMedia($file)
+                ->withCustomProperties([
+                    'keterangan' => $name !== '' ? $name : null,
+                    'user_id' => auth()->user()->id,
+                    'original_name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                    'extension' => $extension,
+                    'updated_by' => auth()->user()->id
+                ])
+                ->usingName($sanitizedBase)
+                ->usingFileName($fileName)
+                ->toMediaCollection($collection);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File uploaded successfully',
+                'media_id' => $media->id,
+                'file_name' => $fileName,
+                'original_name' => $baseName,
+                'collection' => $collection,
+                'url' => $media->getUrl(),
+                'size' => $media->size,
+                'mime_type' => $media->mime_type
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to upload file: ' . $e->getMessage()
+            ], 500);
         }
     }
 
-    //method to store kegiatan basic tab data
+    public function deleteMedia(Media $media)
+    {
+        try {
+            // Check if user has permission to delete this media
+            if (!auth()->user()->hasRole('admin') && $media->getCustomProperty('user_id') != auth()->user()->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to delete this file'
+                ], 403);
+            }
+
+            $media->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function deleteTempFile(Request $request)
+    {
+        try {
+            $request->validate([
+                'file_path' => 'required|string'
+            ]);
+
+            $filePath = $request->input('file_path');
+
+            // Security check - ensure file is in temp directory
+            if (strpos($filePath, storage_path('app/temp/uploads')) !== 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid file path'
+                ], 400);
+            }
+
+            if (file_exists($filePath)) {
+                unlink($filePath);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Temporary file deleted successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'File not found'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete file: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

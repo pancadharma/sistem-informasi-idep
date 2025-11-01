@@ -27,10 +27,10 @@ return [
     'desa'              => 'Desa',
     'dusun'             => 'Dusun',
     'user_management'   => 'Manajemen User',
-    'role'              => 'Role',
+    'role'              => 'Akses Sistem',
     'roles'             => 'Jabatan',
-    'user'              => 'Pengguna',
-    'users'             => 'Pengguna',
+    'user'              => 'Pengguna Sistem',
+    'users'             => 'Pengguna Sistem',
     'kelompok_rentan'   => 'Kelompok Marjinal',
     'pendonor'          => 'Pendonor',
     'kategoripendonor'  => 'Kategori Pendonor',
@@ -50,5 +50,8 @@ return [
     'satuan'            => 'Satuan',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Peran',
-    'komponenmodel'     => 'Komponen/Model'
+    'benchmark'        => 'Benchmark',
+    'komponenmodel'     => 'Komponen/Model',
+    'target_progress'   => 'Target & Progress',
+    'prepost'           => 'Pre/Post Test',
 ];

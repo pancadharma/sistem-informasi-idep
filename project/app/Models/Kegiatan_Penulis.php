@@ -34,7 +34,7 @@ class Kegiatan_Penulis extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     protected function serializeDate(DateTimeInterface $date)
@@ -56,5 +56,4 @@ class Kegiatan_Penulis extends Model
     {
         return $this->belongsTo(Peran::class, 'peran_id');
     }
-
 }

@@ -72,16 +72,6 @@
             $(this).attr('inert', '');
         });
 
-        // $("#activitySelect").select2({
-        //     width: "100%",
-        //     dropdownParent: $("#ModalTambahPeserta"), // Adjust according to your modal ID
-        // });
-
-        // $("#activitySelectEdit").select2({
-        //     width: "100%",
-        //     dropdownParent: $("#editDataModal"),
-        // });
-
         $(document).on('click', '.select-program', function() {
             const id = $(this).data('id');
             const kode = $(this).data('kode');
@@ -92,69 +82,8 @@
             $('#kode_program').val(kode);
             $('#nama_program').val(nama).prop('disabled', true);
 
-            // Fetch activities based on the selected program
-            // fetch(url)
-            //     .then(response => response.json())
-            //     .then(activities => {
-            //         populateActivitySelect(activities, $("#activitySelect"));
-            //         populateActivitySelect(activities, $("#activitySelectEdit"));
-            //         updateActivityHeaders(activities);
-            //     })
-                // .catch(error => console.error('Error fetching activities:', error));
-
             $('#ModalDaftarProgram').modal('hide');
         });
-
-        function populateActivitySelect(activities, selectElement) {
-            // Clear existing options before adding new ones
-            selectElement.empty().append('Pilih Aja Dulu');
-
-            activities.forEach(activity => {
-                // Create and append option for each activity
-                const option = new Option(activity.kode, activity.id, false, false);
-                option.setAttribute('title', activity.nama); // Set title attribute for tooltip or additional info
-                selectElement.append(option);
-            });
-
-            // Refresh Select2 after adding options
-            selectElement.select2();
-        }
-
-        // function updateActivityHeaders(activities) {
-        //     if (activities.length > 0) {
-        //         const activityHeaders = activities.map(activity => `
-        //             <th class="align-middle text-center activity-header" data-activity-id="${activity.id}">${activity.kode}</th>
-        //         `).join('');
-        //         $('#activityHeaders').html(`
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-        //             <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-        //             <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-        //             <th class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-        //             <th class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
-        //             ${activityHeaders}
-        //         `);
-
-        //         $('#headerActivityProgram').attr('rowspan', 1);
-        //         $('#headerActivityProgram').attr('colspan', activities.length);
-
-        //     } else {
-        //         $('#activityHeaders').html(`
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rt") }}</th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.rw") }} <sup><i class="fas fa-question-circle"  title="{{ __("cruds.beneficiary.penerima.banjar") }}" data-placement="top"></i></sup></th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.dusun") }}</th>
-        //             <th class="align-middle text-center">{{ __("cruds.beneficiary.penerima.desa") }}</th>
-        //             <th class="align-middle text-center bg-cyan" title="{{ __('cruds.kegiatan.peserta.anak') }}">0-17</th>
-        //             <th class="align-middle text-center bg-teal" title="{{ __('cruds.kegiatan.peserta.remaja') }}">18-24</th>
-        //             <th class="align-middle text-center bg-yellow" title="{{ __('cruds.kegiatan.peserta.dewasa') }}">25-59</th>
-        //             <th class="align-middle text-center bg-pink" title="{{ __('cruds.kegiatan.peserta.lansia') }}"> > 60 </th>
-        //         `);
-
-        //         $('#headerActivityProgram').attr('rowspan', 2);
-        //     }
-        // }
 
     });
 

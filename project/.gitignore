@@ -47,3 +47,4 @@ project/yarn-error.log
 /public/uploads/*
 /public/uploads
 .editorconfig
+.gemini

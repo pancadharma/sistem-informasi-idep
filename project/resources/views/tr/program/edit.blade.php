@@ -36,7 +36,7 @@
                     {{-- Informasi Dasar --}}
                     <div class="card-body pb-0">
                         <div class="row">
-                                <div class="col-lg-9">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <label for="kode_program" class="control-label small mb-0">{{ __('cruds.program.form.kode') }}</label>
                                         <input type="text" id="kode_program" name="kode" class="form-control {{ $errors->has('kode') ? 'is-invalid' : '' }}" value="{{ old('kode', $program->kode) }}" required oninput="this.value = this.value.toUpperCase();">
@@ -45,7 +45,7 @@
                                         <span class="text-danger">{{ $errors->first('kode') }}</span>
                                     @endif
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-9">
                                     <div class="form-group">
                                         <label for="nama_program" class="control-label small mb-0">{{ __('cruds.program.form.nama') }}</label>
                                         <input type="text" id="nama_program" name="nama" class="form-control {{ $errors->has('nama') ? 'is-invalid' : '' }}" value="{{ old('nama', $program->nama) }}" required>
@@ -98,7 +98,7 @@
                                         class="form-control {{ $errors->has('ekspektasipenerimamanfaat') ? 'is-invalid' : '' }}"
                                         value="{{ old('ekspektasipenerimamanfaat', $program->ekspektasipenerimamanfaat) }}"
                                         placeholder="{{ __('cruds.program.expektasi') }}"
-                                        oninput="this.value = Math.max(0, this.value)">
+                                        oninput="this.value = Math.max(0, this.value)" readonly>
 
                                     @if ($errors->has('ekspektasipenerimamanfaat'))
                                         <span class="text-danger">{{ $errors->first('ekspektasipenerimamanfaat') }}</span>
@@ -315,10 +315,13 @@
                                             {{ __('cruds.status.title') }}
                                         </strong>
                                     </label>
+                                    @php
+                                        $canEditStatus = auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('program_status_edit');
+                                    @endphp
                                     <div class="select2-green">
                                         <select
                                             class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
-                                            name="status" id="status">
+                                            name="status" id="status" @if(!$canEditStatus) disabled @endif>
                                             <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>
                                                 {{ trans('global.pleaseSelect') }}</option>
                                             @foreach (App\Models\Program::STATUS_SELECT as $key => $label)
@@ -327,6 +330,9 @@
                                                     {{ $label }}</option>
                                             @endforeach
                                         </select>
+                                        @if(!$canEditStatus)
+                                            <input type="hidden" name="status" value="{{ old('status', $program->status) }}">
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -363,7 +369,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mt-2">
-                                    <button type="submit" class="btn btn-info btn-block float-right">
+                                    <button type="button" id="updateProgramBtn" class="btn btn-info btn-block float-right">
                                         {{ __('global.update') . ' ' . __('cruds.program.title_singular') }}
                                     </button>
                                 </div>
@@ -406,4 +412,151 @@
 @include('tr.program.js.detail-create.reportschedule')
 @include('tr.program.js.detail-edit.outcome')
 @include('tr.program.js.detail-edit.partner')
+@include('tr.program.js._validation')
+<script>
+    $(document).ready(function() {
+        const benefitInputs = [
+            '#pria',
+            '#wanita',
+            '#laki',
+            '#perempuan',
+            '#total'
+        ];
+        const totalInput = $('#ekspektasipenerimamanfaat');
+
+        function calculateTotal() {
+            let total = 0;
+            benefitInputs.forEach(function(selector) {
+                const value = parseInt($(selector).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            totalInput.val(total);
+        }
+
+        benefitInputs.forEach(function(selector) {
+            $(selector).on('input', calculateTotal);
+        });
+
+        // Initial calculation on page load
+        calculateTotal();
+
+        // Permission and initial status flags from backend
+        const CAN_EDIT_STATUS = {{ $canEditStatus ? 'true' : 'false' }};
+        const initiallyComplete = '{{ $program->status }}' === 'complete';
+
+        // Disable update button if the existing record is already complete
+        if (initiallyComplete && !CAN_EDIT_STATUS) {
+            $('#updateProgramBtn').prop('disabled', true);
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Program is already completed. Not allowed to update unless Administrator only.');
+            } else if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Program is already completed. Not allowed to update unless Administrator only.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+        }
+
+        $('#updateProgramBtn').on('click', function(e) {
+            e.preventDefault();
+
+            // Block submission entirely if record was initially complete and user not allowed
+            if (initiallyComplete && !CAN_EDIT_STATUS) {
+                if (typeof toastr !== 'undefined') {
+                    toastr.error('Program is already completed. Not allowed to update unless Administrator only.');
+                } else if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Action not allowed',
+                        text: 'Program is already completed. Not allowed to update unless Administrator only.'
+                    });
+                }
+                return;
+            }
+
+            // If user is moving status to complete now, run completion validation
+            if ($('#status').val() === 'complete') {
+                if (!validateProgramComplete()) {
+                    return; // Stop if client-side validation fails
+                }
+            }
+
+            Swal.fire({
+                title: '{{ __("global.areYouSure") }}',
+                // text: '{{ __("global.response.confirm_text") }}',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '{{ __("global.yes") }}',
+                cancelButtonText: '{{ __("global.cancel") }}'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: '{{ __("global.response.processing") }}',
+                        text: '{{ __("global.response.please_wait") }}',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    let formData = new FormData($('#editProgram')[0]);
+
+                    // Get unformatted value from AutoNumeric field
+                    const totalNilaiAN = AutoNumeric.getAutoNumericElement('#totalnilai');
+                    if (totalNilaiAN) {
+                        formData.set('totalnilai', totalNilaiAN.getNumericString());
+                    }
+
+                    $.ajax({
+                        url: $('#editProgram').attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: '{{ __("global.success") }}',
+                                text: '{{ __("global.response.save_success") }}',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href = "{{ route('program.index') }}";
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.close();
+                            let errorMessages = [];
+                            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                const errors = xhr.responseJSON.errors;
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        errors[key].forEach(message => {
+                                            errorMessages.push(message);
+                                        });
+                                    }
+                                }
+                            } else {
+                                errorMessages.push('{{ __("global.response.save_failed") }}');
+                            }
+
+                            Swal.fire({
+                                title: '{{ __("global.error") }}',
+                                html: `<div style="text-align: left;"><ul style="padding-left: 20px;">${errorMessages.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
 @endpush

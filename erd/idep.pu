@@ -690,7 +690,7 @@ entity "trmealsqb" as trmealsqb {
     *id : int <<auto>>
     --
     id_program : int <<fk>>
-    id_typeactivity : int <<fk>>
+    id_jeniskegiatan : int <<fk>>
     id_programoutcomeoutputactivity : int <<fk>>
     id_desa : int <<fk>>
     tanggalimplementasi : datetime
@@ -699,12 +699,6 @@ entity "trmealsqb" as trmealsqb {
     score : decimal
     catatanevaluasi : varchar (500)
     area : varchar (500)
-}
-
-entity "mtypeactivity" as mtypeactivity {
-    *id : int <<auto>>
-    --
-    nama : varchar (200)
 }
 
 entity "trmealspreposttest" as trmealspreposttest {

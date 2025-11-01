@@ -16,12 +16,12 @@ class Meals_Komponen_Model extends Model
 {
     use HasFactory, Auditable, LogsActivity;
 
-    protected $table = 'trmealskomponenmodel'; // Table name
+    protected $table = 'trmeals_komponen_model'; // Table name
 
     protected $fillable = [
         'program_id',
+        'user_id',
         'komponenmodel_id',
-        'targetreinstra_id',
         'totaljumlah',
         'created_at',
         'updated_at',
@@ -41,16 +41,26 @@ class Meals_Komponen_Model extends Model
     // Relationships
     public function program()
     {
-        return $this->belongsTo(Program::class, 'program_id', 'id');
+        return $this->belongsTo(Program::class, 'program_id');
     }
 
-    public function komponenModel()
+    public function user()
     {
-        return $this->belongsTo(KomponenModel::class, 'komponenmodel_id', 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function targetReinstra()
+    public function komponenmodel()
     {
-        return $this->belongsTo(TargetReinstra::class, 'targetreinstra_id', 'id');
+        return $this->belongsTo(KomponenModel::class, 'komponenmodel_id');
+    }
+
+    public function sektors()
+    {
+        return $this->belongsToMany(TargetReinstra::class, 'trmeals_komponen_model_targetreinstra', 'mealskomponenmodel_id', 'targetreinstra_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->hasMany(Meals_Komponen_Model_Lokasi::class, 'mealskomponenmodel_id');
     }
 }

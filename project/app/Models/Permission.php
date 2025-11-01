@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use GedeAdi\Permission\Models\Permission as SpatiePermission;
+use GedeAdi\Permission\Models\Role as SpatieRole;
+
 
 class Permission extends Model
 {

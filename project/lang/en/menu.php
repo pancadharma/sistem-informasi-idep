@@ -29,10 +29,10 @@ return [
     'desa'              => 'Village',
     'dusun'             => 'Hamlet',
     'user_management'   => 'User Management',
-    'role'              => 'Role',
+    'role'              => 'System Role Access',
     'roles'             => 'Position',
-    'user'              => 'User',
-    'users'             => 'Users',
+    'user'              => 'System User',
+    'users'             => 'System Users',
     'kelompok_rentan'   => 'Marginalized Groups',
     'pendonor'          => 'Donator',
     'kategoripendonor'  => 'Donator Category',
@@ -52,5 +52,8 @@ return [
     'satuan'            => 'Units',
     'target_reinstra'   => 'Target Reinstra',
     'peran'             => 'Responsibility',
-    'komponenmodel'     => 'Componen/Model'
+    'benchmark'        => 'Benchmark',
+    'komponenmodel'     => 'Componen/Model',
+    'target_progress'    => 'Target & Progress',
+	'prepost'			=>	'Pre/Post Test',
 ];
