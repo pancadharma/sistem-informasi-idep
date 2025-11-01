@@ -45,7 +45,7 @@ class Kelompok_Marjinal extends Model
     public function program()
     {
         //this relation will be called using eager loading in controller
-        return $this->belongsToMany(Program::class, 'trprogramkelompokmarjinal', 'targetreinstra_id', 'program_id');
+        return $this->belongsToMany(Program::class, 'trprogramkelompokmarjinal', 'kelompokmarjinal_id', 'program_id');
     }
 
     public function penerimaManfaat()

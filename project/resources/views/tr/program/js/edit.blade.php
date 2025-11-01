@@ -128,100 +128,237 @@
         });
     });
     // INIT LOAD MEDIA
-    $(document).ready(function() {
-        var fileIndex = 0;
-        var fileCaptions = {};
-        $("#file_pendukung").fileinput({
-            theme: "fa5",
-            showUpload: false,
-            showBrowse: false,
-            browseOnZoneClick: true,
-            showRemove: false,
-            allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
-                'csv', 'gif', 'pdf',
-            ],
-            maxFileSize: 4096,
-            maxFilePreviewSize: 2048,
-            overwriteInitial: true,
-            append: false,
-            initialPreviewAsData: true,
-            initialPreview: {!! json_encode($initialPreview) !!},
-            initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!},
-            removeFromPreviewOnError: true,
-            previewFileIconSettings: {
-                'doc': '<i class="fas fa-file-word text-primary"></i>',
-                'docx': '<i class="fas fa-file-word text-primary"></i>',
-                'xls': '<i class="fas fa-file-excel text-success"></i>',
-                'xlsx': '<i class="fas fa-file-excel text-success"></i>',
-                'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
-                'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
-                'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
-                'zip': '<i class="fas fa-file-archive text-muted"></i>',
-                'htm': '<i class="fas fa-file-code text-info"></i>',
-                'txt': '<i class="fas fa-file-alt text-info"></i>',
-            },
-            previewFileExtSettings: {
-                'doc': function(ext) {
-                    return ext.match(/(doc|docx)$/i);
-                },
-                'xls': function(ext) {
-                    return ext.match(/(xls|xlsx)$/i);
-                },
-                'ppt': function(ext) {
-                    return ext.match(/(ppt|pptx)$/i);
-                },
-                'zip': function(ext) {
-                    return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
-                },
-                'htm': function(ext) {
-                    return ext.match(/(htm|html)$/i);
-                },
-                'txt': function(ext) {
-                    return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
-                },
-                'mov': function(ext) {
-                    return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
-                },
-                'mp3': function(ext) {
-                    return ext.match(/(mp3|wav)$/i);
-                }
-            },
+    // $(document).ready(function() {
+    //     var fileIndex = 0;
+    //     var fileCaptions = {};
+    //     var fileInputId = 'file_pendukung';
+    //     var captionContainerId = 'captions-container';
+    //     var captionPrefix = 'keterangan';
+    //     var docFileCaptions = {};
+    //     var mediaFileCaptions = {};
 
-        }).on('fileloaded', function(event, file, previewId, index, reader) {
-            fileIndex++;
-            var uniqueId = 'file-' + fileIndex;
-            fileCaptions[uniqueId] = file.name;
-            // $('#captions-container').append(
-            //     `<div class="form-group" id="caption-group-${uniqueId}">
-            //         <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
-            //         <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
-            //     </div>`
-            // );
-            // $(`#${previewId}`).attr('data-unique-id', uniqueId);
-        }).on('fileremoved', function(event, id) {
-            var uniqueId = $(`#${id}`).attr('data-unique-id');
-            delete fileCaptions[uniqueId];
-            $(`#caption-group-${uniqueId}`).remove();
-        }).on('fileclear', function(event) {
+    //     $("#file_pendukung").fileinput({
+    //         theme: "fa5",
+    //         showUpload: false,
+    //         showBrowse: false,
+    //         browseOnZoneClick: true,
+    //         showRemove: false,
+    //         allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx',
+    //             'csv', 'gif', 'pdf',
+    //         ],
+    //         maxFileSize: 50096,
+    //         maxFileCount: 50,
+    //         msgFilesTooMany: 'You can upload a maximum of {m} files. You have selected {n} files.',
+    //         maxFilePreviewSize: 2048,
+    //         overwriteInitial: false,
+    //         append: true,
+    //         initialPreviewAsData: true,
+    //         initialPreview: {!! json_encode($initialPreview) !!},
+    //         initialPreviewConfig: {!! json_encode($initialPreviewConfig) !!},
+    //         removeFromPreviewOnError: true,
+    //         previewFileIconSettings: {
+    //             'doc': '<i class="fas fa-file-word text-primary"></i>',
+    //             'docx': '<i class="fas fa-file-word text-primary"></i>',
+    //             'xls': '<i class="fas fa-file-excel text-success"></i>',
+    //             'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+    //             'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+    //             'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+    //             'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+    //             'zip': '<i class="fas fa-file-archive text-muted"></i>',
+    //             'htm': '<i class="fas fa-file-code text-info"></i>',
+    //             'txt': '<i class="fas fa-file-alt text-info"></i>',
+    //         },
+    //         previewFileExtSettings: {
+    //             'doc': function(ext) {
+    //                 return ext.match(/(doc|docx)$/i);
+    //             },
+    //             'xls': function(ext) {
+    //                 return ext.match(/(xls|xlsx)$/i);
+    //             },
+    //             'ppt': function(ext) {
+    //                 return ext.match(/(ppt|pptx)$/i);
+    //             },
+    //             'zip': function(ext) {
+    //                 return ext.match(/(zip|rar|tar|gzip|gz|7z)$/i);
+    //             },
+    //             'htm': function(ext) {
+    //                 return ext.match(/(htm|html)$/i);
+    //             },
+    //             'txt': function(ext) {
+    //                 return ext.match(/(txt|ini|csv|java|php|js|css)$/i);
+    //             },
+    //             'mov': function(ext) {
+    //                 return ext.match(/(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i);
+    //             },
+    //             'mp3': function(ext) {
+    //                 return ext.match(/(mp3|wav)$/i);
+    //             }
+    //         },
+
+    //     }).on('filepreloaded', function(event, data, previewId, index) {
+    //         // Handle preloaded (existing) files
+    //         var uniqueId = data.key; // Media ID from initialPreviewConfig
+    //         var caption = data.extra.keterangan || data.caption.replace(/<[^>]+>/g, '');
+    //         fileCaptions[uniqueId] = caption;
+    //         $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+    //         $('#' + captionContainerId).append(
+    //             `<div class="form-group" id="caption-group-${uniqueId}">
+    //                 <label class="control-label mb-0 small mt-2" for="keterangan-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${data.caption}</span></label>
+    //                 <input type="text" class="form-control" name="${captionPrefix}" id="keterangan-${uniqueId}" value="${caption}">
+    //             </div>`
+    //         );
+    //     }).on('fileloaded', function(event, file, previewId, index, reader) {
+    //         var uniqueId = fileInputId + '-' + (new Date().getTime() + index);
+    //         fileCaptions[uniqueId] = file.name;
+    //         $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+    //         $('#' + captionContainerId).append(
+    //             `<div class="form-group" id="caption-group-${uniqueId}">
+    //                 <label class="control-label mb-0 small mt-2" for="keterangan-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+    //                 <input type="text" class="form-control" name="${captionPrefix}[]" id="keterangan-${uniqueId}" value="">
+    //             </div>`
+    //         );
+    //     }).on('fileremoved', function(event, id) {
+    //         var uniqueId = $(`#${id}`).attr('data-unique-id');
+    //         delete fileCaptions[uniqueId];
+    //         $(`#caption-group-${uniqueId}`).remove();
+    //     }).on('fileclear', function(event) {
+    //         fileCaptions = {};
+    //         $('#captions-container').empty();
+    //     }).on('filebatchselected', function(event, files) {
+    //         // Kosongkan semua data dan caption ketika user pilih ulang file
+    //         fileCaptions = {};
+    //         $('#' + captionContainerId).empty();
+    //     });
+    //     // .on('filebatchselected', function(event, files, previewId, index, reader) {
+    //     //     fileCaptions = {}; // Reset the tracking object
+    //     //     $('#captions-container').empty();
+    //     //     for (var i = 0; i < files.length; i++) {
+    //     //         console.log('File:', files[i]);
+    //     //         console.log('Selected files count:', files.length);
+    //     //         if (files.length === 1){
+    //     //             var uniqueId = fileInputId + '-' + (new Date().getTime() + index);
+    //     //             fileCaptions[uniqueId] = file.name;
+    //     //             $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uniqueId);
+    //     //             $('#' + captionContainerId).append(
+    //     //                 `<div class="form-group" id="caption-group-${uniqueId}">
+    //     //                     <label class="control-label mb-0 small mt-2" for="keterangan-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
+    //     //                     <input type="text" class="form-control" name="${captionPrefix}[]" id="keterangan-${uniqueId}" value="">
+    //     //                 </div>`
+    //     //             );
+    //     //         }else {
+    //     //             //append caption for multiple files
+    //     //             var uniqueId = fileInputId + '-' + (new Date().getTime() + i);
+    //     //             fileCaptions[uniqueId] = files[i].name;
+    //     //             $('#' + captionContainerId).append(
+    //     //                 `<div class="form-group" id="caption-group-${uniqueId}">
+    //     //                     <label class="control-label mb-0 small mt-2" for="keterangan-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${files[i].name}</span></label>
+    //     //                     <input type="text" class="form-control" name="${captionPrefix}[]" id="keterangan-${uniqueId}" value="">
+    //     //                     </div>`
+    //     //                 );
+    //     //         }
+    //     //     }
+    //     // });
+    // });
+
+    $(document).ready(function () {
+        const fileInputId = 'file_pendukung';
+        const captionContainerId = 'captions-container';
+        const captionPrefix = 'keterangan';
+        let fileCaptions = {};
+
+        $("#" + fileInputId).fileinput({
+                theme: "fa5",
+                showUpload: false,
+                showBrowse: false,
+                browseOnZoneClick: true,
+                showRemove: false,
+                allowedFileExtensions: ['jpg', 'png', 'jpeg', 'docx', 'doc', 'ppt', 'pptx', 'xls', 'xlsx', 'csv', 'gif', 'pdf'],
+                maxFileSize: 50096,
+                maxFileCount: 50,
+                msgFilesTooMany: 'You can upload a maximum of {m} files. You have selected {n} files.',
+                maxFilePreviewSize: 2048,
+                overwriteInitial: false,
+                append: true,
+                initialPreviewAsData: true,
+                initialPreview: {!! json_encode($initialPreview) !!},
+                initialPreviewConfig: {!! json_encode($initialPreviewConfig)!!},
+                removeFromPreviewOnError: true,
+                previewFileIconSettings: {
+                    'doc': '<i class="fas fa-file-word text-primary"></i>',
+                    'docx': '<i class="fas fa-file-word text-primary"></i>',
+                    'xls': '<i class="fas fa-file-excel text-success"></i>',
+                    'xlsx': '<i class="fas fa-file-excel text-success"></i>',
+                    'ppt': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                    'pptx': '<i class="fas fa-file-powerpoint text-danger"></i>',
+                    'pdf': '<i class="fas fa-file-pdf text-danger"></i>',
+                    'zip': '<i class="fas fa-file-archive text-muted"></i>',
+                    'htm': '<i class="fas fa-file-code text-info"></i>',
+                    'txt': '<i class="fas fa-file-alt text-info"></i>',
+                },
+                previewFileExtSettings: {
+                    'doc': ext => /(doc|docx)$/i.test(ext),
+                    'xls': ext => /(xls|xlsx)$/i.test(ext),
+                    'ppt': ext => /(ppt|pptx)$/i.test(ext),
+                    'zip': ext => /(zip|rar|tar|gzip|gz|7z)$/i.test(ext),
+                    'htm': ext => /(htm|html)$/i.test(ext),
+                    'txt': ext => /(txt|ini|csv|java|php|js|css)$/i.test(ext),
+                    'mov': ext => /(avi|mpg|mkv|mov|mp4|3gp|webm|wmv)$/i.test(ext),
+                    'mp3': ext => /(mp3|wav)$/i.test(ext),
+                },
+        })
+
+        // 1. Tambah input untuk file yang sudah ada (initialPreview)
+        .on('filepreloaded', function (event, data, previewId) {
+            const uid = data.key;
+            const label = data.extra.keterangan || data.caption.replace(/<[^>]+>/g, '');
+            addCaptionInput(uid, label, false);
+            $('#' + previewId).attr('data-unique-id', uid);
+        })
+
+        // 2. Tambah input caption ketika user pilih file baru (batch)
+        .on('filebatchselected', function (event, files) {
+            $('#' + captionContainerId + ' .new-file').remove();
+
+            Array.from(files).forEach((file, i) => {
+                const uid = 'new-' + Date.now() + '-' + i;
+                addCaptionInput(uid, file.name, true);
+                fileCaptions[uid] = file.name;
+            });
+        })
+
+
+        // 3. Pasang data-unique-id ke DOM preview untuk dipakai saat remove
+        .on('fileloaded', function (event, file, previewId, index) {
+            const uidKeys = Object.keys(fileCaptions);
+            const uid = uidKeys[index];
+            $('#' + previewId).attr('data-unique-id', uid);
+        })
+
+        // 4. Hapus input caption jika preview file dihapus
+        .on('fileremoved', function (event, previewId) {
+            const uid = $('#' + previewId).data('unique-id');
+            $('#caption-group-' + uid).remove();
+        })
+
+        // 5. Hapus semua input caption jika file di-clear semua
+        .on('fileclear', function () {
+            $('#' + captionContainerId).empty();
             fileCaptions = {};
-            $('#captions-container').empty();
-        }).on('filebatchselected', function(event, files) {
-            fileCaptions = {};
-            $('#captions-container').empty();
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                fileIndex++;
-                var uniqueId = 'file-' + fileIndex;
-                fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
-                $('#captions-container').append(
-                    `<div class="form-group" id="caption-group-${uniqueId}">
-                        <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
-                            <input type="text" class="form-control" name="keterangan[]" id="keterangan-${uniqueId}">
-                        </div>`
-                );
-            }
         });
+
+        // Fungsi bantu untuk tambah input caption
+        function addCaptionInput(uid, label, isNew) {
+            $('#' + captionContainerId).append(`
+                <div class="form-group ${isNew ? 'new-file' : ''}" id="caption-group-${uid}">
+                    <label class="control-label mb-0 small mt-2" for="keterangan-${uid}">
+                        {{ __('cruds.program.ket_file') }}: <span class="text-red">${label}</span>
+                    </label>
+                    <input type="text" class="form-control" name="${captionPrefix}[]" id="keterangan-${uid}">
+                </div>
+            `);
+        }
     });
+
 
     // POPULATE EDIT FORM
     $(document).ready(function() {
@@ -368,142 +505,5 @@
     });
 
     // BUTTON SUBMIT UPDATE PROGRAM
-    $(document).ready(function() {
-        $('#editProgram').on('submit', function(e) {
-            e.preventDefault();
-            $(this).find('button[type="submit"]').attr('disabled', 'disabled');
-            var formData = new FormData(this);
-
-            // Log the values of staff[] and peran[] to verify they are included
-            var staffValues = $('select[name="staff[]"]').map(function() {
-                return $(this).val();
-            }).get();
-            var peranValues = $('select[name="peran[]"]').map(function() {
-                return $(this).val();
-            }).get();
-
-            // console.log('Staff Values:', staffValues);
-            // console.log('Peran Values:', peranValues);
-
-            $.each(staffValues, function(index, value) {
-                formData.append('staff[]', value);
-            });
-
-            $.each(peranValues, function(index, value) {
-                formData.append('peran[]', value);
-            });
-
-            formData.append('_method', 'PUT');
-
-            // Collect fields to remove masked values
-            var fieldsToRemove = [];
-            $('input.currency').each(function() {
-                fieldsToRemove.push($(this).attr('name'));
-            });
-
-            // Remove original masked `nilaidonasi` values from FormData
-            fieldsToRemove.forEach(function(field) {
-                formData.delete(field);
-            });
-
-            // Unmask all AutoNumeric fields before submitting, excluding #totalnilai
-            var nilaidonasiValues = [];
-            $('input.currency').each(function() {
-                if ($(this).attr('id') !== 'totalnilai') {
-                    var autoNumericElement = AutoNumeric.getAutoNumericElement(this);
-                    if (autoNumericElement !== null) {
-                        var unmaskedValue = autoNumericElement.getNumericString();
-                        formData.append($(this).attr('name'), unmaskedValue);
-                        nilaidonasiValues.push(unmaskedValue);
-                    } else {
-                        console.error('AutoNumeric not initialized for:', this);
-                    }
-                }
-            });
-
-                // Collect and unmask totalnilaiprogram
-            const totalNilaiInput = document.querySelector('#totalnilai');
-            if (totalNilaiInput) {
-                const totalNilaiAutoNumeric = AutoNumeric.getAutoNumericElement(totalNilaiInput);
-                if (totalNilaiAutoNumeric) {
-                    const totalNilaiUnmasked = totalNilaiAutoNumeric.getNumericString(); // Get unmasked value
-                    formData.append('totalnilai', totalNilaiUnmasked); // Append to FormData
-                } else {
-                    console.error('AutoNumeric not initialized for #totalnilai');
-                }
-            }
-
-            // Log arrays for debugging
-            var pendonorIds = formData.getAll('pendonor_id[]');
-            console.log('pendonor_id[]:', pendonorIds);
-            console.log('nilaidonasi[]:', nilaidonasiValues);
-
-            // Check for length mismatch
-            if (pendonorIds.length !== nilaidonasiValues.length) {
-                console.error('Mismatch between pendonor_id and nilaidonasi arrays');
-                $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Mismatch Error',
-                    text: 'Mismatch between pendonor_id and nilaidonasi arrays.'
-                });
-                return; // Prevent form submission
-            }
-            // Detailed logging
-            for (var pair of formData.entries()) {
-                console.log(`${pair[0]}: ${pair[1]}`);
-            }
-
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                beforeSend: function() {
-                    Toast.fire({
-                        icon: "info",
-                        title: "Updating ...",
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-                },
-                success: function(response) {
-                    setTimeout(() => {
-                        if (response.success === true) {
-                            Swal.fire({
-                                title: "Success",
-                                text: response.message,
-                                icon: "success",
-                                timer: 1500,
-                                timerProgressBar: true,
-                            });
-                            $('#editProgram').trigger('reset');
-                            $('#kelompokmarjinal, #targetreinstra, #kaitansdg').val('').trigger('change');
-                            $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
-                            window.location.reload();
-                        }
-                    }, 500);
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    $('#editProgram').find('button[type="submit"]').removeAttr('disabled');
-                    const errorMessage = getErrorMessage(xhr);
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.errors) {
-                        addInvalidClassToFields(response.errors);
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                        confirmButtonText: 'Okay'
-                    });
-                },
-
-            });
-        });
-    });
+    // This logic has been moved to the main edit.blade.php file to handle validation correctly
 </script>

@@ -20,115 +20,122 @@
             @csrf
             @method('POST')
             <div class="row">
-                {{-- Kiri --}}
+                {{-- Kolom Kiri --}}
                 <div class="col-md-6">
+                    <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}">
+
                     <div class="form-group row">
-                        <!-- nama program-->
-                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-                            <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
-                        <!-- id program -->
+                        <label for="kode_program" class="col-md-3 col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program" data-toggle="modal" data-target="#ModalDaftarProgram" required>
+                                <input type="text" class="form-control" id="nama_program" readonly placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program" style="background-color: #e9ecef;">
+                            </div>
                             <input type="hidden" name="program_id" id="program_id">
-                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}">
-                        <!-- kode program -->
-                            <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
-                            data-toggle="modal" data-target="#ModalDaftarProgram">
                         </div>
-                        <!-- nama program-->
-                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-                            <label for="nama_program" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.program_nama') }}
-                            </label>
-                            <input type="text" class="form-control" id="nama_program" readonly placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program">
-                        </div>
-                    </div>
-                
-                    <div class="form-group">
-                        <label for="jeniskegiatan_id">Jenis Kegiatan</label>
-                        <select id="jeniskegiatan_id" name="jeniskegiatan_id" class="form-control" required>
-                            <option value="">Pilih Jenis Kegiatan</option>
-                        </select>
                     </div>
 
                     <div class="form-group row">
-                        <!-- kode kegiatan-->
-                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-                            <label for="kode_kegiatan" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.kode') }}
-                            </label>
-                            <input type="hidden" class="form-control" id="kegiatan_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kegiatan_id">
-                            <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
-                            data-toggle="modal" data-target="#ModalDaftarProgramActivity">
-                        </div>
-                        <!-- nama kegiatan-->
-                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-                            <label for="nama_kegiatan" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.nama') }}
-                            </label>
-                            <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan" readonly>
+                        <label for="jeniskegiatan_id" class="col-md-3 col-form-label">Jenis Kegiatan</label>
+                        <div class="col-md-9">
+                            <select id="jeniskegiatan_id" name="jeniskegiatan_id" class="form-control" required>
+                                <option value="">Pilih Jenis Kegiatan</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Provinsi</label>
-                        <select id="provinsi_id" name="provinsi_id" class="form-control" required>
-                            <option>
-                                
-                            </option>
-                        </select>
+                    <div class="form-group row">
+                        <label for="kode_kegiatan" class="col-md-3 col-form-label">{{ __('cruds.kegiatan.basic.kode') }}</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan" data-toggle="modal" data-target="#ModalDaftarProgramActivity" required>
+                                <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan" readonly style="background-color: #e9ecef;">
+                            </div>
+                            <input type="hidden" id="kegiatan_id" name="kegiatan_id">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Kabupaten</label>
-                        <select id="kabupaten_id" name="kabupaten_id" class="form-control" required>
-                            <option>
 
-                            </option>
-                        </select>
-                    </div>        
-                    <div class="form-group">
-                        <label>Kecamatan</label>
-                        <select id="kecamatan_id" name="kecamatan_id" class="form-control" required>
-                            <option value="">
-
-                            </option>
-                        </select>    
+                    <div class="form-group row">
+                        <label for="provinsi_id" class="col-md-3 col-form-label">Provinsi</label>
+                        <div class="col-md-9">
+                            <select id="provinsi_id" name="provinsi_id" class="form-control" required>
+                                <option value="">Pilih Provinsi</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Desa</label>
-                        <select id="desa_id" name="desa_id" class="form-control" required>
-                            <option value="">
-                                
-                            </option>
-                        </select>
+
+                    <div class="form-group row">
+                        <label for="kabupaten_id" class="col-md-3 col-form-label">Kabupaten</label>
+                        <div class="col-md-9">
+                            <select id="kabupaten_id" name="kabupaten_id" class="form-control" required>
+                                <option value="">Pilih Kabupaten</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="kecamatan_id" class="col-md-3 col-form-label">Kecamatan</label>
+                        <div class="col-md-9">
+                            <select id="kecamatan_id" name="kecamatan_id" class="form-control" required>
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="desa_id" class="col-md-3 col-form-label">Desa</label>
+                        <div class="col-md-9">
+                            <select id="desa_id" name="desa_id" class="form-control" required>
+                                <option value="">Pilih Desa</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                {{-- Kanan --}}
+                {{-- Kolom Kanan --}}
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="tanggalimplementasi">Tanggal Implementasi</label>
-                        <input type="date" id="tanggalimplementasi" name="tanggalimplementasi" class="form-control" required>
+                    <div class="form-group row">
+                        <label for="tanggalimplementasi" class="col-md-3 col-form-label">Tanggal Implementasi</label>
+                        <div class="col-md-9">
+                            <input type="date" id="tanggalimplementasi" name="tanggalimplementasi" class="form-control" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="handler">Handler</label>
-                        <input type="text" id="handler" name="handler" class="form-control" required>
+
+                    <div class="form-group row">
+                        <label for="handler" class="col-md-3 col-form-label">Handler</label>
+                        <div class="col-md-9">
+                            <input type="text" id="handler" name="handler" class="form-control" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="usercompiler_id">Compiler</label>
-                        <select id="usercompiler_id" name="usercompiler_id" class="form-control" required>
-                            <option value="">-- Pilih Compiler --</option>
-                        </select>
+
+                    <div class="form-group row">
+                        <label for="usercompiler_id" class="col-md-3 col-form-label">Compiler</label>
+                        <div class="col-md-9">
+                            <select id="usercompiler_id" name="usercompiler_id" class="form-control" required>
+                                <option value="">-- Pilih Compiler --</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Score</label>
-                        <input type="number" step="0.01" class="form-control" name="score">
+
+                    <div class="form-group row">
+                        <label for="score" class="col-md-3 col-form-label">Score</label>
+                        <div class="col-md-9">
+                            <input type="number" step="0.01" class="form-control" id="score" name="score">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="catatanevaluasi">Catatan Evaluasi</label>
-                        <textarea id="catatanevaluasi" name="catatanevaluasi" class="form-control" rows="3"></textarea>
+
+                    <div class="form-group row">
+                        <label for="catatanevaluasi" class="col-md-3 col-form-label">Catatan Evaluasi</label>
+                        <div class="col-md-9">
+                            <textarea id="catatanevaluasi" name="catatanevaluasi" class="form-control" rows="3"></textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Area Peningkatan</label>
-                        <textarea class="form-control" name="area" rows="3"></textarea>
+
+                    <div class="form-group row">
+                        <label for="area" class="col-md-3 col-form-label">Area Peningkatan</label>
+                        <div class="col-md-9">
+                            <textarea id="area" class="form-control" name="area" rows="3"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,7 +146,6 @@
         </form>
     </div>
 </div>
-
 @endsection
 
 @push('js')

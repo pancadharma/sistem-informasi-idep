@@ -19,17 +19,17 @@
 @endsection
 
 @section('content_body')
-    <form id="createKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
+    <form id="updateKegiatan" method="POST" class="needs-validation" data-toggle="validator" autocomplete="off"
         action="{{ route('kegiatan.update', [$kegiatan->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
             <div class="col-12 col-sm-12">
-                <div class="card card-primary card-tabs">
+                <div class="card card-info card-tabs">
                     <div class="card-header border-bottom-0 card-header p-0 pt-1 navigasi">
-                        <button type="button" class="btn btn-danger float-right mr-2 mt-1"
-                            id="simpan_kegiatan">{{ __('global.save') }}</button>
-                        <ul class="nav nav-tabs border-bottom-1 border-primary kegiatan-border pt-2"
+                        <button type="button" class="btn btn-warning float-right mr-2 mt-1"
+                            id="update_kegiatan">{{ __('global.update') }}</button>
+                        <ul class="nav nav-tabs border-bottom-1 border-danger kegiatan-border pt-2"
                             id="details-kegiatan-tab" role="tablist">
                             <button type="button" class="btn btn-tool btn-small" data-card-widget="collapse"
                                 title="Minimize">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="details-kegiatan-tabContent">
-                            {{-- Basic Information --}}
+                            <!--BASIC INFORMATION-->
                             <div class="tab-pane fade show active" id="tab-basic" role="tabpanel"
                                 aria-labelledby="basic-tab">
                                 <div class="form-group row">
@@ -99,7 +99,7 @@
                                             value="{{ $kegiatan->programoutcomeoutputactivity->program_outcome_output->program_outcome->program->nama ?? '' }}">
                                     </div>
                                 </div>
-                                {{-- Kode Kegiatan & Nama Kegiatan --}}
+                                <!--Kode Kegiatan & Nama Kegiatan -->
                                 <div class="form-group row">
                                     <!-- kode kegiatan-->
                                     <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
@@ -131,19 +131,16 @@
                                 <!-- jenis kegiatan-->
                                 <div class="form-group row">
                                     <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                                        <label for="jeniskegiatan_id" class="input-group col-form-label">
+                                        <label for="jeniskegiatan" class="input-group col-form-label">
                                             <strong>{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</strong>
                                         </label>
                                         <div class="select2-purple">
-                                            <select name="jeniskegiatan_id" id="jeniskegiatan_id"
-                                                class="form-control select2">
-                                                <option value="">{{ __('global.pleaseSelect') }}</option>
-                                                @foreach ($jenisKegiatanList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ old('jeniskegiatan_id', $kegiatan->jeniskegiatan_id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
-                                                @endforeach
+                                            <input type="hidden" name="jeniskegiatan_id" value="{{ $kegiatan->jeniskegiatan->id ?? '' }}">
+                                            <select name="jeniskegiatan" id="jeniskegiatan"
+                                                class="form-control select2" readonly>
+                                                @if ($kegiatan->jeniskegiatan)
+                                                    <option value="{{ $kegiatan->jeniskegiatan->id }}" selected>{{ $kegiatan->jeniskegiatan->nama }}</option>
+                                                @endif
                                             </select>
 
                                         </div>
@@ -156,11 +153,8 @@
                                         <div class="select2-purple">
                                             <select name="sektor_id[]" id="sektor_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.sektor_kegiatan') }}">
-                                                @foreach ($sektorList as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('sektor_id', $kegiatan->sektor->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                @foreach ($kegiatan->sektor as $item)
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
 
@@ -202,7 +196,7 @@
                                             {{ __('cruds.kegiatan.basic.tanggalmulai') }}
                                         </label>
                                         <input type="date" class="form-control" id="tanggalmulai" name="tanggalmulai"
-                                            value="{{ old('tanggalmulai', $kegiatan->tanggalmulai) }}">
+                                            value="{{ old('tanggalmulai', $tanggalmulai) }}">
                                     </div>
                                     <!-- tgl selesai-->
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
@@ -211,7 +205,7 @@
                                         </label>
                                         <input type="date" class="form-control" id="tanggalselesai"
                                             name="tanggalselesai"
-                                            value="{{ old('tanggalselesai', $kegiatan->tanggalselesai) }}">
+                                            value="{{ old('tanggalselesai', $tanggalselesai) }}">
                                     </div>
                                     <div class="col-sm-6 col-md-6 col-lg-3 self-center order-2 order-md-2">
                                         <label for="durasi" class="input-group col-form-label">
@@ -231,21 +225,21 @@
                                             <select name="mitra_id[]" id="mitra_id" class="form-control select2"
                                                 multiple data-api-url="{{ route('api.kegiatan.mitra') }}">
                                                 @foreach ($kegiatan->mitra as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        {{ collect(old('mitra_id', $kegiatan->mitra->pluck('id') ?? []))->contains($item->id) ? 'selected' : '' }}>
-                                                        {{ $item->nama }}
-                                                    </option>
+                                                    <option value="{{ $item->id }}" selected>{{ $item->nama }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <!-- status kegiatan-->
-                                    <div class="col-sm-12 col-md-3 col-lg-3 self-center order-1 order-md-1">
+                                    <div class="col-sm-12 col-md-3 col-lg-3 order-1 order-md-1">
                                         <label for="status" class="input-group col-form-label">
                                             <strong>{{ __('cruds.status.title') }}</strong>
                                         </label>
+                                        @php
+                                            $canEditKegiatanStatus = auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('kegiatan_status_edit');
+                                        @endphp
                                         <div class="select2-purple">
-                                            <select name="status" id="status" class="form-control select2">
+                                            <select name="status" id="status" class="form-control select2" @if(!$canEditKegiatanStatus) disabled @endif>
                                                 @foreach (['draft', 'ongoing', 'completed', 'cancelled'] as $status)
                                                     <option value="{{ $status }}"
                                                         {{ old('status', $kegiatan->status ?? '') == $status ? 'selected' : '' }}>
@@ -253,6 +247,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @if(!$canEditKegiatanStatus)
+                                                <input type="hidden" name="status" value="{{ old('status', $kegiatan->status ?? '') }}">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -262,16 +259,14 @@
                                         <label for="provinsi_id"
                                             class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
                                         <input type="hidden" name="provinsiID"
-                                            value="{{ $kegiatan->lokasi['0']->kecamatan->kabupaten->provinsi->id ?? ' ?>' }}">
+                                        {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'value=' . $preselectedProvinsiId . '' : '' }}>
                                         <select name="provinsi_id" id="provinsi_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.provinsi') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}"
-                                            disabled>
-
-                                            @foreach ($ProvinsiList as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ old('provinsi_id', $kegiatan->lokasi['0']->kecamatan->kabupaten->provinsi->id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                    {{ $item->nama }}
+                                            {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'disabled' : '' }}>
+                                            @foreach ($provinsiList as $provinsi)
+                                                <option value="{{ $provinsi->id }}" {{ $preselectedProvinsiId == $provinsi->id ? 'selected' : '' }}>
+                                                    {{ $provinsi->nama }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -284,10 +279,9 @@
                                         <select name="kabupaten_id" id="kabupaten_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.kabupaten') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.kabupaten.title') }}">
-                                            @foreach ($kabupatenList as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ old('kabupaten_id', $kegiatan->lokasi['0']->kecamatan->kabupaten->id ?? '') == $item['id'] ? 'selected' : '' }}>
-                                                    {{ $item->nama }}
+                                            @foreach (($provinsiList->firstWhere('id', $preselectedProvinsiId)?->kabupaten ?? collect()) as $kabupaten)
+                                                <option value="{{ $kabupaten->id }}" {{ $preselectedKabupatenId == $kabupaten->id ? 'selected' : '' }}>
+                                                    {{ $kabupaten->nama }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -345,107 +339,85 @@
                                     <!--Input Kelurahan dan Kecamatan-->
                                     <div class="list-lokasi-kegiatan">
                                         @forelse ($kegiatan->lokasi as $item)
-                                            <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
+                                            <?php $uniqueId = "loc_" . (time() . '' . rand(100, 999) ?? $item->id ); // Use db id or fallback to timestamp + random ?>
+                                            <div class="form-group row lokasi-kegiatan" data-unique-id="{{ $uniqueId }}">
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
-                                                    <select name="kecamatan_id[]" id="kecamatan_id"
-                                                        class="form-control select2"
-                                                        data-api-url="{{ route('api.kegiatan.kecamatan') }}"
-                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.kecamatan.title') }}">
-                                                        @foreach ($kecamatanList as $kecamatan)
-                                                            <option value="{{ $kecamatan->id }}"
-                                                                {{ old('kecamatan_id', $item->kecamatan_id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
-                                                                {{ $kecamatan->nama }}
-                                                            </option>
-                                                        @endforeach
+                                                    <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select"
+                                                            id="kecamatan-{{ $uniqueId }}"
+                                                            data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.kecamatan.title') }}"
+                                                            data-selected="{{ $item->desa->kecamatan->id ?? '' }}">
+                                                        <option value="{{ $item->desa->kecamatan->id ?? '' }}" selected>
+                                                            {{ $item->desa->kecamatan->nama ?? '' }}
+                                                        </option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
-                                                    <select name="kelurahan_id[]" id="kelurahan_id"
-                                                        class="form-control select2"
-                                                        data-api-url="{{ route('api.kegiatan.desa') }}"
-                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
-                                                        @foreach ($desaList as $desa)
-                                                            <option value="{{ $desa->id }}"
-                                                                {{ old('desa_id', $item->desa_id ?? '') == $desa['id'] ? 'selected' : '' }}>
-                                                                {{ $desa->nama }}
-                                                            </option>
-                                                        @endforeach
+                                                    <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select"
+                                                            id="kelurahan-{{ $uniqueId }}"
+                                                            data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.desa.title') }}"
+                                                            data-selected="{{ $item->desa_id ?? '' }}">
+                                                        <option value="{{ $item->desa_id ?? '' }}" selected>
+                                                            {{ $item->desa->nama ?? '' }}
+                                                        </option>
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
-                                                    <input type="text"
-                                                        placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}"
-                                                        class="form-control lokasi-input" id="lokasi" name="lokasi[]"
-                                                        value="{{ old('lokasi', $item->lokasi ?? '') }}">
+                                                    <input type="text" class="form-control lokasi-input" id="lokasi-{{ $uniqueId }}" name="lokasi[]"
+                                                           value="{{ old('lokasi', $item->lokasi ?? '') }}"
+                                                           placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}">
                                                 </div>
                                                 <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
-                                                    <input type="text" class="form-control lat-input"
-                                                        id="lat-${uniqueId}" name="lat[]"
-                                                        placeholder="{{ __('cruds.kegiatan.basic.lat') }}"
-                                                        value="{{ old('lat', $item->lat ?? '') }}">
+                                                    <input type="text" class="form-control lat-input" id="lat-{{ $uniqueId }}" name="lat[]"
+                                                           value="{{ old('lat', $item->lat ?? '') }}"
+                                                           placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
                                                 </div>
-
-                                                <div
-                                                    class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
-                                                    <input type="text" class="form-control lang-input flex-grow-1"
-                                                        id="long-${uniqueId}" name="long[]"
-                                                        placeholder="{{ __('cruds.kegiatan.basic.long') }}"
-                                                        value="{{ old('lat', $item->long ?? '') }}">
-                                                    <button type="button"
-                                                        class="btn btn-danger remove-lokasi-row btn-sm ml-1">
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
+                                                    <input type="text" class="form-control lang-input flex-grow-1" id="long-{{ $uniqueId }}" name="long[]"
+                                                           value="{{ old('long', $item->long ?? '') }}"
+                                                           placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                                                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            {{-- <div class="form-group row lokasi-kegiatan mb-0">
-                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
-                                                    <select name="kecamatan_id[]" id="kecamatan_id"
-                                                        class="form-control select2"
-                                                        data-api-url="{{ route('api.kegiatan.kecamatan') }}"
-                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.kecamatan.title') }}">
-                                                        @foreach ($kecamatanList as $kecamatan)
-                                                            <option value="{{ $kecamatan->id }}"
-                                                                {{ old('kecamatan_id', $item->kecamatan_id ?? '') == $kecamatan['id'] ? 'selected' : '' }}>
-                                                                {{ $kecamatan->nama }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
-                                                    <select name="desa_id[]" id="desa_id" class="form-control select2"
-                                                        data-api-url="{{ route('api.kegiatan.desa') }}"
-                                                        data-placeholder="{{ __('global.pleaseSelect') . '' . __('cruds.desa.title') }}">
-                                                        @foreach ($desaList as $desa)
-                                                            <option value="{{ $desa->id }}"
-                                                                {{ old('desa_id', $item->desa_id ?? '') == $desa['id'] ? 'selected' : '' }}>
-                                                                {{ $desa->nama }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-1 order-md-1">
-                                                    <input type="text" class="form-control" id="lokasi"
-                                                        name="lokasi[]" value="{{ old('lokasi', $item->lokasi ?? '') }}">
-                                                </div>
-                                                <div class="col-sm-3 col-md-3 col-lg-3 self-center order-2 order-md-2">
-                                                    <input type="text" class="form-control" id="lat"
-                                                        name="lat[]" value="{{ old('lat', $item->lat ?? '') }}">
-                                                </div> --}}
                                         @empty
-
+                                            <div class="form-group row lokasi-kegiatan" data-unique-id="loc_default">
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
+                                                    <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select" id="kecamatan-loc_default" data-placeholder="Pilih Kecamatan"></select>
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
+                                                    <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select" id="kelurahan-loc_default" data-placeholder="Pilih Desa"></select>
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
+                                                    <input type="text" class="form-control lokasi-input" id="lokasi-loc_default" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}">
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
+                                                    <input type="text" class="form-control lat-input" id="lat-loc_default" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
+                                                </div>
+                                                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
+                                                    <input type="text" class="form-control lang-input flex-grow-1" id="long-loc_default" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                                                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         @endforelse
                                     </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
-                                        <label class="input-group col-form-label">
-                                            {{ __('Get Coordinate') }}
-                                            <i class="bi bi-map-fill"></i>
-                                        </label>
-                                        <div id="map" class="form-control col-form-label"></div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12 col-md-12 col-lg-12 self-center order-1 order-md-1">
+                                            <label class="input-group col-form-label">
+                                                {{ __('Get Coordinate') }}
+                                                <i class="bi bi-map-fill"></i>
+                                            </label>
+                                            <!--MAPS-->
+                                            <div class="card-info pt-2">
+                                            {{-- @include('tr.kegiatan._map') --}}
+                                            @include('tr.kegiatan._google_map')
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
 
                             </div>
                             <!-- deskripsi kegiatan -->
@@ -460,7 +432,7 @@
                                         </label>
                                         <textarea name="deskripsilatarbelakang" id="deskripsilatarbelakang"
                                             placeholder=" {{ __('cruds.kegiatan.description.latar_belakang_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsilatarbelakang', $kegiatan->deskripsilatarbelakang) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- tujuan kegiatan -->
@@ -473,7 +445,7 @@
                                         </label>
                                         <textarea name="deskripsitujuan" id="deskripsitujuan"
                                             placeholder=" {{ __('cruds.kegiatan.description.tujuan_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsitujuan', $kegiatan->deskripsitujuan) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- siapa deskripsi keluaran kegiatan -->
@@ -487,7 +459,7 @@
 
                                         <textarea name="deskripsikeluaran" id="deskripsikeluaran"
                                             placeholder=" {{ __('cruds.kegiatan.description.keluaran_helper') }}" class="form-control summernote"
-                                            rows="2"></textarea>
+                                            rows="2">{{ old('deskripsikeluaran', $kegiatan->deskripsikeluaran) }}</textarea>
                                     </div>
                                 </div>
                                 <!-- Peserta yang terlibat -->
@@ -535,18 +507,18 @@
                                                             <input type="number" id="penerimamanfaatdewasaperempuan"
                                                                 name="penerimamanfaatdewasaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasaperempuan', $kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatdewasalakilaki"
                                                                 name="penerimamanfaatdewasalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdewasalakilaki', $kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatdewasatotal"
                                                                 name="penerimamanfaatdewasatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatdewasatotal', $kegiatan->penerimamanfaatdewasatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--lansia row-->
@@ -559,18 +531,18 @@
                                                             <input type="number" id="penerimamanfaatlansiaperempuan"
                                                                 name="penerimamanfaatlansiaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansiaperempuan', $kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatlansialakilaki"
                                                                 name="penerimamanfaatlansialakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansialakilaki', $kegiatan->penerimamanfaatlansialakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatlansiatotal"
                                                                 name="penerimamanfaatlansiatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlansiatotal', $kegiatan->penerimamanfaatlansiatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--remaja row-->
@@ -583,18 +555,18 @@
                                                             <input type="number" id="penerimamanfaatremajaperempuan"
                                                                 name="penerimamanfaatremajaperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajaperempuan', $kegiatan->penerimamanfaatremajaperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatremajalakilaki"
                                                                 name="penerimamanfaatremajalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajalakilaki', $kegiatan->penerimamanfaatremajalakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatremajatotal"
                                                                 name="penerimamanfaatremajatotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatremajatotal', $kegiatan->penerimamanfaatremajatotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--anak-anak row-->
@@ -607,18 +579,18 @@
                                                             <input type="number" id="penerimamanfaatanakperempuan"
                                                                 name="penerimamanfaatanakperempuan"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanakperempuan', $kegiatan->penerimamanfaatanakperempuan ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1">
                                                             <input type="number" id="penerimamanfaatanaklakilaki"
                                                                 name="penerimamanfaatanaklakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatanaklakilaki', $kegiatan->penerimamanfaatanaklakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatanaktotal"
                                                                 name="penerimamanfaatanaktotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatanaktotal', $kegiatan->penerimamanfaatanaktotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <tr class="align-middle text-center text-nowrap">
@@ -628,18 +600,18 @@
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatperempuantotal"
                                                                 name="penerimamanfaatperempuantotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatperempuantotal', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1">
                                                             <input type="number" readonly
                                                                 id="penerimamanfaatlakilakitotal"
                                                                 name="penerimamanfaatlakilakitotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlakilakitotal', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaattotal"
                                                                 name="penerimamanfaattotal"
-                                                                class="form-control-border border-width-2 form-control form-control-sm">
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaattotal', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </th>
                                                     </tr>
                                                 </tbody>
@@ -650,7 +622,16 @@
 
                                     </div>
                                 </div>
-
+                                <!-- Detail Peserta Yang Disabilitas berdasarkan input peserta_kegiatan_summary -->
+                                <div class="form-group row mb-0">
+                                    <div class="col-sm col-md col-lg self-center">
+                                        <label class="mb-0 self-center input-group">
+                                            {{ __('cruds.kegiatan.peserta.disabilitas') }}
+                                            <i class="fas fa-info-circle text-success" data-toggle="tooltip"
+                                                title="{{ __('cruds.kegiatan.peserta.helper_disabilitas') }}"></i>
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="form-group row mb-0">
                                     <div class="col-sm col-md col-lg self-center">
                                         <div class="card-body table-responsive p-0">
@@ -684,19 +665,19 @@
                                                             <input type="number" id="penerimamanfaatdisabilitasperempuan"
                                                                 name="penerimamanfaatdisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitasperempuan', $kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatdisabilitaslakilaki"
                                                                 name="penerimamanfaatdisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitaslakilaki', $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatdisabilitastotal"
                                                                 name="penerimamanfaatdisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatdisabilitastotal', $kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--non_disabilitas row-->
@@ -710,20 +691,20 @@
                                                                 id="penerimamanfaatnondisabilitasperempuan"
                                                                 name="penerimamanfaatnondisabilitasperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitasperempuan', $kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number"
                                                                 id="penerimamanfaatnondisabilitaslakilaki"
                                                                 name="penerimamanfaatnondisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitaslakilaki', $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatnondisabilitastotal"
                                                                 name="penerimamanfaatnondisabilitastotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatnondisabilitastotal', $kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--marjinal row-->
@@ -736,19 +717,19 @@
                                                             <input type="number" id="penerimamanfaatmarjinalperempuan"
                                                                 name="penerimamanfaatmarjinalperempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinalperempuan', $kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="penerimamanfaatmarjinallakilaki"
                                                                 name="penerimamanfaatmarjinallakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
-                                                                placeholder="0">
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinallakilaki', $kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatmarjinaltotal"
                                                                 name="penerimamanfaatmarjinaltotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('penerimamanfaatmarjinaltotal', $kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}">
                                                         </td>
                                                     </tr>
                                                     <!--total beneficiaries difabel-->
@@ -761,19 +742,19 @@
                                                             <input type="number" id="total_beneficiaries_perempuan"
                                                                 name="total_beneficiaries_perempuan"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_perempuan', $kegiatan->penerimamanfaatperempuantotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1">
                                                             <input type="number" id="total_beneficiaries_lakilaki"
                                                                 name="total_beneficiaries_lakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly placeholder="0">
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_lakilaki', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="beneficiaries_difable_total"
                                                                 name="beneficiaries_difable_total"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
-                                                                readonly>
+                                                                readonly value="{{ old('beneficiaries_difable_total', $kegiatan->penerimamanfaattotal ?? 0) }}">
                                                         </td>
                                                     </tr>
 
@@ -787,54 +768,9 @@
                             <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
                                 <div id="dynamic-form-container"></div>
                             </div>
-                            {{-- File Uplaods Load --}}
+                            <!-- File Uploads Tabs -->
                             <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
-                                {{-- Document Uploads --}}
-                                <div class="card-body pt-0">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <label for="dokumen_pendukung" class="control-label mb-0">
-                                                <strong>
-                                                    {{ __('cruds.kegiatan.file.upload') }}
-                                                </strong>
-                                                <span class="text-red">
-                                                    {{-- ONLY FOR DOCUMENT FILES ONLY --}}
-                                                    (
-                                                    {{ __('allowed file: .pdf, .doc, .docx, .xls, .xlsx, .pptx | max: 50 MB') }}
-                                                    )
-                                                </span>
-                                            </label>
-                                            <div class="form-group file-loading">
-                                                <input id="dokumen_pendukung" name="dokumen_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
-                                            </div>
-                                            <div id="captions-container-docs"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- Media Photo/Video Uploads --}}
-                                <div class="card-body pt-0">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <label for="media_pendukung" class="control-label mb-0">
-                                                <strong>
-                                                    {{ __('cruds.kegiatan.file.upload_media') }}
-                                                </strong>
-                                                <span class="text-red">
-                                                    {{-- ONLY FOR MEDIA FILES ONLY --}}
-                                                    ( {{ __('allowed file: .jpg, .png, .jpeg | max: 50 MB') }} )
-                                                </span>
-                                            </label>
-                                            <div class="form-group file-loading">
-                                                <input id="media_pendukung" name="media_pendukung[]" type="file"
-                                                    class="form-control" multiple data-show-upload="false"
-                                                    data-show-caption="true">
-                                            </div>
-                                            <div id="captions-container-media"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @include('tr.kegiatan.tabs._edit_uploads')
                             </div>
 
                             {{-- Penulis Laporan Kegiatan --}}
@@ -848,8 +784,8 @@
                                 </div>
 
                                 <div class="form-group row col-md-12" id="list_penulis_edit">
-                                    @if (!empty($kegiatan->penulis) && $kegiatan->penulis->isNotEmpty())
-                                        @foreach ($kegiatan->penulis as $penulis)
+                                    @if (!empty($kegiatan->datapenulis) && $kegiatan->datapenulis->isNotEmpty())
+                                        @foreach ($kegiatan->datapenulis as $penulis)
                                             <div class="row penulis-row col-12">
                                                 <div class="col-lg-5 form-group mb-0">
                                                     <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
@@ -857,7 +793,8 @@
                                                         <select class="form-control select2 penulis-select"
                                                             name="penulis[]" data-selected="{{ $penulis->id }}">
                                                             <option value="{{ $penulis->id }}" selected>
-                                                                {{ $penulis->nama }}</option>
+                                                                {{ $penulis->nama }}
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -870,7 +807,7 @@
                                                                 name="jabatan[]"
                                                                 data-selected="{{ $penulis->pivot->peran_id }}">
                                                                 <option value="{{ $penulis->pivot->peran_id }}" selected>
-                                                                    {{ $penulis->peran->find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
+                                                                    {{ App\Models\Peran::find($penulis->pivot->peran_id)->nama ?? 'Unknown Role' }}
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -884,7 +821,27 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        {{-- <p class="text-muted"></p> --}}
+                                        <div class="row penulis-row col-12">
+                                            <div class="col-lg-5 form-group mb-0">
+                                                <label for="penulis">{{ __('cruds.kegiatan.penulis.nama') }}</label>
+                                                <div class="select2-orange">
+                                                    <select class="form-control select2 penulis-select" name="penulis[]"></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5 form-group d-flex align-items-end">
+                                                <div class="flex-grow-1">
+                                                    <label for="jabatan">{{ __('cruds.kegiatan.penulis.jabatan') }}</label>
+                                                    <div class="select2-orange">
+                                                        <select class="form-control select2 jabatan-select" name="jabatan[]"></select>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2">
+                                                    <button type="button" class="btn btn-danger remove-penulis-row">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -900,9 +857,11 @@
 @stop
 
 @include('tr.kegiatan.modal._preview')
+
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/krajee-fileinput/css/fileinput.min.css') }}">
+
     <style>
         .card-header.border-bottom-0.card-header.p-0.pt-1.navigasi {
             position: sticky;
@@ -980,6 +939,10 @@
 <script src="{{ asset('vendor/krajee-fileinput/js/locales/id.js') }}"></script>
 
 @stack('basic_tab_js')
+
+<script>
+    @include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
+</script>
 <script>
     let uniqueId = Date.now();
     var provinsiLayer = null;
@@ -1000,15 +963,129 @@
     }
 
     $('#tanggalmulai, #tanggalselesai').on('change', calculateDuration);
+
+    function initializeSelect2WithDynamicUrl(fieldId) {
+        var select2Field = $('#' + fieldId);
+        var apiUrl = select2Field.data('api-url');
+
+        select2Field.select2({
+            width: '100%',
+            placeholder: select2Field.attr('placeholder'),
+            allowClear: true,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.data.map(function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nama
+                            };
+                        }),
+                        pagination: {
+                            more: data.current_page < data.last_page
+                        }
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 0
+        });
+    }
+
+    const setupSelect2 = (selector, placeholder, url, dataCallback) => {
+        $(selector).select2({
+            placeholder: placeholder,
+            allowClear: true,
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 250,
+                data: dataCallback,
+                processResults: (data, params) => ({
+                    results: data.results,
+                    pagination: { more: (params.page || 1) < data.last_page }
+                }),
+                cache: true
+            }
+        });
+    };
+
+    function select2Single(fieldId) {
+        var select2Field = $('#' + fieldId);
+        var apiUrl = select2Field.data('api-url');
+
+        select2Field.select2({
+            width: 'resolve',
+            placeholder: select2Field.attr('placeholder'),
+            aallowClear: true,
+            ajax: {
+                url: apiUrl,
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        page: params.page || 1
+                    };
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 1;
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: data.pagination.more
+                        }
+                    };
+                },
+                cache: true
+            }
+        }).on('select2:open', function(e) {
+            $('.select2-container').css('z-index', 1035);
+        }).on('select2:close', function(e) {
+            $('.select2-container').css('z-index', 999);
+        });;
+    }
     $(document).ready(function() {
 
         $('.select2').select2({
             width: 'resolve'
         });
 
+        $('.select2').each(function() {
+            var fieldId = $(this).attr('id');
+            initializeSelect2WithDynamicUrl(fieldId);
+        });
+
+        // Initialize Summernote for description tab textareas
+        $('.summernote').each(function() {
+            if (!$(this).data('initialized')) {
+                const placeholder = $(this).attr('placeholder');
+                $(this).summernote({
+                    height: 120,
+                    width: '100%',
+                    inheritPlaceholder: true,
+                    tabDisable: true,
+                    codeviewFilter: false,
+                });
+                $(this).summernote('placeholder', placeholder);
+                $(this).data('initialized', true);
+            }
+        });
+
         // select2 jenis kegiatan
-        $('#jeniskegiatan_id').select2({
+        $('#jeniskegiatan').select2({
             placeholder: '{{ __('global.pleaseSelect') . ' ' . __('cruds.kegiatan.basic.jenis_kegiatan') }}',
+
             ajax: {
                 url: '{{ route('api.kegiatan.jenis_kegiatan') }}',
                 dataType: 'json',
@@ -1032,201 +1109,100 @@
                     };
                 }
             }
-        });
+        }).prop('disabled', true);
 
-        $(`#kabupaten_id`).select2({
-            placeholder: '{{ __('cruds.kegiatan.basic.select_kabupaten') }}',
-            allowClear: true,
-            ajax: {
-                url: "{{ route('api.kegiatan.kabupaten') }}",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    const provinsiId = $(`#provinsi_id`).val();
-                    return {
-                        search: params.term,
-                        provinsi_id: provinsiId,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function(data, params) {
-                    params.page = params.page || 1;
-                    return {
-                        results: data.results,
-                        pagination: {
-                            more: data.pagination.more
-                        }
-                    };
-                },
-                cache: true,
-                error: function(jqXHR, textStatus, errorThrown) {
-                    const provinsiId = $(`#provinsi_id`).val();
-                    let errorMessage = "";
-                    if (jqXHR.responseText) {
-                        try {
-                            const response = JSON.parse(jqXHR.responseText);
-                            if (response.message) {
-                                errorMessage = response
-                                    .message; // Use message from the server if available
+        // Setup dynamic select2 for province and kabupaten
+        setupSelect2('#provinsi_id', '{{ __('cruds.kegiatan.basic.select_provinsi') }}', "{{ route('api.kegiatan.provinsi') }}", params => ({ search: params.term, page: params.page || 1 }));
+        setupSelect2('#kabupaten_id', '{{ __('cruds.kegiatan.basic.select_kabupaten') }}', "{{ route('api.kegiatan.kabupaten') }}", params => ({ search: params.term, provinsi_id: $('#provinsi_id').val(), page: params.page || 1 }));
+
+        // Load hasil data via AJAX and populate dynamic form
+        async function loadHasilKegiatanData() {
+            const kegiatanId = {{ $kegiatan->id }};
+            const initialJenisKegiatan = $('#jeniskegiatan_id').val() || {{ $kegiatan->jeniskegiatan_id }};
+
+            console.log('DEBUG: Loading hasil data for kegiatan:', kegiatanId);
+            console.log('DEBUG: Initial jenis kegiatan:', initialJenisKegiatan);
+            console.log('DEBUG: Available form field map:', formFieldMap);
+
+            if (!initialJenisKegiatan) {
+                console.warn('DEBUG: No jenis kegiatan found, skipping dynamic form loading');
+                return;
+            }
+
+            if (!formFieldMap[initialJenisKegiatan]) {
+                console.warn('DEBUG: No field mapping found for jenis kegiatan:', initialJenisKegiatan);
+                return;
+            }
+
+            try {
+                console.log('DEBUG: Fetching data from API:', `/api/kegiatan/${kegiatanId}/hasil`);
+                const response = await fetch(`/api/kegiatan/${kegiatanId}/hasil`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('DEBUG: API response:', result);
+
+                if (result.success) {
+                    const initialFieldPrefix = formFieldMap[initialJenisKegiatan];
+                    const formContainer = $('#dynamic-form-container');
+
+                    console.log('DEBUG: Field prefix:', initialFieldPrefix);
+                    console.log('DEBUG: Form container:', formContainer);
+
+                    if (initialFieldPrefix) {
+                        const initialFormFields = getFormFields(initialFieldPrefix, result.data || {});
+                        console.log('DEBUG: Generated form fields length:', initialFormFields.length);
+
+                        formContainer.append(initialFormFields);
+                        console.log('DEBUG: Form fields appended to container');
+
+                        // Initialize Summernote for dynamically added fields
+                        formContainer.find('.summernote').each(function() {
+                            if (!$(this).data('initialized')) {
+                                const placeholder = $(this).attr('placeholder');
+                                $(this).summernote({
+                                    inheritPlaceholder: true,
+                                    height: 150,
+                                    width: '100%',
+                                    codeviewFilter: false,
+                                });
+                                $(this).summernote('placeholder', placeholder);
+                                $(this).data('initialized', true);
+                                console.log('DEBUG: Initialized Summernote for field:', $(this).attr('id'));
                             }
-                        } catch (e) {
-                            console.warn("Could not parse JSON response:", jqXHR.responseText);
-                        }
-                    }
-                    if (provinsiId === null || provinsiId === undefined || provinsiId === '') {
-                        Swal.fire({
-                            icon: 'warning' ?? textStatus,
-                            title: 'Failed to load Kabupaten data',
-                            text: '{{ __('global.pleaseSelect') }} {{ __('cruds.provinsi.title') }}',
-                            timer: 1500,
-                        })
-                        setTimeout(() => {
-                            $(`#provinsi_id`).focus();
-                        }, 1000);
-                        return;
-                    } else {
-                        // Handle other AJAX errors
-                        let errorMessage =
-                            '{{ __('Failed to fetch kabupaten data.  Please check your internet connection or try again later.') }}'; // Default, localized message
-                        Swal.fire({
-                            icon: 'error', // Always use 'error' for AJAX failures
-                            title: errorThrown ||
-                                'Error', // Use errorThrown if available, otherwise generic 'Error'
-                            text: errorMessage,
-                            timer: 2500, // Slightly longer timer for general errors
-                            showConfirmButton: false // Hide confirm button
                         });
-
+                    } else {
+                        console.error('DEBUG: No field prefix found for:', initialJenisKegiatan);
                     }
+                } else {
+                    console.error('DEBUG: API returned unsuccessful response:', result);
                 }
+            } catch (error) {
+                console.error('DEBUG: Error loading hasil data:', error);
+                // Show user-friendly error message
+                const formContainer = $('#dynamic-form-container');
+                formContainer.html('<div class="alert alert-warning">Failed to load form fields. Please refresh the page or contact support.</div>');
             }
-        }).on('select2:open', function(e) {
-            $('.select2-container').css('z-index', 1035);
-        }).on('select2:close', function(e) {
-            $('.select2-container').css('z-index', 999);
+        }
+
+        // Initial load of dynamic form
+        loadHasilKegiatanData();
+
+        $('.list-lokasi-kegiatan .lokasi-kegiatan').each(function() {
+            const uniqueId = $(this).data('unique-id');
+            initializeLocationSelect2(uniqueId, $(this).find('.kecamatan-select'), $(this).find('.kelurahan-select'));
         });
 
-        function initializeSelect2WithDynamicUrl(fieldId) {
-            var select2Field = $('#' + fieldId);
-            var apiUrl = select2Field.data('api-url');
+        $('.list-lokasi-kegiatan').on('click', '.remove-lokasi-row', function() {
+            $(this).closest('.lokasi-kegiatan').remove();
+        });
 
-            select2Field.select2({
-                width: '100%',
-                placeholder: select2Field.attr('placeholder'),
-                allowClear: true,
-                ajax: {
-                    url: apiUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.data.map(function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.nama
-                                };
-                            }),
-                            pagination: {
-                                more: data.current_page < data.last_page
-                            }
-                        };
-                    },
-                    cache: true
-                },
-                minimumInputLength: 0
-            });
-        }
-
-        function select2Single(fieldId) {
-            var select2Field = $('#' + fieldId);
-            var apiUrl = select2Field.data('api-url');
-
-            select2Field.select2({
-                width: 'resolve',
-                placeholder: select2Field.attr('placeholder'),
-                aallowClear: true,
-                ajax: {
-                    url: apiUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data, params) {
-                        params.page = params.page || 1;
-                        return {
-                            results: data.results,
-                            pagination: {
-                                more: data.pagination.more
-                            }
-                        };
-                    },
-                    cache: true
-                }
-            }).on('select2:open', function(e) {
-                $('.select2-container').css('z-index', 1035);
-            }).on('select2:close', function(e) {
-                $('.select2-container').css('z-index', 999);
-            });;
-        }
-
-        function addNewLocationInputs(uniqueId) {
-            if (!uniqueId) {
-                uniqueId = Date.now();
-            }
-            var newLocationField = `
-            <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
-                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
-                    <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select" id="kecamatan-${uniqueId}" data-placeholder="Pilih Kecamatan">
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
-                    <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select" id="kelurahan-${uniqueId}" data-placeholder="Pilih Desa">
-                    </select>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
-                    <input type="text" class="form-control lokasi-input" id="lokasi-${uniqueId}" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}">
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
-                    <input type="text" class="form-control lat-input" id="lat-${uniqueId}" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
-                    <input type="text" class="form-control lang-input flex-grow-1" id="long-${uniqueId}" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
-                    <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-            </div>`;
-            $('.list-lokasi-kegiatan').append(newLocationField);
-
-            $(document).on('blur', '.lat-input, .lang-input', function() {
-                const $input = $(this);
-                const value = $input.val();
-                const type = $input.hasClass('lat-input') ? 'latitude' : 'longitude';
-
-                const validationResult = validateCoordinate(value, type);
-
-                if (validationResult.valid) {
-                    $input.val(validationResult.value);
-                    $input.removeClass('is-invalid').addClass('is-valid');
-                } else {
-                    $input.val('');
-                    $input.removeClass('is-valid').addClass('is-invalid');
-                }
-            });
-
-            // Initialize kecamatan select2
-            $(`#kecamatan-${uniqueId}`).select2({
+        function initializeLocationSelect2(uniqueId, kecamatanSelect, kelurahanSelect, kabupatenId = $('#kabupaten_id').val(), isReset = false) {
+            // Initialize Kecamatan Select2
+            kecamatanSelect.select2({
                 placeholder: '{{ __('cruds.kegiatan.basic.select_kecamatan') }}',
                 allowClear: true,
                 ajax: {
@@ -1236,7 +1212,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            kabupaten_id: $(`#kabupaten_id`).val(),
+                            kabupaten_id: kabupatenId,
                             page: params.page || 1
                         };
                     },
@@ -1249,26 +1225,12 @@
                             }
                         };
                     },
-                    cache: true,
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'There was an error fetching Kecamatan data. Please try again later.',
-                            position: 'center',
-                            timer: 2000,
-                            timerProgressBar: true
-                        });
-                        $('#kecamatan-' + uniqueId).focus();
-                    }
+                    cache: false // Disable cache to ensure fresh options
                 }
-            }).on('select2:open', function(e) {
-                $('.select2-container').css('z-index', 1035);
-            }).on('select2:close', function(e) {
-                $('.select2-container').css('z-index', 999);
-            });
+            }).val(isReset ? null : kecamatanSelect.data('selected')).trigger('change');
 
-            $(`#kelurahan-${uniqueId}`).select2({
+            // Initialize Kelurahan Select2 with dependency on Kecamatan
+            kelurahanSelect.select2({
                 placeholder: '{{ __('cruds.kegiatan.basic.select_desa') }}',
                 allowClear: true,
                 ajax: {
@@ -1276,9 +1238,10 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
+                        const kecamatanId = $(`#kecamatan-${uniqueId}`).val();
                         return {
                             search: params.term,
-                            kecamatan_id: $(`#kecamatan-${uniqueId}`).val(),
+                            kecamatan_id: kecamatanId,
                             page: params.page || 1
                         };
                     },
@@ -1291,58 +1254,55 @@
                             }
                         };
                     },
-                    cache: true,
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("Error fetching Kelurahan data:", textStatus, errorThrown);
-                        Toast.fire({
-                            icon: 'error', // Use 'error' icon for errors
-                            title: 'Please Select Kecamatan First!',
-                            text: 'Kelurahan data depends on Kecamatan data. Please select a Kecamatan first.',
-                            position: 'center',
-                            timer: 2000, // Increased timer to 3 seconds for better visibility
-                            timerProgressBar: true
-                        });
-                        $('#kecamatan-' + uniqueId).focus();
-                    }
+                    cache: false // Disable cache to ensure fresh options
                 }
-            }).on('select2:open', function(e) {
-                $('.select2-container').css('z-index', 1035);
-            }).on('select2:close', function(e) {
-                $('.select2-container').css('z-index', 999);
+            }).val(isReset ? null : kelurahanSelect.data('selected')).trigger('change');
+
+            // Reset Kelurahan when Kecamatan changes
+            kecamatanSelect.on('change', function() {
+                kelurahanSelect.val(null).trigger('change');
             });
-
-            // Handle dependencies
-            $(`#provinsi_id`).on('change', function() {
-                $(`#kabupaten_id`).val(null).trigger('change');
-                changeKabupatenAlert();
-            });
-
-            $(`#kabupaten_id`).on('change', function() {
-                changeKabupatenAlert();
-            });
-
-            $(`#kecamatan-${uniqueId}`).on('change', function() {
-                $(`#kelurahan-${uniqueId}`).val(null).trigger('change');
-            });
-
-            $(`#provinsi_id, #kabupaten_id, #kecamatan-${uniqueId}, #kelurahan-${uniqueId}, #lokasi-${uniqueId}, #lat-${uniqueId}, #long-${uniqueId}`)
-                .on('change', function() {});
-
-            $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click',
-                '.remove-lokasi-row',
-                function() {
-                    $(this).closest('.lokasi-kegiatan').remove();
-                });
-            return uniqueId
         }
 
+        function addNewLocationInputs(uniqueId = "loc_" + Date.now()) {
+            var newLocationField = `
+                <div class="form-group row lokasi-kegiatan" data-unique-id="${uniqueId}">
+                    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-3">
+                        <select name="kecamatan_id[]" class="form-control dynamic-select2 kecamatan-select" id="kecamatan-${uniqueId}" data-placeholder="Pilih Kecamatan"></select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-4">
+                        <select name="kelurahan_id[]" class="form-control dynamic-select2 kelurahan-select" id="kelurahan-${uniqueId}" data-placeholder="Pilih Desa"></select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-5">
+                        <input type="text" class="form-control lokasi-input" id="lokasi-${uniqueId}" name="lokasi[]" placeholder="{{ __('cruds.kegiatan.basic.lokasi') }}">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-6">
+                        <input type="text" class="form-control lat-input" id="lat-${uniqueId}" name="lat[]" placeholder="{{ __('cruds.kegiatan.basic.lat') }}">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 self-center order-7 d-flex align-items-center">
+                        <input type="text" class="form-control lang-input flex-grow-1" id="long-${uniqueId}" name="long[]" placeholder="{{ __('cruds.kegiatan.basic.long') }}">
+                        <button type="button" class="btn btn-danger remove-lokasi-row btn-sm ml-1">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            $('.list-lokasi-kegiatan').append(newLocationField);
+
+            $(`.list-lokasi-kegiatan .lokasi-kegiatan[data-unique-id="${uniqueId}"]`).on('click', '.remove-lokasi-row', function() {
+                $(this).closest('.lokasi-kegiatan').remove();
+            });
+
+            initializeLocationSelect2(uniqueId, $(`#kecamatan-${uniqueId}`), $(`#kelurahan-${uniqueId}`));
+            return uniqueId;
+        }
+
+        // grook
         $('#btn-lokasi-kegiatan').on('click', function() {
             let idProvinsi = $('#provinsi_id').val();
             let idKabupaten = $('#kabupaten_id').val();
             if (!idProvinsi) {
                 Swal.fire({
                     icon: 'warning',
-                    title: '',
                     text: 'Please select a province first.',
                     position: 'center',
                     timer: 1000,
@@ -1354,18 +1314,108 @@
             if (!idKabupaten) {
                 Swal.fire({
                     icon: 'warning',
-                    title: '',
                     text: 'Please select a kabupaten after selecting a province.',
                     position: 'center',
                     timer: 1000,
                     timerProgressBar: true
                 });
-
                 $('#kabupaten_id').focus();
                 return false;
             }
 
-            addNewLocationInputs();
+            const newUniqueId = addNewLocationInputs();
+            initializeLocationSelect2(newUniqueId, $(`#kecamatan-${newUniqueId}`), $(`#kelurahan-${newUniqueId}`));
+        });
+
+        $('#status, #fasepelaporan').select2({
+            width: 'resolve',
+            minimumResultsForSearch: -1 // Disable search for static dropdowns
+        });
+
+        let isProgrammaticChange = false;
+        let isProvinsiProgrammaticChange = false;
+
+        $('#provinsi_id').on('change', function() {
+            if (isProvinsiProgrammaticChange) {
+                isProvinsiProgrammaticChange = false; // Reset flag setelah diproses
+                return; // Hentikan eksekusi jika ini perubahan terprogram
+            }
+
+            const newProvinsiId = $(this).val();
+            const previousProvinsiId = {{ $preselectedProvinsiId ?? 'null' }};
+
+            Swal.fire({
+                title: "{{ __('global.warning') }}",
+                text: "{{ __('cruds.kegiatan.validate.prov_change') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "{{ __('global.yes') }}",
+                cancelButtonText: "{{ __('global.no') }}",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna setuju, kosongkan kabupaten dan lokasi
+                    isProgrammaticChange = true;
+                    $('#kabupaten_id').val(null).trigger('change');
+                    $('.list-lokasi-kegiatan').empty();
+                    // Simpan nilai baru sebagai previous-value
+                    $('#provinsi_id').data('previous-value', newProvinsiId);
+                } else {
+                    // Jika pengguna membatalkan, kembalikan ke nilai sebelumnya tanpa memicu loop
+                    isProvinsiProgrammaticChange = true; // Set flag untuk perubahan terprogram
+                    $(this).val(previousProvinsiId).trigger('change'); // Kembali ke nilai sebelumnya
+                }
+            });
+
+            // Simpan nilai saat ini sebagai previous-value sebelum perubahan diterapkan
+            if (!$(this).data('previous-value')) {
+                $(this).data('previous-value', $(this).val());
+            }
+        });
+
+        // Trigger kabupaten select2 to reload when province changes
+        $('#provinsi_id').on('change', function() {
+            $('#kabupaten_id').val(null).trigger('change.select2');
+        });
+
+        $('#kabupaten_id').on('change', function() {
+            if (isProgrammaticChange) {
+                isProgrammaticChange = false; // Reset flag setelah diproses
+                return; // Hentikan eksekusi jika ini perubahan terprogram
+            }
+
+            const newKabupatenId = $(this).val();
+            const previousKabupatenId = {{ $preselectedKabupatenId ?? 'null' }};
+
+            Swal.fire({
+                title: "{{ __('global.warning') }}",
+                text: "{{ __('cruds.kegiatan.validate.kab_change') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "{{ __('global.yes') }}",
+                cancelButtonText: "{{ __('global.no') }}",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna setuju, kosongkan lokasi dan tambahkan baris default
+                    $('.list-lokasi-kegiatan').empty();
+                    const defaultUniqueId = "loc_" + Date.now();
+                    addNewLocationInputs(defaultUniqueId);
+                    initializeLocationSelect2(defaultUniqueId, $(`#kecamatan-${defaultUniqueId}`), $(`#kelurahan-${defaultUniqueId}`), newKabupatenId, true);
+
+                    // Simpan nilai baru sebagai previous-value
+                    $('#kabupaten_id').data('previous-value', newKabupatenId);
+                } else {
+                    // Jika pengguna membatalkan, kembalikan ke nilai sebelumnya tanpa memicu loop
+                    isProgrammaticChange = true; // Set flag untuk perubahan terprogram
+                    $(this).val(previousKabupatenId).trigger('change'); // Kembali ke nilai sebelumnya
+                }
+            });
+
+            // Simpan nilai saat ini sebagai previous-value sebelum perubahan diterapkan
+            if (!$(this).data('previous-value')) {
+                $(this).data('previous-value', $(this).val());
+            }
         });
 
         calculateDuration();
@@ -1566,8 +1616,8 @@
 
         formData.locations.forEach(location => {
             html += '<tr>';
-            html += `<td>${location.kecamatan_text || '-'}</td>`;
-            html += `<td>${location.desa_text || '-'}</td>`;
+            html += `<td>${location.kecamatan_text || '-'} - ${location.kecamatan_id || '-'}</td>`;
+            html += `<td>${location.desa_text || '-'} - ${location.desa_id || '-'}</td>`;
             html += `<td>${location.lokasi || '-'}</td>`;
             html += `<td>${location.lat || '-'}</td>`;
             html += `<td>${location.long || '-'}</td>`;
@@ -1605,106 +1655,297 @@
         // Preview button click handler
         $('#btn-preview-kegiatan').on('click', function() {
             const formData = collectFormData();
-            // const errors = validateFormData(formData);
-
-            // if (errors.length > 0) {
-            //     // Display validation errors
-            //     let errorHtml = '<ul>';
-            //     errors.forEach(error => {
-            //         errorHtml += `<li>${error}</li>`;
-            //     });
-            //     errorHtml += '</ul>';
-
-            //     $('#validation-errors').html(errorHtml).show();
-            // } else {
-            //     // Hide any previous errors
-            //     $('#validation-errors').hide();
-
-            //     // Display the preview
             displayPreview(formData);
-            // }
-
-            // Show the modal
             $('#previewModal').modal('show');
         });
 
-        // Submit button in modal click handler
-        $('#btn-submit-preview').on('click', function() {
-            // Get form data
-            const formData = collectFormData();
-
-            // Send data via AJAX
-            $.ajax({
-                url: '{{ route('kegiatan.update', [$kegiatan->id]) }}',
-                type: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    _method: 'PUT',
-                    ...formData
-                },
-                success: function(response) {
-                    // Close the modal
-                    $('#previewModal').modal('hide');
-
-                    // Show success message
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Data has been saved successfully',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
-                    // Optionally redirect or refresh
-                    // window.location.href = '{{ route('kegiatan.index') }}';
-                },
-                error: function(xhr) {
-                    // Handle errors
-                    let errorMessage = 'An error occurred while saving the data.';
-
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessage
-                    });
-                }
-            });
-        });
     });
 
 
-    // $('#previewModal').on('show.bs.modal', function () {
-    //     let tableBody = $('#lokasiPreview tbody');
-    //     tableBody.empty();
-
-    //     $('.lokasi-row').each(function () {
-    //         const kecamatanSelect = $(this).find('.kecamatan_id');
-    //         const desaSelect = $(this).find('.desa_id');
-
-    //         const kecamatanText = kecamatanSelect.find('option:selected').text().trim() || '-';
-    //         const desaData = desaSelect.select2('data');
-    //         const desaText = desaData.length ? desaData[0].text : '-';
-
-    //         const lokasi = $(this).find('input[name="lokasi[]"]').val() || '-';
-    //         const lat = $(this).find('input[name="lat[]"]').val() || '-';
-    //         const long = $(this).find('input[name="long[]"]').val() || '-';
-
-    //         tableBody.append(`
-    //             <tr>
-    //                 <td>${kecamatanText}</td>
-    //                 <td>${desaText}</td>
-    //                 <td>${lokasi}</td>
-    //                 <td>${lat}</td>
-    //                 <td>${long}</td>
-    //             </tr>
-    //         `);
-    //     });
-    // });
 </script>
+@include('tr.kegiatan.js._penulis')
+<script>
+    $(document).ready(function() {
+        function calculateTotals() {
+            // Calculate totals for each row in the first table
+            $('tr').each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
 
+            // Calculate overall totals for the first table
+            let totalPerempuan = 0;
+            let totalLakilaki = 0;
+            let totalAll = 0;
+
+            totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatlansiaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatremajaperempuan').val()) || 0;
+            totalPerempuan += parseInt($('#penerimamanfaatanakperempuan').val()) || 0;
+
+            totalLakilaki += parseInt($('#penerimamanfaatdewasalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatlansialakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
+            totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
+
+            totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+            totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
+
+            // Update overall total fields for the first table
+            $('#penerimamanfaatperempuantotal').val(totalPerempuan);
+            $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaattotal').val(totalAll);
+
+            // Calculate totals for each row in the second table (difabel table)
+            $('tr', $('#penerima_manfaat_difabel')).each(function() {
+                let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
+                let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
+                let total = pria + wanita;
+                $(this).find('input[id$="total"]').val(total);
+            });
+
+            // Calculate totals for each row in the second table (difabel table)
+            let totalBeneficiariesPerempuan = 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalBeneficiariesPerempuan += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+            $('#total_beneficiaries_perempuan').val(totalBeneficiariesPerempuan);
+
+            let totalBeneficiariesLakilaki = 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+            $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
+
+            let totalBeneficiariesTotal = 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+            $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
+        }
+
+        // Validation for second table inputs
+        $('.hitung-difabel').on('input', function() {
+            let maxPerempuan = parseInt($('#penerimamanfaatperempuantotal').val()) || 0;
+            let maxLakilaki = parseInt($('#penerimamanfaatlakilakitotal').val()) || 0;
+            let maxTotal = parseInt($('#penerimamanfaattotal').val()) || 0;
+
+            let totalPerempuanSoFar = 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatdisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatnondisabilitasperempuan').val()) || 0;
+            totalPerempuanSoFar += parseInt($('#penerimamanfaatmarjinalperempuan').val()) || 0;
+
+            let totalLakilakiSoFar = 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
+            totalLakilakiSoFar += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            let totalAllSoFar = 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
+            totalAllSoFar += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+
+            let id = this.id;
+            let value = parseInt($(this).val()) || 0;
+
+            if (id.includes('perempuan')) {
+                if (totalPerempuanSoFar > maxPerempuan) {
+                    $(this).val(value - (totalPerempuanSoFar - maxPerempuan));
+                }
+            } else if (id.includes('lakilaki')) {
+                if (totalLakilakiSoFar > maxLakilaki) {
+                    $(this).val(value - (totalLakilakiSoFar - maxLakilaki));
+                }
+            } else if (id.includes('total')) {
+                if (totalAllSoFar > maxTotal) {
+                    $(this).val(value - (totalAllSoFar - maxTotal));
+                }
+            }
+            calculateTotals(); // Recalculate totals after validation
+        });
+
+        // Trigger calculateTotals on input change for first table
+        $('.calculate').on('input', function() {
+            calculateTotals();
+        });
+
+        // Trigger calculateTotals on input change for second table
+
+        // Initial calculation
+        calculateTotals();
+
+        $('.calculate, .hitung-difabel').on('input', function() {
+            let value = parseInt($(this).val()) || 0;
+            if (value < 0) {
+                Toast.fire({
+                    icon: "error",
+                    title: "Number cannot be negative",
+                    timer: 600,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        // Swal.showLoading();
+                    },
+                });
+                $(this).val(0);
+                value = 0;
+            }
+            $(this).val(value);
+            calculateTotals($(this).closest('tr'));
+        });
+
+    });
+</script>
 @include('tr.kegiatan.js._validasi')
+{{-- @include('tr.kegiatan.js.complete') --}}
+
+<script>
+    // Tab switching functionality
+    function showTab(tabName) {
+        // Hide all tab contents
+        document.getElementById('documents-content').style.display = 'none';
+        document.getElementById('media-content').style.display = 'none';
+
+        // Remove active class from all tabs
+        document.getElementById('documents-tab').classList.remove('active');
+        document.getElementById('media-tab').classList.remove('active');
+
+        // Show selected tab content
+        document.getElementById(tabName + '-content').style.display = 'block';
+        document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // File preview functionality
+    function previewFile(url, mimeType) {
+        if (mimeType.startsWith('image/')) {
+            Swal.fire({
+                title: '{{ __('Image Preview') }}',
+                html: `<img src="${url}" class="img-fluid" style="max-width: 100%; height: auto;">`,
+                width: '80%',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else if (mimeType === 'application/pdf') {
+            Swal.fire({
+                title: '{{ __('PDF Preview') }}',
+                html: `<iframe src="${url}" style="width: 100%; height: 500px; border: none;"></iframe>`,
+                width: '80%',
+                height: '600px',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else {
+            // For other file types, open in new tab
+            window.open(url, '_blank');
+        }
+    }
+
+    // File delete functionality
+    function deleteFile(mediaId) {
+        Swal.fire({
+            title: '{{ __('Are you sure?') }}',
+            text: "{{ __('You won\'t be able to revert this!') }}",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: '{{ __('Yes, delete it!') }}',
+            cancelButtonText: '{{ __('Cancel') }}'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make AJAX request to delete file
+                fetch(`/kegiatan/media/${mediaId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                        // Reload the page to refresh the file list
+                        location.reload();
+                    } else {
+                        Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+                });
+            }
+        });
+    }
+
+    function uploadDocument(collection) {
+        const isDocument = collection === 'dokumen_pendukung';
+        const title = isDocument ? '{{ __('Upload Document') }}' : '{{ __('Upload Media') }}';
+        const accept = isDocument ? '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt' : '.jpg,.jpeg,.png,.gif,.mp4,.mov,.avi,.mp3,.wav';
+        const placeholder = isDocument ? '{{ __('Document Name') }}' : '{{ __('Media Name') }}';
+
+        Swal.fire({
+            title: title,
+            html: `
+                <input type="file" id="documentFile" class="form-control mb-3" accept="${accept}">
+                <input type="text" id="documentName" class="form-control" placeholder="${placeholder}">
+            `,
+            showCancelButton: true,
+            confirmButtonText: '{{ __('Upload') }}',
+            cancelButtonText: '{{ __('Cancel') }}',
+            preConfirm: () => {
+                const file = document.getElementById('documentFile').files[0];
+                const name = document.getElementById('documentName').value;
+
+                if (!file) {
+                    Swal.showValidationMessage('{{ __('Please select a file') }}');
+                    return false;
+                }
+
+                if (!name) {
+                    Swal.showValidationMessage(isDocument ? '{{ __('Please enter document name') }}' : '{{ __('Please enter media name') }}');
+                    return false;
+                }
+
+                return { file, name };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('file', result.value.file);
+                formData.append('name', result.value.name);
+                formData.append('collection', collection);
+                formData.append('kegiatan_id', {{ $kegiatan->id }});
+
+                fetch('{{ route('kegiatan.upload-document') }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const successMessage = isDocument ? '{{ __('Document uploaded successfully') }}' : '{{ __('Media uploaded successfully') }}';
+                        Swal.fire('{{ __('Success') }}', successMessage, 'success')
+                            .then(() => {
+                                location.reload();
+                            });
+                    } else {
+                        Swal.fire('{{ __('Error') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('{{ __('Error') }}', '{{ __('Upload failed') }}', 'error');
+                });
+            }
+        });
+    }
+</script>
 @endpush

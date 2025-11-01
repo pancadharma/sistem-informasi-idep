@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKegiatanRequest;
 use App\Http\Requests\UpdateKegiatanRequest;
+use App\Jobs\ProcessKegiatanFiles;
 use App\Models\Dusun;
 use App\Models\Jenis_Kegiatan;
 use Illuminate\Http\Request;
@@ -37,8 +38,22 @@ use Illuminate\Support\Facades\Log;
 use PHPUnit\Event\Code\Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 class KegiatanController extends Controller
 {
+    public function delete_media(Request $request)
+    {
+        try {
+            $mediaId = $request->input('media_id', $request->input('key'));
+            $media = Media::findOrFail($mediaId);
+            $media->delete();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
 
     public function dataTable(Request $request)
     {
@@ -53,23 +68,23 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-        ->select('trkegiatan.*')
-        ->get()
-        ->map(function ($item) {
-            // Calculate duration before formatting
-            $item->duration_in_days = $item->getDurationInDays();
+            ->select('trkegiatan.*')
+            ->get()
+            ->map(function ($item) {
+                // Calculate duration before formatting
+                $item->duration_in_days = $item->getDurationInDays();
 
-            // Format dates after calculating duration
-            $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
-            $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
+                // Format dates after calculating duration
+                $item->tanggalmulai = Carbon::parse($item->tanggalmulai)->format('d-m-Y');
+                $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
-            // Add calculated values
-            $program = $item->activity->program_outcome_output->program_outcome->program;
-            $item->total_beneficiaries = $item->penerimamanfaattotal;
-            $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
+                // Add calculated values
+                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $item->total_beneficiaries = $item->penerimamanfaattotal;
+                $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
-            return $item;
-        });
+                return $item;
+            });
 
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
@@ -97,6 +112,11 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
+                // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_export')) {
+                //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
+                //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
+                // }
+                $buttons[] = $this->generateButton('export', 'success', 'printer', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -107,6 +127,10 @@ class KegiatanController extends Controller
 
     private function generateButton($type, $color, $icon, $label, $id)
     {
+        if ($type === 'export') {
+            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+        }
+
         $url = '';
         switch ($type) {
             case 'edit':
@@ -118,6 +142,10 @@ class KegiatanController extends Controller
             case 'details':
                 $url = route('kegiatan.show', $id);
                 break;
+            // case 'export':
+            //     $url = route('kegiatan.export', $id);
+            //     // $url = route('kegiatan.export', ['kegiatan' => $id, 'format' => 'pdf']);
+            //     break;
         }
 
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
@@ -420,16 +448,17 @@ class KegiatanController extends Controller
             $this->storeHasilKegiatan($request, $kegiatan);
             $this->storeLokasiKegiatan($request, $kegiatan);
             $this->storePenulisKegiatan($request, $kegiatan);
-            $this->storeMediaDokumen($request, $kegiatan);
 
-
+            // Handle file uploads asynchronously for large files
+            $this->queueMediaUploads($request, $kegiatan);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
                 'data'    => $data,
-                'created by' => $user->nama,
-                'message' => __('global.create_success'),
+                'created by' => $user->nama ?? 'Unknown',
+                'message' => __('global.create_success') . ' Files are being processed in background.',
             ], 201);
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -438,24 +467,29 @@ class KegiatanController extends Controller
                 'message' => 'Failed to create record: ' . $th->getMessage(),
                 'error'   => $th->getMessage(),
             ], 500);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to create record: ' . $e->getMessage()], 500);
         }
     }
 
     public function storeMediaDokumen(Request $request, Kegiatan $kegiatan)
     {
+        $request->validate([
+            'dokumen_pendukung'     => 'nullable|array|max:50',
+            'dokumen_pendukung.*'   => 'file|mimes:pdf,doc,docx,xls,xlsx,pptx|max:40960',
+            'media_pendukung'       => 'nullable|array|max:50',
+            'media_pendukung.*'     => 'file|mimes:jpg,jpeg,png|max:40960',
+        ]);
+
         $handleFileUploads = function ($files, $captions, $collectionName) use ($kegiatan) {
             $timestamp = now()->format('Ymd_His');
             $fileCount = 1;
 
             foreach ($files as $index => $file) {
-                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $originalDisplayName = $file->getClientOriginalName();
+                $originalName = pathinfo($originalDisplayName, PATHINFO_FILENAME);
                 $extension = $file->getClientOriginalExtension();
-                $kegiatanName = str_replace(' ', '_', $kegiatan->nama);
+                $kegiatanName = str_replace(' ', '_', $kegiatan->nama ?? 'kegiatan'); // Fallback if nama is null
                 $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$extension}";
-                $keterangan = $captions[$index] ?? $fileName;
+                $keterangan = $captions[$index] ?? $originalDisplayName;
 
                 $media = $kegiatan
                     ->addMedia($file)
@@ -463,9 +497,10 @@ class KegiatanController extends Controller
                         'keterangan' => $keterangan,
                         'user_id' => auth()->user()->id,
                         'original_name' => $originalName,
-                        'extension' => $extension
+                        'extension' => $extension,
+                        'updated_by' => auth()->user()->id
                     ])
-                    ->usingName("{$kegiatanName}_{$originalName}_{$fileCount}")
+                    ->usingName($originalDisplayName)
                     ->usingFileName($fileName)
                     ->toMediaCollection($collectionName);
 
@@ -486,6 +521,45 @@ class KegiatanController extends Controller
                 $request->file('media_pendukung'),
                 $request->input('keterangan', []),
                 'media_pendukung'
+            );
+        }
+    }
+
+
+    private function queueMediaUploads(Request $request, Kegiatan $kegiatan)
+    {
+        // Store files temporarily and queue processing
+        if ($request->hasFile('dokumen_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('dokumen_pendukung') as $file) {
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            $collections = array_fill(0, count($tempPaths), 'dokumen_pendukung');
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
+                $request->input('keterangan', []),
+                $collections
+            );
+        }
+
+        if ($request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            foreach ($request->file('media_pendukung') as $file) {
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                $tempPaths[] = storage_path('app/' . $tempPath);
+            }
+
+            $collections = array_fill(0, count($tempPaths), 'media_pendukung');
+
+            ProcessKegiatanFiles::dispatch(
+                $kegiatan,
+                $tempPaths,
+                $request->input('keterangan', []),
+                $collections
             );
         }
     }
@@ -657,62 +731,144 @@ class KegiatanController extends Controller
         }
     }
 
-    public function updateApi(Request $request, Kegiatan $kegiatan)
+    public function updateAPI(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
         try {
+            $data = $request->validated();
             DB::beginTransaction();
 
-            $kegiatan->update([
-                'programoutcomeoutputactivity_id' => $request->programoutcomeoutputactivity_id,
-            ]);
+            // Update main Kegiatan record
+            $kegiatan->update($data);
 
-            $this->syncRelationships($request, $kegiatan);
-            $this->updateLocations($request, $kegiatan);
+            // Sync relationships
+            $kegiatan->mitra()->sync($request->input('mitra_id', []));
+            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+            // Update related data
+            $this->updateHasilKegiatan($request, $kegiatan);
+            $this->updateLocations($request, $kegiatan); // Reusing updateLocations
+            $this->storePenulisKegiatan($request, $kegiatan); // Reusing storePenulisKegiatan
+            $this->handleMediaUpdates($request, $kegiatan);
 
             DB::commit();
+
             return response()->json([
                 'success' => true,
-                'data' => $kegiatan,
+                'data' => $data ?? '',
                 'message' => __('global.update_success'),
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update record: ' . $th->getMessage(),
+                'message' => 'Failed to update kegiatan: ' . $th->getMessage(),
                 'error' => $th->getMessage(),
             ], 500);
         }
     }
 
-
-    public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    protected function updateHasilKegiatan(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
     {
-        try {
-            $data = $request->validated();
+        $jenisKegiatan = (int)$request->input('jeniskegiatan_id');
+        $idKegiatan = $kegiatan->id;
 
-            DB::beginTransaction();
-            $kegiatan->update($data);
-            $kegiatan->mitra()->sync($request->input('mitra_id', []));
-            $kegiatan->sektor()->sync($request->input('sektor_id', []));
+        $modelMapping = [
+            1 => Kegiatan_Assessment::class,
+            2 => Kegiatan_Sosialisasi::class,
+            3 => Kegiatan_Pelatihan::class,
+            4 => Kegiatan_Pembelanjaan::class,
+            5 => Kegiatan_Pengembangan::class,
+            6 => Kegiatan_Kampanye::class,
+            7 => Kegiatan_Pemetaan::class,
+            8 => Kegiatan_Monitoring::class,
+            9 => Kegiatan_Kunjungan::class,
+            10 => Kegiatan_Konsultasi::class,
+            11 => Kegiatan_Lainnya::class,
+        ];
 
-            // Update hasil kegiatan jika diperlukan
-            DB::commit();
+        if (!isset($modelMapping[$jenisKegiatan])) {
+            throw new \InvalidArgumentException("Invalid jenisKegiatan: " . $jenisKegiatan);
+        }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Kegiatan berhasil diperbarui',
-                'data' => $kegiatan,
-            ], 200);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal memperbarui kegiatan',
-                'error' => $th->getMessage(),
-            ], 500);
+        $modelClass = $modelMapping[$jenisKegiatan];
+        $validatedData = $request->validated();
+        $validatedData['kegiatan_id'] = $idKegiatan;
+
+        // Update or create the type-specific record
+        $modelClass::updateOrCreate(
+            ['kegiatan_id' => $idKegiatan],
+            array_intersect_key($validatedData, array_flip($this->getTypeSpecificFields($jenisKegiatan)))
+        );
+    }
+
+    protected function handleMediaUpdates(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    {
+        // Handle existing media captions
+        if ($request->has('keterangan_existing')) {
+            foreach ($request->input('keterangan_existing', []) as $mediaId => $keterangan) {
+                $media = Media::find($mediaId);
+                if ($media && $media->model_id === $kegiatan->id) {
+                    $media->setCustomProperty('keterangan', $keterangan);
+                    $media->save();
+                }
+            }
+        }
+
+        // Handle new file uploads
+        if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            $captions = $request->input('keterangan_new', []);
+            $collections = [];
+
+            if ($request->hasFile('dokumen_pendukung')) {
+                foreach ($request->file('dokumen_pendukung') as $index => $file) {
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'dokumen_pendukung';
+                }
+            }
+
+            if ($request->hasFile('media_pendukung')) {
+                foreach ($request->file('media_pendukung') as $index => $file) {
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'media_pendukung';
+                }
+            }
+
+            // Queue processing for new files
+            ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);
         }
     }
+
+
+    // public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
+    // {
+    //     try {
+    //         $data = $request->validated();
+
+    //         DB::beginTransaction();
+    //         $kegiatan->update($data);
+    //         $kegiatan->mitra()->sync($request->input('mitra_id', []));
+    //         $kegiatan->sektor()->sync($request->input('sektor_id', []));
+
+    //         // Update hasil kegiatan jika diperlukan
+    //         DB::commit();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Kegiatan berhasil diperbarui',
+    //             'data' => $kegiatan,
+    //         ], 200);
+    //     } catch (\Throwable $th) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Gagal memperbarui kegiatan',
+    //             'error' => $th->getMessage(),
+    //         ], 500);
+    //     }
+    // }
 
     public function getKegiatan(Request $request)
     {
@@ -767,5 +923,54 @@ class KegiatanController extends Controller
     public function getPeran()
     {
         return Peran::where('aktif', 1)->select('id', 'nama')->get();
+    }
+
+    public function getHasilKegiatan(Kegiatan $kegiatan)
+    {
+        try {
+            $jenisKegiatan = (int) $kegiatan->jeniskegiatan_id;
+            $relationMap = [
+                1 => 'assessment',
+                2 => 'sosialisasi',
+                3 => 'pelatihan',
+                4 => 'pembelanjaan',
+                5 => 'pengembangan',
+                6 => 'kampanye',
+                7 => 'pemetaan',
+                8 => 'monitoring',
+                9 => 'kunjungan',
+                10 => 'konsultasi',
+                11 => 'lainnya',
+            ];
+
+            if (!isset($relationMap[$jenisKegiatan])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid jenis kegiatan',
+                    'data' => null
+                ], 400);
+            }
+
+            $relationName = $relationMap[$jenisKegiatan];
+            $hasilData = $kegiatan->$relationName;
+
+            if ($hasilData) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $hasilData->toArray()
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => null
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error getting hasil data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
     }
 }

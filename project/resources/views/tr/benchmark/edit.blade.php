@@ -23,134 +23,153 @@
             <div class="row">
                 {{-- Kiri --}}
                 <div class="col-md-6">
+                    <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}" readonly>
                     <div class="form-group row">
-                        <!-- nama program-->
-                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-                            <label for="kode_program" class="input-group col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
-                        <!-- id program -->
-                            <input type="hidden" name="program_id" id="program_id" value="{{ $benchmark->program->id ?? '' }}" readonly>
-                            <input type="hidden" name="user_id" id="user_id" value="{{ auth()->user()->id ?? '' }}" title="{{ auth()->user()->nama ?? '' }}" readonly>
-                        <!-- kode program -->
-                            <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
-                            value="{{ $benchmark->program->kode ?? '' }}"  readonly>
-                        </div>
-                        <!-- nama program-->
-                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-                            <label for="nama_program" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.program_nama') }}
-                            </label>
-                            <input type="text" class="form-control" id="nama_program" value="{{ $benchmark->program->nama ?? '' }}"
+                        <label for="kode_program" class="col-md-3 col-form-label">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="kode_program" placeholder="{{ __('cruds.kegiatan.basic.program_select_kode') }}" name="kode_program"
+                                value="{{ $benchmark->program->kode ?? '' }}"  readonly>
+                                 <input type="text" class="form-control" id="nama_program" value="{{ $benchmark->program->nama ?? '' }}"
                                 placeholder="{{ __('cruds.kegiatan.basic.program_nama') }}" name="nama_program" readonly>
+                            </div>
+                            <input type="hidden" name="program_id" id="program_id" value="{{ $benchmark->program->id ?? '' }}">                                
                         </div>
                     </div>
-                
-                    <label for="jeniskegiatan_id">Jenis Kegiatan</label>
-                    <select name="jeniskegiatan_id" id="jeniskegiatan_id" class="form-control select2">
-                        <option value="">{{ __('global.pleaseSelect') }}</option>
-                        <option value="{{ $benchmark->jenisKegiatan->id }}" selected>
-                            {{ $benchmark->jenisKegiatan->nama }}
-                        </option>
-                    </select>
-                    <div id="error-jeniskegiatan" class="text-danger mt-1" style="display:none;"></div>
 
                     <div class="form-group row">
-                        <!-- kode kegiatan-->
-                        <div class="col-sm-12 col-md-12 col-lg-3 self-center order-1 order-md-1">
-                            <label for="kode_kegiatan" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.kode') }}
-                            </label>
-                            <input type="hidden" class="form-control" id="kegiatan_id" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kegiatan_id" value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->id ?? '' }}">
-                            <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan" value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->kode ?? '' }}"
-                            data-toggle="modal" data-target="#ModalDaftarProgramActivity">
-                        </div>
-                        <!-- nama kegiatan-->
-                        <div class="col-sm-12 col-md-12 col-lg-9 self-center order-2 order-md-2">
-                            <label for="nama_kegiatan" class="input-group col-form-label">
-                                {{ __('cruds.kegiatan.basic.nama') }}
-                            </label>
-                            <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan" value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->nama ?? '' }}" readonly>
+                        <label for="jeniskegiatan_id" class="col-md-3 col-form-label">Jenis Kegiatan</label>
+                        <div class="col-md-9">
+                            <select name="jeniskegiatan_id" id="jeniskegiatan_id" class="form-control select2">
+                                <option value="">{{ __('global.pleaseSelect') }}</option>
+                                <option value="{{ $benchmark->jenisKegiatan->id }}" selected>
+                                    {{ $benchmark->jenisKegiatan->nama }}
+                                </option>
+                            </select>
+                        <div id="error-jeniskegiatan" class="text-danger mt-1" style="display:none;"></div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Provinsi</label>
-                        <select id="provinsi_id" name="provinsi_id" class="form-control" required>
-                            <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
-                             @if ($benchmark->provinsi->id)
-                                <option value="{{ $benchmark->provinsi->id}}" selected>
-                                    {{ $benchmark->provinsi->nama }}
-                                </option>
-                            @endif
-                        </select>
+                    <div class="form-group row">
+                        <label for="kode_kegiatan" class="col-md-3 col-form-label">
+                            {{ __('cruds.kegiatan.basic.kode') }}
+                        </label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="kode_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.kode') }}" name="kode_kegiatan"
+                                value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->kode ?? '' }}" readonly>
+                                <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan"
+                                value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->nama ?? '' }}" readonly>
+                            </div>
+                            <input type="hidden" id="kegiatan_id" name="kegiatan_id" value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->id ?? '' }}">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Kabupaten</label>
-                        <select id="kabupaten_id" name="kabupaten_id" class="form-control" required>
-                           <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
-                             @if ($benchmark->kabupaten->id)
-                                <option value="{{ $benchmark->kabupaten->id}}" selected>
-                                    {{ $benchmark->kabupaten->nama }}
-                                </option>
-                            @endif
-                        </select>
-                    </div>        
-                    <div class="form-group">
-                        <label>Kecamatan</label>
-                        <select id="kecamatan_id" name="kecamatan_id" class="form-control" required>
-                           <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
-                             @if ($benchmark->kecamatan->id)
+
+                    <div class="form-group row">
+                        <label for="provinsi_id" class="col-md-3 col-form-label">Provinsi</label>
+                        <div class="col-md-9">
+                            <select id="provinsi_id" name="provinsi_id" class="form-control select2" required>
+                                <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
+                                @if ($benchmark->provinsi->id)
+                                    <option value="{{ $benchmark->provinsi->id }}" selected>
+                                        {{ $benchmark->provinsi->nama }}
+                                    </option>
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="kabupaten_id" class="col-md-3 col-form-label">Kabupaten</label>
+                        <div class="col-md-9">
+                            <select id="kabupaten_id" name="kabupaten_id" class="form-control select2" required>
+                                <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
+                                @if ($benchmark->kabupaten->id)
+                                    <option value="{{ $benchmark->kabupaten->id }}" selected>
+                                        {{ $benchmark->kabupaten->nama }}
+                                    </option>
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="kecamatan_id" class="col-md-3 col-form-label">Kecamatan</label>
+                        <div class="col-md-9">
+                            <select id="kecamatan_id" name="kecamatan_id" class="form-control select2" required>
+                                <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
+                                @if ($benchmark->kecamatan->id)
                                 <option value="{{ $benchmark->kecamatan->id}}" selected>
                                     {{ $benchmark->kecamatan->nama }}
                                 </option>
                             @endif
-                        </select>    
+                            </select>    
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Desa</label>
-                        <select id="desa_id" name="desa_id" class="form-control" required>
-                           <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
-                             @if ($benchmark->desa->id)
-                                <option value="{{ $benchmark->desa->id}}" selected>
+
+                    <div class="form-group row">
+                        <label for="desa_id" class="col-md-3 col-form-label">Desa</label>
+                        <div class="col-md-9">
+                            <select id="desa_id" name="desa_id" class="form-control" required>
+                                <option value="" disabled>{{ __('global.pleaseSelect') }}</option>
+                                @if ($benchmark->desa->id)
+                                    <option value="{{ $benchmark->desa->id}}" selected>
                                     {{ $benchmark->desa->nama }}
                                 </option>
-                            @endif
-                        </select>
+                                @endif
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 {{-- Kanan --}}
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="tanggalimplementasi">Tanggal Implementasi</label>
-                        <input type="date" id="tanggalimplementasi" name="tanggalimplementasi" class="form-control" 
-                        value="{{ old('tanggalimplementasi', $benchmark->tanggalimplementasi->format('Y-m-d')) }}" required>
+                    <div class="form-group row">
+                        <label for="tanggalimplementasi" class="col-md-3 col-form-label">Tanggal Implementasi</label>
+                        <div class="col-md-9">
+                            <input type="date" id="tanggalimplementasi" name="tanggalimplementasi" class="form-control" 
+                            value="{{ old('tanggalimplementasi', $benchmark->tanggalimplementasi->format('Y-m-d')) }}" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="handler">Handler</label>
-                        <input type="text" id="handler" name="handler" class="form-control" 
-                        value="{{ old('handler', $benchmark->handler) }}" required>
+                    <div class="form-group row">
+                        <label for="handler" class="col-md-3 col-form-label">Handler</label>
+                        <div class="col-md-9">
+                            <input type="text" id="handler" name="handler" class="form-control" 
+                            value="{{ old('handler', $benchmark->handler) }}" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="usercompiler_id">Compiler</label>
-                        <select id="usercompiler_id" name="usercompiler_id" class="form-control" required>
-                            @if ($benchmark->compiler->id)
-                                <option value="{{ $benchmark->compiler->id }}" selected>
-                                    {{ $benchmark->compiler->nama }}
-                                </option>
-                            @endif
-                        </select>
+                    <div class="form-group row">
+                        <label for="usercompiler_id" class="col-md-3 col-form-label">Compiler</label>
+                        <div class="col-md-9">
+                            <select id="usercompiler_id" name="usercompiler_id" class="form-control" required>
+                                @if ($benchmark->compiler->id)
+                                    <option value="{{ $benchmark->compiler->id }}" selected>
+                                        {{ $benchmark->compiler->nama }}
+                                    </option>
+                                @endif
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Score</label>
-                        <input type="number" step="0.01" class="form-control" value="{{ old('score', $benchmark->score) }}" name="score">
+
+                    <div class="form-group row">
+                        <label for="score" class="col-md-3 col-form-label">Score</label>
+                        <div class="col-md-9">
+                            <input type="number" step="0.01" class="form-control" value="{{ old('score', $benchmark->score) }}" name="score"> 
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="catatanevaluasi">Catatan Evaluasi</label>
-                        <textarea id="catatanevaluasi" name="catatanevaluasi" class="form-control" rows="3">{{  old('catatanevaluasi', $benchmark->catatanevaluasi) }}</textarea>
+
+                    <div class="form-group row">
+                        <label for="catatanevaluasi" class="col-md-3 col-form-label">Catatan Evaluasi</label>
+                        <div class="col-md-9">
+                            <textarea id="catatanevaluasi" name="catatanevaluasi" class="form-control" rows="3">{{  old('catatanevaluasi', $benchmark->catatanevaluasi) }}</textarea>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Area Peningkatan</label>
-                        <textarea class="form-control" name="area" rows="3">{{ $benchmark->area }}</textarea>
+
+                    <div class="form-group row">
+                        <label for="area" class="col-md-3 col-form-label">Area Peningkatan</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="area" rows="3">{{ $benchmark->area }}</textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,7 +180,6 @@
         </form>
     </div>
 </div>
-
 @endsection
 
 @push('js')

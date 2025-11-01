@@ -101,7 +101,7 @@ return [
         ],
     ],
     'dusun' => [
-        'list'          => 'List Hamlet',
+        'list'          => 'Hamlet List',
         'title'         => 'Hamlet',
         'form'          => [
             'id'        => 'ID',
@@ -366,6 +366,10 @@ return [
 
     'program' => [
         'title_singular'                         => 'Program',
+        'all'                                    => 'All Program',
+        'all_years'                              => 'All Years',
+        'years'                                  => 'Years',
+        'periode'                                => 'Period (Year)',
         'title'                                  => 'Program',
         'nama'                                   => 'Program Name',
         'kode'                                   => 'Code',
@@ -403,7 +407,7 @@ return [
             'id'                                 => 'ID',
             'title'                              => 'Program Information',
             'list'                               => 'Program List',
-            'nama'                               => 'Name',
+            'nama'                               => 'Program Name',
             'kode'                               => 'Code',
             'tgl_mulai'                          => 'Start Date',
             'tgl_selesai'                        => 'Finish Date',
@@ -419,6 +423,8 @@ return [
         ],
         'lokasi'                                 => [
             'label'                              => 'Location',
+            'all_provinsi'                       => 'All Provinces',
+            'all_kabupaten'                      => 'All Districts',
             'pro'                                => 'Province',
             'sel_pro'                            => 'Select Province',
             'kab'                                => 'District',
@@ -846,7 +852,9 @@ return [
         'peserta'                                => [
             'label'                              => 'Beneficiaries of the Activity',
             'helper'                             => 'Fill in the 2 tables below as a receipt/beneficiary of the activity, please note the form absense',
+            'helper_disabilitas'                 => 'Please fill in the number of beneficiaries with disabilities based on the table above, if none please fill in 0',
             'peserta'                            => 'Beneficiaries',
+            'disabilitas'                        => 'Disabilities Beneficiaries',
             'nama'                               => 'Beneficiaries Name',
             'pria'                               => 'Men',
             'wanita'                             => 'Women',
@@ -920,6 +928,10 @@ return [
             'program_activity'                   => 'Please select a Program and Activity.',
             'program'                            => 'Please select a Program.',
             'activity'                           => 'Please select an Activity.',
+            'kab_change'                         => 'Are you sure you want to change the Kabupaten? This will reset the location fields.',
+            'prov_change'                        => 'Are you sure you want to change the Province? This will reset the Kabupaten and location fields.',
+            'update_kegiatan'                    => 'Are you sure you want to update the Activity ?',
+            'store_kegiatan'                     => 'Are you sure you want to save the Activity?',
         ],
 
     ],
@@ -1025,6 +1037,12 @@ return [
         'label_sektor'                  => 'Sector',
         'label_location'                => 'Location',
         'jumlah'                        => 'Quantity',
+        'dashboard'                     => 'Dashboard Komponen/Model',
+        'export'                        => 'Export',
+        'export_pdf'                    => 'Export PDF',
+        'export_docx'                   => 'Export DOCX',
+        'export_csv'                    => 'Export CSV',
+        'export_excel'                  => 'Export Excel',
     ],
     'benchmark'                                    => [
         'title'                         => 'Benchmark',

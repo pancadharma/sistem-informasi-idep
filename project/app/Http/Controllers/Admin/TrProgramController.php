@@ -18,6 +18,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log;
 
 class TrProgramController extends Controller
 {
@@ -155,35 +156,44 @@ class TrProgramController extends Controller
     {
         try {
             $request->validate([
-                'files.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf|max:14048',
+                'files.*' => 'nullable|file|mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,gif,pdf,mp4,avi,mov,mp3,wav|max:51200',
                 'captions.*' => 'nullable|string|max:255',
+                'program_id' => 'required|exists:trprogram,id',
             ]);
-            // Assuming you have a user with ID 19, you can adjust this to your logic.
-            // this is experimental purposes only
-            $user = Program::find(18); // Adjust to your logic
+
+            $program = Program::find($request->program_id);
 
             if ($request->hasFile('files')) {
-                $timestamp = now()->format('Ymd_His');
-                $fileCount = 1;
-                foreach ($request->file('files') as $index => $file) {
+                $files = $request->file('files');
+                $captions = $request->input('captions', []);
+                
+                foreach ($files as $index => $file) {
                     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                     $extension = $file->getClientOriginalExtension();
-                    $caption = $request->input('captions')[$index] ?? "{$originalName}.{$extension}";
+                    $caption = $captions[$index] ?? "{$originalName}.{$extension}";
 
-                    $user->addMedia($file)
+                    $program->addMedia($file)
                         ->usingName("{$originalName}.{$extension}")
-                        ->usingFileName("{$originalName}.{$extension}")
-                        ->withCustomProperties(['keterangan' => $caption, 'user_id'  => auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
-                        ->toMediaCollection('file_pendukung_program');
+                        ->withCustomProperties([
+                            'keterangan' => $caption,
+                            'user_id' => auth()->user()->id,
+                            'original_name' => $originalName,
+                            'extension' => $extension
+                        ])
+                        ->toMediaCollection('program_' . $program->id, 'program_uploads');
                 }
             }
-            return response()->json(['success' => 'Files uploaded successfully']);
+            
+            return response()->json([
+                'success' => true, 
+                'message' => 'Files uploaded successfully'
+            ]);
         } catch (Exception $e) {
-            // Handle all other exceptions
+            \Log::error('File upload error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred.',
-                'error'   => $e->getMessage(),
+                'message' => 'An error occurred during file upload.',
+                'error' => config('app.debug') ? $e->getMessage() : 'Upload failed'
             ], 500);
         }
     }

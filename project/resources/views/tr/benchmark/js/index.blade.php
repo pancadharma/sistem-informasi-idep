@@ -11,7 +11,7 @@
                 name: 'No.',
                 className: "text-center",
                 title: '{{ __('No.') }}',
-                orderable: true,
+                orderable: false,
                 searchable: false,
             },
             {data: 'program', name: 'program.nama', title: '{{ __('cruds.program.nama') }}', orderable: true, searchable: true},

@@ -802,8 +802,15 @@
                         });
                     },
                     success: function (response) {
-                        Swal.fire("Sukses", response.message || "Data berhasil disimpan.", "success")
-                            .then(() => location.reload());
+                        Swal.fire({
+                            title: "Sukses",
+                            text: response.message || "Data berhasil disimpan!",
+                            icon: "success",
+                            timer: 1000,
+                            timerProgressBar: true,
+                        }).then(() => {
+                            window.location.href = "{{ route('prepost.index') }}";
+                        });
                     },
                     error: function (xhr) {
                         const msg = xhr.responseJSON?.message || "Terjadi kesalahan saat menyimpan.";

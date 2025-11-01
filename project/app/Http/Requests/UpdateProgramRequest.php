@@ -48,8 +48,8 @@ class UpdateProgramRequest extends FormRequest
             'kelompokmarjinal.*'                    => ['nullable', 'integer', 'exists:mkelompokmarjinal,id'],
             'kaitansdg'                             => ['array'],
             'kaitansdg.*'                           => ['nullable', 'exists:mkaitansdg,id'],
-            'file_pendukung'                        => ['array'],
-            'file_pendukung.*'                      => ['nullable', 'file', 'mimes:jpg,png,pdf,docx', 'max:4096'],
+            'file_pendukung'                        => ['array', 'max:50'],
+            'file_pendukung.*'                      => ['nullable', 'file', 'mimes:jpg,png,jpeg,docx,doc,ppt,pptx,xls,xlsx,csv,gif,pdf', 'max:51200'],
             'status'                                => ['string', 'max:50'],
             'keterangan.*'                          => ['nullable', 'string', 'max:255'],
             'pendonor_id'                           => ['array'],
@@ -60,5 +60,50 @@ class UpdateProgramRequest extends FormRequest
             'lokasi.*'                              => ['nullable', 'integer', 'exists:provinsi,id'],
 
         ];
+    }
+
+    /**
+     * Normalize currency-like inputs before validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $normalizeCurrency = function ($value) {
+            if ($value === null) {
+                return null;
+            }
+            if (is_numeric($value)) {
+                return $value;
+            }
+            if (is_string($value)) {
+                // Remove currency text and thousand separators, convert decimal comma to dot
+                $s = str_ireplace(['rp', 'idr'], '', $value);
+                $s = str_replace([' ', "\u{00A0}"], '', $s); // strip spaces incl. NBSP
+                $s = str_replace('.', '', $s); // drop thousands separator
+                $s = str_replace(',', '.', $s); // convert decimal comma to dot
+                // Keep only valid number characters
+                $s = preg_replace('/[^0-9.\-]/', '', $s);
+                // Avoid strings like '.' or '-'
+                if ($s === '' || $s === '.' || $s === '-' || $s === '-.') {
+                    return null;
+                }
+                return $s;
+            }
+            return $value;
+        };
+
+        // Normalize array of donation values
+        $nilaiDonasi = $this->input('nilaidonasi', []);
+        if (is_array($nilaiDonasi)) {
+            $nilaiDonasi = array_map($normalizeCurrency, $nilaiDonasi);
+        }
+
+        // Normalize totalnilai if present
+        $totalNilai = $this->input('totalnilai');
+        $totalNilai = $normalizeCurrency($totalNilai);
+
+        $this->merge([
+            'nilaidonasi' => $nilaiDonasi,
+            'totalnilai'  => $totalNilai,
+        ]);
     }
 }

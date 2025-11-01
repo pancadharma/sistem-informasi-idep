@@ -40,6 +40,11 @@ class Kegiatan extends Model implements HasMedia
         'tanggalselesai'
     ];
 
+    protected $casts = [
+        'created_at'   => 'datetime',
+        'updated_at'   => 'datetime',
+    ];
+
     protected $fillable = [
         'programoutcomeoutputactivity_id',
         'jeniskegiatan_id',
@@ -267,7 +272,7 @@ class Kegiatan extends Model implements HasMedia
 
     public function konsultasi()
     {
-        return $this->hasMany(Kegiatan_Konsultasi::class, 'kegiatan_id');
+        return $this->hasOne(Kegiatan_Konsultasi::class, 'kegiatan_id');
     }
 
     public function kunjungan()

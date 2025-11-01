@@ -10,7 +10,8 @@ $(document).ready(function(){
         placeholder: placeholder,
         width: '100%',
         allowClear: true,
-        minimumInputLength: 3,
+        // minimumInputLength: 3,
+        minimumResultsForSearch: -1, // Disable search for static dropdowns
         ajax: {
             url: url_permission,
             method: 'GET',
@@ -159,7 +160,8 @@ $(document).ready(function(){
                     });
                     $('#edit_permissions').select2({
                         data: permissions,
-                        minimumInputLength: 3,
+                        // minimumInputLength: 3,
+                        minimumResultsForSearch: -1,
                         dropdownParent: $('#EditRoleModal'),
                         placeholder: "{{ __('global.pleaseSelect') }}",
                         width: '100%',

@@ -14,33 +14,16 @@ class PermissionRoleTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin_permissions = Permission::all();
-        Role::findOrFail(1)->permissions()->sync($admin_permissions->pluck('id'));
-        $user_permissions = $admin_permissions->filter(function ($permission) {
-            return substr($permission->nama, 0, 5) != 'user_' && substr($permission->nama, 0, 5) != 'role_' && substr($permission->nama, 0, 11) != 'permission_';
-        });
-        // Role::findOrFail(2)->permissions()->sync($user_permissions);
+        $allPermissions = Permission::all()->pluck('id');
 
-        // $admin_permissions = Permission::all();
+        // Super Admin gets all permissions
+        Role::findOrFail(1)->permissions()->sync(
+            $allPermissions->mapWithKeys(fn($id) => [$id => ['updated_at' => now()]])->toArray()
+        );
 
-        // // For admin role (ID 1)
-        // Role::findOrFail(1)->permissions()->sync(
-        //     $admin_permissions->pluck('id')->mapWithKeys(function ($id) {
-        //         return [$id => ['updated_at' => now()]];
-        //     })->toArray()
-        // );
-
-        // For user role (assuming ID 2)
-        // $user_permissions = $admin_permissions->filter(function ($permission) {
-        //     return substr($permission->nama, 0, 5) != 'user_' &&
-        //         substr($permission->nama, 0, 5) != 'role_' &&
-        //         substr($permission->nama, 0, 11) != 'permission_';
-        // });
-
+        // Administrator also gets all permissions (same as Super Admin)
         Role::findOrFail(2)->permissions()->sync(
-            $user_permissions->pluck('id')->mapWithKeys(function ($id) {
-                return [$id => ['updated_at' => now()]];
-            })->toArray()
+            $allPermissions->mapWithKeys(fn($id) => [$id => ['updated_at' => now()]])->toArray()
         );
     }
 }
