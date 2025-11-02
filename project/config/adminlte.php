@@ -387,6 +387,13 @@ return [
                     // 'can'       => ['target_progress_access'],
                     'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
                 ],
+                [
+                    'text'      => 'FRM',
+                    'icon'      => 'nav-icon bi bi-chat-quote', 
+                    'icon_text' => 'feedback',
+                    'route'     => 'feedback.index',
+                    'active'    => ['feedback', 'feedback*', 'regex:@^feedback/[0-9]+$@'],
+                ]
             ],
         ],
         [

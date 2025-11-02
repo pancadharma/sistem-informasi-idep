@@ -41,6 +41,7 @@ use App\Http\Controllers\API\BeneficiaryController;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
 use App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller;
+use App\Http\Controllers\API\FeedbackController;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
@@ -533,4 +534,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
         Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
     });
+
+    Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
+
+        Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
+            Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
+        });
 });
