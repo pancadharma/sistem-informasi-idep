@@ -51,13 +51,13 @@
         {{-- <div class="collapse" id="filterCollapse"> ... form filter lama ... </div> --}}
 
         <div class="card-body table-responsive"> {{-- Tambahkan kelas table-responsive di sini --}}
-            {{-- Pesan Sukses --}}
+            <!-- {{-- Pesan Sukses --}}
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            @endif -->
 
             {{-- Tabel Data - Sekarang hanya kerangka --}}
             <table class="table table-bordered table-hover" id="feedbackTable"> {{-- Tambahkan ID unik --}}
@@ -96,6 +96,19 @@
 
 {{-- Jika tidak pakai sistem plugin, pastikan SEMUA file JS yang diperlukan sudah di-load SEBELUM @include ini --}}
 {{-- Termasuk: jQuery, DataTables core, DT Bootstrap adapter, DT Buttons, Buttons Bootstrap adapter, JSZip, pdfmake, Buttons HTML5, Buttons Print, Buttons ColVis, SweetAlert2 --}}
+{{-- Script untuk meneruskan pesan session ke JS --}}
+    @if (session('success'))
+    <script>
+        window.serverMessage = { type: 'success', message: @json(session('success')) };
+    </script>
+    @endif
+    @if (session('error'))
+    <script>
+        window.serverMessage = { type: 'error', message: @json(session('error')) };
+    </script>
+    @endif
+    {{-- / Script untuk meneruskan pesan session ke JS --}}
+
 
 {{-- Include file JavaScript DataTables yang baru dibuat --}}
 @include('tr.feedback.js.index')

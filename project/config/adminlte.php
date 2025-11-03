@@ -393,7 +393,7 @@ return [
                     'icon_text' => 'feedback',
                     'route'     => 'feedback.index',
                     'active'    => ['feedback', 'feedback*', 'regex:@^feedback/[0-9]+$@'],
-                ],
+                ]
             ],
         ],
         [

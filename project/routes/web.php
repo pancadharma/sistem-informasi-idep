@@ -534,20 +534,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('lokasi', [App\Http\Controllers\API\BenchmarkController::class, 'getLokasi'])->name('lokasi');
         Route::get('compiler', [App\Http\Controllers\API\BenchmarkController::class, 'getCompilers'])->name('compiler');
     });
-});
-    // Feedback & Response Model
-    // Route::group(['prefix' => 'feedback', 'as' => 'feedback.'], function () {
-    //     Route::get('/',                             [App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('index');
-    //     Route::get('/show',  [App\Http\Controllers\Admin\FeedbackController::class, 'show'])->name('show');
-    //     Route::get('/edit',  [App\Http\Controllers\Admin\FeedbackController::class, 'edit'])->name('edit');
-    //     Route::delete('/destroy',  [App\Http\Controllers\Admin\FeedbackController::class, 'destroy'])->name('destroy');
-    // });
 
-    // Route resource untuk semua operasi CRUD feedback
     Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
-});
 
-Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
-    Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
-    // Tambahkan route API lain untuk feedback jika perlu
+        Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
+            Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
+        });
 });
