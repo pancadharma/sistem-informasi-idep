@@ -114,7 +114,7 @@ class MealsTargetProgressController extends Controller
 									<i class='bi bi-plus'></i>
 								</button>
 							";
-					
+
 					return $button;
 				})
 				->rawColumns([
@@ -170,7 +170,7 @@ class MealsTargetProgressController extends Controller
 								<i class='bi bi-eye'></i>
 							</button>
 						";
-					
+
 					return $button;
 				})
 				->rawColumns([
@@ -287,8 +287,12 @@ class MealsTargetProgressController extends Controller
 				->addColumn('indent', function ($target) {
 					return $target->indent;
 				})
+				->addColumn('level_text', function ($target) {
+					return $target->level_text;
+				})
 				->rawColumns([
 					'level',
+					'level_text',
 					'achievements',
 					'progress',
 					'persentase_complete',
@@ -486,7 +490,7 @@ class MealsTargetProgressController extends Controller
 	private function splitupTargetsObjects(?object $targetProgress, ?int $indent=1, ?object $object, string $type="", ?string $idx=null, ?string $parentType=null, ?string $parentIdx=null, ?bool $bold=false):array{
 		$targets	= $this->splitupTargets($object?->target);
 		$id			= collect([$parentIdx, $idx])->filter()->join('.');
-		
+
 		return array_map(function($target, $tg_idx) use ($targetProgress, $indent, $parentType, $parentIdx, $object, $type, $id, $bold){
 			$level		= empty($id) ? $tg_idx+1 : $id;
 			$level_text	= collect([$type, $level])->filter()->join(' ');
@@ -523,13 +527,13 @@ class MealsTargetProgressController extends Controller
 				])
 				->get()
 				->values();
-		
+
 			try {
 				$detail = $details->get($tg_idx) ?? $details->first();
 			} catch (Throwable $th) {
 				$detail = null;
 			}
-			
+
 			// Fallback: make a new model if nothing found
 			if (!$detail || !$detail->exists) {
 				$detail = $targetProgress->details()->make([
@@ -538,7 +542,7 @@ class MealsTargetProgressController extends Controller
 					'targetable_id'     => $attributes->targetable_id,
 					'targetable_type'   => $attributes->targetable_type,
 				]);
-			}		
+			}
 
 			$attributes->detail = $detail;
 
@@ -550,7 +554,7 @@ class MealsTargetProgressController extends Controller
 		$base   = "target_progress[details][$index]";
 		$name   = $attribute ? "[$attribute]" : '';
 		$suffix = $multiple ? '[]' : '';
-		
+
 		return $base . $name . $suffix;
 	}
 }
