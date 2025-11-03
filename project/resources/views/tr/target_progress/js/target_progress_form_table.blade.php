@@ -1,5 +1,5 @@
 <script>
-	let params	= @json($params ?? []); 
+	let params	= @json($params ?? []);
 
 	const modalTemplate = $(`
 			<div class="modal fade" id="modal-template" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -200,6 +200,104 @@
 							$('#ModalHistoryTargetProgress').modal("show");
 						},
 					},
+                    // {
+                    //     extend: "csvHtml5",
+                    //     text: '<i class="fas fa-file-csv"></i> <span class="d-none d-md-inline"></span>',
+                    //     className: 'btn btn-success',
+                    //     attr: {
+                    //         id: 'exportCSV',
+                    //         title: 'Click to export CSV',
+                    //     },
+                    //     title: function() {
+                    //         let programName = $('#program_id option:selected').text().trim();
+                    //         let reportDate = $('#target_progress_tanggal').val();
+                    //         return `Target Progress Report - ${programName} - ${reportDate}`;
+                    //     },
+                    //     exportOptions: {
+                    //         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // Export all visible columns except the hidden ones
+                    //         format: {
+                    //             body: function ( data, row, column, node ) {
+                    //                 // For columns with inputs/textareas, get the value. Otherwise, get cell text.
+                    //                 let input = $(node).find('input, textarea, select').first();
+                    //                 if (input.length) {
+                    //                     // For select2, we get the text of the selected option
+                    //                     if (input.hasClass('select2-hidden-accessible')) {
+                    //                         return input.find('option:selected').text();
+                    //                     }
+                    //                     return input.val();
+                    //                 }
+                    //                 return $(node).text();
+                    //             }
+                    //         }
+                    //     }
+                    // },
+                    {
+                        extend: "excelHtml5",
+                        text: '<i class="fas fa-file-excel"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-info',
+                        attr: {
+                            id: 'exportXLSX',
+                            title: 'Click to export Excel',
+                        },
+                        title: function() {
+                            let programName = $('#program_id option:selected').text().trim();
+                            let reportDate = $('#target_progress_tanggal').val();
+                            return `Target Progress Report - ${programName} - ${reportDate}`;
+                        },
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                            format: {
+                                body: function ( data, row, column, node ) {
+                                    let input = $(node).find('input, textarea, select').first();
+                                    if (input.length) {
+                                        if (input.hasClass('select2-hidden-accessible')) {
+                                            return input.find('option:selected').text();
+                                        }
+                                        return input.val();
+                                    }
+                                    return $(node).text();
+                                }
+                            }
+                        }
+                    },
+                    // {
+                    //     extend: "pdfHtml5",
+                    //     text: '<i class="fas fa-file-pdf"></i> <span class="d-none d-md-inline"></span>',
+                    //     className: 'btn btn-danger',
+                    //     attr: {
+                    //         id: 'exportPDF',
+                    //         title: 'Click to export PDF',
+                    //     },
+                    //     orientation: 'landscape',
+                    //     pageSize: 'A4',
+                    //     title: function() {
+                    //         let programName = $('#program_id option:selected').text().trim();
+                    //         let reportDate = $('#target_progress_tanggal').val();
+                    //         return `Target Progress Report - ${programName} - ${reportDate}`;
+                    //     },
+                    //     exportOptions: {
+                    //         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    //         // The PDF export reads data directly, so a format.body function is not needed here.
+                    //         // It will automatically pick up the values from the input fields.
+                    //     },
+                    //     customize: function (doc) {
+                    //         // Set a smaller font size for the entire document
+                    //         doc.defaultStyle.fontSize = 8;
+                    //         doc.styles.tableHeader.fontSize = 9;
+
+                    //         // Set column widths. The sum of '*' should be 100.
+                    //         // 'auto' makes the column as wide as its content.
+                    //         // '*' makes the column share the remaining space.
+                    //         doc.content[1].table.widths = [
+                    //             'auto', '15%', '15%', '15%', '10%',
+                    //             'auto', 'auto', 'auto', 'auto', '15%',
+                    //             '15%', 'auto', '15%'
+                    //         ];
+
+                    //         // Set page margins [left, top, right, bottom]
+                    //         doc.pageMargins = [20, 60, 20, 30];
+                    //     }
+                    // },
 					{
 						extend: 'colvis',
 						text: '<i class="fas fa-eye" aria-hidden="true"></i>',
@@ -262,7 +360,18 @@
 						orderable: false,
 						searchable: true,
 					},
-					{data: 'level',					name: 'level',					title: '{{ __('cruds.target_progress.level') }}'},
+					{
+						data: 'level',
+						name: 'level',
+						title: '{{ __('cruds.target_progress.level') }}',
+						render: function(data, type, row) {
+							// For display, use the formatted text with indentation.
+							if (type === 'display') {
+								return row.level_text;
+							}
+							// For export and other types, use the clean text.
+							return row.level_text.replace(/<[^>]+>/g, '');
+						}},
 					{data: 'deskripsi',				name: 'deskripsi',				title: '{{ __('cruds.target_progress.deskripsi') }}'},
 					{data: 'indikator',				name: 'indikator',				title: '{{ __('cruds.target_progress.indikator') }}'},
 					{data: 'target',				name: 'target',					title: '{{ __('cruds.target_progress.target') }}'},
@@ -437,7 +546,7 @@
 							$persentase_complete	= fields.persentase_complete,
 							progress				= $this.val(),
 							persentase_complete		= $persentase_complete.val();
-							
+
 						if(progress > 100){
 							progress = 100;
 						}else if(progress < 0){
@@ -453,7 +562,7 @@
 							$progress			= fields.progress,
 							persentase_complete	= $this.val(),
 							progress			= $progress.val();
-							
+
 						if(persentase_complete > 100){
 							persentase_complete = 100;
 						}else if(persentase_complete < 0){
@@ -464,7 +573,7 @@
 						$this.val(persentase_complete).trigger("change.setHiddenFields");
 						$progress.val(progress).trigger("change.setHiddenFields");
 					});
-					
+
 					// SETUP SELECT2 - untuk status & risk input
 					fields.status.select2({
 						placeholder: "{{__('enums.target_progress_status.placeholder')}}",
