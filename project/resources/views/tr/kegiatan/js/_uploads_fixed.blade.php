@@ -10,10 +10,10 @@
 
         function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize,
             maxCount) {
-
+            
             // Determine the caption prefix based on the file input ID
             const captionPrefix = fileInputId === 'dokumen_pendukung' ? 'dokumen_keterangan' : 'media_keterangan';
-
+            
             $("#" + fileInputId).fileinput({
                     theme: "fa5",
                     showBrowse: false,

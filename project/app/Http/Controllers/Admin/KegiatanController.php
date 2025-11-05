@@ -912,12 +912,14 @@ class KegiatanController extends Controller
             // Generate filename with timestamp
             $timestamp = now()->format('Ymd_His');
             $fileName = "{$sanitizedBase}_{$timestamp}.{$extension}";
+            // $keterangan = $request->input('keterangan', [])[$index] ?? '';
 
             // Add media to kegiatan with custom name as caption
             $media = $kegiatan
                 ->addMedia($file)
                 ->withCustomProperties([
-                    'keterangan' => $name !== '' ? $name : null,
+                    // 'keterangan' => $name !== '' ? $name : null,
+                    'keterangan' => $request->input('keterangan'),
                     'user_id' => auth()->user()->id,
                     'original_name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
                     'extension' => $extension,
