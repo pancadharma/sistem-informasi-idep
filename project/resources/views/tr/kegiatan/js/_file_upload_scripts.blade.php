@@ -87,8 +87,13 @@ $(document).ready(function() {
             // Handle preloaded (existing) files
             const caption = data.caption || data.name;
             const uid = data.key;
-            const label = data.extra.keterangan || data.caption.replace(/<[^>]+>/g, '');
-            addCaptionInput(uid, label, false);
+            const label = data.extra.original_name || data.extra.keterangan || data.caption.replace(/<[^>]+>/g, '');
+
+            // Get the actual caption from the initialPreviewConfig
+            const captionValue = data.extra && data.extra.keterangan ? data.extra.keterangan :
+                                (data.caption ? data.caption : data.filename || '');
+
+            addCaptionInput(uid, label, false, captionValue);
             $(`#${$.escapeSelector(previewId)}`).attr('data-unique-id', uid);
 
         })
@@ -97,42 +102,38 @@ $(document).ready(function() {
 
             Array.from(files).forEach((file, i) => {
                 const uid = 'new-' + Date.now() + '-' + i;
-                addCaptionInput(uid, file.name, true);
+                addCaptionInput(uid, file.name, true, '');
                 fileCaptions[uid] = file.name;
             });
         })
 
         .on('fileloaded', function(event, file, previewId, index, reader) {
-
-
             const uidKeys = Object.keys(fileCaptions);
             const uid = uidKeys[index];
             $('#' + previewId).attr('data-unique-id', uid);
+        })
 
-        }).on('fileremoved', function(event, id) {
+        .on('fileremoved', function(event, id, previewId) {
             const uid = $('#' + previewId).data('unique-id');
             $('#caption-group-' + uid).remove();
+        })
 
-
-        }).on('fileclear', function(event) {
+        .on('fileclear', function(event) {
             $('#' + captionContainerId).empty();
             fileCaptions = {};
         });
 
-        function addCaptionInput(uid, label, isNew) {
+        function addCaptionInput(uid, label, isNew, captionValue) {
             $('#' + captionContainerId).append(`
                     <div class="form-group ${isNew ? 'new-file' : ''}" id="caption-group-${uid}">
                         <label class="control-label mb-0 small mt-2" for="keterangan-${uid}">
                             {{ __('cruds.program.ket_file') }}: <span class="text-red">${label}</span>
                         </label>
-                        <input type="text" class="form-control" name="${captionPrefix}[]" id="${captionPrefix}-${uid}">
+                        <input type="text" class="form-control edit-page" name="${captionPrefix}[]" id="${captionPrefix}-${uid}" value="${captionValue || ''}">
                     </div>
             `);
         }
-
     }
-
-
 });
 
 </script>
