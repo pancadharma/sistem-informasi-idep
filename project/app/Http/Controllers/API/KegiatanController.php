@@ -450,7 +450,9 @@ class KegiatanController extends Controller
             $this->storePenulisKegiatan($request, $kegiatan);
 
             // Handle file uploads asynchronously for large files
-            $this->queueMediaUploads($request, $kegiatan);
+            // $this->queueMediaUploads($request, $kegiatan);
+            $this->handleMediaUploads($request, $kegiatan);
+
 
             DB::commit();
 
@@ -817,11 +819,13 @@ class KegiatanController extends Controller
         // Handle new file uploads
         if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
             $tempPaths = [];
-            $captions = $request->input('keterangan_new', []);
             $collections = [];
+            $captions = [];
 
             if ($request->hasFile('dokumen_pendukung')) {
                 foreach ($request->file('dokumen_pendukung') as $index => $file) {
+                    $captions[] = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    // $keterangan = $request->input('dokumen_keterangan', [])[$index] ?? '';
                     $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'dokumen_pendukung';
@@ -830,11 +834,62 @@ class KegiatanController extends Controller
 
             if ($request->hasFile('media_pendukung')) {
                 foreach ($request->file('media_pendukung') as $index => $file) {
+                    $captions[] = $request->input('media_keterangan', [])[$index] ?? '';
                     $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'media_pendukung';
                 }
             }
+
+            \Log::info('Captions: ', $captions);
+            \Log::info('Collections: ', $collections);
+
+
+            // Queue processing for new files
+            ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);
+        }
+    }
+    protected function handleMediaUploads(StoreKegiatanRequest $request, Kegiatan $kegiatan)
+    {
+        // Handle existing media captions
+        if ($request->has('keterangan_existing')) {
+            foreach ($request->input('keterangan_existing', []) as $mediaId => $keterangan) {
+                $media = Media::find($mediaId);
+                if ($media && $media->model_id === $kegiatan->id) {
+                    $media->setCustomProperty('keterangan', $keterangan);
+                    $media->save();
+                }
+            }
+        }
+
+        // Handle new file uploads
+        if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            $collections = [];
+            $captions = [];
+
+            if ($request->hasFile('dokumen_pendukung')) {
+                foreach ($request->file('dokumen_pendukung') as $index => $file) {
+                    $captions[] = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    // $keterangan = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'dokumen_pendukung';
+                }
+            }
+
+            if ($request->hasFile('media_pendukung')) {
+                foreach ($request->file('media_pendukung') as $index => $file) {
+                    $captions[] = $request->input('media_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'media_pendukung';
+                }
+            }
+
+            \Log::info('Captions: ', $captions);
+            \Log::info('Collections: ', $collections);
+
 
             // Queue processing for new files
             ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);

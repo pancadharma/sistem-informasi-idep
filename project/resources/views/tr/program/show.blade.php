@@ -184,7 +184,7 @@
                     <i class="fas fa-users-cog"></i> Collaboration
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" id="target-groups-tab" data-toggle="tab" href="#target-groups" role="tab">
                     <i class="fas fa-bullseye"></i> Target Groups
                 </a>
@@ -193,7 +193,7 @@
                 <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
                     <i class="fas fa-tasks"></i> Activities
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </div>
     <div class="card-body">
@@ -364,7 +364,7 @@
                                         <div class="card mb-3">
                                             <div class="card-body">
                                                 <h6 class="card-title">{{ $partner->nama }}</h6>
-                                                <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p>
+                                                {{-- <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p> --}}
                                                 @if($partner->telepon)
                                                     <p class="mb-0"><i class="fas fa-phone"></i> {{ $partner->telepon }}</p>
                                                 @endif
@@ -383,17 +383,17 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Donors</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.mpendonor.mpendonor') }}</h5>
                             </div>
                             <div class="card-body">
                                 @if($program->pendonor->count() > 0)
                                     @foreach($program->pendonor as $pendonor)
                                         <div class="card mb-3">
                                             <div class="card-body">
-                                                <h6 class="card-title">{{ $pendonor->nama }}</h6>
-                                                <p class="card-text text-muted">{{ $pendonor->kategori ? $pendonor->kategori->nama : 'Uncategorized' }}</p>
+                                                <h6 class="pendonor">{{ $pendonor->nama }}</h6>
+                                                {{-- <p class="card-text text-muted">{{ $pendonor->kategori ? $pendonor->kategori->nama : 'Uncategorized' }}</p> --}}
                                                 @if($pendonor->pivot->nilaidonasi)
-                                                    <p class="mb-0"><strong>Donation:</strong> Rp {{ number_format($pendonor->pivot->nilaidonasi, 0, ',', '.') }}</p>
+                                                    <span class="mb-0"><strong>{{ __('cruds.program.donor.val') }}:</strong> Rp {{ number_format($pendonor->pivot->nilaidonasi, 0, ',', '.') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -598,7 +598,7 @@
                             </button>
                             @endcan
                         </div>
-                        
+
                         <!-- Files Section -->
                         <div class="files-section">
                             @php
@@ -669,7 +669,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <!-- If no files at all -->
                         @if($programFiles->count() == 0)
                             <div class="text-center py-5">
@@ -841,7 +841,7 @@
             </div>
 
             <!-- Target Groups Tab -->
-            <div class="tab-pane fade" id="target-groups" role="tabpanel">
+            {{-- <div class="tab-pane fade" id="target-groups" role="tabpanel">
                 <div class="row">
                     <!-- Marginalized Groups -->
                     <div class="col-md-6">
@@ -962,10 +962,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Activities Tab -->
-            <div class="tab-pane fade" id="activities" role="tabpanel">
+            {{-- <div class="tab-pane fade" id="activities" role="tabpanel">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -1073,7 +1073,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Collaboration Tab -->
             <div class="tab-pane fade" id="collaboration" role="tabpanel">
@@ -2591,17 +2591,17 @@ function uploadProgramFile() {
         preConfirm: () => {
             const files = document.getElementById('programFile').files;
             const name = document.getElementById('fileName').value;
-            
+
             if (files.length === 0) {
                 Swal.showValidationMessage('{{ __('Please select a file') }}');
                 return false;
             }
-            
+
             if (!name) {
                 Swal.showValidationMessage('{{ __('Please enter file name') }}');
                 return false;
             }
-            
+
             return { files: Array.from(files), name };
         }
     }).then((result) => {
@@ -2612,7 +2612,7 @@ function uploadProgramFile() {
                 formData.append('captions[]', result.value.name + (index > 0 ? ` ${index + 1}` : ''));
             });
             formData.append('program_id', {{ $program->id }});
-            
+
             fetch('{{ route('program.docs') }}', {
                 method: 'POST',
                 body: formData,

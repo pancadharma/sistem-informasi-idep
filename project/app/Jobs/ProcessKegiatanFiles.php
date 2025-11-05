@@ -72,6 +72,9 @@ class ProcessKegiatanFiles implements ShouldQueue
             // Build stored filename as <base>_<timestamp>_<count>.<ext>
             $fileName = "{$sanitizedBase}_{$timestamp}_{$fileCount}.{$fileExtension}";
 
+            $namaFileDokumenSaja = preg_replace('/[^A-Za-z0-9_-]+/', '_', trim($originalName));
+            $namaFileDokumen = $namaFileDokumenSaja . '.' . $fileExtension;
+
             // Caption shown to users: prefer raw caption if present, else original display name
             $keterangan = isset($this->captions[$index]) && trim($this->captions[$index]) !== ''
                 ? trim($this->captions[$index])
@@ -85,12 +88,12 @@ class ProcessKegiatanFiles implements ShouldQueue
                     ->withCustomProperties([
                         'keterangan' => $keterangan,
                         'user_id' => $this->kegiatan->user_id,
-                        'original_name' => $originalName,
+                        'original_name' => $namaFileDokumen,
                         'extension' => $fileExtension,
                         'updated_by' => $this->kegiatan->user_id
                     ])
-                    ->usingName($originalName)
-                    ->usingFileName($fileName)
+                    ->usingName($namaFileDokumenSaja)
+                    ->usingFileName($namaFileDokumen)
                     ->toMediaCollection($collectionName);
 
                 // Clean up temporary file
