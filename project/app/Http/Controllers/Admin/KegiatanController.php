@@ -383,10 +383,8 @@ class KegiatanController extends Controller
     {
         // Fetch the Kegiatan with all its relationships
         $kegiatan = Kegiatan::with([
-            'programOutcomeOutputActivity',
-            'programOutcomeOutputActivity.program_outcome_output',
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome',
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.goal',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.kaitanSdg',
             'sektor',
             'mitra',
             'user',
@@ -395,25 +393,23 @@ class KegiatanController extends Controller
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
             'kegiatan_penulis.user',
-            // 'assessment',
-            // 'sosialisasi',
-            // 'pelatihan',
-            // 'pembelanjaan',
-            // 'pengembangan',
-            // 'kampanye',
-            // 'pemetaan',
-            // 'monitoring',
-            // 'kunjungan',
-            // 'konsultasi',
-            // 'lainnya',
-            // 'goals'
+            'assessment',
+            'sosialisasi',
+            'pelatihan',
+            'pembelanjaan',
+            'pengembangan',
+            'kampanye',
+            'pemetaan',
+            'monitoring',
+            'kunjungan',
+            'konsultasi',
+            'lainnya'
         ])->findOrFail($id);
 
         // Get all the media collections
         $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
         $mediaPendukung = $kegiatan->getMedia('media_pendukung');
         $durationInDays = $kegiatan->getDurationInDays();
-
 
         // Get specific relation based on jenis kegiatan
         $jenisKegiatanId = $kegiatan->jeniskegiatan_id;
@@ -425,12 +421,12 @@ class KegiatanController extends Controller
             $kegiatanRelation = $kegiatan->$relationName;
         }
 
+        // Load peran for penulis safely
         foreach ($kegiatan->datapenulis as $penulis) {
-            $penulis->kegiatanPeran = Peran::find($penulis->pivot->peran_id);
+            $penulis->kegiatanPeran = $penulis->pivot && $penulis->pivot->peran_id
+                ? Peran::find($penulis->pivot->peran_id)
+                : null;
         }
-
-        // $lokasi = $kegiatan->lokasi;
-        // return $kegiatan->datapenulis;
 
         return view('tr.kegiatan.show', compact(
             'kegiatan',
