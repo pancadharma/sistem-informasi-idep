@@ -3,7 +3,7 @@
 @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label'))
 {{-- @section('content_header_title', __('global.details') . ' ' . __('cruds.kegiatan.label')) --}}
 @section('content_header_title')
-    <button type="button" class="btn btn-secondary btn-sm "
+    <button type="button" class="btn btn-secondary btn-sm print-btn"
         title="{{ __('global.print') . ' ' . __('cruds.kegiatan.label') }}">
         <!-- icon fa print-->
         <i class="fa fa-print"></i>
@@ -59,18 +59,22 @@
                             <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.laporan') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @foreach ($kegiatan->datapenulis as $penulis)
-                                    {{ $penulis->nama ?? '' }},
-                                @endforeach
+                                @if($kegiatan->datapenulis && is_iterable($kegiatan->datapenulis))
+                                    @foreach ($kegiatan->datapenulis as $penulis)
+                                        {{ $penulis->nama ?? '' }},
+                                    @endforeach
+                                @endif
                             </td>
                         </tr>
                         <tr class="align-middle">
                             <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.jabatan') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @foreach ($kegiatan->datapenulis as $penulis)
-                                    {{ $penulis->kegiatanPeran->nama . ',' ?? '' }}
-                                @endforeach
+                                @if($kegiatan->datapenulis && is_iterable($kegiatan->datapenulis))
+                                    @foreach ($kegiatan->datapenulis as $penulis)
+                                        {{ $penulis->kegiatanPeran?->nama . ',' ?? '' }}
+                                    @endforeach
+                                @endif
                             </td>
                         </tr>
                         <tr class="align-middle">
@@ -79,12 +83,16 @@
                             <td class="align-middle w-50">{{ $kegiatan->jenisKegiatan->nama ?? '' }}</td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.jabatan') }}</th>
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @foreach ($kegiatan->sektor as $key => $value)
-                                    {{ $value->nama . ',' ?? '' }}
-                                @endforeach
+                                @if($kegiatan->sektor && is_iterable($kegiatan->sektor))
+                                    @foreach ($kegiatan->sektor as $key => $value)
+                                    <span class="badge bg-warning text-dark me-1">
+                                            {{ $value->nama . ',' ?? '' }}
+                                    </span>
+                                    @endforeach
+                                @endif
                             </td>
                         </tr>
                         <tr class="align-middle">
@@ -118,9 +126,11 @@
                             <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.nama_mitra') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @foreach ($kegiatan->mitra as $partner)
-                                    {{ $partner->nama . ',' ?? '' }}
-                                @endforeach
+                                @if($kegiatan->mitra && is_iterable($kegiatan->mitra))
+                                    @foreach ($kegiatan->mitra as $partner)
+                                        {{ $partner->nama . ',' ?? '' }}
+                                    @endforeach
+                                @endif
                             </td>
                         </tr>
                         <tr class="align-middle">
@@ -132,11 +142,11 @@
                             <th class="align-middle w-25">{{ __('cruds.kegiatan.tempat') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @if ($kegiatan->lokasi->isNotEmpty())
+                                @if($kegiatan->lokasi && is_iterable($kegiatan->lokasi) && $kegiatan->lokasi->isNotEmpty())
                                     {{ $kegiatan->lokasi->unique('kabupaten_id')->pluck('desa.kecamatan.kabupaten.nama')->implode(', ') }}
                                     @if ($kegiatan->lokasi->unique('provinsi_id')->count() == 1)
                                         ,
-                                        {{ $kegiatan->lokasi->first()->desa->kecamatan->kabupaten->provinsi->nama ?? '' }}
+                                        {{ $kegiatan->lokasi->first()?->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '' }}
                                     @endif
                                 @endif
                             </td>
@@ -146,52 +156,30 @@
                                 {{ __('Program Hierarchy & Progress') }} <i class="fas fa-sitemap"></i>
                             </th>
                         </tr>
-                    </tbody>
-                </table>
-
-                <!-- Program Hierarchy Details -->
-                <table class="table datatable table-sm mb-0 table-hover">
-                    <tbody>
                         <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Program Outcome') }}</th>
+                            <th class="align-middle w-25">{{ __('Program Outcome Target') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                <strong>{{ $kegiatan->activity->program_outcome_output->program_outcome->nama ?? '-' }}</strong>
-                                @if($kegiatan->activity->program_outcome_output->program_outcome->target_progress)
-                                    <div class="progress mt-1" style="height: 5px;">
-                                        <div class="progress-bar bg-success" role="progressbar"
-                                             style="width: {{ $kegiatan->activity->program_outcome_output->program_outcome->target_progress->progress_percentage ?? 0 }}%"
-                                             aria-valuenow="{{ $kegiatan->activity->program_outcome_output->program_outcome->target_progress->progress_percentage ?? 0 }}"
-                                             aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <small class="text-muted">{{ $kegiatan->activity->program_outcome_output->program_outcome->target_progress->progress_percentage ?? 0 }}% Complete</small>
-                                @endif
+                                {{-- <strong>{{ $kegiatan->activity?->program_outcome_output?->program_outcome?->nama ?? '-' }}</strong> --}}
+                                <strong>{{ $kegiatan->activity?->program_outcome_output?->program_outcome?->target ?? '-' }}</strong>
                             </td>
                         </tr>
                         <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Program Output') }}</th>
+                            <th class="align-middle w-25">{{ __('Program Outcome Output Target') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                <strong>{{ $kegiatan->activity->program_outcome_output->nama ?? '-' }}</strong>
-                                @if($kegiatan->activity->program_outcome_output->target_reinstra)
-                                    <div class="mt-1">
-                                        <small class="text-muted">
-                                            Target: {{ $kegiatan->activity->program_outcome_output->target_reinstra->target_value ?? 0 }}
-                                            {{ $kegiatan->activity->program_outcome_output->target_reinstra->satuan->nama ?? '' }}
-                                        </small>
-                                    </div>
-                                @endif
+                                <strong>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-' }}</strong>
                             </td>
                         </tr>
                         <tr class="align-middle">
                             <th class="align-middle w-25">{{ __('Activity Target') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
-                                @if($kegiatan->activity->target_reinstra)
-                                    <span class="badge bg-primary">{{ $kegiatan->activity->target_reinstra->target_value ?? 0 }} {{ $kegiatan->activity->target_reinstra->satuan->nama ?? '' }}</span>
+                                {{-- @if($kegiatan->activity->target_reinstra)
+                                    <span class="badge bg-primary">{{ $kegiatan->activity?->target_reinstra?->target_value ?? 0 }} {{ $kegiatan->activity?->target_reinstra?->satuan?->nama ?? '' }}</span>
                                 @else
                                     <span class="text-muted">{{ __('No target set') }}</span>
-                                @endif
+                                @endif --}}
                             </td>
                         </tr>
                         <tr class="align-middle">
@@ -216,8 +204,8 @@
                                 @endif
                             </td>
                         </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('SDGs') }}</th>
+                        {{-- <tr class="align-middle">
+                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</th>
                             <td class="text-center align-middle" style="width: 1%;">:</td>
                             <td class="align-middle w-50">
                                 @php
@@ -228,13 +216,13 @@
                                 @endphp
                                 @if($sdgs && $sdgs->count() > 0)
                                     @foreach($sdgs as $sdg)
-                                        <span class="badge bg-warning text-dark me-1">SDG {{ $sdg->kode }}</span>
+                                        <span class="badge bg-warning text-dark me-1"> {{ $sdg->kode }}</span>
                                     @endforeach
                                 @else
                                     <span class="text-muted">{{ __('No SDGs linked') }}</span>
                                 @endif
                             </td>
-                        </tr>
+                        </tr> --}}
                     </tbody>
                 </table>
 
@@ -332,13 +320,13 @@
                     <div class="row text-center">
                         <div class="col-4">
                             <div class="border rounded p-2">
-                                <h3 class="mb-0 text-primary">{{ optional($kegiatan->lokasi)->count() ?? 0 }}</h3>
+                                <h3 class="mb-0 text-primary">{{ $kegiatan->lokasi && is_iterable($kegiatan->lokasi) ? $kegiatan->lokasi->count() : 0 }}</h3>
                                 <small>{{ __('Locations') }}</small>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="border rounded p-2">
-                                <h3 class="mb-0 text-success">{{ optional($kegiatan->mitra)->count() ?? 0 }}</h3>
+                                <h3 class="mb-0 text-success">{{ $kegiatan->mitra && is_iterable($kegiatan->mitra) ? $kegiatan->mitra->count() : 0 }}</h3>
                                 <small>{{ __('Partners') }}</small>
                             </div>
                         </div>
@@ -1406,6 +1394,58 @@
                     this.style.boxShadow = '0 0.125rem 0.25rem rgba(0,0,0,0.075)';
                 });
             });
+
+            // Print functionality
+            const printBtn = document.querySelector('.print-btn');
+            if (printBtn) {
+                printBtn.addEventListener('click', function() {
+                    window.print();
+                });
+            }
         });
     </script>
-@endpush
+
+    @push('styles')
+    <style media="print">
+        body {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .card-tools, .btn, .action-buttons, .file-actions {
+            display: none !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+
+        .table {
+            font-size: 10px;
+        }
+
+        .table th, .table td {
+            padding: 4px 8px !important;
+        }
+
+        .progress {
+            height: 3px !important;
+        }
+
+        .badge {
+            font-size: 8px !important;
+            padding: 2px 4px !important;
+        }
+
+        .section-title {
+            font-size: 12px !important;
+            margin-top: 15px !important;
+            margin-bottom: 8px !important;
+        }
+
+        @page {
+            margin: 1cm;
+        }
+    </style>
+    @endpush

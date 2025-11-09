@@ -331,6 +331,10 @@ class Kegiatan extends Model implements HasMedia
     {
         return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
     }
+    public function target_reinstra()
+    {
+        return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+    }
 
 
     public function user()

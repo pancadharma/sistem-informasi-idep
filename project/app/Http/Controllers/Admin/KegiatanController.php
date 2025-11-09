@@ -206,37 +206,92 @@ class KegiatanController extends Controller
         }
 
         if ($format === 'docx') {
-            $phpWord = new PhpWord();
-            $section = $phpWord->addSection();
-            $phpWord->setDefaultFontName('Times New Roman');
-            $fontStyleName = 'oneUserDefinedStyle';
-            $phpWord->addFontStyle(
-                $fontStyleName,
-                array('name' => 'Tahoma', 'size' => 12, 'color' => '1B2232', 'bold' => true)
-            );
+            try {
+                $phpWord = new PhpWord();
+                $section = $phpWord->addSection();
 
-            $fontStyle = new \PhpOffice\PhpWord\Style\Font();
-            $fontStyle->setBold(true);
-            $fontStyle->setName('Tahoma');
-            $fontStyle->setSize(13);
+                // Set default styles
+                $phpWord->setDefaultFontName('Times New Roman');
+                $phpWord->setDefaultFontSize(12);
 
-            $html = view('tr.kegiatan.export', $data)->render();
-            Html::addHtml($section, $html, true, false);
+                // Define styles
+                $phpWord->addFontStyle('headerStyle', [
+                    'name' => 'Times New Roman',
+                    'size' => 16,
+                    'bold' => true,
+                    'color' => '000000'
+                ]);
 
-            $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan');
-            $tempFilePath = pathinfo($tempFile, PATHINFO_DIRNAME);
-            $tempFileName = pathinfo($tempFile, PATHINFO_BASENAME);
+                $phpWord->addFontStyle('titleStyle', [
+                    'name' => 'Times New Roman',
+                    'size' => 14,
+                    'bold' => true,
+                    'color' => '000000'
+                ]);
 
-            $phpWord->setDefaultFontSize(12);
-            $phpWord->setDefaultFontName('Times New Roman');
-            $phpWord->setDefaultParagraphStyle([
-                'fontSize' => 12,
-                'fontName' => 'Times New Roman',
-            ]);
+                $phpWord->addFontStyle('normalStyle', [
+                    'name' => 'Times New Roman',
+                    'size' => 11,
+                    'color' => '000000'
+                ]);
 
-            $tempFile = $tempFilePath . '/' . $tempFileName . '.docx';
-            $phpWord->save($tempFile, 'Word2007', true); // save the document and download it
-            return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')->deleteFileAfterSend(true);
+                $html = view('tr.kegiatan.export', $data)->render();
+
+                // Clean HTML for better Word conversion - more aggressive cleaning
+                $html = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $html);
+                $html = preg_replace('/<link[^>]*>/is', '', $html);
+                $html = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $html);
+
+                // Remove problematic HTML5 tags that might cause XML parsing issues
+                $html = preg_replace('/<[^>]+>/s', '', $html); // Remove all HTML tags
+
+                // Convert HTML entities to plain text
+                $html = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+                // Remove any remaining XML-invalid characters
+                $html = preg_replace('/[^\x09\x0A\x0D\x20-\xD7FF\xE000-\xFFFD]/u', '', $html);
+
+                // Create a simple HTML structure for Word conversion
+                $cleanHtml = '<html><head><meta charset="UTF-8"></head><body>';
+                $cleanHtml .= nl2br($html);
+                $cleanHtml .= '</body></html>';
+
+                Html::addHtml($section, $cleanHtml, false, false);
+
+                // Create temporary file with proper cleanup
+                $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan_' . $kegiatan->id);
+                if (!$tempFile) {
+                    throw new \Exception('Failed to create temporary file');
+                }
+
+                // Ensure the file has .docx extension
+                $tempFile = $tempFile . '.docx';
+
+                // Save the document
+                $phpWord->save($tempFile, 'Word2007');
+
+                // Verify file exists before download
+                if (!file_exists($tempFile)) {
+                    throw new \Exception('DOCX file was not created successfully');
+                }
+
+                // Set up cleanup
+                register_shutdown_function(function() use ($tempFile) {
+                    if (file_exists($tempFile)) {
+                        @unlink($tempFile);
+                    }
+                });
+
+                return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')
+                    ->deleteFileAfterSend(true);
+
+            } catch (\Exception $e) {
+                \Log::error('DOCX export failed for kegiatan ' . $kegiatan->id . ': ' . $e->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to generate DOCX export: ' . $e->getMessage()
+                ], 500);
+            }
         }
 
         abort(404);
@@ -329,6 +384,9 @@ class KegiatanController extends Controller
         // Fetch the Kegiatan with all its relationships
         $kegiatan = Kegiatan::with([
             'programOutcomeOutputActivity',
+            'programOutcomeOutputActivity.program_outcome_output',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
             'sektor',
             'mitra',
             'user',
@@ -336,6 +394,19 @@ class KegiatanController extends Controller
             'jenisKegiatan',
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
+            // 'assessment',
+            // 'sosialisasi',
+            // 'pelatihan',
+            // 'pembelanjaan',
+            // 'pengembangan',
+            // 'kampanye',
+            // 'pemetaan',
+            // 'monitoring',
+            // 'kunjungan',
+            // 'konsultasi',
+            // 'lainnya',
+            // 'goals'
         ])->findOrFail($id);
 
         // Get all the media collections
