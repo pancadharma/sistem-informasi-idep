@@ -27,12 +27,9 @@
                 </button>
             </div>
         </div>
-        {{-- tr kegiatan data --}}
         <!-- Activity Metrics Section -->
-
         <div class="card-body border-top">
             <div class="col-md-12">
-                {{-- <h5 class="text-success"><i class="fas fa-tasks me-2"></i>{{ __('Activity Metrics') }}</h5> --}}
                 <div class="row text-center">
                     <div class="col-4">
                         <div class="border rounded p-2">
@@ -1015,48 +1012,4 @@
             }
         });
     </script>
-
-    @push('styles')
-    <style media="print">
-        body {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .card-tools, .btn, .action-buttons, .file-actions {
-            display: none !important;
-        }
-
-        .card {
-            box-shadow: none !important;
-            border: 1px solid #ddd !important;
-        }
-
-        .table {
-            font-size: 10px;
-        }
-
-        .table th, .table td {
-            padding: 4px 8px !important;
-        }
-
-        .progress {
-            height: 3px !important;
-        }
-
-        .badge {
-            font-size: 8px !important;
-            padding: 2px 4px !important;
-        }
-
-        .section-title {
-            font-size: 12px !important;
-            margin-top: 15px !important;
-            margin-bottom: 8px !important;
-        }
-
-        @page {
-            margin: 1cm;
-        }
-    </style>
 @endpush

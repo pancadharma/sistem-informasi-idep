@@ -32,15 +32,15 @@
             </div>
         </div>
     </div>
+    <!-- Quick Stats Row -->
     <div class="card-body">
-        <!-- Quick Stats Row -->
         <div class="row mb-4">
             <div class="col-md-3 col-sm-6">
                 <div class="info-box bg-primary">
                     <span class="info-box-icon"><i class="fas fa-users"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Beneficiaries</span>
-                        <span class="info-box-number">{{ $kegiatan->totalBeneficiaries ?? '-' }}</span>
+                        <span class="info-box-text">Total {{ __('cruds.kegiatan.peserta.label') }}</span>
+                        <span class="info-box-number">{{ $kegiatan->penerimamanfaattotal ?? '-' }}</span>
                     </div>
                 </div>
             </div>
@@ -77,6 +77,7 @@
 
 <!-- Kegiatan Details Tabs -->
 <div class="card">
+    <!--Tabs -->
     <div class="card-header p-0">
         <ul class="nav nav-tabs" id="kegiatanTabs" role="tablist">
             <li class="nav-item">
@@ -86,32 +87,32 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="beneficiaries-tab" data-toggle="tab" href="#beneficiaries" role="tab">
-                    <i class="fas fa-users"></i> Beneficiaries
+                    <i class="fas fa-users"></i>  {{ __('cruds.kegiatan.peserta.label') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="team-tab" data-toggle="tab" href="#team" role="tab">
-                    <i class="fas fa-user-friends"></i> Team
+                    <i class="fas fa-user-friends"></i> {{ __('cruds.kegiatan.penulis.laporan') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab">
-                    <i class="fas fa-handshake"></i> Partners
+                    <i class="fas fa-handshake"></i> {{ __('cruds.kegiatan.basic.mitra') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="locations-tab" data-toggle="tab" href="#locations" role="tab">
-                    <i class="fas fa-map-marked-alt"></i> Locations
+                    <i class="fas fa-map-marked-alt"></i> {{ __('cruds.kegiatan.basic.lokasi_kegiatan') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab">
-                    <i class="fas fa-folder-open"></i> Documents
+                    <i class="fas fa-folder-open"></i> {{ __('cruds.kegiatan.file.label') }}
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab">
-                    <i class="fas fa-chart-line"></i> Hasil Kegiatan
+                    <i class="fas fa-chart-line"></i> {{ __('cruds.kegiatan.hasil.label') }}
                 </a>
             </li>
             <li class="nav-item">
@@ -121,31 +122,62 @@
             </li>
         </ul>
     </div>
+
+    <!-- Details of Tabs -->
     <div class="card-body">
         <div class="tab-content" id="kegiatanTabsContent">
             <!-- Overview Tab -->
             <div class="tab-pane fade show active" id="overview" role="tabpanel">
                 <div class="row">
-                    <div class="col-6">
+                    <!-- Deskripsi -->
+                    <div class="col-12">
                         <div class="card card-outline card-danger">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">{{ __('cruds.kegiatan.tabs.description') }}</h5>
                             </div>
-                            <div class="card-body">
-                                <p>{{ $kegiatan->deskripsilatarbelakang ?? 'No description available' }}</p>
+                            <div class="card-body text-justify pt-0">
+                                <div class="row">
+                                    <!-- Latar Belakang-->
+                                    <div class="col-md-4 p-2">
+                                        <label>{{ __('cruds.kegiatan.description.latar_belakang') }}</label>
+                                        {!! $kegiatan->deskripsilatarbelakang ?? '-' !!}
+                                    </div>
+                                    <!-- Tujuan -->
+                                    <div class="col-md-4 p-2">
+                                        <label>{{ __('cruds.kegiatan.description.tujuan') }}</label>
+                                        {!! $kegiatan->deskripsitujuan ?? '-' !!}
+                                    </div>
+                                    <!-- Deskripsi Keluaran -->
+                                    <div class="col-md-4 p-2">
+                                        <label>{{ __('cruds.kegiatan.description.deskripsikeluaran') }}</label>
+                                        {!! $kegiatan->deskripsikeluaran ?? '-' !!}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="card">
+                    {{-- <!-- Tujuan Kegiatan -->
+                    <div class="col-sm-12 col-md-4 col-xl-4">
+                        <div class="card card-outline card-warning">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">{{ __('cruds.program.output.indicator') . ' '. __('cruds.program.output.label') }}</h5>
+                                <label>{{ __('cruds.kegiatan.description.tujuan') }}</label>
                             </div>
-                            <div class="card-body">
-                                <p>{{ $kegiatan->deskripsiyangdikaji ?? $kegiatan->activity->indikator ?? 'No problem analysis available' }}</p>
+                            <div class="card-body text-justify">
+                                {!! $kegiatan->deskripsitujuan ?? '-' !!}
                             </div>
                         </div>
                     </div>
+                    <!-- Deskripsi Keluaran -->
+                    <div class="col-sm-12 col-md-4 col-xl-4">
+                        <div class="card card-outline card-success">
+                            <div class="card-header">
+                                <label>{{ __('cruds.kegiatan.description.deskripsikeluaran') }}</label>
+                            </div>
+                            <div class="card-body text-justify">
+                                {!! $kegiatan->deskripsikeluaran ?? '-' !!}
+                            </div>
+                        </div>
+                    </div> --}}
                 </div>
 
                 <!-- Additional Information from trkegiatan -->
@@ -178,7 +210,7 @@
                     <div class="col-md-12">
                         <div class="card card-outline card-primary">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Kegiatan Summary</h5>
+                                <h5 class="card-title mb-0">BTOR Summary</h5>
                             </div>
                             <div class="card-body">
                                 @php

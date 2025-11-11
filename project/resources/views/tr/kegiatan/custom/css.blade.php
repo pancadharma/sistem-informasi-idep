@@ -275,3 +275,45 @@
         .bg-purple { background-color: #6f42c1 !important; }
         .bg-gray { background-color: #6c757d !important; }
     </style>
+    <style media="print">
+        body {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .card-tools, .btn, .action-buttons, .file-actions {
+            display: none !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+
+        .table {
+            font-size: 10px;
+        }
+
+        .table th, .table td {
+            padding: 4px 8px !important;
+        }
+
+        .progress {
+            height: 3px !important;
+        }
+
+        .badge {
+            font-size: 8px !important;
+            padding: 2px 4px !important;
+        }
+
+        .section-title {
+            font-size: 12px !important;
+            margin-top: 15px !important;
+            margin-bottom: 8px !important;
+        }
+
+        @page {
+            margin: 1cm;
+        }
+    </style>
