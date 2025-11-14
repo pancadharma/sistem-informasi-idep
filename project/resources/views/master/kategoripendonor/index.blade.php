@@ -6,6 +6,7 @@
 
 @section('content_body')
     <div class="card card-primary collapsed-card">
+            @can('kategoridonor_create')
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.kategoripendonor.title')}}
                 <div class="card-tools">
@@ -14,6 +15,7 @@
                     </button>
                 </div>
             </div>
+            @endcan
                 <div class="card-body">
                 <form action="{{ route('kategoripendonor.store')}}" method="POST" class="resettable-form" id="kategoripendonorForm" autocomplete="off">
                     @csrf

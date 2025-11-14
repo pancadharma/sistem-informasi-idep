@@ -139,11 +139,14 @@ class SatuanController extends Controller
                         title=\"" . __('global.edit') . " " . __('cruds.satuan.title') . " {$satuan->nama}\">
                         <i class=\"fas fa-pencil-alt\"></i> " . __('global.edit') . "</button>";
                     }
+                    if (auth()->user()->can("satuan_show")) {
                     $viewButton = "<button type=\"button\" class=\"btn btn-sm btn-primary view-satuan-btn\"
                     data-action=\"view\" data-satuan-id=\"{$satuan->id}\"
                     title=\"" . __('global.view') . " " . __('cruds.satuan.title') . " {$satuan->nama}\">
                     <i class=\"fas fa-folder-open\"></i> " . __('global.view') . "</button>";
-                    return "$editButton $viewButton";
+                    }
+                    // return "$editButton $viewButton";
+                    return trim("$editButton $viewButton") ?: '-';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

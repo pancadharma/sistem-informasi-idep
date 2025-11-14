@@ -6,8 +6,14 @@
         var docFileCaptions = {}; // Object to track document files and captions
         var mediaFileCaptions = {}; // Object to track media files and captions
 
+        // function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize, maxCount, initialPreview, initialPreviewConfig, captionPrefix) {
+
         function handleFileInput(fileInputId, captionContainerId, fileCaptions, allowedExtensions, maxSize,
             maxCount) {
+
+            // Determine the caption prefix based on the file input ID
+            const captionPrefix = fileInputId === 'dokumen_pendukung' ? 'dokumen_keterangan' : 'media_keterangan';
+
             $("#" + fileInputId).fileinput({
                     theme: "fa5",
                     showBrowse: false,
@@ -77,12 +83,12 @@
                     // Iterate over each selected file and trigger the fileloaded event manually
                     for (var i = 0; i < files.length; i++) {
                         var file = files[i];
-                        var uniqueId = fileInputId + '-' + (new Date().getTime());
+                        var uniqueId = fileInputId + '-' + (new Date().getTime()) + '-' + i;
                         fileCaptions[uniqueId] = file.name; // Track the file with its unique ID
                         $('#' + captionContainerId).append(
                             `<div class="form-group" id="caption-group-${uniqueId}">
                             <label class="control-label mb-0 small mt-2" for="caption-${uniqueId}">{{ __('cruds.program.ket_file') }} : <span class="text-red">${file.name}</span></label>
-                            <input type="text" class="form-control" name="keterangan[]" id="caption-${uniqueId}">
+                            <input type="text" class="form-control" name="${captionPrefix}[]" id="caption-${uniqueId}">
                         </div>`
                         );
                     }

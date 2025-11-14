@@ -4,49 +4,88 @@
     <title>Kegiatan Export</title>
     <style>
         body {
-            font-family: sans-serif;
-            font-size: 12px;
+            font-family: 'Times New Roman', serif;
+            font-size: 11px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
         }
         .container {
             width: 100%;
+            max-width: 800px;
             margin: 0 auto;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
         }
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
         }
         .header p {
-            margin: 0;
+            margin: 5px 0 0 0;
+            font-size: 12px;
+            color: #333;
         }
         .content {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .content table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 15px;
         }
         .content th, .content td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px 8px;
             text-align: left;
+            vertical-align: top;
         }
         .content th {
-            background-color: #f2f2f2;
+            background-color: #f5f5f5;
+            font-weight: bold;
+            font-size: 10px;
+        }
+        .content td {
+            font-size: 10px;
         }
         .section-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 25px;
+            margin-bottom: 12px;
             border-bottom: 1px solid #000;
             padding-bottom: 5px;
+            color: #000;
         }
         .description {
             margin-top: 10px;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+        .table-header {
+            font-weight: bold;
+            background-color: #e8e8e8;
+        }
+        .empty-cell {
+            color: #666;
+            font-style: italic;
+        }
+        .total-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .map-link {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .map-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -150,19 +189,19 @@
             <table>
                 <tr>
                     <th style="width: 30%;">Program Outcome</th>
-                    <td>{{ $kegiatan->activity?->program_outcome_output?->program_outcome?->nama ?? '-' }}</td>
+                    <td class="empty-cell">{{ $kegiatan->activity?->program_outcome_output?->program_outcome?->nama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Program Output</th>
-                    <td>{{ $kegiatan->activity?->program_outcome_output?->nama ?? '-' }}</td>
+                    <td class="empty-cell">{{ $kegiatan->activity?->program_outcome_output?->nama ?? '-' }}</td>
                 </tr>
                 <tr>
                     <th>Target Kegiatan</th>
                     <td>
                         @if($kegiatan->activity?->target_reinstra)
-                            {{ $kegiatan->activity?->target_reinstra?->target_value ?? 0 }} {{ $kegiatan->activity?->target_reinstra?->satuan?->nama ?? '' }}
+                            <span class="empty-cell">{{ $kegiatan->activity?->target_reinstra?->target_value ?? 0 }} {{ $kegiatan->activity?->target_reinstra?->satuan?->nama ?? '' }}</span>
                         @else
-                            Tidak ada target
+                            <span class="empty-cell">Tidak ada target</span>
                         @endif
                     </td>
                 </tr>
@@ -171,7 +210,7 @@
             <div class="section-title">Detail Lokasi</div>
             <table>
                 <thead>
-                    <tr>
+                    <tr class="table-header">
                         <th>Nama Tempat</th>
                         <th>Longitude</th>
                         <th>Latitude</th>
@@ -183,19 +222,20 @@
                             <td>
                                 @if ($lokasi->lat && $lokasi->long)
                                     <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}"
-                                        target="_blank">
+                                       target="_blank"
+                                       class="map-link">
                                         {{ ucwords(strtolower($lokasi->lokasi ?? 'Lihat Di Peta')) }}
                                     </a>
                                 @else
-                                    {{ $lokasi->lokasi ?? '—' }}
+                                    <span class="empty-cell">{{ $lokasi->lokasi ?? '—' }}</span>
                                 @endif
                             </td>
-                            <td>{{ $lokasi->long ?? '—' }}</td>
-                            <td>{{ $lokasi->lat ?? '—' }}</td>
+                            <td class="empty-cell">{{ $lokasi->long ?? '—' }}</td>
+                            <td class="empty-cell">{{ $lokasi->lat ?? '—' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" style="text-align: center;">Tidak ada data lokasi tersedia.</td>
+                            <td colspan="3" style="text-align: center; font-style: italic;">Tidak ada data lokasi tersedia.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -204,7 +244,7 @@
             <div class="section-title">Ringkasan Peserta</div>
             <table>
                 <thead>
-                    <tr>
+                    <tr class="table-header">
                         <th>Peserta</th>
                         <th>Wanita</th>
                         <th>Pria</th>
@@ -214,33 +254,33 @@
                 <tbody>
                     <tr>
                         <td>Dewasa</td>
-                        <td>{{ $kegiatan->penerimamanfaatdewasaperempuan ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatdewasalakilaki ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatdewasatotal ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatdewasaperempuan ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatdewasalakilaki ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatdewasatotal ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>Lansia</td>
-                        <td>{{ $kegiatan->penerimamanfaatlansiaperempuan ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatlansialakilaki ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatlansiatotal ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatlansiaperempuan ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatlansialakilaki ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatlansiatotal ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>Remaja</td>
-                        <td>{{ $kegiatan->penerimamanfaatremajaperempuan ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatremajalakilaki ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatremajatotal ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatremajaperempuan ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatremajalakilaki ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatremajatotal ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>Anak-anak</td>
-                        <td>{{ $kegiatan->penerimamanfaatanakperempuan ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatanaklakilaki ?? 0 }}</td>
-                        <td>{{ $kegiatan->penerimamanfaatanaktotal ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatanakperempuan ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatanaklakilaki ?? 0 }}</td>
+                        <td class="empty-cell">{{ $kegiatan->penerimamanfaatanaktotal ?? 0 }}</td>
                     </tr>
-                    <tr>
+                    <tr class="total-row">
                         <th>Total</th>
-                        <th>{{ $kegiatan->penerimamanfaatperempuantotal ?? 0 }}</th>
-                        <th>{{ $kegiatan->penerimamanfaatlakilakitotal ?? 0 }}</th>
-                        <th>{{ $kegiatan->penerimamanfaattotal ?? 0 }}</th>
+                        <th class="empty-cell">{{ $kegiatan->penerimamanfaatperempuantotal ?? 0 }}</th>
+                        <th class="empty-cell">{{ $kegiatan->penerimamanfaatlakilakitotal ?? 0 }}</th>
+                        <th class="empty-cell">{{ $kegiatan->penerimamanfaattotal ?? 0 }}</th>
                     </tr>
                 </tbody>
             </table>

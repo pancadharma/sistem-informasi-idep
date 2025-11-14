@@ -570,8 +570,10 @@ return [
             'description'                        => 'Description',
             'hasil'                              => 'Result Activity',
             'peserta'                            => 'Beneficiaries',
+            'beneficiaries'                      => 'Beneficiaries',
             'file'                               => 'File',
-            'penulis'                            => 'Author of the Activity',
+            'penulis'                            => 'Author',
+            'laporan'                            => 'Author of Report',
         ],
         'basic'                                  => [
             'program_select'                     => 'Select Program',
@@ -585,6 +587,7 @@ return [
             'tanggalmulai'                       => 'Start Date',
             'tanggalselesai'                     => 'End Date',
             'nama_mitra'                         => 'Partner Name',
+            'mitra'                              => 'Partner',
             'lokasi_kegiatan'                    => 'Activity Location',
             'jenis_kegiatan'                     => 'Type of Activity',
             'sektor_kegiatan'                    => 'Activity Sector',
@@ -852,7 +855,9 @@ return [
         'peserta'                                => [
             'label'                              => 'Beneficiaries of the Activity',
             'helper'                             => 'Fill in the 2 tables below as a receipt/beneficiary of the activity, please note the form absense',
+            'helper_disabilitas'                 => 'Please fill in the number of beneficiaries with disabilities based on the table above, if none please fill in 0',
             'peserta'                            => 'Beneficiaries',
+            'disabilitas'                        => 'Disabilities Beneficiaries',
             'nama'                               => 'Beneficiaries Name',
             'pria'                               => 'Men',
             'wanita'                             => 'Women',
@@ -909,7 +914,7 @@ return [
             'max_file_size'                      => '(maximum 10MB)',
         ],
         'penulis'                                => [
-            'label'                              => 'Activity',
+            'label'                              => 'Activity Writer',
             'nama'                               => 'Writer Name',
             'laporan'                            => 'Report Writer',
             'jabatan'                            => 'Position',

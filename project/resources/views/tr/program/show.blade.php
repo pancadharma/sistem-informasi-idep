@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('subtitle', __('global.details') . ' ' . __('cruds.program.title'))
-@section('content_header_title', __('global.details') . ' ' . __('cruds.program.title'))
+@section('content_header_title', __('global.details') .' '. $program->nama ?? '' . ' ' . __('cruds.program.title'))
 
 @section('content_body')
 
@@ -16,23 +16,27 @@
      data-program-budget="{{ $program->totalnilai }}"
      data-program-description="{{ str_replace('"', '&quot;', strip_tags($program->deskripsiprojek)) }}"
      data-program-analysis="{{ str_replace('"', '&quot;', strip_tags($program->analisamasalah)) }}">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
+    <div class="card-header d-flex align-items-center">
+        {{-- <div class="d-flex align-items-center">
             <a class="btn btn-outline-secondary mr-3" href="{{ route('program.index') }}">
                 <i class="fas fa-arrow-left"></i> {{ __('global.back') }}
             </a>
             <div>
-                <h2 class="mb-0">{{ $program->nama }}</h2>
-                <p class="mb-0 text-muted">Code: {{ $program->kode }}</p>
+                <h2 class="mb-0">{{ $program->nama ?? '' }}</h2>
             </div>
+        </div> --}}
+        <div class="card-title">
+            <h3 class="text-muted pr-2">
+                {{-- {{ __('cruds.program.kode') }}:  --}}
+                {{ $program->kode }}</h3>
         </div>
-        <div class="card-tools">
+        <div class="{{-- card-tools --}} ml-auto">
             <span class="badge badge-lg {{ $program->status === 'running' ? 'bg-success' : ($program->status === 'pending' ? 'bg-warning' : ($program->status === 'complete' ? 'bg-info' : 'bg-secondary')) }}">
                 {{ strtoupper($program->status) }}
             </span>
 
             <!-- Export Dropdown -->
-            <div class="btn-group ml-2">
+            <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-download"></i> Export
                 </button>
@@ -60,7 +64,7 @@
             </div>
 
             @can('program_edit')
-            <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary ml-2">
+            <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary">
                 <i class="fas fa-edit"></i> Edit
             </a>
             @endcan
@@ -68,12 +72,12 @@
     </div>
     <div class="card-body">
         <!-- Quick Stats Row -->
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-3 col-sm-6">
                 <div class="info-box bg-primary">
                     <span class="info-box-icon"><i class="fas fa-users"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Beneficiaries</span>
+                        <span class="info-box-text">{{ __('cruds.program.expektasi') }}</span>
                         <span class="info-box-number">{{ $totalBeneficiaries }}</span>
                     </div>
                 </div>
@@ -109,25 +113,22 @@
 
         <!-- Timeline Info -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3 col-sm-6 col-xl-6">
                 <div class="small-box bg-light">
                     <div class="inner">
                         <h4>Start Date</h4>
                         <p>{{ $program->tanggalmulai }}</p>
                     </div>
-                    <div class="icon">
+                    {{-- <div class="icon">
                         <i class="fas fa-play"></i>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3 col-sm-6 col-xl-6">
                 <div class="small-box bg-light">
                     <div class="inner">
                         <h4>End Date</h4>
                         <p>{{ $program->tanggalselesai }}</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-stop"></i>
                     </div>
                 </div>
             </div>
@@ -184,7 +185,7 @@
                     <i class="fas fa-users-cog"></i> Collaboration
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" id="target-groups-tab" data-toggle="tab" href="#target-groups" role="tab">
                     <i class="fas fa-bullseye"></i> Target Groups
                 </a>
@@ -193,7 +194,7 @@
                 <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
                     <i class="fas fa-tasks"></i> Activities
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </div>
     <div class="card-body">
@@ -364,7 +365,7 @@
                                         <div class="card mb-3">
                                             <div class="card-body">
                                                 <h6 class="card-title">{{ $partner->nama }}</h6>
-                                                <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p>
+                                                {{-- <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p> --}}
                                                 @if($partner->telepon)
                                                     <p class="mb-0"><i class="fas fa-phone"></i> {{ $partner->telepon }}</p>
                                                 @endif
@@ -383,17 +384,17 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Donors</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.mpendonor.mpendonor') }}</h5>
                             </div>
                             <div class="card-body">
                                 @if($program->pendonor->count() > 0)
                                     @foreach($program->pendonor as $pendonor)
                                         <div class="card mb-3">
                                             <div class="card-body">
-                                                <h6 class="card-title">{{ $pendonor->nama }}</h6>
-                                                <p class="card-text text-muted">{{ $pendonor->kategori ? $pendonor->kategori->nama : 'Uncategorized' }}</p>
+                                                <h6 class="pendonor">{{ $pendonor->nama }}</h6>
+                                                {{-- <p class="card-text text-muted">{{ $pendonor->kategori ? $pendonor->kategori->nama : 'Uncategorized' }}</p> --}}
                                                 @if($pendonor->pivot->nilaidonasi)
-                                                    <p class="mb-0"><strong>Donation:</strong> Rp {{ number_format($pendonor->pivot->nilaidonasi, 0, ',', '.') }}</p>
+                                                    <span class="mb-0"><strong>{{ __('cruds.program.donor.val') }}:</strong> Rp {{ number_format($pendonor->pivot->nilaidonasi, 0, ',', '.') }}</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -598,7 +599,7 @@
                             </button>
                             @endcan
                         </div>
-                        
+
                         <!-- Files Section -->
                         <div class="files-section">
                             @php
@@ -669,7 +670,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <!-- If no files at all -->
                         @if($programFiles->count() == 0)
                             <div class="text-center py-5">
@@ -841,7 +842,7 @@
             </div>
 
             <!-- Target Groups Tab -->
-            <div class="tab-pane fade" id="target-groups" role="tabpanel">
+            {{-- <div class="tab-pane fade" id="target-groups" role="tabpanel">
                 <div class="row">
                     <!-- Marginalized Groups -->
                     <div class="col-md-6">
@@ -962,10 +963,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Activities Tab -->
-            <div class="tab-pane fade" id="activities" role="tabpanel">
+            {{-- <div class="tab-pane fade" id="activities" role="tabpanel">
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -1073,7 +1074,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Collaboration Tab -->
             <div class="tab-pane fade" id="collaboration" role="tabpanel">
@@ -2591,17 +2592,17 @@ function uploadProgramFile() {
         preConfirm: () => {
             const files = document.getElementById('programFile').files;
             const name = document.getElementById('fileName').value;
-            
+
             if (files.length === 0) {
                 Swal.showValidationMessage('{{ __('Please select a file') }}');
                 return false;
             }
-            
+
             if (!name) {
                 Swal.showValidationMessage('{{ __('Please enter file name') }}');
                 return false;
             }
-            
+
             return { files: Array.from(files), name };
         }
     }).then((result) => {
@@ -2612,7 +2613,7 @@ function uploadProgramFile() {
                 formData.append('captions[]', result.value.name + (index > 0 ? ` ${index + 1}` : ''));
             });
             formData.append('program_id', {{ $program->id }});
-            
+
             fetch('{{ route('program.docs') }}', {
                 method: 'POST',
                 body: formData,

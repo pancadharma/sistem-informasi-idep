@@ -45,7 +45,8 @@ class KegiatanController extends Controller
     public function delete_media(Request $request)
     {
         try {
-            $media = Media::findOrFail($request->media_id);
+            $mediaId = $request->input('media_id', $request->input('key'));
+            $media = Media::findOrFail($mediaId);
             $media->delete();
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
@@ -105,12 +106,12 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access' || auth()->user()->can('kegiatan_show'))) {
                     $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
+                // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
+                //     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', 'xxx' . $kegiatan->nama, $kegiatan->id);
+                // }
                 // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_export')) {
                 //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
@@ -147,7 +148,7 @@ class KegiatanController extends Controller
             //     break;
         }
 
-        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
+        return "<a href='" . $url ."' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
     }
     public function getProvinsi(Request $request)
     {
@@ -449,7 +450,9 @@ class KegiatanController extends Controller
             $this->storePenulisKegiatan($request, $kegiatan);
 
             // Handle file uploads asynchronously for large files
-            $this->queueMediaUploads($request, $kegiatan);
+            // $this->queueMediaUploads($request, $kegiatan);
+            $this->handleMediaUploads($request, $kegiatan);
+
 
             DB::commit();
 
@@ -531,7 +534,7 @@ class KegiatanController extends Controller
         if ($request->hasFile('dokumen_pendukung')) {
             $tempPaths = [];
             foreach ($request->file('dokumen_pendukung') as $file) {
-                $tempPath = $file->store('temp');
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
@@ -548,7 +551,7 @@ class KegiatanController extends Controller
         if ($request->hasFile('media_pendukung')) {
             $tempPaths = [];
             foreach ($request->file('media_pendukung') as $file) {
-                $tempPath = $file->store('temp');
+                $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                 $tempPaths[] = storage_path('app/' . $tempPath);
             }
 
@@ -816,12 +819,14 @@ class KegiatanController extends Controller
         // Handle new file uploads
         if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
             $tempPaths = [];
-            $captions = $request->input('keterangan_new', []);
             $collections = [];
+            $captions = [];
 
             if ($request->hasFile('dokumen_pendukung')) {
                 foreach ($request->file('dokumen_pendukung') as $index => $file) {
-                    $tempPath = $file->store('temp');
+                    $captions[] = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    // $keterangan = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'dokumen_pendukung';
                 }
@@ -829,11 +834,62 @@ class KegiatanController extends Controller
 
             if ($request->hasFile('media_pendukung')) {
                 foreach ($request->file('media_pendukung') as $index => $file) {
-                    $tempPath = $file->store('temp');
+                    $captions[] = $request->input('media_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
                     $tempPaths[] = storage_path('app/' . $tempPath);
                     $collections[] = 'media_pendukung';
                 }
             }
+
+            \Log::info('Captions: ', $captions);
+            \Log::info('Collections: ', $collections);
+
+
+            // Queue processing for new files
+            ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);
+        }
+    }
+    protected function handleMediaUploads(StoreKegiatanRequest $request, Kegiatan $kegiatan)
+    {
+        // Handle existing media captions
+        if ($request->has('keterangan_existing')) {
+            foreach ($request->input('keterangan_existing', []) as $mediaId => $keterangan) {
+                $media = Media::find($mediaId);
+                if ($media && $media->model_id === $kegiatan->id) {
+                    $media->setCustomProperty('keterangan', $keterangan);
+                    $media->save();
+                }
+            }
+        }
+
+        // Handle new file uploads
+        if ($request->hasFile('dokumen_pendukung') || $request->hasFile('media_pendukung')) {
+            $tempPaths = [];
+            $collections = [];
+            $captions = [];
+
+            if ($request->hasFile('dokumen_pendukung')) {
+                foreach ($request->file('dokumen_pendukung') as $index => $file) {
+                    $captions[] = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    // $keterangan = $request->input('dokumen_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'dokumen_pendukung';
+                }
+            }
+
+            if ($request->hasFile('media_pendukung')) {
+                foreach ($request->file('media_pendukung') as $index => $file) {
+                    $captions[] = $request->input('media_keterangan', [])[$index] ?? '';
+                    $tempPath = $file->storeAs('temp', uniqid() . '_' . trim($file->getClientOriginalName()));
+                    $tempPaths[] = storage_path('app/' . $tempPath);
+                    $collections[] = 'media_pendukung';
+                }
+            }
+
+            \Log::info('Captions: ', $captions);
+            \Log::info('Collections: ', $collections);
+
 
             // Queue processing for new files
             ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);

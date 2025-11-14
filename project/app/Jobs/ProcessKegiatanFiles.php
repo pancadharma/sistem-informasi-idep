@@ -44,25 +44,42 @@ class ProcessKegiatanFiles implements ShouldQueue
             // Extract the original filename from the temp file path
             $tempFilename = pathinfo($filePath, PATHINFO_FILENAME);
             $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-            
+
             // Try to extract the original filename from the temp filename
             // Temp files are stored as uniqid() . '_' . trim($file->getClientOriginalName())
             $parts = explode('_', $tempFilename, 2);
             $originalDisplayName = isset($parts[1]) ? $parts[1] : $tempFilename;
-            
+
             // Get the file extension from the original display name if it has one
             $originalName = pathinfo($originalDisplayName, PATHINFO_FILENAME);
             $originalExtension = pathinfo($originalDisplayName, PATHINFO_EXTENSION);
-            
+
             // Use the original extension if available, otherwise use the temp file extension
             $fileExtension = $originalExtension ?: $extension;
-            
-            $kegiatanName = str_replace(' ', '_', $this->kegiatan->nama ?? 'kegiatan');
-            $fileName = "{$kegiatanName}_{$timestamp}_{$fileCount}.{$fileExtension}";
-            
-            // Use the caption if provided, otherwise use the original display name with extension
-            $keterangan = $this->captions[$index] ?? ($originalDisplayName . ($fileExtension ? ".{$fileExtension}" : ''));
-            
+
+            // Determine human-friendly base name from caption or original name
+            $baseName = isset($this->captions[$index]) && trim($this->captions[$index]) !== ''
+                ? trim($this->captions[$index])
+                : $originalName;
+
+            // Sanitize for filesystem and display
+            $sanitizedBase = preg_replace('/[^A-Za-z0-9_-]+/', '_', $baseName);
+            $sanitizedBase = trim($sanitizedBase, '_');
+            if ($sanitizedBase === '') {
+                $sanitizedBase = 'file';
+            }
+
+            // Build stored filename as <base>_<timestamp>_<count>.<ext>
+            $fileName = "{$sanitizedBase}_{$timestamp}_{$fileCount}.{$fileExtension}";
+
+            $namaFileDokumenSaja = preg_replace('/[^A-Za-z0-9_-]+/', '_', trim($originalName));
+            $namaFileDokumen = $namaFileDokumenSaja . '.' . $fileExtension;
+
+            // Caption shown to users: prefer raw caption if present, else original display name
+            $keterangan = isset($this->captions[$index]) && trim($this->captions[$index]) !== ''
+                ? trim($this->captions[$index])
+                : $originalDisplayName;
+
             $collectionName = $this->collectionNames[$index] ?? 'media_pendukung';
 
             try {
@@ -71,12 +88,12 @@ class ProcessKegiatanFiles implements ShouldQueue
                     ->withCustomProperties([
                         'keterangan' => $keterangan,
                         'user_id' => $this->kegiatan->user_id,
-                        'original_name' => $originalName,
+                        'original_name' => $namaFileDokumen,
                         'extension' => $fileExtension,
                         'updated_by' => $this->kegiatan->user_id
                     ])
-                    ->usingName($originalDisplayName)
-                    ->usingFileName($fileName)
+                    ->usingName($namaFileDokumenSaja)
+                    ->usingFileName($namaFileDokumen)
                     ->toMediaCollection($collectionName);
 
                 // Clean up temporary file

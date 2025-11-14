@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Validation\Rules\Can;
+
 return [
     'title' => 'IDEP Foundation',
     'title_prefix' => '- ',
@@ -154,8 +156,9 @@ return [
                 ],
                 [
                     'text'          => 'Komodel Dashboard',
-                    'route'         => 'dashboard.komodel_v2',
+                    'route'         => 'dashboard.komodel_v3',
                     'icon'          => 'fas fa-chart-pie',
+                    'active'        => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],
                 ],
             ]
         ],
@@ -263,18 +266,21 @@ return [
                     'route'     => 'kelompokmarjinal.index',
                     'icon'      => 'fas fa-people-arrows',
                     'active'    => ['kelompok_rentan', 'kelompok_rentan*', 'regex:@^kelompok_rentan/[0-9]+$@'],
+                    'can'       => ['marjinal_access', 'marjinal_edit', 'marjinal_show', 'marjinal_create'],
                 ],
                 [
                     'text'      => 'kategoripendonor',
                     'route'     => 'kategoripendonor.index',
                     'icon'      => 'fas fa-medkit',
                     'active'    => ['kategoripendonor', 'kategoripendonor*', 'regex:@^kategoripendonor/[0-9]+$@'],
+                    'can'       => ['kategoridonor_access', 'kategoridonor_edit', 'kategoridonor_show', 'kategoridonor_create'],
                 ],
                 [
                     'text'      => 'pendonor',
                     'route'     => 'pendonor.index',
                     'icon'      => 'fas fa-hand-holding-medical',
                     'active'    => ['pendonor', 'pendonor*', 'regex:@^pendonor/[0-9]+$@'],
+                    'can'       => ['pendonor_access', 'pendonor_edit', 'pendonor_show', 'pendonor_create'],
                 ],
                 [
                     'text'      => 'partner',
@@ -284,11 +290,11 @@ return [
                     'active'    => ['partner', 'partner*', 'regex:@^partner/[0-9]+$@'],
                 ],
                 [
-                    'text' => 'jenis_bantuan',
-                    //'can'       => ['jenis_bantuanr_access','jenis_bantuan_edit', 'jenis_bantuan_show', 'jenis_bantuan_create'],
-                    'route' => 'jenisbantuan.index',
-                    'icon' => 'fas fa-hands-helping',
-                    'active' => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
+                    'text'      => 'jenis_bantuan',
+                    'route'     => 'jenisbantuan.index',
+                    'icon'      => 'fas fa-hands-helping',
+                    'active'    => ['jenis_bantuan', 'jenis_bantuan*', 'regex:@^jenis_bantuan/[0-9]+$@'],
+                    'can'       => ['jenisbantuan_access', 'jenisbantuan_edit', 'jenisbantuan_show', 'jenisbantuan_create'],
                 ],
                 [
                     'text'      => 'satuan',
@@ -298,10 +304,11 @@ return [
                     'can'       => ['satuan_access', 'satuan_edit', 'satuan_show', 'satuan_create'],
                 ],
                 [
-                    'text' => 'sdg',
-                    'route' => 'kaitan_sdg.index',
-                    'icon' => 'fas fa-external-link-square-alt',
-                    'active' => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                    'text'      => 'sdg',
+                    'route'     => 'kaitan_sdg.index',
+                    'icon'      => 'fas fa-external-link-square-alt',
+                    'active'    => ['sdg', 'sdg*', 'regex:@^sdg/[0-9]+$@'],
+                    'can'       => ['sdg_access', 'sdg_edit', 'sdg_show', 'sdg_create'],
                 ],
                 // [
                 //     'text' => 'idep',
@@ -314,7 +321,7 @@ return [
                     'route'     => 'target-reinstra.index',
                     'icon'      => 'fas fa-shapes',
                     'active'    => ['target_reinstra', 'target_reinstra*', 'regex:@^target_reinstra/[0-9]+$@'],
-                    // 'can'       => ['target_reinstra_access'],
+                    'can'       => ['target_reinstra_access'],
                 ],
             ],
         ],
@@ -367,7 +374,7 @@ return [
                     'icon'      => 'nav-icon bi bi-person-raised-hand',
                     // 'icon_text' => 'monitoring',
                     'route'     => 'benchmark.index',
-                    // 'can'       => ['benchmark_access'],
+                    'can'       => ['benchmark_access'],
                     'active'    => ['benchmark', 'benchmark*', 'regex:@^benchmark/[0-9]+$@'],
                 ],
                 [
@@ -375,7 +382,7 @@ return [
                     'icon'      => 'nav-icon bi bi-clipboard-check',
                     'icon_text' => 'prepost',
                     'route'     => 'prepost.index',
-                    // 'can'       => ['komponenmodel_access'],
+                    'can'       => ['prepostl_access'],
                     'active'    => ['prepost', 'prepost*', 'regex:@^komodel/[0-9]+$@'],
                 ],
                 [
@@ -383,35 +390,47 @@ return [
                     'icon'      => 'nav-icon bi bi-bar-chart-steps',
                     'icon_text' => 'monitoring',
                     'route'     => 'target_progress.index',
-                    // 'can'       => ['target_progress_access'],
+                    'can'       => ['target_progress_access'],
                     'active'    => ['target_progress', 'target-progress*', 'regex:@^target-progress/[0-9]+$@'],
                 ],
+                [
+                    'text'      => 'FRM',
+                    'icon'      => 'nav-icon bi bi-chat-quote', 
+                    'icon_text' => 'feedback',
+                    'route'     => 'feedback.index',
+                    'active'    => ['feedback', 'feedback*', 'regex:@^feedback/[0-9]+$@'],
+                    'can'       => ['frm_access'],
+                ]
             ],
         ],
         [
-            'text' => 'log',
-            'url' => 'logs',
-            'icon' => 'fas fa-file-contract',
-            'icon_color' => 'yellow',
-            'active' => ['log', 'log*', 'log:@^evaluasi/[0-9]+$@'],
+            'text'          => 'log',
+            'url'           => 'logs',
+            'icon'          => 'fas fa-file-contract',
+            'icon_color'    => 'yellow',
+            'active'        => ['log', 'log*', 'log:@^evaluasi/[0-9]+$@'],
+            'can'           => ['log_access'],
+
         ],
         [
-            'header' => 'laporan',
-            'classes' => 'text-bold text-uppercase',
+            'header'        => 'laporan',
+            'classes'       => 'text-bold text-uppercase',
+            'can'           => ['laporan_access'],
         ],
         [
-            'text' => 'laporan',
-            'url' => '#',
-            'icon' => 'fas fa-file',
-            'icon_color' => 'cyan',
-            'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+            'text'          => 'laporan',
+            'url'           => '#',
+            'icon'          => 'fas fa-file',
+            'icon_color'    => 'cyan',
+            'active'        => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+            'can'           => ['laporan_access'],
         ],
-        [
-            'text'   => 'Report IDEP',
-            'route'  => 'report.index',
-            'icon'   => 'fas fa-file-alt',
-            'active' => ['report', 'report*'],
-        ],
+        // [
+        //     'text'          => 'Report IDEP',
+        //     'route'         => 'report.index',
+        //     'icon'          => 'fas fa-file-alt',
+        //     'active'        => ['report', 'report*'],
+        // ],
     ],
 
     /*
