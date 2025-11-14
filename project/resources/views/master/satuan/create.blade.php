@@ -1,14 +1,14 @@
 <div id="add_satuan" class="card card-primary collapsed-card">
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.satuan.title')}}
+        {{-- limit which user can view this button to open the form create satuan --}}
+        @can('satuan_create')
         <div class="card-tools">
-            {{-- limit which user can view this button to open the form create satuan --}}
-            @can('satuan_create')
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-plus"></i>
             </button>
-            @endcan
         </div>
+        @endcan
     </div>
     <div class="card-body responsive">
         {{-- Add Satuan Form --}}

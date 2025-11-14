@@ -55,38 +55,94 @@ class FeedbackController extends Controller
                 //  elseif ($status == 'Ditolak') $class = 'bg-danger';
                  return '<span class="badge ' . htmlspecialchars($class) . '">' . htmlspecialchars($status) . '</span>';
             })
+            // ->addColumn('action', function ($row) {
+            //     // ===========================================
+            //     // GUNAKAN ID EKSPLISIT YANG SUDAH DI-ALIAS
+            //     // ===========================================
+            //     // Ambil ID feedback dari kolom yang sudah kita pilih secara eksplisit
+            //     $feedbackId = $row->feedback_id_explicit; // <-- Gunakan alias dari select()
+            //     // ===========================================
+
+            //     // Log ID yang digunakan (seharusnya sekarang benar)
+            //     Log::info('Generating action buttons for Feedback ID (explicit): ' . $feedbackId);
+            //     // Log::info('Row data for Feedback ID ' . $feedbackId . ':', $row->toArray()); // Log row jika masih perlu
+
+            //     $buttons = [];
+
+            //     try {
+            //         // Gunakan $feedbackId yang sudah benar
+            //         $showUrl = route('feedback.show', ['feedback' => $feedbackId]);
+            //         $editUrl = route('feedback.edit', ['feedback' => $feedbackId]);
+            //         $deleteRoute = route('feedback.destroy', ['feedback' => $feedbackId]);
+
+            //         Log::info('Generated Show URL for Feedback ID ' . $feedbackId . ': ' . $showUrl);
+
+            //         $buttons[] = '<a href="' . e($showUrl) . '" class="btn btn-info btn-sm" title="' . e(__('Lihat Detail')) . '"><i class="fas fa-eye"></i></a>';
+            //         $buttons[] = '<a href="' . e($editUrl) . '" class="btn btn-warning btn-sm" title="' . e(__('Edit')) . '"><i class="fas fa-edit"></i></a>';
+            //         $buttons[] = '<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="'.e($feedbackId).'" data-route="'.e($deleteRoute).'" title="' . e(__('Hapus')) . '"><i class="fas fa-trash"></i></button>';
+
+            //     } catch (\Exception $e) {
+            //         Log::error('Error generating route for Feedback ID ' . $feedbackId . ': ' . $e->getMessage());
+            //         return 'Error generating actions';
+            //     }
+
+            //     return implode(' ', $buttons);
+            // })
             ->addColumn('action', function ($row) {
-                // ===========================================
-                // GUNAKAN ID EKSPLISIT YANG SUDAH DI-ALIAS
-                // ===========================================
-                // Ambil ID feedback dari kolom yang sudah kita pilih secara eksplisit
-                $feedbackId = $row->feedback_id_explicit; // <-- Gunakan alias dari select()
-                // ===========================================
+                $feedbackId = $row->feedback_id_explicit;
 
-                // Log ID yang digunakan (seharusnya sekarang benar)
                 Log::info('Generating action buttons for Feedback ID (explicit): ' . $feedbackId);
-                // Log::info('Row data for Feedback ID ' . $feedbackId . ':', $row->toArray()); // Log row jika masih perlu
 
-                $buttons = [];
+                $buttons = '';
 
                 try {
-                    // Gunakan $feedbackId yang sudah benar
-                    $showUrl = route('feedback.show', ['feedback' => $feedbackId]);
-                    $editUrl = route('feedback.edit', ['feedback' => $feedbackId]);
-                    $deleteRoute = route('feedback.destroy', ['feedback' => $feedbackId]);
+                    $showUrl   = route('feedback.show',   ['feedback' => $feedbackId]);
+                    $editUrl   = route('feedback.edit',   ['feedback' => $feedbackId]);
+                    $deleteUrl = route('feedback.destroy',['feedback' => $feedbackId]);
 
                     Log::info('Generated Show URL for Feedback ID ' . $feedbackId . ': ' . $showUrl);
 
-                    $buttons[] = '<a href="' . e($showUrl) . '" class="btn btn-info btn-sm" title="' . e(__('Lihat Detail')) . '"><i class="fas fa-eye"></i></a>';
-                    $buttons[] = '<a href="' . e($editUrl) . '" class="btn btn-warning btn-sm" title="' . e(__('Edit')) . '"><i class="fas fa-edit"></i></a>';
-                    $buttons[] = '<button type="button" class="btn btn-danger btn-sm delete-btn" data-id="'.e($feedbackId).'" data-route="'.e($deleteRoute).'" title="' . e(__('Hapus')) . '"><i class="fas fa-trash"></i></button>';
+                    // Tombol Show
+                    if (auth()->user()->can('frm_show')) {
+                        $buttons .= '
+                            <a href="' . e($showUrl) . '" 
+                            class="btn btn-info btn-sm" 
+                            title="' . e(__('Lihat Detail')) . '">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        ';
+                    }
+
+                    // Tombol Edit
+                    if (auth()->user()->can('frm_edit')) {
+                        $buttons .= '
+                            <a href="' . e($editUrl) . '" 
+                            class="btn btn-warning btn-sm" 
+                            title="' . e(__('Edit')) . '">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        ';
+                    }
+
+                    // Tombol Delete
+                    if (auth()->user()->can('frm_delete')) {
+                        $buttons .= '
+                            <button type="button" 
+                                class="btn btn-danger btn-sm delete-btn"
+                                data-id="'. e($feedbackId) .'" 
+                                data-route="'. e($deleteUrl) .'"
+                                title="' . e(__('Hapus')) . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ';
+                    }
 
                 } catch (\Exception $e) {
                     Log::error('Error generating route for Feedback ID ' . $feedbackId . ': ' . $e->getMessage());
-                    return 'Error generating actions';
+                    return 'Error';
                 }
 
-                return implode(' ', $buttons);
+                return $buttons ?: '-';
             })
             ->rawColumns(['status_badge', 'action'])
             ->make(true);

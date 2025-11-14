@@ -2,9 +2,11 @@
 
 @section('subtitle', __('cruds.benchmark.list'))
 @section('content_header_title')
+        @can('benchmark_create')
         <a class="btn-success btn" href="{{ route('benchmark.create') }}" title="{{ __('cruds.benchmark.add') }}">
             {{ __('global.create') .' '.__('cruds.benchmark.label') }}
         </a>
+        @endcan
 @endsection
 @section('sub_breadcumb', __('cruds.benchmark.list'))
 
@@ -21,10 +23,12 @@
                 {{__('cruds.benchmark.list')}}
             </h3>
         <div class="card-tools">
+            @can('benchmark_create')
             <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('benchmark.create') }}`"
                 title="{{ __('global.create') . ' ' . __('cruds.benchmark.label') }}">
                 <i class="fas fa-plus"></i>
             </button>
+            @endcan
         </div>
 
         <div class="card-body table-responsive">

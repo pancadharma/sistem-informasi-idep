@@ -43,20 +43,49 @@ class MealsTargetProgressController extends Controller
 			->addColumn('updated_count', function ($target) {
 				return $target->updated_count;
 			})
+			// ->addColumn('action', function ($target) {
+			// 	$edit_url = route('target_progress.edit', $target->program_id);
+			// 	$button = "
+			// 		<div class='button-container'>
+			// 			<a href='{$edit_url}' class='btn btn-sm btn-info edit-target-progress'>
+			// 				<i class='bi bi-pencil-square'></i>
+			// 			</a>
+			// 			<button type='button' class='btn btn-sm btn-secondary target-progress-history'>
+			// 				<i class='fas fa-history'></i>
+			// 			</button>
+			// 		</div>
+			// 	";
+
+			// 	return $button;
+			// })
 			->addColumn('action', function ($target) {
-				$edit_url = route('target_progress.edit', $target->program_id);
-				$button = "
-					<div class='button-container'>
-						<a href='{$edit_url}' class='btn btn-sm btn-info edit-target-progress'>
+				$buttons = '';
+				$editUrl = route('target_progress.edit', $target->program_id);
+
+				// Tombol Edit
+				if (auth()->user()->can('target_progress_edit')) {
+					$buttons .= "
+						<a href=\"{$editUrl}\" 
+						class=\"btn btn-sm btn-info edit-target-progress\"
+						title=\"" . __('global.edit') . " Target Progress\">
 							<i class='bi bi-pencil-square'></i>
 						</a>
-						<button type='button' class='btn btn-sm btn-secondary target-progress-history'>
+					";
+				}
+
+				// Tombol History
+				if (auth()->user()->can('target_progress_show')) {
+					$buttons .= "
+						<button type=\"button\" 
+								class=\"btn btn-sm btn-secondary target-progress-history\"
+								data-target-id=\"{$target->id}\"
+								title=\"Riwayat Progress\">
 							<i class='fas fa-history'></i>
 						</button>
-					</div>
-				";
+					";
+				}
 
-				return $button;
+				return $buttons ?: '-';
 			})
 			->rawColumns([
 				'action',

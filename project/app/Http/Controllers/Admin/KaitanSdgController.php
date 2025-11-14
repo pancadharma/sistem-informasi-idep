@@ -126,8 +126,35 @@ class KaitanSdgController extends Controller
         $kaitansdgs = KaitanSdg::get();
         $data = DataTables::of($kaitansdgs)
             ->addColumn('action', function ($kaitansdg) {
-                return '<button type="button" class="btn btn-sm btn-info edit-kaitansdg-btn" data-action="edit" data-kaitansdg-id="' . $kaitansdg->id . '"><i class="fas fa-pencil-alt"></i><span class="d-none d-sm-inline">' . trans('global.edit') . '</span></button>
-                        <button type="button" class="btn btn-sm btn-primary view-kaitansdg-btn" data-action="view" data-kaitansdg-id="' . $kaitansdg->id . '"><i class="fas fa-folder-open"></i> <span class="d-none d-sm-inline">' . trans('global.view') . '</span></button>';
+                $buttons = '';
+
+                if (auth()->user()->can('sdg_edit')) {
+                    $buttons .= '
+                        <button type="button" 
+                            class="btn btn-sm btn-info edit-kaitansdg-btn"
+                            data-action="edit" 
+                            data-kaitansdg-id="' . $kaitansdg->id . '"
+                            title="' . trans('global.edit') . ' ' . $kaitansdg->nama . '">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span class="d-none d-sm-inline">' . trans('global.edit') . '</span>
+                        </button>
+                    ';
+                }
+
+                if (auth()->user()->can('sdg_show')) {
+                    $buttons .= '
+                        <button type="button" 
+                            class="btn btn-sm btn-primary view-kaitansdg-btn"
+                            data-action="view" 
+                            data-kaitansdg-id="' . $kaitansdg->id . '"
+                            title="' . trans('global.view') . ' ' . $kaitansdg->nama . '">
+                            <i class="fas fa-folder-open"></i>
+                            <span class="d-none d-sm-inline">' . trans('global.view') . '</span>
+                        </button>
+                    ';
+                }
+
+                return $buttons ?: '-';
             })
             ->make(true);
         return $data;

@@ -59,15 +59,15 @@ class KomponenModelController extends Controller
                     ->addColumn('action', function ($item) {
                         $buttons = [];
 
-                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_edit')) {
+                        if (auth()->user()->id === 1 || auth()->user()->can('komponenmodel_edit')) {
                             $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
                         }
-                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_view') || auth()->user()->can('komodel_access')) {
+                        if (auth()->user()->id === 1 || auth()->user()->can('komponenmodel_view') || auth()->user()->can('komponenmodel_access')) {
                             $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
                         }
-                        if (auth()->user()->id === 1 || auth()->user()->can('komodel_details_edit') || auth()->user()->can('komodel_edit')) {
-                            $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
-                        }
+                        // if (auth()->user()->id === 1 || auth()->user()->can('komodel_details_edit') || auth()->user()->can('komodel_edit')) {
+                        //     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . ' ' . __('cruds.komodel.label') . ' ' . $item->id, $item->id);
+                        // }
 
                         return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
                     })

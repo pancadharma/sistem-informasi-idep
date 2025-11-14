@@ -12,10 +12,12 @@
 @section('content_header_title')
     {{-- Tombol Tambah FRM - Diubah menjadi Link ke Halaman Create --}}
     {{-- Hapus atribut data-bs-toggle & data-bs-target --}}
+    @can('frm_create')
     <a href="{{ route('feedback.create') }}" class="btn btn-success" title="{{ __('Tambah Feedback Baru') }}">
          {{-- <i class="fas fa-plus me-1"></i> --}}
         {{ __('Tambah FRM') }}
     </a>
+    @endcan
 @endsection
 
 @section('sub_breadcumb')
