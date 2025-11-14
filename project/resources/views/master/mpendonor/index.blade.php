@@ -6,6 +6,7 @@
 
 @section('content_body')
     <div class="card card-primary collapsed-card" >
+            @can('pendonor_create')
             <div class="card-header">
                 {{ trans('global.create')}} {{trans('cruds.mpendonor.title')}}
                 <div class="card-tools">
@@ -14,6 +15,7 @@
                     </button>
                 </div>
             </div>
+            @endcan
                 <div class="card-body">
                 <form action="{{ route('pendonor.store')}}" method="POST" class="resettable-form" id="mpendonorForm" autocomplete="off">
                     @csrf

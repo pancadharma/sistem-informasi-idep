@@ -2,7 +2,7 @@
 
 @section('subtitle', __('cruds.beneficiary.list'))
 @section('content_header_title')
-    @can('meals_access')
+    @can('beneficiary_create')
         <a class="btn-success btn" href="{{ route('beneficiary.create') }}" title="{{ __('cruds.beneficiary.add') }}">
             {{ __('global.create') .' '.__('cruds.beneficiary.label') }}
         </a>

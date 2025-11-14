@@ -142,20 +142,39 @@ class KelompokmarjinalController extends Controller
         //
     }
 
-    public function datakelompokmarjinal(){
+    public function datakelompokmarjinal()
+    {
         $activekelompokmarjinal = Kelompok_Marjinal::get();
-        // Prepare data for DataTables (without modifying original collection)
+
         $data = DataTables::of($activekelompokmarjinal)
             ->addColumn('action', function ($kelompokmarjinal) {
-                $editUrl = route('kelompokmarjinal.edit', $kelompokmarjinal->id);
-                $viewUrl = route('kelompokmarjinal.show', $kelompokmarjinal->id);
-                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
-                //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
+                $buttons = '';
 
-                return '<button type="button" class="btn btn-sm btn-info edit-kelompokmarjinal-btn" data-action="edit" data-kelompokmarjinal-id="'. $kelompokmarjinal->id .'" title="'.__('global.edit') .' '. __('cruds.kelompokmarjinal.title') .' '. $kelompokmarjinal->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-kelompokmarjinal-btn" data-action="view" data-kelompokmarjinal-id="'. $kelompokmarjinal->id .'" value="'. $kelompokmarjinal->id .'" title="'.__('global.view') .' '. __('cruds.kelompokmarjinal.title') .' '. $kelompokmarjinal->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                
+                if (auth()->user()->can('marjinal_edit')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-info edit-kelompokmarjinal-btn" 
+                        data-action="edit" 
+                        data-kelompokmarjinal-id="'. $kelompokmarjinal->id .'" 
+                        title="'.__('global.edit') .' '. __('cruds.kelompokmarjinal.title') .' '. $kelompokmarjinal->nama .'">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </button> ';
+                }
+
+                
+                if (auth()->user()->can('marjinal_show')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-primary view-kelompokmarjinal-btn" 
+                        data-action="view" 
+                        data-kelompokmarjinal-id="'. $kelompokmarjinal->id .'" 
+                        value="'. $kelompokmarjinal->id .'" 
+                        title="'.__('global.view') .' '. __('cruds.kelompokmarjinal.title') .' '. $kelompokmarjinal->nama .'">
+                        <i class="fas fa-folder-open"></i> View
+                    </button> ';
+                }
+
+                return $buttons ?: '-';
             })
             ->make(true);
+
         return $data;
     }
 }

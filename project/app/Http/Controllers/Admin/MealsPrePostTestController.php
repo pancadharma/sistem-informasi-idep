@@ -47,10 +47,10 @@ class MealsPrePostTestController extends Controller
                     ->addColumn('total_peserta', fn($item) => $item->peserta->count()) // hitung jumlah peserta
                     ->addColumn('action', function ($item) {
                         $buttons = [];
-                        if (auth()->user()->id === 1 || auth()->user()->can('prepost_edit')) {
+                        if (auth()->user()->id === 1 || auth()->user()->can('prepostl_edit')) {
                             $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . ' PrePost ' . $item->id, $item->id);
                         }
-                        if (auth()->user()->id === 1 || auth()->user()->can('prepost_view')) {
+                        if (auth()->user()->id === 1 || auth()->user()->can('prepostl_view')) {
                             $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . ' PrePost ' . $item->id, $item->id);
                         }
                         return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";

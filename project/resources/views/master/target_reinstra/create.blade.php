@@ -1,15 +1,15 @@
 <div id="add_reinstra" class="card card-primary collapsed-card">
+    {{-- limit which user can view this button to open the form create reinstra --}}
+    @can('target_reinstra_create')
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.reinstra.title')}}
         <div class="card-tools">
-            {{-- limit which user can view this button to open the form create reinstra --}}
-            @can('target_reinstra_create')
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-plus"></i>
             </button>
-            @endcan
         </div>
     </div>
+    @endcan
     <div class="card-body responsive">
         {{-- Add Target Reinstra Form --}}
         <form id="AddTargetReinstraForm" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"  @submit.prevent="handleSubmit" novalidate>
