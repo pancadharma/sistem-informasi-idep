@@ -50,9 +50,11 @@
             <i class="fas fa-info-circle me-1"></i>
             Detail Feedback ID: {{ $feedback->id }}
         </h3>
+        @can('frm_edit')
         <a href="{{ route('feedback.edit', $feedback->id) }}" class="btn btn-warning btn-sm">
             <i class="fas fa-edit me-1"></i> Edit Data
         </a>
+        @endcan
     </div>
 
     {{-- Card Body Utama (Scrollable) --}}

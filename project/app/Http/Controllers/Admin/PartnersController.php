@@ -138,21 +138,35 @@ class PartnersController extends Controller
                               </div>',
                     };
                 })
-                ->addColumn('action', function($partner) {
-                    $editButton = '';
-                    $viewButton = '';
-                    $deleteButton = '';
-                    if (auth()->user()->can("partner_edit")) {
-                        $editButton = "<button type=\"button\" class=\"btn btn-sm btn-info edit-partner-btn\"
-                        data-action=\"edit\" data-partner-id=\"{$partner->id}\"
-                        title=\"" . __('global.edit') . " " . __('cruds.partner.title') . " {$partner->nama}\">
-                        <i class=\"fas fa-pencil-alt\"></i> " . __('global.edit') . "</button>";
+                ->addColumn('action', function ($partner) {
+                    $buttons = '';
+
+                    if (auth()->user()->can('partner_edit')) {
+                        $buttons .= '
+                            <button type="button" 
+                                class="btn btn-sm btn-info edit-partner-btn"
+                                data-action="edit" 
+                                data-partner-id="' . $partner->id . '"
+                                title="' . __('global.edit') . ' ' . __('cruds.partner.title') . ' ' . $partner->nama . '">
+                                <i class="fas fa-pencil-alt"></i> ' . __('global.edit') . '
+                            </button>
+                        ';
                     }
-                    $viewButton = "<button type=\"button\" class=\"btn btn-sm btn-primary view-partner-btn\"
-                    data-action=\"view\" data-partner-id=\"{$partner->id}\"
-                    title=\"" . __('global.view') . " " . __('cruds.partner.title') . " {$partner->nama}\">
-                    <i class=\"fas fa-folder-open\"></i> " . __('global.view') . "</button>";
-                    return "$editButton $viewButton";
+
+                    if (auth()->user()->can('partner_show')) {
+                        $buttons .= '
+                            <button type="button" 
+                                class="btn btn-sm btn-primary view-partner-btn"
+                                data-action="view" 
+                                data-partner-id="' . $partner->id . '"
+                                title="' . __('global.view') . ' ' . __('cruds.partner.title') . ' ' . $partner->nama . '">
+                                <i class="fas fa-folder-open"></i> ' . __('global.view') . '
+                            </button>
+                        ';
+                    }
+
+                    // tampilkan '-' kalau user gak punya izin sama sekali
+                    return $buttons ?: '-';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

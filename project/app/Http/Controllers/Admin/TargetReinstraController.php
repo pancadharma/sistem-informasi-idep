@@ -159,11 +159,13 @@ class TargetReinstraController extends Controller
                         title=\"" . __('global.edit') . " " . __('cruds.reinstra.title') . " {$reinstra->nama}\">
                         <i class=\"fas fa-pencil-alt\"></i> " . __('global.edit') . "</button>";
                     }
+                    if (auth()->user()->can("target_reinstra_show")) {  
                     $viewButton = "<button type=\"button\" class=\"btn btn-sm btn-primary view-reinstra-btn\"
                     data-action=\"view\" data-reinstra-id=\"{$reinstra->id}\"
                     title=\"" . __('global.view') . " " . __('cruds.reinstra.title') . " {$reinstra->nama}\">
                     <i class=\"fas fa-folder-open\"></i> " . __('global.view') . "</button>";
-                    return "$editButton $viewButton";
+                    }
+                    return trim("$editButton $viewButton") ?: '-';
                 })
                 ->rawColumns(['status', 'action'])
                 ->make(true);

@@ -166,13 +166,30 @@ class MPendonorController extends Controller
         $data = DataTables::of($pendonor)
         
             ->addColumn('action', function ($mpendonor) {
-                $editUrl = route('pendonor.edit', $mpendonor->id);
-                $viewUrl = route('pendonor.show', $mpendonor->id);
-                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
-                //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
+                $buttons = '';
 
-                return '<button type="button" class="btn btn-sm btn-info edit-mpendonor-btn" data-action="edit" data-mpendonor-id="'. $mpendonor->id .'" title="'.__('global.edit') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-mpendonor-btn" data-action="view" data-mpendonor-id="'. $mpendonor->id .'" value="'. $mpendonor->id .'" title="'.__('global.view') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                // Cek permission untuk edit
+                if (auth()->user()->can('pendonor_edit')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-info edit-mpendonor-btn" 
+                        data-action="edit" 
+                        data-mpendonor-id="'. $mpendonor->id .'" 
+                        title="'.__('global.edit') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </button> ';
+                }
+
+                // Cek permission untuk view
+                if (auth()->user()->can('pendonor_show')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-primary view-mpendonor-btn" 
+                        data-action="view" 
+                        data-mpendonor-id="'. $mpendonor->id .'" 
+                        value="'. $mpendonor->id .'" 
+                        title="'.__('global.view') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'">
+                        <i class="fas fa-folder-open"></i> View
+                    </button>';
+                }
+
+                return $buttons ?: '-'; // kalau ga punya permission sama sekali
             })
             ->make(true);
         return $data;
