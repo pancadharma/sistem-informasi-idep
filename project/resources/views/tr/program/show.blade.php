@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('subtitle', __('global.details') . ' ' . __('cruds.program.title'))
-@section('content_header_title', __('global.details') . ' ' . __('cruds.program.title'))
+@section('content_header_title', __('global.details') .' '. $program->nama ?? '' . ' ' . __('cruds.program.title'))
 
 @section('content_body')
 
@@ -16,23 +16,27 @@
      data-program-budget="{{ $program->totalnilai }}"
      data-program-description="{{ str_replace('"', '&quot;', strip_tags($program->deskripsiprojek)) }}"
      data-program-analysis="{{ str_replace('"', '&quot;', strip_tags($program->analisamasalah)) }}">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
+    <div class="card-header d-flex align-items-center">
+        {{-- <div class="d-flex align-items-center">
             <a class="btn btn-outline-secondary mr-3" href="{{ route('program.index') }}">
                 <i class="fas fa-arrow-left"></i> {{ __('global.back') }}
             </a>
             <div>
-                <h2 class="mb-0">{{ $program->nama }}</h2>
-                <p class="mb-0 text-muted">Code: {{ $program->kode }}</p>
+                <h2 class="mb-0">{{ $program->nama ?? '' }}</h2>
             </div>
+        </div> --}}
+        <div class="card-title">
+            <h3 class="text-muted pr-2">
+                {{-- {{ __('cruds.program.kode') }}:  --}}
+                {{ $program->kode }}</h3>
         </div>
-        <div class="card-tools">
+        <div class="{{-- card-tools --}} ml-auto">
             <span class="badge badge-lg {{ $program->status === 'running' ? 'bg-success' : ($program->status === 'pending' ? 'bg-warning' : ($program->status === 'complete' ? 'bg-info' : 'bg-secondary')) }}">
                 {{ strtoupper($program->status) }}
             </span>
 
             <!-- Export Dropdown -->
-            <div class="btn-group ml-2">
+            <div class="btn-group">
                 <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-download"></i> Export
                 </button>
@@ -60,7 +64,7 @@
             </div>
 
             @can('program_edit')
-            <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary ml-2">
+            <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary">
                 <i class="fas fa-edit"></i> Edit
             </a>
             @endcan
@@ -68,12 +72,12 @@
     </div>
     <div class="card-body">
         <!-- Quick Stats Row -->
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-3 col-sm-6">
                 <div class="info-box bg-primary">
                     <span class="info-box-icon"><i class="fas fa-users"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Total Beneficiaries</span>
+                        <span class="info-box-text">{{ __('cruds.program.expektasi') }}</span>
                         <span class="info-box-number">{{ $totalBeneficiaries }}</span>
                     </div>
                 </div>
@@ -109,25 +113,22 @@
 
         <!-- Timeline Info -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3 col-sm-6 col-xl-6">
                 <div class="small-box bg-light">
                     <div class="inner">
                         <h4>Start Date</h4>
                         <p>{{ $program->tanggalmulai }}</p>
                     </div>
-                    <div class="icon">
+                    {{-- <div class="icon">
                         <i class="fas fa-play"></i>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3 col-sm-6 col-xl-6">
                 <div class="small-box bg-light">
                     <div class="inner">
                         <h4>End Date</h4>
                         <p>{{ $program->tanggalselesai }}</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-stop"></i>
                     </div>
                 </div>
             </div>

@@ -106,12 +106,12 @@ class KegiatanController extends Controller
                 if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_edit')) {
                     $buttons[] = $this->generateButton('edit', 'info', 'pencil-square', __('global.edit') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access')) {
+                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_view') || auth()->user()->can('kegiatan_access' || auth()->user()->can('kegiatan_show'))) {
                     $buttons[] = $this->generateButton('view', 'primary', 'folder2-open', __('global.view') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
                 }
-                if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
-                    $buttons[] = $this->generateButton('details', 'danger', 'list-ul', __('global.details') . __('cruds.kegiatan.label') . $kegiatan->nama, $kegiatan->id);
-                }
+                // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_show') || auth()->user()->can('kegiatan_edit')) {
+                //     $buttons[] = $this->generateButton('details', 'danger', 'list-ul', 'xxx' . $kegiatan->nama, $kegiatan->id);
+                // }
                 // if (auth()->user()->id === 1 || auth()->user()->can('kegiatan_export')) {
                 //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
@@ -148,7 +148,7 @@ class KegiatanController extends Controller
             //     break;
         }
 
-        return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . " title='" . $label . "''></i></a>";
+        return "<a href='" . $url ."' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
     }
     public function getProvinsi(Request $request)
     {
