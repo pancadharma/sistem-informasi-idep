@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="signature-box">
-                <p><strong>Prepared by:</strong></p>
+                <p><strong>{{ __('btor.prepared_by') }}:</strong></p>
                 <br><br><br>
                 <p>
                     @if($kegiatan->datapenulis?->first())
@@ -10,7 +10,7 @@
                         <em>{{ $kegiatan->datapenulis->first()->kegiatanPeran?->nama ?? 'Staff' }}</em>
                     @else
                         <strong>_____________________</strong><br>
-                        <em>Report Writer</em>
+                        <em>{{ __('btor.penulis_laporan') }}</em>
                     @endif
                 </p>
                 <p>Date: {{ now()->format('d F Y') }}</p>
@@ -18,15 +18,15 @@
         </div>
         <div class="col-md-6">
             <div class="signature-box">
-                <p><strong>Approved by:</strong></p>
+                <p><strong>{{ __('btor.approve_by') }}:</strong></p>
                 <br><br><br>
                 <p>
                     @if($kegiatan->user)
-                        <strong>{{ $kegiatan->user->name }}</strong><br>
-                        <em>Program Coordinator</em>
+                        <strong>{{ $kegiatan->user->nama }}</strong><br>
+                        <em>{{ $kegiatan->user->jabatan?->nama ?? __('btor.penanggung_jawab_jabatan') }}</em>
                     @else
                         <strong>_____________________</strong><br>
-                        <em>Supervisor</em>
+                        <em>{{ __('btor.penanggung_jawab_jabatan') }}</em>
                     @endif
                 </p>
                 <p>Date: _________________</p>

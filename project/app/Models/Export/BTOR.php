@@ -77,25 +77,52 @@ class BTOR extends Model
      */
     public static function getData(int $kegiatanId)
     {
+        // return Kegiatan::with([
+        //     'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.goal',
+        //     'jenisKegiatan',
+        //     'lokasi.desa.kecamatan.kabupaten.provinsi',
+        //     'datapenulis',
+        //     'monitoring',
+        //     'assessment',
+        //     'kampanye',
+        //     'konsultasi',
+        //     'kunjungan',
+        //     'lainnya',
+        //     'pelatihan',
+        //     'pembelanjaan',
+        //     'pemetaan',
+        //     'pengembangan',
+        //     'sosialisasi',
+        //     'mitra',
+        //     'sektor',
+        //     'user'
+
+
+        // ])->findOrFail($kegiatanId);
         return Kegiatan::with([
             'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.goal',
             'jenisKegiatan',
             'lokasi.desa.kecamatan.kabupaten.provinsi',
             'datapenulis',
-            'monitoring',
+            'lokasi_kegiatan',
+            'kegiatan_penulis.peran',
+            'kegiatan_penulis.user',
             'assessment',
-            'kampanye',
-            'konsultasi',
-            'kunjungan',
-            'lainnya',
+            'monitoring',
+            'sosialisasi',
             'pelatihan',
             'pembelanjaan',
-            'pemetaan',
             'pengembangan',
-            'sosialisasi',
-            'mitra',
+            'kampanye',
+            'pemetaan',
+            'monitoring',
+            'kunjungan',
+            'konsultasi',
+            'lainnya',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.kaitanSdg',
             'sektor',
-            'user'
+            'mitra',
+            'user',
         ])->findOrFail($kegiatanId);
     }
 

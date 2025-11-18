@@ -1,15 +1,15 @@
 <div class="location-section">
     @if($kegiatan->lokasi?->count() > 0)
-        <table class="table table-bordered table-sm">
-            <thead class="thead-light">
+        <table class="table-bordered" style="font-size: 8pt; width: 100%;">
+            <thead>
                 <tr>
-                    <th width="5%" class="text-center">No</th>
-                    <th width="20%">Location Name</th>
-                    <th width="15%">Village/Ward</th>
-                    <th width="15%">Sub-District</th>
-                    <th width="15%">District</th>
-                    <th width="15%">Province</th>
-                    <th width="15%">Coordinates</th>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 18%;">Location Name</th>
+                    <th style="width: 15%;">Village/Ward</th>
+                    <th style="width: 15%;">Sub-District</th>
+                    <th style="width: 17%;">District</th>
+                    <th style="width: 15%;">Province</th>
+                    <th style="width: 15%;">Coordinates</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,19 +21,11 @@
                         <td>{{ $lokasi->desa?->kecamatan?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '-' }}</td>
-                        <td>
+                        <td class="text-center">
                             @if($lokasi->lat && $lokasi->long)
-                                <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}"
-                                   target="_blank"
-                                   class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-map-marker-alt"></i> Map
-                                </a>
-                                <br>
-                                <small class="text-muted">
-                                    {{ number_format($lokasi->lat, 6) }}, {{ number_format($lokasi->long, 6) }}
-                                </small>
+                                {{ number_format($lokasi->lat, 4) }},<br>{{ number_format($lokasi->long, 4) }}
                             @else
-                                <span class="text-muted">N/A</span>
+                                -
                             @endif
                         </td>
                     </tr>
@@ -42,8 +34,7 @@
         </table>
 
         {{-- Summary --}}
-        <div class="alert alert-secondary mt-3">
-            <i class="fas fa-map-marked-alt"></i>
+        <div style="margin-top: 10px; padding: 8px; background-color: #f0f0f0; border: 1px solid #ccc; font-size: 9pt;">
             <strong>Location Summary:</strong>
             @php
                 $provinces = $kegiatan->lokasi
@@ -69,9 +60,6 @@
             @endif
         </div>
     @else
-        <div class="alert alert-warning">
-            <i class="fas fa-exclamation-triangle"></i>
-            No location data available for this activity.
-        </div>
+        <p><em>No location data available for this activity.</em></p>
     @endif
 </div>

@@ -1,14 +1,14 @@
 <div class="beneficiaries-table">
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
+    <table class="table-bordered" style="font-size: 9pt; width: 100%;">
+        <thead>
             <tr>
-                <th rowspan="2" class="align-middle">Category</th>
-                <th colspan="3" class="text-center">Gender</th>
+                <th rowspan="2" style="width: 30%; vertical-align: middle;">Category</th>
+                <th colspan="3" class="text-center">Gender Distribution</th>
             </tr>
             <tr>
-                <th class="text-center">Female</th>
-                <th class="text-center">Male</th>
-                <th class="text-center">Total</th>
+                <th class="text-center" style="width: 23%;">Female</th>
+                <th class="text-center" style="width: 23%;">Male</th>
+                <th class="text-center" style="width: 24%;">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}</td>
                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}</strong></td>
             </tr>
-            <tr class="table-warning">
+            <tr class="table-secondary">
                 <td><strong>Marginalized Groups</strong></td>
                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
@@ -58,15 +58,8 @@
                 <td><strong>GRAND TOTAL</strong></td>
                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
-                <td class="text-center"><strong class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</strong></td>
+                <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</strong></td>
             </tr>
         </tbody>
     </table>
-
-    <div class="alert alert-info mt-3">
-        <i class="fas fa-info-circle"></i>
-        <strong>Total Beneficiaries:</strong> {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} people
-        ({{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }} female,
-        {{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }} male)
-    </div>
 </div>

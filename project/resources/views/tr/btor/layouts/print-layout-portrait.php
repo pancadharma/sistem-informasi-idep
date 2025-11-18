@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>@yield('title', 'BTOR Print')</title>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@yield('title', 'BTOR Prints')</title>
 
     @include('tr.btor.custom.style')
-    @stack('print-styles')
 </head>
+
 <body>
-    {{-- Print Controls (hidden when printing) --}}
-    <div class="print-controls no-print">
+    @if(isset($showButtons) && $showButtons)
+    <div class="print-controls">
         <button onclick="window.print()" class="btn-print">
             Print
         </button>
@@ -21,9 +20,9 @@
             Close
         </button>
     </div>
+    @endif
 
     @yield('content')
-
-    @stack('print-scripts')
 </body>
+
 </html>

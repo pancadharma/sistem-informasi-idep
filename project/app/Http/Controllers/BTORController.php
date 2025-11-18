@@ -44,31 +44,43 @@ class BTORController extends Controller
         return view('tr.btor.show', compact('kegiatan', 'viewPath'));
     }
 
-    /**
-     * Show print preview
-     */
     public function print($id)
     {
         $kegiatan = BTOR::getData($id);
         $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
+        $showButtons = true; // Show buttons for print preview
 
-        // Debug: Check if view exists
-        if (!view()->exists('tr.btor.print')) {
-            abort(500, 'Print view template not found');
-        }
-
-        if (!view()->exists($viewPath)) {
-            abort(500, "Back to Office type view not found: {$viewPath}");
-        }
-
-        return view('tr.btor.print', compact('kegiatan', 'viewPath'));
+        return view('tr.btor.print', compact('kegiatan', 'viewPath', 'showButtons'));
     }
+
+    public function exportPdf($id, Request $request)
+    {
+        $kegiatan = BTOR::getData($id);
+        $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
+        $showButtons = false; // Hide buttons for PDF
+
+        $orientation = $request->get('orientation', 'landscape');
+
+        $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath', 'showButtons'))
+            ->setPaper('a4', $orientation)
+            ->setOption([
+                'margin-top' => 10,
+                'margin-bottom' => 10,
+                'margin-left' => 30,
+                'margin-right' => 30,
+            ]);
+
+        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
+
+        return $pdf->download($filename);
+    }
+
 
 
     /**
      * Export to PDF
      */
-    public function exportPdf($id)
+    public function exportPdfOld($id)
     {
         $kegiatan = BTOR::getData($id);
         $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
@@ -141,6 +153,36 @@ class BTORController extends Controller
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
+
+    /**
+     * Export to PDF
+     */
+    public function exportPdf2($id, Request $request)
+    {
+        $kegiatan = BTOR::getData($id);
+        $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
+
+        // Choose orientation based on query parameter (default: landscape)
+        $orientation = $request->get('orientation', 'landscape');
+
+        $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath'))
+            ->setPaper('a4', $orientation)
+            ->setOption([
+                'margin-top' => 10,
+                'margin-bottom' => 10,
+                'margin-left' => 10,
+                'margin-right' => 20,
+                'enable-local-file-access' => true,
+                'encoding' => 'UTF-8',
+                'enable-smart-shrinking' => true,
+                'no-outline' => true,
+            ]);
+
+        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
+
+        return $pdf->download($filename);
+    }
+
 
     /**
      * Show export configuration page
