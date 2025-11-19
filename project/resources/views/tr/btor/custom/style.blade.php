@@ -1,5 +1,6 @@
 <style>
     /* Print-specific CSS */
+
     @page {
         size: A4 landscape; /* Changed to landscape for wider tables */
         margin: 1.5cm 1cm;
@@ -68,8 +69,10 @@
     }
 
     .subsection {
-        margin-bottom: 12px;
-        margin-left: 10px;
+        /* margin-bottom: 12px; */
+        /* margin-left: 10px; */
+        font-size: 10pt;
+        font-weight: bold;
     }
 
     .subsection h5 {

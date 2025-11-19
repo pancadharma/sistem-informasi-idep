@@ -23,9 +23,17 @@
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '-' }}</td>
                         <td class="text-center">
                             @if($lokasi->lat && $lokasi->long)
-                                {{ number_format($lokasi->lat, 4) }},<br>{{ number_format($lokasi->long, 4) }}
+                                {{ number_format($lokasi->lat, 4) }},{{ number_format($lokasi->long, 4) }}
                             @else
                                 -
+                            @endif
+
+                            @if ($lokasi->lat && $lokasi->long)
+                                <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
+                                    {{ ucwords(strtolower($lokasi->lokasi ?? 'Maps')) }}
+                                </a>
+                            @else
+                                {{ $lokasi->lokasi ?? '—' }}
                             @endif
                         </td>
                     </tr>

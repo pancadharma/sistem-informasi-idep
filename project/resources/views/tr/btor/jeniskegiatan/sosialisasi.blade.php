@@ -1,7 +1,7 @@
 <div class="sosialisasi-details">
     @if($kegiatan->sosialisasi)
-        <div class="card border-success">
-            <div class="card-header bg-success text-white">
+        <div class="card card-primary card-outline">
+            <div class="card-header bg-primary">
                 <h5 class="mb-0"><i class="fas fa-bullhorn"></i> Socialization Details</h5>
             </div>
             <div class="card-body">
