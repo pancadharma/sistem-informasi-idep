@@ -3,6 +3,7 @@
 namespace App\Models\Export;
 
 use App\Models\Kegiatan;
+use App\Models\Export\ProgramBTOR;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -203,16 +204,7 @@ class BTOR extends Model
      */
     protected function getProgramInfo(Kegiatan $kegiatan): array
     {
-        $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
-
-        return [
-            'program_kode' => $program?->kode,
-            'program_nama' => $program?->nama,
-            'outcome_target' => $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target,
-            'output_target' => $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target,
-            'activity_target' => $kegiatan->programOutcomeOutputActivity?->target,
-            'goals' => $program?->goals?->pluck('nama')->toArray() ?? [],
-        ];
+        return ProgramBTOR::getProgramInfo($kegiatan);
     }
 
     /**
