@@ -12,6 +12,7 @@ return [
     'status' => 'Status',
     'tempat' => 'Tempat',
     'programs' => 'Programs',
+    'program' => 'Program',
     'nama_program' => 'Nama Program',
     'kode_program' => 'Kode Program',
     'nama_kegiatan' => 'Nama Kegiatan',
@@ -20,8 +21,10 @@ return [
     'jenis_kegiatan' => 'Jenis Kegiatan',
     'sektor_kegiatan' => 'Sektor Kegiatan',
     'mitra_kegiatan' => 'Mitra Kegiatan',
+    'pihak_yang_terlibat' => 'Pihak yang Terlibat',
     'lokasi_kegiatan' => 'Lokasi Kegiatan',
     'tanggal_mulai' => 'Tanggal Mulai',
+    'hari'  => 'hari',
     'tanggal_selesai' => 'Tanggal Selesai',
 
     'periode' => 'Periode',
@@ -42,16 +45,55 @@ return [
     'activity_description' => 'Deskripsi Aktifitas',
 
     'latar_belakang_kegiatan' => 'Latar Belakang Kegiatan',
+    'no_background_activity' => 'Tidak Ada Latar Belakang Kegiatan atau Belum di inputkan',
     'tujuan_kegiatan' => 'Tujuan Kegiatan',
+    'no_tujuan_activity' => 'Tidak Ada Tujuan Kegiatan atau Belum di inputkan',
     'keluaran_kegiatan' => 'Keluaran Kegiatan',
+    'no_keluaran_activity' => 'Tidak Ada Keluaran Kegiatan atau Belum di inputkan',
     'detail_kegiatan' => 'Detail Kegiatan',
     'deskripsilatarbelakang' => 'Deskripsi Latar Belakang',
     'deskripsitujuan' => 'Deskripsi Tujuan',
     'deskripsikeluaran' => 'Deskripsi Keluaran',
     'deskripsiyangdikaji' => 'Kajian',
 
-    'informasi_lokasi' => 'Informasi Lokasi',
+    'detail_kegiatan_spesifik' => 'Detail Kegiatan Spesifik',
+    'hasil_kegiatan' => 'Hasil Kegiatan',
+
+    'jumlah_partisipan' => 'Jumlah Partisipan yang Terlibat dan Disagregat',
+    'table_partisipan' => 'Tabel Disagregasi Berdasarkan Usia dan Jenis Kelamin',
+    'table_kelompok_khusus' => 'Tabel Disagregasi Berdasarkan Kelompok Khusus',
+    'penyandang_disabilitas' => 'Penyandang Disabilitas',
+    'non_disabilitas' => 'Non-disabilitas',
+    'non_disabilitas' => 'Kelompok Marjinal Lainnya',
+    
+    
     'penerima_manfaat' => 'Penerima Manfaat',
+
+    
+    'perempuan' => 'Perempuan',
+    'laki_laki' => 'Laki-laki',
+    'lainnya' => 'Lainnya',
+    'sub_total' => 'Sub Total',
+    'total_keseluruhan' => 'Total Keseluruhan',
+    'orang' => 'Orang',
+
+    'dewasa' => 'Dewasa',
+    'lansia' => 'Lansia',
+    'remaja' => 'Remaja',
+    'anak' => 'Anak',
+    'grand_total' => 'Grand Total',
+
+    'umur_18_kebawah' => 'Umur 18 tahun ke bawah',
+    'umur_18_24' => 'Umur 18 - 24 tahun',
+    'umur_25_59' => 'Umur 25 - 59 tahun',
+    'umur_60' => 'Umur 60 tahun', 
+    'umur_60_ke_atas' => 'Umur 60  ke atas',
+    
+    
+
+    'hasil_pertemuan' => 'Hasil Pertemuan',
+
+    'informasi_lokasi' => 'Informasi Lokasi',
 
     'prepared_by' => 'Disiapkan Oleh',
     'penulis_jabatan' => 'Jabatan',
@@ -59,4 +101,11 @@ return [
     'penanggung_jawab' => 'Penanggung Jawab',
     'penanggung_jawab_jabatan' => 'Jabatan Penanggung Jawab',
     'approve_by' => 'Disetujui Oleh',
+
+    'report_detail' => 'Detail Laporan',
+    'btor_report_detail' => 'Detail Laporan BTOR',
+    'btor_report_list' => 'Daftar Laporan BTOR',
+    'back_to_list' => 'Kembali ke Daftar',
+    'export_pdf' => 'Export PDF',
+    'print_preview' => 'Print Preview',
 ];

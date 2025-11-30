@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('subtitle', __('BTOR Report Detail'))
-@section('content_header_title') <strong>{{ __('BTOR Report Detail') }}</strong>@endsection
-@section('sub_breadcumb')<a href="{{ route('btor.index') }}" title="{{ __('BTOR Report List') }}"> {{ __('BTOR Report List') }}</a>@endsection
-@section('sub_sub_breadcumb') / <span title="Current Page {{ __('BTOR Report Detail') }}">{{ __('BTOR Report Detail') }}</span>@endsection
+@section('subtitle', __('btor.btor_report_detail'))
+@section('content_header_title') <strong>{{ __('btor.btor_report_detail') }}</strong>@endsection
+@section('sub_breadcumb')<a href="{{ route('btor.index') }}" title="{{ __('btor.btor_report_list') }}"> {{ __('btor.btor_report_list') }}</a>@endsection
+@section('sub_sub_breadcumb') / <span title="Current Page {{ __('btor.btor_report_detail') }}">{{ __('btor.btor_report_detail') }}</span>@endsection
 
 @section('preloader')
     <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
@@ -19,17 +19,17 @@
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group mr-2">
                     <a href="{{ route('btor.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Kembali ke Daftar
+                        <i class="fas fa-arrow-left"></i> {{ __('btor.back_to_list') }}
                     </a>
                 </div>
                 <div class="btn-group mr-2">
                     <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-info" target="_blank">
-                        <i class="fas fa-print"></i> Print Preview
+                        <i class="fas fa-print"></i> {{ __('btor.print_preview') }}
                     </a>
                 </div>
                 <div class="btn-group">
                     <a href="{{ route('btor.export.pdf', $kegiatan->id) }}" class="btn btn-danger">
-                        <i class="fas fa-file-pdf"></i> Export PDF
+                        <i class="fas fa-file-pdf"></i> {{ __('btor.export_pdf') }}
                     </a>
                 </div>
             </div>
@@ -41,7 +41,7 @@
 
         {{-- Header --}}
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0 text-center">BACK TO OFFICE REPORT (BTOR)</h3>
+            <h3 class="mb-0 text-center">{{ __('btor.btor') }}</h3>
             <p class="text-center mb-0"><small>Report ID: {{ $kegiatan->id }}</small></p>
         </div>
 
@@ -52,28 +52,28 @@
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td width="25%" class="table-light"><strong>Department</strong></td>
-                            <td>: Program</td>
+                            <td width="25%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
+                            <td>Program</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Program</strong></td>
-                            <td>: {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
+                            <td class="table-light"><strong>{{ __('btor.program') }}</strong></td>
+                            <td>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Nama Kegiatan</strong></td>
-                            <td>: {{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
+                            <td class="table-light"><strong>{{ __('btor.nama_kegiatan') }}</strong></td>
+                            <td>{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Kode Budget</strong></td>
-                            <td>: {{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
+                            <td class="table-light"><strong>{{ __('btor.kode_budget') }}</strong></td>
+                            <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Penulis Laporan</strong></td>
-                            <td>: {{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: '-' }}</td>
+                            <td class="table-light"><strong>{{ __('btor.penulis_laporan') }}</strong></td>
+                            <td>{{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Jabatan</strong></td>
-                            <td>: {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}</td>
+                            <td class="table-light"><strong>{{ __('btor.penanggung_jawab') }}</strong></td>
+                            <td>{{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -84,47 +84,47 @@
             {{-- 1. Latar Belakang Kegiatan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-info-circle text-primary"></i> Latar Belakang Kegiatan
+                    <i class="fas fa-info-circle text-primary"></i> {{ __('btor.latar_belakang_kegiatan') }}
                 </h4>
                 <div class="p-3 bg-light rounded" style="min-height: 100px;">
-                    {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted">Tidak ada data latar belakang</em>' !!}
+                    {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted"> ' . __('btor.no_background_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 2. Tujuan Kegiatan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-bullseye text-success"></i> Tujuan Kegiatan
+                    <i class="fas fa-bullseye text-success"></i> {{ __('btor.tujuan_kegiatan') }}
                 </h4>
                 <div class="p-3 bg-light rounded" style="min-height: 100px;">
-                    {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted">Tidak ada data tujuan</em>' !!}
+                    {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted"> ' . __('btor.no_tujuan_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 3. Detail Kegiatan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-calendar-alt text-warning"></i> Detail Kegiatan
+                    <i class="fas fa-calendar-alt text-warning"></i> {{ __('btor.detail_kegiatan') }}
                 </h4>
 
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td width="25%" class="table-light"><strong>Hari, Tanggal</strong></td>
+                            <td width="25%" class="table-light"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
                             <td>
                                 : @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
                                     {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                     @if($kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
                                         - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                     @endif
-                                    <span class="badge badge-info ml-2">{{ $kegiatan->getDurationInDays() }} hari</span>
+                                    <span class="badge badge-info ml-2">{{ $kegiatan->getDurationInDays() }} {{ __('btor.hari') }}</span>
                                 @else
                                     -
                                 @endif
                             </td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Tempat</strong></td>
+                            <td class="table-light"><strong>{{ __('btor.lokasi_kegiatan') }}</strong></td>
                             <td>
                                 : @if($kegiatan->lokasi?->count() > 0)
                                     @php
@@ -145,7 +145,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Pihak yang Terlibat</strong></td>
+                            <td class="table-light"><strong>{{ __('btor.pihak_yang_terlibat') }}</strong></td>
                             <td>
                                 : @if($kegiatan->mitra?->count() > 0)
                                     <ul class="mb-0 pl-3">
@@ -159,7 +159,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>Sektor</strong></td>
+                            <td class="table-light"><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
                             <td>
                                 : @if($kegiatan->sektor?->count() > 0)
                                     {{ $kegiatan->sektor->pluck('nama')->implode(', ') }}
@@ -182,7 +182,7 @@
                 {{-- Activity Type Specific Content --}}
                 <div class="mt-4">
                     <h5 class="mb-3">
-                        <i class="fas fa-tasks text-info"></i> Detail Kegiatan Spesifik
+                        <i class="fas fa-tasks text-info"></i> {{ __('btor.detail_kegiatan_spesifik') }}
                         <span class="badge badge-info">{{ $kegiatan->jenisKegiatan?->nama }}</span>
                     </h5>
                     @include($viewPath, ['kegiatan' => $kegiatan])
@@ -192,49 +192,49 @@
             {{-- 4. Hasil Kegiatan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-chart-bar text-success"></i> Hasil Kegiatan
+                    <i class="fas fa-chart-bar text-success"></i> {{ __('btor.hasil_kegiatan') }}
                 </h4>
 
                 {{-- 4a. Jumlah Partisipan --}}
-                <h5 class="mb-3">a. Jumlah Partisipan yang Terlibat dan Disagregat</h5>
+                <h5 class="mb-3">{{ __('btor.jumlah_partisipan') }}</h5>
 
-                <p class="text-muted mb-2"><em>Tabel Disagregasi Berdasarkan Usia dan Jenis Kelamin:</em></p>
+                <p class="text-muted mb-2"><em>{{ __('btor.table_partisipan') }}:</em></p>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Penerima Manfaat</th>
-                                <th class="text-center" width="15%">Perempuan</th>
-                                <th class="text-center" width="15%">Laki-laki</th>
-                                <th class="text-center" width="15%">Lainnya</th>
-                                <th class="text-center" width="15%">Sub Total</th>
+                                <th>{{ __('btor.penerima_manfaat') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.perempuan') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.laki_laki') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.lainnya') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.sub_total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Dewasa <em>(umur 25 sampai 59 tahun)</em></td>
+                                <td>{{ __('btor.dewasa') }} <em>( {{ __('btor.umur_25_59') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</strong></td>
                             </tr>
                             <tr>
-                                <td>Lansia <em>(umur 60 ke atas)</em></td>
+                                <td>{{ __('btor.lansia') }} <em>( {{ __('btor.umur_60_ke_atas') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</strong></td>
                             </tr>
                             <tr>
-                                <td>Remaja <em>(umur 18 - 24 tahun)</em></td>
+                                <td>{{ __('btor.remaja') }} <em>( {{ __('btor.umur_18_24') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</strong></td>
                             </tr>
                             <tr>
-                                <td>Anak <em>(umur 18 ke bawah)</em></td>
+                                <td>{{ __('btor.anak') }} <em>( {{ __('btor.umur_18_kebawah') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
@@ -251,43 +251,43 @@
                     </table>
                 </div>
 
-                <p class="text-muted mb-2 mt-3"><em>Tabel Disagregasi Berdasarkan Kelompok Khusus:</em></p>
+                <p class="text-muted mb-2 mt-3"><em>{{ __('btor.table_kelompok_khusus') }}:</em></p>
 
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Penerima Manfaat</th>
-                                <th class="text-center" width="15%">Perempuan</th>
-                                <th class="text-center" width="15%">Laki-laki</th>
-                                <th class="text-center" width="15%">Lainnya</th>
-                                <th class="text-center" width="15%">Sub Total</th>
+                                <th>{{ __('btor.penerima_manfaat') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.perempuan') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.laki_laki') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.lainnya') }}</th>
+                                <th class="text-center" width="15%">{{ __('btor.sub_total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Penyandang Disabilitas</td>
+                                <td>{{ __('btor.penyandang_disabilitas') }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</strong></td>
                             </tr>
                             <tr>
-                                <td>Non-disabilitas</td>
+                                <td>{{ __('btor.non_disabilitas') }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}</strong></td>
                             </tr>
                             <tr>
-                                <td>Kelompok Marjinal Lainnya</td>
+                                <td>{{ __('btor.kelompok_marjinal_lainnya') }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</strong></td>
                             </tr>
                             <tr class="table-primary">
-                                <td><strong>Grand Total</strong></td>
+                                <td><strong>{{ __('btor.grand_total') }}</strong></td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
                                 <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
                                 <td class="text-center"><strong>0</strong></td>
@@ -299,13 +299,13 @@
 
                 <div class="alert alert-info mt-3">
                     <i class="fas fa-users"></i>
-                    <strong>Total Keseluruhan:</strong> {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} orang
-                    ({{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }} perempuan,
-                    {{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }} laki-laki)
+                    <strong>{{ __('btor.total_keseluruhan') }}:</strong> {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} {{ __('btor.orang') }}
+                    ({{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }} {{ __('btor.perempuan') }},
+                    {{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }} {{ __('btor.laki_laki') }})
                 </div>
 
                 {{-- 4b. Hasil Pertemuan --}}
-                <h5 class="mt-4 mb-3">b. Hasil Pertemuan</h5>
+                <h5 class="mt-4 mb-3">b. {{ __('btor.hasil_pertemuan') }}</h5>
                 <div class="p-3 bg-light rounded" style="min-height: 100px;">
                     {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data hasil pertemuan</em>' !!}
                 </div>
