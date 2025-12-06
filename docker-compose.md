@@ -91,7 +91,6 @@ Masuk ke folder `project` lalu jalankan:
 ```bash
 cd project
 docker compose up -d
-````
 
 Akses aplikasi di:
 
