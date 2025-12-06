@@ -23,5 +23,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Setup permissions for www-data user
 RUN chown -R www-data:www-data /var/www/html
 
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo "upload_max_filesize=100M" >> /usr/local/etc/php/conf.d/uploads.ini
+RUN echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/uploads.ini
+
 EXPOSE 9000
 CMD ["php-fpm"]

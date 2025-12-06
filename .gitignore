@@ -44,3 +44,9 @@ cline_mcp_settings.json
 .kilocode/
 .trae/settings.json
 .trae/
+project/bootstrap/cache*
+project/storage/framework/cache*
+project/storage/framework/sessions*
+project/storage/framework/views*
+project/storage/logs*
+/bootstrap
