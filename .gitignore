@@ -49,4 +49,7 @@ project/storage/framework/cache*
 project/storage/framework/sessions*
 project/storage/framework/views*
 project/storage/logs*
-/bootstrap
+bootstrap/*
+project/bootstrap/cache/*
+project/storage/*
+project/storage/logs/.gitignore
