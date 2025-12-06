@@ -45,6 +45,7 @@ use App\Http\Controllers\API\FeedbackController;
 use Monolog\Handler\RotatingFileHandler;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Symfony\Component\Translation\Catalogue\TargetOperation;
+use App\Http\Controllers\BTORController;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
@@ -537,7 +538,25 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
 
-        Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
-            Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
-        });
+    Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
+        Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
+    });
+
+
+    // BTOR Routes Group
+    Route::middleware(['auth'])->prefix('btor')->name('btor.')->group(function () {
+
+        // Main routes
+        Route::get('/', [BTORController::class, 'index'])->name('index');
+        Route::get('/show/{id}', [BTORController::class, 'show'])->name('show');
+        Route::get('/print/{id}', [BTORController::class, 'print'])->name('print');
+
+        // Export routes
+        Route::get('/export', [BTORController::class, 'exportConfig'])->name('export.config');
+        Route::get('/export/pdf/{id}', [BTORController::class, 'exportPdf'])->name('export.pdf');
+        Route::post('/export/excel', [BTORController::class, 'exportExcel'])->name('export.excel');
+        Route::post('/export/bulk-pdf', [BTORController::class, 'exportBulkPdf'])->name('export.bulk');
+
+    });
+
 });

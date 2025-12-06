@@ -39,3 +39,17 @@ cline_mcp_settings.json
 .kilocode/mcp.json
 .continue/mcpServers/new-mcp-server-1.yaml
 .continue/*
+.continue/
+.grok/
+.kilocode/
+.trae/settings.json
+.trae/
+project/bootstrap/cache*
+project/storage/framework/cache*
+project/storage/framework/sessions*
+project/storage/framework/views*
+project/storage/logs*
+bootstrap/*
+project/bootstrap/cache/*
+project/storage/*
+project/storage/logs/.gitignore
