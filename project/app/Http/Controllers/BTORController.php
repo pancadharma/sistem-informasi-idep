@@ -18,19 +18,138 @@ class BTORController extends Controller
     {
         $filters = [
             'jeniskegiatan_id' => $request->input('jeniskegiatan_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
             'status' => $request->input('status'),
             'program_id' => $request->input('program_id'),
+            'kegiatan_id' => $request->input('kegiatan_id'),
         ];
 
         $kegiatanList = BTOR::getFilteredList($filters);
 
-        // Get filter options
-        $jenisKegiatanList = \App\Models\Jenis_Kegiatan::all();
-        $programList = \App\Models\Program::all();
+        return view('tr.btor.index', compact('kegiatanList', 'filters'));
+    }
 
-        return view('tr.btor.index', compact('kegiatanList', 'jenisKegiatanList', 'programList', 'filters'));
+    /**
+     * API: Get all programs for Select2
+     */
+    public function getPrograms(Request $request)
+    {
+        $search = $request->input('search');
+        $page = $request->input('page', 1);
+        $perPage = 20;
+
+        $query = \App\Models\Program::query();
+
+        if ($search) {
+            $query->where('nama', 'like', "%{$search}%")
+                ->orWhere('kode', 'like', "%{$search}%");
+        }
+
+        $total = $query->count();
+        $programs = $query->skip(($page - 1) * $perPage)
+            ->take($perPage)
+            ->get();
+
+        $results = $programs->map(function ($program) {
+            return [
+                'id' => $program->id,
+                'text' => $program->kode . ' - ' . $program->nama
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => [
+                'more' => ($page * $perPage) < $total
+            ]
+        ]);
+    }
+
+    /**
+     * API: Get kegiatan by program (trkegiatan based on program through relations)
+     */
+    public function getKegiatanByProgram(Request $request)
+    {
+        $programId = $request->input('program_id');
+        $search = $request->input('search');
+
+        $query = Kegiatan::with(['programOutcomeOutputActivity', 'jenisKegiatan']);
+
+        // Filter by program if selected
+        if ($programId) {
+            $query->whereHas('programOutcomeOutputActivity.program_outcome_output.program_outcome.program', function ($q) use ($programId) {
+                $q->where('id', $programId);
+            });
+        }
+
+        // Search
+        if ($search) {
+            $query->whereHas('programOutcomeOutputActivity', function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                    ->orWhere('kode', 'like', "%{$search}%");
+            });
+        }
+
+        $kegiatanList = $query->orderBy('tanggalmulai', 'desc')->get();
+
+        $results = $kegiatanList->map(function ($kegiatan) {
+            $activity = $kegiatan->programOutcomeOutputActivity;
+            return [
+                'id' => $kegiatan->id,
+                'text' => ($activity->kode ?? '') . ' - ' . ($activity->nama ?? 'N/A'),
+                'jeniskegiatan_id' => $kegiatan->jeniskegiatan_id
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => ['more' => false]
+        ]);
+    }
+
+    /**
+     * API: Get jenis kegiatan by kegiatan or all if no kegiatan selected 
+     */
+    public function getJenisKegiatanByKegiatan(Request $request)
+    {
+        $kegiatanId = $request->input('kegiatan_id');
+        $search = $request->input('search');
+
+        // If kegiatan selected, only return the jenis for that kegiatan
+        if ($kegiatanId) {
+            $kegiatan = Kegiatan::with('jenisKegiatan')->find($kegiatanId);
+            if ($kegiatan && $kegiatan->jenisKegiatan) {
+                return response()->json([
+                    'results' => [
+                        [
+                            'id' => $kegiatan->jenisKegiatan->id,
+                            'text' => $kegiatan->jenisKegiatan->nama
+                        ]
+                    ],
+                    'pagination' => ['more' => false]
+                ]);
+            }
+        }
+
+        // Return all jenis kegiatan
+        $query = \App\Models\Jenis_Kegiatan::query();
+
+        if ($search) {
+            $query->where('nama', 'like', "%{$search}%");
+        }
+
+        $jenisList = $query->get();
+
+        $results = $jenisList->map(function ($jenis) {
+            return [
+                'id' => $jenis->id,
+                'text' => $jenis->nama
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => ['more' => false]
+        ]);
     }
 
     /**
@@ -71,28 +190,6 @@ class BTORController extends Controller
             ]);
 
         $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
-
-        return $pdf->download($filename);
-    }
-
-
-
-    /**
-     * Export to PDF
-     */
-    public function exportPdfOld($id)
-    {
-        $kegiatan = BTOR::getData($id);
-        $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
-
-        $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath'))
-            ->setPaper('a4', 'portrait')
-            ->setOption('margin-top', 10)
-            ->setOption('margin-bottom', 10)
-            ->setOption('margin-left', 15)
-            ->setOption('margin-right', 15);
-
-        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd') . '.pdf';
 
         return $pdf->download($filename);
     }
@@ -153,36 +250,6 @@ class BTORController extends Controller
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
-
-    /**
-     * Export to PDF
-     */
-    public function exportPdf2($id, Request $request)
-    {
-        $kegiatan = BTOR::getData($id);
-        $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
-
-        // Choose orientation based on query parameter (default: landscape)
-        $orientation = $request->get('orientation', 'landscape');
-
-        $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath'))
-            ->setPaper('a4', $orientation)
-            ->setOption([
-                'margin-top' => 10,
-                'margin-bottom' => 10,
-                'margin-left' => 10,
-                'margin-right' => 20,
-                'enable-local-file-access' => true,
-                'encoding' => 'UTF-8',
-                'enable-smart-shrinking' => true,
-                'no-outline' => true,
-            ]);
-
-        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
-
-        return $pdf->download($filename);
-    }
-
 
     /**
      * Show export configuration page

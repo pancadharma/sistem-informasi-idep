@@ -5,11 +5,7 @@
 
 @section('subtitle', __('cruds.kegiatan.list'))
 @section('content_header_title')
-    @can('kegiatan_access')
-        <a class="btn-success btn" href="{{ route('kegiatan.create') }}" title="{{ __('cruds.kegiatan.add') }}">
-            {{ __('global.create') .' '.__('cruds.kegiatan.label') }}
-        </a>
-    @endcan
+    &nbsp;
 @endsection
 @section('sub_breadcumb', __('cruds.kegiatan.list'))
 
@@ -18,7 +14,13 @@
     <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
 @endsection
 
-@section('content')
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Select2', true)
+@section('plugins.Toastr', true)
+@section('plugins.Validation', true)
+
+@section('content_body')
 <div class="container-fluid">
     <div class="row mb-3">
         <div class="col-12">
@@ -29,57 +31,59 @@
 
     {{-- Filter Card --}}
     <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-filter"></i> Filters</h5>
-        </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('btor.index') }}">
+            <form method="GET" action="{{ route('btor.index') }}" id="filterForm">
+                {{-- Row 1: Program, Kegiatan, Jenis Kegiatan --}}
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label>Activity Type</label>
-                            <select name="jeniskegiatan_id" class="form-control">
-                                <option value="">All Types</option>
-                                @foreach($jenisKegiatanList as $jenis)
-                                    <option value="{{ $jenis->id }}" {{ ($filters['jeniskegiatan_id'] ?? '') == $jenis->id ? 'selected' : '' }}>
-                                        {{ $jenis->nama }}
-                                    </option>
-                                @endforeach
+                            <label>Program</label>
+                            <select name="program_id" id="program_id" class="form-control" style="width: 100%">
+                                <option value="">Pilih Program</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date" class="form-control" value="{{ $filters['start_date'] ?? '' }}">
+                            <label>Kegiatan</label>
+                            <select name="kegiatan_id" id="kegiatan_id" class="form-control select2" style="width: 100%">
+                                <option value="">Pilih Semua</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label>End Date</label>
-                            <input type="date" name="end_date" class="form-control" value="{{ $filters['end_date'] ?? '' }}">
+                            <label>Jenis Kegiatan</label>
+                            <select name="jeniskegiatan_id" id="jeniskegiatan_id" class="form-control select2" style="width: 100%">
+                                <option value="">Pilih Semua</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                </div>
+
+                {{-- Row 2: Status, Search Button --}}
+                <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Status</label>
-                            <select name="status" class="form-control">
-                                <option value="">All Status</option>
+                            <select name="status" id="status" class="form-control select2" style="width: 100%">
+                                <option value="">Pilih Semua</option>
                                 <option value="draft" {{ ($filters['status'] ?? '') == 'draft' ? 'selected' : '' }}>Draft</option>
                                 <option value="ongoing" {{ ($filters['status'] ?? '') == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
                                 <option value="completed" {{ ($filters['status'] ?? '') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="cancelled" {{ ($filters['status'] ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label>&nbsp;</label>
                             <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-search"></i> Filter
+                                <button type="submit" class="btn btn-primary" id="search-btn">
+                                    Search
                                 </button>
-                                <a href="{{ route('btor.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-redo"></i> Reset
+                                <a href="{{ route('btor.index') }}" class="btn btn-secondary ml-2">
+                                    Reset
                                 </a>
                             </div>
                         </div>
@@ -88,6 +92,7 @@
             </form>
         </div>
     </div>
+
 
     {{-- Bulk Actions --}}
     <div class="card mb-4">
@@ -182,9 +187,216 @@
         </div>
     </div>
 </div>
+@endsection
 
-@push('scripts')
+@push('js')
 <script>
+
+    $('#search-btn').click(function(e) {
+        e.preventDefault();
+        let programId = $('#program_id').val();
+        if (!programId) {
+            e.preventDefault();
+            Toast.fire({
+                icon: "warning",
+                title: "Opssss...",
+                text: "Please select a program first.",
+                timer: 2000,
+                position: "top-end",
+                timerProgressBar: true,
+            });
+
+            return false;
+
+        } else {
+            //do submit
+            $('#filterForm').submit();
+        }
+    });
+
+
+    $(function() {
+        // API URLs
+        const programsUrl = "{{ route('btor.api.programs') }}";
+        const kegiatanUrl = "{{ route('btor.api.kegiatan') }}";
+        const jenisKegiatanUrl = "{{ route('btor.api.jenis_kegiatan') }}";
+
+        // Old filter values from URL
+        const oldProgramId = "{{ $filters['program_id'] ?? '' }}";
+        const oldKegiatanId = "{{ $filters['kegiatan_id'] ?? '' }}";
+        const oldJenisId = "{{ $filters['jeniskegiatan_id'] ?? '' }}";
+
+        // Initialize Program Select2 with AJAX
+        function initProgramSelect() {
+            $('#program_id').select2({
+                // placeholder: 'Choose...',
+                allowClear: true,
+                ajax: {
+                    url: programsUrl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: data.pagination
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            // Restore old value if any
+            if (oldProgramId) {
+                $.ajax({
+                    url: programsUrl,
+                    dataType: 'json',
+                    success: function(data) {
+                        var found = data.results.find(p => p.id == oldProgramId);
+                        if (found) {
+                            var option = new Option(found.text, found.id, true, true);
+                            $('#program_id').append(option).trigger('change');
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize Kegiatan Select2 with AJAX
+        function initKegiatanSelect() {
+            $('#kegiatan_id').select2({
+                // placeholder: 'Choose...',
+                allowClear: true,
+                ajax: {
+                    url: kegiatanUrl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            program_id: $('#program_id').val()
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: data.pagination
+                        };
+                    },
+                    cache: false
+                }
+            });
+
+            // Restore old value if any
+            if (oldKegiatanId) {
+                $.ajax({
+                    url: kegiatanUrl,
+                    data: { program_id: oldProgramId },
+                    dataType: 'json',
+                    success: function(data) {
+                        var found = data.results.find(k => k.id == oldKegiatanId);
+                        if (found) {
+                            var option = new Option(found.text, found.id, true, true);
+                            $('#kegiatan_id').append(option).trigger('change');
+                        }
+                    }
+                });
+            }
+        }
+
+
+        // Initialize Jenis Kegiatan Select2 with AJAX
+        function initJenisKegiatanSelect() {
+            $('#jeniskegiatan_id').select2({
+                // placeholder: 'Choose...',
+                allowClear: true,
+                ajax: {
+                    url: jenisKegiatanUrl,
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            search: params.term,
+                            kegiatan_id: $('#kegiatan_id').val()
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results,
+                            pagination: data.pagination
+                        };
+                    },
+                    cache: false
+                }
+            });
+
+            // Restore old value if any
+            if (oldJenisId) {
+                $.ajax({
+                    url: jenisKegiatanUrl,
+                    data: { kegiatan_id: oldKegiatanId },
+                    dataType: 'json',
+                    success: function(data) {
+                        var found = data.results.find(j => j.id == oldJenisId);
+                        if (found) {
+                            var option = new Option(found.text, found.id, true, true);
+                            $('#jeniskegiatan_id').append(option).trigger('change');
+                        }
+                    }
+                });
+            }
+        }
+
+        // Status Select2
+        $('#status').select2({
+            // placeholder: 'Choose...',
+            allowClear: true
+        });
+
+        // Initialize all selects
+        initProgramSelect();
+        initKegiatanSelect();
+        initJenisKegiatanSelect();
+
+        // When Program changes, reset Kegiatan and Jenis Kegiatan
+        $('#program_id').on('change', function() {
+            $('#kegiatan_id').val(null).trigger('change');
+            $('#jeniskegiatan_id').val(null).trigger('change');
+        });
+
+        // When Kegiatan changes, reload Jenis Kegiatan options
+        $('#kegiatan_id').on('change', function() {
+            var kegiatanId = $(this).val();
+            
+            // If a specific kegiatan is selected, auto-select its jenis
+            if (kegiatanId) {
+                var selectedData = $('#kegiatan_id').select2('data')[0];
+                if (selectedData && selectedData.jeniskegiatan_id) {
+                    // Fetch and set the jenis kegiatan
+                    $.ajax({
+                        url: jenisKegiatanUrl,
+                        data: { kegiatan_id: kegiatanId },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.results.length > 0) {
+                                var jenis = data.results[0];
+                                var option = new Option(jenis.text, jenis.id, true, true);
+                                $('#jeniskegiatan_id').empty().append(option).trigger('change');
+                            }
+                        }
+                    });
+                }
+            } else {
+                $('#jeniskegiatan_id').val(null).trigger('change');
+            }
+        });
+    });
+
     // Select All Checkbox
     document.getElementById('select-all').addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('.select-item');
@@ -217,4 +429,4 @@
     });
 </script>
 @endpush
-@endsection
+

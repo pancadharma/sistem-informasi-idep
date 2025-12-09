@@ -138,9 +138,19 @@ class BTOR extends Model
             'user'
         ]);
 
+        // Filter by specific kegiatan ID
+        if (!empty($filters['kegiatan_id'])) {
+            $query->where('id', $filters['kegiatan_id']);
+        }
+
         // Filter by jenis kegiatan
         if (!empty($filters['jeniskegiatan_id'])) {
             $query->where('jeniskegiatan_id', $filters['jeniskegiatan_id']);
+        }
+
+        // Filter by activity (programoutcomeoutputactivity_id)
+        if (!empty($filters['activity_id'])) {
+            $query->where('programoutcomeoutputactivity_id', $filters['activity_id']);
         }
 
         // Filter by date range
@@ -158,13 +168,14 @@ class BTOR extends Model
 
         // Filter by program
         if (!empty($filters['program_id'])) {
-            $query->whereHas('programOutcomeOutputActivity.program_outcome_output.program_outcome.program', function($q) use ($filters) {
+            $query->whereHas('programOutcomeOutputActivity.program_outcome_output.program_outcome.program', function ($q) use ($filters) {
                 $q->where('id', $filters['program_id']);
             });
         }
 
         return $query->orderBy('tanggalmulai', 'desc')->get();
     }
+
 
     /**
      * Prepare data for export (PDF, Excel, etc.)
@@ -212,7 +223,7 @@ class BTOR extends Model
      */
     protected function getLocationInfo(Kegiatan $kegiatan): array
     {
-        return $kegiatan->lokasi->map(function($lokasi) {
+        return $kegiatan->lokasi->map(function ($lokasi) {
             return [
                 'lokasi' => $lokasi->lokasi,
                 'desa' => $lokasi->desa?->nama,
@@ -284,14 +295,14 @@ class BTOR extends Model
     protected function getMediaInfo(Kegiatan $kegiatan): array
     {
         return [
-            'dokumen' => $kegiatan->getDokumenPendukung()?->map(function($doc) {
+            'dokumen' => $kegiatan->getDokumenPendukung()?->map(function ($doc) {
                 return [
                     'name' => $doc->file_name,
                     'url' => $doc->getUrl(),
                     'size' => $doc->size,
                 ];
             })->toArray() ?? [],
-            'media' => $kegiatan->getMediaPendukung()?->map(function($media) {
+            'media' => $kegiatan->getMediaPendukung()?->map(function ($media) {
                 return [
                     'name' => $media->file_name,
                     'url' => $media->getUrl(),
