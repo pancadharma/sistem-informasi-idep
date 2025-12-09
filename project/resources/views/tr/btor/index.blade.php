@@ -103,6 +103,9 @@
                 <button type="submit" class="btn btn-danger" id="bulkExportBtn" disabled>
                     <i class="fas fa-file-pdf"></i> Export Selected to PDF
                 </button>
+                <button type="button" class="btn btn-secondary" id="bulkPrintBtn" disabled>
+                    <i class="fas fa-print"></i> Print Selected
+                </button>
                 <a href="{{ route('btor.export.config') }}" class="btn btn-success">
                     <i class="fas fa-file-excel"></i> Export to Excel
                 </a>
@@ -416,16 +419,83 @@
 
         document.getElementById('selectedCount').textContent = count + ' item(s) selected';
         document.getElementById('bulkExportBtn').disabled = count === 0;
+        document.getElementById('bulkPrintBtn').disabled = count === 0;
         document.getElementById('selectedIds').value = selected.join(',');
     }
 
-    // Bulk Form Submit
+    // Bulk Form Submit (Export PDF)
     document.getElementById('bulkForm').addEventListener('submit', function(e) {
         const count = document.querySelectorAll('.select-item:checked').length;
         if (count === 0) {
             e.preventDefault();
-            alert('Please select at least one report to export');
+            Toast.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Pilih minimal 1 laporan untuk diekspor.',
+                timer: 2000,
+                position: 'top-end',
+                timerProgressBar: true
+            });
         }
+    });
+
+    // Bulk Print - Loop through selected items and open print preview
+    document.getElementById('bulkPrintBtn').addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
+        
+        if (selected.length === 0) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Pilih minimal 1 laporan untuk dicetak.',
+                timer: 2000,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+            return;
+        }
+
+        // Confirm before opening multiple windows
+        Swal.fire({
+            title: 'Print ' + selected.length + ' Laporan?',
+            text: 'Akan membuka ' + selected.length + ' tab baru untuk print preview.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Buka Print Preview',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Open print preview tabs sequentially with delay
+                let index = 0;
+                const printUrl = '{{ route("btor.print", ":id") }}';
+                
+                function openNextPrint() {
+                    if (index < selected.length) {
+                        const url = printUrl.replace(':id', selected[index]);
+                        window.open(url, '_blank');
+                        index++;
+                        
+                        // Delay before opening next tab (500ms)
+                        if (index < selected.length) {
+                            setTimeout(openNextPrint, 500);
+                        }
+                    }
+                }
+                
+                openNextPrint();
+                
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Print Preview',
+                    text: 'Membuka ' + selected.length + ' print preview...',
+                    timer: 2000,
+                    position: 'top-end',
+                    timerProgressBar: true
+                });
+            }
+        });
     });
 </script>
 @endpush
