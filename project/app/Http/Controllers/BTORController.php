@@ -20,7 +20,7 @@ class BTORController extends Controller
             'jeniskegiatan_id' => $request->input('jeniskegiatan_id'),
             'status' => $request->input('status'),
             'program_id' => $request->input('program_id'),
-            'kegiatan_id' => $request->input('kegiatan_id'),
+            'activity_id' => $request->input('activity_id'),
         ];
 
         $kegiatanList = BTOR::getFilteredList($filters);
@@ -65,14 +65,18 @@ class BTORController extends Controller
     }
 
     /**
-     * API: Get kegiatan by program (trkegiatan based on program through relations)
+     * API: Get activities (programoutcomeoutputactivity) that have kegiatan in trkegiatan
+     * Returns unique activities based on program filter
      */
     public function getKegiatanByProgram(Request $request)
     {
         $programId = $request->input('program_id');
         $search = $request->input('search');
 
-        $query = Kegiatan::with(['programOutcomeOutputActivity', 'jenisKegiatan']);
+        // Get distinct activity IDs that have kegiatan records
+        $query = Kegiatan::select('programoutcomeoutputactivity_id')
+            ->distinct()
+            ->with('programOutcomeOutputActivity');
 
         // Filter by program if selected
         if ($programId) {
@@ -81,7 +85,7 @@ class BTORController extends Controller
             });
         }
 
-        // Search
+        // Search by activity kode or nama
         if ($search) {
             $query->whereHas('programOutcomeOutputActivity', function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
@@ -89,49 +93,47 @@ class BTORController extends Controller
             });
         }
 
-        $kegiatanList = $query->orderBy('tanggalmulai', 'desc')->get();
-
-        $results = $kegiatanList->map(function ($kegiatan) {
-            $activity = $kegiatan->programOutcomeOutputActivity;
-            return [
-                'id' => $kegiatan->id,
-                'text' => ($activity->kode ?? '') . ' - ' . ($activity->nama ?? 'N/A'),
-                'jeniskegiatan_id' => $kegiatan->jeniskegiatan_id
-            ];
-        });
+        $activities = $query->get()
+            ->map(function ($kegiatan) {
+                $activity = $kegiatan->programOutcomeOutputActivity;
+                if (!$activity)
+                    return null;
+                return [
+                    'id' => $activity->id,
+                    'text' => ($activity->kode ?? '') . ' - ' . ($activity->nama ?? 'N/A')
+                ];
+            })
+            ->filter()
+            ->unique('id')
+            ->values();
 
         return response()->json([
-            'results' => $results,
+            'results' => $activities,
             'pagination' => ['more' => false]
         ]);
     }
 
     /**
-     * API: Get jenis kegiatan by kegiatan or all if no kegiatan selected 
+     * API: Get jenis kegiatan based on selected activity (programoutcomeoutputactivity_id)
+     * Returns distinct jenis kegiatan types that exist in trkegiatan for the selected activity
      */
     public function getJenisKegiatanByKegiatan(Request $request)
     {
-        $kegiatanId = $request->input('kegiatan_id');
+        $activityId = $request->input('activity_id');
         $search = $request->input('search');
 
-        // If kegiatan selected, only return the jenis for that kegiatan
-        if ($kegiatanId) {
-            $kegiatan = Kegiatan::with('jenisKegiatan')->find($kegiatanId);
-            if ($kegiatan && $kegiatan->jenisKegiatan) {
-                return response()->json([
-                    'results' => [
-                        [
-                            'id' => $kegiatan->jenisKegiatan->id,
-                            'text' => $kegiatan->jenisKegiatan->nama
-                        ]
-                    ],
-                    'pagination' => ['more' => false]
-                ]);
-            }
-        }
+        // If activity selected, get distinct jenis kegiatan from trkegiatan for this activity
+        if ($activityId) {
+            $jenisIds = Kegiatan::where('programoutcomeoutputactivity_id', $activityId)
+                ->distinct()
+                ->pluck('jeniskegiatan_id')
+                ->filter();
 
-        // Return all jenis kegiatan
-        $query = \App\Models\Jenis_Kegiatan::query();
+            $query = \App\Models\Jenis_Kegiatan::whereIn('id', $jenisIds);
+        } else {
+            // Return all jenis kegiatan if no activity selected
+            $query = \App\Models\Jenis_Kegiatan::query();
+        }
 
         if ($search) {
             $query->where('nama', 'like', "%{$search}%");
@@ -170,6 +172,35 @@ class BTORController extends Controller
         $showButtons = true; // Show buttons for print preview
 
         return view('tr.btor.print', compact('kegiatan', 'viewPath', 'showButtons'));
+    }
+
+    /**
+     * Print preview for multiple kegiatan in a single page
+     */
+    public function printBulk(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        // Handle comma-separated string from URL
+        if (is_string($ids)) {
+            $ids = array_filter(explode(',', $ids));
+        }
+
+        if (empty($ids)) {
+            return back()->with('error', 'Pilih minimal 1 laporan untuk dicetak');
+        }
+
+        $kegiatanList = collect($ids)->map(function ($id) {
+            $kegiatan = BTOR::getData($id);
+            return [
+                'kegiatan' => $kegiatan,
+                'viewPath' => BTOR::getViewPath($kegiatan->jeniskegiatan_id)
+            ];
+        });
+
+        $showButtons = true;
+
+        return view('tr.btor.print-bulk', compact('kegiatanList', 'showButtons'));
     }
 
     public function exportPdf($id, Request $request)

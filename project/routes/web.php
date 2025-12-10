@@ -550,6 +550,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [BTORController::class, 'index'])->name('index');
         Route::get('/show/{id}', [BTORController::class, 'show'])->name('show');
         Route::get('/print/{id}', [BTORController::class, 'print'])->name('print');
+        Route::get('/print-bulk', [BTORController::class, 'printBulk'])->name('print.bulk');
 
         // API routes for AJAX dropdowns
         Route::get('/api/programs', [BTORController::class, 'getPrograms'])->name('api.programs');

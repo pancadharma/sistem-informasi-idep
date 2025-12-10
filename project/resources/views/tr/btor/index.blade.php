@@ -46,7 +46,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Kegiatan</label>
-                            <select name="kegiatan_id" id="kegiatan_id" class="form-control select2" style="width: 100%">
+                            <select name="activity_id" id="activity_id" class="form-control select2" style="width: 100%">
                                 <option value="">Pilih Semua</option>
                             </select>
                         </div>
@@ -165,13 +165,13 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('btor.show', $kegiatan->id) }}" class="btn btn-sm btn-info" title="View Details">
-                                        <i class="fas fa-eye"></i> View
+                                        <i class="fas fa-eye"></i> 
                                     </a>
                                     <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-sm btn-secondary" target="_blank" title="Print Preview">
-                                        <i class="fas fa-print"></i> Print
+                                        <i class="fas fa-print"></i>
                                     </a>
                                     <a href="{{ route('btor.export.pdf', $kegiatan->id) }}" class="btn btn-sm btn-danger" title="Download PDF">
-                                        <i class="fas fa-file-pdf"></i> PDF
+                                        <i class="fas fa-file-pdf"></i> 
                                     </a>
                                 </td>
                             </tr>
@@ -226,7 +226,7 @@
 
         // Old filter values from URL
         const oldProgramId = "{{ $filters['program_id'] ?? '' }}";
-        const oldKegiatanId = "{{ $filters['kegiatan_id'] ?? '' }}";
+        const oldActivityId = "{{ $filters['activity_id'] ?? '' }}";
         const oldJenisId = "{{ $filters['jeniskegiatan_id'] ?? '' }}";
 
         // Initialize Program Select2 with AJAX
@@ -270,9 +270,9 @@
             }
         }
 
-        // Initialize Kegiatan Select2 with AJAX
+        // Initialize Kegiatan (Activity) Select2 with AJAX
         function initKegiatanSelect() {
-            $('#kegiatan_id').select2({
+            $('#activity_id').select2({
                 // placeholder: 'Choose...',
                 allowClear: true,
                 ajax: {
@@ -296,16 +296,16 @@
             });
 
             // Restore old value if any
-            if (oldKegiatanId) {
+            if (oldActivityId) {
                 $.ajax({
                     url: kegiatanUrl,
                     data: { program_id: oldProgramId },
                     dataType: 'json',
                     success: function(data) {
-                        var found = data.results.find(k => k.id == oldKegiatanId);
+                        var found = data.results.find(k => k.id == oldActivityId);
                         if (found) {
                             var option = new Option(found.text, found.id, true, true);
-                            $('#kegiatan_id').append(option).trigger('change');
+                            $('#activity_id').append(option).trigger('change');
                         }
                     }
                 });
@@ -325,7 +325,7 @@
                     data: function(params) {
                         return {
                             search: params.term,
-                            kegiatan_id: $('#kegiatan_id').val()
+                            activity_id: $('#activity_id').val()
                         };
                     },
                     processResults: function(data) {
@@ -342,7 +342,7 @@
             if (oldJenisId) {
                 $.ajax({
                     url: jenisKegiatanUrl,
-                    data: { kegiatan_id: oldKegiatanId },
+                    data: { activity_id: oldActivityId },
                     dataType: 'json',
                     success: function(data) {
                         var found = data.results.find(j => j.id == oldJenisId);
@@ -368,34 +368,32 @@
 
         // When Program changes, reset Kegiatan and Jenis Kegiatan
         $('#program_id').on('change', function() {
-            $('#kegiatan_id').val(null).trigger('change');
+            $('#activity_id').val(null).trigger('change');
             $('#jeniskegiatan_id').val(null).trigger('change');
         });
 
-        // When Kegiatan changes, reload Jenis Kegiatan options
-        $('#kegiatan_id').on('change', function() {
-            var kegiatanId = $(this).val();
+        // When Activity changes, reload Jenis Kegiatan options
+        $('#activity_id').on('change', function() {
+            var activityId = $(this).val();
             
-            // If a specific kegiatan is selected, auto-select its jenis
-            if (kegiatanId) {
-                var selectedData = $('#kegiatan_id').select2('data')[0];
-                if (selectedData && selectedData.jeniskegiatan_id) {
-                    // Fetch and set the jenis kegiatan
-                    $.ajax({
-                        url: jenisKegiatanUrl,
-                        data: { kegiatan_id: kegiatanId },
-                        dataType: 'json',
-                        success: function(data) {
-                            if (data.results.length > 0) {
-                                var jenis = data.results[0];
-                                var option = new Option(jenis.text, jenis.id, true, true);
-                                $('#jeniskegiatan_id').empty().append(option).trigger('change');
-                            }
+            // Reset jenis kegiatan and reload options
+            $('#jeniskegiatan_id').val(null).trigger('change');
+            
+            // If activity is selected, fetch available jenis kegiatan
+            if (activityId) {
+                $.ajax({
+                    url: jenisKegiatanUrl,
+                    data: { activity_id: activityId },
+                    dataType: 'json',
+                    success: function(data) {
+                        // If only one jenis kegiatan, auto-select it
+                        if (data.results.length === 1) {
+                            var jenis = data.results[0];
+                            var option = new Option(jenis.text, jenis.id, true, true);
+                            $('#jeniskegiatan_id').empty().append(option).trigger('change');
                         }
-                    });
-                }
-            } else {
-                $('#jeniskegiatan_id').val(null).trigger('change');
+                    }
+                });
             }
         });
     });
@@ -439,7 +437,7 @@
         }
     });
 
-    // Bulk Print - Loop through selected items and open print preview
+    // Bulk Print - Open single page with all selected reports
     document.getElementById('bulkPrintBtn').addEventListener('click', function() {
         const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
         
@@ -455,10 +453,10 @@
             return;
         }
 
-        // Confirm before opening multiple windows
+        // Confirm before opening print preview
         Swal.fire({
             title: 'Print ' + selected.length + ' Laporan?',
-            text: 'Akan membuka ' + selected.length + ' tab baru untuk print preview.',
+            text: 'Akan membuka 1 tab dengan semua laporan yang dipilih.',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -467,29 +465,15 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Open print preview tabs sequentially with delay
-                let index = 0;
-                const printUrl = '{{ route("btor.print", ":id") }}';
-                
-                function openNextPrint() {
-                    if (index < selected.length) {
-                        const url = printUrl.replace(':id', selected[index]);
-                        window.open(url, '_blank');
-                        index++;
-                        
-                        // Delay before opening next tab (500ms)
-                        if (index < selected.length) {
-                            setTimeout(openNextPrint, 500);
-                        }
-                    }
-                }
-                
-                openNextPrint();
+                // Open single page with all selected reports
+                const bulkPrintUrl = '{{ route("btor.print.bulk") }}';
+                const url = bulkPrintUrl + '?ids=' + selected.join(',');
+                window.open(url, '_blank');
                 
                 Toast.fire({
                     icon: 'success',
                     title: 'Print Preview',
-                    text: 'Membuka ' + selected.length + ' print preview...',
+                    text: 'Membuka print preview untuk ' + selected.length + ' laporan...',
                     timer: 2000,
                     position: 'top-end',
                     timerProgressBar: true
