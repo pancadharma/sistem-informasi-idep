@@ -87,26 +87,26 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jenis-kegiatan', [ReportController::class, 'getJenisKegiatan'])->name('jenis_kegiatan');
     });
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
-        Route::get('/',                                     [HomeController::class, 'index'])->name('index');
-        Route::get('/print',                                [HomeController::class, 'index'])->name('print');
-        Route::get('/data',                                 [HomeController::class, 'getDashboardData'])->name('data');
-        Route::get('/data/get-desa-chart-data',             [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
-        Route::get('/data/get-provinsi-koordinat/{id?}',    [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
-        Route::get('/data/age-group-chart',                 [HomeController::class, 'getAgeGroupChartData'])->name('age-group-chart');
+        Route::get('/', [HomeController::class, 'index'])->name('index');
+        Route::get('/print', [HomeController::class, 'index'])->name('print');
+        Route::get('/data', [HomeController::class, 'getDashboardData'])->name('data');
+        Route::get('/data/get-desa-chart-data', [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
+        Route::get('/data/get-provinsi-koordinat/{id?}', [HomeController::class, 'getFilteredProvinsi'])->name('api.markers');
+        Route::get('/data/age-group-chart', [HomeController::class, 'getAgeGroupChartData'])->name('age-group-chart');
 
         // NEW ROUTE FOR COMBINED DESA MAP DATA
         Route::get('/api/combined-desa-map-data/{provinsi_id?}', [HomeController::class, 'getCombinedDesaMapData'])->name('api.combined_desa_map_data');
 
-        Route::get('/provinsi',                             [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
-        Route::get('/data/provinsi/{id}',                   [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
-        Route::get('/api/markers/provinsi/{id}',            [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
+        Route::get('/provinsi', [DashboardProvinsiController::class, 'getDashboardDataProvinsi'])->name('data.provinsi');
+        Route::get('/data/provinsi/{id}', [DashboardProvinsiController::class, 'provinsiDetail'])->name('data.provinsi.detail');
+        Route::get('/api/markers/provinsi/{id}', [DashboardProvinsiController::class, 'getKegiatanMarkers'])->name('api.markers.provinsi');
 
-        Route::get('/data/program-stats',                   [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
-        Route::get('/data/desatable',                       [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
-        Route::get('/data/kabupaten-pie',                   [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
+        Route::get('/data/program-stats', [DashboardProvinsiController::class, 'getProgramStatsPerProvinsi'])->name('data.program-stats');
+        Route::get('/data/desatable', [DashboardProvinsiController::class, 'getDesaTableData'])->name('data.desa');
+        Route::get('/data/kabupaten-pie', [DashboardProvinsiController::class, 'getKabupatenPieData'])->name('data.kabupatenPie');
 
-        Route::get('/data/get-data-desa/{id?}',             [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
-        Route::get('/data/chart/kabupaten/{id?}',           [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
+        Route::get('/data/get-data-desa/{id?}', [DashboardProvinsiController::class, 'getFilteredDataDesa'])->name('provinsi.data.desa');
+        Route::get('/data/chart/kabupaten/{id?}', [DashboardProvinsiController::class, 'getChartByKabupaten'])->name('chart.kabupaten');
         // Dashboard export (PDF/DOCX)
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
@@ -228,8 +228,8 @@ Route::middleware(['auth'])->group(function () {
     //kegiatan api - program
     Route::get('kegiatan/api/satuan', [KegiatanController::class, 'getSatuan'])->name('api.kegiatan.satuan');
     Route::get('kegiatan/api/program/{id}/out/activity', [KegiatanController::class, 'getActivityProgram'])->name('api.program.kegiatan');
-    Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
-    Route::get('kegiatan/api/programs',                  [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
+    Route::get('kegiatan/api/programs', [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
+    Route::get('kegiatan/api/programs', [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('api.data.program.kegiatan');
     Route::get('kegiatan/api/jenis_kegiatan', [KegiatanController::class, 'getJenisKegiatan'])->name('api.kegiatan.jenis_kegiatan');
     Route::get('kegiatan/api/mitra', [KegiatanController::class, 'getKegiatanMitra'])->name('api.kegiatan.mitra');
     Route::get('kegiatan/api/desa', [KegiatanController::class, 'getKegiatanDesa'])->name('api.kegiatan.desa');
@@ -345,13 +345,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/create', [KegiatanController::class, 'create'])
         ->name('kegiatan.create')
         ->middleware('check.kegiatan:kegiatan_create');
-    Route::post('kegiatan',  [KegiatanController::class, 'store'])
+    Route::post('kegiatan', [KegiatanController::class, 'store'])
         ->name('kegiatan.store')
         ->middleware('check.kegiatan:kegiatan_create');
     Route::get('kegiatan/{kegiatan}', [KegiatanController::class, 'show'])
         ->name('kegiatan.show')
         ->middleware('check.kegiatan:kegiatan_show');
-    Route::get('kegiatan/{kegiatan}/edit',  [KegiatanController::class, 'edit'])
+    Route::get('kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])
         ->name('kegiatan.edit')
         ->middleware('check.kegiatan:kegiatan_edit');
     Route::put('kegiatan/{kegiatan}', [KegiatanController::class, 'update'])
@@ -366,15 +366,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kegiatan/api/sektor_kegiatan', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor_kegiatan');
     Route::get('kegiatan/api/fase-pelaporan/{programoutcomeoutputactivity_id}/', [KegiatanController::class, 'fetchNextFasePelaporan'])->name('kegiatan.fase-pelaporan');
     Route::post('kegiatan/upload-document', [KegiatanController::class, 'uploadTempFile'])->name('kegiatan.upload-document');
-        Route::delete('kegiatan/media/{media}', [KegiatanController::class, 'deleteMedia'])->name('kegiatan.media.delete');
+    Route::delete('kegiatan/media/{media}', [KegiatanController::class, 'deleteMedia'])->name('kegiatan.media.delete');
 
     Route::get('kegiatan/api/penulis', [ProgramController::class, 'getProgramStaff'])->name('api.kegiatan.penulis'); // can be used to get data staff for program
     Route::get('kegiatan/api/jabatan', [ProgramController::class, 'getProgramPeran'])->name('api.kegiatan.jabatan'); // can be used to get data peran for program
-    Route::get('kegiatan/api/sektor',  [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
+    Route::get('kegiatan/api/sektor', [KegiatanController::class, 'getSektorKegiatan'])->name('api.kegiatan.sektor');
 
     Route::group(['prefix' => 'api/kegiatan', 'as' => 'api.kegiatan.'], function () {
-        Route::get('/list',      [App\Http\Controllers\API\KegiatanController::class, 'dataTable'])->name('list');
-        Route::get('/provinsi',  [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('/list', [App\Http\Controllers\API\KegiatanController::class, 'dataTable'])->name('list');
+        Route::get('/provinsi', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsi'])->name('provinsi');
         Route::get('/kabupaten', [App\Http\Controllers\API\KegiatanController::class, 'getKabupaten'])->name('kabupaten');
         Route::get('/kecamatan', [App\Http\Controllers\API\KegiatanController::class, 'getKecamatan'])->name('kecamatan');
         Route::get('/kelurahan', [App\Http\Controllers\API\KegiatanController::class, 'getKelurahan'])->name('kelurahan');
@@ -384,61 +384,61 @@ Route::middleware(['auth'])->group(function () {
     });
 
     //
-    Route::get('/api/geojson/provinsi/{id}',        [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
-    Route::get('/api/geojson/kabupaten/{id}',       [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
+    Route::get('/api/geojson/provinsi/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getProvinsiGeojson'])->name('api.geojson.provinsi');
+    Route::get('/api/geojson/kabupaten/{id}', [App\Http\Controllers\API\KegiatanController::class, 'getKabupatenGeojson'])->name('api.geojson.kabupaten');
 
 
     // Penerima Manfaat / Beneficiary
     Route::group(['prefix' => 'beneficiary', 'as' => 'beneficiary.'], function () {
-        Route::get('/',                             [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
-        Route::POST('/',                            [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
-        Route::get('/{program}/edit',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
-        Route::get('/{id}/data',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'getBeneficiaryData'])->name('get.individual');
-        Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
-        Route::PUT('/{id}/edit',                    [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
-        Route::post('/add',                         [App\Http\Controllers\Admin\BeneficiaryController::class, 'storeBeneficiary'])->name('store.individual');
-        Route::delete('/delete/{id}',               [App\Http\Controllers\Admin\BeneficiaryController::class, 'deleteBeneficiary'])->name('delete.individual');
-        Route::PUT('/{beneficiary}/update',         [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
-        Route::get('/{beneficiary}/show',           [App\Http\Controllers\Admin\BeneficiaryController::class, 'show'])->name('show');
-        Route::get('/create',                       [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
-        Route::get('/wilayah',                      [App\Http\Controllers\Admin\BeneficiaryController::class, 'wilayah'])->name('wilayah');
+        Route::get('/', [App\Http\Controllers\Admin\BeneficiaryController::class, 'index'])->name('index');
+        Route::POST('/', [App\Http\Controllers\Admin\BeneficiaryController::class, 'store'])->name('store');
+        Route::get('/{program}/edit', [App\Http\Controllers\Admin\BeneficiaryController::class, 'edit'])->name('edit');
+        Route::get('/{id}/data', [App\Http\Controllers\Admin\BeneficiaryController::class, 'getBeneficiaryData'])->name('get.individual');
+        Route::PUT('/{id}/edit', [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
+        Route::PUT('/{id}/edit', [App\Http\Controllers\Admin\BeneficiaryController::class, 'updateDataBeneficiary'])->name('edit.individual');
+        Route::post('/add', [App\Http\Controllers\Admin\BeneficiaryController::class, 'storeBeneficiary'])->name('store.individual');
+        Route::delete('/delete/{id}', [App\Http\Controllers\Admin\BeneficiaryController::class, 'deleteBeneficiary'])->name('delete.individual');
+        Route::PUT('/{beneficiary}/update', [App\Http\Controllers\Admin\BeneficiaryController::class, 'update'])->name('update');
+        Route::get('/{beneficiary}/show', [App\Http\Controllers\Admin\BeneficiaryController::class, 'show'])->name('show');
+        Route::get('/create', [App\Http\Controllers\Admin\BeneficiaryController::class, 'create'])->name('create');
+        Route::get('/wilayah', [App\Http\Controllers\Admin\BeneficiaryController::class, 'wilayah'])->name('wilayah');
     });
 
     //penerima manfaat api router
     Route::group(['prefix' => 'beneficiary/api/', 'as' => 'api.beneficiary.'], function () {
-        Route::get('datatable',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getPenerimaManfaat'])->name('datatable');
-        Route::get('program',                       [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('program');
-        Route::get('provinsi',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
-        Route::get('kab/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kab');
-        Route::get('kec/{id}',                      [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kec');
-        Route::get('desa/{id}',                     [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
-        Route::get('dusun/{id}',                    [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
-        Route::get('kelompok-rentan',               [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
-        Route::get('kelompok-jenis',                [App\Http\Controllers\API\BeneficiaryController::class, 'getJenisKelompok'])->name('kelompok.jenis');
-        Route::get('activity/{id}',                 [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
-        Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
+        Route::get('datatable', [App\Http\Controllers\API\BeneficiaryController::class, 'getPenerimaManfaat'])->name('datatable');
+        Route::get('program', [App\Http\Controllers\API\BeneficiaryController::class, 'getPrograms'])->name('program');
+        Route::get('provinsi', [App\Http\Controllers\API\BeneficiaryController::class, 'getProvinsi'])->name('provinsi');
+        Route::get('kab/{id}', [App\Http\Controllers\API\BeneficiaryController::class, 'getKabupaten'])->name('kab');
+        Route::get('kec/{id}', [App\Http\Controllers\API\BeneficiaryController::class, 'getKecamatan'])->name('kec');
+        Route::get('desa/{id}', [App\Http\Controllers\API\BeneficiaryController::class, 'getDesa'])->name('desa');
+        Route::get('dusun/{id}', [App\Http\Controllers\API\BeneficiaryController::class, 'getDusuns'])->name('dusun');
+        Route::get('kelompok-rentan', [App\Http\Controllers\API\BeneficiaryController::class, 'getKelompokRentan'])->name('kelompok.rentan');
+        Route::get('kelompok-jenis', [App\Http\Controllers\API\BeneficiaryController::class, 'getJenisKelompok'])->name('kelompok.jenis');
+        Route::get('activity/{id}', [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
+        Route::POST('dusun/save', [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
     });
 
     Route::group(['prefix' => 'api/', 'as' => 'api.'], function () {
-        Route::get('prov',                          [WilayahController::class, 'getProvinsi'])->name('prov');
-        Route::get('kab/{id}',                      [WilayahController::class, 'getKabupaten'])->name('kab');
-        Route::get('kec/{id}',                      [WilayahController::class, 'getKecamatan'])->name('kec');
-        Route::get('desa/{id}',                     [WilayahController::class, 'getDesa'])->name('desa');
-        Route::get('dusun/{id}',                    [WilayahController::class, 'getDusun'])->name('dusun');
-        Route::GET('activity/{id}',                 [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
-        Route::get('jenis-kelompok',                [BeneficiaryController::class, 'getJenisKelompok'])->name('jenis.kelompok');
-        Route::POST('dusun/save',                   [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
+        Route::get('prov', [WilayahController::class, 'getProvinsi'])->name('prov');
+        Route::get('kab/{id}', [WilayahController::class, 'getKabupaten'])->name('kab');
+        Route::get('kec/{id}', [WilayahController::class, 'getKecamatan'])->name('kec');
+        Route::get('desa/{id}', [WilayahController::class, 'getDesa'])->name('desa');
+        Route::get('dusun/{id}', [WilayahController::class, 'getDusun'])->name('dusun');
+        Route::GET('activity/{id}', [BeneficiaryController::class, 'getActivityProgram'])->name('program.activity');
+        Route::get('jenis-kelompok', [BeneficiaryController::class, 'getJenisKelompok'])->name('jenis.kelompok');
+        Route::POST('dusun/save', [BeneficiaryController::class, 'storeDusun'])->name('dusun.simpan');
 
         // using api to store / create kegiatan
-        Route::post('kegiatan/store',               [App\Http\Controllers\API\KegiatanController::class, 'storeApi'])->name('kegiatan.store');
-        Route::GET('kegiatan/edit/{id}',            [App\Http\Controllers\API\KegiatanController::class, 'edit'])->name('kegiatan.edit');
-        Route::PUT('kegiatan/update/{id}',          [App\Http\Controllers\API\KegiatanController::class, 'updateAPI'])->name('kegiatan.update');
+        Route::post('kegiatan/store', [App\Http\Controllers\API\KegiatanController::class, 'storeApi'])->name('kegiatan.store');
+        Route::GET('kegiatan/edit/{id}', [App\Http\Controllers\API\KegiatanController::class, 'edit'])->name('kegiatan.edit');
+        Route::PUT('kegiatan/update/{id}', [App\Http\Controllers\API\KegiatanController::class, 'updateAPI'])->name('kegiatan.update');
         // Route::DELETE('kegiatan/delete/{id}',  [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
-        Route::get('kecamatan/{id}/kelurahan',      [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
+        Route::get('kecamatan/{id}/kelurahan', [WilayahController::class, 'getKelurahanByKecamatan'])->name('kecamatan.kelurahan');
         // route for api create master jenis kelompok
 
-        Route::POST('jenis-kelompok/save',          [BeneficiaryController::class, 'apiStoreJenisKelompok'])->name('jenis_kelompok.simpan');
+        Route::POST('jenis-kelompok/save', [BeneficiaryController::class, 'apiStoreJenisKelompok'])->name('jenis_kelompok.simpan');
     });
 
     //SPATIE Activity logs
@@ -473,14 +473,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::group(['prefix' => 'komodel/api/', 'as' => 'api.komodel.'], function () {
-        Route::get('datatable',         [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
-        Route::post('komponen',         [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
-        Route::get('prov',              [APIKomponenModelController::class, 'getProv'])->name('prov');
-        Route::get('kab{id}',               [APIKomponenModelController::class, 'getKabupatens'])->name('kab');
-        Route::get('kec{id}',               [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
-        Route::get('desa{id}',              [APIKomponenModelController::class, 'getDesas'])->name('desa');
-        Route::get('dusun{id}',             [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
-        Route::get('satuan',            [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
+        Route::get('datatable', [App\Http\Controllers\API\KomponenModelController::class, 'getKomodelDatatable'])->name('datatable');
+        Route::post('komponen', [APIKomponenModelController::class, 'storeKomponen'])->name('komponen.store');
+        Route::get('prov', [APIKomponenModelController::class, 'getProv'])->name('prov');
+        Route::get('kab{id}', [APIKomponenModelController::class, 'getKabupatens'])->name('kab');
+        Route::get('kec{id}', [APIKomponenModelController::class, 'getKecamatans'])->name('kec');
+        Route::get('desa{id}', [APIKomponenModelController::class, 'getDesas'])->name('desa');
+        Route::get('dusun{id}', [APIKomponenModelController::class, 'getDusuns'])->name('dusun');
+        Route::get('satuan', [APIKomponenModelController::class, 'getSatuan'])->name('satuan');
     });
 
     // MEALS Pre Post
@@ -500,20 +500,20 @@ Route::middleware(['auth'])->group(function () {
 
     // TARGET & PROGRESS
     Route::group(['prefix' => 'target-progress', 'as' => 'target_progress.'], function () {
-        Route::get('/',                        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
-        Route::get('/create',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
-        Route::get('/{program_id}/edit',        [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
-        Route::POST('/store',                    [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
+        Route::get('/', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'create'])->name('create');
+        Route::get('/{program_id}/edit', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'edit'])->name('edit');
+        Route::POST('/store', [App\Http\Controllers\Admin\MealsTargetProgressController::class, 'store'])->name('store');
     });
     Route::group(['prefix' => 'target-progress/api/', 'as' => 'api.target_progress.'], function () {
-        Route::get('target-progresses',        [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
-        Route::get('programs',                    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
-        Route::get('status-options',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
-        Route::get('risk-options',                [App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
-        Route::get('program/targets',            [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
-        Route::get('program/{id}/histories',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
+        Route::get('target-progresses', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargetProgress'])->name('target_progresses');
+        Route::get('programs', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getPrograms'])->name('programs');
+        Route::get('status-options', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getStatusOptions'])->name('status_options');
+        Route::get('risk-options', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getRiskOptions'])->name('risk_options');
+        Route::get('program/targets', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getTargets'])->name('targets');
+        Route::get('program/{id}/histories', [App\Http\Controllers\API\MealsTargetProgressController::class, 'getHistories'])->name('histories');
 
-        Route::get('target-progresses/{target_progress_id}/show',    [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
+        Route::get('target-progresses/{target_progress_id}/show', [App\Http\Controllers\API\MealsTargetProgressController::class, 'showTargets'])->name('show_targets');
     });
 
 
@@ -550,6 +550,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [BTORController::class, 'index'])->name('index');
         Route::get('/show/{id}', [BTORController::class, 'show'])->name('show');
         Route::get('/print/{id}', [BTORController::class, 'print'])->name('print');
+        Route::get('/print-bulk', [BTORController::class, 'printBulk'])->name('print.bulk');
+
+        // API routes for AJAX dropdowns
+        Route::get('/api/programs', [BTORController::class, 'getPrograms'])->name('api.programs');
+        Route::get('/api/kegiatan', [BTORController::class, 'getKegiatanByProgram'])->name('api.kegiatan');
+        Route::get('/api/jenis-kegiatan', [BTORController::class, 'getJenisKegiatanByKegiatan'])->name('api.jenis_kegiatan');
 
         // Export routes
         Route::get('/export', [BTORController::class, 'exportConfig'])->name('export.config');
