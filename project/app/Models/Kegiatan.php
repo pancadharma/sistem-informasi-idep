@@ -10,6 +10,7 @@ use Spatie\Image\Enums\Fit;
 
 use App\Models\Jenis_Kegiatan;
 use App\Models\TargetReinstra;
+use App\Models\Kegiatan_Penulis;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;

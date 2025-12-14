@@ -53,237 +53,243 @@
             </div>
         </div>
         <!--End Activity Metrics Section -->
-        <div class="card-body m-0 p-0">
-            <div class="details">
-                <table class="table datatable table-sm mb-0 table-hover">
-                    <tbody>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.program_kode') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->kode ?? '-' }}
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.program_nama') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                <a href="{{ route('program.show', $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->id) }}"
-                                target="_blank">
-                                {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}
-                                </a>
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.kode') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.nama') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.laporan') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->datapenulis && $kegiatan->datapenulis->count() > 0)
-                                    {{ $kegiatan->datapenulis->pluck('nama')->filter()->implode(', ') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.penulis.jabatan') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->datapenulis && $kegiatan->datapenulis->count() > 0)
-                                    {{ $kegiatan->datapenulis->map(fn($p) => $p->kegiatanPeran?->nama)->filter()->implode(', ') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">{{ $kegiatan->jenisKegiatan?->nama ?? '-' }}</td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->sektor && $kegiatan->sektor->count() > 0)
-                                    @foreach ($kegiatan->sektor as $value)
-                                        <span class="badge bg-warning text-dark me-1">{{ $value->nama }}</span>
-                                    @endforeach
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.fase_pelaporan') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">{{ $kegiatan->fasepelaporan ?? '-' }}</td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->tanggalmulai)
-                                    {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') }}
-                                    ({{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->diffForHumans() }})
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->tanggalselesai)
-                                    {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') }}
-                                    ({{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->diffForHumans() }})
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.durasi') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">{{ $durationInDays ?? 0 }} {{ __('cruds.kegiatan.days') }}</td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.basic.nama_mitra') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->mitra && $kegiatan->mitra->count() > 0)
-                                    {{ $kegiatan->mitra->pluck('nama')->implode(', ') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.status') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }}">
-                                    {{ ucfirst($kegiatan->status ?? 'draft') }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('cruds.kegiatan.tempat') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @if($kegiatan->lokasi && $kegiatan->lokasi->count() > 0)
-                                    @php
-                                        $kabupatenNames = $kegiatan->lokasi
-                                            ->filter(fn($lok) => $lok->desa?->kecamatan?->kabupaten?->nama)
-                                            ->unique(fn($lok) => $lok->desa->kecamatan->kabupaten->id)
-                                            ->pluck('desa.kecamatan.kabupaten.nama')
-                                            ->implode(', ');
-
-                                        $provinsiName = $kegiatan->lokasi->first()?->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '';
-                                    @endphp
-                                    {{ $kabupatenNames }}@if($provinsiName), {{ $provinsiName }}@endif
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr class="align-middle bg-info">
-                            <th colspan="3" class="align-middle text-white">
-                                {{ __('Program Hierarchy & Progress') }} <i class="fas fa-sitemap"></i>
-                            </th>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Program Outcome Target') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                <strong>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-' }}</strong>
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Program Outcome Output Target') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                <strong>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-' }}</strong>
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Activity Target') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                <strong>{{ $kegiatan->programOutcomeOutputActivity?->target ?? '-' }}</strong>
-                            </td>
-                        </tr>
-                        <tr class="align-middle">
-                            <th class="align-middle w-25">{{ __('Program Goals') }}</th>
-                            <td class="text-center align-middle" style="width: 1%;">:</td>
-                            <td class="align-middle w-50">
-                                @php
-                                    $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
-                                    $goal = $program?->goal ?? null;
-                                @endphp
-                                @if($goal)
-                                    <li class="badge bg-info me-1">{{ $goal->deskripsi ?? '-' }}</li>
-                                    <li class="badge bg-success me-1">{{ $goal->indikator ?? '-' }}</li>
-                                    <li class="badge bg-warning me-1">{{ $goal->target ?? '-' }}</li>
-                                @else
-                                    <span class="text-muted">{{ __('No goals defined') }}</span>
-                                @endif
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table datatable table-sm mb-0 table-hover">
-                    <tbody>
-                        <tr class="align-middle bg-success">
-                            <th colspan="3" class="align-middle">
-                                {{ __('global.details') . ' ' . __('cruds.kegiatan.tempat') }} <i class="fas fa-map-marker-alt"></i>
-                            </th>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table datatable table-sm mb-0 table-hover">
-                    <thead class="bg-light">
-                        <tr>
-                            <th class="tb-header mr-0 pr-0 align-middle col-3">Nama Tempat</th>
-                            <th class="tb-header mr-0 pr-0 align-middle col-3">Longitude</th>
-                            <th class="tb-header mr-0 pr-0 align-middle col-3">Latitude</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($kegiatan->lokasi as $lokasi)
-                            <tr class="align-middle">
-                                <td class="tb-header mr-0 pr-0 align-middle">
-                                    @if ($lokasi->lat && $lokasi->long)
-                                        <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
-                                            {{ ucwords(strtolower($lokasi->lokasi ?? 'Lihat Di Peta')) }}
-                                        </a>
+        <!--End Activity Metrics Section -->
+        <div class="card-body bg-light m-0 p-3">
+            <div class="details container-fluid">
+                
+                <!-- Basic Information Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
+                        <h5 class="text-primary mb-0"><i class="fas fa-info-circle me-2"></i>{{ __('Basic Information') }}</h5>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
+                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->kode ?? '-' }}</div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.program_nama') }}</label>
+                                <div>
+                                    <a href="{{ route('program.show', $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->id) }}" target="_blank" class="text-decoration-none fw-medium">
+                                        {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }} <i class="fas fa-external-link-alt small ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.kode') }}</label>
+                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.nama') }}</label>
+                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</label>
+                                <div><span class="badge bg-info text-dark bg-opacity-10 border border-info px-3 py-2">{{ $kegiatan->jenisKegiatan?->nama ?? '-' }}</span></div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</label>
+                                <div>
+                                    @if($kegiatan->sektor && $kegiatan->sektor->count() > 0)
+                                        @foreach ($kegiatan->sektor as $value)
+                                            <span class="badge bg-warning text-dark me-1">{{ $value->nama }}</span>
+                                        @endforeach
                                     @else
-                                        {{ $lokasi->lokasi ?? '—' }}
+                                        -
                                     @endif
-                                </td>
-                                <td class="tb-header mr-0 pr-0 align-middle">{{ $lokasi->long ?? '—' }}</td>
-                                <td class="tb-header mr-0 pr-0 align-middle">{{ $lokasi->lat ?? '—' }}</td>
-                            </tr>
-                        @empty
-                            <tr class="align-middle">
-                                <td colspan="3" class="text-center text-muted">Tidak ada data lokasi tersedia.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.fase_pelaporan') }}</label>
+                                <div class="fw-medium">{{ $kegiatan->fasepelaporan ?? '-' }}</div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.status') }}</label>
+                                <div>
+                                    <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }} px-3 py-2">
+                                        {{ ucfirst($kegiatan->status ?? 'draft') }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.durasi') }}</label>
+                                <div class="fw-medium">{{ $durationInDays ?? 0 }} {{ __('cruds.kegiatan.days') }}</div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</label>
+                                <div class="fw-medium">
+                                    @if($kegiatan->tanggalmulai)
+                                        <i class="far fa-calendar-alt me-1 text-muted"></i> {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') }}
+                                    @else
+                                        -
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</label>
+                                <div class="fw-medium">
+                                    @if($kegiatan->tanggalselesai)
+                                        <i class="far fa-calendar-check me-1 text-muted"></i> {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') }}
+                                    @else
+                                        -
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
+                                <div>
+                                    @if($kegiatan->mitra && $kegiatan->mitra->count() > 0)
+                                        @foreach($kegiatan->mitra as $mitra)
+                                            <span class="badge bg-secondary me-1"><i class="fas fa-handshake me-1"></i> {{ $mitra->nama }}</span>
+                                        @endforeach
+                                    @else
+                                        -
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Location Information -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4 h-100">
+                            <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
+                                <h6 class="text-success mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ __('Location Information') }}</h6>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm border-0 mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>{{ __('Kecamatan/Desa') }}</th>
+                                                <th>{{ __('Lokasi') }}</th>
+                                                <th class="text-end">{{ __('Coords') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($kegiatan->lokasi as $lokasi)
+                                                <tr>
+                                                    <td>
+                                                        <div class="fw-bold">{{ $lokasi->desa?->kecamatan?->nama ?? '-' }}</div>
+                                                        <small class="text-muted">{{ $lokasi->desa?->nama ?? '-' }}</small>
+                                                    </td>
+                                                    <td>
+                                                        @if ($lokasi->lat && $lokasi->long)
+                                                            <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank" class="text-decoration-none">
+                                                                <i class="fas fa-map-pin text-danger"></i> {{ ucwords(strtolower($lokasi->lokasi ?? 'Lihat Peta')) }}
+                                                            </a>
+                                                        @else
+                                                            {{ $lokasi->lokasi ?? '—' }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-end small">
+                                                        <div>{{ $lokasi->lat ?? '-' }}</div>
+                                                        <div>{{ $lokasi->long ?? '-' }}</div>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="3" class="text-center text-muted small fst-italic">{{ __('Tidak ada data lokasi tersedia.') }}</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Penulis Information -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4 h-100">
+                            <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
+                                <h6 class="text-info mb-0"><i class="fas fa-users me-2"></i>{{ __('Penulis Information') }}</h6>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-sm border-0 mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>{{ __('Penulis') }}</th>
+                                                <th>{{ __('Jabatan') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($kegiatan->datapenulis ?? [] as $penulis)
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="bg-light rounded-circle p-2 me-2 text-center" style="width:32px;height:32px;line-height:1;">
+                                                                <i class="fas fa-user-circle text-secondary"></i>
+                                                            </div>
+                                                            <div>{{ $penulis->nama ?? '-' }}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle"><span class="badge bg-light text-dark border">{{ $penulis->kegiatanPeran?->nama ?? '-' }}</span></td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted small fst-italic">{{ __('Tidak ada data penulis tersedia.') }}</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Program Hierarchy & Progress -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
+                        <h6 class="text-warning text-dark mb-0"><i class="fas fa-sitemap me-2"></i>{{ __('Program Hierarchy & Progress') }}</h6>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded text-center h-100 border">
+                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Program Outcome Target') }}</small>
+                                    <h5 class="mb-0 text-primary">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-' }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded text-center h-100 border">
+                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Outcome Output Target') }}</small>
+                                    <h5 class="mb-0 text-info">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-' }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded text-center h-100 border">
+                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Activity Target') }}</small>
+                                    <h5 class="mb-0 text-success">{{ $kegiatan->programOutcomeOutputActivity?->target ?? '-' }}</h5>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mt-2">
+                                    <strong class="text-secondary small text-uppercase"><i class="fas fa-bullseye me-1"></i> {{ __('Program Goals') }}:</strong> 
+                                    @php
+                                        $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
+                                        $goal = $program?->goal ?? null;
+                                    @endphp
+                                    @if($goal)
+                                        <div class="mt-2 d-flex flex-wrap gap-2">
+                                            @if($goal->deskripsi)<span class="badge bg-primary bg-opacity-10 text-primary border border-primary">{{ $goal->deskripsi }}</span>@endif
+                                            @if($goal->indikator)<span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $goal->indikator }}</span>@endif
+                                            @if($goal->target)<span class="badge bg-warning bg-opacity-10 text-dark border border-warning">{{ $goal->target }}</span>@endif
+                                        </div>
+                                    @else
+                                        <span class="text-muted fst-italic ms-2">{{ __('No goals defined') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -599,59 +605,202 @@
 
         </div>
 
+        <!-- Activity Type Specific Details Section -->
+        <div class="card-body border-top">
+            <h5 class="text-primary mb-4"><i class="fas fa-clipboard-list me-2"></i>{{ __('Detail Kegiatan Spesifik') }}</h5>
+            
+            @php
+                $jenisId = $kegiatan->jeniskegiatan_id;
+            @endphp
+
+            @if($kegiatan->assessment)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-search me-1"></i> Assessment Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->assessment->assessmentdeskripsi)
+                            <p><strong>Deskripsi:</strong> {!! $kegiatan->assessment->assessmentdeskripsi !!}</p>
+                        @endif
+                        @if($kegiatan->assessment->assessmentmetode)
+                            <p><strong>Metode:</strong> {!! $kegiatan->assessment->assessmentmetode !!}</p>
+                        @endif
+                        @if($kegiatan->assessment->assessmenttemuan)
+                            <p><strong>Temuan:</strong> {!! $kegiatan->assessment->assessmenttemuan !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->pelatihan)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-chalkboard-teacher me-1"></i> Pelatihan Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->pelatihan->pelatihantopik)
+                            <p><strong>Topik:</strong> {!! $kegiatan->pelatihan->pelatihantopik !!}</p>
+                        @endif
+                        @if($kegiatan->pelatihan->pelatihanmateri)
+                            <p><strong>Materi:</strong> {!! $kegiatan->pelatihan->pelatihanmateri !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->sosialisasi)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-bullhorn me-1"></i> Sosialisasi Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->sosialisasi->sosialisasitopik)
+                            <p><strong>Topik:</strong> {!! $kegiatan->sosialisasi->sosialisasitopik !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->monitoring)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-chart-line me-1"></i> Monitoring Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->monitoring->monitoringdeskripsi)
+                            <p><strong>Deskripsi:</strong> {!! $kegiatan->monitoring->monitoringdeskripsi !!}</p>
+                        @endif
+                        @if($kegiatan->monitoring->monitoringtemuan)
+                            <p><strong>Temuan:</strong> {!! $kegiatan->monitoring->monitoringtemuan !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if(!$kegiatan->assessment && !$kegiatan->pelatihan && !$kegiatan->sosialisasi && !$kegiatan->monitoring && !$kegiatan->kampanye && !$kegiatan->pemetaan && !$kegiatan->kunjungan && !$kegiatan->konsultasi)
+                <div class="text-center py-3 text-muted">
+                    <i class="fas fa-info-circle me-1"></i> {{ __('Tidak ada detail kegiatan spesifik yang tersedia') }}
+                </div>
+            @endif
+        </div>
+
+        <!-- Tantangan & Solusi Section -->
+        <div class="card-body border-top">
+            <h5 class="text-warning mb-4"><i class="fas fa-exclamation-triangle me-2"></i>{{ __('Tantangan & Solusi') }}</h5>
+            
+            @php
+                $kendala = $kegiatan->assessment?->assessmentkendala 
+                        ?? $kegiatan->pelatihan?->pelatihanisu
+                        ?? $kegiatan->monitoring?->monitoringkendala
+                        ?? null;
+                $solusi = $kegiatan->assessment?->assessmentpembelajaran 
+                       ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                       ?? $kegiatan->monitoring?->monitoringpembelajaran
+                       ?? null;
+            @endphp
+
+            @if($kendala || $solusi)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 50%;">{{ __('Tantangan') }}</th>
+                                <th style="width: 50%;">{{ __('Solusi yang Diambil') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{!! $kendala ?? '<em class="text-muted">-</em>' !!}</td>
+                                <td>{!! $solusi ?? '<em class="text-muted">-</em>' !!}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="text-center py-3 text-muted bg-light rounded">
+                    <i class="fas fa-check-circle me-1"></i> {{ __('Tidak ada tantangan yang dicatat') }}
+                </div>
+            @endif
+        </div>
+
+        <!-- Isu yang Perlu Diperhatikan Section -->
+        <div class="card-body border-top">
+            <h5 class="text-danger mb-4"><i class="fas fa-flag me-2"></i>{{ __('Isu yang Perlu Diperhatikan') }}</h5>
+            
+            @php
+                $isu = $kegiatan->assessment?->assessmentisu 
+                    ?? $kegiatan->pelatihan?->pelatihanisu
+                    ?? $kegiatan->monitoring?->monitoringisu
+                    ?? null;
+            @endphp
+
+            @if($isu)
+                <div class="bg-light p-3 rounded">
+                    {!! $isu !!}
+                </div>
+            @else
+                <div class="text-center py-3 text-muted bg-light rounded">
+                    <i class="fas fa-check-circle me-1"></i> {{ __('Tidak ada isu yang perlu diperhatikan') }}
+                </div>
+            @endif
+        </div>
+
+        <!-- Pembelajaran Section -->
+        <div class="card-body border-top">
+            <h5 class="text-success mb-4"><i class="fas fa-lightbulb me-2"></i>{{ __('Pembelajaran') }}</h5>
+            
+            @php
+                $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
+                             ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                             ?? $kegiatan->monitoring?->monitoringpembelajaran
+                             ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
+                             ?? $kegiatan->kampanye?->kampanyepembelajaran
+                             ?? $kegiatan->konsultasi?->konsultasipembelajaran
+                             ?? $kegiatan->kunjungan?->kunjunganpembelajaran
+                             ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
+                             ?? $kegiatan->pengembangan?->pengembanganpembelajaran
+                             ?? $kegiatan->pemetaan?->pemetaanpembelajaran
+                             ?? $kegiatan->lainnya?->lainnyapembelajaran
+                             ?? null;
+            @endphp
+
+            @if($pembelajaran)
+                <div class="bg-light p-3 rounded">
+                    {!! $pembelajaran !!}
+                </div>
+            @else
+                <div class="text-center py-3 text-muted bg-light rounded">
+                    <i class="fas fa-info-circle me-1"></i> {{ __('Tidak ada pembelajaran yang tersedia') }}
+                </div>
+            @endif
+        </div>
+
         <!-- Related Documents & Files Section -->
         <div class="card-body border-top">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="text-info mb-0"><i class="fas fa-folder-open me-2"></i>{{ __('Related Documents & Files') }}</h5>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-outline-primary btn-sm active" id="documents-tab" onclick="showTab('documents')">
-                        <i class="fas fa-file-alt me-1"></i>{{ __('Documents') }}
-                    </button>
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="media-tab" onclick="showTab('media')">
-                        <i class="fas fa-images me-1"></i>{{ __('Media') }}
-                    </button>
-                    <button type="button" class="btn btn-outline-success btn-sm" onclick="uploadDocument('dokumen_pendukung')">
-                        <i class="fas fa-plus me-1"></i>{{ __('Upload Document') }}
-                    </button>
-                    <button type="button" class="btn btn-outline-info btn-sm" onclick="uploadDocument('media_pendukung')">
-                        <i class="fas fa-plus me-1"></i>{{ __('Upload Media') }}
-                    </button>
-                </div>
-            </div>
+            <h5 class="text-info mb-4"><i class="fas fa-folder-open me-2"></i>{{ __('Related Documents & Files') }}</h5>
 
             <!-- Documents Section -->
-            <div id="documents-content" class="tab-content">
+            <div class="mb-4">
+                <h6 class="text-primary mb-3"><i class="fas fa-file-alt me-2"></i>{{ __('Documents') }}</h6>
                 @if($kegiatan->getMedia('dokumen_pendukung') && $kegiatan->getMedia('dokumen_pendukung')->count() > 0)
                     <div class="row g-3">
                         @foreach($kegiatan->getMedia('dokumen_pendukung') as $media)
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="card file-card h-100 shadow-sm hover-shadow transition-all">
+                                <div class="card file-card h-100 shadow-sm">
                                     <div class="card-body p-3">
                                         <div class="file-icon text-center mb-3">
                                             @if(strstr($media->mime_type, "image/"))
-                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 120px; object-fit: cover;">
+                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 100px; object-fit: cover;">
                                             @elseif(strstr($media->mime_type, "pdf"))
-                                                <i class="fas fa-file-pdf fa-4x text-danger"></i>
+                                                <i class="fas fa-file-pdf fa-3x text-danger"></i>
                                             @elseif(strstr($media->mime_type, "word"))
-                                                <i class="fas fa-file-word fa-4x text-primary"></i>
+                                                <i class="fas fa-file-word fa-3x text-primary"></i>
                                             @elseif(strstr($media->mime_type, "excel") || strstr($media->mime_type, "spreadsheet"))
-                                                <i class="fas fa-file-excel fa-4x text-success"></i>
+                                                <i class="fas fa-file-excel fa-3x text-success"></i>
                                             @elseif(strstr($media->mime_type, "powerpoint"))
-                                                <i class="fas fa-file-powerpoint fa-4x text-warning"></i>
+                                                <i class="fas fa-file-powerpoint fa-3x text-warning"></i>
                                             @else
-                                                <i class="fas fa-file fa-4x text-secondary"></i>
+                                                <i class="fas fa-file fa-3x text-secondary"></i>
                                             @endif
                                         </div>
-                                        <h6 class="card-title text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
-                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
+                                        <h6 class="card-title text-truncate small" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
+                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 30) }}
                                         </h6>
                                         <div class="file-meta">
-                                            <small class="text-muted d-block">
-                                                <i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}
-                                            </small>
-                                            <small class="text-muted d-block">
-                                                <i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}
-                                            </small>
+                                            <small class="text-muted d-block"><i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}</small>
+                                            <small class="text-muted d-block"><i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}</small>
                                         </div>
                                     </div>
                                     <div class="card-footer bg-transparent border-top-0 p-2">
@@ -662,9 +811,6 @@
                                             <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" title="{{ __('Download') }}">
                                                 <i class="fas fa-download"></i>
                                             </a>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteFile('{{ $media->id }}')" title="{{ __('Delete') }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -672,46 +818,41 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="text-center py-5">
-                        <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
-                        <h6 class="text-muted">{{ __('No supporting documents uploaded yet') }}</h6>
-                        <p class="text-muted small">{{ __('Upload documents to support this activity') }}</p>
-                        <button class="btn btn-primary" onclick="uploadDocument('dokumen_pendukung')">
-                            <i class="fas fa-plus me-2"></i>{{ __('Upload Document') }}
-                        </button>
+                    <div class="text-center py-4 bg-light rounded">
+                        <i class="fas fa-file-alt fa-2x text-muted mb-2"></i>
+                        <p class="text-muted small mb-0">{{ __('No supporting documents available') }}</p>
                     </div>
                 @endif
             </div>
 
+            <hr class="my-4">
+
             <!-- Media Section -->
-            <div id="media-content" class="tab-content" style="display: none;">
+            <div>
+                <h6 class="text-success mb-3"><i class="fas fa-images me-2"></i>{{ __('Media') }}</h6>
                 @if($kegiatan->getMedia('media_pendukung') && $kegiatan->getMedia('media_pendukung')->count() > 0)
                     <div class="row g-3">
                         @foreach($kegiatan->getMedia('media_pendukung') as $media)
                             <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="card file-card h-100 shadow-sm hover-shadow transition-all">
+                                <div class="card file-card h-100 shadow-sm">
                                     <div class="card-body p-3">
                                         <div class="file-icon text-center mb-3">
                                             @if(strstr($media->mime_type, "image/"))
-                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 120px; object-fit: cover;">
+                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 100px; object-fit: cover;">
                                             @elseif(strstr($media->mime_type, "video/"))
-                                                <i class="fas fa-file-video fa-4x text-warning"></i>
+                                                <i class="fas fa-file-video fa-3x text-warning"></i>
                                             @elseif(strstr($media->mime_type, "audio/"))
-                                                <i class="fas fa-file-audio fa-4x text-info"></i>
+                                                <i class="fas fa-file-audio fa-3x text-info"></i>
                                             @else
-                                                <i class="fas fa-file fa-4x text-secondary"></i>
+                                                <i class="fas fa-file fa-3x text-secondary"></i>
                                             @endif
                                         </div>
-                                        <h6 class="card-title text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
-                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
+                                        <h6 class="card-title text-truncate small" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
+                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 30) }}
                                         </h6>
                                         <div class="file-meta">
-                                            <small class="text-muted d-block">
-                                                <i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}
-                                            </small>
-                                            <small class="text-muted d-block">
-                                                <i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}
-                                            </small>
+                                            <small class="text-muted d-block"><i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}</small>
+                                            <small class="text-muted d-block"><i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}</small>
                                         </div>
                                     </div>
                                     <div class="card-footer bg-transparent border-top-0 p-2">
@@ -722,9 +863,6 @@
                                             <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" title="{{ __('Download') }}">
                                                 <i class="fas fa-download"></i>
                                             </a>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteFile('{{ $media->id }}')" title="{{ __('Delete') }}">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -732,99 +870,11 @@
                         @endforeach
                     </div>
                 @else
-                    <div class="text-center py-5">
-                        <i class="fas fa-images fa-4x text-muted mb-3"></i>
-                        <h6 class="text-muted">{{ __('No supporting media uploaded yet') }}</h6>
-                        <p class="text-muted small">{{ __('Upload photos, videos, or other media files') }}</p>
-                        <button class="btn btn-primary" onclick="uploadDocument('media_pendukung')">
-                            <i class="fas fa-plus me-2"></i>{{ __('Upload Media') }}
-                        </button>
+                    <div class="text-center py-4 bg-light rounded">
+                        <i class="fas fa-images fa-2x text-muted mb-2"></i>
+                        <p class="text-muted small mb-0">{{ __('No supporting media available') }}</p>
                     </div>
                 @endif
-            </div>
-
-            <!-- If no files at all -->
-            @if($kegiatan->getMedia('dokumen_pendukung')->count() == 0 && $kegiatan->getMedia('media_pendukung')->count() == 0)
-                <div class="text-center py-5">
-                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
-                    <h6 class="text-muted">{{ __('No files uploaded yet') }}</h6>
-                    <p class="text-muted small">{{ __('Upload documents and media to support this activity') }}</p>
-                    <div class="d-flex gap-2 justify-content-center">
-                    <button class="btn btn-primary" onclick="uploadDocument('dokumen_pendukung')">
-                        <i class="fas fa-plus me-2"></i>{{ __('Upload Document') }}
-                    </button>
-                    <button class="btn btn-info" onclick="uploadDocument('media_pendukung')">
-                        <i class="fas fa-plus me-2"></i>{{ __('Upload Media') }}
-                    </button>
-                  </div>
-                </div>
-            @endif
-
-            <div class="mt-3">
-                <button class="btn btn-outline-primary btn-sm" onclick="uploadDocument('dokumen_pendukung')">
-                    <i class="fas fa-plus me-1"></i>{{ __('Upload Document') }}
-                </button>
-                <button class="btn btn-outline-info btn-sm" onclick="uploadDocument('media_pendukung')">
-                    <i class="fas fa-plus me-1"></i>{{ __('Upload Media') }}
-                </button>
-            </div>
-        </div>
-
-        <!-- Related Activities Section -->
-        <div class="card-body border-top">
-            <h5 class="mb-3"><i class="me-2"></i>{{ __('Related Activities') }}</h5>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <h6 class="text-primary">{{ __('Activities in Same Program') }}</h6>
-                    @php
-                        $program = optional($kegiatan->activity)->program_outcome_output ?
-                                 optional($kegiatan->activity->program_outcome_output)->program_outcome ?
-                                 optional($kegiatan->activity->program_outcome_output->program_outcome)->program : null : null;
-                        $relatedActivities = $program ? $program->kegiatan()->where('trkegiatan.id', '!=', $kegiatan->id)->limit(3)->get() : collect();
-                    @endphp
-                    @if($relatedActivities && $relatedActivities->count() > 0)
-                        <div class="list-group">
-                            @foreach($relatedActivities as $related)
-                                <a href="{{ route('kegiatan.show', $related->id) }}" class="list-group-item list-group-item-action">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{ optional($related->activity)->nama ?? 'N/A' }}</h6>
-                                        <small>{{ optional($related->tanggalmulai)->format('M Y') ?? 'N/A' }}</small>
-                                    </div>
-                                    <p class="mb-1">{{ optional($related->jenisKegiatan)->nama ?? 'N/A' }}</p>
-                                </a>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">{{ __('No other activities in this program') }}</p>
-                    @endif
-                </div>
-
-                <div class="col-md-12">
-                    <h6 class="text-success">{{ __('Activities by Same Partners') }}</h6>
-                    @if(optional($kegiatan->mitra)->count() > 0)
-                        <div class="list-group">
-                            @foreach($kegiatan->mitra->take(3) as $mitra)
-                                @php
-                                    $partnerActivities = $mitra->kegiatan()->where('trkegiatan.id', '!=', $kegiatan->id)->limit(2)->get();
-                                @endphp
-                                @if($partnerActivities && $partnerActivities->count() > 0)
-                                    @foreach($partnerActivities as $related)
-                                        <a href="{{ route('kegiatan.show', $related->id) }}" class="list-group-item list-group-item-action">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h6 class="mb-1">{{ optional($related->activity)->nama ?? ' ' }}</h6>
-                                                <small>{{ optional($related->tanggalmulai)->format('M Y') ?? '-' }}</small>
-                                            </div>
-                                            <p class="mb-1">{{ optional($related->jenisKegiatan)->nama ?? '*' }}</p>
-                                        </a>
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="text-muted">{{ __('No activities by same partners') }}</p>
-                    @endif
-                </div>
             </div>
         </div>
     </div>
