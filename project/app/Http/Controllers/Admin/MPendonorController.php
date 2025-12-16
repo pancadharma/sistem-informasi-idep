@@ -14,6 +14,9 @@ use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreMpendonorRequest;
 use App\Http\Requests\UpdateMpendonorRequest;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DonationExport;
+use App\Models\Program_Pendonor as TrProgramPendonor;
 
 class MPendonorController extends Controller
 {
@@ -261,22 +264,27 @@ class MPendonorController extends Controller
         // Data untuk chart - Donasi per program
         $donationsByProgram = $donations->groupBy('program_id')->map(function ($group) {
             return [
-                'name' => $group->first()->program->nama,
+                'name' => $group->first()->program?->nama ?? '-',
+                'kode' => $group->first()->program?->kode ?? '-',
                 'count' => $group->count(),
                 'total' => $group->sum('nilaidonasi')
             ];
         })->values();
 
-        // Data untuk timeline (per bulan)
-        $timeline = $donations->groupBy(function ($donation) {
+        // Data untuk timeline (per bulan) - filter out null created_at
+        $timeline = $donations->filter(function ($donation) {
+            return $donation->created_at !== null;
+        })->groupBy(function ($donation) {
             return \Carbon\Carbon::parse($donation->created_at)->format('Y-m');
         })->map(function ($group, $month) {
+            $date = \Carbon\Carbon::parse($month . '-01');
             return [
-                'month' => $month,
+                'month' => $date->format('M Y'), // Format: "Jan 2024"
+                'sort_key' => $month, // For sorting
                 'count' => $group->count(),
                 'total' => $group->sum('nilaidonasi')
             ];
-        })->values();
+        })->sortBy('sort_key')->values();
 
         return response()->json([
             'statistics' => [
@@ -293,13 +301,39 @@ class MPendonorController extends Controller
             ],
             'details' => $donations->map(function ($donation) {
                 return [
-                    'pendonor' => $donation->pendonor->nama,
-                    'program' => $donation->program->nama,
+                    'pendonor' => $donation->pendonor->nama ?? '-',
+                    'program' => $donation->program->nama ?? '-',
+                    'program_year' => $donation->program?->tanggalmulai ? \Carbon\Carbon::parse($donation->program->tanggalmulai)->format('Y') : '-',
                     'nilaidonasi' => $donation->nilaidonasi,
-                    'tanggal' => $donation->created_at->format('d M Y'),
+                    'tanggal' => $donation->created_at?->format('d M Y') ?? '-',
                 ];
             })
         ]);
+    }
+
+    public function exportDonation(Request $request)
+    {
+        $query = TrProgramPendonor::with(['pendonor', 'program']);
+
+        // Apply filters
+        if ($request->filled('year')) {
+            $query->whereHas('program', function ($q) use ($request) {
+                $q->whereYear('tanggalmulai', $request->year)
+                    ->orWhereYear('tanggalselesai', $request->year);
+            });
+        }
+
+        if ($request->filled('program_id')) {
+            $query->where('program_id', $request->program_id);
+        }
+
+        if ($request->filled('pendonor_id')) {
+            $query->where('pendonor_id', $request->pendonor_id);
+        }
+
+        $donations = $query->get();
+
+        return Excel::download(new DonationExport($donations), 'donasi_' . date('YmdHis') . '.xlsx');
     }
 
 

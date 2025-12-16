@@ -573,7 +573,9 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard Pendonor
         Route::get('/dashboard/{id?}', [MPendonorController::class, 'dashboard'])->name('dashboard');
         Route::get('/api/donation-data', [MPendonorController::class, 'getDonationData'])->name('donation.data');
+        Route::get('/api/donation-export', [MPendonorController::class, 'exportDonation'])->name('donation.export');
     });
+
 
     Route::get('/data/pendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
 });
