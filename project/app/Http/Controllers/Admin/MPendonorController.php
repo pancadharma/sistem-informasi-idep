@@ -333,7 +333,16 @@ class MPendonorController extends Controller
 
         $donations = $query->get();
 
-        return Excel::download(new DonationExport($donations), 'donasi_' . date('YmdHis') . '.xlsx');
+        $filename = 'donasi_' . date('YmdHis') . '.xlsx';
+
+        // Store temporarily then download to fix filename issue
+        Excel::store(new DonationExport($donations), $filename, 'local');
+
+        $path = storage_path('app/' . $filename);
+
+        return response()->download($path, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ])->deleteFileAfterSend(true);
     }
 
 
