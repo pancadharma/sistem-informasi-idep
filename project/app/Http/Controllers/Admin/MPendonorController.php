@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Program;
+use App\Models\Program_Pendonor;
 use Exception;
 use App\Models\MPendonor;
 use Illuminate\Http\Request;
@@ -37,26 +39,26 @@ class MPendonorController extends Controller
      */
     public function store(StoreMpendonorRequest $request)
     {
-        
+
         try {
             $data = $request->validated();
             MPendonor::create($data);
-            
+
             return response()->json([
-                "success"    => true,
-                "message"   => __('cruds.data.data') .' '.__('cruds.mpendonor.title') .' '. $request->nama .' '. __('cruds.data.added'),
-                "status"    => 201,
-                "data"      => $data,
+                "success" => true,
+                "message" => __('cruds.data.data') . ' ' . __('cruds.mpendonor.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
+                "status" => 201,
+                "data" => $data,
             ]);
 
         } catch (\Throwable $th) {
             return response()->json([
-                "status"    => 400,
-                "success"   => false,
-                "message"   => $th,
-                "data"      => $request->all(),
+                "status" => 400,
+                "success" => false,
+                "message" => $th,
+                "data" => $request->all(),
             ]);
-        }catch (ValidationException $e) {
+        } catch (ValidationException $e) {
             $status = 'error';
             $message = 'Validation failed: ' . implode(', ', $e->errors());
             return response()->json(['status' => $status, 'message' => $message], 422); // Use 422 Unprocessable Entity for validation errors
@@ -76,7 +78,7 @@ class MPendonorController extends Controller
             return response()->json(['status' => $status, 'message' => $message], 500); // Use 500 Internal Server Error for general errors
         } catch (Exception $e) {
             $status = 'error';
-            $message = 'An unexpected error occurred: ' . $e->getMessage(); 
+            $message = 'An unexpected error occurred: ' . $e->getMessage();
             return response()->json(['status' => $status, 'message' => $message], 419); // Use 500 Internal Server Error for general errors
         }
     }
@@ -118,7 +120,7 @@ class MPendonorController extends Controller
             // $pendonor->save();
             $status = "success";
             $message = "Data " . $request->nama . " was updated successfully!";
-            return response()->json(['status' => $status, 'message' => $message, 'data' =>$data], 200); // Use 200 OK for successful updates
+            return response()->json(['status' => $status, 'message' => $message, 'data' => $data], 200); // Use 200 OK for successful updates
 
         } catch (ValidationException $e) {
             $status = 'error';
@@ -159,40 +161,146 @@ class MPendonorController extends Controller
     //     return $data;
     // }
 
-    public function datapendonor(){
-        $pendonor = MPendonor::with('mpendonnorkategori')->get();
-        // Prepare data for DataTables (without modifying original collection)
-        
+    public function datapendonor()
+    {
+        $pendonor = MPendonor::with('mpendonnorkategori')
+            ->withCount('donations as donation_count')
+            ->withSum('donations as total_donation_value', 'nilaidonasi')
+            ->get();
+
         $data = DataTables::of($pendonor)
-        
+            ->addColumn('donation_count', function ($mpendonor) {
+                return '<span class="badge badge-primary">' . ($mpendonor->donation_count ?? 0) . ' donasi</span>';
+            })
+            ->addColumn('total_donation_value', function ($mpendonor) {
+                return 'Rp ' . number_format($mpendonor->total_donation_value ?? 0, 0, ',', '.');
+            })
             ->addColumn('action', function ($mpendonor) {
                 $buttons = '';
 
-                // Cek permission untuk edit
                 if (auth()->user()->can('pendonor_edit')) {
                     $buttons .= '<button type="button" class="btn btn-sm btn-info edit-mpendonor-btn" 
-                        data-action="edit" 
-                        data-mpendonor-id="'. $mpendonor->id .'" 
-                        title="'.__('global.edit') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'">
-                        <i class="fas fa-pencil-alt"></i> Edit
-                    </button> ';
+                    data-action="edit" 
+                    data-mpendonor-id="' . $mpendonor->id . '" 
+                    title="' . __('global.edit') . ' ' . __('cruds.mpendonor.title') . ' ' . $mpendonor->nama . '">
+                    <i class="fas fa-pencil-alt"></i> 
+                </button> ';
                 }
 
-                // Cek permission untuk view
                 if (auth()->user()->can('pendonor_show')) {
                     $buttons .= '<button type="button" class="btn btn-sm btn-primary view-mpendonor-btn" 
-                        data-action="view" 
-                        data-mpendonor-id="'. $mpendonor->id .'" 
-                        value="'. $mpendonor->id .'" 
-                        title="'.__('global.view') .' '. __('cruds.mpendonor.title') .' '. $mpendonor->nama .'">
-                        <i class="fas fa-folder-open"></i> View
-                    </button>';
+                    data-action="view" 
+                    data-mpendonor-id="' . $mpendonor->id . '" 
+                    value="' . $mpendonor->id . '" 
+                    title="' . __('global.view') . ' ' . __('cruds.mpendonor.title') . ' ' . $mpendonor->nama . '">
+                    <i class="fas fa-folder-open"></i>
+                </button> ';
                 }
 
-                return $buttons ?: '-'; // kalau ga punya permission sama sekali
+                // Tambahkan button untuk dashboard
+                $buttons .= '<a href="' . route('pendonor.dashboard', $mpendonor->id) . '" class="btn btn-sm btn-success" 
+                title="Dashboard Donasi">
+                <i class="fas fa-chart-line"></i>
+            </a>';
+
+                return $buttons ?: '-';
             })
+            ->rawColumns(['donation_count', 'total_donation_value', 'action'])
             ->make(true);
         return $data;
     }
-   
+
+    public function dashboard($id = null)
+    {
+        $pendonors = MPendonor::active()->orderBy('nama')->get();
+        $programs = Program::where('status', '!=', 'deleted')->orderBy('nama')->get();
+
+        $selectedPendonor = $id ? MPendonor::findOrFail($id) : null;
+
+        return view('master.mpendonor.dashboard', compact('pendonors', 'programs', 'selectedPendonor'));
+    }
+
+    public function getDonationData(Request $request)
+    {
+        $query = Program_Pendonor::with(['pendonor', 'program']);
+
+        // Filter berdasarkan tahun
+        if ($request->filled('year')) {
+            $query->whereHas('program', function ($q) use ($request) {
+                $q->whereYear('tanggalmulai', $request->year)
+                    ->orWhereYear('tanggalselesai', $request->year);
+            });
+        }
+
+        // Filter berdasarkan program
+        if ($request->filled('program_id')) {
+            $query->where('program_id', $request->program_id);
+        }
+
+        // Filter berdasarkan pendonor
+        if ($request->filled('pendonor_id')) {
+            $query->where('pendonor_id', $request->pendonor_id);
+        }
+
+        $donations = $query->get();
+
+        // Hitung statistik
+        $totalDonations = $donations->count();
+        $totalValue = $donations->sum('nilaidonasi');
+        $avgDonation = $totalDonations > 0 ? $totalValue / $totalDonations : 0;
+
+        // Data untuk chart - Donasi per pendonor
+        $donationsByDonor = $donations->groupBy('pendonor_id')->map(function ($group) {
+            return [
+                'name' => $group->first()->pendonor->nama,
+                'count' => $group->count(),
+                'total' => $group->sum('nilaidonasi')
+            ];
+        })->values();
+
+        // Data untuk chart - Donasi per program
+        $donationsByProgram = $donations->groupBy('program_id')->map(function ($group) {
+            return [
+                'name' => $group->first()->program->nama,
+                'count' => $group->count(),
+                'total' => $group->sum('nilaidonasi')
+            ];
+        })->values();
+
+        // Data untuk timeline (per bulan)
+        $timeline = $donations->groupBy(function ($donation) {
+            return \Carbon\Carbon::parse($donation->created_at)->format('Y-m');
+        })->map(function ($group, $month) {
+            return [
+                'month' => $month,
+                'count' => $group->count(),
+                'total' => $group->sum('nilaidonasi')
+            ];
+        })->values();
+
+        return response()->json([
+            'statistics' => [
+                'total_donations' => $totalDonations,
+                'total_value' => $totalValue,
+                'average_donation' => $avgDonation,
+                'unique_donors' => $donations->unique('pendonor_id')->count(),
+                'unique_programs' => $donations->unique('program_id')->count(),
+            ],
+            'charts' => [
+                'by_donor' => $donationsByDonor,
+                'by_program' => $donationsByProgram,
+                'timeline' => $timeline,
+            ],
+            'details' => $donations->map(function ($donation) {
+                return [
+                    'pendonor' => $donation->pendonor->nama,
+                    'program' => $donation->program->nama,
+                    'nilaidonasi' => $donation->nilaidonasi,
+                    'tanggal' => $donation->created_at->format('d M Y'),
+                ];
+            })
+        ]);
+    }
+
+
 }

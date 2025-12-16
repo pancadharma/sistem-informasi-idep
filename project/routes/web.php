@@ -565,4 +565,15 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+    Route::middleware(['auth'])->prefix('pendonor')->name('pendonor.')->group(function () {
+        Route::post('/', [MPendonorController::class, 'store'])->name('store');
+        Route::put('/{pendonor}', [MPendonorController::class, 'update'])->name('update');
+        Route::delete('/{pendonor}', [MPendonorController::class, 'destroy'])->name('destroy');
+
+        // Dashboard Pendonor
+        Route::get('/dashboard/{id?}', [MPendonorController::class, 'dashboard'])->name('dashboard');
+        Route::get('/api/donation-data', [MPendonorController::class, 'getDonationData'])->name('donation.data');
+    });
+
+    Route::get('/data/pendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
 });
