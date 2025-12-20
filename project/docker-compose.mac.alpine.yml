@@ -11,6 +11,7 @@ services:
       - .:/var/www/html:cached
       - vendor:/var/www/html/vendor
       - node_modules:/var/www/html/node_modules
+      - ../.git:/var/www/html/.git # Mount .git for version info
     depends_on:
       - db
     networks:

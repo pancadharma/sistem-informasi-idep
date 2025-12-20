@@ -53,3 +53,5 @@ bootstrap/*
 project/bootstrap/cache/*
 project/storage/*
 project/storage/logs/.gitignore
+project/docker-compose.mac.alpine.yml
+.gitignore
