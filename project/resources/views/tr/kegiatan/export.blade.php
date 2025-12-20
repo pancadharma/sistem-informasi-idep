@@ -353,6 +353,126 @@
                 @include('tr.kegiatan.export_lainnya')
             @endif
 
+            <div class="section-title">Tantangan dan Solusi</div>
+            @php
+                $kendala = $kegiatan->assessment?->assessmentkendala
+                    ?? $kegiatan->pelatihan?->pelatihanisu
+                    ?? $kegiatan->monitoring?->monitoringkendala
+                    ?? null;
+                $solusi = $kegiatan->assessment?->assessmentpembelajaran
+                    ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                    ?? $kegiatan->monitoring?->monitoringpembelajaran
+                    ?? null;
+            @endphp
+
+            @if($kendala || $solusi)
+                <table>
+                    <thead>
+                        <tr class="table-header">
+                            <th style="width: 50%;">Tantangan</th>
+                            <th style="width: 50%;">Solusi yang Diambil Tim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{!! $kendala ?? 'Tidak ada data' !!}</td>
+                            <td>{!! $solusi ?? 'Tidak ada data' !!}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            @else
+                <p class="empty-cell">Tidak ada data tantangan dan solusi yang tersedia.</p>
+            @endif
+
+            <div class="section-title">Isu yang Perlu Diperhatikan & Rekomendasi</div>
+            @php
+                $isu = $kegiatan->assessment?->assessmentisu
+                    ?? $kegiatan->pelatihan?->pelatihanisu
+                    ?? $kegiatan->monitoring?->monitoringisu
+                    ?? null;
+            @endphp
+            @if($isu)
+                <table>
+                    <thead>
+                        <tr class="table-header">
+                            <th style="width: 50%;">Isu yang Perlu Diperhatikan</th>
+                            <th style="width: 50%;">Rekomendasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{!! $isu !!}</td>
+                            <td>
+                                {!! $kegiatan->assessment?->assessmentpembelajaran
+                                    ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                                    ?? '-' !!}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            @else
+                <p class="empty-cell">Tidak ada isu yang perlu diperhatikan.</p>
+            @endif
+
+            <div class="section-title">Pembelajaran</div>
+            <div class="description">
+                @php
+                    $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
+                        ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                        ?? $kegiatan->monitoring?->monitoringpembelajaran
+                        ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
+                        ?? $kegiatan->kampanye?->kampanyepembelajaran
+                        ?? $kegiatan->konsultasi?->konsultasipembelajaran
+                        ?? $kegiatan->kunjungan?->kunjunganpembelajaran
+                        ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
+                        ?? $kegiatan->pengembangan?->pengembanganpembelajaran
+                        ?? $kegiatan->pemetaan?->pemetaanpembelajaran
+                        ?? $kegiatan->lainnya?->lainnyapembelajaran;
+                @endphp
+                @if($pembelajaran)
+                    {!! $pembelajaran !!}
+                @else
+                    <span class="empty-cell">Tidak ada data pembelajaran yang tersedia.</span>
+                @endif
+            </div>
+
+            {{-- <div class="section-title">Catatan Penulis Laporan</div>
+            <div class="description" style="min-height: 50px; border: 1px solid #ddd; padding: 10px;">
+                -
+            </div> 
+            <table style="width: 100%; border: none;">
+                <tr style="border: none;">
+                    <td style="width: 50%; border: none; text-align: center;">
+                        <p><strong>Disusun oleh:</strong></p>
+                        <br><br><br>
+                        <p>
+                            @if($kegiatan->datapenulis->first())
+                                <strong>{{ $kegiatan->datapenulis->first()->nama }}</strong><br>
+                                <em>{{ $kegiatan->datapenulis->first()->kegiatanPeran?->nama ?? 'Staff' }}</em>
+                            @else
+                                <strong>_____________________</strong><br>
+                                <em>Penulis Laporan</em>
+                            @endif
+                        </p>
+                        <p><small>Tanggal: {{ now()->locale('id')->isoFormat('D MMMM Y') }}</small></p>
+                    </td>
+                    <td style="width: 50%; border: none; text-align: center;">
+                        <p><strong>Disetujui oleh:</strong></p>
+                        <br><br><br>
+                        <p>
+                            @if($kegiatan->user)
+                                <strong>{{ $kegiatan->user->name }}</strong><br>
+                                <em>Program Coordinator</em>
+                            @else
+                                <strong>_____________________</strong><br>
+                                <em>Supervisor</em>
+                            @endif
+                        </p>
+                        <p><small>Tanggal: _________________</small></p>
+                    </td>
+                </tr>
+            </table> --}}
+
             <div class="section-title">Dokumen Pendukung</div>
             @if($kegiatan->getMedia('dokumen_pendukung')->count() > 0)
                 <ul>

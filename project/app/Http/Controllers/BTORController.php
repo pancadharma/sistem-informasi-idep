@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kegiatan;
 use App\Models\Export\BTOR;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BTORExport;
@@ -209,21 +210,44 @@ class BTORController extends Controller
         $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
         $showButtons = false; // Hide buttons for PDF
 
-        $orientation = $request->get('orientation', 'landscape');
+        // Customizable header/footer config (can be extended via request params)
+        $headerConfig = [
+            'organization' => $request->get('organization', 'IDEP Foundation'),
+            'department' => $request->get('department', 'Program'),
+            'showReportInfo' => true,
+            'logo' => public_path('images/logo-idep.png'),
+        ];
 
-        $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath', 'showButtons'))
+        $footerConfig = [
+            'organization' => $request->get('organization', 'IDEP Foundation'),
+            'showPageNumber' => true,
+            'customText' => 'Back to Office Report (BTOR)',
+        ];
+
+        $orientation = $request->get('orientation', 'portrait');
+
+        $pdf = Pdf::loadView('tr.btor.pdf-export', compact(
+            'kegiatan', 
+            'viewPath', 
+            'showButtons',
+            'headerConfig',
+            'footerConfig'
+        ))
             ->setPaper('a4', $orientation)
             ->setOption([
-                'margin-top' => 10,
-                'margin-bottom' => 10,
-                'margin-left' => 30,
-                'margin-right' => 30,
+                'margin-top' => 20,
+                'margin-bottom' => 25,
+                'margin-left' => 15,
+                'margin-right' => 15,
+                'encoding' => 'UTF-8',
+                'enable-local-file-access' => true,
             ]);
 
         $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
 
         return $pdf->download($filename);
     }
+
 
     /**
      * Export to Excel
@@ -244,43 +268,67 @@ class BTORController extends Controller
     }
 
     /**
-     * Export multiple reports to ZIP
+     * Export multiple reports to single PDF (all reports looped together)
      */
     public function exportBulkPdf(Request $request)
     {
         $ids = $request->input('ids', []);
 
+        // Handle comma-separated string from form
+        if (is_string($ids)) {
+            $ids = array_filter(explode(',', $ids));
+        }
+
         if (empty($ids)) {
             return back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
         }
 
-        $zip = new \ZipArchive();
-        $zipFileName = 'BTOR_Bulk_' . date('Ymd_His') . '.zip';
-        $zipPath = storage_path('app/temp/' . $zipFileName);
+        // Build kegiatan list with view paths (same structure as printBulk)
+        $kegiatanList = collect($ids)->map(function ($id) {
+            $kegiatan = BTOR::getData($id);
+            return [
+                'kegiatan' => $kegiatan,
+                'viewPath' => BTOR::getViewPath($kegiatan->jeniskegiatan_id)
+            ];
+        });
 
-        // Create temp directory if not exists
-        if (!file_exists(storage_path('app/temp'))) {
-            mkdir(storage_path('app/temp'), 0755, true);
-        }
+        // Customizable header/footer config
+        $headerConfig = [
+            'organization' => 'IDEP Foundation',
+            'department' => 'Program',
+            'showReportInfo' => true,
+            'logo' => public_path('images/logo-idep.png'),
+        ];
 
-        if ($zip->open($zipPath, \ZipArchive::CREATE) === TRUE) {
-            foreach ($ids as $id) {
-                $kegiatan = BTOR::getData($id);
-                $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
+        $footerConfig = [
+            'organization' => 'IDEP Foundation',
+            'showPageNumber' => true,
+            'customText' => 'Back to Office Report (BTOR)',
+        ];
 
-                $pdf = Pdf::loadView('tr.btor.print', compact('kegiatan', 'viewPath'))
-                    ->setPaper('a4', 'portrait');
+        $showButtons = false;
 
-                $pdfContent = $pdf->output();
-                $pdfFileName = 'BTOR_' . $kegiatan->id . '_' . str_slug($kegiatan->programOutcomeOutputActivity?->nama ?? 'report') . '.pdf';
+        $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact(
+            'kegiatanList',
+            'showButtons',
+            'headerConfig',
+            'footerConfig'
+        ))
+            ->setPaper('a4', 'portrait')
+            ->setOption([
+                'margin-top' => 20,
+                'margin-bottom' => 25,
+                'margin-left' => 15,
+                'margin-right' => 15,
+                'encoding' => 'UTF-8',
+                'enable-local-file-access' => true,
+            ]);
 
-                $zip->addFromString($pdfFileName, $pdfContent);
-            }
-            $zip->close();
-        }
+        $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
 
-        return response()->download($zipPath)->deleteFileAfterSend(true);
+        return $pdf->download($filename);
     }
+
 
     /**
      * Show export configuration page

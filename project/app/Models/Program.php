@@ -88,7 +88,8 @@ class Program extends Model implements HasMedia
     public function pendonor()
     {
         return $this->belongsToMany(MPendonor::class, 'trprogrampendonor', 'program_id', 'pendonor_id')
-            ->withPivot('nilaidonasi');
+            ->withPivot('nilaidonasi')
+            ->withTimestamps();
     }
     public function outcome()
     {
@@ -125,9 +126,9 @@ class Program extends Model implements HasMedia
     {
         $file = $this->getMedia('file_pendukung_program')->last();
         if ($file) {
-            $file->url       = $file->getUrl();
+            $file->url = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');
-            $file->preview   = $file->getUrl('preview');
+            $file->preview = $file->getUrl('preview');
         }
 
         return $file;
@@ -141,9 +142,9 @@ class Program extends Model implements HasMedia
     }
 
     public const STATUS_SELECT = [
-        'draft'    => 'Draft',
-        'running'  => 'Running',
-        'submit'   => 'Submit',
+        'draft' => 'Draft',
+        'running' => 'Running',
+        'submit' => 'Submit',
         'complete' => 'Complete',
     ];
 
