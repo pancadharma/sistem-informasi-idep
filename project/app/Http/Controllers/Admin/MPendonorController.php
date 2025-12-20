@@ -201,7 +201,7 @@ class MPendonorController extends Controller
                 }
 
                 // Tambahkan button untuk dashboard
-                $buttons .= '<a href="' . route('pendonor.dashboard', $mpendonor->id) . '" class="btn btn-sm btn-success" 
+                $buttons .= '<a href="' . route('dashboard.pendonor', $mpendonor->id) . '" class="btn btn-sm btn-success" 
                 title="Dashboard Donasi">
                 <i class="fas fa-chart-line"></i>
             </a>';

@@ -4,50 +4,10 @@
 
 @section('subtitle', 'Dashboard Donasi Pendonor')
 @section('content_header_title', 'Dashboard Donasi')
-@section('sub_breadcumb', 'Dashboard Donatur')
+@section('sub_breadcumb', 'Dashboard Donasi')
 
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
-<style>
-    /* .stat-card {
-        border-radius: 10px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    .stat-icon {
-        font-size: 3rem;
-        opacity: 0.8;
-    }
-    .chart-container {
-        position: relative;
-        height: 400px;
-        margin-bottom: 20px;
-    }
-    .filter-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 20px;
-    }
-    .filter-card .form-control,
-    .filter-card .select2-container--default .select2-selection--single {
-        background: rgba(255, 255, 255, 0.9);
-        border: none;
-        border-radius: 8px;
-    }
-    .table-responsive {
-        max-height: 500px;
-        overflow-y: auto;
-    }
-    .donation-badge {
-        font-size: 0.9rem;
-        padding: 5px 10px;
-    } */
-</style>
 @endpush
 
 @section('content_body')
@@ -65,16 +25,16 @@
         <div class="col-12">    
             <div class="card card-primary card-outline">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-filter"></i> Filter Data Donasi</h3>
+                    <h3 class="card-title"><i class="fas fa-filter"></i> {{ __('cruds.mpendonor.filter') }}</h3>
                 </div>
                 <div class="card-body">
                     <form id="filterForm">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="filter_year" class="">Tahun</label>
+                                    <label for="filter_year" class="">{{ __('cruds.mpendonor.year') }}</label>
                                     <select id="filter_year" name="year" class="form-control select2">
-                                        <option value="">Semua Tahun</option>
+                                        <option value="">{{ __('cruds.mpendonor.year') }}</option>
                                         @for($year = date('Y'); $year >= 2020; $year--)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
@@ -83,9 +43,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="filter_pendonor" class="">Pendonor</label>
+                                    <label for="filter_pendonor" class="">{{ __('cruds.mpendonor.pendonor') }}</label>
                                     <select id="filter_pendonor" name="pendonor_id" class="form-control select2">
-                                        <option value="">Semua Pendonor</option>
+                                        <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
                                         @foreach($pendonors as $pendonor)
                                             <option value="{{ $pendonor->id }}" 
                                                 {{ $selectedPendonor && $selectedPendonor->id == $pendonor->id ? 'selected' : '' }}>
@@ -97,9 +57,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="filter_program" class="">Program</label>
+                                    <label for="filter_program" class="">{{ __('cruds.program.title_singular') }}</label>
                                     <select id="filter_program" name="program_id" class="form-control select2">
-                                        <option value="">Semua Program</option>
+                                        <option value="">{{ __('cruds.program.all') }}</option>
                                         @foreach($programs as $program)
                                             <option value="{{ $program->id }}">{{ $program->nama }}</option>
                                         @endforeach
@@ -127,7 +87,7 @@
             <div class="small-box bg-info stat-card">
                 <div class="inner">
                     <h3 id="total_donations">0</h3>
-                    <p> Donasi</p>
+                    <p> {{ __('cruds.mpendonor.jumlah_donasi') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-hand-holding-usd stat-icon"></i>
@@ -138,7 +98,7 @@
             <div class="small-box bg-success stat-card">
                 <div class="inner text-right text-wrap">
                     <h3 id="total_value"><span>Rp </span>0</h3>
-                    <p>Nilai Donasi</p>
+                    <p>{{ __('cruds.mpendonor.total_nilai') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-dollar-sign stat-icon"></i>
@@ -149,7 +109,7 @@
             <div class="small-box bg-warning stat-card">
                 <div class="inner">
                     <h3 id="unique_donors">0</h3>
-                    <p>Pendonor Unik</p>
+                    <p>{{ __('cruds.mpendonor.unik_donor') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-users stat-icon"></i>
@@ -160,7 +120,7 @@
             <div class="small-box bg-danger stat-card">
                 <div class="inner">
                     <h3 id="unique_programs">0</h3>
-                    <p>Program Berbeda</p>
+                    <p>{{ __('cruds.mpendonor.diff_program') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-project-diagram stat-icon"></i>
@@ -177,7 +137,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-chart-pie mr-1"></i>
-                        Donasi per Pendonor
+                        {{ __('cruds.mpendonor.donasi_pendonor') }}
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -199,7 +159,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-chart-bar mr-1"></i>
-                        Donasi per Program
+                        {{ __('cruds.mpendonor.donasi_program') }}
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -223,7 +183,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-chart-line mr-1"></i>
-                        Timeline Donasi
+                        {{ __('cruds.mpendonor.timeline_donasi') }}
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -247,7 +207,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-table mr-1"></i>
-                        Detail Donasi
+                        {{ __('cruds.mpendonor.detail_donasi') }}
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -264,11 +224,11 @@
                             <thead class="bg-light">
                                 <tr>
                                     <th width="5%">No</th>
-                                    <th>Pendonor</th>
-                                    <th>Program</th>
-                                    <th width="8%" class="text-center">Tahun Program</th>
-                                    <th width="15%" class="text-right">Nilai Donasi</th>
-                                    <th width="12%" class="text-center">Tanggal</th>
+                                    <th>{{ __('cruds.mpendonor.nama') }}</th>
+                                    <th>{{ __('cruds.program.title_singular') }}</th>
+                                    <th width="8%" class="text-center">{{ __('cruds.mpendonor.year') }}</th>
+                                    <th width="15%" class="text-right">{{ __('cruds.mpendonor.total_nilai') }}</th>
+                                    <th width="12%" class="text-center">{{ __('cruds.mpendonor.tanggal') }}</th>
                                 </tr>
                             </thead>
                             <tbody id="donationTableBody">
@@ -304,28 +264,65 @@
 @push('js')
 @section('plugins.Select2', true)
 @section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <script>
 $(document).ready(function() {
     // Get the selected pendonor ID from the route (if any)
-    const selectedPendonorId = '{{ $selectedPendonor->id ?? '' }}';
+    const selectedPendonorId = '{{ $selectedPendonor->id ?? "" }}';
+
+    // Initialize locale settings
+    const currentLocale = '{{ app()->getLocale() }}';
+    const jsLocale = currentLocale === 'id' ? 'id-ID' : 'en-US';
+    console.log('Dashboard Locale:', currentLocale, 'JS Locale:', jsLocale);
 
     // Initialize Select2
     $('.select2').select2({
-        // theme: 'bootstrap4',
-        placeholder: 'Pilih...',
+        placeholder: '{{ __("global.pleaseSelect") }}...',
         allowClear: true
     });
 
     // If there's a selected pendonor, set the Select2 value
-    if (selectedPendonorId) {
+    if (typeof selectedPendonorId !== 'undefined' && selectedPendonorId) {
         $('#filter_pendonor').val(selectedPendonorId).trigger('change');
     }
 
     // Chart instances
     let donorChart, programChart, timelineChart;
+    let donationDataTable;
+
+    // Initialize DataTable
+    donationDataTable = $('#donationTable').DataTable({
+        data: [],
+        columns: [
+            { data: null, render: function(data, type, row, meta) {
+                return meta.row + 1;
+            }},
+            { data: 'pendonor' },
+            { data: 'program' },
+            { data: 'program_year', className: 'text-center', render: function(data) {
+                return '<span class="badge badge-secondary">' + data + '</span>';
+            }},
+            { data: 'nilaidonasi', className: 'text-right', render: function(data) {
+                return 'Rp ' + parseFloat(data).toLocaleString(jsLocale);
+            }},
+            { data: 'tanggal', className: 'text-center', render: function(data) {
+                return '<span class="badge badge-info donation-badge"><i class="far fa-calendar"></i> ' + data + '</span>';
+            }}
+        ],
+        order: [[0, 'asc']],
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "{{ __('global.all') }}"]],
+        footerCallback: function(row, data, start, end, display) {
+            const api = this.api();
+            const total = api.column(4).data().reduce(function(a, b) {
+                return parseFloat(a) + parseFloat(b);
+            }, 0);
+            $('#tableTotal').text('Rp ' + total.toLocaleString(jsLocale));
+        }
+    });
 
     // Load initial data
     loadDonationData();
@@ -369,10 +366,44 @@ $(document).ready(function() {
         });
     }
 
+    // Function to format numbers compactly (Rb/K, Jt/M, M/B, T/T)
+    function formatCompactNumber(value) {
+        const isID = currentLocale === 'id';
+        const suffixes = isID ? 
+            { k: 'Rb', m: 'Jt', b: 'M', t: 'T' } : 
+            { k: 'K', m: 'M', b: 'B', t: 'T' };
+
+        if (value >= 1000000000000) {
+            return (value / 1000000000000).toLocaleString(jsLocale, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' ' + suffixes.t;
+        } else if (value >= 1000000000) {
+            return (value / 1000000000).toLocaleString(jsLocale, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' ' + suffixes.b;
+        } else if (value >= 1000000) {
+            return (value / 1000000).toLocaleString(jsLocale, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' ' + suffixes.m;
+        } else if (value >= 1000) {
+            return (value / 1000).toLocaleString(jsLocale, {maximumFractionDigits: 0}) + ' ' + suffixes.k;
+        }
+        return value.toLocaleString(jsLocale);
+    }
+
     // Update statistics cards
     function updateStatistics(stats) {
-        $('#total_donations').text(stats.total_donations.toLocaleString('id-ID'));
-        $('#total_value').text('Rp ' + stats.total_value.toLocaleString('id-ID'));
+        $('#total_donations').text(stats.total_donations.toLocaleString(jsLocale));
+        
+        // Compact display for main box, full value in tooltip
+        const fullValue = 'Rp ' + stats.total_value.toLocaleString(jsLocale);
+        const compactValue = 'Rp ' + formatCompactNumber(stats.total_value);
+        
+        $('#total_value').text(compactValue);
+        $('#total_value').attr('title', fullValue); // Browser tooltip
+        $('#total_value').css('cursor', 'help');
+        
+        // Add dynamic font size adjustment if value is still long
+        if (compactValue.length > 10) {
+            $('#total_value').css('font-size', '1.8rem');
+        } else {
+            $('#total_value').css('font-size', '');
+        }
+
         $('#unique_donors').text(stats.unique_donors);
         $('#unique_programs').text(stats.unique_programs);
     }
@@ -388,7 +419,7 @@ $(document).ready(function() {
             data: {
                 labels: charts.by_program.map(p => p.kode),
                 datasets: [{
-                    label: 'Jumlah Donasi',
+                    label: '{{ __("cruds.mpendonor.chart_donation_count") }}',
                     data: charts.by_program.map(p => p.count),
                     backgroundColor: [
                         '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
@@ -406,15 +437,16 @@ $(document).ready(function() {
                     },
                     title: {
                         display: true,
-                        text: 'Distribusi Donasi per Program'
+                        text: '{{ __("cruds.mpendonor.chart_distribution") }}'
                     },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
                                 const program = charts.by_program[context.dataIndex];
+                                const labelDonasi = '{{ __("cruds.mpendonor.chart_donation") }}';
                                 return [
-                                    program.name + ' (' + program.kode + '): ' + program.count + ' donasi',
-                                    'Total: Rp ' + program.total.toLocaleString('id-ID')
+                                    program.name + ' (' + program.kode + '): ' + program.count + ' ' + labelDonasi,
+                                    'Total: Rp ' + program.total.toLocaleString(jsLocale)
                                 ];
                             }
                         }
@@ -432,7 +464,7 @@ $(document).ready(function() {
             data: {
                 labels: charts.by_program.map(p => p.kode),
                 datasets: [{
-                    label: 'Nilai Donasi (Rp)',
+                    label: '{{ __("cruds.mpendonor.chart_donation_value") }} (Rp)',
                     data: charts.by_program.map(p => p.total),
                     backgroundColor: 'rgba(54, 162, 235, 0.6)',
                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -448,12 +480,12 @@ $(document).ready(function() {
                     },
                     title: {
                         display: true,
-                        text: 'Total Nilai Donasi per Program'
+                        text: '{{ __("cruds.mpendonor.chart_donation_value") }}'
                     },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return 'Rp ' + context.parsed.y.toLocaleString('id-ID');
+                                return 'Rp ' + context.parsed.y.toLocaleString(jsLocale);
                             }
                         }
                     }
@@ -463,7 +495,7 @@ $(document).ready(function() {
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return 'Rp ' + value.toLocaleString('id-ID');
+                                return 'Rp ' + value.toLocaleString(jsLocale);
                             }
                         }
                     }
@@ -486,7 +518,7 @@ $(document).ready(function() {
             data: {
                 labels: charts.timeline.map(t => t.month),
                 datasets: [{
-                    label: 'Total Donasi (Rp)',
+                    label: '{{ __("cruds.mpendonor.fields.total_donation") ?? "Total Donasi" }} (Rp)',
                     data: charts.timeline.map(t => t.total),
                     borderColor: 'rgba(34, 197, 94, 1)',
                     backgroundColor: gradient,
@@ -513,7 +545,7 @@ $(document).ready(function() {
                     },
                     title: {
                         display: true,
-                        text: 'Trend Total Donasi per Bulan',
+                        text: '{{ __("cruds.mpendonor.donation_trend") ?? "" }}',
                         font: {
                             size: 16,
                             weight: 'bold'
@@ -526,12 +558,13 @@ $(document).ready(function() {
                         padding: 12,
                         callbacks: {
                             label: function(context) {
-                                return 'Total: Rp ' + context.parsed.y.toLocaleString('id-ID');
+                                return 'Total: Rp ' + context.parsed.y.toLocaleString(jsLocale);
                             },
                             afterLabel: function(context) {
                                 const dataIndex = context.dataIndex;
                                 const count = charts.timeline[dataIndex]?.count || 0;
-                                return 'Jumlah Donasi: ' + count;
+                                const labelDonationCount = '{{ __("cruds.mpendonor.chart_donation_count") }}';
+                                return labelDonationCount + ': ' + count;
                             }
                         }
                     }
@@ -556,19 +589,12 @@ $(document).ready(function() {
                         },
                         title: {
                             display: true,
-                            text: 'Total Donasi (Rp)',
+                            text: '{{ __("cruds.mpendonor.chart_total_donation") }} (Rp)',
                             font: { weight: 'bold' }
                         },
                         ticks: {
                             callback: function(value) {
-                                if (value >= 1000000000) {
-                                    return 'Rp ' + (value / 1000000000).toFixed(1) + 'M';
-                                } else if (value >= 1000000) {
-                                    return 'Rp ' + (value / 1000000).toFixed(1) + 'Jt';
-                                } else if (value >= 1000) {
-                                    return 'Rp ' + (value / 1000).toFixed(0) + 'Rb';
-                                }
-                                return 'Rp ' + value.toLocaleString('id-ID');
+                                return 'Rp ' + formatCompactNumber(value);
                             }
                         }
                     }
@@ -579,41 +605,15 @@ $(document).ready(function() {
 
     // Update detail table
     function updateTable(details) {
-        const tbody = $('#donationTableBody');
-        tbody.empty();
-
+        donationDataTable.clear();
+        
         if (details.length === 0) {
-            tbody.append(`
-                <tr>
-                    <td colspan="6" class="text-center text-muted">
-                        <i class="fas fa-inbox"></i> Tidak ada data donasi
-                    </td>
-                </tr>
-            `);
+            donationDataTable.draw();
             $('#tableTotal').text('Rp 0');
             return;
         }
 
-        let total = 0;
-        details.forEach((item, index) => {
-            total += parseFloat(item.nilaidonasi);
-            tbody.append(`
-                <tr>
-                    <td class="text-center">${index + 1}</td>
-                    <td>${item.pendonor}</td>
-                    <td>${item.program}</td>
-                    <td class="text-center"><span class="badge badge-secondary">${item.program_year}</span></td>
-                    <td class="text-right">Rp ${parseFloat(item.nilaidonasi).toLocaleString('id-ID')}</td>
-                    <td class="text-center">
-                        <span class="badge badge-info donation-badge">
-                            <i class="far fa-calendar"></i> ${item.tanggal}
-                        </span>
-                    </td>
-                </tr>
-            `);
-        });
-
-        $('#tableTotal').text('Rp ' + total.toLocaleString('id-ID'));
+        donationDataTable.rows.add(details).draw();
     }
 
     // Export to Excel
