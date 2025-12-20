@@ -55,3 +55,6 @@ project/storage/*
 project/storage/logs/.gitignore
 project/docker-compose.mac.alpine.yml
 .gitignore
+project/.DS_Store
+project/nginx/.DS_Store
+.DS_Store
