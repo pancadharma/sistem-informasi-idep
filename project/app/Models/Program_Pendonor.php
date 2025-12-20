@@ -20,18 +20,18 @@ class Program_Pendonor extends Model
         'program_id',
         'pendonor_id',
         'nilaidonasi',
-        'created_at',
-        'updated_at',
+        // Removed created_at and updated_at - let Laravel auto-manage timestamps
     ];
+
     protected $dates = [
         'created_at',
         'updated_at',
     ];
-    
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
 
     protected function serializeDate(DateTimeInterface $date)
