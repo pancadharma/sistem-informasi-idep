@@ -2,10 +2,13 @@
 
 @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label'))
 @section('content_header_title')
-    <button type="button" class="btn btn-secondary btn-sm print-btn"
+    {{-- <button type="button" class="btn btn-secondary btn-sm print-btn"
         title="{{ __('global.print') . ' ' . __('cruds.kegiatan.label') }}">
         <i class="fa fa-print"></i>
-    </button>
+    </button> --}}
+    <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-info" target="_blank">
+        <i class="fas fa-print"></i> {{ __('btor.print_preview') }}
+    </a>
 @endsection
 @section('sub_breadcumb', __('cruds.kegiatan.list'))
 

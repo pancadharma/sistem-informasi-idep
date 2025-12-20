@@ -12,6 +12,7 @@ use App\Models\mSektor;
 use App\Models\Partner;
 use App\Models\Program;
 use App\Models\Kegiatan;
+use App\Models\Export\BTOR;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
@@ -194,8 +195,11 @@ class KegiatanController extends Controller
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
     }
 
-    public function export(Kegiatan $kegiatan, $format)
+     public function export(Kegiatan $kegiatan, $format)
     {
+        // Use BTOR::getData to load all necessary relationships including dynamic ones
+        $kegiatan = BTOR::getData($kegiatan->id);
+        
         $format = strtolower($format);
         $durationInDays = $kegiatan->getDurationInDays();
         $data = compact('kegiatan', 'durationInDays');
@@ -207,89 +211,88 @@ class KegiatanController extends Controller
 
         if ($format === 'docx') {
             try {
-                $phpWord = new PhpWord();
-                $section = $phpWord->addSection();
+                $builder = \Novay\Word\Facades\Word::builder();
 
-                // Set default styles
-                $phpWord->setDefaultFontName('Times New Roman');
-                $phpWord->setDefaultFontSize(12);
+                // Helper function to sanitize text
+                $sanitize = function($text) {
+                    if (empty($text)) return '-';
+                    $text = strip_tags($text);
+                    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    return trim($text) ?: '-';
+                };
 
-                // Define styles
-                $phpWord->addFontStyle('headerStyle', [
-                    'name' => 'Times New Roman',
-                    'size' => 16,
-                    'bold' => true,
-                    'color' => '000000'
+                // Header
+                $builder->addTitle('BACK TO OFFICE REPORT', 1);
+                $builder->addText('Laporan Kegiatan', ['italic' => true]);
+                $builder->addText(''); // spacing
+
+                // Informasi Dasar
+                $builder->addTitle('Informasi Dasar', 2);
+                $builder->addTable([
+                    ['Kode Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->kode)],
+                    ['Nama Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->nama)],
+                    ['Kode Kegiatan', $sanitize($kegiatan->activity?->kode)],
+                    ['Nama Kegiatan', $sanitize($kegiatan->activity?->nama)],
+                    ['Penulis', $kegiatan->datapenulis->pluck('nama')->implode(', ') ?: '-'],
+                    ['Jenis Kegiatan', $sanitize($kegiatan->jenisKegiatan?->nama)],
+                    ['Tanggal Mulai', $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') : '-'],
+                    ['Tanggal Selesai', $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') : '-'],
+                    ['Lokasi', $kegiatan->lokasi->isNotEmpty() ? $kegiatan->lokasi->unique('kabupaten_id')->pluck('desa.kecamatan.kabupaten.nama')->filter()->implode(', ') : '-'],
                 ]);
+                $builder->addText('');
 
-                $phpWord->addFontStyle('titleStyle', [
-                    'name' => 'Times New Roman',
-                    'size' => 14,
-                    'bold' => true,
-                    'color' => '000000'
+                // Deskripsi
+                $builder->addTitle('Deskripsi', 2);
+                
+                $builder->addText('Latar Belakang', ['bold' => true]);
+                $builder->addText($sanitize($kegiatan->deskripsilatarbelakang));
+                $builder->addText('');
+                
+                $builder->addText('Tujuan', ['bold' => true]);
+                $builder->addText($sanitize($kegiatan->deskripsitujuan));
+                $builder->addText('');
+                
+                $builder->addText('Keluaran', ['bold' => true]);
+                $builder->addText($sanitize($kegiatan->deskripsikeluaran));
+                $builder->addText('');
+
+                // Ringkasan Peserta
+                $builder->addTitle('Ringkasan Peserta', 2);
+                $builder->addTable([
+                    ['Kategori', 'Wanita', 'Pria', 'Total'],
+                    ['Dewasa', (string)($kegiatan->penerimamanfaatdewasaperempuan ?? 0), (string)($kegiatan->penerimamanfaatdewasalakilaki ?? 0), (string)($kegiatan->penerimamanfaatdewasatotal ?? 0)],
+                    ['Lansia', (string)($kegiatan->penerimamanfaatlansiaperempuan ?? 0), (string)($kegiatan->penerimamanfaatlansialakilaki ?? 0), (string)($kegiatan->penerimamanfaatlansiatotal ?? 0)],
+                    ['Remaja', (string)($kegiatan->penerimamanfaatremajaperempuan ?? 0), (string)($kegiatan->penerimamanfaatremajalakilaki ?? 0), (string)($kegiatan->penerimamanfaatremajatotal ?? 0)],
+                    ['Anak', (string)($kegiatan->penerimamanfaatanakperempuan ?? 0), (string)($kegiatan->penerimamanfaatanaklakilaki ?? 0), (string)($kegiatan->penerimamanfaatanaktotal ?? 0)],
+                    ['TOTAL', (string)($kegiatan->penerimamanfaatperempuantotal ?? 0), (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0), (string)($kegiatan->penerimamanfaattotal ?? 0)],
                 ]);
+                $builder->addText('');
 
-                $phpWord->addFontStyle('normalStyle', [
-                    'name' => 'Times New Roman',
-                    'size' => 11,
-                    'color' => '000000'
-                ]);
-
-                $html = view('tr.kegiatan.export', $data)->render();
-
-                // Clean HTML for better Word conversion - more aggressive cleaning
-                $html = preg_replace('/<style[^>]*>.*?<\/style>/is', '', $html);
-                $html = preg_replace('/<link[^>]*>/is', '', $html);
-                $html = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $html);
-
-                // Remove problematic HTML5 tags that might cause XML parsing issues
-                $html = preg_replace('/<[^>]+>/s', '', $html); // Remove all HTML tags
-
-                // Convert HTML entities to plain text
-                $html = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-                // Remove any remaining XML-invalid characters
-                $html = preg_replace('/[^\x09\x0A\x0D\x20-\xD7FF\xE000-\xFFFD]/u', '', $html);
-
-                // Create a simple HTML structure for Word conversion
-                $cleanHtml = '<html><head><meta charset="UTF-8"></head><body>';
-                $cleanHtml .= nl2br($html);
-                $cleanHtml .= '</body></html>';
-
-                Html::addHtml($section, $cleanHtml, false, false);
-
-                // Create temporary file with proper cleanup
-                $tempFile = tempnam(sys_get_temp_dir(), 'kegiatan_' . $kegiatan->id);
-                if (!$tempFile) {
-                    throw new \Exception('Failed to create temporary file');
+                // Pembelajaran
+                $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
+                    ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                    ?? $kegiatan->monitoring?->monitoringpembelajaran
+                    ?? null;
+                    
+                if ($pembelajaran) {
+                    $builder->addTitle('Pembelajaran', 2);
+                    $builder->addText($sanitize($pembelajaran));
+                    $builder->addText('');
                 }
 
-                // Ensure the file has .docx extension
-                $tempFile = $tempFile . '.docx';
-
-                // Save the document
-                $phpWord->save($tempFile, 'Word2007');
-
-                // Verify file exists before download
-                if (!file_exists($tempFile)) {
-                    throw new \Exception('DOCX file was not created successfully');
+                // Clear output buffer
+                if (ob_get_length()) {
+                    ob_end_clean();
                 }
 
-                // Set up cleanup
-                register_shutdown_function(function() use ($tempFile) {
-                    if (file_exists($tempFile)) {
-                        @unlink($tempFile);
-                    }
-                });
-
-                return response()->download($tempFile, 'kegiatan-' . $kegiatan->id . '.docx')
-                    ->deleteFileAfterSend(true);
+                return $builder->download('kegiatan-' . $kegiatan->id . '.docx');
 
             } catch (\Exception $e) {
-                \Log::error('DOCX export failed for kegiatan ' . $kegiatan->id . ': ' . $e->getMessage());
+                \Log::error('DOCX export failed: ' . $e->getMessage());
+                \Log::error($e->getTraceAsString());
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to generate DOCX export: ' . $e->getMessage()
+                    'message' => 'Failed to generate DOCX: ' . $e->getMessage()
                 ], 500);
             }
         }
@@ -299,6 +302,9 @@ class KegiatanController extends Controller
 
     public function exportV2(Kegiatan $kegiatan, $format)
     {
+        // Use BTOR::getData to load all necessary relationships including dynamic ones
+        $kegiatan = BTOR::getData($kegiatan->id);
+
         $format = strtolower($format);
         $durationInDays = $kegiatan->getDurationInDays();
         $data = compact('kegiatan', 'durationInDays');

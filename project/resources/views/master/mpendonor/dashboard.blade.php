@@ -4,12 +4,12 @@
 
 @section('subtitle', 'Dashboard Donasi Pendonor')
 @section('content_header_title', 'Dashboard Donasi')
-@section('sub_breadcumb', 'Analisis & Statistik')
+@section('sub_breadcumb', 'Dashboard Donatur')
 
 @push('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
 <style>
-    .stat-card {
+    /* .stat-card {
         border-radius: 10px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -46,7 +46,7 @@
     .donation-badge {
         font-size: 0.9rem;
         padding: 5px 10px;
-    }
+    } */
 </style>
 @endpush
 
@@ -55,64 +55,68 @@
     <div class="row mb-3">
         <div class="col-12">
             <a href="{{ route('pendonor.index') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Kembali ke Daftar Pendonor
+                <i class="fas fa-arrow-left"></i> {{ __('cruds.mpendonor.list')}}
             </a>
         </div>
     </div>
 
     {{-- Filter Section --}}
     <div class="row">
-        <div class="col-12">
-            <div class="filter-card">
-                <h4 class="mb-3"><i class="fas fa-filter"></i> Filter Data Donasi</h4>
-                <form id="filterForm">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="filter_year" class="text-white">Tahun</label>
-                                <select id="filter_year" name="year" class="form-control">
-                                    <option value="">Semua Tahun</option>
-                                    @for($year = date('Y'); $year >= 2020; $year--)
-                                        <option value="{{ $year }}">{{ $year }}</option>
-                                    @endfor
-                                </select>
+        <div class="col-12">    
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-filter"></i> Filter Data Donasi</h3>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="filter_year" class="">Tahun</label>
+                                    <select id="filter_year" name="year" class="form-control select2">
+                                        <option value="">Semua Tahun</option>
+                                        @for($year = date('Y'); $year >= 2020; $year--)
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="filter_pendonor" class="">Pendonor</label>
+                                    <select id="filter_pendonor" name="pendonor_id" class="form-control select2">
+                                        <option value="">Semua Pendonor</option>
+                                        @foreach($pendonors as $pendonor)
+                                            <option value="{{ $pendonor->id }}" 
+                                                {{ $selectedPendonor && $selectedPendonor->id == $pendonor->id ? 'selected' : '' }}>
+                                                {{ $pendonor->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="filter_program" class="">Program</label>
+                                    <select id="filter_program" name="program_id" class="form-control select2">
+                                        <option value="">Semua Program</option>
+                                        @foreach($programs as $program)
+                                            <option value="{{ $program->id }}">{{ $program->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="text-white d-block">&nbsp;</label>
+                                    <button type="submit" class="btn btn-info btn-red">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="filter_pendonor" class="text-white">Pendonor</label>
-                                <select id="filter_pendonor" name="pendonor_id" class="form-control select2">
-                                    <option value="">Semua Pendonor</option>
-                                    @foreach($pendonors as $pendonor)
-                                        <option value="{{ $pendonor->id }}" 
-                                            {{ $selectedPendonor && $selectedPendonor->id == $pendonor->id ? 'selected' : '' }}>
-                                            {{ $pendonor->nama }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="filter_program" class="text-white">Program</label>
-                                <select id="filter_program" name="program_id" class="form-control select2">
-                                    <option value="">Semua Program</option>
-                                    @foreach($programs as $program)
-                                        <option value="{{ $program->id }}">{{ $program->nama }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label class="text-white d-block">&nbsp;</label>
-                                <button type="submit" class="btn btn-light btn-block">
-                                    <i class="fas fa-search"></i> Filter
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -123,7 +127,7 @@
             <div class="small-box bg-info stat-card">
                 <div class="inner">
                     <h3 id="total_donations">0</h3>
-                    <p>Total Donasi</p>
+                    <p> Donasi</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-hand-holding-usd stat-icon"></i>
@@ -132,9 +136,9 @@
         </div>
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success stat-card">
-                <div class="inner">
-                    <h3 id="total_value">Rp 0</h3>
-                    <p>Total Nilai Donasi</p>
+                <div class="inner text-right text-wrap">
+                    <h3 id="total_value"><span>Rp </span>0</h3>
+                    <p>Nilai Donasi</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-dollar-sign stat-icon"></i>
@@ -310,7 +314,7 @@ $(document).ready(function() {
 
     // Initialize Select2
     $('.select2').select2({
-        theme: 'bootstrap4',
+        // theme: 'bootstrap4',
         placeholder: 'Pilih...',
         allowClear: true
     });
