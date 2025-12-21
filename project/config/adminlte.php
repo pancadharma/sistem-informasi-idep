@@ -160,6 +160,12 @@ return [
                     'icon' => 'fas fa-chart-pie',
                     'active' => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],
                 ],
+                [
+                    'text' => 'Pendonor Dashboard',
+                    'route' => 'dashboard.pendonor',
+                    'icon' => 'fas fa-hand-holding-heart',
+                    'active' => ['dashboard/pendonor*', 'regex:@^dashboard/pendonor/[0-9]+$@'],
+                ],
             ]
         ],
         [

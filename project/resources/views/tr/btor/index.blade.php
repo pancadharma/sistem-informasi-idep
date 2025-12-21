@@ -106,9 +106,9 @@
                 <button type="button" class="btn btn-secondary" id="bulkPrintBtn" disabled>
                     <i class="fas fa-print"></i> Print Selected
                 </button>
-                <a href="{{ route('btor.export.config') }}" class="btn btn-success">
+                {{-- <a href="{{ route('btor.export.config') }}" class="btn btn-success">
                     <i class="fas fa-file-excel"></i> Export to Excel
-                </a>
+                </a> --}}
                 <span id="selectedCount" class="ml-3 text-muted">0 items selected</span>
             </form>
         </div>

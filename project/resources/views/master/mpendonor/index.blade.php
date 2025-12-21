@@ -8,7 +8,7 @@
     <div class="card card-primary collapsed-card" >
             @can('pendonor_create')
             <div class="card-header">
-                {{ trans('global.create')}} {{trans('cruds.mpendonor.title')}}
+                {{ __('global.create')}} {{__('cruds.mpendonor.title')}}
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                         <i class="fas fa-plus"></i>
@@ -21,7 +21,7 @@
                     @csrf
                     @method('POST')
                     <div class="form-group"> {{--  id kategori pendonor --}}
-                        <label for="kategoripendonor_add">{{ trans('cruds.kategoripendonor.nama') }} {{ trans('cruds.kategoripendonor.title') }}</label>
+                        <label for="kategoripendonor_add">{{ __('cruds.kategoripendonor.nama') }} {{ __('cruds.kategoripendonor.title') }}</label>
                         <div class="form-group">
                             <select id="kategoripendonor_add" required name="mpendonorkategori_id" class="form-control select2 kategoripendonor-data" style="width: 100%">
                                 <option></option>
@@ -29,54 +29,59 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="nama">{{ trans('cruds.mpendonor.nama') }} {{ trans('cruds.mpendonor.title') }}</label>
+                        <label for="nama">{{ __('cruds.mpendonor.nama') }} {{ __('cruds.mpendonor.title') }}</label>
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
-                        <label for="pic">{{ trans('cruds.mpendonor.pic') }} {{ trans('cruds.mpendonor.title') }}</label>
+                        <label for="pic">{{ __('cruds.mpendonor.pic') }} {{ __('cruds.mpendonor.title') }}</label>
                         <input type="text" id="pic" name="pic" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
-                        <label for="email">{{ trans('cruds.mpendonor.email') }} {{ trans('cruds.mpendonor.title') }}</label>
+                        <label for="email">{{ __('cruds.mpendonor.email') }} {{ __('cruds.mpendonor.title') }}</label>
                         <input type="text" id="email" name="email" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
-                        <label for="phone">{{ trans('cruds.mpendonor.phone') }} {{ trans('cruds.mpendonor.title') }}</label>
+                        <label for="phone">{{ __('cruds.mpendonor.phone') }} {{ __('cruds.mpendonor.title') }}</label>
                         <input type="text" id="phone" name="phone" class="form-control" required maxlength="20">
                     </div>
                     <div class="form-group">
-                    <strong>{{ trans('cruds.status.title') }} {{ trans('cruds.mpendonor.title') }}</strong>
+                    <strong>{{ __('cruds.status.title') }} {{ __('cruds.mpendonor.title') }}</strong>
                         <div class="icheck-primary">
                             <input type="checkbox" name="aktif" id="aktif" {{ old('aktif',1) == 1 ? 'checked' : '' }} value="1">
-                            <label for="aktif">{{ trans('cruds.status.aktif') }}</label>
+                            <label for="aktif">{{ __('cruds.status.aktif') }}</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success float-right btn-add-mpendonor" data-toggle="tooltip" data-placement="top" title="{{ trans('global.submit') }}"><i class="fas fa-save"></i> {{ trans('global.submit') }}</button>
+                    <button type="submit" class="btn btn-success float-right btn-add-mpendonor" data-toggle="tooltip" data-placement="top" title="{{ __('global.submit') }}"><i class="fas fa-save"></i> {{ __('global.submit') }}</button>
                 </form>
 
 
             </div>
         </div>
-    <div class="card card-outline card-primary">
-        <div class="card-body">
-            <table id="mpendonor" class="table table-bordered cell-border ajaxTable datatable-mpendonor" style="width:100%">
-                <thead>
-                    <tr>
-                        
-                        <th class="center">No.</th>
-                        <th>{{ trans('cruds.kategoripendonor.title') }}</th>
-                        <th>{{ trans('cruds.mpendonor.title') }}</th>
-                        <th>{{ trans('cruds.mpendonor.pic') }}</th>
-                        <th>{{ trans('cruds.mpendonor.email') }}</th>
-                        <th>{{ trans('cruds.mpendonor.phone') }}</th>
-                        <th>{{ trans('cruds.status.title') }}</th>
-                        <th>{{ trans('cruds.status.action') }}</th> 
-                        
-                    </tr>
-                </thead>
-            </table>
+        <div class="card card-outline card-primary">
+            <div class="card-body">
+                <div class="row responsive listdonor">
+                    <div class="col-12 table-responsive">
+                        <table id="mpendonor" class="table table-sm table-hover display text-nowrap table-bordered cell-border ajaxTable datatable-mpendonor dataTable" style="width:100%">
+                            {{-- table table-sm table-bordered table-hover datatable-kegiatan display text-nowrap --}}
+                            <thead>
+                                <tr>
+                                    <th class="center">No.</th>
+                                    <th>{{ __('cruds.kategoripendonor.title') }}</th>
+                                    <th>{{ __('cruds.mpendonor.title') }}</th>
+                                    <th>{{ __('cruds.mpendonor.pic') }}</th>
+                                    <th>{{ __('cruds.mpendonor.email') }}</th>
+                                    <th>{{ __('cruds.mpendonor.phone') }}</th>
+                                    <th>{{ __('cruds.mpendonor.jumlah_donasi') }}</th>
+                                    <th>{{ __('cruds.mpendonor.total_nilai') }}</th>
+                                    <th>{{ __('cruds.status.title') }}</th>
+                                    <th>{{ __('cruds.status.action') }}</th>  
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
    
     {{-- @include('master.mpendonor.create') --}}
     @include('master.mpendonor.edit')
@@ -114,7 +119,7 @@
                     });
                     
                     $('#kategoripendonor_add').select2({
-                        placeholder: "{{ trans('global.pleaseSelect') }} {{ trans('cruds.kategoripendonor.title')}}",
+                        placeholder: "{{ __('global.pleaseSelect') }} {{ __('cruds.kategoripendonor.title')}}",
                         allowClear: true,
                         delay: 250,
                         data : data,

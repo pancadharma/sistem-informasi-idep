@@ -36,7 +36,21 @@ $(document).ready(function() {
             },
             {
                 data: "phone",
-                width: "10%"
+                width: "8%"
+            },
+                        {
+                data: "donation_count",
+                width: "8%",
+                className: "text-center",
+                orderable: true,
+                searchable: false
+            },
+            {
+                data: "total_donation_value",
+                width: "10%",
+                className: "text-right",
+                orderable: true,
+                searchable: false
             },
             {
                 data: "aktif",
@@ -45,18 +59,16 @@ $(document).ready(function() {
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
-                        if (data === 1) {
-                            // return '<span class="badge bg-success">Aktif</span>'
-                            return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
-                                row.id + '"></label></div>';
-                        } else {
-                            //return '<span class="badge bg-danger">Tidak Aktif</span>'
-                           return  '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
-                                '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox" ><label for="aktif_' +
-                                row.id + '"></label></div>';
-                        }
+                    if (data === 1) {
+                        return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                            '" class="icheck-primary" title="{{ __("cruds.status.aktif") }}" type="checkbox" checked><label for="aktif_' +
+                            row.id + '"></label></div>';
+                    } else {
+                        return '<div class="icheck-primary d-inline"><input id="aktif_" data-aktif-id="aktif_' + row.id +
+                            '" class="icheck-primary" title="{{ __("cruds.status.tidak_aktif") }}" type="checkbox"><label for="aktif_' +
+                            row.id + '"></label></div>';
                     }
+                }
             },
             {
                 data: "action",
@@ -73,16 +85,14 @@ $(document).ready(function() {
                             exportOptions: {
                                 stripHTML: false,
                                 format: {
-                                    body: function (data, row, column, node) {
-                                        if (column === 6) {
-                                            // return $(data).find('input').is(':checked') ? '✅' : '⬜';
-                                            return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
-                                        }
-                                        return data;
-
+                                body: function(data, row, column, node) {
+                                    if (column === 8) {
+                                        return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                     }
-                                },
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                    return data;
+                                }
+                            },
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                             }
                         },
                         {
@@ -90,7 +100,7 @@ $(document).ready(function() {
                             exportOptions: {
                                 format: {
                                     body: function (data, row, column, node) {
-                                        if (column === 6) {
+                                        if (column === 8) {
                                             // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
@@ -98,14 +108,14 @@ $(document).ready(function() {
 
                                     }
                                 },
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                             }
                         },{
                             extend: 'pdfHtml5', text: `<i class="far fa-file-pdf"></i>`, titleAttr: "Export to PDF", className: "btn-danger",
                             exportOptions: {
                                 format: {
                                     body: function (data, row, column, node) {
-                                        if (column === 6) {
+                                        if (column === 8) {
                                             // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? 'Aktif' : '-';
                                         }
@@ -113,14 +123,14 @@ $(document).ready(function() {
 
                                     }
                                 },
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                             }
                         },{
                             extend: 'copy', text: `<i class="fas fa-copy"></i>`, titleAttr: "Copy",
                             exportOptions: {
                                 format: {
                                     body: function (data, row, column, node) {
-                                        if (column === 6) {
+                                        if (column === 8) {
                                             // return $(data).find('input').is(':checked') ? '✅' : '⬜';
                                             return $(data).find('input').is(':checked') ? '\u2611' : '\u2610';
                                         }
@@ -128,7 +138,7 @@ $(document).ready(function() {
 
                                     }
                                 },
-                                columns: [0, 1, 2, 3, 4, 5, 6]
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                             }
                         },
                         {extend: 'colvis', text: `<i class="fas fa-eye"></i>`, titleAttr: "Select Visible Column", className: "btn-warning"},

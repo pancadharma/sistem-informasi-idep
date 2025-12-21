@@ -69,7 +69,79 @@ docker run -d --name idep_app \
   gedeadi32/sistem-informasi-idep:app-latest
 ```
 
+## Mac Installation (Optimized for Apple Silicon)
+
+This setup is optimized for Mac (especially M1/M2/M3 chips) using Alpine Linux containers for better performance.
+
+### 1. Prerequisites
+- Docker Desktop for Mac installed and running.
+- Terminal access.
+
+### 2. Configuration
+If you haven't already, create the `.env` file:
+
+```bash
+cd project
+cp .env.example.docker .env
+```
+
+### 3. Run with Optimized Docker Compose
+
+Use the `docker-compose.mac.alpine.yml` configuration:
+
+```bash
+# Start containers (detached mode)
+docker compose -f docker-compose.mac.alpine.yml up -d --build
+
+# Stop containers
+docker compose -f docker-compose.mac.alpine.yml down
+```
+
+### 4. Setup Application
+The container will automatically handle the initial bootstrap (key generation, dependencies, linking storage) on the first run.
+
+Monitor the logs to see when it's ready:
+
+```bash
+docker logs -f idep_app_mac
+```
+
+Wait until you see: `✅ Bootstrap finished, starting PHP-FPM`
+
+### 5. Initialize Database
+Run the migrations and seeders manually:
+
+```bash
+docker exec -it idep_app_mac php artisan migrate --seed
+```
+
+### 6. Access the Application
+- **Web App**: [http://localhost](http://localhost)
+- **PHPMyAdmin**: [http://localhost:8080](http://localhost:8080)
+
 ## Notes
 
 - The image listens on port **9000** (PHP-FPM). You need a web server (like Nginx) to proxy requests to it.
 - Ensure you mount or provide a `.env` file or environment variables.
+
+## Deployment / Release
+
+To build and push the Mac-optimized image to Docker Hub:
+
+### 1. Build the Image
+```bash
+# Build using the Mac Alpine Dockerfile
+docker build -t gedeadisurya/idep-app:mac-alpine -f project/Dockerfile.mac.alpine project/
+```
+
+### 2. Push to Docker Hub
+> [!IMPORTANT]
+> Ensure you have created the repository `idep-app` in your Docker Hub account before pushing.
+
+```bash
+# Login if needed
+docker login
+
+# Push the tagged image
+docker push gedeadisurya/idep-app:mac-alpine
+```
