@@ -101,14 +101,14 @@
                 @csrf
                 <input type="hidden" name="ids" id="selectedIds">
                 <button type="submit" class="btn btn-danger" id="bulkExportBtn" disabled>
-                    <i class="fas fa-file-pdf"></i> Export Selected to PDF
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button type="button" class="btn btn-primary" id="bulkExportDocxBtn" disabled>
+                    <i class="fas fa-file-word"></i> Export DOCX
                 </button>
                 <button type="button" class="btn btn-secondary" id="bulkPrintBtn" disabled>
                     <i class="fas fa-print"></i> Print Selected
                 </button>
-                {{-- <a href="{{ route('btor.export.config') }}" class="btn btn-success">
-                    <i class="fas fa-file-excel"></i> Export to Excel
-                </a> --}}
                 <span id="selectedCount" class="ml-3 text-muted">0 items selected</span>
             </form>
         </div>
@@ -172,6 +172,9 @@
                                     </a>
                                     <a href="{{ route('btor.export.pdf', $kegiatan->id) }}" class="btn btn-sm btn-danger" title="Download PDF">
                                         <i class="fas fa-file-pdf"></i> 
+                                    </a>
+                                    <a href="{{ route('btor.export.docx', $kegiatan->id) }}" class="btn btn-sm btn-primary" title="Download DOCX">
+                                        <i class="fas fa-file-word"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -417,6 +420,7 @@
 
         document.getElementById('selectedCount').textContent = count + ' item(s) selected';
         document.getElementById('bulkExportBtn').disabled = count === 0;
+        document.getElementById('bulkExportDocxBtn').disabled = count === 0;
         document.getElementById('bulkPrintBtn').disabled = count === 0;
         document.getElementById('selectedIds').value = selected.join(',');
     }
@@ -479,6 +483,52 @@
                     timerProgressBar: true
                 });
             }
+        });
+    });
+
+    // Bulk Export DOCX - Submit form to export selected reports as DOCX
+    document.getElementById('bulkExportDocxBtn').addEventListener('click', function() {
+        const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
+        
+        if (selected.length === 0) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Pilih minimal 1 laporan untuk diekspor.',
+                timer: 2000,
+                position: 'top-end',
+                timerProgressBar: true
+            });
+            return;
+        }
+
+        // Create form and submit to DOCX bulk export endpoint
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("btor.export.bulk_docx") }}';
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_token';
+        csrfInput.value = '{{ csrf_token() }}';
+        form.appendChild(csrfInput);
+        
+        const idsInput = document.createElement('input');
+        idsInput.type = 'hidden';
+        idsInput.name = 'ids';
+        idsInput.value = selected.join(',');
+        form.appendChild(idsInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        Toast.fire({
+            icon: 'success',
+            title: 'Export DOCX',
+            text: 'Mengexport ' + selected.length + ' laporan ke DOCX...',
+            timer: 2000,
+            position: 'top-end',
+            timerProgressBar: true
         });
     });
 </script>
