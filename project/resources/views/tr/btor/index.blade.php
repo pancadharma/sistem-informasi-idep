@@ -1,27 +1,16 @@
-{{-- @extends('tr.btor.layouts.master')
-
-@section('title', 'BTOR Report List') --}}
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.kegiatan.list'))
-@section('content_header_title')
-    &nbsp;
-@endsection
-@section('sub_breadcumb', __('cruds.kegiatan.list'))
-
-@section('preloader')
-    <i class="fas fa-4x fa-spin fa-spinner text-secondary"></i>
-    <h4 class="mt-4 text-dark">{{ __('global.loading') }}...</h4>
-@endsection
+@section('subtitle', 'BTOR List')
+@section('content_header_title', 'BTOR - Back to Office Report')
+@section('sub_breadcumb', 'BTOR List')
 
 @section('plugins.Sweetalert2', true)
-@section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
-@section('plugins.Validation', true)
 
 @section('content_body')
 <div class="container-fluid">
+    {{-- Header --}}
     <div class="row mb-3">
         <div class="col-12">
             <h2>BTOR - Back to Office Report</h2>
@@ -33,7 +22,6 @@
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('btor.index') }}" id="filterForm">
-                {{-- Row 1: Program, Kegiatan, Jenis Kegiatan --}}
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -61,7 +49,6 @@
                     </div>
                 </div>
 
-                {{-- Row 2: Status, Search Button --}}
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -80,10 +67,10 @@
                             <label>&nbsp;</label>
                             <div>
                                 <button type="submit" class="btn btn-primary" id="search-btn">
-                                    Search
+                                    <i class="fas fa-search"></i> Search
                                 </button>
                                 <a href="{{ route('btor.index') }}" class="btn btn-secondary ml-2">
-                                    Reset
+                                    <i class="fas fa-redo"></i> Reset
                                 </a>
                             </div>
                         </div>
@@ -93,24 +80,30 @@
         </div>
     </div>
 
-
     {{-- Bulk Actions --}}
     <div class="card mb-4">
         <div class="card-body">
-            <form method="POST" action="{{ route('btor.export.bulk') }}" id="bulkForm">
+            <form method="POST" id="bulkFormPdf" action="{{ route('btor.export.bulk') }}">
                 @csrf
-                <input type="hidden" name="ids" id="selectedIds">
-                <button type="submit" class="btn btn-danger" id="bulkExportBtn" disabled>
-                    <i class="fas fa-file-pdf"></i> Export PDF
+                <input type="hidden" name="ids" id="selectedIdsPdf">
+            </form>
+            <form method="POST" id="bulkFormDocx" action="{{ route('btor.export.bulk.docx') }}">
+                @csrf
+                <input type="hidden" name="ids" id="selectedIdsDocx">
+            </form>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-danger" id="bulkExportPdfBtn" disabled>
+                    <i class="fas fa-file-pdf"></i> Export to PDF
                 </button>
                 <button type="button" class="btn btn-primary" id="bulkExportDocxBtn" disabled>
-                    <i class="fas fa-file-word"></i> Export DOCX
+                    <i class="fas fa-file-word"></i> Export to DOCX
                 </button>
                 <button type="button" class="btn btn-secondary" id="bulkPrintBtn" disabled>
-                    <i class="fas fa-print"></i> Print Selected
+                    <i class="fas fa-print"></i> Print Preview
                 </button>
-                <span id="selectedCount" class="ml-3 text-muted">0 items selected</span>
-            </form>
+            </div>
+            <span id="selectedCount" class="ml-3 text-muted">0 items selected</span>
         </div>
     </div>
 
@@ -130,7 +123,7 @@
                             <th>Date</th>
                             <th>Duration</th>
                             <th>Status</th>
-                            <th width="200px">Actions</th>
+                            <th width="250px">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -165,17 +158,24 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('btor.show', $kegiatan->id) }}" class="btn btn-sm btn-info" title="View Details">
-                                        <i class="fas fa-eye"></i> 
+                                        <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-sm btn-secondary" target="_blank" title="Print Preview">
                                         <i class="fas fa-print"></i>
                                     </a>
-                                    <a href="{{ route('btor.export.pdf', $kegiatan->id) }}" class="btn btn-sm btn-danger" title="Download PDF">
-                                        <i class="fas fa-file-pdf"></i> 
-                                    </a>
-                                    <a href="{{ route('btor.export.docx', $kegiatan->id) }}" class="btn btn-sm btn-primary" title="Download DOCX">
-                                        <i class="fas fa-file-word"></i>
-                                    </a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" title="Export">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{{ route('btor.export.pdf', $kegiatan->id) }}">
+                                                <i class="fas fa-file-pdf text-danger"></i> PDF
+                                            </a>
+                                            <a class="dropdown-item" href="{{ route('btor.export.docx', $kegiatan->id) }}">
+                                                <i class="fas fa-file-word text-primary"></i> DOCX
+                                            </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -197,340 +197,169 @@
 
 @push('js')
 <script>
-
-    $('#search-btn').click(function(e) {
-        e.preventDefault();
-        let programId = $('#program_id').val();
-        if (!programId) {
-            e.preventDefault();
-            Toast.fire({
-                icon: "warning",
-                title: "Opssss...",
-                text: "Please select a program first.",
-                timer: 2000,
-                position: "top-end",
-                timerProgressBar: true,
-            });
-
-            return false;
-
-        } else {
-            //do submit
-            $('#filterForm').submit();
-        }
-    });
-
-
     $(function() {
-        // API URLs
         const programsUrl = "{{ route('btor.api.programs') }}";
         const kegiatanUrl = "{{ route('btor.api.kegiatan') }}";
         const jenisKegiatanUrl = "{{ route('btor.api.jenis_kegiatan') }}";
 
-        // Old filter values from URL
         const oldProgramId = "{{ $filters['program_id'] ?? '' }}";
         const oldActivityId = "{{ $filters['activity_id'] ?? '' }}";
         const oldJenisId = "{{ $filters['jeniskegiatan_id'] ?? '' }}";
 
-        // Initialize Program Select2 with AJAX
-        function initProgramSelect() {
-            $('#program_id').select2({
-                // placeholder: 'Choose...',
-                allowClear: true,
-                ajax: {
-                    url: programsUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            page: params.page || 1
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            // Restore old value if any
-            if (oldProgramId) {
-                $.ajax({
-                    url: programsUrl,
-                    dataType: 'json',
-                    success: function(data) {
-                        var found = data.results.find(p => p.id == oldProgramId);
-                        if (found) {
-                            var option = new Option(found.text, found.id, true, true);
-                            $('#program_id').append(option).trigger('change');
-                        }
-                    }
-                });
+        // Initialize Select2
+        $('#program_id').select2({
+            allowClear: true,
+            ajax: {
+                url: programsUrl,
+                dataType: 'json',
+                delay: 250,
+                data: params => ({ search: params.term, page: params.page || 1 }),
+                processResults: data => ({ results: data.results, pagination: data.pagination }),
+                cache: true
             }
-        }
-
-        // Initialize Kegiatan (Activity) Select2 with AJAX
-        function initKegiatanSelect() {
-            $('#activity_id').select2({
-                // placeholder: 'Choose...',
-                allowClear: true,
-                ajax: {
-                    url: kegiatanUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            program_id: $('#program_id').val()
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination
-                        };
-                    },
-                    cache: false
-                }
-            });
-
-            // Restore old value if any
-            if (oldActivityId) {
-                $.ajax({
-                    url: kegiatanUrl,
-                    data: { program_id: oldProgramId },
-                    dataType: 'json',
-                    success: function(data) {
-                        var found = data.results.find(k => k.id == oldActivityId);
-                        if (found) {
-                            var option = new Option(found.text, found.id, true, true);
-                            $('#activity_id').append(option).trigger('change');
-                        }
-                    }
-                });
-            }
-        }
-
-
-        // Initialize Jenis Kegiatan Select2 with AJAX
-        function initJenisKegiatanSelect() {
-            $('#jeniskegiatan_id').select2({
-                // placeholder: 'Choose...',
-                allowClear: true,
-                ajax: {
-                    url: jenisKegiatanUrl,
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            activity_id: $('#activity_id').val()
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: data.results,
-                            pagination: data.pagination
-                        };
-                    },
-                    cache: false
-                }
-            });
-
-            // Restore old value if any
-            if (oldJenisId) {
-                $.ajax({
-                    url: jenisKegiatanUrl,
-                    data: { activity_id: oldActivityId },
-                    dataType: 'json',
-                    success: function(data) {
-                        var found = data.results.find(j => j.id == oldJenisId);
-                        if (found) {
-                            var option = new Option(found.text, found.id, true, true);
-                            $('#jeniskegiatan_id').append(option).trigger('change');
-                        }
-                    }
-                });
-            }
-        }
-
-        // Status Select2
-        $('#status').select2({
-            // placeholder: 'Choose...',
-            allowClear: true
         });
 
-        // Initialize all selects
-        initProgramSelect();
-        initKegiatanSelect();
-        initJenisKegiatanSelect();
-
-        // When Program changes, reset Kegiatan and Jenis Kegiatan
-        $('#program_id').on('change', function() {
-            $('#activity_id').val(null).trigger('change');
-            $('#jeniskegiatan_id').val(null).trigger('change');
+        $('#activity_id').select2({
+            allowClear: true,
+            ajax: {
+                url: kegiatanUrl,
+                dataType: 'json',
+                delay: 250,
+                data: params => ({ search: params.term, program_id: $('#program_id').val() }),
+                processResults: data => ({ results: data.results, pagination: data.pagination }),
+                cache: false
+            }
         });
 
-        // When Activity changes, reload Jenis Kegiatan options
+        $('#jeniskegiatan_id').select2({
+            allowClear: true,
+            ajax: {
+                url: jenisKegiatanUrl,
+                dataType: 'json',
+                delay: 250,
+                data: params => ({ search: params.term, activity_id: $('#activity_id').val() }),
+                processResults: data => ({ results: data.results, pagination: data.pagination }),
+                cache: false
+            }
+        });
+
+        $('#status').select2({ allowClear: true });
+
+        // Restore old values
+        if (oldProgramId) {
+            $.get(programsUrl, data => {
+                const found = data.results.find(p => p.id == oldProgramId);
+                if (found) $('#program_id').append(new Option(found.text, found.id, true, true)).trigger('change');
+            });
+        }
+
+        if (oldActivityId) {
+            $.get(kegiatanUrl, { program_id: oldProgramId }, data => {
+                const found = data.results.find(k => k.id == oldActivityId);
+                if (found) $('#activity_id').append(new Option(found.text, found.id, true, true)).trigger('change');
+            });
+        }
+
+        if (oldJenisId) {
+            $.get(jenisKegiatanUrl, { activity_id: oldActivityId }, data => {
+                const found = data.results.find(j => j.id == oldJenisId);
+                if (found) $('#jeniskegiatan_id').append(new Option(found.text, found.id, true, true)).trigger('change');
+            });
+        }
+
+        // Cascade changes
+        $('#program_id').on('change', () => {
+            $('#activity_id, #jeniskegiatan_id').val(null).trigger('change');
+        });
+
         $('#activity_id').on('change', function() {
-            var activityId = $(this).val();
-            
-            // Reset jenis kegiatan and reload options
             $('#jeniskegiatan_id').val(null).trigger('change');
-            
-            // If activity is selected, fetch available jenis kegiatan
+            const activityId = $(this).val();
             if (activityId) {
-                $.ajax({
-                    url: jenisKegiatanUrl,
-                    data: { activity_id: activityId },
-                    dataType: 'json',
-                    success: function(data) {
-                        // If only one jenis kegiatan, auto-select it
-                        if (data.results.length === 1) {
-                            var jenis = data.results[0];
-                            var option = new Option(jenis.text, jenis.id, true, true);
-                            $('#jeniskegiatan_id').empty().append(option).trigger('change');
-                        }
+                $.get(jenisKegiatanUrl, { activity_id: activityId }, data => {
+                    if (data.results.length === 1) {
+                        const jenis = data.results[0];
+                        $('#jeniskegiatan_id').empty().append(new Option(jenis.text, jenis.id, true, true)).trigger('change');
                     }
                 });
+            }
+        });
+
+        // Search validation
+        $('#search-btn').click(function(e) {
+            if (!$('#program_id').val()) {
+                e.preventDefault();
+                Toast.fire({
+                    icon: "warning",
+                    title: "Warning",
+                    text: "Please select a program first.",
+                    timer: 2000,
+                    position: "top-end"
+                });
+                return false;
             }
         });
     });
 
-    // Select All Checkbox
-    document.getElementById('select-all').addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('.select-item');
-        checkboxes.forEach(cb => cb.checked = this.checked);
+    // Select All
+    $('#select-all').change(function() {
+        $('.select-item').prop('checked', this.checked);
         updateBulkActions();
     });
 
-    // Individual Checkboxes
-    document.querySelectorAll('.select-item').forEach(checkbox => {
-        checkbox.addEventListener('change', updateBulkActions);
-    });
+    $('.select-item').change(updateBulkActions);
 
-    // Update Bulk Actions
     function updateBulkActions() {
-        const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
+        const selected = $('.select-item:checked').map(function() { return this.value; }).get();
         const count = selected.length;
 
-        document.getElementById('selectedCount').textContent = count + ' item(s) selected';
-        document.getElementById('bulkExportBtn').disabled = count === 0;
-        document.getElementById('bulkExportDocxBtn').disabled = count === 0;
-        document.getElementById('bulkPrintBtn').disabled = count === 0;
-        document.getElementById('selectedIds').value = selected.join(',');
+        $('#selectedCount').text(count + ' item(s) selected');
+        $('#bulkExportPdfBtn, #bulkExportDocxBtn, #bulkPrintBtn').prop('disabled', count === 0);
+        $('#selectedIdsPdf, #selectedIdsDocx').val(selected.join(','));
     }
 
-    // Bulk Form Submit (Export PDF)
-    document.getElementById('bulkForm').addEventListener('submit', function(e) {
-        const count = document.querySelectorAll('.select-item:checked').length;
-        if (count === 0) {
-            e.preventDefault();
-            Toast.fire({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: 'Pilih minimal 1 laporan untuk diekspor.',
-                timer: 2000,
-                position: 'top-end',
-                timerProgressBar: true
-            });
+    // Bulk Export PDF
+    $('#bulkExportPdfBtn').click(function() {
+        if ($('.select-item:checked').length === 0) {
+            Toast.fire({ icon: 'warning', title: 'Warning', text: 'Select at least 1 report.', timer: 2000, position: 'top-end' });
+            return;
         }
+        $('#bulkFormPdf').submit();
     });
 
-    // Bulk Print - Open single page with all selected reports
-    document.getElementById('bulkPrintBtn').addEventListener('click', function() {
-        const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
+    // Bulk Export DOCX
+    $('#bulkExportDocxBtn').click(function() {
+        if ($('.select-item:checked').length === 0) {
+            Toast.fire({ icon: 'warning', title: 'Warning', text: 'Select at least 1 report.', timer: 2000, position: 'top-end' });
+            return;
+        }
+        $('#bulkFormDocx').submit();
+    });
+
+    // Bulk Print
+    $('#bulkPrintBtn').click(function() {
+        const selected = $('.select-item:checked').map(function() { return this.value; }).get();
         
         if (selected.length === 0) {
-            Toast.fire({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: 'Pilih minimal 1 laporan untuk dicetak.',
-                timer: 2000,
-                position: 'top-end',
-                timerProgressBar: true
-            });
+            Toast.fire({ icon: 'warning', title: 'Warning', text: 'Select at least 1 report.', timer: 2000, position: 'top-end' });
             return;
         }
 
-        // Confirm before opening print preview
         Swal.fire({
-            title: 'Print ' + selected.length + ' Laporan?',
-            text: 'Akan membuka 1 tab dengan semua laporan yang dipilih.',
+            title: 'Print ' + selected.length + ' Report(s)?',
+            text: 'Will open 1 tab with all selected reports.',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Buka Print Preview',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
+            confirmButtonText: 'Yes, Open Print Preview',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
             if (result.isConfirmed) {
-                // Open single page with all selected reports
-                const bulkPrintUrl = '{{ route("btor.print.bulk") }}';
-                const url = bulkPrintUrl + '?ids=' + selected.join(',');
-                window.open(url, '_blank');
-                
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Print Preview',
-                    text: 'Membuka print preview untuk ' + selected.length + ' laporan...',
-                    timer: 2000,
-                    position: 'top-end',
-                    timerProgressBar: true
-                });
+                window.open('{{ route("btor.print.bulk") }}?ids=' + selected.join(','), '_blank');
+                Toast.fire({ icon: 'success', title: 'Print Preview', text: 'Opening print preview...', timer: 2000, position: 'top-end' });
             }
-        });
-    });
-
-    // Bulk Export DOCX - Submit form to export selected reports as DOCX
-    document.getElementById('bulkExportDocxBtn').addEventListener('click', function() {
-        const selected = Array.from(document.querySelectorAll('.select-item:checked')).map(cb => cb.value);
-        
-        if (selected.length === 0) {
-            Toast.fire({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: 'Pilih minimal 1 laporan untuk diekspor.',
-                timer: 2000,
-                position: 'top-end',
-                timerProgressBar: true
-            });
-            return;
-        }
-
-        // Create form and submit to DOCX bulk export endpoint
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{{ route("btor.export.bulk_docx") }}';
-        
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = '{{ csrf_token() }}';
-        form.appendChild(csrfInput);
-        
-        const idsInput = document.createElement('input');
-        idsInput.type = 'hidden';
-        idsInput.name = 'ids';
-        idsInput.value = selected.join(',');
-        form.appendChild(idsInput);
-        
-        document.body.appendChild(form);
-        form.submit();
-        
-        Toast.fire({
-            icon: 'success',
-            title: 'Export DOCX',
-            text: 'Mengexport ' + selected.length + ' laporan ke DOCX...',
-            timer: 2000,
-            position: 'top-end',
-            timerProgressBar: true
         });
     });
 </script>
 @endpush
-

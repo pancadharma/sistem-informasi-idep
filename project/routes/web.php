@@ -565,8 +565,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export/pdf/{id}', [BTORController::class, 'exportPdf'])->name('export.pdf');
         Route::get('/export/docx/{id}', [BTORController::class, 'exportDocx'])->name('export.docx');
         Route::post('/export/excel', [BTORController::class, 'exportExcel'])->name('export.excel');
-        Route::post('/export/bulk-pdf', [BTORController::class, 'exportBulkPdf'])->name('export.bulk');
-        Route::post('/export/bulk-docx', [BTORController::class, 'exportBulkDocx'])->name('export.bulk_docx');
+        // Route::post('/export/bulk-pdf', [BTORController::class, 'exportBulkPdf'])->name('export.bulk');
+        // Route::post('/export/bulk-docx', [BTORController::class, 'exportBulkDocx'])->name('export.bulk_docx');
+
+        // Bulk Export
+        Route::post('/export/bulk/pdf', [BTORController::class, 'exportBulkPdf'])->name('export.bulk');
+        Route::post('/export/bulk/docx', [BTORController::class, 'exportBulkDocx'])->name('export.bulk.docx');
 
     });
 

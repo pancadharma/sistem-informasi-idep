@@ -174,6 +174,10 @@ class Kegiatan extends Model implements HasMedia
 
     public function getDurationInDays()
     {
+
+        if (!$this->tanggalmulai || !$this->tanggalselesai) {
+            return 0;
+        }
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
