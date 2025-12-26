@@ -91,7 +91,7 @@ class KegiatanController extends Controller
             'kategori_lokasi',
             'sektor'
         ])
-            ->select('trkegiatan.*')
+            ->select('trkegiatan.*')->orderBy('updated_at', 'desc')
             ->get()
             ->map(function ($item) {
                 // Calculate duration before formatting

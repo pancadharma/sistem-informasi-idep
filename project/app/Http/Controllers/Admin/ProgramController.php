@@ -81,7 +81,7 @@ class ProgramController extends Controller
 
     public function getData()
     {
-        $programs = Program::all();
+        $programs = Program::orderBy('updated_at', 'desc')->get();
         $data = DataTables::of($programs)
             ->addIndexColumn()
             ->addColumn('action', function ($program) {

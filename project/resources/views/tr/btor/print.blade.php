@@ -7,42 +7,41 @@
 
     {{-- Header Section --}}
     <div class="report-header text-center">
-        <h2>BACK TO OFFICE REPORT</h2>
-        <h3>(BTOR)</h3>
+        <h2>{{ __('btor.btor') }}</h2>
     </div>
 
     {{-- Basic Information Table --}}
     <div class="section">
         <table class="table-print" style="font-size: 10pt; margin-bottom: 20px;">
             <tr>
-                <td width="25%"><strong>Department</strong></td>
-                <td width="5%">:</td>
+                <td width="20%"><strong>{{ __('btor.departemen') }}</strong></td>
+                <td width="1%">:</td>
                 <td>Program</td>
             </tr>
             <tr>
-                <td><strong>Program</strong></td>
+                <td><strong>{{ __('btor.program') }}</strong></td>
                 <td>:</td>
                 <td>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
             </tr>
             <tr>
-                <td><strong>Nama Kegiatan</strong></td>
+                <td><strong>{{ __('btor.nama_kegiatan') }}</strong></td>
                 <td>:</td>
                 <td>{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
             </tr>
             <tr>
-                <td><strong>Kode Budget</strong></td>
+                <td><strong>{{ __('btor.kode_budget') }}</strong></td>
                 <td>:</td>
                 <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
             </tr>
             <tr>
-                <td><strong>Penulis Laporan</strong></td>
+                <td><strong>{{ __('btor.penulis_laporan') }}</strong></td>
                 <td>:</td>
                 <td>
-                    {{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: '-' }}
+                    {{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: __('btor.no_writer_activity') }}
                 </td>
             </tr>
             <tr>
-                <td><strong>Jabatan</strong></td>
+                <td><strong>{{ __('btor.jabatan') }}</strong></td>
                 <td>:</td>
                 <td>
                     {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
@@ -55,28 +54,28 @@
 
     {{-- 1. Latar Belakang Kegiatan --}}
     <div class="section">
-        <h4 class="section-title">Latar Belakang Kegiatan</h4>
+        <h4 class="section-title">{{ __('btor.latar_belakang_kegiatan') }}</h4>
         <div class="content-box">
-            {!! $kegiatan->deskripsilatarbelakang ?? '<em>Tidak ada data latar belakang</em>' !!}
+           {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted"> ' . __('btor.no_background_activity') . '</em>' !!}
         </div>
     </div>
 
     {{-- 2. Tujuan Kegiatan --}}
     <div class="section">
-        <h4 class="section-title">Tujuan Kegiatan</h4>
+        <h4 class="section-title">{{ __('btor.tujuan_kegiatan') }}</h4>
         <div class="content-box">
-            {!! $kegiatan->deskripsitujuan ?? '<em>Tidak ada data tujuan</em>' !!}
+            {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted"> ' . __('btor.no_tujuan_activity') . '</em>' !!}
         </div>
     </div>
 
     {{-- 3. Detail Kegiatan --}}
     <div class="section page-break">
-        <h4 class="section-title">Detail Kegiatan</h4>
+        <h4 class="section-title">{{ __('btor.detail_kegiatan') }}</h4>
 
         <table class="table-print" style="font-size: 9pt; margin-bottom: 15px;">
             <tr>
-                <td width="25%"><strong>Hari, Tanggal</strong></td>
-                <td width="5%">:</td>
+                <td width="25%"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
+                <td width="1%">:</td>
                 <td>
                     @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
                         {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}

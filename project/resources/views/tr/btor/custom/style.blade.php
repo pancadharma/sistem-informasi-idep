@@ -18,10 +18,13 @@
         line-height: 1.4;
         color: #000;
         background: white;
+        width: 600px;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .print-container {
-        width: 100%;
+        width: 650px;
         max-width: 100%;
         margin: 0 auto;
         padding: 10px;
@@ -161,12 +164,13 @@
 
     /* Content Box */
     .content-box {
-        padding: 8px;
-        border: 1px solid #ccc;
-        background-color: #fafafa;
+        /* padding: 8px; */
+        /* border: 1px solid #ccc; */
+        /* background-color: #fafafa; */
         margin-bottom: 8px;
         min-height: 40px;
         word-wrap: break-word;
+        text-align: justify;
     }
 
     /* Alert Boxes */
@@ -419,6 +423,8 @@
         body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
+            width: 600px;
+            max-width: 100%;
         }
 
         .no-print,

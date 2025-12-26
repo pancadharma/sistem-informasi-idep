@@ -35,8 +35,13 @@
                 {{ strtoupper($program->status) }}
             </span>
 
+            <!-- Print Button -->
+            <button type="button" class="btn btn-sm btn-default mr-2" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Page
+            </button>
+
             <!-- Export Dropdown -->
-            <div class="btn-group">
+            <div class="btn-group d-none">
                 <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
                     <i class="fas fa-download"></i> Export
                 </button>
@@ -44,7 +49,7 @@
                     <a class="dropdown-item" href="#" onclick="exportProgram('pdf')">
                         <i class="fas fa-file-pdf"></i> Export as PDF
                     </a>
-                    <a class="dropdown-item" href="#" onclick="exportProgram('excel')">
+                    <a class="dropdown-item" href="#" onclick="exportProgram('xlsx')">
                         <i class="fas fa-file-excel"></i> Export as Excel
                     </a>
                     <a class="dropdown-item" href="#" onclick="exportProgram('json')">
@@ -175,7 +180,7 @@
                     <i class="fas fa-folder-open"></i> Documents
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item d-none">
                 <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab">
                     <i class="fas fa-chart-line"></i> Progress
                 </a>
@@ -424,9 +429,9 @@
                                     <div class="col-md-6 col-lg-4 mb-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h6 class="card-title">{{ $lokasi->nama }}</h6>
-                                                <p class="text-muted mb-0">Province: {{ $lokasi->nama }}</p>
-                                                <small class="text-muted">ID: {{ $lokasi->id }}</small>
+                                                <h5 class="lokasi">{{ $lokasi->nama }}</h5>
+                                                <span class="text-muted mb-0">{{ __('cruds.provinsi.title') }}: {{ $lokasi->nama }}</span>
+                                                <div class="text-muted">ID: {{ $lokasi->id }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -618,7 +623,7 @@
                                                             <i class="fas fa-file-pdf fa-4x text-danger"></i>
                                                         @elseif(strstr($media->mime_type, "word"))
                                                             <i class="fas fa-file-word fa-4x text-primary"></i>
-                                                        @elseif(strstr($media->mime_type, "excel") || strstr($media->mime_type, "spreadsheet"))
+                                                        @elseif(strstr($media->mime_type, "xlsx") || strstr($media->mime_type, "spreadsheet"))
                                                             <i class="fas fa-file-excel fa-4x text-success"></i>
                                                         @elseif(strstr($media->mime_type, "powerpoint"))
                                                             <i class="fas fa-file-powerpoint fa-4x text-warning"></i>
@@ -626,10 +631,10 @@
                                                             <i class="fas fa-file fa-4x text-secondary"></i>
                                                         @endif
                                                     </div>
-                                                    <h6 class="card-title text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
-                                                        {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
-                                                    </h6>
                                                     <div class="file-meta">
+                                                        <span class="nama-media text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
+                                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
+                                                        </span>
                                                         <small class="text-muted d-block">
                                                             <i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}
                                                         </small>
@@ -840,241 +845,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Target Groups Tab -->
-            {{-- <div class="tab-pane fade" id="target-groups" role="tabpanel">
-                <div class="row">
-                    <!-- Marginalized Groups -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Marginalized Groups Served</h5>
-                            </div>
-                            <div class="card-body">
-                                @if($program->kelompokMarjinal->count() > 0)
-                                    <div class="row">
-                                        @foreach($program->kelompokMarjinal as $kelompokMarjinal)
-                                            <div class="col-md-12 mb-3">
-                                                <div class="card border-left-primary">
-                                                    <div class="card-body">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="target-group-icon bg-primary">
-                                                                <i class="fas fa-users text-white"></i>
-                                                            </div>
-                                                            <div class="target-group-content flex-grow-1">
-                                                                <h6 class="mb-1">{{ $kelompokMarjinal->kelompokmarjinal->nama ?? 'Unknown Group' }}</h6>
-                                                                <p class="mb-0 text-muted">Target group for program inclusion</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h5>No Marginalized Groups Defined</h5>
-                                        <p>This program doesn't target specific marginalized groups yet.</p>
-                                        <small>Define target groups to ensure inclusive program implementation.</small>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SDGs Alignment -->
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">SDGs Alignment</h5>
-                            </div>
-                            <div class="card-body">
-                                @if($program->kaitanSDG->count() > 0)
-                                    <div class="row">
-                                        @foreach($program->kaitanSDG as $kaitanSDG)
-                                            <div class="col-md-12 mb-3">
-                                                <div class="card border-left-success">
-                                                    <div class="card-body">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="sdg-icon bg-success">
-                                                                <i class="fas fa-globe text-white"></i>
-                                                            </div>
-                                                            <div class="sdg-content flex-grow-1">
-                                                                <h6 class="mb-1">{{ $kaitanSDG->kaitansdg->nama ?? 'Unknown SDG' }}</h6>
-                                                                <p class="mb-0 text-muted">Sustainable Development Goal alignment</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-globe fa-3x mb-3"></i>
-                                        <h5>No SDGs Alignment</h5>
-                                        <p>This program doesn't have SDGs alignment defined yet.</p>
-                                        <small>Align with Sustainable Development Goals for global impact tracking.</small>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Target Reinstra Integration -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Target Reinstra Integration</h5>
-                            </div>
-                            <div class="card-body">
-                                @if($program->targetReinstra->count() > 0)
-                                    <div class="row">
-                                        @foreach($program->targetReinstra as $targetReinstra)
-                                            <div class="col-md-6 col-lg-4 mb-3">
-                                                <div class="card border-left-info">
-                                                    <div class="card-body">
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="reinstra-icon bg-info">
-                                                                <i class="fas fa-crosshairs text-white"></i>
-                                                            </div>
-                                                            <div class="reinstra-content flex-grow-1">
-                                                                <h6 class="mb-1">{{ $targetReinstra->targetreinstra->nama ?? 'Unknown Target' }}</h6>
-                                                                <p class="mb-0 text-muted">Strategic target alignment</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-crosshairs fa-3x mb-3"></i>
-                                        <h5>No Target Reinstra Integration</h5>
-                                        <p>This program doesn't have strategic target integration yet.</p>
-                                        <small>Connect with strategic targets for better alignment and reporting.</small>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
-
-            <!-- Activities Tab -->
-            {{-- <div class="tab-pane fade" id="activities" role="tabpanel">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Related Activities (Kegiatan)</h5>
-                                @can('program_edit')
-                                <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-plus"></i> Add Activity
-                                </a>
-                                @endcan
-                            </div>
-                            <div class="card-body">
-                                @php
-                                    $allActivities = $program->allKegiatan();
-                                @endphp
-
-                                @if($allActivities->count() > 0)
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Activity Name</th>
-                                                    <th>Status</th>
-                                                    <th>Duration</th>
-                                                    <th>Budget</th>
-                                                    <th>Progress</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($allActivities as $kegiatan)
-                                                    <tr>
-                                                        <td>
-                                                            <div>
-                                                                <strong>{{ $kegiatan->nama }}</strong>
-                                                                <br>
-                                                                <small class="text-muted">{{ $kegiatan->kode }}</small>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <span class="badge badge-{{ $kegiatan->status === 'running' ? 'success' : ($kegiatan->status === 'pending' ? 'warning' : ($kegiatan->status === 'complete' ? 'info' : 'secondary')) }}">
-                                                                {{ ucfirst($kegiatan->status) }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
-                                                                {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') }}
-                                                            @else
-                                                                <span class="text-muted">Not set</span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            @if($kegiatan->totalnilai)
-                                                                Rp {{ number_format($kegiatan->totalnilai, 0, ',', '.') }}
-                                                            @else
-                                                                <span class="text-muted">Not set</span>
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                            <div class="progress" style="height: 20px;">
-                                                                @php
-                                                                    $progress = $kegiatan->status === 'complete' ? 100 : ($kegiatan->status === 'running' ? 75 : ($kegiatan->status === 'pending' ? 25 : 0));
-                                                                @endphp
-                                                                <div class="progress-bar bg-{{ $progress >= 75 ? 'success' : ($progress >= 50 ? 'warning' : 'danger') }}"
-                                                                     role="progressbar"
-                                                                     style="width: {{ $progress }}%"
-                                                                     aria-valuenow="{{ $progress }}"
-                                                                     aria-valuemin="0"
-                                                                     aria-valuemax="100">
-                                                                    {{ $progress }}%
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="btn-group btn-group-sm">
-                                                                <a href="{{ route('kegiatan.show', $kegiatan->id) }}" class="btn btn-outline-primary">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
-                                                                @can('kegiatan_edit')
-                                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-outline-success">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                                @endcan
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-tasks fa-3x mb-3"></i>
-                                        <h5>No Activities Linked</h5>
-                                        <p>This program doesn't have any activities linked yet.</p>
-                                        <small>Activities help implement program goals and objectives.</small>
-                                        @can('program_edit')
-                                        <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-primary mt-3">
-                                            <i class="fas fa-plus"></i> Create First Activity
-                                        </a>
-                                        @endcan
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
 
             <!-- Collaboration Tab -->
             <div class="tab-pane fade" id="collaboration" role="tabpanel">
@@ -1707,7 +1477,7 @@
 @media (max-width: 768px) {
     /* Header Section */
     .card-header .d-flex {
-        flex-direction: column;
+        
         align-items: flex-start !important;
     }
 
@@ -1814,7 +1584,7 @@
     }
 
     .document-actions .btn-group {
-        flex-direction: column;
+        
     }
 
     .document-actions .btn-group .btn {
@@ -1851,7 +1621,7 @@
     }
 
     .activities-table .btn-group {
-        flex-direction: column;
+        
     }
 
     .activities-table .btn-group .btn {
@@ -1903,7 +1673,7 @@
 
     /* Button Groups */
     .btn-group {
-        flex-direction: column;
+        
         width: 100%;
     }
 
@@ -1960,6 +1730,82 @@
         font-size: 0.8rem;
     }
 }
+
+/* Print Styles */
+@media print {
+    /* Hide non-essential elements */
+    .main-sidebar,
+    .main-header,
+    .content-header,
+    .card-header .card-tools,
+    .navbar,
+    .main-footer,
+    .btn,
+    .no-print,
+    .swal2-container {
+        display: none !important;
+    }
+
+    /* Reset container width and margins */
+    body,
+    .content-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        background: white !important;
+    }
+
+    .container-fluid {
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+        margin-bottom: 20px !important;
+    }
+
+    .card-header {
+        border-bottom: 2px solid #333 !important;
+        padding-left: 0 !important;
+    }
+
+    /* Force all tabs to be visible */
+    .tab-content > .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        overflow: visible !important;
+    }
+
+    /* Hide tab navigation */
+    .nav-tabs {
+        display: none !important;
+    }
+
+    /* Expand all collapse elements if any */
+    .collapse {
+        display: block !important;
+    }
+
+    /* Ensure charts and images are printed */
+    canvas, img {
+        max-width: 100% !important;
+        page-break-inside: avoid;
+    }
+
+    /* Ensure background colors are printed */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Avoid breaking elements inside */
+    .row, .card-body, .table {
+        page-break-inside: avoid;
+    }
+}
 </style>
 @endpush
 
@@ -1972,6 +1818,120 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+@php
+// Prepare structured data for export
+$exportStructure = [
+    'program_info' => [
+        'id' => $program->id,
+        'name' => $program->nama,
+        'code' => $program->kode,
+        'status' => $program->status,
+        'start_date' => $program->tanggalmulai,
+        'end_date' => $program->tanggalselesai,
+        'total_budget' => $program->totalnilai,
+        'description' => strip_tags($program->deskripsiprojek),
+        'problem_analysis' => strip_tags($program->analisamasalah),
+        'created_at' => $program->created_at->format('Y-m-d H:i:s'),
+        'updated_at' => $program->updated_at->format('Y-m-d H:i:s'),
+        'duration_days' => $durationInDays ?? 0,
+        'beneficiaries_total' => $totalBeneficiaries ?? 0,
+    ],
+    'beneficiaries_breakdown' => [
+        'women' => $program->ekspektasipenerimamanfaatwoman ?? 0,
+        'men' => $program->ekspektasipenerimamanfaatman ?? 0,
+        'girls' => $program->ekspektasipenerimamanfaatgirl ?? 0,
+        'boys' => $program->ekspektasipenerimamanfaatboy ?? 0,
+        'indirect' => $program->ekspektasipenerimamanfaattidaklangsung ?? 0,
+    ],
+    'locations' => $program->lokasi->map(function($l) {
+        return [
+            'id' => $l->id,
+            'name' => $l->nama,
+            'province' => $l->province ?? '',
+        ];
+    })->values(),
+    'partners' => $program->partner->map(function($p) {
+        return [
+            'name' => $p->nama,
+            'phone' => $p->telepon,
+            'address' => $p->alamat,
+        ];
+    })->values(),
+    'donors' => $program->pendonor->map(function($d) {
+        return [
+            'name' => $d->nama,
+            'donation_amount' => $d->pivot->nilaidonasi,
+        ];
+    })->values(),
+    'team_members' => $program->staff->map(function($s) {
+        $roleName = 'Team Member';
+        if ($s->pivot->peran_id) {
+            $role = \App\Models\Peran::find($s->pivot->peran_id);
+            if ($role) $roleName = $role->nama;
+        }
+        return [
+            'name' => $s->name,
+            'email' => $s->email,
+            'role' => $roleName,
+        ];
+    })->values(),
+    'activities' => $program->allKegiatan()->map(function($k) {
+        return [
+            'name' => $k->nama,
+            'code' => $k->kode,
+            'status' => $k->status,
+            'start_date' => $k->tanggalmulai,
+            'end_date' => $k->tanggalselesai,
+            'budget' => $k->totalnilai,
+            'progress_percent' => $k->status === 'complete' ? 100 : ($k->status === 'submit' ? 75 : ($k->status === 'running' ? 50 : ($k->status === 'draft' ? 25 : 0)))
+        ];
+    })->values(),
+    'progress_metrics' => $program->targetProgresses->flatMap(function($tp) {
+        return $tp->details->map(function($detail) {
+             // Cast to float to avoid "Unsupported operand types" error in PHP 8 if values are strings
+             $target = (float)($detail->targetable->target ?? 0);
+             $actual = (float)($detail->actual ?? 0);
+             
+             return [
+                 'metric' => $detail->targetable->deskripsi ?? 'Unknown',
+                 'target' => $target,
+                 'actual' => $actual,
+                 'percent' => ($target > 0) ? round(($actual / $target) * 100, 2) : 0,
+             ];
+        });
+    })->values(),
+    'structure' => [
+        'goal' => $program->goal ? [
+            'description' => $program->goal->deskripsi,
+            'indicator' => $program->goal->indikator,
+            'target' => $program->goal->target
+        ] : null,
+        'objective' => $program->objektif ? [
+            'description' => $program->objektif->deskripsi,
+            'indicator' => $program->objektif->indikator,
+            'target' => $program->objektif->target
+        ] : null,
+        'outcomes' => $program->outcome->map(function($o) {
+            return [
+                'description' => $o->deskripsi,
+                'indicator' => $o->indikator,
+                'target' => $o->target,
+                'outputs' => $o->output->map(function($out) {
+                    return [
+                        'description' => $out->deskripsi,
+                        'indicator' => $out->indikator,
+                        'target' => $out->target
+                    ];
+                })
+            ];
+        })
+    ]
+];
+@endphp
+<script>
+    const PROGRAM_EXPORT_DATA = {!! json_encode($exportStructure) !!};
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -2127,101 +2087,7 @@ function deleteDocument(mediaId) {
 }
 
 
-function exportProgramData(dataType) {
-    // Get program data from data attributes
-    const programElement = document.querySelector('[data-program-id]');
-    const programId = programElement ? programElement.dataset.programId : '1';
-    const programName = programElement ? programElement.dataset.programName : 'Program';
 
-    Swal.fire({
-        // title: 'Exporting Data...',
-        title: `Exporting Data...`,
-        text: `Preparing ${dataType} data export...`,
-        icon: 'info',
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        willOpen: () => {
-            Swal.showLoading();
-        }
-    });
-
-    let exportData = {};
-
-    switch(dataType) {
-        case 'beneficiaries':
-            exportData = {
-                program: programName,
-                dataType: 'beneficiaries',
-                data: {
-                    total: {{ $totalBeneficiaries }},
-                    breakdown: {
-                        women: {{ $program->ekspektasipenerimamanfaatwoman ?: 0 }},
-                        men: {{ $program->ekspektasipenerimamanfaatman ?: 0 }},
-                        girls: {{ $program->ekspektasipenerimamanfaatgirl ?: 0 }},
-                        boys: {{ $program->ekspektasipenerimamanfaatboy ?: 0 }},
-                        indirect: {{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}
-                    }
-                },
-                exportDate: new Date().toISOString()
-            };
-            break;
-
-        case 'progress':
-            exportData = {
-                program: programName,
-                dataType: 'progress',
-                data: {
-                    status: '{{ $program->status }}',
-                    duration: {{ $durationInDays }},
-                    progressPercentage: {{ $program->status === 'complete' ? 100 : ($program->status === 'running' ? 75 : ($program->status === 'pending' ? 25 : 0)) }},
-                    timeline: {
-                        start: '{{ $program->tanggalmulai }}',
-                        end: '{{ $program->tanggalselesai }}'
-                    }
-                },
-                exportDate: new Date().toISOString()
-            };
-            break;
-
-        case 'activities':
-            exportData = {
-                program: programName,
-                dataType: 'activities',
-                data: {
-                    totalActivities: {{ $program->allKegiatan()->count() }},
-                    // Activities data would be fetched via AJAX in real implementation
-                    activities: []
-                },
-                exportDate: new Date().toISOString()
-            };
-            break;
-    }
-
-    setTimeout(() => {
-        Swal.close();
-        downloadJSON(exportData, `${programName}_${dataType}_Data.json`);
-    }, 1000);
-}
-
-function downloadJSON(data, filename) {
-    const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = filename;
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-
-    Swal.fire({
-        title: 'Export Complete!',
-        text: 'Your file has been downloaded successfully.',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false
-    });
-}
 
 // Real-time updates functionality
 let realTimeUpdatesEnabled = true;
@@ -2481,39 +2347,29 @@ function exportProgramData(dataType) {
 }
 
 function generateExportData(format, programId, programName) {
-    const programElement = document.querySelector('[data-program-id]');
-    const programData = {
-        id: programId,
-        name: programName,
-        code: programElement ? programElement.dataset.programCode : 'PROGRAM-001',
-        startDate: programElement ? programElement.dataset.programStart : '2024-01-01',
-        endDate: programElement ? programElement.dataset.programEnd : '2024-12-31',
-        status: programElement ? programElement.dataset.programStatus : 'Active',
-        totalBudget: programElement ? programElement.dataset.programBudget : 1000000,
-        description: programElement ? programElement.dataset.programDescription : 'Program description',
-        problemAnalysis: programElement ? programElement.dataset.programAnalysis : 'Problem analysis',
-        exportDate: new Date().toISOString(),
-        exportedBy: 'Current User'
-    };
+    // We don't need to reconstruct programData here since we have PROGRAM_EXPORT_DATA
+    // But keeping this structure for potential other uses or legacy checks if needed
+    // However, for the export, we just delegate to the formatters
 
     switch(format) {
         case 'json':
-            return JSON.stringify(programData, null, 2);
+            return JSON.stringify(PROGRAM_EXPORT_DATA, null, 2);
         case 'csv':
-            return convertToCSV(programData);
-        case 'excel':
-            // In real implementation, use a library like SheetJS
-            return convertToCSV(programData); // Fallback to CSV
+        case 'xlsx':
+            // Flatten the data for CSV/Excel
+            return convertToMultiSheetCSV(PROGRAM_EXPORT_DATA);
         case 'pdf':
             // For PDF, we'll use the dedicated exportProgramPDF function
             exportProgramPDF(programId, programName);
-            return null; // Handled separately
+            return null;
         default:
-            return JSON.stringify(programData, null, 2);
+            return JSON.stringify(PROGRAM_EXPORT_DATA, null, 2);
     }
 }
 
 function generateSpecificExportData(dataType) {
+    if (!PROGRAM_EXPORT_DATA) return 'No data available';
+
     switch(dataType) {
         case 'beneficiaries':
             return generateBeneficiariesExport();
@@ -2527,43 +2383,104 @@ function generateSpecificExportData(dataType) {
 }
 
 function generateBeneficiariesExport() {
+    const b = PROGRAM_EXPORT_DATA.beneficiaries_breakdown;
     const beneficiaries = [
-        ['Category', 'Women', 'Men', 'Girls', 'Boys', 'Indirect'],
-        ['Expected', 1200, 800, 600, 400, 300]
+        ['Category', 'Count'],
+        ['Women', b.women],
+        ['Men', b.men],
+        ['Girls', b.girls],
+        ['Boys', b.boys],
+        ['Indirect', b.indirect],
+        ['Total', PROGRAM_EXPORT_DATA.program_info.beneficiaries_total]
     ];
     return convertToCSV(beneficiaries);
 }
 
 function generateProgressExport() {
-    const progress = [
-        ['Target Type', 'Target', 'Achieved', 'Progress %'],
-        ['Overall Goal', '100%', '75%', '75%'],
-        ['Objectives', '8', '6', '75%'],
-        ['Outcomes', '12', '9', '75%'],
-        ['Activities', '25', '18', '72%']
-    ];
-    return convertToCSV(progress);
+    const headers = [['Metric', 'Target', 'Actual', 'Percentage']];
+    const rows = PROGRAM_EXPORT_DATA.progress_metrics.map(pm => [
+        pm.metric,
+        pm.target,
+        pm.actual,
+        pm.percent + '%'
+    ]);
+    return convertToCSV(headers.concat(rows));
 }
 
 function generateActivitiesExport() {
-    const activities = [
-        ['Activity ID', 'Activity Name', 'Status', 'Progress %', 'Start Date', 'End Date'],
-        ['ACT001', 'Community Assessment', 'Completed', '100%', '2024-01-01', '2024-01-15'],
-        ['ACT002', 'Stakeholder Engagement', 'In Progress', '60%', '2024-01-16', '2024-02-15'],
-        ['ACT003', 'Implementation Phase', 'Planned', '0%', '2024-02-16', '2024-03-31']
-    ];
-    return convertToCSV(activities);
+    const headers = [['Activity Name', 'Code', 'Status', 'Start Date', 'End Date', 'Budget', 'Progress']];
+    const rows = PROGRAM_EXPORT_DATA.activities.map(act => [
+        act.name,
+        act.code,
+        act.status,
+        act.start_date,
+        act.end_date,
+        act.budget,
+        act.progress_percent + '%'
+    ]);
+    return convertToCSV(headers.concat(rows));
 }
 
 function convertToCSV(data) {
     if (Array.isArray(data)) {
-        return data.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-    } else if (typeof data === 'object') {
-        const headers = Object.keys(data);
-        const values = Object.values(data);
-        return [headers.join(','), values.map(v => `"${v}"`).join(',')].join('\n');
+        return data.map(row => row.map(cell => {
+            const val = (cell === null || cell === undefined) ? '' : cell.toString();
+            return `"${val.replace(/"/g, '""')}"`;
+        }).join(',')).join('\n');
     }
-    return data;
+    return '';
+}
+
+function convertToMultiSheetCSV(data) {
+    // Strategy: Create sections for different data types
+    let csvContent = [];
+    
+    // 1. Program Info
+    csvContent.push(['PROGRAM INFORMATION']);
+    Object.keys(data.program_info).forEach(key => {
+        csvContent.push([key.replace(/_/g, ' ').toUpperCase(), data.program_info[key]]);
+    });
+    csvContent.push([]); // Empty line
+    
+    // 2. Beneficiaries
+    csvContent.push(['BENEFICIARIES']);
+    const benKeys = Object.keys(data.beneficiaries_breakdown);
+    csvContent.push(['Category', 'Count']);
+    benKeys.forEach(k => {
+        csvContent.push([k, data.beneficiaries_breakdown[k]]);
+    });
+    csvContent.push([]);
+    
+    // 3. Financials (Donors)
+    csvContent.push(['DONORS & FUNDING']);
+    if (data.donors.length > 0) {
+        csvContent.push(['Donor Name', 'Amount']);
+        data.donors.forEach(d => csvContent.push([d.name, d.donation_amount]));
+    } else {
+        csvContent.push(['No donors recorded']);
+    }
+    csvContent.push([]);
+    
+    // 4. Team
+    csvContent.push(['TEAM MEMBERS']);
+    if (data.team_members.length > 0) {
+        csvContent.push(['Name', 'Email', 'Role']);
+        data.team_members.forEach(t => csvContent.push([t.name, t.email, t.role]));
+    } else {
+        csvContent.push(['No team members recorded']);
+    }
+    csvContent.push([]);
+
+    // 5. Activities
+    csvContent.push(['ACTIVITIES']);
+    if (data.activities.length > 0) {
+        csvContent.push(['Name', 'Code', 'Status', 'Start', 'End', 'Budget', 'Progress']);
+        data.activities.forEach(a => csvContent.push([a.name, a.code, a.status, a.start_date, a.end_date, a.budget, a.progress_percent + '%']));
+    } else {
+        csvContent.push(['No activities recorded']);
+    }
+
+    return convertToCSV(csvContent);
 }
 
 function downloadFile(content, filename, contentType) {
@@ -2785,154 +2702,120 @@ function exportProgramPDF(programId, programName) {
 }
 
 function generatePDFContent(programId, programName) {
-    const programElement = document.querySelector('[data-program-id]');
+    if (typeof PROGRAM_EXPORT_DATA === 'undefined' || !PROGRAM_EXPORT_DATA) return '<h1 style="text-align:center">Error Loading Data</h1>';
+
+
+    const info = PROGRAM_EXPORT_DATA.program_info;
     const currentDate = new Date().toLocaleDateString();
 
-    return `
+    let html = `
         <div style="margin-bottom: 30px;">
             <h1 style="text-align: center; margin-bottom: 10px; color: #333; font-size: 24px;">
-                ${programName}
+                ${info.name}
             </h1>
             <p style="text-align: center; margin-bottom: 30px; color: #666; font-size: 14px;">
                 Program Report - Generated on ${currentDate}
             </p>
 
-            <!-- Program Header Information -->
+            <!-- Initial Info Table -->
             <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
                 <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Program Information</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
                         <td style="width: 30%; padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Program Code:</td>
-                        <td style="width: 70%; padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programCode : 'N/A'}</td>
+                        <td style="width: 70%; padding: 8px; border-bottom: 1px solid #eee;">${info.code}</td>
                     </tr>
                     <tr>
                         <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Status:</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programStatus : 'N/A'}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.status}</td>
                     </tr>
                     <tr>
                         <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Start Date:</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programStart : 'N/A'}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.start_date}</td>
                     </tr>
                     <tr>
                         <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">End Date:</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programEnd : 'N/A'}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.end_date}</td>
                     </tr>
                     <tr>
                         <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Total Budget:</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${programElement ? programElement.dataset.programBudget : 'N/A'}</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.total_budget}</td>
                     </tr>
                 </table>
             </div>
-
-            <!-- Program Description -->
+            
             <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Program Description</h2>
-                <p style="margin-bottom: 15px; line-height: 1.6;">
-                    ${programElement ? programElement.dataset.programDescription : 'No description available.'}
-                </p>
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Description & Analysis</h2>
+                 <p style="margin-bottom: 15px; line-height: 1.6;"><strong>Description:</strong> ${info.description}</p>
+                 <p style="margin-bottom: 15px; line-height: 1.6;"><strong>Problem Analysis:</strong> ${info.problem_analysis}</p>
+            </div>
+            
+            <h2 style="margin-bottom: 20px; color: #333; font-size: 18px;">Detailed Report</h2>
+            
+            <!-- Beneficiaries -->
+             <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #dc3545; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #dc3545; font-size: 16px;">Beneficiaries</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="background-color: #eee;">
+                        <th style="padding: 8px; border: 1px solid #ddd;">Women</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Men</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Girls</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Boys</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Total</th>
+                    </tr>
+                    <tr>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.women}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.men}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.girls}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.boys}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: bold;">${info.beneficiaries_total}</td>
+                    </tr>
+                </table>
+             </div>
+             
+             <!-- Team -->
+             <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #28a745; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #28a745; font-size: 16px;">Team Members</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    ${PROGRAM_EXPORT_DATA.team_members.length > 0 ? 
+                        PROGRAM_EXPORT_DATA.team_members.map(t => 
+                            `<li style="margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                                <strong>${t.name}</strong> - ${t.role} <br> <small>${t.email}</small>
+                             </li>`
+                        ).join('') 
+                    : '<li>No team members recorded.</li>'}
+                </ul>
+             </div>
+
+            <!-- Activities -->
+            <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6610f2; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #6610f2; font-size: 16px;">Activities</h3>
+                 <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <tr style="background-color: #eee;">
+                        <th style="padding: 5px; border: 1px solid #ddd;">Name</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Status</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Progress</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Budget</th>
+                    </tr>
+                    ${PROGRAM_EXPORT_DATA.activities.length > 0 ? 
+                        PROGRAM_EXPORT_DATA.activities.map(a => 
+                             `<tr>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.name}</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.status}</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.progress_percent}%</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.budget}</td>
+                              </tr>`
+                        ).join('')
+                    : '<tr><td colspan="4" style="padding: 5px; text-align: center;">No activities recorded.</td></tr>'}
+                 </table>
             </div>
 
-            <!-- Problem Analysis -->
-            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
-                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Problem Analysis</h2>
-                <p style="margin-bottom: 15px; line-height: 1.6;">
-                    ${programElement ? programElement.dataset.programAnalysis : 'No analysis available.'}
-                </p>
-            </div>
-
-            <!-- Vertical Tabs Layout for All Sections -->
-            <div style="margin-bottom: 30px;">
-                <h2 style="margin-bottom: 20px; color: #333; font-size: 18px;">Program Details</h2>
-
-                <!-- Overview Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #007bff; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #007bff; font-size: 16px;">1. Program Overview</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        This section contains comprehensive program information including objectives,
-                        expected outcomes, and implementation strategy.
-                    </p>
-                </div>
-
-                <!-- Team Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #28a745; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #28a745; font-size: 16px;">2. Team Members</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Program staff and team members with their roles and responsibilities.
-                    </p>
-                </div>
-
-                <!-- Partners Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #ffc107; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #ffc107; font-size: 16px;">3. Partners & Donors</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Partner organizations and donors supporting the program implementation.
-                    </p>
-                </div>
-
-                <!-- Locations Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #17a2b8; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #17a2b8; font-size: 16px;">4. Implementation Locations</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Geographic areas and regions where the program is being implemented.
-                    </p>
-                </div>
-
-                <!-- Beneficiaries Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #dc3545; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #dc3545; font-size: 16px;">5. Beneficiaries</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Expected beneficiaries breakdown by demographic categories and target groups.
-                    </p>
-                </div>
-
-                <!-- Budget Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6f42c1; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #6f42c1; font-size: 16px;">6. Budget & Timeline</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Financial information and project timeline with key milestones.
-                    </p>
-                </div>
-
-                <!-- Structure Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #e83e8c; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #e83e8c; font-size: 16px;">7. Program Structure</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Program goals, objectives, outcomes, and activities hierarchy.
-                    </p>
-                </div>
-
-                <!-- Progress Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #fd7e14; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #fd7e14; font-size: 16px;">8. Progress Tracking</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Current progress, achievements, and performance metrics.
-                    </p>
-                </div>
-
-                <!-- Target Groups Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #20c997; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #20c997; font-size: 16px;">9. Target Groups</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Marginalized groups served and SDGs alignment information.
-                    </p>
-                </div>
-
-                <!-- Activities Section -->
-                <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6610f2; background-color: #f8f9fa;">
-                    <h3 style="margin-bottom: 10px; color: #6610f2; font-size: 16px;">10. Related Activities</h3>
-                    <p style="margin-bottom: 10px; line-height: 1.6;">
-                        Linked activities (kegiatan) and their current status.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Footer -->
             <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;">
-                <p>This report was generated automatically from the Program Management System.</p>
-                <p>For more information, please contact the program administrator.</p>
+                <p>Generated by App - ${currentDate}</p>
             </div>
         </div>
     `;
+    return html;
 }
 </script>
 @endpush
