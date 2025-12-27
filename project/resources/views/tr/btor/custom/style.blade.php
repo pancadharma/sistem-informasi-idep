@@ -2,7 +2,7 @@
     /* Print-specific CSS */
 
     @page {
-        size: A4 landscape; /* Changed to landscape for wider tables */
+        size: A4 portrait; /* Changed to landscape for wider tables */
         margin: 1.5cm 1cm;
     }
 
@@ -24,7 +24,7 @@
     }
 
     .print-container {
-        width: 650px;
+        /* width: 650px; */
         max-width: 100%;
         margin: 0 auto;
         padding: 10px;
@@ -423,7 +423,7 @@
         body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
-            width: 600px;
+            /* width: 600px; */
             max-width: 100%;
         }
 

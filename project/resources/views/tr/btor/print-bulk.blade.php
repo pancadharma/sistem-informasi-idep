@@ -90,7 +90,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>{{ __('btor.jabatan') }}</strong></td>
+                        <td><strong>{{ __('btor.penulis_jabatan') }}</strong></td>
                         <td width="1%">:</td>
                         <td>
                             {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
@@ -118,7 +118,7 @@
             </div>
 
             {{-- 3. Detail Kegiatan --}}
-            <div class="section page-break">
+            <div class="section">
                 <h4 class="section-title">{{ __('btor.detail_kegiatan') }}</h4>
 
                 <table class="table-print" style="font-size: 9pt; margin-bottom: 15px;">
@@ -142,7 +142,7 @@
                         <td>:</td>
                         <td>
                             @if($kegiatan->mitra?->count() > 0)
-                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                <ul style="list-style-type: none;">
                                     @foreach($kegiatan->mitra as $mitra)
                                         <li>{{ $mitra->nama }}</li>
                                     @endforeach
@@ -419,7 +419,7 @@
             </div>
 
             {{-- Signature Section --}}
-            <div class="section" style="margin-top: 40px;">
+            {{-- <div class="section" style="margin-top: 40px;">
                 <table style="width: 100%; border: none;">
                     <tr>
                         <td style="width: 50%; vertical-align: top; text-align: center;">
@@ -457,7 +457,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>
+            </div> --}}
 
             {{-- Footer --}}
             <div class="report-footer">

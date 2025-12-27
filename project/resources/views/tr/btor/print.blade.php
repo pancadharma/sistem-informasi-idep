@@ -41,7 +41,7 @@
                 </td>
             </tr>
             <tr>
-                <td><strong>{{ __('btor.jabatan') }}</strong></td>
+                <td><strong>{{ __('btor.penulis_jabatan') }}</strong></td>
                 <td>:</td>
                 <td>
                     {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
@@ -69,12 +69,12 @@
     </div>
 
     {{-- 3. Detail Kegiatan --}}
-    <div class="section page-break">
+    <div class="section">
         <h4 class="section-title">{{ __('btor.detail_kegiatan') }}</h4>
 
-        <table class="table-print" style="font-size: 9pt; margin-bottom: 15px;">
+        <table class="table-print" style="font-size: 9pt; margin-bottom: 5px;">
             <tr>
-                <td width="25%"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
+                <td width="20%"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
                 <td width="1%">:</td>
                 <td>
                     @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
@@ -88,8 +88,8 @@
                     @endif
                 </td>
             </tr>
-            {{-- <tr>
-                <td><strong>Tempat</strong></td>
+            <tr>
+                <td><strong>{{ ('btor.tempat') }}</strong></td>
                 <td>:</td>
                 <td>
                     @if($kegiatan->lokasi?->count() > 0)
@@ -109,13 +109,13 @@
                         -
                     @endif
                 </td>
-            </tr> --}}
+            </tr>
             <tr>
                 <td><strong>Pihak yang Terlibat</strong></td>
                 <td>:</td>
                 <td>
                     @if($kegiatan->mitra?->count() > 0)
-                        <ul style="margin: 5px 0; padding-left: 20px;">
+                        <ul style="list-style-type: none;">
                             @foreach($kegiatan->mitra as $mitra)
                                 <li>{{ $mitra->nama }}</li>
                             @endforeach
@@ -131,14 +131,14 @@
 
         {{-- Activity Type Specific Content --}}
         <div class="mt-3">
-            <strong>Detail Kegiatan Spesifik:</strong>
+            <strong>{{ __('btor.jenis_kegiatan') }}</strong>
             @include($viewPath, ['kegiatan' => $kegiatan])
         </div>
     </div>
 
     {{-- 4. Hasil Kegiatan --}}
     <div class="section page-break">
-        <h4 class="section-title">Hasil Kegiatan</h4>
+        <h4 class="section-title">{{ __('btor.hasil.label') }}</h4>
 
         {{-- 4a. Jumlah Partisipan --}}
         <h5 style="font-size: 10pt; font-weight: bold; margin-bottom: 10px;">a. Jumlah Partisipan yang Terlibat dan Disagregat</h5>
@@ -372,7 +372,7 @@
     </div>
 
     {{-- Signature Section --}}
-    <div class="section" style="margin-top: 40px;">
+    {{-- <div class="section" style="margin-top: 40px;">
         <table style="width: 100%; border: none;">
             <tr>
                 <td style="width: 50%; vertical-align: top; text-align: center;">
@@ -409,7 +409,7 @@
                 </td>
             </tr>
         </table>
-    </div>
+    </div> --}}
 
     {{-- Footer --}}
     <div class="report-footer">
