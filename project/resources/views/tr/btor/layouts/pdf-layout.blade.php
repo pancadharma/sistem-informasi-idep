@@ -5,10 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>@yield('title', 'BTOR Export')</title>
     <style>
-        /* Print-specific CSS - Inline for PDF */
+        /** Define the margins of your page **/
         @page {
-            size: A4 portrait;
-            margin: 1.5cm 1cm;
+            margin: 120px 40px 100px 40px;
         }
 
         * {
@@ -25,15 +24,43 @@
             background: white;
         }
 
-        /* Header image in content - centered */
+        /** Fixed Header - repeats on EVERY page **/
         header {
+            position: fixed;
+            top: -100px;
+            left: 0;
+            right: 0;
+            height: 90px;
             text-align: center;
-            margin-bottom: 15px;
         }
 
         header img {
             max-width: 100%;
-            max-height: 80px;
+            max-height: 85px;
+        }
+
+        /** Fixed Footer - repeats on EVERY page **/
+        footer {
+            position: fixed;
+            bottom: -80px;
+            left: 0;
+            right: 0;
+            height: 70px;
+            text-align: center;
+            font-size: 8pt;
+            border-top: 2px double #008000;
+            padding-top: 8px;
+        }
+
+        footer .company {
+            font-weight: bold;
+            color: #008000;
+            margin-bottom: 3px;
+        }
+
+        footer .address {
+            color: #008000;
+            font-size: 7pt;
         }
 
         .print-container {
@@ -143,24 +170,13 @@
             text-align: justify;
         }
 
-        /* Footer in content - shows at end of report */
+        /* Hide in-content header and footer since we use fixed positioning */
+        .print-container > header {
+            display: none;
+        }
+
         .report-footer {
-            margin-top: 30px;
-            padding-top: 10px;
-            border-top: 2px double #008000;
-            font-size: 8pt;
-            text-align: center;
-        }
-
-        .report-footer .company {
-            font-weight: bold;
-            color: #008000;
-            margin-bottom: 2px;
-        }
-
-        .report-footer .address {
-            color: #008000;
-            font-size: 7pt;
+            display: none;
         }
 
         .page-break {
@@ -226,7 +242,20 @@
     @stack('print-styles')
 </head>
 <body>
+    {{-- Fixed Header - MUST be at top of body, before content --}}
+    <header>
+        <img src="{{ public_path('images/uploads/header.png') }}" alt="IDEP Header">
+    </header>
+
+    {{-- Fixed Footer - MUST be at top of body, before content --}}
+    <footer>
+        <div class="company">Yayasan IDEP Selaras Alam</div>
+        <div class="address">Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</div>
+    </footer>
+
     {{-- Main Content --}}
-    @yield('content')
+    <main>
+        @yield('content')
+    </main>
 </body>
 </html>
