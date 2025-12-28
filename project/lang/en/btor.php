@@ -113,6 +113,14 @@ return [
     'back_to_list' => 'Back to List',
     'export_pdf' => 'Export PDF',
     'print_preview' => 'Print Preview',
+    'pihak_yang_terlibat' => 'Involved Parties',
+    'partisipan_disagregat' => 'Number of Participants Involved and Disaggregated',
+
+    'tantangan_solusi' => 'Challenges and Solutions',
+    'tantangan' => 'Challenges',
+    'solusi' => 'Solutions',
+    'tantangan_solusi_ket' => 'Please fill in and describe the challenges encountered during the activity, as well as the solutions based on the activity evaluation results (if any).',
+    'no_tantang_solusi' => 'No Challenges and Solutions or Not Inputted',
 
     'hasil' => [
             'label' => 'Result Activity',

@@ -89,7 +89,7 @@
                 </td>
             </tr>
             <tr>
-                <td><strong>{{ ('btor.tempat') }}</strong></td>
+                <td><strong>{{ __('btor.tempat') }}</strong></td>
                 <td>:</td>
                 <td>
                     @if($kegiatan->lokasi?->count() > 0)
@@ -97,9 +97,9 @@
                             $lokasiList = $kegiatan->lokasi->map(function($lok) {
                                 $parts = array_filter([
                                     $lok->lokasi,
-                                    $lok->desa?->nama,
-                                    $lok->desa?->kecamatan?->nama,
-                                    $lok->desa?->kecamatan?->kabupaten?->nama
+                                    // $lok->desa?->nama,
+                                    // $lok->desa?->kecamatan?->nama,
+                                    // $lok->desa?->kecamatan?->kabupaten?->nama
                                 ]);
                                 return implode(', ', $parts);
                             });
@@ -111,7 +111,7 @@
                 </td>
             </tr>
             <tr>
-                <td><strong>Pihak yang Terlibat</strong></td>
+                <td><strong>{{ __('btor.pihak_yang_terlibat')}}</strong></td>
                 <td>:</td>
                 <td>
                     @if($kegiatan->mitra?->count() > 0)
@@ -141,51 +141,51 @@
         <h4 class="section-title">{{ __('btor.hasil.label') }}</h4>
 
         {{-- 4a. Jumlah Partisipan --}}
-        <h5 style="font-size: 10pt; font-weight: bold; margin-bottom: 10px;">a. Jumlah Partisipan yang Terlibat dan Disagregat</h5>
+        <h5 style="font-size: 10pt; font-weight: bold; margin-bottom: 10px;">a. {{ __('btor.partisipan_disagregat') }} </h5>
 
-        <p style="font-size: 9pt; margin-bottom: 8px;"><em>Tabel Disagregasi Berdasarkan Usia dan Jenis Kelamin:</em></p>
+        <p style="font-size: 9pt; margin-bottom: 8px;"><em>{{ __('btor.table_partisipan') }}:</em></p>
 
         <table class="table-bordered" style="font-size: 8pt; margin-bottom: 15px;">
             <thead>
                 <tr>
-                    <th style="width: 40%;">Penerima Manfaat</th>
-                    <th style="width: 15%;" class="text-center">Perempuan</th>
-                    <th style="width: 15%;" class="text-center">Laki-laki</th>
-                    <th style="width: 15%;" class="text-center">Lainnya</th>
-                    <th style="width: 15%;" class="text-center">Sub Total</th>
+                    <th style="width: 40%;">{{ __('btor.penerima_manfaat') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.perempuan') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.laki_laki') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.lainnya') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.sub_total') }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Dewasa <em>(umur 25 sampai 59 tahun)</em></td>
+                    <td>{{ __('btor.dewasa') }} <em>({{ __('btor.umur_25_59') }})</em></td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>Lansia <em>(umur 60 ke atas)</em></td>
+                    <td>{{ __('btor.lansia') }} <em>({{ __('btor.umur_60') }})</em></td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>Remaja <em>(umur 18 - 24 tahun)</em></td>
+                    <td>{{ __('btor.remaja') }} <em>({{ __('btor.umur_18_24') }})</em></td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>Anak <em>(umur 18 ke bawah)</em></td>
+                    <td>{{ __('btor.anak') }} <em>({{ __('btor.umur_18_kebawah') }})</em></td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</strong></td>
                 </tr>
                 <tr class="table-active">
-                    <td><strong>Grand Total</strong></td>
+                    <td><strong>{{ __('btor.grand_total') }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
                     <td class="text-center"><strong>0</strong></td>
@@ -194,42 +194,43 @@
             </tbody>
         </table>
 
-        <p style="font-size: 9pt; margin-bottom: 8px;"><em>Tabel Disagregasi Berdasarkan Kelompok Khusus:</em></p>
+        <p style="font-size: 9pt; margin-bottom: 8px;"><em>
+            {{ __('btor.table_kelompok_khusus') }}:</em></p>
 
         <table class="table-bordered" style="font-size: 8pt; margin-bottom: 15px;">
             <thead>
                 <tr>
-                    <th style="width: 40%;">Penerima Manfaat</th>
-                    <th style="width: 15%;" class="text-center">Perempuan</th>
-                    <th style="width: 15%;" class="text-center">Laki-laki</th>
-                    <th style="width: 15%;" class="text-center">Lainnya</th>
-                    <th style="width: 15%;" class="text-center">Sub Total</th>
+                    <th style="width: 40%;">{{ __('btor.penerima_manfaat') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.perempuan') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.laki_laki') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.lainnya') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.sub_total') }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Penyandang Disabilitas</td>
+                    <td>{{ __('btor.penyandang_disabilitas') }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>Non-disabilitas</td>
+                    <td>{{ __('btor.non_disabilitas') }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>Kelompok Marjinal Lainnya</td>
+                    <td>{{ __('btor.kelompok_marjinal_lainnya') }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
                     <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
                     <td class="text-center">0</td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</strong></td>
                 </tr>
                 <tr class="table-active">
-                    <td><strong>Grand Total</strong></td>
+                    <td><strong>{{ __('btor.grand_total') }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
                     <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
                     <td class="text-center"><strong>0</strong></td>
@@ -239,7 +240,7 @@
         </table>
 
         {{-- 4b. Hasil Pertemuan --}}
-        <h5 style="font-size: 10pt; font-weight: bold; margin: 15px 0 10px 0;">b. Hasil Pertemuan</h5>
+        <h5 style="font-size: 10pt; font-weight: bold; margin: 15px 0 10px 0;">b. {{ __('btor.hasil_pertemuan') }}</h5>
         <div class="content-box">
             {!! $kegiatan->deskripsikeluaran ?? '<em>Tidak ada data hasil pertemuan</em>' !!}
         </div>
@@ -247,9 +248,9 @@
 
     {{-- 5. Tantangan dan Solusi --}}
     <div class="section page-break">
-        <h4 class="section-title">Tantangan dan Solusi</h4>
+        <h4 class="section-title">{{ __('btor.tantangan_solusi') }}</h4>
         <p style="font-size: 9pt; font-style: italic; margin-bottom: 10px;">
-            Silahkan isi dan jabarkan tantangan yang ditemui selama menjalankan kegiatan, serta solusinya berdasarkan hasil evaluasi kegiatan (jika ada).
+            {{ __('btor.tantangan_solusi_ket') }}
         </p>
 
         @if($kegiatan->assessment?->assessmentkendala || $kegiatan->pelatihan?->pelatihanisu)
@@ -257,8 +258,8 @@
                 <thead>
                     <tr>
                         <th style="width: 10%;" class="text-center">No.</th>
-                        <th style="width: 45%;">Tantangan</th>
-                        <th style="width: 45%;">Solusi yang Diambil Tim</th>
+                        <th style="width: 45%;">{{ __('btor.tantangan') }}</th>
+                        <th style="width: 45%;">{{ __('btor.solusi') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -280,7 +281,7 @@
                 </tbody>
             </table>
         @else
-            <p><em>Tidak ada data tantangan dan solusi yang tersedia.</em></p>
+            <p><em>.</em></p>
         @endif
     </div>
 
@@ -371,48 +372,8 @@
         </div>
     </div>
 
-    {{-- Signature Section --}}
-    {{-- <div class="section" style="margin-top: 40px;">
-        <table style="width: 100%; border: none;">
-            <tr>
-                <td style="width: 50%; vertical-align: top; text-align: center;">
-                    <div class="signature-box">
-                        <p><strong>Disusun oleh:</strong></p>
-                        <br><br><br>
-                        <p>
-                            @if($kegiatan->kegiatan_penulis?->first())
-                                <strong><u>{{ $kegiatan->kegiatan_penulis->first()->user?->nama }}</u></strong><br>
-                                <em>{{ $kegiatan->kegiatan_penulis->first()->peran?->nama ?? 'Staff' }}</em>
-                            @else
-                                <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong><br>
-                                <em>Penulis Laporan</em>
-                            @endif
-                        </p>
-                        <p style="margin-top: 5px;"><small>Tanggal: {{ now()->locale('id')->isoFormat('D MMMM Y') }}</small></p>
-                    </div>
-                </td>
-                <td style="width: 50%; vertical-align: top; text-align: center;">
-                    <div class="signature-box">
-                        <p><strong>Disetujui oleh:</strong></p>
-                        <br><br><br>
-                        <p>
-                            @if($kegiatan->user)
-                                <strong><u>{{ $kegiatan->user->name }}</u></strong><br>
-                                <em>Program Coordinator</em>
-                            @else
-                                <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong><br>
-                                <em>Supervisor</em>
-                            @endif
-                        </p>
-                        <p style="margin-top: 5px;"><small>Tanggal: _________________</small></p>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div> --}}
-
     {{-- Footer --}}
-    <div class="report-footer">
+    {{-- <div class="report-footer">
         <table style="width: 100%; border: none; font-size: 8pt;">
             <tr>
                 <td style="width: 70%;">
@@ -423,6 +384,11 @@
                 </td>
             </tr>
         </table>
+    </div> --}}
+    <div class="report-footer">
+        <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+        <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
+        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
     </div>
 </div>
 @endsection

@@ -418,49 +418,8 @@
                 </div>
             </div>
 
-            {{-- Signature Section --}}
-            {{-- <div class="section" style="margin-top: 40px;">
-                <table style="width: 100%; border: none;">
-                    <tr>
-                        <td style="width: 50%; vertical-align: top; text-align: center;">
-                            <div class="signature-box">
-                                <p><strong>Disusun oleh:</strong></p>
-                                <br><br><br>
-                                <p>
-                                    @if($kegiatan->kegiatan_penulis?->first())
-                                        <strong><u>{{ $kegiatan->kegiatan_penulis->first()->user?->nama }}</u></strong><br>
-                                        <em>{{ $kegiatan->kegiatan_penulis->first()->peran?->nama ?? 'Staff' }}</em>
-                                    @else
-                                        <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong><br>
-                                        <em>Penulis Laporan</em>
-                                    @endif
-                                </p>
-                                <p style="margin-top: 5px;"><small>Tanggal:
-                                        {{ now()->locale('id')->isoFormat('D MMMM Y') }}</small></p>
-                            </div>
-                        </td>
-                        <td style="width: 50%; vertical-align: top; text-align: center;">
-                            <div class="signature-box">
-                                <p><strong>Disetujui oleh:</strong></p>
-                                <br><br><br>
-                                <p>
-                                    @if($kegiatan->user)
-                                        <strong><u>{{ $kegiatan->user->name }}</u></strong><br>
-                                        <em>Program Coordinator</em>
-                                    @else
-                                        <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong><br>
-                                        <em>Supervisor</em>
-                                    @endif
-                                </p>
-                                <p style="margin-top: 5px;"><small>Tanggal: _________________</small></p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div> --}}
-
             {{-- Footer --}}
-            <div class="report-footer">
+            {{-- <div class="report-footer">
                 <table style="width: 100%; border: none; font-size: 8pt;">
                     <tr>
                         <td style="width: 70%;">
@@ -471,6 +430,11 @@
                         </td>
                     </tr>
                 </table>
+            </div> --}}
+            <div class="report-footer">
+                <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+                <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
+                <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
             </div>
         </div>
     @endforeach

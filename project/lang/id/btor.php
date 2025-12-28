@@ -68,7 +68,7 @@ return [
     'table_kelompok_khusus' => 'Tabel Disagregasi Berdasarkan Kelompok Khusus',
     'penyandang_disabilitas' => 'Penyandang Disabilitas',
     'non_disabilitas' => 'Non-disabilitas',
-    'non_disabilitas' => 'Kelompok Marjinal Lainnya',
+    'kelompok_marjinal_lainnya' => 'Kelompok Marjinal Lainnya',
     
     
     'penerima_manfaat' => 'Penerima Manfaat',
@@ -112,6 +112,15 @@ return [
     'back_to_list' => 'Kembali ke Daftar',
     'export_pdf' => 'Export PDF',
     'print_preview' => 'Print Preview',
+    'pihak_yang_terlibat' => 'Pihak yang Terlibat',
+    'partisipan_disagregat' => 'Jumlah Partisipan yang Terlibat dan Disagregat',
+
+    'tantangan_solusi' => 'Tantangan dan Solusi',
+    'tantangan' => 'Tantangan',
+    'solusi' => 'Solusi',
+    'tantangan_solusi_ket' => 'Silahkan isi dan jabarkan tantangan yang ditemui selama menjalankan kegiatan, serta solusinya berdasarkan hasil evaluasi kegiatan (jika ada).',
+    'no_tantang_solusi' => 'Tidak ada tantangan dan solusi',
+
 
     'hasil' => [
             'label' => 'Hasil Kegiatan',

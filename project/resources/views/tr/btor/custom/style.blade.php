@@ -33,8 +33,8 @@
     /* Header Styles */
     .report-header {
         margin-bottom: 15px;
-        border-bottom: 2px solid #000;
-        padding-bottom: 8px;
+        /* border-bottom: 2px solid #000; */
+        /* padding-bottom: 8px; */
     }
 
     .report-header h2 {
@@ -67,7 +67,7 @@
         font-weight: bold;
         margin-bottom: 8px;
         text-transform: uppercase;
-        border-bottom: 2px solid #333;
+        /* border-bottom: 2px solid #333; */
         padding-bottom: 3px;
     }
 
@@ -290,10 +290,16 @@
 
     /* Report Footer */
     .report-footer {
-        margin-top: 20px;
+        /* margin-top: 20px;
         padding-top: 12px;
         border-top: 1px solid #ccc;
         font-size: 8pt;
+        color: #666; */
+        margin-top: 30px;
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+        font-size: 8pt;
+        text-align: center;
         color: #666;
     }
 
