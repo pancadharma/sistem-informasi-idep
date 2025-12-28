@@ -7,6 +7,7 @@ use App\Models\Export\BTOR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Style\Font;
@@ -198,15 +199,12 @@ class BTORController extends Controller
         $kegiatan = BTOR::getData($id);
         $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
 
-        $pdf = Pdf::loadView('tr.btor.templates.pdf-styled', compact('kegiatan', 'viewPath'))
+        // Use pdf-export.blade.php with inline CSS (most reliable for DomPDF)
+        $pdf = Pdf::loadView('tr.btor.pdf-export', compact('kegiatan', 'viewPath'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'margin-top' => 15,
-                'margin-bottom' => 15,
-                'margin-left' => 20,
-                'margin-right' => 20,
+                'isRemoteEnabled' => true,
                 'encoding' => 'UTF-8',
-                'enable-local-file-access' => true,
             ]);
 
         $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
@@ -215,29 +213,113 @@ class BTORController extends Controller
 
     public function exportDocx($id)
     {
-        $kegiatan = BTOR::getData($id);
+        try {
+            $kegiatan = BTOR::getData($id);
         
-        $phpWord = new PhpWord();
-        $section = $phpWord->addSection([
-            'marginTop' => 1134,
-            'marginBottom' => 1134,
-            'marginLeft' => 1134,
-            'marginRight' => 1134,
-        ]);
+            $phpWord = new PhpWord();
+            $section = $phpWord->addSection();
 
-        // Header
-        $this->addDocxHeader($section, $kegiatan);
+            // Title
+            $section->addText('BACK TO OFFICE REPORT', ['bold' => true, 'size' => 16]);
+            $section->addTextBreak(1);
+
+            // Header info
+            $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
+            
+            $section->addText('Departemen : Program', ['size' => 11]);
+            $section->addText('Program : ' . ($program->nama ?? 'N/A'), ['size' => 11]);
+            $section->addText('Nama Kegiatan : ' . ($kegiatan->programOutcomeOutputActivity?->nama ?? 'N/A'), ['size' => 11]);
+            $section->addText('Kode budget : ' . ($kegiatan->programOutcomeOutputActivity?->kode ?? 'N/A'), ['size' => 11]);
+            
+            $penulis = $kegiatan->kegiatan_penulis->map(fn($p) => $p->user->nama ?? '')->filter()->join(', ');
+            $section->addText('Penulis laporan : ' . ($penulis ?: '-'), ['size' => 11]);
+            
+            $jabatan = $kegiatan->kegiatan_penulis->map(fn($p) => $p->peran->nama ?? '')->filter()->join(', ');
+            $section->addText('Jabatan : ' . ($jabatan ?: '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // A. Latar Belakang
+            $section->addText('A. Latar Belakang Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($kegiatan->deskripsilatarbelakang ?? 'Tidak ada deskripsi latar belakang.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // B. Tujuan
+            $section->addText('B. Tujuan Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($kegiatan->deskripsitujuan ?? 'Tidak ada deskripsi tujuan.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // C. Detail Kegiatan
+            $section->addText('C. Detail Kegiatan', ['bold' => true, 'size' => 12]);
+            $tanggalMulai = $kegiatan->tanggalmulai ? Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') : 'N/A';
+            $tanggalSelesai = $kegiatan->tanggalselesai ? Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') : 'N/A';
+            $section->addText('Hari, tanggal : ' . $tanggalMulai . ' - ' . $tanggalSelesai, ['size' => 11]);
+            
+            $lokasiList = $kegiatan->lokasi?->map(fn($l) => $l->lokasi ?? '-')->toArray() ?? [];
+            $section->addText('Tempat : ' . (implode('; ', $lokasiList) ?: '-'), ['size' => 11]);
+            
+            if ($kegiatan->mitra && $kegiatan->mitra->count() > 0) {
+                $section->addText('Pihak yang terlibat :', ['size' => 11]);
+                foreach ($kegiatan->mitra as $index => $mitra) {
+                    $section->addText('   ' . ($index + 1) . '. ' . $mitra->nama, ['size' => 11]);
+                }
+            }
+            $section->addTextBreak(1);
+
+            // D. Hasil Kegiatan
+            $section->addText('D. Hasil Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText('Jumlah partisipan: ' . ($kegiatan->penerimamanfaattotal ?? 0) . ' orang', ['size' => 11]);
+            $section->addText('- Perempuan: ' . ($kegiatan->penerimamanfaatperempuantotal ?? 0), ['size' => 11]);
+            $section->addText('- Laki-laki: ' . ($kegiatan->penerimamanfaatlakilakitotal ?? 0), ['size' => 11]);
+            $section->addTextBreak(1);
+            
+            $section->addText('Hasil pertemuan:', ['size' => 11]);
+            $section->addText(strip_tags($kegiatan->deskripsikeluaran ?? 'Tidak ada deskripsi hasil pertemuan.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // Get specific data
+            $specificData = $this->getSpecificKegiatanData($kegiatan);
+
+            // E. Tantangan dan Solusi
+            $section->addText('E. Tantangan dan Solusi', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($specificData['kendala'] ?? 'Tidak ada data tantangan.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // F. Isu dan Rekomendasi
+            $section->addText('F. Isu yang Perlu Diperhatikan & Rekomendasi', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($specificData['isu'] ?? 'Tidak ada data isu.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // G. Pembelajaran
+            $section->addText('G. Pembelajaran', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // H. Dokumen Pendukung
+            $section->addText('H. Dokumen Pendukung', ['bold' => true, 'size' => 12]);
+            $dokumen = $kegiatan->getDokumenPendukung();
+            if ($dokumen && $dokumen->count() > 0) {
+                foreach ($dokumen as $doc) {
+                    $section->addText('- ' . $doc->name, ['size' => 11]);
+                }
+            } else {
+                $section->addText('Tidak ada dokumen pendukung.', ['size' => 11]);
+            }
+            $section->addTextBreak(1);
+
+            // Footer
+            $section->addText('---', ['size' => 11]);
+            $section->addText('Yayasan IDEP Selaras Alam', ['bold' => true, 'size' => 9]);
+            $section->addText('Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali', ['size' => 8]);
+
+            $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.docx';
+            $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_') . '.docx';
+            $phpWord->save($tmpDoc, 'Word2007');
         
-        // Content sections
-        $this->addDocxContent($section, $kegiatan);
-
-        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.docx';
-        $temp_file = tempnam(sys_get_temp_dir(), 'PHPWord');
-        
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save($temp_file);
-
-        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+            return response()->download($tmpDoc, $filename)->deleteFileAfterSend(true);
+        } catch (\Throwable $th) {
+            Log::error('Gagal mengekspor laporan BTOR: ' . $th->getMessage());
+            return back()->with('error', 'Gagal mengekspor laporan. ' . $th->getMessage());
+        }
     }
 
     public function exportBulkPdf(Request $request)
@@ -258,15 +340,12 @@ class BTORController extends Controller
             ];
         });
 
-        $pdf = Pdf::loadView('tr.btor.templates.pdf-styled-bulk', compact('kegiatanList'))
+        // Use pdf-export-bulk.blade.php with inline CSS (most reliable for DomPDF)
+        $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('kegiatanList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'margin-top' => 15,
-                'margin-bottom' => 15,
-                'margin-left' => 20,
-                'margin-right' => 20,
+                'isRemoteEnabled' => true,
                 'encoding' => 'UTF-8',
-                'enable-local-file-access' => true,
             ]);
 
         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
@@ -288,28 +367,72 @@ class BTORController extends Controller
         foreach ($ids as $index => $id) {
             $kegiatan = BTOR::getData($id);
             
-            $section = $phpWord->addSection([
-                'marginTop' => 1134,
-                'marginBottom' => 1134,
-                'marginLeft' => 1134,
-                'marginRight' => 1134,
-            ]);
+            // Simple approach - add new section for each report
+            $section = $phpWord->addSection();
 
-            $this->addDocxHeader($section, $kegiatan);
-            $this->addDocxContent($section, $kegiatan);
+            // Title
+            $section->addText('BACK TO OFFICE REPORT', ['bold' => true, 'size' => 16]);
+            $section->addTextBreak(1);
 
-            if ($index < count($ids) - 1) {
-                $section->addPageBreak();
-            }
+            // Header info
+            $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
+            $section->addText('Program : ' . ($program->nama ?? 'N/A'), ['size' => 11]);
+            $section->addText('Nama Kegiatan : ' . ($kegiatan->programOutcomeOutputActivity?->nama ?? 'N/A'), ['size' => 11]);
+            $section->addText('Kode budget : ' . ($kegiatan->programOutcomeOutputActivity?->kode ?? 'N/A'), ['size' => 11]);
+            
+            $penulis = $kegiatan->kegiatan_penulis->map(fn($p) => $p->user->nama ?? '')->filter()->join(', ');
+            $section->addText('Penulis laporan : ' . ($penulis ?: '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // A. Latar Belakang
+            $section->addText('A. Latar Belakang Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($kegiatan->deskripsilatarbelakang ?? '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // B. Tujuan
+            $section->addText('B. Tujuan Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($kegiatan->deskripsitujuan ?? '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // C. Detail Kegiatan
+            $section->addText('C. Detail Kegiatan', ['bold' => true, 'size' => 12]);
+            $tanggalMulai = $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('D MMMM Y') : 'N/A';
+            $tanggalSelesai = $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('D MMMM Y') : 'N/A';
+            $section->addText('Tanggal : ' . $tanggalMulai . ' - ' . $tanggalSelesai, ['size' => 11]);
+            
+            $lokasiList = $kegiatan->lokasi?->map(fn($l) => $l->lokasi ?? '-')->toArray() ?? [];
+            $section->addText('Tempat : ' . (implode('; ', $lokasiList) ?: '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // D. Hasil Kegiatan
+            $section->addText('D. Hasil Kegiatan', ['bold' => true, 'size' => 12]);
+            $section->addText('Total partisipan: ' . ($kegiatan->penerimamanfaattotal ?? 0), ['size' => 11]);
+            $section->addText(strip_tags($kegiatan->deskripsikeluaran ?? '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // Get specific data
+            $specificData = $this->getSpecificKegiatanData($kegiatan);
+
+            // E. Tantangan dan Solusi
+            $section->addText('E. Tantangan dan Solusi', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($specificData['kendala'] ?? '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // F. Pembelajaran
+            $section->addText('F. Pembelajaran', ['bold' => true, 'size' => 12]);
+            $section->addText(strip_tags($specificData['pembelajaran'] ?? '-'), ['size' => 11]);
+            $section->addTextBreak(1);
+
+            // Footer
+            $section->addText('---', ['size' => 11]);
+            $section->addText('Yayasan IDEP Selaras Alam', ['bold' => true, 'size' => 9]);
         }
 
         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.docx';
-        $temp_file = tempnam(sys_get_temp_dir(), 'PHPWord');
+        $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_bulk_') . '.docx';
+        $phpWord->save($tmpDoc, 'Word2007');
         
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save($temp_file);
-
-        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
+        return response()->download($tmpDoc, $filename)->deleteFileAfterSend(true);
     }
 
     private function addDocxHeader($section, $kegiatan)
@@ -342,24 +465,35 @@ class BTORController extends Controller
     {
         // A. Latar Belakang
         $section->addText('A. Latar Belakang Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText($kegiatan->deskripsilatarbelakang ?? 'Tidak ada deskripsi latar belakang.', ['size' => 11]);
+        $section->addText(strip_tags($kegiatan->deskripsilatarbelakang ?? 'Tidak ada deskripsi latar belakang.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // B. Tujuan
         $section->addText('B. Tujuan Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText($kegiatan->deskripsitujuan ?? 'Tidak ada deskripsi tujuan.', ['size' => 11]);
+        $section->addText(strip_tags($kegiatan->deskripsitujuan ?? 'Tidak ada deskripsi tujuan.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // C. Detail Kegiatan
         $section->addText('C. Detail Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText('a. Hari, tanggal : ' . 
-            ($kegiatan->tanggalmulai ? date('d F Y', strtotime($kegiatan->tanggalmulai)) : 'N/A') . 
-            ' - ' . 
-            ($kegiatan->tanggalselesai ? date('d F Y', strtotime($kegiatan->tanggalselesai)) : 'N/A'), 
-            ['size' => 11]);
         
-        $lokasi = $kegiatan->lokasi_kegiatan->map(fn($l) => $l->desa->nama ?? 'N/A')->join(', ');
-        $section->addText('b. Tempat : ' . $lokasi, ['size' => 11]);
+        // Date formatting
+        $tanggalMulai = $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') : 'N/A';
+        $tanggalSelesai = $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') : 'N/A';
+        $duration = $kegiatan->getDurationInDays() ?? 0;
+        
+        $dateText = 'a. Hari, tanggal : ' . $tanggalMulai;
+        if ($kegiatan->tanggalmulai != $kegiatan->tanggalselesai) {
+            $dateText .= ' - ' . $tanggalSelesai;
+        }
+        $dateText .= ' (' . $duration . ' hari)';
+        $section->addText($dateText, ['size' => 11]);
+        
+        // Fix: Use lokasi relationship instead of lokasi_kegiatan
+        $lokasiList = [];
+        if ($kegiatan->lokasi && $kegiatan->lokasi->count() > 0) {
+            $lokasiList = $kegiatan->lokasi->map(fn($l) => $l->lokasi ?? '-')->toArray();
+        }
+        $section->addText('b. Tempat : ' . implode('; ', $lokasiList ?: ['-']), ['size' => 11]);
         
         // Partners
         if ($kegiatan->mitra && $kegiatan->mitra->count() > 0) {
@@ -369,6 +503,13 @@ class BTORController extends Controller
             }
         }
         $section->addTextBreak(1);
+        
+        // Location Table
+        if ($kegiatan->lokasi && $kegiatan->lokasi->count() > 0) {
+            $section->addText('Tabel Lokasi:', ['bold' => true, 'size' => 11]);
+            $this->addLocationTable($section, $kegiatan);
+            $section->addTextBreak(1);
+        }
 
         // D. Hasil Kegiatan - Beneficiaries Table
         $section->addText('D. Hasil Kegiatan', ['bold' => true, 'size' => 12]);
@@ -376,7 +517,7 @@ class BTORController extends Controller
         $this->addBeneficiariesTable($section, $kegiatan);
         
         $section->addText('b. Hasil pertemuan', ['size' => 11]);
-        $section->addText($kegiatan->deskripsikeluaran ?? 'Tidak ada deskripsi hasil pertemuan.', ['size' => 11]);
+        $section->addText(strip_tags($kegiatan->deskripsikeluaran ?? 'Tidak ada deskripsi hasil pertemuan.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // Get specific data based on jenis kegiatan
@@ -384,24 +525,36 @@ class BTORController extends Controller
 
         // E. Tantangan dan Solusi
         $section->addText('E. Tantangan dan Solusi', ['bold' => true, 'size' => 12]);
-        $section->addText($specificData['kendala'] ?? 'Tidak ada data tantangan.', ['size' => 11]);
+        $section->addText(strip_tags($specificData['kendala'] ?? 'Tidak ada data tantangan.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // F. Isu yang Perlu Diperhatikan & Rekomendasi
         $section->addText('F. Isu yang Perlu Diperhatikan & Rekomendasi', ['bold' => true, 'size' => 12]);
-        $section->addText($specificData['isu'] ?? 'Tidak ada data isu.', ['size' => 11]);
+        $section->addText(strip_tags($specificData['isu'] ?? 'Tidak ada data isu.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // G. Pembelajaran
         $section->addText('G. Pembelajaran', ['bold' => true, 'size' => 12]);
-        $section->addText($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.', ['size' => 11]);
+        $section->addText(strip_tags($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.'), ['size' => 11]);
         $section->addTextBreak(1);
 
         // H. Dokumen Pendukung
         $section->addText('H. Dokumen Pendukung', ['bold' => true, 'size' => 12]);
-        if ($kegiatan->getDokumenPendukung() && $kegiatan->getDokumenPendukung()->count() > 0) {
-            foreach ($kegiatan->getDokumenPendukung() as $doc) {
-                $section->addText('- ' . $doc->file_name, ['size' => 11]);
+        $dokumen = $kegiatan->getDokumenPendukung();
+        $media = $kegiatan->getMediaPendukung();
+        
+        if (($dokumen && $dokumen->count() > 0) || ($media && $media->count() > 0)) {
+            if ($dokumen && $dokumen->count() > 0) {
+                $section->addText('Dokumen (' . $dokumen->count() . '):', ['size' => 11]);
+                foreach ($dokumen as $doc) {
+                    $section->addText('- ' . $doc->name, ['size' => 11]);
+                }
+            }
+            if ($media && $media->count() > 0) {
+                $section->addText('Media Pendukung (' . $media->count() . '):', ['size' => 11]);
+                foreach ($media as $item) {
+                    $section->addText('- ' . $item->name, ['size' => 11]);
+                }
             }
         } else {
             $section->addText('Tidak ada dokumen pendukung.', ['size' => 11]);
@@ -481,6 +634,58 @@ class BTORController extends Controller
                 ?? $specificData?->lainnyapembelajaran 
                 ?? 'Tidak ada data pembelajaran.',
         ];
+    }
+
+    /**
+     * Add location table to DOCX
+     */
+    private function addLocationTable($section, $kegiatan)
+    {
+        $tableStyle = ['borderSize' => 6, 'borderColor' => '000000', 'width' => 9000, 'unit' => 'pct'];
+        $table = $section->addTable($tableStyle);
+        
+        // Header row
+        $table->addRow();
+        $table->addCell(500, ['bgColor' => 'f0f0f0'])->addText('No', ['bold' => true, 'size' => 9], ['alignment' => Jc::CENTER]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Lokasi', ['bold' => true, 'size' => 9]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Desa', ['bold' => true, 'size' => 9]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Kecamatan', ['bold' => true, 'size' => 9]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Kabupaten', ['bold' => true, 'size' => 9]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Provinsi', ['bold' => true, 'size' => 9]);
+        $table->addCell(1500, ['bgColor' => 'f0f0f0'])->addText('Koordinat', ['bold' => true, 'size' => 9]);
+
+        // Data rows
+        foreach ($kegiatan->lokasi as $index => $lokasi) {
+            $table->addRow();
+            $table->addCell(500)->addText($index + 1, ['size' => 9], ['alignment' => Jc::CENTER]);
+            $table->addCell(1500)->addText($lokasi->lokasi ?? '-', ['size' => 9]);
+            $table->addCell(1500)->addText($lokasi->desa?->nama ?? '-', ['size' => 9]);
+            $table->addCell(1500)->addText($lokasi->desa?->kecamatan?->nama ?? '-', ['size' => 9]);
+            $table->addCell(1500)->addText($lokasi->desa?->kecamatan?->kabupaten?->nama ?? '-', ['size' => 9]);
+            $table->addCell(1500)->addText($lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '-', ['size' => 9]);
+            
+            $koordinat = '-';
+            if ($lokasi->lat && $lokasi->long) {
+                $koordinat = number_format($lokasi->lat, 6) . ',' . number_format($lokasi->long, 6);
+            }
+            $table->addCell(1500)->addText($koordinat, ['size' => 9], ['alignment' => Jc::CENTER]);
+        }
+
+        $section->addTextBreak(1);
+        
+        // Summary
+        $provinces = $kegiatan->lokasi->pluck('desa.kecamatan.kabupaten.provinsi.nama')->filter()->unique()->values();
+        $districts = $kegiatan->lokasi->pluck('desa.kecamatan.kabupaten.nama')->filter()->unique()->values();
+        
+        $summary = $kegiatan->lokasi->count() . ' location(s) in ' . 
+            $districts->count() . ' district(s) across ' . 
+            $provinces->count() . ' province(s)';
+        
+        if ($provinces->count() > 0) {
+            $summary .= ' - Provinces: ' . $provinces->implode(', ');
+        }
+        
+        $section->addText($summary, ['size' => 9, 'italic' => true]);
     }
 
     /**
