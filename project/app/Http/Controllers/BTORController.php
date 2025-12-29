@@ -471,22 +471,22 @@ class BTORController extends Controller
         // Basic information with proper null handling and encoding
         $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
         
-        $section->addText('Departemen : Program', $hBodyStyle, $hStyle) ;
-        $section->addText('Program : ' . $this->safeValue($program?->nama), $hBodyStyle, $hStyle);
-        $section->addText('Nama Kegiatan : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->nama), $hBodyStyle, $hStyle);
-        $section->addText('Kode budget : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->kode), $hBodyStyle, $hStyle);
+        $section->addText('Departemen      	: Program', $hBodyStyle, $hStyle) ;
+        $section->addText('Program      		: ' . $this->safeValue($program?->nama), $hBodyStyle, $hStyle);
+        $section->addText('Nama Kegiatan      	: ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->nama), $hBodyStyle, $hStyle);
+        $section->addText('Kode Budget      	: ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->kode), $hBodyStyle, $hStyle);
 
         // Penulis (authors)
         $penulis = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
             ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->user?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Penulis laporan : ' . $penulis, $hBodyStyle, $hStyle);
+        $section->addText('Penulis Laporan      	: ' . $penulis, $hBodyStyle, $hStyle);
 
         // Jabatan (positions)
         $jabatan = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
             ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->peran?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Jabatan : ' . $jabatan, $hBodyStyle, $hStyle);
+        $section->addText('Jabatan      		: ' . $jabatan, $hBodyStyle, $hStyle);
         
         $section->addText('', [], $borderStyle);
         
