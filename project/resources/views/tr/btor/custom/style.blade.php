@@ -1,9 +1,11 @@
 <style>
-    /* Print-specific CSS */
-
+    /* --- 1. GLOBAL SETTINGS --- */
     @page {
-        size: A4 portrait; /* Changed to landscape for wider tables */
-        margin: 1.5cm 1cm;
+        size: A4 portrait;
+        margin: 2 cm; /* Matches PHPWord Margins */
+    }
+    td.media-item {
+        text-align: center !important;
     }
 
     * {
@@ -13,167 +15,120 @@
     }
 
     body {
-        font-family: 'DejaVu Sans', 'Arial', sans-serif; /* DejaVu Sans has better UTF-8 support */
-        font-size: 9pt;
-        line-height: 1.4;
+        font-family: 'Tahoma', sans-serif; /* Matches DOCX Font */
+        font-size: 10pt;
+        line-height: 1.3;
         color: #000;
         background: white;
-        width: 600px;
-        max-width: 100%;
         margin: 0 auto;
     }
 
     .print-container {
-        /* width: 650px; */
-        max-width: 100%;
+        width: 100%;
+        max-width: 21cm; /* A4 Width */
         margin: 0 auto;
-        padding: 10px;
+        padding: 0;
     }
 
-    /* Header Styles */
+    /* --- 2. HEADER STYLES --- */
     .report-header {
-        margin-bottom: 15px;
-        /* border-bottom: 2px solid #000; */
-        /* padding-bottom: 8px; */
+        margin-bottom: 20px;
+        text-align: center;
     }
 
     .report-header h2 {
-        font-size: 16pt;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 3px;
-        text-transform: uppercase;
-    }
-
-    .report-header h3 {
         font-size: 14pt;
         font-weight: bold;
-        text-align: center;
-        margin-bottom: 8px;
+        margin: 0;
+        text-transform: uppercase;
+        color: #000;
     }
 
-    .report-info {
-        margin-bottom: 15px;
-    }
-
-    /* Section Styles */
+    /* --- 3. SECTION STYLES --- */
     .section {
         margin-bottom: 15px;
         page-break-inside: avoid;
     }
 
     .section-title {
-        font-size: 11pt;
-        font-weight: bold;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        /* border-bottom: 2px solid #333; */
-        padding-bottom: 3px;
-    }
-
-    .subsection {
-        /* margin-bottom: 12px; */
-        /* margin-left: 10px; */
         font-size: 10pt;
         font-weight: bold;
+        margin-top: 15pt;
+        margin-bottom: 5pt;
+        text-transform: none;
+        color: #000;
     }
 
-    .subsection h5 {
-        font-size: 10pt;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    /* Table Styles */
-    .table-print {
+    /* --- 4. TABLE STYLES --- */
+    table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 10px;
-        table-layout: auto; /* Allow table to adjust column width */
+        font-size: 10pt;
     }
 
+    /* Info Table (No Border) */
     .table-print td {
-        padding: 3px 5px;
+        padding: 2px 4px;
         vertical-align: top;
         border: none;
-        font-size: 9pt;
-        word-wrap: break-word;
     }
 
+    /* Data Table (Bordered & Green Header) */
     .table-bordered {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 10px;
-        table-layout: fixed; /* Fixed layout for better control */
     }
 
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #333;
-        padding: 5px;
-        text-align: left;
-        font-size: 8pt;
+        border: 1px solid #000 !important; /* Matches DOCX border */
+        padding: 4px;
+        vertical-align: middle;
+        font-size: 10pt;
         word-wrap: break-word;
-        overflow-wrap: break-word;
     }
 
+    .table-bordered thead th,
     .table-bordered th {
-        background-color: #e0e0e0;
+        background-color: #385623 !important; /* Green Header */
+        color: #FFFFFF !important; /* White Text */
         font-weight: bold;
         text-align: center;
+        -webkit-print-color-adjust: exact; /* Force print color */
     }
 
-    .table-bordered thead th {
-        background-color: #d0d0d0;
-    }
-
-    /* Responsive Table - Adjust for landscape */
-    .table-responsive-print {
-        width: 100%;
-        overflow: visible;
-    }
-
-    .table-sm td,
-    .table-sm th {
-        padding: 3px;
-        font-size: 7pt;
-    }
-
-    /* Table Utilities */
-    .text-center {
-        text-align: center !important;
-    }
-
-    .text-right {
-        text-align: right !important;
-    }
-
-    .text-left {
-        text-align: left !important;
-    }
-
-    .table-secondary {
-        background-color: #f5f5f5 !important;
-        font-weight: bold;
-    }
-
-    .table-active {
-        background-color: #e8e8e8 !important;
-        font-weight: bold;
-    }
-
-    /* Content Box */
+    /* --- 5. CONTENT UTILITIES --- */
     .content-box {
-        /* padding: 8px; */
-        /* border: 1px solid #ccc; */
-        /* background-color: #fafafa; */
-        margin-bottom: 8px;
-        min-height: 40px;
-        word-wrap: break-word;
         text-align: justify;
+        margin-bottom: 8px;
+    }
+    .content-box p {
+        margin-bottom: 5px;
     }
 
-    /* Alert Boxes */
+    .text-center { text-align: center !important; }
+    .text-right { text-align: right !important; }
+    .text-bold { font-weight: bold; }
+
+    /* --- 6. FOOTER STYLES --- */
+    .report-footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 8pt;
+        color: #0F7001; /* Footer Green */
+        border-top: 3px double #000;
+        padding-top: 10px;
+        page-break-inside: avoid;
+    }
+    .report-footer strong {
+        color: #0D654D;
+    }
+    .report-footer p {
+        margin: 2px 0;
+    }
+
+    /* --- 7. UI ELEMENTS (Buttons, Alerts) --- */
     .alert {
         padding: 8px 12px;
         margin-bottom: 10px;
@@ -181,260 +136,42 @@
         border-radius: 3px;
         font-size: 9pt;
     }
+    .alert-info { background-color: #d9edf7; color: #31708f; border-color: #bce8f1; }
 
-    .alert-info {
-        background-color: #d9edf7;
-        border-color: #bce8f1;
-        color: #31708f;
-    }
-
-    .alert-warning {
-        background-color: #fcf8e3;
-        border-color: #faebcc;
-        color: #8a6d3b;
-    }
-
-    .alert-secondary {
-        background-color: #e7e7e7;
-        border-color: #ddd;
-        color: #333;
-    }
-
-    /* Card Styles */
-    .card {
-        border: 1px solid #333;
-        margin-bottom: 12px;
-        page-break-inside: avoid;
-    }
-
-    .card-header {
-        background-color: #f0f0f0;
-        padding: 8px 12px;
-        border-bottom: 1px solid #333;
-        font-weight: bold;
-        font-size: 10pt;
-    }
-
-    .card-body {
-        padding: 12px;
-    }
-
-    /* Badges */
-    .badge {
-        display: inline-block;
-        padding: 3px 6px;
-        font-size: 8pt;
-        font-weight: bold;
-        border-radius: 2px;
-        border: 1px solid #333;
-    }
-
-    .badge-success {
-        background-color: #d4edda;
-        color: #155724;
-        border-color: #c3e6cb;
-    }
-
-    .badge-warning {
-        background-color: #fff3cd;
-        color: #856404;
-        border-color: #ffeaa7;
-    }
-
-    .badge-info {
-        background-color: #d1ecf1;
-        color: #0c5460;
-        border-color: #bee5eb;
-    }
-
-    .badge-secondary {
-        background-color: #e2e3e5;
-        color: #383d41;
-        border-color: #d6d8db;
-    }
-
-    .badge-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border-color: #f5c6cb;
-    }
-
-    .badge-lg {
-        padding: 5px 10px;
-        font-size: 9pt;
-    }
-
-    /* Signature Section */
-    .signature-section {
-        margin-top: 30px;
-        page-break-inside: avoid;
-    }
-
-    .signature-box {
-        padding: 12px;
-        text-align: center;
-    }
-
-    .signature-box p {
-        margin-bottom: 8px;
-    }
-
-    .signature-box strong {
-        font-size: 10pt;
-    }
-
-    .signature-box em {
-        font-size: 9pt;
-        color: #666;
-    }
-
-    /* Report Footer */
-    .report-footer {
-        /* margin-top: 20px;
-        padding-top: 12px;
-        border-top: 1px solid #ccc;
-        font-size: 8pt;
-        color: #666; */
-        margin-top: 30px;
-        padding-top: 10px;
-        border-top: 1px solid #ccc;
-        font-size: 8pt;
-        text-align: center;
-        color: #666;
-    }
-
-    /* Page Break Utilities */
-    .page-break {
-        page-break-before: always;
-    }
-
-    .no-break {
-        page-break-inside: avoid;
-    }
-
-    /* Row and Column Grid */
-    .row {
-        width: 100%;
-        margin-bottom: 8px;
-        display: table;
-    }
-
-    .row::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .col-md-6 {
-        width: 48%;
-        float: left;
-        padding: 0 1%;
-    }
-
-    .col-md-12 {
-        width: 100%;
-    }
-
-    /* Utilities */
-    .mb-0 { margin-bottom: 0; }
-    .mb-1 { margin-bottom: 3px; }
-    .mb-2 { margin-bottom: 5px; }
-    .mb-3 { margin-bottom: 8px; }
-    .mb-4 { margin-bottom: 12px; }
-    .mt-2 { margin-top: 5px; }
-    .mt-3 { margin-top: 8px; }
-    .mt-4 { margin-top: 12px; }
-    .mt-5 { margin-top: 15px; }
-    .pt-3 { padding-top: 8px; }
-    .pb-2 { padding-bottom: 5px; }
-
-    strong {
-        font-weight: bold;
-    }
-
-    em {
-        font-style: italic;
-    }
-
-    small {
-        font-size: 8pt;
-    }
-
-    .text-muted {
-        color: #666;
-    }
-
-    .text-primary {
-        color: #0056b3;
-        font-weight: bold;
-    }
-
-    .text-white {
-        color: #fff;
-    }
-
-    .border-top {
-        border-top: 1px solid #ccc;
-    }
-
-    .border-bottom {
-        border-bottom: 1px solid #ccc;
-    }
-
-    /* Print Button Styles */
+    /* Print Controls (Floating) */
     .print-controls {
         position: fixed;
-        top: 10px;
-        right: 10px;
+        top: 20px;
+        right: 20px;
         z-index: 9999;
         background: white;
         padding: 10px;
         border-radius: 5px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        display: block;
     }
 
-    .btn-print {
-        padding: 10px 20px;
-        background-color: #007bff;
+    .btn-print, .btn-close {
+        padding: 8px 15px;
         color: white;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-size: 13px;
-        margin-right: 5px;
-        font-family: Arial, sans-serif;
+        margin-left: 5px;
     }
+    .btn-print { background-color: #007bff; }
+    .btn-close { background-color: #6c757d; }
 
-    .btn-print:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-close {
-        padding: 10px 20px;
-        background-color: #6c757d;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 13px;
-        font-family: Arial, sans-serif;
-    }
-
-    .btn-close:hover {
-        background-color: #545b62;
-    }
-
-    /* Hide elements when printing */
+    /* --- 8. MEDIA QUERIES --- */
     @media print {
         body {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
-            /* width: 600px; */
-            max-width: 100%;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            background-color: white !important;
         }
 
-        .no-print,
-        .print-controls {
+        .print-controls, .no-print {
             display: none !important;
         }
 
@@ -442,74 +179,83 @@
             page-break-before: always;
         }
 
-        .no-break {
-            page-break-inside: avoid;
-        }
-
+        /* Ensure links don't show blue/underlined in print unless intended */
         a {
             text-decoration: none;
             color: inherit;
         }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #000 !important;
-        }
-
-        /* Ensure tables don't break */
-        table {
-            page-break-inside: auto;
-        }
-
-        tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-        }
-
-        thead {
-            display: table-header-group;
-        }
-
-        tfoot {
-            display: table-footer-group;
-        }
+    }
+/* --- 9. GALLERY STYLES (Added) --- */
+    .media-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -5px; /* Negative margin for gutter */
     }
 
-    /* Word Wrap for Long Content */
-    td, th, p, div {
+    .media-item {
+        width: 33.333%; /* 3 Columns */
+        padding: 0 5px;
+        margin-bottom: 15px;
+        page-break-inside: avoid; /* Prevent cutting images in half on print */
+        box-sizing: border-box;
+    }
+    
+    td.media-item {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .media-card {
+        border: 1px solid #ccc;
+        background: #fff;
+        padding: 5px;
+        height: 100%;
+    }
+
+    .media-img-container {
+        width: 100%;
+        height: 150px; /* Fixed height for uniformity */
+        background-color: #f0f0f0;
+        overflow: hidden;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .media-img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensures image covers the box without stretching */
+        display: block;
+    }
+    
+    /* Icon fallback for non-images in gallery */
+    .media-icon-placeholder {
+        font-size: 30pt;
+        color: #ccc;
+    }
+
+    .media-caption {
+        font-size: 8pt;
+        text-align: center;
+        line-height: 1.2;
+        padding: 3px;
         word-wrap: break-word;
-        overflow-wrap: break-word;
-        hyphens: auto;
     }
 
-    /* Prevent overflow */
-    * {
-        max-width: 100%;
-    }
-    .print-controls,
-    .no-print {
-        display: none !important;
+    .media-meta {
+        font-size: 7pt;
+        color: #666;
+        text-align: center;
+        margin-top: 2px;
     }
 
-    /* Override for screen view only */
-    @media screen {
-        .print-controls {
-            display: block !important;
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 9999;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-    }
-
-    /* Hide for PDF generation and print */
+    /* Print adjustment for gallery */
     @media print {
-        .print-controls {
-            display: none !important;
+        .media-img-container {
+            border: 1px solid #ccc; /* Ensure border prints */
         }
     }
+
 </style>
