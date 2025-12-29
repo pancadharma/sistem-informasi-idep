@@ -4,37 +4,46 @@
             <thead>
                 <tr>
                     <th style="width: 5%;">No</th>
-                    <th style="width: 18%;">Location Name</th>
-                    <th style="width: 15%;">Village/Ward</th>
-                    <th style="width: 15%;">Sub-District</th>
-                    <th style="width: 17%;">District</th>
-                    <th style="width: 15%;">Province</th>
-                    <th style="width: 15%;">Coordinates</th>
+                    <th style="width: 18%;">{{ __('btor.lokasi') }}</th>
+                    <th style="width: 15%;">{{ __('btor.desa') }}</th>
+                    <th style="width: 15%;">{{ __('btor.kecamatan') }}</th>
+                    <th style="width: 17%;">{{ __('btor.kabupaten') }}</th>
+                    <th style="width: 15%;">{{ __('btor.provinsi') }}</th>
+                    <th style="width: 15%;">{{ __('btor.koordinat') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($kegiatan->lokasi as $index => $lokasi)
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td>{{ $lokasi->lokasi ?? '-' }}</td>
+                        <td>
+                            @if ($lokasi->lat && $lokasi->long)
+                                <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
+                                    {{ ucwords(strtoupper($lokasi->lokasi ?? 'Maps')) }}
+                                </a>
+                            @else
+                                {{ $lokasi->lokasi ?? '—' }}
+                            @endif
+                        </td>
+                        
                         <td>{{ $lokasi->desa?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '-' }}</td>
                         <td class="text-center">
                             @if($lokasi->lat && $lokasi->long)
-                                {{ number_format($lokasi->lat, 4) }},{{ number_format($lokasi->long, 4) }}
+                                {{ number_format($lokasi->lat, 8) }},{{ number_format($lokasi->long, 8) }}
                             @else
                                 -
                             @endif
-
+{{-- 
                             @if ($lokasi->lat && $lokasi->long)
                                 <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
                                     {{ ucwords(strtolower($lokasi->lokasi ?? 'Maps')) }}
                                 </a>
                             @else
                                 {{ $lokasi->lokasi ?? '—' }}
-                            @endif
+                            @endif --}}
                         </td>
                     </tr>
                 @endforeach
