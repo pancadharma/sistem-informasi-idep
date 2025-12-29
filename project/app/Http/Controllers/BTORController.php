@@ -13,7 +13,9 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\SimpleType\Jc;
-
+use PhpOffice\PhpWord\SimpleType\JcTable;
+use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
+use PhpOffice\PhpWord\Writer\Word2007\Element\ParagraphAlignment;
 
 class BTORController extends Controller
 {
@@ -235,6 +237,74 @@ class BTORController extends Controller
             // Create PHPWord document
             $phpWord = new PhpWord();
             $section = $phpWord->addSection();
+            // ✅ ADD HEADER (repeats on every page)
+            $header = $section->addHeader();
+
+            $section = $phpWord->addSection([
+                // Body content uses these margins
+                'marginTop' => 1417,       // 2.5 cm
+                'marginBottom' => 1417,    // 2.5 cm
+                'marginLeft' => 1417,      // 2.5 cm
+                'marginRight' => 1417,     // 2.5 cm
+                
+                // Header has its own space
+                'headerHeight' => 283,    // 2 cm for header image
+                'headerDistance' => 283,   // 0.5 cm gap after header
+                
+                // Footer has its own space
+                'footerHeight' => 567,     // 1 cm for footer
+                'footerDistance' => 283,   // 0.5 cm gap before footer
+
+                // 'headerFromTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 1.5 cm dari tepi atas
+
+                // // 3. MARGIN FOOTER (Posisi Footer dari tepi bawah kertas)
+                // // Harus lebih kecil dari marginBottom
+                // 'footerFromBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1),
+            ]);
+
+            
+            
+            $imagePath = public_path('images/uploads/header.png');
+            if (file_exists($imagePath)) {
+                $header->addImage($imagePath, [
+                    'width' => 395,      // Width in pixels
+                    'height' => 38,         // Height in pixels 
+                    'alignment' => 'center'
+                ]);
+            } else {
+                // Fallback text if image not found
+                $header->addText('YAYASAN IDEP', ['bold' => true, 'size' => 14]);
+            }
+
+            // ✅ ADD FOOTER (repeats on every page)
+            $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
+
+            $footerStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 8, 'color' => '0D654D'];
+            $footerBodyStyle = ['name' => 'Tahoma', 'size' => 8, 'color' => '0F7001'];
+            $pStyle = [
+                'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+                'spaceBefore' => 0.25,
+                'spaceAfter' => 0.25,
+                'lineHeight' => 1.0
+            ];
+
+            $footerLineStyle = [
+                'borderBottomStyle' => 'thinThickMediumGap', 
+                'borderBottomSize'  => 25,
+                'borderBottomColor' => '000000',
+                'spaceBefore'    => 1,
+                'lineHeight' => 1.0,
+                'spaceAfter'     => 1,
+                'alignment'      => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+            ];
+
+            $footer = $section->addFooter();
+
+            $footer->addText('', [], $footerLineStyle);
+            $footer->addPreserveText('Yayasan IDEP Selaras Alam', $footerStyle, $pStyle);
+            $footer->addPreserveText('Office &amp; Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia', $footerBodyStyle, $pStyle);
+            $footer->addPreserveText(' Telp/Fax : +62-361-908-2983 / +62-812 4658 5137', $footerBodyStyle, $pStyle);
+            $footer->addPreserveText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), $footerBodyStyle, $pStyle);
 
             // Add document content
             $this->addDocxHeader($section, $kegiatan);
@@ -312,88 +382,6 @@ class BTORController extends Controller
         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
         return $pdf->download($filename);
     }
-
-    // public function exportBulkDocx(Request $request)
-    // {
-    //     $ids = is_string($request->input('ids')) 
-    //         ? array_filter(explode(',', $request->input('ids')))
-    //         : $request->input('ids', []);
-
-    //     if (empty($ids)) {
-    //         return redirect()->back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
-    //     }
-
-    //     // FIX: Limit bulk exports to prevent timeout
-    //     if (count($ids) > 20) {
-    //         return redirect()->back()->with('error', 'Maksimal 20 laporan sekaligus. Silakan split menjadi beberapa batch.');
-    //     }
-
-    //     $tmpDoc = null;
-    //     try {
-    //         // Create single DOCX with multiple sections
-    //         $phpWord = new PhpWord();
-
-    //         $first = true;
-    //         foreach ($ids as $index => $id) {
-    //             // Add page break between reports (except first)
-    //             if (!$first) {
-    //                 $phpWord->addSection();
-    //             }
-    //             $first = false;
-
-    //             // Load kegiatan
-    //             $kegiatan = BTOR::getData($id);
-                
-    //             // Ensure relationships loaded
-    //             $this->ensureRelationshipsLoaded($kegiatan);
-                
-    //             // Get section
-    //             $sections = $phpWord->getSections();
-    //             $section = $sections[count($sections) - 1];
-
-    //             // Add content
-    //             $this->addDocxHeader($section, $kegiatan);
-    //             $this->addDocxContent($section, $kegiatan);
-    //         }
-
-    //         // Generate temp file
-    //         $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_bulk_' . time() . '_');
-    //         if (!$tmpDoc) {
-    //             throw new \Exception('Tidak dapat membuat file temporary');
-    //         }
-
-    //         // Save
-    //         $phpWord->save($tmpDoc, 'Word2007');
-
-    //         if (!file_exists($tmpDoc) || filesize($tmpDoc) === 0) {
-    //             throw new \Exception('File DOCX bulk tidak terbuat dengan benar');
-    //         }
-
-    //         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('YmdHis') . '.docx';
-
-    //         // FIX: Clean output buffers
-    //         if (ob_get_level() > 0) {
-    //             ob_end_clean();
-    //         }
-
-    //         return response()->download($tmpDoc, $filename)
-    //             ->deleteFileAfterSend(true);
-
-    //     } catch (\Exception $e) {
-    //         Log::error('BTOR Bulk DOCX Export Error', [
-    //             'ids' => $ids,
-    //             'count' => count($ids),
-    //             'error' => $e->getMessage(),
-    //             'trace' => $e->getTraceAsString()
-    //         ]);
-
-    //         if ($tmpDoc && file_exists($tmpDoc)) {
-    //             @unlink($tmpDoc);
-    //         }
-
-    //         return redirect()->back()->with('error', 'Gagal mengekspor bulk laporan: ' . $e->getMessage());
-    //     }
-    // }
     
     public function exportBulkDocx(Request $request)
     {
@@ -458,31 +446,50 @@ class BTORController extends Controller
 
     private function addDocxHeader($section, $kegiatan)
     {
-        // Title
-        $section->addText('BACK TO OFFICE REPORT', ['bold' => true, 'size' => 16, 'alignment' => new Jc(Jc::CENTER)]);
-        $section->addTextBreak(1);
+        $reportTitleStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $hBodyStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+
+        $hStyle = [
+            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
+            'spaceBefore' => 0.25,
+            'spaceAfter' => 0.25,
+            'lineHeight' => 1.0,
+        ];
+
+        $borderStyle = [
+            'lineHeight' => 1.5,
+            'borderTopSize'  => 10, // Pakai Bottom untuk di bawah teks
+            'borderTopColor' => '000000',
+            'borderTopStyle' => 'single', // Style tebal-tipis yang tadi
+            'spaceAfter'        => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(6),
+            'spaceBefore'        => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(6),
+            'alignment'         => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+        ];
+        
+        $section->addPreserveText('BACK TO OFFICE REPORT', $reportTitleStyle, ['alignment' => Jc::CENTER]);
 
         // Basic information with proper null handling and encoding
         $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
         
-        $section->addText('Departemen : Program', ['size' => 11]);
-        $section->addText('Program : ' . $this->safeValue($program?->nama), ['size' => 11]);
-        $section->addText('Nama Kegiatan : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->nama), ['size' => 11]);
-        $section->addText('Kode budget : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->kode), ['size' => 11]);
+        $section->addText('Departemen : Program', $hBodyStyle, $hStyle) ;
+        $section->addText('Program : ' . $this->safeValue($program?->nama), $hBodyStyle, $hStyle);
+        $section->addText('Nama Kegiatan : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->nama), $hBodyStyle, $hStyle);
+        $section->addText('Kode budget : ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->kode), $hBodyStyle, $hStyle);
 
         // Penulis (authors)
         $penulis = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
             ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->user?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Penulis laporan : ' . $penulis, ['size' => 11]);
+        $section->addText('Penulis laporan : ' . $penulis, $hBodyStyle, $hStyle);
 
         // Jabatan (positions)
         $jabatan = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
             ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->peran?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Jabatan : ' . $jabatan, ['size' => 11]);
+        $section->addText('Jabatan : ' . $jabatan, $hBodyStyle, $hStyle);
         
-        $section->addTextBreak(1);
+        $section->addText('', [], $borderStyle);
+        
     }
 
     /**
@@ -495,6 +502,7 @@ class BTORController extends Controller
      */
     private function addDocxContent($section, $kegiatan)
     {
+
         // A. Latar Belakang
         $section->addText('A. Latar Belakang Kegiatan', ['bold' => true, 'size' => 12]);
         $section->addText($this->safeText($kegiatan->deskripsilatarbelakang), ['size' => 11]);
@@ -603,12 +611,6 @@ class BTORController extends Controller
             $section->addText('Tidak ada dokumen pendukung.', ['size' => 11]);
         }
         $section->addTextBreak(2);
-
-        // Footer
-        $section->addText('Yayasan IDEP Selaras Alam', ['bold' => true, 'size' => 9, 'alignment' => new Jc(Jc::CENTER)]);
-        $section->addText('Office Demosite Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali Indonesia', ['size' => 8, 'alignment' => new Jc(Jc::CENTER)]);
-        $section->addText('Telp/Fax 62-361-908-2983 | 62-812 4658 5137', ['size' => 8, 'alignment' => new Jc(Jc::CENTER)]);
-        $section->addText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), ['size' => 8, 'alignment' => new Jc(Jc::CENTER)]);
     }
 
 
