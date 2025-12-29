@@ -165,6 +165,34 @@
 						columns: ':not(.no-colvis)',
 						className: 'btn btn-warning',  // Assign class to specify it goes to the left
 					},
+                    {
+                        extend: "excelHtml5",
+                        text: '<i class="fas fa-file-excel"></i> <span class="d-none d-md-inline"></span>',
+                        className: 'btn btn-info',
+                        attr: {
+                            id: 'exportXLSX',
+                            title: 'Click to export Excel',
+                        },
+                        title: function() {
+                            let reportDate = Date.now();
+                            return `Target Progress History - ${reportDate}`;
+                        },
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                            format: {
+                                body: function ( data, row, column, node ) {
+                                    let input = $(node).find('input, textarea, select').first();
+                                    if (input.length) {
+                                        if (input.hasClass('select2-hidden-accessible')) {
+                                            return input.find('option:selected').text();
+                                        }
+                                        return input.val();
+                                    }
+                                    return $(node).text();
+                                }
+                            }
+                        }
+                    },
 				],
 				columnDefs: [
 					{

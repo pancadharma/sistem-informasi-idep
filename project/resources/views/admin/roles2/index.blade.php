@@ -1,28 +1,28 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Roles')
-@section('content_header_title', 'Roles')
-@section('sub_breadcumb', 'Roles')
+@section('subtitle', __('global.list') .' '. __('menu.role'))
+@section('content_header_title', __('global.list') .' '. __('menu.role'))
+@section('sub_breadcumb', __('global.list') .' '. __('menu.role'))
 
 @section('content_body')
 
 <div class="row mb-2">
     <div class="col-lg-12">
-        <x-adminlte-button label="{{ __('global.add') }} Role" data-toggle="modal" data-target="#role-modal" class="bg-success" id="add-role-btn"/>
+        <x-adminlte-button label="{{ __('global.add') . ' ' . __('cruds.role.title') }}" data-toggle="modal" data-target="#role-modal" class="bg-success" id="add-role-btn"/>
     </div>
 </div>
 
 <div class="card card-outline card-primary">
     <div class="card-header">
-        <h2 class="card-title">Roles</h2>
+        <h2 class="card-title">{{ __('menu.role')}}</h2>
     </div>
     <div class="card-body table-responsive">
         <table id="roles-table" class="table table-bordered table-striped table-hover row-border display compact responsive nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th width="10"></th>
-                    <th>Name</th>
-                    <th>Permissions</th>
+                    <th>{{ __('cruds.role.title') }}</th>
+                    <th>{{ __('cruds.permission.title') }}</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
@@ -30,18 +30,18 @@
     </div>
 </div>
 
-<x-adminlte-modal id="role-modal" title="Add Role" size="lg" theme="teal" icon="fas fa-user-tag" v-centered static-backdrop scrollable>
+<x-adminlte-modal id="role-modal" title="{{ __('global.add') . ' ' . __('cruds.role.title') }}" size="lg" theme="teal" icon="fas fa-user-tag" v-centered static-backdrop scrollable>
     <form id="role-form">
         <input type="hidden" id="role-id">
         <div class="mb-3">
-            <label for="role-name" class="form-label">Role Name</label>
+            <label for="role-name" class="form-label">{{ __('cruds.role.fields.nama') }}</label>
             <input type="text" class="form-control" id="role-name" required>
         </div>
         <div class="mb-3">
-            <label for="permissions-checkboxes" class="form-label">Permissions</label>
+            <label for="permissions-checkboxes" class="form-label">{{ __('cruds.role.fields.permissions') }}</label>
             <div class="mb-2">
-                <button type="button" class="btn btn-sm btn-secondary" id="select-all-permissions">Select All</button>
-                <button type="button" class="btn btn-sm btn-secondary" id="deselect-all-permissions">Deselect All</button>
+                <button type="button" class="btn btn-sm btn-secondary" id="select-all-permissions">{{ __('global.select_all') }}</button>
+                <button type="button" class="btn btn-sm btn-secondary" id="deselect-all-permissions">{{ __('global.deselect_all') }}</button>
             </div>
             <div id="permissions-checkboxes" class="row"></div>
         </div>
@@ -52,7 +52,7 @@
     </x-slot>
 </x-adminlte-modal>
 
-<x-adminlte-modal id="view-permissions-modal" title="View Permissions" size="lg" theme="info" icon="fas fa-eye" v-centered static-backdrop scrollable>
+<x-adminlte-modal id="view-permissions-modal" title="{{ __('global.view') . ' ' . __('cruds.role.fields.permissions') }}" size="lg" theme="info" icon="fas fa-eye" v-centered static-backdrop scrollable>
     <div id="permissions-list"></div>
     <x-slot name="footerSlot">
         <x-adminlte-button theme="danger" label="{{ __('global.close') }}" data-dismiss="modal"/>
@@ -157,7 +157,7 @@
                     success: function(data) {
                         $('#role-id').val(data.id);
                         $('#role-name').val(data.nama);
-                        $('#role-modal .modal-title').text('Edit Role');
+                        $('#role-modal .modal-title').text('{{ __('global.edit') . ' ' . __('cruds.role.title') }}');
 
                         var selectedPermissions = data.permissions.map(function(p) { return p.id; });
                         console.log('Data from server for edit:', data);
@@ -179,11 +179,14 @@
                         var permissionsList = $('#permissions-list');
                         permissionsList.empty();
                         if (data.permissions && data.permissions.length > 0) {
-                            var list = '<ul class="list-group list-group-flush">';
-                            data.permissions.forEach(function(p) {
-                                list += '<li class="list-group-item">' + p.nama + '</li>';
+                            var list = '<div class="row">';
+                            data.permissions.forEach(function(p, index) {
+                                if (index % 3 === 0 && index !== 0) {
+                                    list += '</div><div class="row">';
+                                }
+                                list += '<div class="col-lg-4"><ul class="list-group list-group-flush"><li class="list-group-item">' + p.nama + '</li></ul></div>';
                             });
-                            list += '</ul>';
+                            list += '</div>';
                             permissionsList.html(list);
                         } else {
                             permissionsList.html('No permissions assigned.');
@@ -275,12 +278,17 @@
                                 table.ajax.reload();
                             },
                             error: function (xhr) {
-                                Swal.fire(
-                                    'Error!',
-                                    'There was an error deleting the role.',
-                                    'error'
-                                );
-                                console.error(xhr);
+                                let errorMessage = 'An unknown error occurred.';
+                                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join('\n');
+                                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: errorMessage,
+                                });
                             }
                         });
                     }

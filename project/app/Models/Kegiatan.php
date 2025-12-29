@@ -10,6 +10,7 @@ use Spatie\Image\Enums\Fit;
 
 use App\Models\Jenis_Kegiatan;
 use App\Models\TargetReinstra;
+use App\Models\Kegiatan_Penulis;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Activitylog\LogOptions;
 use GedeAdi\Permission\Traits\HasRoles;
@@ -173,6 +174,10 @@ class Kegiatan extends Model implements HasMedia
 
     public function getDurationInDays()
     {
+
+        if (!$this->tanggalmulai || !$this->tanggalselesai) {
+            return 0;
+        }
         return Carbon::parse($this->tanggalmulai)
             ->diffInDays(Carbon::parse($this->tanggalselesai));
     }
@@ -287,6 +292,7 @@ class Kegiatan extends Model implements HasMedia
     public function monitoring()
     {
         return $this->hasOne(Kegiatan_Monitoring::class, 'kegiatan_id');
+        // return $this->hasMany(Kegiatan_Monitoring::class, 'kegiatan_id');
     }
     public function pelatihan()
     {
@@ -328,6 +334,10 @@ class Kegiatan extends Model implements HasMedia
     }
 
     public function sektor()
+    {
+        return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
+    }
+    public function target_reinstra()
     {
         return $this->belongsToMany(TargetReinstra::class, 'trkegiatan_sektor', 'kegiatan_id', 'sektor_id');
     }

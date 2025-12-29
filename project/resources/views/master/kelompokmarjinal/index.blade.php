@@ -6,15 +6,17 @@
 
 @section('content_body')
     <div class="card card-primary collapsed-card">
-            <div class="card-header">
-                {{ trans('global.create')}} {{trans('cruds.kelompokmarjinal.title')}}
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
+            @can('marjinal_create')
+                <div class="card-header">
+                    {{ trans('global.create')}} {{trans('cruds.kelompokmarjinal.title')}}
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-                <div class="card-body">
+            @endcan
+            <div class="card-body">
                 <form action="{{ route('kelompokmarjinal.store')}}" method="POST" class="resettable-form" id="kelompokmarjinalForm" autocomplete="off">
                     @csrf
                     @method('POST')
@@ -48,15 +50,10 @@
                             });
                         }
                     });
-                    </script>
-
-
-
-
-
+                </script>
 
             </div>
-        </div>
+    </div>
     <div class="card card-outline card-primary">
         <div class="card-body">
             <table id="kelompokmarjinal" class="table table-bordered cell-border ajaxTable datatable-kelompokmarjinal" style="width:100%">

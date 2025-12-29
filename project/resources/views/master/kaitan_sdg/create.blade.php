@@ -1,4 +1,5 @@
 <div id="add_kaitan_sdg" class="card card-primary collapsed-card">
+    @can('sdg_create')
     <div class="card-header">
         {{ trans('global.create') }} {{ trans('cruds.kaitan_sdg.title') }}
         <div class="card-tools">
@@ -7,6 +8,7 @@
             </button>
         </div>
     </div>
+    @endcan
     <div class="card-body">
         <form action="{{ route('kaitan_sdg.store') }}" method="POST" class="resettable-form" id="kaitanSdgForm" autocomplete="off">
             @csrf

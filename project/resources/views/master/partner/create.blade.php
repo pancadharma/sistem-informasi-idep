@@ -1,15 +1,16 @@
 <div id="add_partner" class="card card-primary collapsed-card">
+    {{-- limit which user can view this button to open the form create partner --}}
+    @can('partner_create')
     <div class="card-header">
         {{ trans('global.create')}} {{trans('cruds.partner.title')}}
         <div class="card-tools">
-            {{-- limit which user can view this button to open the form create partner --}}
-            @can('partner_create')
+            
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                 <i class="fas fa-plus"></i>
             </button>
-            @endcan
         </div>
     </div>
+    @endcan
     <div class="card-body">
         {{-- Add Role Form --}}
         <form id="AddPartnerForm" method="POST" class="resettable-form" data-toggle="validator" autocomplete="off"  @submit.prevent="handleSubmit" novalidate>

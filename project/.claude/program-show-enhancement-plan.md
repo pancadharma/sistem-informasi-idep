@@ -66,12 +66,12 @@ The current `show.blade.php` is very basic, showing only:
 ### Phase 6: Enhanced Data Display ✅
 - [x] **Target Groups**
   - [x] Marginalized groups served
-  - [x] SDGs alignment
+  - [x] SDGs alignment -> Please AI Ignore this works
   - [x] Target reinstra integration
 
 ### Phase 7: Documents & Media ✅
 - [x] **Supporting Documents**
-  - [x] File uploads and attachments
+  - [x] File uploads and attachments media
   - [x] Document categories
   - [x] Download/preview capabilities
 

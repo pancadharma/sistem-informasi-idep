@@ -5,22 +5,22 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
-    'name'            => env('APP_NAME', 'IDEP Foundation'),
-    'env'             => env('APP_ENV', 'production'),
-    'debug'           => (bool) env('APP_DEBUG', false),
-    'url'             => env('APP_URL', 'http://localhost'),
-    'asset_url'       => env('ASSET_URL'),
-    'timezone'        => 'Asia/Singapore',
-    'locale'          => 'id',
+    'name' => env('APP_NAME', 'IDEP Foundation'),
+    'env' => env('APP_ENV', 'production'),
+    'debug' => (bool) env('APP_DEBUG', false),
+    'url' => env('APP_URL', 'http://localhost'),
+    'asset_url' => env('ASSET_URL'),
+    'timezone' => 'Asia/Singapore',
+    'locale' => 'id',
     'fallback_locale' => 'id',
-    'faker_locale'    => 'en_US',
-    'key'             => env('APP_KEY'),
-    'cipher'          => 'AES-256-CBC',
-    'maintenance'     => [
-        'driver'      => 'file',
+    'faker_locale' => 'en_US',
+    'key' => env('APP_KEY'),
+    'cipher' => 'AES-256-CBC',
+    'maintenance' => [
+        'driver' => 'file',
         // 'store'    => 'redis',
     ],
-    'providers'       => ServiceProvider::defaultProviders()->merge([
+    'providers' => ServiceProvider::defaultProviders()->merge([
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -44,7 +44,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -60,9 +60,10 @@ return [
         App\Providers\RepositoryServiceProvider::class,
     ])->toArray(),
 
-    'aliases'         => Facade::defaultAliases()->merge([
+    'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'App' => Illuminate\Support\Facades\App::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
 ];

@@ -1,537 +1,3071 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.details') . ' ' . __('cruds.program.title_singular'). ' '. $program->nama ?? '')
-@section('content_header_title', __('cruds.program.outcome.list_program').' '. $program->nama ?? '')
-@section('sub_breadcumb', __('cruds.program.title_singular'))
+@section('subtitle', __('global.details') . ' ' . __('cruds.program.title'))
+@section('content_header_title', __('global.details') .' '. $program->nama ?? '' . ' ' . __('cruds.program.title'))
 
 @section('content_body')
-<div class="row">
-    <div class="col-md-3">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.outcome.label') }}</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
-                </div>
+
+<!-- Program Header Section -->
+<div class="card card-outline card-primary mb-4"
+     data-program-id="{{ $program->id }}"
+     data-program-name="{{ $program->nama }}"
+     data-program-code="{{ $program->kode }}"
+     data-program-status="{{ $program->status }}"
+     data-program-start="{{ $program->tanggalmulai }}"
+     data-program-end="{{ $program->tanggalselesai }}"
+     data-program-budget="{{ $program->totalnilai }}"
+     data-program-description="{{ str_replace('"', '&quot;', strip_tags($program->deskripsiprojek)) }}"
+     data-program-analysis="{{ str_replace('"', '&quot;', strip_tags($program->analisamasalah)) }}">
+    <div class="card-header d-flex align-items-center">
+        {{-- <div class="d-flex align-items-center">
+            <a class="btn btn-outline-secondary mr-3" href="{{ route('program.index') }}">
+                <i class="fas fa-arrow-left"></i> {{ __('global.back') }}
+            </a>
+            <div>
+                <h2 class="mb-0">{{ $program->nama ?? '' }}</h2>
             </div>
-            <div class="card-body p-0">
-                <ul class="nav nav-pills flex-column">
-                    @forelse ($outcomes as $index => $outcome)
-                    <li class="nav-item">
-                        <button type="button" class="nav-link btn text-left btn-block btn-list-outcome waves-effect waves-teal" data-index="{{ $index + 1 }}" data-outcome-id="{{ $outcome->id }}" data-action="load">
-                            {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}
-                            <!-- <i class="far fa-envelope float-right align-middle mt-2"></i> -->
-                            <i class="bi bi-box-arrow-in-right text-danger float-right align-middle mt-2" title="{{ __('global.details') }} {{ __('cruds.program.outcome.out_program') }} {{ $index + 1 }}"></i>
-                        </button>
-                    </li>
-                    @empty
-                    <div class="nav flex-column nav-tabs h-100">
-                        <button type="button" class="btn btn-block"></i>No Outcome</button>
-                    </div>
-                    @endforelse
-                </ul>
-            </div>
+        </div> --}}
+        <div class="card-title">
+            <h3 class="text-muted pr-2">
+                {{-- {{ __('cruds.program.kode') }}:  --}}
+                {{ $program->kode }}</h3>
         </div>
-        <div class="card card-info">
-            <div class="card-header">
-                <h3 class="card-title">{{ __('cruds.program.title_singular') }}</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                            class="fas fa-minus"></i></button>
+        <div class="{{-- card-tools --}} ml-auto">
+            <span class="badge badge-lg {{ $program->status === 'running' ? 'bg-success' : ($program->status === 'pending' ? 'bg-warning' : ($program->status === 'complete' ? 'bg-info' : 'bg-secondary')) }}">
+                {{ strtoupper($program->status) }}
+            </span>
+
+            <!-- Export Dropdown -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-info dropdown-toggle" data-toggle="dropdown">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="#" onclick="exportProgram('pdf')">
+                        <i class="fas fa-file-pdf"></i> Export as PDF
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgram('excel')">
+                        <i class="fas fa-file-excel"></i> Export as Excel
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgram('json')">
+                        <i class="fas fa-file-code"></i> Export as JSON
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('beneficiaries')">
+                        <i class="fas fa-users"></i> Export Beneficiaries Data
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('progress')">
+                        <i class="fas fa-chart-line"></i> Export Progress Report
+                    </a>
+                    <a class="dropdown-item" href="#" onclick="exportProgramData('activities')">
+                        <i class="fas fa-tasks"></i> Export Activities Data
+                    </a>
                 </div>
             </div>
-            {{-- show objective and goals --}}
-            <div class="accordion" id="programObjectiveGoals">
-                <div class="card mb-0">
-                    <div class="card-header" id="cardObjective">
-                        <button class="btn-link btn text-left btn-block pt-0 pb-0 pr-0 pl-0" type="button" data-toggle="collapse" data-target="#objectiveData" aria-expanded="true" aria-controls="objectiveData">
-                            <h5 class="card-title">{{ __('cruds.program.objective.label') }}</h5>
-                        </button>
-                    </div>
 
-                    <div id="objectiveData" class="collapse show" aria-labelledby="cardObjective"
-                        data-parent="#programObjectiveGoals">
-                        <div class="card-body">
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->objektif->deskripsi ?? '') }}
-                                </p>
-                            </div>
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->objektif->indikator ?? '') }}
-                                </p>
-                            </div>
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->objektif->target ?? '') }}
-                                </p>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-0">
-                    <div class="card-header" id="cardGoals">
-                        <button class="btn-link btn text-left btn-block pt-0 pb-0 pr-0 pl-0" type="button" data-toggle="collapse" data-target="#goalsData" aria-expanded="false" aria-controls="goalsData">
-                            <h5 class="card-title">{{ __('cruds.program.goals.label') }}</h5>
-                        </button>
-                    </div>
-                    <div id="goalsData" class="collapse" aria-labelledby="cardGoals" data-parent="#programObjectiveGoals">
-                        <div class="card-body">
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.desc') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->goal->deskripsi ?? '') }}
-                                </p>
-                            </div>
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.indicator') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->goal->indikator ?? '') }}
-                                </p>
-                            </div>
-                            <div class="text-wrap">
-                                <div class="label font-weight-bold">{{ __('cruds.program.objective.target') }}</div>
-                                <p class="text-break">
-                                    {{ old('goal', $program->goal->target ?? '') }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @can('program_edit')
+            <a href="{{ route('program.edit', $program->id) }}" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            @endcan
         </div>
     </div>
-    <div class="col-md-9">
-        <div class="card card-primary card-outline hide" id="outcomeData">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col pl-2">
-                        <h3 class="card-title pt-2">
-                            {{ __('global.details') . ' ' . __('cruds.program.outcome.out_program') }} <span id="outcome-title"></span>
-                        </h3>
+    <div class="card-body">
+        <!-- Quick Stats Row -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="info-box bg-primary">
+                    <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">{{ __('cruds.program.expektasi') }}</span>
+                        <span class="info-box-number">{{ $totalBeneficiaries }}</span>
                     </div>
                 </div>
             </div>
-            {{-- showing outcome details after clicking --}}
-            <div class="card-body hide" id="detail_outcome">
-                <div class="row">
-                    <div class="input-field col-lg-4">
-                        {{-- <input id="deskripsi" name="deskripsi" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.desc') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.desc') }}"> --}}
-                        {{-- <label for="deskripsi">{{ __('cruds.program.outcome.desc') }}</label> --}}
-                        <div class="text-wrap">
-                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.desc') }}</div>
-                            <p class="text-break">
-                                <span id="deskripsi" name="deskripsi"></span>
-                            </p>
-                        </div>
-
+            <div class="col-md-3 col-sm-6">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-calendar-alt"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Duration</span>
+                        <span class="info-box-number">{{ $durationInDays }} Days</span>
                     </div>
-                    <div class="input-field col-lg-4">
-                        {{-- <input id="indikator" name="indikator" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.indicator') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.indicator') }}">
-                        <label for="indikator">{{ __('cruds.program.outcome.indicator') }}</label> --}}
-                        <div class="text-wrap">
-                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.indicator') }}</div>
-                            <p class="text-break">
-                                <span id="indikator" name="indikator"></span>
-                            </p>
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="info-box bg-info">
+                    <span class="info-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Locations</span>
+                        <span class="info-box-number">{{ $program->lokasi()->count() }}</span>
                     </div>
-                    <div class="input-field col-lg-4">
-                        {{-- <input id="target" name="target" type="text" class="validate" readonly placeholder="{{ __('cruds.program.outcome.target') }}" data-toggle="tooltip" data-placement="top" data-position="top" data-tooltip="{{ __('cruds.program.outcome.target') }}">
-                        <label for="target">{{ __('cruds.program.outcome.target') }}</label> --}}
-                        <div class="text-wrap">
-                            <div class="label font-weight-bold">{{ __('cruds.program.outcome.target') }}</div>
-                            <p class="text-break">
-                                <span id="target" name="target"></span>
-                            </p>
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="info-box bg-warning">
+                    <span class="info-box-icon"><i class="fas fa-dollar-sign"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Budget</span>
+                        <span class="info-box-number">{{ number_format($program->totalnilai, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- hidden detail output --}}
-        <div class="card card-outline card-primary hide" id="list_output">
-            <div class="card-header pr-0 pl-3">
-                <div class="row">
-                    <div class="col">
-                        <h3 class="card-title pt-2"><i class="fas fa-list-ul"></i> {{ __('cruds.program.output.list') }} {{ __('cruds.program.outcome.of_outcome') }} <span id="outcome-number"></span></h3>
+
+        <!-- Timeline Info -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-xl-6">
+                <div class="small-box bg-light">
+                    <div class="inner">
+                        <h4>Start Date</h4>
+                        <p>{{ $program->tanggalmulai }}</p>
                     </div>
-                    <div class="col">
-                        <button type="button" data-target="modalAddOutput" class="btn btn-sm modal-trigger float-right waves-effect waves-teal btn-success" id="addOutputBtn" data-toggle="tooltip" data-position="top" data-tooltip=" {{ __('global.add'). ' ' . __('cruds.program.output.label') }}"><i class="bi bi-plus"></i>
-                            {{ __('global.add'). ' ' . __('cruds.program.output.label') }}
-                        </button>
-                    </div>
+                    {{-- <div class="icon">
+                        <i class="fas fa-play"></i>
+                    </div> --}}
                 </div>
             </div>
-            <div class="card-body pr-0 pl-0 pt-0">
-                <table id="outcome_output_list" class="highlight striped" style="width:100%">
-                    <thead class="">
-                        <tr>
-                            <th class="pl-3" width="30%">{{ __('Output Description') }}</th>
-                            <th width="30%">{{ __('Output Indicator') }}</th>
-                            <th width="30%">{{ __('Output Target') }}</th>
-                            <th width="10%" class="text-center">{{ __('Action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody id="row-output">
-
-                    </tbody>
-                </table>
+            <div class="col-md-3 col-sm-6 col-xl-6">
+                <div class="small-box bg-light">
+                    <div class="inner">
+                        <h4>End Date</h4>
+                        <p>{{ $program->tanggalselesai }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-@include('tr.program.detail.output-add-modal')
-{{-- @include('master.users.show-modal') --}}
+<!-- Program Details Tabs -->
+<div class="card">
+    <div class="card-header p-0">
+        <ul class="nav nav-tabs" id="programTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab">
+                    <i class="fas fa-info-circle"></i> Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="beneficiaries-tab" data-toggle="tab" href="#beneficiaries" role="tab">
+                    <i class="fas fa-users"></i> Beneficiaries
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="team-tab" data-toggle="tab" href="#team" role="tab">
+                    <i class="fas fa-user-friends"></i> Team
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="partners-tab" data-toggle="tab" href="#partners" role="tab">
+                    <i class="fas fa-handshake"></i> Partners
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="locations-tab" data-toggle="tab" href="#locations" role="tab">
+                    <i class="fas fa-map-marked-alt"></i> Locations
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="structure-tab" data-toggle="tab" href="#structure" role="tab">
+                    <i class="fas fa-sitemap"></i> Structure
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab">
+                    <i class="fas fa-folder-open"></i> Documents
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="progress-tab" data-toggle="tab" href="#progress" role="tab">
+                    <i class="fas fa-chart-line"></i> Progress
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="collaboration-tab" data-toggle="tab" href="#collaboration" role="tab">
+                    <i class="fas fa-users-cog"></i> Collaboration
+                </a>
+            </li>
+            {{-- <li class="nav-item">
+                <a class="nav-link" id="target-groups-tab" data-toggle="tab" href="#target-groups" role="tab">
+                    <i class="fas fa-bullseye"></i> Target Groups
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="activities-tab" data-toggle="tab" href="#activities" role="tab">
+                    <i class="fas fa-tasks"></i> Activities
+                </a>
+            </li> --}}
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="programTabsContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Program Description</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ $program->deskripsiprojek ?: 'No description available' }}</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Problem Analysis</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>{{ $program->analisamasalah ?: 'No problem analysis available' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Program Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th>Status:</th>
+                                        <td><span class="badge badge-{{ $program->status === 'running' ? 'success' : ($program->status === 'pending' ? 'warning' : 'secondary') }}">{{ $program->status }}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created:</th>
+                                        <td>{{ $program->created_at->format('d M Y') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Updated:</th>
+                                        <td>
+                                            <span>{{ $program->updated_at->format('d M Y') }}</span>
+                                            <span class="badge badge-success ml-2" id="live-status" style="display: none;">
+                                                <i class="fas fa-circle"></i> Live
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Activity:</th>
+                                        <td id="last-activity">
+                                            {{ $program->updated_at->diffForHumans() }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Created By:</th>
+                                        <td>{{ $program->users->name ?? 'Unknown' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beneficiaries Tab -->
+            <div class="tab-pane fade" id="beneficiaries" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Beneficiaries Breakdown</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="beneficiariesChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Beneficiary Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Women:</th>
+                                        <td>{{ $program->ekspektasipenerimamanfaatwoman ?: 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Men:</th>
+                                        <td>{{ $program->ekspektasipenerimamanfaatman ?: 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Girls:</th>
+                                        <td>{{ $program->ekspektasipenerimamanfaatgirl ?: 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Boys:</th>
+                                        <td>{{ $program->ekspektasipenerimamanfaatboy ?: 0 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Indirect:</th>
+                                        <td>{{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}</td>
+                                    </tr>
+                                    <tr class="table-active">
+                                        <th><strong>Total:</strong></th>
+                                        <td><strong>{{ $totalBeneficiaries }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Tab -->
+            <div class="tab-pane fade" id="team" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Program Team</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($program->staff->count() > 0)
+                            <div class="row">
+                                @foreach($program->staff as $staff)
+                                    <div class="col-md-6 col-lg-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body text-center">
+                                                <div class="mb-3">
+                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center"
+                                                         style="width: 64px; height: 64px;">
+                                                        <span class="text-white h4 mb-0">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
+                                                    </div>
+                                                </div>
+                                                <h6 class="card-title">{{ $staff->name }}</h6>
+                                                <p class="text-muted">{{ $staff->email }}</p>
+                                                <span class="badge badge-info">{{ $staff->pivot->peran_id ? (\App\Models\Peran::find($staff->pivot->peran_id)->nama ?? 'Team Member') : 'Team Member' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center text-muted">
+                                <i class="fas fa-users fa-3x mb-3"></i>
+                                <p>No team members assigned</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partners Tab -->
+            <div class="tab-pane fade" id="partners" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Partner Organizations</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->partner->count() > 0)
+                                    @foreach($program->partner as $partner)
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-title">{{ $partner->nama }}</h6>
+                                                {{-- <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p> --}}
+                                                @if($partner->telepon)
+                                                    <p class="mb-0"><i class="fas fa-phone"></i> {{ $partner->telepon }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-handshake fa-3x mb-3"></i>
+                                        <p>No partners assigned</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">{{ __('cruds.mpendonor.mpendonor') }}</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->pendonor->count() > 0)
+                                    @foreach($program->pendonor as $pendonor)
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h6 class="pendonor">{{ $pendonor->nama }}</h6>
+                                                {{-- <p class="card-text text-muted">{{ $pendonor->kategori ? $pendonor->kategori->nama : 'Uncategorized' }}</p> --}}
+                                                @if($pendonor->pivot->nilaidonasi)
+                                                    <span class="mb-0"><strong>{{ __('cruds.program.donor.val') }}:</strong> Rp {{ number_format($pendonor->pivot->nilaidonasi, 0, ',', '.') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-donate fa-3x mb-3"></i>
+                                        <p>No donors assigned</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations Tab -->
+            <div class="tab-pane fade" id="locations" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Implementation Locations</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($program->lokasi->count() > 0)
+                            <div class="row">
+                                @foreach($program->lokasi as $lokasi)
+                                    <div class="col-md-6 col-lg-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">{{ $lokasi->nama }}</h6>
+                                                <p class="text-muted mb-0">Province: {{ $lokasi->nama }}</p>
+                                                <small class="text-muted">ID: {{ $lokasi->id }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center text-muted">
+                                <i class="fas fa-map-marked-alt fa-3x mb-3"></i>
+                                <p>No locations specified</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Structure Tab -->
+            <div class="tab-pane fade" id="structure" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Program Structure Hierarchy</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->goal || $program->objektif || $program->outcome->count() > 0)
+                                    <div class="program-structure">
+                                        <!-- Goal Section -->
+                                        @if($program->goal)
+                                            <div class="structure-item goal-level mb-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="structure-icon bg-primary">
+                                                        <i class="fas fa-bullseye text-white"></i>
+                                                    </div>
+                                                    <div class="structure-content flex-grow-1">
+                                                        <h6 class="mb-1">Goal</h6>
+                                                        <p class="mb-1">{{ $program->goal->deskripsi ?? 'No description available' }}</p>
+                                                        <div class="structure-meta">
+                                                            <small class="text-muted">
+                                                                <strong>Indicator:</strong> {{ $program->goal->indikator ?? 'Not specified' }}<br>
+                                                                <strong>Target:</strong> {{ $program->goal->target ?? 'Not set' }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Objective Section -->
+                                        @if($program->objektif)
+                                            <div class="structure-item objective-level mb-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="structure-icon bg-success">
+                                                        <i class="fas fa-crosshairs text-white"></i>
+                                                    </div>
+                                                    <div class="structure-content flex-grow-1">
+                                                        <h6 class="mb-1">Objective</h6>
+                                                        <p class="mb-1">{{ $program->objektif->deskripsi ?? 'No description available' }}</p>
+                                                        <div class="structure-meta">
+                                                            <small class="text-muted">
+                                                                <strong>Indicator:</strong> {{ $program->objektif->indikator ?? 'Not specified' }}<br>
+                                                                <strong>Target:</strong> {{ $program->objektif->target ?? 'Not set' }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Outcomes Section -->
+                                        @if($program->outcome->count() > 0)
+                                            <div class="outcomes-section">
+                                                <h6 class="text-primary mb-3">Outcomes</h6>
+                                                @foreach($program->outcome as $outcome)
+                                                    <div class="structure-item outcome-level mb-3">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="structure-icon bg-info">
+                                                                <i class="fas fa-trophy text-white"></i>
+                                                            </div>
+                                                            <div class="structure-content flex-grow-1">
+                                                                <h6 class="mb-1">Outcome</h6>
+                                                                <p class="mb-1">{{ $outcome->deskripsi ?? 'No description available' }}</p>
+                                                                <div class="structure-meta">
+                                                                    <small class="text-muted">
+                                                                        <strong>Indicator:</strong> {{ $outcome->indikator ?? 'Not specified' }}<br>
+                                                                        <strong>Target:</strong> {{ $outcome->target ?? 'Not set' }}
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Outputs Section -->
+                                                        @if($outcome->output->count() > 0)
+                                                            <div class="outputs-section ml-4 mt-3">
+                                                                <h6 class="text-success mb-2">Outputs</h6>
+                                                                @foreach($outcome->output as $output)
+                                                                    <div class="structure-item output-level mb-2">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="structure-icon bg-warning">
+                                                                                <i class="fas fa-cube text-white"></i>
+                                                                            </div>
+                                                                            <div class="structure-content flex-grow-1">
+                                                                                <h6 class="mb-1">Output</h6>
+                                                                                <p class="mb-1">{{ $output->deskripsi ?? 'No description available' }}</p>
+                                                                                <div class="structure-meta">
+                                                                                    <small class="text-muted">
+                                                                                        <strong>Indicator:</strong> {{ $output->indikator ?? 'Not specified' }}<br>
+                                                                                        <strong>Target:</strong> {{ $output->target ?? 'Not set' }}
+                                                                                    </small>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!-- Activities Section -->
+                                                                        @if($output->activities->count() > 0)
+                                                                            <div class="activities-section ml-4 mt-2">
+                                                                                <h6 class="text-info mb-2">Activities</h6>
+                                                                                @foreach($output->activities as $activity)
+                                                                                    <div class="structure-item activity-level mb-2">
+                                                                                        <div class="d-flex align-items-center">
+                                                                                            <div class="structure-icon bg-secondary">
+                                                                                                <i class="fas fa-tasks text-white"></i>
+                                                                                            </div>
+                                                                                            <div class="structure-content flex-grow-1">
+                                                                                                <h6 class="mb-1">Activity</h6>
+                                                                                                <p class="mb-1">{{ $activity->deskripsi ?? 'No description available' }}</p>
+                                                                                                <div class="structure-meta">
+                                                                                                    <small class="text-muted">
+                                                                                                        <strong>Indicator:</strong> {{ $activity->indikator ?? 'Not specified' }}<br>
+                                                                                                        <strong>Target:</strong> {{ $activity->target ?? 'Not set' }}
+                                                                                                    </small>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-sitemap fa-3x mb-3"></i>
+                                        <h5>No Program Structure Defined</h5>
+                                        <p>This program doesn't have any goals, objectives, outcomes, or activities defined yet.</p>
+                                        <small>Program structure helps organize and track program implementation.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Tab -->
+            <div class="tab-pane fade" id="documents" role="tabpanel">
+                <div class="card">
+                    <div class="card-body border-top">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="text-info mb-0"><i class="fas fa-folder-open me-2"></i>{{ __('Program Documents & Files') }}</h5>
+                            @can('program_edit')
+                            <button type="button" class="btn btn-primary btn-sm" onclick="uploadProgramFile()">
+                                <i class="fas fa-plus me-1"></i>{{ __('Upload Files') }}
+                            </button>
+                            @endcan
+                        </div>
+
+                        <!-- Files Section -->
+                        <div class="files-section">
+                            @php
+                                $programFiles = $program->getMedia('program_' . $program->id);
+                            @endphp
+                            @if($programFiles && $programFiles->count() > 0)
+                                <div class="row g-3">
+                                    @foreach($programFiles as $media)
+                                        <div class="col-lg-3 col-md-4 col-sm-6">
+                                            <div class="card file-card h-100 shadow-sm hover-shadow transition-all">
+                                                <div class="card-body p-3">
+                                                    <div class="file-icon text-center mb-3">
+                                                        @if(strstr($media->mime_type, "image/"))
+                                                            <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 120px; object-fit: cover;">
+                                                        @elseif(strstr($media->mime_type, "pdf"))
+                                                            <i class="fas fa-file-pdf fa-4x text-danger"></i>
+                                                        @elseif(strstr($media->mime_type, "word"))
+                                                            <i class="fas fa-file-word fa-4x text-primary"></i>
+                                                        @elseif(strstr($media->mime_type, "excel") || strstr($media->mime_type, "spreadsheet"))
+                                                            <i class="fas fa-file-excel fa-4x text-success"></i>
+                                                        @elseif(strstr($media->mime_type, "powerpoint"))
+                                                            <i class="fas fa-file-powerpoint fa-4x text-warning"></i>
+                                                        @else
+                                                            <i class="fas fa-file fa-4x text-secondary"></i>
+                                                        @endif
+                                                    </div>
+                                                    <h6 class="card-title text-truncate" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
+                                                        {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 25) }}
+                                                    </h6>
+                                                    <div class="file-meta">
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}
+                                                        </small>
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer bg-transparent border-top-0 p-2">
+                                                    <div class="btn-group w-100" role="group">
+                                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="previewProgramFile('{{ $media->getUrl() }}', '{{ $media->mime_type }}')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                        <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download>
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                        @can('program_edit')
+                                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteProgramFile({{ $media->id }})">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                        @endcan
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-5">
+                                    <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                                    <h6 class="text-muted">{{ __('No supporting documents uploaded yet') }}</h6>
+                                    <p class="text-muted small">{{ __('Upload documents to support this program') }}</p>
+                                    @can('program_edit')
+                                    <button class="btn btn-primary" onclick="uploadProgramDocument('file_pendukung_program')">
+                                        <i class="fas fa-plus me-2"></i>{{ __('Upload Document') }}
+                                    </button>
+                                    @endcan
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- If no files at all -->
+                        @if($programFiles->count() == 0)
+                            <div class="text-center py-5">
+                                <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                                <h6 class="text-muted">{{ __('No files uploaded yet') }}</h6>
+                                <p class="text-muted small">{{ __('Upload documents and media to support this program') }}</p>
+                                @can('program_edit')
+                                <button class="btn btn-primary" onclick="uploadProgramFile()">
+                                    <i class="fas fa-plus me-2"></i>{{ __('Upload Files') }}
+                                </button>
+                                @endcan
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div class="tab-pane fade" id="progress" role="tabpanel">
+                <div class="row">
+                    <!-- Progress Overview -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Progress Overview</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <div class="progress-circle position-relative d-inline-block">
+                                        <canvas id="progressChart" width="200" height="200"></canvas>
+                                        <div class="position-absolute top-50 start-50 translate-middle">
+                                            <h3 class="mb-0">{{ $program->status === 'complete' ? '100' : ($program->status === 'running' ? '75' : ($program->status === 'pending' ? '25' : '0')) }}%</h3>
+                                            <small class="text-muted">Complete</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="progress-details">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Status:</span>
+                                        <span class="badge badge-{{ $program->status === 'running' ? 'success' : ($program->status === 'pending' ? 'warning' : 'secondary') }}">{{ ucfirst($program->status) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Duration:</span>
+                                        <span>{{ $durationInDays }} days</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Target Progress:</span>
+                                        <span>{{ $program->targetProgresses->count() }} metrics</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Progress -->
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Target Progress Details</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->targetProgresses->count() > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Metric</th>
+                                                    <th>Target</th>
+                                                    <th>Achieved</th>
+                                                    <th>Progress</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($program->targetProgresses as $progress)
+                                                    @foreach($progress->details as $detail)
+                                                        <tr>
+                                                            <td>{{ $detail->targetable->deskripsi ?? 'Unknown Target' }}</td>
+                                                            <td>{{ $detail->targetable->target ?? 0 }}</td>
+                                                            <td>{{ $detail->actual ?? 0 }}</td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    @php
+                                                                        $targetValue = (float)($detail->targetable->target ?? 0);
+                                                                        $actualValue = (float)($detail->actual ?? 0);
+                                                                        $percentage = ($targetValue > 0) ?
+                                                                            min(($actualValue / $targetValue) * 100, 100) : 0;
+                                                                    @endphp
+                                                                    <div class="progress-bar bg-{{ $percentage >= 100 ? 'success' : ($percentage >= 50 ? 'warning' : 'danger') }}"
+                                                                         role="progressbar"
+                                                                         style="width: {{ $percentage }}%"
+                                                                         aria-valuenow="{{ $percentage }}"
+                                                                         aria-valuemin="0"
+                                                                         aria-valuemax="100">
+                                                                        {{ round($percentage) }}%
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span class="badge badge-{{ $percentage >= 100 ? 'success' : ($percentage >= 50 ? 'warning' : 'danger') }}">
+                                                                    {{ $percentage >= 100 ? 'On Track' : ($percentage >= 50 ? 'In Progress' : 'Behind') }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                                        <h5>No Progress Data Available</h5>
+                                        <p>This program doesn't have any progress tracking data yet.</p>
+                                        <small>Progress tracking helps monitor program implementation and achievements.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Timeline -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Program Timeline</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="timeline">
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker bg-success">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Program Start</h6>
+                                            <p class="text-muted">{{ $program->tanggalmulai }}</p>
+                                            <small>Program officially began</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker bg-{{ $program->status === 'running' ? 'warning' : 'secondary' }}">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Current Phase</h6>
+                                            <p class="text-muted">{{ ucfirst($program->status) }}</p>
+                                            <small>Program is currently in this phase</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker bg-{{ $program->status === 'complete' ? 'success' : 'secondary' }}">
+                                            <i class="fas fa-flag-checkered"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Program End</h6>
+                                            <p class="text-muted">{{ $program->tanggalselesai }}</p>
+                                            <small>Expected completion date</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Groups Tab -->
+            {{-- <div class="tab-pane fade" id="target-groups" role="tabpanel">
+                <div class="row">
+                    <!-- Marginalized Groups -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Marginalized Groups Served</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->kelompokMarjinal->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->kelompokMarjinal as $kelompokMarjinal)
+                                            <div class="col-md-12 mb-3">
+                                                <div class="card border-left-primary">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="target-group-icon bg-primary">
+                                                                <i class="fas fa-users text-white"></i>
+                                                            </div>
+                                                            <div class="target-group-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $kelompokMarjinal->kelompokmarjinal->nama ?? 'Unknown Group' }}</h6>
+                                                                <p class="mb-0 text-muted">Target group for program inclusion</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-users fa-3x mb-3"></i>
+                                        <h5>No Marginalized Groups Defined</h5>
+                                        <p>This program doesn't target specific marginalized groups yet.</p>
+                                        <small>Define target groups to ensure inclusive program implementation.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SDGs Alignment -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">SDGs Alignment</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->kaitanSDG->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->kaitanSDG as $kaitanSDG)
+                                            <div class="col-md-12 mb-3">
+                                                <div class="card border-left-success">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="sdg-icon bg-success">
+                                                                <i class="fas fa-globe text-white"></i>
+                                                            </div>
+                                                            <div class="sdg-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $kaitanSDG->kaitansdg->nama ?? 'Unknown SDG' }}</h6>
+                                                                <p class="mb-0 text-muted">Sustainable Development Goal alignment</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-globe fa-3x mb-3"></i>
+                                        <h5>No SDGs Alignment</h5>
+                                        <p>This program doesn't have SDGs alignment defined yet.</p>
+                                        <small>Align with Sustainable Development Goals for global impact tracking.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Reinstra Integration -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Target Reinstra Integration</h5>
+                            </div>
+                            <div class="card-body">
+                                @if($program->targetReinstra->count() > 0)
+                                    <div class="row">
+                                        @foreach($program->targetReinstra as $targetReinstra)
+                                            <div class="col-md-6 col-lg-4 mb-3">
+                                                <div class="card border-left-info">
+                                                    <div class="card-body">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="reinstra-icon bg-info">
+                                                                <i class="fas fa-crosshairs text-white"></i>
+                                                            </div>
+                                                            <div class="reinstra-content flex-grow-1">
+                                                                <h6 class="mb-1">{{ $targetReinstra->targetreinstra->nama ?? 'Unknown Target' }}</h6>
+                                                                <p class="mb-0 text-muted">Strategic target alignment</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-crosshairs fa-3x mb-3"></i>
+                                        <h5>No Target Reinstra Integration</h5>
+                                        <p>This program doesn't have strategic target integration yet.</p>
+                                        <small>Connect with strategic targets for better alignment and reporting.</small>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
+            <!-- Activities Tab -->
+            {{-- <div class="tab-pane fade" id="activities" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Related Activities (Kegiatan)</h5>
+                                @can('program_edit')
+                                <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Add Activity
+                                </a>
+                                @endcan
+                            </div>
+                            <div class="card-body">
+                                @php
+                                    $allActivities = $program->allKegiatan();
+                                @endphp
+
+                                @if($allActivities->count() > 0)
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Activity Name</th>
+                                                    <th>Status</th>
+                                                    <th>Duration</th>
+                                                    <th>Budget</th>
+                                                    <th>Progress</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($allActivities as $kegiatan)
+                                                    <tr>
+                                                        <td>
+                                                            <div>
+                                                                <strong>{{ $kegiatan->nama }}</strong>
+                                                                <br>
+                                                                <small class="text-muted">{{ $kegiatan->kode }}</small>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge badge-{{ $kegiatan->status === 'running' ? 'success' : ($kegiatan->status === 'pending' ? 'warning' : ($kegiatan->status === 'complete' ? 'info' : 'secondary')) }}">
+                                                                {{ ucfirst($kegiatan->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
+                                                                {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') }} - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') }}
+                                                            @else
+                                                                <span class="text-muted">Not set</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($kegiatan->totalnilai)
+                                                                Rp {{ number_format($kegiatan->totalnilai, 0, ',', '.') }}
+                                                            @else
+                                                                <span class="text-muted">Not set</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            <div class="progress" style="height: 20px;">
+                                                                @php
+                                                                    $progress = $kegiatan->status === 'complete' ? 100 : ($kegiatan->status === 'running' ? 75 : ($kegiatan->status === 'pending' ? 25 : 0));
+                                                                @endphp
+                                                                <div class="progress-bar bg-{{ $progress >= 75 ? 'success' : ($progress >= 50 ? 'warning' : 'danger') }}"
+                                                                     role="progressbar"
+                                                                     style="width: {{ $progress }}%"
+                                                                     aria-valuenow="{{ $progress }}"
+                                                                     aria-valuemin="0"
+                                                                     aria-valuemax="100">
+                                                                    {{ $progress }}%
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group btn-group-sm">
+                                                                <a href="{{ route('kegiatan.show', $kegiatan->id) }}" class="btn btn-outline-primary">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                                @can('kegiatan_edit')
+                                                                <a href="{{ route('kegiatan.edit', $kegiatan->id) }}" class="btn btn-outline-success">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                @endcan
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted">
+                                        <i class="fas fa-tasks fa-3x mb-3"></i>
+                                        <h5>No Activities Linked</h5>
+                                        <p>This program doesn't have any activities linked yet.</p>
+                                        <small>Activities help implement program goals and objectives.</small>
+                                        @can('program_edit')
+                                        <a href="{{ route('kegiatan.create', ['program_id' => $program->id]) }}" class="btn btn-primary mt-3">
+                                            <i class="fas fa-plus"></i> Create First Activity
+                                        </a>
+                                        @endcan
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
+            <!-- Collaboration Tab -->
+            <div class="tab-pane fade" id="collaboration" role="tabpanel">
+                <div class="row">
+                    <!-- Active Collaborators -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">Active Collaborators</h5>
+                                <span class="badge badge-success" id="active-users-count">
+                                    {{ $program->staff->count() }} Online
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div id="active-users-list">
+                                    @if($program->staff->count() > 0)
+                                        @foreach($program->staff as $staff)
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="user-avatar bg-primary rounded-circle d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px;">
+                                                    <span class="text-white">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
+                                                </div>
+                                                <div class="user-info flex-grow-1">
+                                                    <h6 class="mb-0">{{ $staff->name }}</h6>
+                                                    <small class="text-muted">{{ $staff->email }}</small>
+                                                </div>
+                                                <div class="user-status">
+                                                    <span class="badge badge-success">
+                                                        <i class="fas fa-circle"></i> Online
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="text-center text-muted">
+                                            <i class="fas fa-users fa-2x mb-2"></i>
+                                            <p>No active collaborators</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Recent Activity</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="activity-feed">
+                                    <div class="activity-item mb-3">
+                                        <div class="d-flex">
+                                            <div class="activity-icon bg-info">
+                                                <i class="fas fa-edit text-white"></i>
+                                            </div>
+                                            <div class="activity-content ml-3">
+                                                <h6 class="mb-1">Program Updated</h6>
+                                                <p class="mb-0 text-muted">Program details were last updated {{ $program->updated_at->diffForHumans() }}</p>
+                                                <small class="text-muted">{{ $program->updated_at->format('d M Y, H:i') }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="activity-item mb-3">
+                                        <div class="d-flex">
+                                            <div class="activity-icon bg-success">
+                                                <i class="fas fa-plus text-white"></i>
+                                            </div>
+                                            <div class="activity-content ml-3">
+                                                <h6 class="mb-1">Program Created</h6>
+                                                <p class="mb-0 text-muted">Program was created by {{ $program->users->name ?? 'Unknown' }}</p>
+                                                <small class="text-muted">{{ $program->created_at->format('d M Y, H:i') }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if($program->staff->count() > 0)
+                                        <div class="activity-item">
+                                            <div class="d-flex">
+                                                <div class="activity-icon bg-primary">
+                                                    <i class="fas fa-users text-white"></i>
+                                                </div>
+                                                <div class="activity-content ml-3">
+                                                    <h6 class="mb-1">Team Members Added</h6>
+                                                    <p class="mb-0 text-muted">{{ $program->staff->count() }} team members assigned to this program</p>
+                                                    <small class="text-muted">Team collaboration active</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Updates Status -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Real-time Updates</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-wifi fa-2x text-success"></i>
+                                            </div>
+                                            <h6>Connection Status</h6>
+                                            <p class="text-muted">Connected to real-time updates</p>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="toggleRealTimeUpdates()">
+                                                <i class="fas fa-sync"></i> Refresh Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-clock fa-2x text-info"></i>
+                                            </div>
+                                            <h6>Last Update</h6>
+                                            <p class="text-muted" id="last-update-time">{{ $program->updated_at->diffForHumans() }}</p>
+                                            <small>Auto-refresh enabled</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="real-time-status mb-3">
+                                                <i class="fas fa-bell fa-2x text-warning"></i>
+                                            </div>
+                                            <h6>Notifications</h6>
+                                            <p class="text-muted">Real-time notifications active</p>
+                                            <button class="btn btn-sm btn-outline-warning" onclick="testNotification()">
+                                                <i class="fas fa-bell"></i> Test
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @push('css')
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-<link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/materialize.css') }}">
+<style>
+/* Program Structure Styles */
+.program-structure {
+    font-family: inherit;
+}
 
+.structure-item {
+    border-left: 3px solid #e9ecef;
+    padding-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.structure-item:hover {
+    border-left-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.05);
+    border-radius: 0.375rem;
+}
+
+.structure-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.structure-item:hover .structure-icon {
+    transform: scale(1.1);
+}
+
+.structure-content h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.structure-content p {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.structure-meta {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border-left: 3px solid #dee2e6;
+}
+
+.goal-level .structure-meta {
+    border-left-color: #007bff;
+}
+
+.objective-level .structure-meta {
+    border-left-color: #28a745;
+}
+
+.outcome-level .structure-meta {
+    border-left-color: #17a2b8;
+}
+
+.output-level .structure-meta {
+    border-left-color: #ffc107;
+}
+
+.activity-level .structure-meta {
+    border-left-color: #6c757d;
+}
+
+.outcomes-section,
+.outputs-section,
+.activities-section {
+    position: relative;
+}
+
+.outcomes-section::before,
+.outputs-section::before,
+.activities-section::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.outcomes-section::before {
+    background-color: #17a2b8;
+}
+
+.outputs-section::before {
+    background-color: #ffc107;
+}
+
+.activities-section::before {
+    background-color: #6c757d;
+}
+
+.structure-level-title {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.structure-level-title::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+.goal-level .structure-level-title::before {
+    background-color: #007bff;
+}
+
+.objective-level .structure-level-title::before {
+    background-color: #28a745;
+}
+
+.outcome-level .structure-level-title::before {
+    background-color: #17a2b8;
+}
+
+.output-level .structure-level-title::before {
+    background-color: #ffc107;
+}
+
+.activity-level .structure-level-title::before {
+    background-color: #6c757d;
+}
+
+/* Timeline Styles */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    z-index: 1;
+}
+
+.timeline-content {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border-left: 3px solid #dee2e6;
+}
+
+.timeline-content h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+}
+
+/* Progress Circle Styles */
+.progress-circle {
+    position: relative;
+    display: inline-block;
+}
+
+/* Document Card Styles */
+.document-card {
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.document-icon {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.document-card:hover .document-icon {
+    opacity: 1;
+}
+
+.document-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.document-meta {
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.document-actions .btn {
+    font-size: 0.8rem;
+}
+
+/* File Cards Styles */
+.file-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+}
+
+.file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.file-icon {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.file-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.file-meta {
+    font-size: 0.8rem;
+}
+
+.file-card .btn-group .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* Target Groups Styles */
+.target-group-icon,
+.sdg-icon,
+.reinstra-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.target-group-content,
+.sdg-content,
+.reinstra-content {
+    flex-grow: 1;
+}
+
+.target-group-content h6,
+.sdg-content h6,
+.reinstra-content h6 {
+    margin-bottom: 0.25rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.target-group-content p,
+.sdg-content p,
+.reinstra-content p {
+    margin-bottom: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.border-left-primary {
+    border-left: 4px solid #007bff;
+}
+
+.border-left-success {
+    border-left: 4px solid #28a745;
+}
+
+.border-left-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.border-left-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.border-left-danger {
+    border-left: 4px solid #dc3545;
+}
+
+/* Hover effects for target group cards */
+.card.border-left-primary:hover,
+.card.border-left-success:hover,
+.card.border-left-info:hover,
+.card.border-left-warning:hover,
+.card.border-left-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.card.border-left-primary:hover .target-group-icon,
+.card.border-left-success:hover .sdg-icon,
+.card.border-left-info:hover .reinstra-icon {
+    transform: scale(1.1);
+}
+
+/* Activities Table Styles */
+.activities-table .progress {
+    height: 20px;
+    border-radius: 0.25rem;
+}
+
+.activities-table .btn-group {
+    flex-wrap: nowrap;
+}
+
+.activities-table .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Collaboration Styles */
+.user-avatar {
+    transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.1);
+}
+
+.user-status .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-content h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.activity-content p {
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.activity-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.real-time-status i {
+    transition: transform 0.3s ease;
+}
+
+.real-time-status:hover i {
+    transform: scale(1.2);
+}
+
+#live-status {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Responsive collaboration styles */
+@media (max-width: 768px) {
+    .activity-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .activity-content h6 {
+        font-size: 0.9rem;
+    }
+
+    .activity-content p {
+        font-size: 0.8rem;
+    }
+
+    .user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .user-avatar span {
+        font-size: 0.9rem;
+    }
+
+    .real-time-status i {
+        font-size: 1.5rem;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    /* Header Section */
+    .card-header .d-flex {
+        
+        align-items: flex-start !important;
+    }
+
+    .card-header .card-tools {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .card-header .btn {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Quick Stats */
+    .info-box {
+        margin-bottom: 1rem;
+    }
+
+    .info-box .info-box-number {
+        font-size: 1.5rem;
+    }
+
+    /* Tabs Navigation */
+    .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-tabs .nav-link {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        min-width: auto;
+    }
+
+    .nav-tabs .nav-link i {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+    }
+
+    /* Structure Styles */
+    .structure-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .structure-content {
+        margin-left: 0.5rem;
+    }
+
+    .structure-item {
+        padding-left: 0.5rem;
+    }
+
+    .outputs-section,
+    .activities-section {
+        margin-left: 1rem !important;
+    }
+
+    /* Timeline Styles */
+    .timeline {
+        padding-left: 1.5rem;
+    }
+
+    .timeline-marker {
+        left: -1rem;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .timeline-content {
+        padding: 0.75rem;
+    }
+
+    /* Progress Section */
+    .progress-circle canvas {
+        width: 150px !important;
+        height: 150px !important;
+    }
+
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    .table .btn {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Document Cards */
+    .document-card {
+        margin-bottom: 1rem;
+    }
+
+    .document-icon i {
+        font-size: 2rem;
+    }
+
+    .document-actions .btn {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .document-actions .btn-group {
+        
+    }
+
+    .document-actions .btn-group .btn {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Target Groups Responsive */
+    .target-group-icon,
+    .sdg-icon,
+    .reinstra-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .target-group-content h6,
+    .sdg-content h6,
+    .reinstra-content h6 {
+        font-size: 0.9rem;
+    }
+
+    .target-group-content p,
+    .sdg-content p,
+    .reinstra-content p {
+        font-size: 0.8rem;
+    }
+
+    /* Activities Table Responsive */
+    .activities-table {
+        font-size: 0.8rem;
+    }
+
+    .activities-table .progress {
+        height: 15px;
+    }
+
+    .activities-table .btn-group {
+        
+    }
+
+    .activities-table .btn-group .btn {
+        margin-bottom: 0.25rem;
+        border-radius: 0.375rem !important;
+    }
+
+    .activities-table .btn-group .btn:not(:last-child) {
+        margin-right: 0;
+    }
+
+    /* Team Cards */
+    .team-card .card-body {
+        padding: 1rem;
+    }
+
+    .team-card .rounded-circle {
+        width: 48px;
+        height: 48px;
+    }
+
+    .team-card .rounded-circle span {
+        font-size: 1.2rem;
+    }
+
+    /* Partners and Donors */
+    .partner-card, .donor-card {
+        margin-bottom: 1rem;
+    }
+
+    /* Location Cards */
+    .location-card {
+        margin-bottom: 1rem;
+    }
+
+    /* Chart Containers */
+    #beneficiariesChart {
+        height: 250px !important;
+    }
+
+    /* Mobile-specific adjustments */
+    .d-md-none {
+        display: block !important;
+    }
+
+    .d-none.d-md-block {
+        display: none !important;
+    }
+
+    /* Button Groups */
+    .btn-group {
+        
+        width: 100%;
+    }
+
+    .btn-group .btn {
+        margin-bottom: 0.25rem;
+        border-radius: 0.375rem !important;
+    }
+
+    .btn-group .btn:not(:last-child) {
+        margin-right: 0;
+    }
+}
+
+/* Extra Small Mobile Devices */
+@media (max-width: 576px) {
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-header p {
+        font-size: 0.9rem;
+    }
+
+    .info-box .info-box-text {
+        font-size: 0.8rem;
+    }
+
+    .info-box .info-box-number {
+        font-size: 1.25rem;
+    }
+
+    .nav-tabs .nav-link {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .nav-tabs .nav-link i {
+        font-size: 0.9rem;
+    }
+
+    .table-responsive {
+        font-size: 0.75rem;
+    }
+
+    .progress {
+        height: 15px;
+    }
+
+    .timeline-content h6 {
+        font-size: 0.9rem;
+    }
+
+    .timeline-content p {
+        font-size: 0.8rem;
+    }
+}
+</style>
 @endpush
 
 @push('js')
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> --}}
-<script src="{{ asset('vendor/adminlte/dist/js/materialize.js') }}"></script>
 @section('plugins.Sweetalert2', true)
 @section('plugins.DatatablesNew', true)
 @section('plugins.Select2', true)
 @section('plugins.Toastr', true)
 @section('plugins.Validation', true)
-@section('plugins.Summernote', true)
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<script src="{{ asset('/vendor/inputmask/jquery.maskMoney.js') }}"></script>
-<script src="{{ asset('/vendor/inputmask/AutoNumeric.js') }}"></script>
-
+@php
+// Prepare structured data for export
+$exportStructure = [
+    'program_info' => [
+        'id' => $program->id,
+        'name' => $program->nama,
+        'code' => $program->kode,
+        'status' => $program->status,
+        'start_date' => $program->tanggalmulai,
+        'end_date' => $program->tanggalselesai,
+        'total_budget' => $program->totalnilai,
+        'description' => strip_tags($program->deskripsiprojek),
+        'problem_analysis' => strip_tags($program->analisamasalah),
+        'created_at' => $program->created_at->format('Y-m-d H:i:s'),
+        'updated_at' => $program->updated_at->format('Y-m-d H:i:s'),
+        'duration_days' => $durationInDays ?? 0,
+        'beneficiaries_total' => $totalBeneficiaries ?? 0,
+    ],
+    'beneficiaries_breakdown' => [
+        'women' => $program->ekspektasipenerimamanfaatwoman ?? 0,
+        'men' => $program->ekspektasipenerimamanfaatman ?? 0,
+        'girls' => $program->ekspektasipenerimamanfaatgirl ?? 0,
+        'boys' => $program->ekspektasipenerimamanfaatboy ?? 0,
+        'indirect' => $program->ekspektasipenerimamanfaattidaklangsung ?? 0,
+    ],
+    'locations' => $program->lokasi->map(function($l) {
+        return [
+            'id' => $l->id,
+            'name' => $l->nama,
+            'province' => $l->province ?? '',
+        ];
+    })->values(),
+    'partners' => $program->partner->map(function($p) {
+        return [
+            'name' => $p->nama,
+            'phone' => $p->telepon,
+            'address' => $p->alamat,
+        ];
+    })->values(),
+    'donors' => $program->pendonor->map(function($d) {
+        return [
+            'name' => $d->nama,
+            'donation_amount' => $d->pivot->nilaidonasi,
+        ];
+    })->values(),
+    'team_members' => $program->staff->map(function($s) {
+        $roleName = 'Team Member';
+        if ($s->pivot->peran_id) {
+            $role = \App\Models\Peran::find($s->pivot->peran_id);
+            if ($role) $roleName = $role->nama;
+        }
+        return [
+            'name' => $s->name,
+            'email' => $s->email,
+            'role' => $roleName,
+        ];
+    })->values(),
+    'activities' => $program->allKegiatan()->map(function($k) {
+        return [
+            'name' => $k->nama,
+            'code' => $k->kode,
+            'status' => $k->status,
+            'start_date' => $k->tanggalmulai,
+            'end_date' => $k->tanggalselesai,
+            'budget' => $k->totalnilai,
+            'progress_percent' => $k->status === 'complete' ? 100 : ($k->status === 'running' ? 75 : ($k->status === 'pending' ? 25 : 0))
+        ];
+    })->values(),
+    'progress_metrics' => $program->targetProgresses->flatMap(function($tp) {
+        return $tp->details->map(function($detail) {
+             // Cast to float to avoid "Unsupported operand types" error in PHP 8 if values are strings
+             $target = (float)($detail->targetable->target ?? 0);
+             $actual = (float)($detail->actual ?? 0);
+             
+             return [
+                 'metric' => $detail->targetable->deskripsi ?? 'Unknown',
+                 'target' => $target,
+                 'actual' => $actual,
+                 'percent' => ($target > 0) ? round(($actual / $target) * 100, 2) : 0,
+             ];
+        });
+    })->values(),
+    'structure' => [
+        'goal' => $program->goal ? [
+            'description' => $program->goal->deskripsi,
+            'indicator' => $program->goal->indikator,
+            'target' => $program->goal->target
+        ] : null,
+        'objective' => $program->objektif ? [
+            'description' => $program->objektif->deskripsi,
+            'indicator' => $program->objektif->indikator,
+            'target' => $program->objektif->target
+        ] : null,
+        'outcomes' => $program->outcome->map(function($o) {
+            return [
+                'description' => $o->deskripsi,
+                'indicator' => $o->indikator,
+                'target' => $o->target,
+                'outputs' => $o->output->map(function($out) {
+                    return [
+                        'description' => $out->deskripsi,
+                        'indicator' => $out->indikator,
+                        'target' => $out->target
+                    ];
+                })
+            ];
+        })
+    ]
+];
+@endphp
 <script>
-    function handleErrors(response) {
-        let errorMessage = response.message;
-        if (response.status === 400) {
-            try {
-                const errors = response.errors;
-                errorMessage = formatErrorMessages(errors);
-            } catch (error) {
-                errorMessage = "<p>An unexpected error occurred. Please try again later.</p>";
-            }
-        }
-        Swal.fire({
-            title: "Error!",
-            html: errorMessage,
-            icon: "error"
-        });
-    }
-
-    function formatErrorMessages(errors) {
-        let message = '<br><ul style="text-align:left!important">';
-        for (const field in errors) {
-            errors[field].forEach(function(error) {
-                message += `<li>${error}</li>`;
-            });
-        }
-        message += '</ul>';
-        return message;
-    }
-
-    function getErrorMessage(xhr) {
-        let message;
-        try {
-            const response = JSON.parse(xhr.responseText);
-            message = response.message || 'An unexpected error occurred. Please try again later.';
-        } catch (e) {
-            message = 'An unexpected error occurred. Please try again later.';
-        }
-        return message;
-    }
-
-    // load data outcome when
-    $(document).ready(function() {
-        $('#addOutputBtn').click(function() {
-            $('#modalAddOutput').modal('show');
-        });
-
-        $('.nav').on('click', '.btn-list-outcome', function(e) {
-            e.preventDefault(); // Prevent default button behavior
-            var outcomeId = $(this).data('outcome-id');
-            var outcomeIndex = $(this).data('index');
-            var outcomeApi = "{{ route('api.program.outcome', ':id') }}".replace(':id', outcomeId);
-            var outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId);
-
-            // Fetch outcome data using the outcome ID
-            $.ajax({
-                url: outcomeApi,
-                method: 'GET',
-                beforeSend: function() {
-                    $('#detail_outcome, #list_output, #outcomeData').addClass('hide');
-                    $('#loading').removeClass('hide');
-                },
-                success: function(response) {
-                    setTimeout(() => {
-                        if (response.success) {
-                            $('#detail_outcome, #list_output, #outcomeData').removeClass('hide');
-                            $('#outcome-title').text(outcomeIndex);
-                            $('#outcome-number').text(outcomeIndex);
-
-                            // $('#deskripsi').val(response.data.deskripsi ?? '').trigger('input');
-                            $('#deskripsi').html(response.data.deskripsi ?? '')
-                            // $('#indikator').val(response.data.indikator ?? '').trigger('input');
-                            $('#indikator').html(response.data.indikator ?? '');
-                            // $('#target').val(response.data.target ?? '').trigger('input');
-                            $('#target').html(response.data.target ?? '');
-                            $('#goal').focus().trigger('input');
-                            $('#objektif').trigger('input');
-                            $('#programoutcome_id').val(response.data.id);
-
-                            var $this = $(this); // Cache the current element
-                            var $outputId = $this.data('output-id');
-                            var $outputIndex = $this.data('index');
-                            var $outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId); // Get the API URL for the current output
-
-                            $.ajax({
-                                url: $outputApi,
-                                method: 'GET',
-                                beforeSend: function() {
-                                    Toast.fire({
-                                        icon: 'info',
-                                        title: 'Loading...',
-                                        timer: 300
-                                    });
-                                },
-                                success: function(response) {
-                                    setTimeout(() => {
-                                        if (response.success) {
-                                            $('#row-output').empty();
-                                            // if (response.data.length === 0) {
-                                            if (response.data.length === 0 || response.data.every(row => !row.deskripsi && !row.indikator && !row.target)) {
-                                                $('#row-output').append(`
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">No data available</td>
-                                                    </tr>
-                                                `);
-                                            } else {
-                                                response.data.forEach(function(output) {
-                                                    $('#row-output').append(`
-                                                        <tr id="row-output-${output.id}" data-id="${output.id}" class="data-output">
-                                                            <td class="pl-3">${output.deskripsi ?? ''}</td>
-                                                            <td>${output.indikator ?? ''}</td>
-                                                            <td>${output.target ?? ''}</td>
-                                                            <td><div class="button-container">
-                                                                    <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success" data-output-id="${output.id}" data-index="${$outputIndex}">
-                                                                    <i class="bi bi-pencil-square"></i>
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    `);
-                                                });
-                                            }
-                                            $('#output-title').text($outputIndex);
-                                            $('#output-action').text('Add Output');
-                                        } else {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Error!',
-                                                text: response.message,
-                                            });
-                                        }
-                                    }, 100);
-                                },
-                                error: function(xhr, textStatus, errorThrown) {
-                                    const errorMessage = getErrorMessage(xhr);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error!',
-                                        html: errorMessage,
-                                        confirmButtonText: 'Okay'
-                                    });
-                                },
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                text: response.message,
-                            });
-                        }
-                    }, 300);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    const errorMessage = getErrorMessage(xhr);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                        confirmButtonText: 'Okay'
-                    });
-                },
-            });
-        });
-    });
-
-    // add data activity on modal add output
-    $(document).ready(function() {
-        $('#addActvityOutcome').click(function() {
-            let activityIndex = $('#activity_output_list tbody.data-activity').length + 1;
-            $('#tbody-no-activity').addClass('hide').empty();
-
-            let newActivityTbody = `
-                <tbody id="has-activity-${activityIndex}" data-body-id="${activityIndex}" class="data-activity">
-                    <tr data-activity-id="${activityIndex}">
-                        <th width="10%">Deskripsi Kegiatan</th>
-                        <td width="90%">
-                        <textarea type="textarea" id="deskripsi_${activityIndex}" name="deskripsi[]" class="form-control" placeholder="Deskripsi Kegiatan" rows="1" maxlength="1000"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th width="10%">Indikator Kegiatan</th>
-                        <td width="90%">
-                        <textarea type="textarea" id=indikator_"${activityIndex}" name="indikator[]" class="form-control" placeholder="Indikator Kegiatan" rows="1" maxlength="1000"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th width="10%">Target Kegiatan</th>
-                        <td width="90%">
-                        <textarea type="textarea" id=target_"${activityIndex}" name="target[]" class="form-control" placeholder="Target Kegiatan" rows="1" maxlength="1000"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <td class="align-middle float-right">
-                        <div style="text-align: center">
-                            <button type="button" class="btn btn-sm btn-danger waves-effect waves-red remove-activity" title="Hapus">
-                            <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                        </td>
-                </tr>
-                </tbody>`;
-            $('#activity_output_list').append(newActivityTbody);
-
-            // Initialize Summernote for the new textareas
-
-            // $(`#has-activity-${activityIndex} textarea`).each(function() {
-            //     if (!$(this).data('initialized')) {
-            //         $(this).summernote({
-            //             height: 100,
-            //             width: '100%',
-            //             toolbar: [
-            //                 ['font', ['bold', 'italic', 'underline', 'clear']],
-            //                 ['color', ['color']],
-            //                 ['table', ['table']],
-            //                 ['paragraph', ['paragraph']],
-            //                 ['view', ['fullscreen', 'codeview']],
-            //             ],
-            //             inheritPlaceholder: true,
-            //         });
-            //         $(this).data('initialized', true); // Mark this textarea as initialized
-            //     }
-            // });
-        });
-
-        // Event delegation to handle removing activity rows
-        $('#activity_output_list').on('click', '.remove-activity', function(e) {
-            e.preventDefault();
-            var activityId = $(this).closest('tbody').data('body-id');
-            $(`#has-activity-${activityId}`).remove();
-
-            // Check if there are no more activity rows and show the no-activity message
-            if ($('#activity_output_list tbody.data-activity').length === 0) {
-                $('#tbody-no-activity').removeClass('hide').html(`
-                    <tr>
-                    <td colspan="4" class="text-center" id="no-activity">
-                        {{ __('cruds.activity.no_selected') }}
-                    </td>
-                    </tr>
-                `);
-            }
-        });
-
-        // Reset modal content when closed
-        $('#modalAddOutput').on('hidden.bs.modal', function() {
-            $(this).find('form')[0].reset();
-            $('#tbody-no-activity').removeClass('hide').html(`
-                <tr>
-                <td colspan="4" class="text-center" id="no-activity">
-                    {{ __('cruds.activity.no_selected') }}
-                </td>
-                </tr>
-            `);
-            $('#activity_output_list').find('tbody.data-activity').remove();
-        });
-    });
-
-    let url_simpan_output_activity = "{{ route('program.details.output.activity.store') }}";
-    let output_outcome_id = "{{ $program->id }}";
-
-    $(document).ready(function() {
-        $('#formAddOutput').submit(function(event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            // Collect the main form data
-            let formData = {
-                _token: $('input[name="_token"]').val(),
-                _method: 'POST',
-                programoutcome_id: $('#programoutcome_id').val(),
-                deskripsi: $('#deskripsi_output').val(),
-                indikator: $('#indikator_output').val(),
-                target: $('#target_output').val(),
-                activities: []
-            };
-
-            // Collect output activity data
-            $('#activity_output_list tbody.data-activity').each(function() {
-                let activity = {
-                    deskripsi: $(this).find('textarea[name="deskripsi[]"]').val(),
-                    indikator: $(this).find('textarea[name="indikator[]"]').val(),
-                    target: $(this).find('textarea[name="target[]"]').val()
-                };
-                formData.activities.push(activity);
-            });
-
-            // Log the final payload for debugging
-            console.log('Final Payload:', formData); // Debug log to check data
-
-            // Send the data via AJAX
-            $.ajax({
-                type: 'POST',
-                url: url_simpan_output_activity, // Replace with your server endpoint
-                data: JSON.stringify(formData),
-                dataType: 'json',
-                contentType: 'application/json',
-                success: function(response) {
-                    console.log('Form submitted successfully:', response);
-                    // Handle successful response
-                    // Reset the form and modal if needed
-                    $('#formAddOutput')[0].reset();
-                    $('#tbody-no-activity').removeClass('hide').html(`
-                        <tr>
-                        <td colspan="4" class="text-center" id="no-activity">
-                            {{ __('cruds.activity.no_selected') }}
-                        </td>
-                        </tr>
-                    `);
-                    $('#activity_output_list').find('tbody.data-activity').remove();
-                    $('#modalAddOutput').modal('hide');
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    const errorMessage = getErrorMessage(xhr);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        html: errorMessage,
-                        timer: 300,
-                        confirmButtonText: 'Okay'
-                    });
-                },
-            });
-        });
-    });
+    const PROGRAM_EXPORT_DATA = {!! json_encode($exportStructure) !!};
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize beneficiaries chart
+    const beneficiariesCtx = document.getElementById('beneficiariesChart');
+    if (beneficiariesCtx) {
+        new Chart(beneficiariesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Women', 'Men', 'Girls', 'Boys', 'Indirect'],
+                datasets: [{
+                    data: [
+                        {{ $program->ekspektasipenerimamanfaatwoman ?: 0 }},
+                        {{ $program->ekspektasipenerimamanfaatman ?: 0 }},
+                        {{ $program->ekspektasipenerimamanfaatgirl ?: 0 }},
+                        {{ $program->ekspektasipenerimamanfaatboy ?: 0 }},
+                        {{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}
+                    ],
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize progress chart
+    const progressCtx = document.getElementById('progressChart');
+    if (progressCtx) {
+        const progressPercentage = {{ $program->status === 'complete' ? 100 : ($program->status === 'running' ? 75 : ($program->status === 'pending' ? 25 : 0)) }};
+
+        new Chart(progressCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [progressPercentage, 100 - progressPercentage],
+                    backgroundColor: [
+                        progressPercentage >= 75 ? '#28a745' : (progressPercentage >= 50 ? '#ffc107' : '#dc3545'),
+                        '#e9ecef'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize tab tooltips
+    const tabLinks = document.querySelectorAll('#programTabs .nav-link');
+    tabLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.setAttribute('title', this.textContent.trim());
+        });
+    });
+});
+
+// Document management functions
+function uploadDocument() {
+    // For now, redirect to edit page where document upload is available
+    window.location.href = '{{ route("program.edit", $program->id) }}#documents';
+}
+
+function deleteDocument(mediaId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Make AJAX request to delete document
+            fetch(`/program/media/${mediaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire(
+                        'Deleted!',
+                        'Document has been deleted.',
+                        'success'
+                    ).then(() => {
+                        // Refresh the page to update documents list
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'Failed to delete document.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    'Failed to delete document.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+
+function exportProgramData(dataType) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+
+    Swal.fire({
+        // title: 'Exporting Data...',
+        title: `Exporting Data...`,
+        text: `Preparing ${dataType} data export...`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    let exportData = {};
+
+    switch(dataType) {
+        case 'beneficiaries':
+            exportData = {
+                program: programName,
+                dataType: 'beneficiaries',
+                data: {
+                    total: {{ $totalBeneficiaries }},
+                    breakdown: {
+                        women: {{ $program->ekspektasipenerimamanfaatwoman ?: 0 }},
+                        men: {{ $program->ekspektasipenerimamanfaatman ?: 0 }},
+                        girls: {{ $program->ekspektasipenerimamanfaatgirl ?: 0 }},
+                        boys: {{ $program->ekspektasipenerimamanfaatboy ?: 0 }},
+                        indirect: {{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+
+        case 'progress':
+            exportData = {
+                program: programName,
+                dataType: 'progress',
+                data: {
+                    status: '{{ $program->status }}',
+                    duration: {{ $durationInDays }},
+                    progressPercentage: {{ $program->status === 'complete' ? 100 : ($program->status === 'running' ? 75 : ($program->status === 'draft' ? 25 : 0)) }},
+                    timeline: {
+                        start: '{{ $program->tanggalmulai }}',
+                        end: '{{ $program->tanggalselesai }}'
+                    }
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+
+        case 'activities':
+            exportData = {
+                program: programName,
+                dataType: 'activities',
+                data: {
+                    totalActivities: {{ $program->allKegiatan()->count() }},
+                    // Activities data would be fetched via AJAX in real implementation
+                    activities: []
+                },
+                exportDate: new Date().toISOString()
+            };
+            break;
+    }
+
+    setTimeout(() => {
+        Swal.close();
+        downloadJSON(exportData, `${programName}_${dataType}_Data.json`);
+    }, 1000);
+}
+
+function downloadJSON(data, filename) {
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(link.href);
+
+    Swal.fire({
+        title: 'Export Complete!',
+        text: 'Your file has been downloaded successfully.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+// Real-time updates functionality
+let realTimeUpdatesEnabled = true;
+let updateInterval;
+
+// Initialize real-time updates when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    startRealTimeUpdates();
+    showLiveStatus();
+});
+
+function startRealTimeUpdates() {
+    if (realTimeUpdatesEnabled) {
+        updateInterval = setInterval(() => {
+            updateLastActivity();
+            checkForUpdates();
+        }, 30000); // Update every 30 seconds
+    }
+}
+
+function stopRealTimeUpdates() {
+    if (updateInterval) {
+        clearInterval(updateInterval);
+    }
+}
+
+function toggleRealTimeUpdates() {
+    realTimeUpdatesEnabled = !realTimeUpdatesEnabled;
+
+    if (realTimeUpdatesEnabled) {
+        startRealTimeUpdates();
+        showLiveStatus();
+        Swal.fire({
+            title: 'Real-time Updates Enabled',
+            text: 'Auto-refresh has been turned on.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    } else {
+        stopRealTimeUpdates();
+        hideLiveStatus();
+        Swal.fire({
+            title: 'Real-time Updates Disabled',
+            text: 'Auto-refresh has been turned off.',
+            icon: 'info',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+}
+
+function showLiveStatus() {
+    const liveStatus = document.getElementById('live-status');
+    if (liveStatus) {
+        liveStatus.style.display = 'inline-block';
+    }
+}
+
+function hideLiveStatus() {
+    const liveStatus = document.getElementById('live-status');
+    if (liveStatus) {
+        liveStatus.style.display = 'none';
+    }
+}
+
+function updateLastActivity() {
+    const lastActivityElement = document.getElementById('last-activity');
+    const lastUpdateTimeElement = document.getElementById('last-update-time');
+
+    if (lastActivityElement) {
+        lastActivityElement.textContent = 'Just now';
+    }
+
+    if (lastUpdateTimeElement) {
+        lastUpdateTimeElement.textContent = 'Just now';
+    }
+}
+
+function checkForUpdates() {
+    // Simulate checking for updates (in real implementation, this would make an AJAX call)
+    console.log('Checking for program updates...');
+
+    // Simulate random activity
+    const activities = [
+        'Program data synchronized',
+        'Team member activity detected',
+        'New document uploaded',
+        'Progress updated',
+        'Collaboration request received'
+    ];
+
+    const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+    addActivityFeedItem(randomActivity);
+}
+
+function addActivityFeedItem(activity) {
+    const activityFeed = document.getElementById('activity-feed');
+    if (activityFeed) {
+        const newActivity = document.createElement('div');
+        newActivity.className = 'activity-item mb-3';
+        newActivity.innerHTML = `
+            <div class="d-flex">
+                <div class="activity-icon bg-warning">
+                    <i class="fas fa-sync text-white"></i>
+                </div>
+                <div class="activity-content ml-3">
+                    <h6 class="mb-1">System Activity</h6>
+                    <p class="mb-0 text-muted">${activity}</p>
+                    <small class="text-muted">${new Date().toLocaleString()}</small>
+                </div>
+            </div>
+        `;
+
+        // Add to top of activity feed
+        activityFeed.insertBefore(newActivity, activityFeed.firstChild);
+
+        // Keep only last 5 activities
+        while (activityFeed.children.length > 5) {
+            activityFeed.removeChild(activityFeed.lastChild);
+        }
+    }
+}
+
+function testNotification() {
+    if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+            showNotification();
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    showNotification();
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Notifications Blocked',
+                text: 'Please enable browser notifications to receive alerts.',
+                icon: 'warning'
+            });
+        }
+    } else {
+        Swal.fire({
+            title: 'Notifications Not Supported',
+            text: 'Your browser does not support desktop notifications.',
+            icon: 'info'
+        });
+    }
+}
+
+function showNotification() {
+    const notification = new Notification('Program Update', {
+        body: 'New activity detected in your program',
+        icon: '/favicon.ico',
+        badge: '/favicon.ico'
+    });
+
+    notification.onclick = function() {
+        window.focus();
+        notification.close();
+    };
+
+    Swal.fire({
+        title: 'Test Notification Sent',
+        text: 'Check your browser notifications!',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+// Simulate user presence updates
+function updateUserPresence() {
+    const activeUsersCount = document.getElementById('active-users-count');
+    if (activeUsersCount) {
+        // Simulate changing number of active users
+        const baseCount = {{ $program->staff->count() }};
+        const variation = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+        const newCount = Math.max(0, baseCount + variation);
+        activeUsersCount.textContent = `${newCount} Online`;
+    }
+}
+
+// Update user presence every minute
+setInterval(updateUserPresence, 60000);
+
+// Export functionality
+function exportProgram(format) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+
+    if(format === "pdf"){
+        exportProgramPDF(programId, programName);
+        return;
+    }
+    // Show loading
+    Swal.fire({
+        title: 'Preparing Export...',
+        text: `Generating ${format.toUpperCase()} export for ${programName}`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timerProgressBar: true
+    });
+
+    // Simulate export process (in real implementation, this would make AJAX calls)
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Export Ready!',
+            text: `${programName} data has been exported as ${format.toUpperCase()}`,
+            icon: 'success',
+            confirmButtonText: 'Download'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                // Simulate download
+                const exportData = generateExportData(format, programId, programName);
+                downloadFile(exportData, `${programName}_program_data.${format}`, format);
+            }
+        });
+    }, 2000);
+}
+
+function exportProgramData(dataType) {
+    // Get program data from data attributes
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+
+    // Show loading
+    Swal.fire({
+        title: 'Preparing Export...',
+        text: `Exporting ${dataType} data for ${programName}`,
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        timerProgressBar: true
+    });
+
+    // Simulate export process
+    setTimeout(() => {
+        Swal.fire({
+            title: 'Export Ready!',
+            text: `${dataType} data has been exported successfully`,
+            icon: 'success',
+            confirmButtonText: 'Download'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Simulate download
+                const exportData = generateSpecificExportData(dataType);
+                downloadFile(exportData, `${programName}_${dataType}_data.csv`, 'csv');
+            }
+        });
+    }, 1500);
+}
+
+function generateExportData(format, programId, programName) {
+    // We don't need to reconstruct programData here since we have PROGRAM_EXPORT_DATA
+    // But keeping this structure for potential other uses or legacy checks if needed
+    // However, for the export, we just delegate to the formatters
+    const programElement = document.querySelector('[data-program-id]');
+    const programId = programElement ? programElement.dataset.programId : '1';
+    const programName = programElement ? programElement.dataset.programName : 'Program';
+
+    switch(format) {
+        case 'json':
+            return JSON.stringify(PROGRAM_EXPORT_DATA, null, 2);
+        case 'csv':
+        case 'excel':
+            // Flatten the data for CSV/Excel
+            return convertToMultiSheetCSV(PROGRAM_EXPORT_DATA);
+        case 'pdf':
+            // For PDF, we'll use the dedicated exportProgramPDF function
+            exportProgramPDF(programId, programName);
+            return null;
+        default:
+            return JSON.stringify(PROGRAM_EXPORT_DATA, null, 2);
+    }
+}
+
+function generateSpecificExportData(dataType) {
+    if (!PROGRAM_EXPORT_DATA) return 'No data available';
+
+    switch(dataType) {
+        case 'beneficiaries':
+            return generateBeneficiariesExport();
+        case 'progress':
+            return generateProgressExport();
+        case 'activities':
+            return generateActivitiesExport();
+        default:
+            return 'No data available';
+    }
+}
+
+function generateBeneficiariesExport() {
+    const b = PROGRAM_EXPORT_DATA.beneficiaries_breakdown;
+    const beneficiaries = [
+        ['Category', 'Count'],
+        ['Women', b.women],
+        ['Men', b.men],
+        ['Girls', b.girls],
+        ['Boys', b.boys],
+        ['Indirect', b.indirect],
+        ['Total', PROGRAM_EXPORT_DATA.program_info.beneficiaries_total]
+    ];
+    return convertToCSV(beneficiaries);
+}
+
+function generateProgressExport() {
+    const headers = [['Metric', 'Target', 'Actual', 'Percentage']];
+    const rows = PROGRAM_EXPORT_DATA.progress_metrics.map(pm => [
+        pm.metric,
+        pm.target,
+        pm.actual,
+        pm.percent + '%'
+    ]);
+    return convertToCSV(headers.concat(rows));
+}
+
+function generateActivitiesExport() {
+    const headers = [['Activity Name', 'Code', 'Status', 'Start Date', 'End Date', 'Budget', 'Progress']];
+    const rows = PROGRAM_EXPORT_DATA.activities.map(act => [
+        act.name,
+        act.code,
+        act.status,
+        act.start_date,
+        act.end_date,
+        act.budget,
+        act.progress_percent + '%'
+    ]);
+    return convertToCSV(headers.concat(rows));
+}
+
+function convertToCSV(data) {
+    if (Array.isArray(data)) {
+        return data.map(row => row.map(cell => {
+            const val = (cell === null || cell === undefined) ? '' : cell.toString();
+            return `"${val.replace(/"/g, '""')}"`;
+        }).join(',')).join('\n');
+    }
+    return '';
+}
+
+function convertToMultiSheetCSV(data) {
+    // Strategy: Create sections for different data types
+    let csvContent = [];
+    
+    // 1. Program Info
+    csvContent.push(['PROGRAM INFORMATION']);
+    Object.keys(data.program_info).forEach(key => {
+        csvContent.push([key.replace(/_/g, ' ').toUpperCase(), data.program_info[key]]);
+    });
+    csvContent.push([]); // Empty line
+    
+    // 2. Beneficiaries
+    csvContent.push(['BENEFICIARIES']);
+    const benKeys = Object.keys(data.beneficiaries_breakdown);
+    csvContent.push(['Category', 'Count']);
+    benKeys.forEach(k => {
+        csvContent.push([k, data.beneficiaries_breakdown[k]]);
+    });
+    csvContent.push([]);
+    
+    // 3. Financials (Donors)
+    csvContent.push(['DONORS & FUNDING']);
+    if (data.donors.length > 0) {
+        csvContent.push(['Donor Name', 'Amount']);
+        data.donors.forEach(d => csvContent.push([d.name, d.donation_amount]));
+    } else {
+        csvContent.push(['No donors recorded']);
+    }
+    csvContent.push([]);
+    
+    // 4. Team
+    csvContent.push(['TEAM MEMBERS']);
+    if (data.team_members.length > 0) {
+        csvContent.push(['Name', 'Email', 'Role']);
+        data.team_members.forEach(t => csvContent.push([t.name, t.email, t.role]));
+    } else {
+        csvContent.push(['No team members recorded']);
+    }
+    csvContent.push([]);
+
+    // 5. Activities
+    csvContent.push(['ACTIVITIES']);
+    if (data.activities.length > 0) {
+        csvContent.push(['Name', 'Code', 'Status', 'Start', 'End', 'Budget', 'Progress']);
+        data.activities.forEach(a => csvContent.push([a.name, a.code, a.status, a.start_date, a.end_date, a.budget, a.progress_percent + '%']));
+    } else {
+        csvContent.push(['No activities recorded']);
+    }
+
+    return convertToCSV(csvContent);
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+}
+
+// Program Document Functions
+function uploadProgramFile() {
+    Swal.fire({
+        title: '{{ __('Upload Files') }}',
+        html: `
+            <input type="file" id="programFile" class="form-control mb-3" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mov,.mp3,.wav" multiple>
+            <input type="text" id="fileName" class="form-control" placeholder="{{ __('File Name') }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: '{{ __('Upload') }}',
+        cancelButtonText: '{{ __('Cancel') }}',
+        preConfirm: () => {
+            const files = document.getElementById('programFile').files;
+            const name = document.getElementById('fileName').value;
+
+            if (files.length === 0) {
+                Swal.showValidationMessage('{{ __('Please select a file') }}');
+                return false;
+            }
+
+            if (!name) {
+                Swal.showValidationMessage('{{ __('Please enter file name') }}');
+                return false;
+            }
+
+            return { files: Array.from(files), name };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            result.value.files.forEach((file, index) => {
+                formData.append('files[]', file);
+                formData.append('captions[]', result.value.name + (index > 0 ? ` ${index + 1}` : ''));
+            });
+            formData.append('program_id', {{ $program->id }});
+
+            fetch('{{ route('program.docs') }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('{{ __('Success!') }}', '{{ __('Files uploaded successfully') }}', 'success');
+                    // Reload the page to refresh the file list
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('{{ __('Error!') }}', '{{ __('Upload failed') }}', 'error');
+            });
+        }
+    });
+}
+
+function previewProgramFile(url, mimeType) {
+    if (mimeType.startsWith('image/')) {
+        Swal.fire({
+            title: '{{ __('Image Preview') }}',
+            html: `<img src="${url}" class="img-fluid" style="max-width: 100%; height: auto;">`,
+            width: '80%',
+            showCloseButton: true,
+            showConfirmButton: false
+        });
+    } else if (mimeType === 'application/pdf') {
+        Swal.fire({
+            title: '{{ __('PDF Preview') }}',
+            html: `<iframe src="${url}" style="width: 100%; height: 600px; border: none;"></iframe>`,
+            width: '90%',
+            height: '600px',
+            showCloseButton: true,
+            showConfirmButton: false
+        });
+    } else {
+        // For other file types, open in new tab
+        window.open(url, '_blank');
+    }
+}
+
+function deleteProgramFile(mediaId) {
+    Swal.fire({
+        title: '{{ __('Are you sure?') }}',
+        text: "{{ __('You won\'t be able to revert this!') }}",
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#3085d6',
+        confirmButtonColor: '#d33',
+        confirmButtonText: '{{ __('Yes, delete it!') }}',
+        cancelButtonText: '{{ __('Cancel') }}'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Make AJAX request to delete file
+            fetch(`/program/media/${mediaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                    // Reload the page to refresh the file list
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+            });
+        }
+    });
+}
+
+// PDF Export Function
+function exportProgramPDF(programId, programName) {
+    Swal.fire({
+        title: 'Generating PDF...',
+        text: 'Converting program data to PDF format. This may take a moment.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Create a hidden container for PDF content
+    const pdfContainer = document.createElement('div');
+    pdfContainer.style.position = 'absolute';
+    pdfContainer.style.left = '-9999px';
+    pdfContainer.style.width = '210mm'; // A4 width
+    pdfContainer.style.padding = '20px';
+    pdfContainer.style.fontFamily = 'Arial, sans-serif';
+    pdfContainer.style.fontSize = '12px';
+    pdfContainer.style.lineHeight = '1.4';
+    pdfContainer.style.backgroundColor = 'white';
+    pdfContainer.style.color = 'black';
+
+    // Generate PDF content with vertical tabs
+    pdfContainer.innerHTML = generatePDFContent(programId, programName);
+    document.body.appendChild(pdfContainer);
+
+    // Use html2canvas to capture the content
+    html2canvas(pdfContainer, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+    }).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 295; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // Add first page
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        // Add additional pages if needed
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        // Save the PDF
+        pdf.save(`${programName}_Program_Report.pdf`);
+
+        // Clean up
+        document.body.removeChild(pdfContainer);
+
+        Swal.fire({
+            title: 'PDF Generated!',
+            text: 'Your program report has been downloaded successfully.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }).catch(error => {
+        console.error('PDF generation error:', error);
+        document.body.removeChild(pdfContainer);
+
+        Swal.fire({
+            title: 'PDF Generation Failed',
+            text: 'There was an error generating the PDF. Please try again.',
+            icon: 'error'
+        });
+    });
+}
+
+function generatePDFContent(programId, programName) {
+    if (!PROGRAM_EXPORT_DATA) return '<h1 style="text-align:center">Error Loading Data</h1>';
+
+    const info = PROGRAM_EXPORT_DATA.program_info;
+    const currentDate = new Date().toLocaleDateString();
+
+    let html = `
+        <div style="margin-bottom: 30px;">
+            <h1 style="text-align: center; margin-bottom: 10px; color: #333; font-size: 24px;">
+                ${info.name}
+            </h1>
+            <p style="text-align: center; margin-bottom: 30px; color: #666; font-size: 14px;">
+                Program Report - Generated on ${currentDate}
+            </p>
+
+            <!-- Initial Info Table -->
+            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Program Information</h2>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 30%; padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Program Code:</td>
+                        <td style="width: 70%; padding: 8px; border-bottom: 1px solid #eee;">${info.code}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Status:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.status}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Start Date:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.start_date}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">End Date:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.end_date}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Total Budget:</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #eee;">${info.total_budget}</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div style="margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+                <h2 style="margin-bottom: 15px; color: #333; font-size: 18px;">Description & Analysis</h2>
+                 <p style="margin-bottom: 15px; line-height: 1.6;"><strong>Description:</strong> ${info.description}</p>
+                 <p style="margin-bottom: 15px; line-height: 1.6;"><strong>Problem Analysis:</strong> ${info.problem_analysis}</p>
+            </div>
+            
+            <h2 style="margin-bottom: 20px; color: #333; font-size: 18px;">Detailed Report</h2>
+            
+            <!-- Beneficiaries -->
+             <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #dc3545; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #dc3545; font-size: 16px;">Beneficiaries</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="background-color: #eee;">
+                        <th style="padding: 8px; border: 1px solid #ddd;">Women</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Men</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Girls</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Boys</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Total</th>
+                    </tr>
+                    <tr>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.women}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.men}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.girls}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${PROGRAM_EXPORT_DATA.beneficiaries_breakdown.boys}</td>
+                         <td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: bold;">${info.beneficiaries_total}</td>
+                    </tr>
+                </table>
+             </div>
+             
+             <!-- Team -->
+             <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #28a745; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #28a745; font-size: 16px;">Team Members</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    ${PROGRAM_EXPORT_DATA.team_members.length > 0 ? 
+                        PROGRAM_EXPORT_DATA.team_members.map(t => 
+                            `<li style="margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                                <strong>${t.name}</strong> - ${t.role} <br> <small>${t.email}</small>
+                             </li>`
+                        ).join('') 
+                    : '<li>No team members recorded.</li>'}
+                </ul>
+             </div>
+
+            <!-- Activities -->
+            <div style="margin-bottom: 25px; padding: 15px; border-left: 4px solid #6610f2; background-color: #f8f9fa;">
+                <h3 style="margin-bottom: 10px; color: #6610f2; font-size: 16px;">Activities</h3>
+                 <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <tr style="background-color: #eee;">
+                        <th style="padding: 5px; border: 1px solid #ddd;">Name</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Status</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Progress</th>
+                        <th style="padding: 5px; border: 1px solid #ddd;">Budget</th>
+                    </tr>
+                    ${PROGRAM_EXPORT_DATA.activities.length > 0 ? 
+                        PROGRAM_EXPORT_DATA.activities.map(a => 
+                             `<tr>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.name}</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.status}</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.progress_percent}%</td>
+                                <td style="padding: 5px; border: 1px solid #ddd;">${a.budget}</td>
+                              </tr>`
+                        ).join('')
+                    : '<tr><td colspan="4" style="padding: 5px; text-align: center;">No activities recorded.</td></tr>'}
+                 </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px;">
+                <p>Generated by App - ${currentDate}</p>
+            </div>
+        </div>
+    `;
+    return html;
+}
+</script>
 @endpush

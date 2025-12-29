@@ -2,11 +2,11 @@
 
 @section('subtitle', __('cruds.prepost.list'))
 @section('content_header_title')
-    {{-- @can('prepost_access') --}}
+    @can('prepostl_create')
         <a class="btn-success btn" href="{{ route('prepost.create') }}" title="{{ __('cruds.prepost.add') }}">
             {{ __('global.create') .' '.__('cruds.prepost.label') }}
         </a>
-    {{-- @endcan --}}
+    @endcan
 @endsection
 @section('sub_breadcumb', __('cruds.prepost.list'))
 
@@ -23,10 +23,12 @@
                 {{__('cruds.prepost.list')}}
             </h3>
             <div class="card-tools">
+                @can('prepostl_create')
                 <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('prepost.create') }}`"
                     title="{{ __('global.create') . ' ' . __('cruds.prepost.label') }}">
                     <i class="fas fa-plus"></i>
                 </button>
+                @endcan
             </div>
         </div>
 

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Akhir Program - Pemberdayaan Masyarakat Bali</title>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- PRINT STYLES --- */
+        @media print {
+            .no-print { display: none !important; }
+            body { 
+                background: #fff; 
+                font-size: 10pt; 
+                -webkit-print-color-adjust: exact; /* Pastikan background color tercetak */
+                print-color-adjust: exact;
+            }
+            .container { 
+                box-shadow: none; 
+                border: none; 
+                padding: 0; 
+                width: 100%; 
+                max-width: 100%; 
+            }
+            .page-break { page-break-before: always; }
+            .avoid-break { page-break-inside: avoid; }
+            
+            /* Sembunyikan URL/Header browser default jika memungkinkan */
+            @page { margin: 2cm; }
+            
+            /* Tweak untuk tabel saat print */
+            th { background-color: #34495e !important; color: white !important; }
+            .group-header { background-color: #2c3e50 !important; color: white !important; }
+        }
+
+        /* --- GENERAL STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #333;
+            background: #f0f2f5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 12px;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px double #3498db;
+            padding-bottom: 25px;
+            margin-bottom: 40px;
+        }
+        .header-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+        .header h1 {
+            font-size: 24pt;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header .subtitle {
+            font-size: 14pt;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+        .header-meta {
+            text-align: right;
+            font-size: 9pt;
+            color: #95a5a6;
+        }
+
+        /* --- INFO BOX --- */
+        .info-card {
+            background: #f8f9fa;
+            border-left: 5px solid #2c3e50;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .info-row { display: flex; margin-bottom: 8px; }
+        .info-label { font-weight: bold; width: 140px; color: #555; }
+        .info-value { font-weight: 500; color: #222; }
+
+        /* --- DASHBOARD SUMMARY --- */
+        .summary-box {
+            background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.2);
+        }
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-value { font-size: 28pt; font-weight: 700; display: block; margin-bottom: 5px; }
+        .stat-label { font-size: 10pt; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- SECTIONS --- */
+        .section-title {
+            font-size: 16pt;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin: 40px 0 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- TABLES --- */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 10.5pt;
+        }
+        .data-table th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .data-table tr:nth-child(even) { background: #f8f9fa; }
+        .data-table tfoot td {
+            background: #ecf0f1;
+            font-weight: bold;
+            border-top: 2px solid #bdc3c7;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        /* --- ACTIVITY CARDS --- */
+        .group-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            margin-top: 40px;
+        }
+        .group-content {
+            border: 2px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .activity-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-left: 5px solid #3498db;
+            border-radius: 6px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        /* Color coding border left based on status */
+        .status-completed { border-left-color: #27ae60; }
+        .status-progress { border-left-color: #f39c12; }
+        
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 15px;
+        }
+        .activity-title h3 { margin: 0; font-size: 14pt; color: #2c3e50; }
+        .activity-breadcrumbs { font-size: 9pt; color: #7f8c8d; margin-top: 5px; }
+        
+        .badges { display: flex; gap: 5px; }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 8pt;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .bg-blue { background: #e3f2fd; color: #2196f3; }
+        .bg-green { background: #e8f5e9; color: #2e7d32; }
+        .bg-orange { background: #fff3e0; color: #ef6c00; }
+        .bg-purple { background: #f3e5f5; color: #9c27b0; }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .grid-item strong { display: block; font-size: 9pt; color: #7f8c8d; }
+        
+        .activity-body {
+            margin-top: 15px;
+        }
+        .detail-box {
+            background: #fcfcfc;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+        .detail-box h4 {
+            font-size: 11pt;
+            margin-bottom: 10px;
+            color: #34495e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- SIGNATURE --- */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid #ddd;
+            page-break-inside: avoid;
+        }
+        .signature-box {
+            text-align: center;
+            width: 250px;
+        }
+        .signature-line {
+            margin-top: 80px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+        }
+
+        /* --- BUTTON --- */
+        .fab-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: none;
+            z-index: 999;
+        }
+        .fab-print:hover { transform: scale(1.1); background: #2980b9; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-logo">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <div class="header-content">
+                <h1>Laporan Akhir Program</h1>
+                <div class="subtitle">Pemberdayaan Masyarakat Pesisir Bali Berkelanjutan</div>
+            </div>
+            <div class="header-meta">
+                <p>No. Dokumen: <strong>RPT-2024-BALI-001</strong></p>
+                <p>Status: <strong>Final</strong></p>
+            </div>
+        </header>
+
+        <!-- INFO PROGRAM -->
+        <section class="info-card avoid-break">
+            <div>
+                <div class="info-row">
+                    <div class="info-label">Nama Program</div>
+                    <div class="info-value">: PMPB - Bali Sustainable Coastal</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Kode Program</div>
+                    <div class="info-value">: PRG-2024-005</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Lokasi Utama</div>
+                    <div class="info-value">: Denpasar Selatan, Badung, Gianyar</div>
+                </div>
+            </div>
+            <div>
+                <div class="info-row">
+                    <div class="info-label">Periode</div>
+                    <div class="info-value">: 01 Jan 2024 - 31 Des 2024</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Manajer Program</div>
+                    <div class="info-value">: Budi Santoso, S.Sos</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Donor Utama</div>
+                    <div class="info-value">: Global Environment Facility (GEF)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD STATS -->
+        <section class="summary-box avoid-break">
+            <div class="summary-header">
+                <h2 style="margin:0">Ringkasan Pencapaian</h2>
+                <span style="font-size: 0.9em; opacity: 0.8"><i class="fa-regular fa-clock"></i> Data per: 08 Des 2024</span>
+            </div>
+            <div class="summary-grid">
+                <div class="stat-card">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">Realisasi Program</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">1,247</span>
+                    <span class="stat-label">Penerima Manfaat</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">Rp 2.4M</span>
+                    <span class="stat-label">Dana Terserap</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">15</span>
+                    <span class="stat-label">Desa Binaan</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- BAGIAN 1: KEUANGAN (NEW SECTION) -->
+        <h2 class="section-title"><i class="fa-solid fa-coins"></i> Ringkasan Keuangan</h2>
+        <p style="margin-bottom: 15px;">Berikut adalah ringkasan penyerapan anggaran program berdasarkan kategori pengeluaran utama:</p>
+        <table class="data-table avoid-break">
+            <thead>
+                <tr>
+                    <th>Kategori Pengeluaran</th>
+                    <th class="text-right">Anggaran (IDR)</th>
+                    <th class="text-right">Realisasi (IDR)</th>
+                    <th class="text-center">% Serapan</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Biaya Personil & Staff</td>
+                    <td class="text-right">800.000.000</td>
+                    <td class="text-right">795.500.000</td>
+                    <td class="text-center">99.4%</td>
+                    <td>Sesuai rencana</td>
+                </tr>
+                <tr>
+                    <td>Biaya Kegiatan & Pelatihan</td>
+                    <td class="text-right">1.000.000.000</td>
+                    <td class="text-right">980.000.000</td>
+                    <td class="text-center">98.0%</td>
+                    <td>Efisiensi biaya venue</td>
+                </tr>
+                <tr>
+                    <td>Pengadaan Peralatan (Procurement)</td>
+                    <td class="text-right">500.000.000</td>
+                    <td class="text-right">500.000.000</td>
+                    <td class="text-center">100%</td>
+                    <td>Pembelian mesin & perahu</td>
+                </tr>
+                <tr>
+                    <td>Operasional Kantor & Admin</td>
+                    <td class="text-right">200.000.000</td>
+                    <td class="text-right">185.000.000</td>
+                    <td class="text-center">92.5%</td>
+                    <td>Penghematan ATK</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>TOTAL</td>
+                    <td class="text-right">2.500.000.000</td>
+                    <td class="text-right">2.460.500.000</td>
+                    <td class="text-center">98.42%</td>
+                    <td>Sangat Baik</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- BAGIAN 2: DEMOGRAFI -->
+        <div class="avoid-break">
+            <h2 class="section-title"><i class="fa-solid fa-users"></i> Demografi Penerima Manfaat</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th class="text-center">Perempuan</th>
+                        <th class="text-center">Laki-laki</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Persentase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dewasa (18-59 th)</td>
+                        <td class="text-center">345</td>
+                        <td class="text-center">298</td>
+                        <td class="text-center"><strong>643</strong></td>
+                        <td class="text-center">51.5%</td>
+                    </tr>
+                    <tr>
+                        <td>Lansia (>60 th)</td>
+                        <td class="text-center">87</td>
+                        <td class="text-center">72</td>
+                        <td class="text-center"><strong>159</strong></td>
+                        <td class="text-center">12.7%</td>
+                    </tr>
+                    <tr>
+                        <td>Remaja & Anak</td>
+                        <td class="text-center">255</td>
+                        <td class="text-center">190</td>
+                        <td class="text-center"><strong>445</strong></td>
+                        <td class="text-center">35.8%</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>TOTAL</td>
+                        <td class="text-center">687</td>
+                        <td class="text-center">560</td>
+                        <td class="text-center">1,247</td>
+                        <td class="text-center">100%</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="page-break"></div>
+
+        <!-- BAGIAN 3: DAFTAR KEGIATAN -->
+        <h2 class="section-title"><i class="fa-solid fa-list-check"></i> Rincian Kegiatan</h2>
+
+        <!-- GROUP A1 -->
+        <div class="group-header avoid-break">
+            <h3 style="margin:0">Output A1: Peningkatan Kapasitas SDM</h3>
+            <small>Outcome: Masyarakat memiliki keterampilan pengolahan produk bernilai tambah</small>
+        </div>
+        <div class="group-content">
+            
+            <!-- KEGIATAN 1 -->
+            <div class="activity-item status-completed avoid-break">
+                <div class="activity-header">
+                    <div class="activity-title">
+                        <h3>Pelatihan Pengolahan Hasil Laut</h3>
+                        <div class="activity-breadcrumbs">A1.1.1 &bull; Pelatihan Teknis</div>
+                    </div>
+                    <div class="badges">
+                        <span class="badge bg-green">Completed</span>
+                        <span class="badge bg-blue">Training</span>
+                    </div>
+                </div>
+                
+                <div class="activity-grid">
+                    <div class="grid-item">
+                        <strong><i class="fa-regular fa-calendar"></i> Tanggal</strong>
+                        15 - 17 Jan 2024
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-map-pin"></i> Lokasi</strong>
+                        Desa Sanur, Denpasar
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-user-group"></i> Peserta</strong>
+                        45 Orang (28 P, 17 L)
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-handshake"></i> Mitra</strong>
+                        Dinas Kelautan & KUD Mina Jaya
+                    </div>
+                </div>
+
+                <div class="activity-body">
+                    <p><strong>Ringkasan:</strong> Pelatihan intensif selama 3 hari mengenai teknik pembuatan abon ikan, kerupuk kulit ikan, dan pengemasan vakum untuk meningkatkan masa simpan produk.</p>
+                    <div class="detail-box">
+                        <h4><i class="fa-solid fa-check-double"></i> Hasil Utama (Output)</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>3 kelompok usaha wanita terbentuk.</li>
+                            <li>5 varian produk baru tercipta.</li>
+                            <li>Peserta memahami standar sanitasi dan higienitas produksi pangan (PIRT).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KEGIATAN 2 (MONITORING) -->
+            <div class="activity-item status-completed avoid-break">
+                <div class="activity-header">
+                    <div class="activity-title">
+                        <h3>Monitoring Pasca Pelatihan</h3>
+                        <div class="activity-breadcrumbs">A1.1.1 &bull; Monitoring & Evaluasi</div>
+                    </div>
+                    <div class="badges">
+                        <span class="badge bg-green">Completed</span>
+                        <span class="badge bg-purple">Monev</span>
+                    </div>
+                </div>
+                
+                <div class="activity-grid">
+                    <div class="grid-item">
+                        <strong><i class="fa-regular fa-calendar"></i> Tanggal</strong>
+                        15 Feb 2024
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-clipboard-check"></i> Metode</strong>
+                        Wawancara & Kunjungan Rumah
+                    </div>
+                </div>
+
+                <div class="activity-body">
+                    <div class="detail-box">
+                        <h4><i class="fa-solid fa-magnifying-glass-chart"></i> Temuan Monitoring</h4>
+                        <p>84% peserta aktif memproduksi. Tantangan utama yang ditemukan adalah akses terhadap kemasan murah. Solusi: Koperasi akan memfasilitasi pembelian kemasan secara kolektif.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Group A1 -->
+
+        <!-- GROUP B1 (NEW - PENGADAAN) -->
+        <div class="group-header avoid-break">
+            <h3 style="margin:0">Output B1: Dukungan Infrastruktur & Alat</h3>
+            <small>Outcome: Peningkatan efisiensi produksi melalui mekanisasi</small>
+        </div>
+        <div class="group-content">
+
+            <!-- KEGIATAN 3 - PENGADAAN (BARU) -->
+            <div class="activity-item status-completed avoid-break">
+                <div class="activity-header">
+                    <div class="activity-title">
+                        <h3>Pengadaan & Distribusi Mesin Pengering</h3>
+                        <div class="activity-breadcrumbs">B1.2.1 &bull; Pembelanjaan</div>
+                    </div>
+                    <div class="badges">
+                        <span class="badge bg-green">Completed</span>
+                        <span class="badge bg-orange">Procurement</span>
+                    </div>
+                </div>
+                
+                <div class="activity-grid">
+                    <div class="grid-item">
+                        <strong><i class="fa-regular fa-calendar"></i> Periode</strong>
+                        01 - 10 Mar 2024
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-box-open"></i> Item</strong>
+                        5 Unit Solar Dryer Dome
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-truck-fast"></i> Penerima</strong>
+                        5 Kelompok Tani Garam
+                    </div>
+                    <div class="grid-item">
+                        <strong><i class="fa-solid fa-money-bill-wave"></i> Nilai</strong>
+                        Rp 125.000.000
+                    </div>
+                </div>
+
+                <div class="activity-body">
+                    <p><strong>Deskripsi:</strong> Pembelian 5 unit alat pengering tenaga surya (Solar Dryer Dome) untuk membantu petani garam tetap berproduksi saat musim hujan.</p>
+                    <div class="detail-box">
+                        <h4><i class="fa-solid fa-list-ul"></i> Detail Distribusi</h4>
+                        <ul style="margin-left: 20px;">
+                            <li>1 Unit: Kelompok Tani Kusamba (Klungkung)</li>
+                            <li>2 Unit: Kelompok Tani Amed (Karangasem)</li>
+                            <li>2 Unit: Kelompok Tani Tejakula (Buleleng)</li>
+                        </ul>
+                        <p style="margin-top:10px; font-size: 0.9em;"><em>Semua unit telah diserahterimakan lengkap dengan Berita Acara Serah Terima (BAST).</em></p>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Group B1 -->
+
+        <div class="page-break"></div>
+
+        <!-- BAGIAN 4: TANTANGAN & REKOMENDASI (NEW) -->
+        <h2 class="section-title"><i class="fa-solid fa-triangle-exclamation"></i> Tantangan & Pembelajaran</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border: 1px solid #ffeeba;">
+                <h3 style="color: #856404; margin-bottom: 10px;"><i class="fa-solid fa-bolt"></i> Tantangan</h3>
+                <ol style="margin-left: 20px; color: #555;">
+                    <li style="margin-bottom: 8px;">Cuaca ekstrem pada bulan Februari menghambat proses distribusi bantuan alat ke wilayah Nusa Penida.</li>
+                    <li style="margin-bottom: 8px;">Kenaikan harga bahan baku lokal sebesar 15% mempengaruhi margin keuntungan kelompok usaha binaan.</li>
+                    <li>Koordinasi dengan dinas terkait sempat melambat karena adanya rotasi pejabat daerah.</li>
+                </ol>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-radius: 8px; border: 1px solid #c3e6cb;">
+                <h3 style="color: #155724; margin-bottom: 10px;"><i class="fa-regular fa-lightbulb"></i> Pembelajaran & Rekomendasi</h3>
+                <ol style="margin-left: 20px; color: #555;">
+                    <li style="margin-bottom: 8px;">Pengadaan kolektif melalui koperasi terbukti efektif menekan biaya produksi hingga 10%.</li>
+                    <li style="margin-bottom: 8px;">Diperlukan pelatihan manajemen risiko bencana untuk kelompok tani pesisir.</li>
+                    <li>Pelibatan tokoh adat (Bendesa) sangat krusial dalam mempercepat sosialisasi program di tingkat desa.</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- BAGIAN 5: TANDA TANGAN (NEW) -->
+        <div class="signature-section avoid-break">
+            <div class="signature-box">
+                <p>Dibuat Oleh,</p>
+                <div class="signature-line"></div>
+                <p><strong>Wayan Artha</strong></p>
+                <p>Field Coordinator</p>
+            </div>
+            
+            <div class="signature-box">
+                <p>Diperiksa Oleh,</p>
+                <div class="signature-line"></div>
+                <p><strong>Sarah Jenkins</strong></p>
+                <p>MEAL Officer</p>
+            </div>
+            
+            <div class="signature-box">
+                <p>Disetujui Oleh,</p>
+                <div class="signature-line"></div>
+                <p><strong>Budi Santoso</strong></p>
+                <p>Program Manager</p>
+            </div>
+        </div>
+
+    </div> <!-- End Container -->
+
+    <!-- FAB Print Button -->
+    <button class="fab-print no-print" onclick="window.print()" title="Cetak Laporan">
+        <i class="fa-solid fa-print" style="font-size: 1.5rem;"></i>
+    </button>
+
+</body>
+</html>

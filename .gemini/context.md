@@ -1,10 +1,13 @@
 # IDEP Information System - Root Context
 
 ## Project Overview
-IDEP (Institut untuk Demokrasi dan Pemberdayaan) Information System is a Laravel-based training management system designed for non-profit organizations to manage training programs efficiently.
+
+IDEP Information System is a Laravel-based training management system designed for non-profit organizations to manage training programs efficiently.
 
 ## Core Purpose
+
 Sistem Informasi IDEP dirancang untuk:
+
 - Mengelola informasi tentang berbagai program pelatihan yang ditawarkan
 - Menyimpan rincian peserta, jadwal, dan lokasi pelatihan
 - Memungkinkan pemantauan kemajuan peserta selama pelatihan
@@ -13,6 +16,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Menyediakan analisis dan statistik untuk evaluasi program
 
 ## Technology Stack
+
 - **Backend**: Laravel Framework (PHP)
 - **Database**: MySQL
 - **Frontend**: AdminLTE Template
@@ -22,6 +26,7 @@ Sistem Informasi IDEP dirancang untuk:
 - **Authentication**: Laravel built-in authentication system
 
 ## Key Features
+
 - **Program Management**: Manage various training programs offered
 - **Participant Management**: Store participant details, schedules, and locations
 - **Progress Monitoring**: Track participant progress during training
@@ -34,6 +39,7 @@ Sistem Informasi IDEP dirancang untuk:
 - **Integration Capability**: Ability to integrate with other applications/systems
 
 ## Development Principles
+
 - Follow Laravel MVC architecture strictly
 - Use AdminLTE components consistently
 - Implement proper authentication and authorization
@@ -43,6 +49,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Maintain responsive design for all devices
 
 ## Code Style Guidelines
+
 - PSR-12 coding standards for PHP
 - Laravel naming conventions for models, controllers, migrations
 - AdminLTE component structure for views
@@ -51,6 +58,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Meaningful variable and function names
 
 ## Security Requirements
+
 - Laravel authentication for user access
 - Role-based permissions for different user types
 - CSRF protection on all forms
@@ -59,6 +67,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Data encryption where needed
 
 ## Performance Considerations
+
 - Efficient database queries using Eloquent
 - Proper indexing for frequently queried data
 - Lazy loading for large datasets
@@ -67,6 +76,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Caching strategies for reports and analytics
 
 ## User Roles & Permissions
+
 - **Super Admin**: Full system access
 - **Admin**: Program and participant management
 - **Staff**: Limited access to assigned programs
@@ -74,6 +84,7 @@ Sistem Informasi IDEP dirancang untuk:
 - **Participant**: View own training progress and materials
 
 ## Reporting Requirements
+
 - Attendance reports per program/session
 - Participant achievement summaries
 - Training program effectiveness analysis
@@ -82,6 +93,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Export capabilities (PDF, Excel)
 
 ## AdminLTE Integration Notes
+
 - Use AdminLTE's card components for content sections
 - Implement AdminLTE's form styling consistently
 - Utilize AdminLTE's navigation patterns
@@ -89,6 +101,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Use AdminLTE's plugin system for additional functionality
 
 ## Database Design Principles
+
 - Normalize database structure for training management
 - Implement proper foreign key relationships
 - Use soft deletes for important records
@@ -96,6 +109,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Store audit trails for important changes
 
 ## jQuery/AJAX Patterns
+
 - Use consistent error handling across all AJAX calls
 - Implement loading states for better UX
 - Validate forms on both client and server side
@@ -103,6 +117,7 @@ Sistem Informasi IDEP dirancang untuk:
 - Handle CSRF tokens properly in AJAX requests
 
 ## Deployment Requirements
+
 - PHP 8.1+ support
 - MySQL 8.0+ database
 - Web server (Apache/Nginx) configuration

@@ -179,13 +179,34 @@ class JenisbantuanController extends Controller
         // Prepare data for DataTables (without modifying original collection)
         $data = DataTables::of($activeJenisbantuan)
             ->addColumn('action', function ($jenisbantuan) {
-                $editUrl = route('jenisbantuan.edit', $jenisbantuan->id);
-                $viewUrl = route('jenisbantuan.show', $jenisbantuan->id);
-                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
-                //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
+                $buttons = '';
 
-                return '<button type="button" class="btn btn-sm btn-info edit-jenisbantuan-btn" data-action="edit" data-jenisbantuan-id="'. $jenisbantuan->id .'" title="'.__('global.edit') .' '. __('cruds.jenisbantuan.title') .' '. $jenisbantuan->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-jenisbantuan-btn" data-action="view" data-jenisbantuan-id="'. $jenisbantuan->id .'" value="'. $jenisbantuan->id .'" title="'.__('global.view') .' '. __('cruds.jenisbantuan.title') .' '. $jenisbantuan->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                if (auth()->user()->can('jenisbantuan_edit')) {
+                    $buttons .= '
+                        <button type="button" 
+                            class="btn btn-sm btn-info edit-jenisbantuan-btn"
+                            data-action="edit" 
+                            data-jenisbantuan-id="' . $jenisbantuan->id . '"
+                            title="' . __('global.edit') . ' ' . __('cruds.jenisbantuan.title') . ' ' . $jenisbantuan->nama . '">
+                            <i class="fas fa-pencil-alt"></i> ' . __('global.edit') . '
+                        </button>
+                    ';
+                }
+
+                if (auth()->user()->can('jenisbantuan_show')) {
+                    $buttons .= '
+                        <button type="button" 
+                            class="btn btn-sm btn-primary view-jenisbantuan-btn"
+                            data-action="view" 
+                            data-jenisbantuan-id="' . $jenisbantuan->id . '"
+                            title="' . __('global.view') . ' ' . __('cruds.jenisbantuan.title') . ' ' . $jenisbantuan->nama . '">
+                            <i class="fas fa-folder-open"></i> ' . __('global.view') . '
+                        </button>
+                    ';
+                }
+
+                // tampilkan '-' kalau user gak punya izin sama sekali
+                return $buttons ?: '-';
             })
             ->make(true);
         return $data;

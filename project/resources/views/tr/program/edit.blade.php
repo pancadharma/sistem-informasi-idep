@@ -315,10 +315,13 @@
                                             {{ __('cruds.status.title') }}
                                         </strong>
                                     </label>
+                                    @php
+                                        $canEditStatus = auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('program_status_edit');
+                                    @endphp
                                     <div class="select2-green">
                                         <select
                                             class="form-control select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
-                                            name="status" id="status">
+                                            name="status" id="status" @if(!$canEditStatus) disabled @endif>
                                             <option value disabled {{ old('status', null) === null ? 'selected' : '' }}>
                                                 {{ trans('global.pleaseSelect') }}</option>
                                             @foreach (App\Models\Program::STATUS_SELECT as $key => $label)
@@ -327,6 +330,9 @@
                                                     {{ $label }}</option>
                                             @endforeach
                                         </select>
+                                        @if(!$canEditStatus)
+                                            <input type="hidden" name="status" value="{{ old('status', $program->status) }}">
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -436,9 +442,45 @@
         // Initial calculation on page load
         calculateTotal();
 
+        // Permission and initial status flags from backend
+        const CAN_EDIT_STATUS = {{ $canEditStatus ? 'true' : 'false' }};
+        const initiallyComplete = '{{ $program->status }}' === 'complete';
+
+        // Disable update button if the existing record is already complete
+        if (initiallyComplete && !CAN_EDIT_STATUS) {
+            $('#updateProgramBtn').prop('disabled', true);
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Program is already completed. Not allowed to update unless Administrator only.');
+            } else if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Program is already completed. Not allowed to update unless Administrator only.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+        }
+
         $('#updateProgramBtn').on('click', function(e) {
             e.preventDefault();
 
+            // Block submission entirely if record was initially complete and user not allowed
+            if (initiallyComplete && !CAN_EDIT_STATUS) {
+                if (typeof toastr !== 'undefined') {
+                    toastr.error('Program is already completed. Not allowed to update unless Administrator only.');
+                } else if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Action not allowed',
+                        text: 'Program is already completed. Not allowed to update unless Administrator only.'
+                    });
+                }
+                return;
+            }
+
+            // If user is moving status to complete now, run completion validation
             if ($('#status').val() === 'complete') {
                 if (!validateProgramComplete()) {
                     return; // Stop if client-side validation fails

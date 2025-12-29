@@ -2,9 +2,11 @@
 
 @section('subtitle', __('cruds.target_progress.list'))
 @section('content_header_title')
+	@can('target_progress_create')
 	<a class="btn-success btn" href="{{ route('target_progress.create') }}" title="{{ __('cruds.target_progress.add') }}">
 		{{ __('global.create') .' '.__('cruds.target_progress.label') }}
 	</a>
+	@endcan
 @endsection
 
 @section('sub_breadcumb', __('cruds.target_progress.list'))
@@ -22,12 +24,14 @@
 				{{__('cruds.target_progress.list')}}
 			</h3>
 			<div class="card-tools">
+				@can('target_progress_create')
 				<button type="button" class="btn btn-tool"
 					onclick="window.location.href=`{{ route('target_progress.create') }}`"
 					title="{{ __('global.create') . ' ' . __('cruds.target_progress.label') }}"
 				>
 					<i class="fas fa-plus"></i>
 				</button>
+				@endcan
 			</div>
 		</div>
 

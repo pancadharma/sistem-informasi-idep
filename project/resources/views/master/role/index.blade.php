@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('subtitle', __('cruds.role.list'))
-@section('content_header_title', __('cruds.role.list'))
+@section('content_header_title', __('cruds.role.list') .' '. "System" )
 @section('sub_breadcumb', __('cruds.role.title'))
 
 @section('content_body')

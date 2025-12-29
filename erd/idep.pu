@@ -694,7 +694,7 @@ entity "trmealsqb" as trmealsqb {
     id_programoutcomeoutputactivity : int <<fk>>
     id_desa : int <<fk>>
     tanggalimplementasi : datetime
-    id_userhandler : int <<fk>>
+    handler : varchar (500)
     id_usercompiler : int <<fk>>
     score : decimal
     catatanevaluasi : varchar (500)

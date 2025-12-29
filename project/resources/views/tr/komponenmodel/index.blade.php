@@ -2,7 +2,7 @@
 
 @section('subtitle', __('cruds.komponenmodel.list'))
 @section('content_header_title')
-    @can('komponenmodel_access')
+    @can('komponenmodel_create')
         <a class="btn-success btn" href="{{ route('komodel.create') }}" title="{{ __('cruds.komponenmodel.add') }}">
             {{ __('global.create') .' '.__('cruds.komponenmodel.label') }}
         </a>
@@ -23,10 +23,12 @@
                 {{__('cruds.komponenmodel.list')}}
             </h3>
             <div class="card-tools">
+                @can('komponenmodel_create')
                 <button type="button" class="btn btn-tool" onclick="window.location.href=`{{ route('komodel.create') }}`"
                     title="{{ __('global.create') . ' ' . __('cruds.komponenmodel.label') }}">
                     <i class="fas fa-plus"></i>
                 </button>
+                @endcan
             </div>
         </div>
 

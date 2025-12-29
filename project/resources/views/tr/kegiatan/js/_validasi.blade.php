@@ -1,5 +1,45 @@
 <script>
     $(document).ready(function() {
+        // Permission and initial-status logic
+        const CAN_EDIT_STATUS_KEGIATAN = {{ (auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('kegiatan_status_edit')) ? 'true' : 'false' }};
+        const INITIALLY_COMPLETED_KEGIATAN = '{{ $kegiatan->status ?? '' }}' === 'completed';
+
+        // Lock status field for unauthorized users and preserve value via hidden input
+        (function lockStatusIfUnauthorized(){
+            const $form = $('#updateKegiatan');
+            const $status = $('#status');
+            if ($form.length && $status.length && !CAN_EDIT_STATUS_KEGIATAN) {
+                const currentVal = $status.val();
+                $status.prop('disabled', true).addClass('is-readonly');
+                const s2 = $status.data('select2');
+                if (s2 && s2.$container) {
+                    s2.$container.addClass('select2-container--disabled');
+                }
+                if ($form.find('input[type="hidden"][name="status"]').length === 0) {
+                    $('<input>', { type: 'hidden', name: 'status', value: currentVal }).appendTo($form);
+                } else {
+                    $form.find('input[type="hidden"][name="status"]').val(currentVal);
+                }
+                $status.on('change', function(){
+                    $(this).val(currentVal).trigger('change.select2');
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning('You do not have permission to change status.');
+                    } else if (typeof Swal !== 'undefined') {
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'warning', title: 'You do not have permission to change status.', showConfirmButton: false, timer: 2500 });
+                    }
+                });
+            }
+        })();
+
+        // If already completed and user is not allowed, disable update
+        if (INITIALLY_COMPLETED_KEGIATAN && !CAN_EDIT_STATUS_KEGIATAN) {
+            $('#update_kegiatan').prop('disabled', true);
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+            } else if (typeof Swal !== 'undefined') {
+                Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Kegiatan is already completed. Not allowed to update unless Administrator only.', showConfirmButton: false, timer: 3000 });
+            }
+        }
         function validasiProgramIDActivityID() {
             let program_id = $('#program_id').val();
             let kode_program = $('#kode_program').val();
@@ -667,6 +707,15 @@
 
         $('#update_kegiatan').on('click', function(e) {
             e.preventDefault();
+
+            if (INITIALLY_COMPLETED_KEGIATAN && !CAN_EDIT_STATUS_KEGIATAN) {
+                if (typeof toastr !== 'undefined') {
+                    toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+                } else if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Action not allowed', text: 'Kegiatan is already completed. Not allowed to update unless Administrator only.'});
+                }
+                return false;
+            }
 
             if ($('#status').val() === 'completed') {
                 validateStatusComplete();

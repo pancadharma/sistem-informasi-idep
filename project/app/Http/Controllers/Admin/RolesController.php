@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class RolesController extends Controller
 {
     public function index(){
-        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('role_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $roles = Role::pluck('nama', 'id');
         $permissions = Permission::pluck('nama','id');
         $permissions_data = Permission::get(['id', 'nama'])

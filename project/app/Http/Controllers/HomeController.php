@@ -78,7 +78,7 @@ class HomeController extends Controller
             'perempuan'       => $data->where('jenis_kelamin', 'perempuan')->count(),
             'anak_laki'       => $data->where('jenis_kelamin', 'laki')->where('umur', '<', 17)->count(),
             'anak_perempuan'  => $data->where('jenis_kelamin', 'perempuan')->where('umur', '<', 17)->count(),
-            'disabilitas'     => $data->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(),
+            'disabilitas'     => $data->filter(fn($item) => $item->kelompokMarjinal->contains('id', 3))->count(), // disabilitas id=3
             'keluarga'        => $uniqueFamilies,
         ]);
     }
@@ -363,4 +363,42 @@ class HomeController extends Controller
 
     // }
 
+    public function getAgeGroupChartData(Request $request)
+    {
+        $query = Meals_Penerima_Manfaat::query();
+
+        if ($request->provinsi_id) {
+            $query->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($q) use ($request) {
+                $q->where('id', $request->provinsi_id);
+            });
+        }
+
+        if ($request->program_id) {
+            $query->where('program_id', $request->program_id);
+        }
+
+        if ($request->tahun) {
+            $query->whereHas('program', function ($q) use ($request) {
+                $q->whereYear('tanggalmulai', '<=', $request->tahun)
+                    ->whereYear('tanggalselesai', '>=', $request->tahun);
+            });
+        }
+
+        $beneficiary_by_age = $query->select('umur')->get()->pluck('umur');
+        $age_groups = ['0-17' => 0, '18-30' => 0, '31-59' => 0, '60+' => 0];
+
+        foreach ($beneficiary_by_age as $age) {
+            if ($age <= 17) $age_groups['0-17']++;
+            elseif ($age <= 30) $age_groups['18-30']++;
+            elseif ($age <= 59) $age_groups['31-59']++;
+            else $age_groups['60+']++;
+        }
+
+        $beneficiary_age_chart = [
+            'labels' => array_keys($age_groups),
+            'data' => array_values($age_groups),
+        ];
+
+        return response()->json($beneficiary_age_chart);
+    }
 }

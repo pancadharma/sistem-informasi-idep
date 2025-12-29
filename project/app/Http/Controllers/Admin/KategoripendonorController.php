@@ -140,20 +140,37 @@ class KategoripendonorController extends Controller
     {
         //
     }
-    public function datakategoripendonor(){
+    public function datakategoripendonor()
+    {
         $activekategoripendonor = Kategori_Pendonor::get();
-        // Prepare data for DataTables (without modifying original collection)
+
         $data = DataTables::of($activekategoripendonor)
             ->addColumn('action', function ($kategoripendonor) {
-                $editUrl = route('kategoripendonor.edit', $kategoripendonor->id);
-                $viewUrl = route('kategoripendonor.show', $kategoripendonor->id);
-                // return '<a href="'.$editUrl.'" class="btn btn-sm btn-info" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a> <a href="'.$viewUrl.'" class="btn btn-sm btn-primary" title="'.__('global.view') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-folder-open"></i></a>';
-                //<button type="button" class="btn btn-sm btn-info edit-province-btn" data-province-id="{{ $province->id }}" title="'.__('global.edit') .' '. __('cruds.provinsi.title') .' '. $provinsi->nama .'"><i class="fas fa-pencil-alt"></i></a>Edit</button>
+                $buttons = '';
 
-                return '<button type="button" class="btn btn-sm btn-info edit-kategoripendonor-btn" data-action="edit" data-kategoripendonor-id="'. $kategoripendonor->id .'" title="'.__('global.edit') .' '. __('cruds.kategoripendonor.title') .' '. $kategoripendonor->nama .'"><i class="fas fa-pencil-alt"></i> Edit</button>
-                <button type="button" class="btn btn-sm btn-primary view-kategoripendonor-btn" data-action="view" data-kategoripendonor-id="'. $kategoripendonor->id .'" value="'. $kategoripendonor->id .'" title="'.__('global.view') .' '. __('cruds.kategoripendonor.title') .' '. $kategoripendonor->nama .'"><i class="fas fa-folder-open"></i> View</button>';
+                if (auth()->user()->can('kategoridonor_edit')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-info edit-kategoripendonor-btn"
+                        data-action="edit"
+                        data-kategoripendonor-id="'. $kategoripendonor->id .'"
+                        title="'.__('global.edit') .' '. __('cruds.kategoripendonor.title') .' '. $kategoripendonor->nama .'">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </button> ';
+                }
+
+                if (auth()->user()->can('kategoridonor_show')) {
+                    $buttons .= '<button type="button" class="btn btn-sm btn-primary view-kategoripendonor-btn"
+                        data-action="view"
+                        data-kategoripendonor-id="'. $kategoripendonor->id .'"
+                        value="'. $kategoripendonor->id .'"
+                        title="'.__('global.view') .' '. __('cruds.kategoripendonor.title') .' '. $kategoripendonor->nama .'">
+                        <i class="fas fa-folder-open"></i> View
+                    </button> ';
+                }
+
+                return $buttons ?: '-';
             })
             ->make(true);
+
         return $data;
     }
 
