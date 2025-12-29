@@ -11,13 +11,6 @@
 @section('content_body')
 <div class="container-fluid">
     {{-- Header --}}
-    <div class="row mb-3">
-        <div class="col-12">
-            <h2>BTOR - Back to Office Report</h2>
-            <p class="text-muted">Manage and export activity reports</p>
-        </div>
-    </div>
-
     {{-- Filter Card --}}
     <div class="card mb-4">
         <div class="card-body">
