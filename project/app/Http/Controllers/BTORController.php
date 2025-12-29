@@ -249,10 +249,10 @@ class BTORController extends Controller
             
             $phpWord->setDefaultFontName('Tahoma');
             $phpWord->setDefaultFontSize(10);
-            
 
-            $section = $phpWord->addSection();
-            $header = $section->addHeader();
+
+            // $section = $phpWord->addSection();
+
 
             $section = $phpWord->addSection([
                 // Body content uses these margins
@@ -267,7 +267,8 @@ class BTORController extends Controller
                 'footerHeight' => 567,
                 'footerDistance' => 283,
             ]);
-            
+
+            $header = $section->addHeader();
             $imagePath = public_path('images/uploads/header.png');
             if (file_exists($imagePath)) {
                 $header->addImage($imagePath, [
