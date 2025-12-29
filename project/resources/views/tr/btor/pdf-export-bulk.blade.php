@@ -1,290 +1,354 @@
-@extends('tr.btor.layouts.pdf-layout')
-
-@section('title', 'BTOR Bulk Export - ' . count($kegiatanList) . ' Reports')
-
-@push('print-styles')
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>BTOR Export</title>
     <style>
-        .page-break-before {
-            page-break-before: always;
+        @page {
+            margin: 2.5cm 2.5cm 2.5cm 2.5cm;
         }
 
-        .report-separator {
-            border: none;
-            border-top: 3px dashed #333;
-            margin: 30px 0;
+        body {
+            font-family: 'Tahoma', sans-serif;
+            font-size: 10pt;
+            line-height: 1.3;
+            color: #000000;
         }
 
-        .report-number-badge {
-            background: #333;
-            color: #fff;
-            padding: 5px 15px;
-            font-size: 12pt;
+        /** HEADER & FOOTER **/
+        header {
+            position: fixed;
+            top: -2cm;
+            left: 0;
+            right: 0;
+            height: 40px;
+            text-align: center;
+        }
+
+        footer {
+            position: fixed;
+            bottom: -2.5cm;
+            left: 0;
+            right: 0;
+            height: 80px;
+            font-size: 8pt;
+            text-align: center;
+            color: #0F7001;
+        }
+
+        .footer-line {
+            border-top: 1px double #000000;
+            margin-bottom: 5px;
+            width: 100%;
+        }
+
+        .footer-bold {
             font-weight: bold;
-            display: inline-block;
-            margin-bottom: 15px;
+            color: #0D654D;
         }
 
-        @media print {
-            .report-separator {
-                display: none;
-            }
+        /** HEADINGS **/
+        h1 {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-top: 15pt;
+            margin-bottom: 5pt;
+        }
 
-            .report-number-badge {
-                display: none;
-            }
+        /** TABLES **/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #000000;
+            padding: 4px;
+            vertical-align: middle;
+            font-size: 10pt;
+        }
+
+        .data-table th {
+            background-color: #385623;
+            color: #FFFFFF;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .no-border-table td {
+            border: none;
+            padding: 2px;
+            vertical-align: top;
+        }
+        
+        .label-col { width: 25%; font-weight: bold; }
+        .sep-col { width: 2%; text-align: center; }
+        .val-col { width: 73%; }
+
+        /** UTILS **/
+        .page-break { page-break-after: always; }
+        .text-center { text-align: center; }
+        .text-bold { font-weight: bold; }
+        .mt-2 { margin-top: 10px; }
+
+        /** HTML CONTENT STYLING FIX **/
+        /* This ensures paragraphs inside your data don't add too much spacing */
+        .html-content p {
+            margin: 0 0 5px 0;
+            text-align: justify;
+        }
+        .html-content ul, .html-content ol {
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-left: 20px;
         }
     </style>
-@endpush
+</head>
+<body>
+    <header>
+        @if(file_exists(public_path('images/uploads/header.png')))
+            <img src="{{ public_path('images/uploads/header.png') }}" style="height: 38px; width: auto;">
+        @else
+            <div style="font-size: 14pt; font-weight: bold;">YAYASAN IDEP</div>
+        @endif
+    </header>
 
-@section('content')
-@foreach($kegiatanList as $index => $item)
-    @php
-        $kegiatan = $item['kegiatan'];
-        $viewPath = $item['viewPath'];
-    @endphp
+    <footer>
+        <div class="footer-line"></div>
+        <div class="footer-bold">Yayasan IDEP Selaras Alam</div>
+        <div>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia</div>
+        <div>Telp/Fax : +62-361-908-2983 / +62-812 4658 5137</div>
+        <div>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</div>
+    </footer>
 
-    <div class="print-container">
-        {{-- Header Image --}}
-        <header>
-            <img src="{{ public_path('images/uploads/header.png') }}" alt="IDEP Header">
-        </header>
+    <main>
+        @foreach($dataList as $index => $item)
+            @php
+                $kegiatan = $item->kegiatan;
+                $specific = $item->specific;
+            @endphp
 
-        {{-- Header Section --}}
-        <div class="report-header text-center">
-            <h2>{{ __('btor.btor') }}</h2>
-        </div>
+            <div class="{{ !$loop->last ? 'page-break' : '' }}">
+                
+                {{-- Metadata Table --}}
+                <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; margin-top: 20px;">
+                    <table class="no-border-table">
+                        <tr>
+                            <td class="label-col">Departemen</td>
+                            <td class="sep-col">:</td>
+                            <td class="val-col">Program</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Program</td>
+                            <td class="sep-col">:</td>
+                            <td class="val-col">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Nama Kegiatan</td>
+                            <td class="sep-col">:</td>
+                            <td class="val-col">{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Kode Budget</td>
+                            <td class="sep-col">:</td>
+                            <td class="val-col">{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Penulis Laporan</td>
+                            <td class="sep-col">:</td>
+                            <td class="val-col">
+                                {{ $kegiatan->kegiatan_penulis->map(fn($p) => $p->user->nama ?? '')->filter()->implode(', ') ?: '-' }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
-        {{-- Basic Information Table --}}
-        <div class="section">
-            <table class="table-print" style="font-size: 10pt; margin-bottom: 20px;">
-                <tr>
-                    <td width="20%"><strong>{{ __('btor.departemen') }}</strong></td>
-                    <td width="1%">:</td>
-                    <td>Program</td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.program') }}</strong></td>
-                    <td>:</td>
-                    <td>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.nama_kegiatan') }}</strong></td>
-                    <td>:</td>
-                    <td>{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.kode_budget') }}</strong></td>
-                    <td>:</td>
-                    <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.penulis_laporan') }}</strong></td>
-                    <td>:</td>
-                    <td>
-                        {{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: __('btor.no_writer_activity') }}
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.penulis_jabatan') }}</strong></td>
-                    <td>:</td>
-                    <td>
-                        {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
-                    </td>
-                </tr>
-            </table>
-        </div>
+                {{-- A. Latar Belakang --}}
+                <h1>A. Latar Belakang Kegiatan</h1>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">{!! $kegiatan->deskripsilatarbelakang !!}</div>
 
-        <hr style="border: 1px solid #000; margin: 15px 0;">
+                {{-- B. Tujuan --}}
+                <h1>B. Tujuan Kegiatan</h1>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">{!! $kegiatan->deskripsitujuan !!}</div>
 
-        {{-- 1. Latar Belakang Kegiatan --}}
-        <div class="section">
-            <h4 class="section-title">{{ __('btor.latar_belakang_kegiatan') }}</h4>
-            <div class="content-box">
-               {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted"> ' . __('btor.no_background_activity') . '</em>' !!}
-            </div>
-        </div>
-
-        {{-- 2. Tujuan Kegiatan --}}
-        <div class="section">
-            <h4 class="section-title">{{ __('btor.tujuan_kegiatan') }}</h4>
-            <div class="content-box">
-                {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted"> ' . __('btor.no_tujuan_activity') . '</em>' !!}
-            </div>
-        </div>
-
-        {{-- 3. Detail Kegiatan --}}
-        <div class="section">
-            <h4 class="section-title">{{ __('btor.detail_kegiatan') }}</h4>
-
-            <table class="table-print" style="font-size: 9pt; margin-bottom: 5px;">
-                <tr>
-                    <td width="20%"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
-                    <td width="1%">:</td>
-                    <td>
-                        @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
-                            {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                            @if($kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
-                                - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                            @endif
-                            ({{ $kegiatan->getDurationInDays() }} hari)
-                        @else
-                            -
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.tempat') }}</strong></td>
-                    <td>:</td>
-                    <td>
-                        @if($kegiatan->lokasi?->count() > 0)
+                {{-- C. Detail Kegiatan --}}
+                <h1>C. Detail Kegiatan</h1>
+                <table class="no-border-table">
+                    <tr>
+                        <td class="label-col">Hari, Tanggal</td>
+                        <td class="sep-col">:</td>
+                        <td class="val-col">
                             @php
-                                $lokasiList = $kegiatan->lokasi->map(function($lok) {
-                                    return $lok->lokasi ?? '-';
-                                });
+                                $start = $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') : 'Tidak ditentukan';
+                                $end = $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') : null;
+                                $durasi = method_exists($kegiatan, 'getDurationInDays') ? $kegiatan->getDurationInDays() : 0;
                             @endphp
-                            {{ $lokasiList->implode('; ') }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.pihak_yang_terlibat')}}</strong></td>
-                    <td>:</td>
-                    <td>
-                        @if($kegiatan->mitra?->count() > 0)
-                            <ul style="list-style-type: none;">
-                                @foreach($kegiatan->mitra as $mitra)
-                                    <li>{{ $mitra->nama }}</li>
-                                @endforeach
-                            </ul>
-                        @else
-                            -
-                        @endif
-                    </td>
-                </tr>
-            </table>
+                            {{ $start }} 
+                            @if($end && $start != $end) - {{ $end }} @endif
+                            @if($durasi > 0) ({{ $durasi }} hari) @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Tempat</td>
+                        <td class="sep-col">:</td>
+                        <td class="val-col">
+                            {{ $kegiatan->lokasi->map(fn($l) => $l->lokasi)->filter()->implode(', ') ?: '-' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-col">Pihak yang terlibat</td>
+                        <td class="sep-col">:</td>
+                        <td class="val-col">
+                            {{ $kegiatan->mitra->map(fn($m) => $m->nama)->filter()->implode(', ') ?: '-' }}
+                        </td>
+                    </tr>
+                </table>
 
-            @include('tr.btor.partials.location')
+                @if($kegiatan->lokasi && count($kegiatan->lokasi) > 0)
+                    <div class="text-bold mt-2">Tabel Lokasi</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="5%">No</th>
+                                <th>Lokasi</th>
+                                <th>Desa</th>
+                                <th>Kecamatan</th>
+                                <th>Kabupaten</th>
+                                <th>Provinsi</th>
+                                <th>Koordinat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($kegiatan->lokasi as $idx => $loc)
+                                <tr>
+                                    <td class="text-center">{{ $idx + 1 }}</td>
+                                    <td>{{ $loc->lokasi }}</td>
+                                    <td>{{ $loc->desa?->nama }}</td>
+                                    <td>{{ $loc->desa?->kecamatan?->nama }}</td>
+                                    <td>{{ $loc->desa?->kecamatan?->kabupaten?->nama }}</td>
+                                    <td>{{ $loc->desa?->kecamatan?->kabupaten?->provinsi?->nama }}</td>
+                                    <td class="text-center">
+                                        @if($loc->lat && $loc->long)
+                                            {{ number_format($loc->lat, 6) }}, {{ number_format($loc->long, 6) }}
+                                        @else - @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @endif
 
-            {{-- Activity Type Specific Content --}}
-            <div class="mt-3">
-                <strong>{{ __('btor.jenis_kegiatan') }}</strong>
-                @include($viewPath, ['kegiatan' => $kegiatan])
+                {{-- D. Hasil Kegiatan --}}
+                <h1>D. Hasil Kegiatan</h1>
+                <div class="text-bold">a. Jumlah partisipan yang terlibat dan disagregat</div>
+                <p>Silakan mengisi tabel berikut:</p>
+
+                @if($kegiatan->penerimamanfaattotal > 0)
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th width="40%">Kategori</th>
+                                <th width="20%">Perempuan</th>
+                                <th width="20%">Laki-laki</th>
+                                <th width="20%">Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dewasa (25-59 tahun)</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasaperempuan }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasalakilaki }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasatotal }}</td>
+                            </tr>
+                            <tr>
+                                <td>Lansia (60+ tahun)</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansiaperempuan }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansialakilaki }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansiatotal }}</td>
+                            </tr>
+                            <tr>
+                                <td>Remaja (18-24 tahun)</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajaperempuan }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajalakilaki }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajatotal }}</td>
+                            </tr>
+                            <tr>
+                                <td>Anak (< 18 tahun)</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanakperempuan }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanaklakilaki }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanaktotal }}</td>
+                            </tr>
+                            <tr style="font-weight: bold;">
+                                <td>GRAND TOTAL</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatperempuantotal }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlakilakitotal }}</td>
+                                <td class="text-center">{{ (int)$kegiatan->penerimamanfaattotal }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @else
+                    <p>Tidak ada data penerima manfaat.</p>
+                @endif
+
+                <div class="text-bold mt-2">b. Hasil pertemuan</div>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">{!! $kegiatan->deskripsikeluaran !!}</div>
+
+                {{-- E. Tantangan --}}
+                <h1>E. Tantangan dan Solusi</h1>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">
+                    {!! $specific['kendala'] ?? 'Tidak ada data tantangan.' !!}
+                </div>
+
+                {{-- F. Isu --}}
+                <h1>F. Isu yang Perlu Diperhatikan / Rekomendasi</h1>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">
+                    {!! $specific['isu'] ?? 'Tidak ada data isu.' !!}
+                </div>
+
+                {{-- G. Pembelajaran --}}
+                <h1>G. Pembelajaran</h1>
+                {{-- FIX: Removed e() and nl2br() --}}
+                <div class="html-content">
+                    {!! $specific['pembelajaran'] ?? 'Tidak ada data pembelajaran.' !!}
+                </div>
+
+                {{-- H. Dokumen --}}
+                <h1>H. Dokumen Pendukung</h1>
+                @php
+                    $docs = $kegiatan->getDokumenPendukung();
+                    $media = $kegiatan->getMediaPendukung();
+                @endphp
+                
+                @if(($docs && $docs->count() > 0) || ($media && $media->count() > 0))
+                    @if($docs && $docs->count() > 0)
+                        <div class="text-bold">Dokumen:</div>
+                        <ul>
+                            @foreach($docs as $d)
+                                <li>{{ $d->file_name }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    
+                    @if($media && $media->count() > 0)
+                        <div class="text-bold">Media:</div>
+                        <ul>
+                            @foreach($media as $m)
+                                <li>{{ $m->file_name }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                @else
+                    <p>Tidak ada dokumen pendukung.</p>
+                @endif
+
             </div>
-        </div>
-
-        {{-- 4. Hasil Kegiatan --}}
-        <div class="section">
-            <h4 class="section-title">{{ __('btor.hasil.label') }}</h4>
-
-            <h5 style="font-size: 10pt; font-weight: bold; margin-bottom: 10px;">a. {{ __('btor.partisipan_disagregat') }} </h5>
-            <p style="font-size: 9pt; margin-bottom: 8px;"><em>{{ __('btor.table_partisipan') }}:</em></p>
-
-            <table class="table-bordered" style="font-size: 8pt; margin-bottom: 15px;">
-                <thead>
-                    <tr>
-                        <th style="width: 40%;">{{ __('btor.penerima_manfaat') }}</th>
-                        <th style="width: 15%;" class="text-center">{{ __('btor.perempuan') }}</th>
-                        <th style="width: 15%;" class="text-center">{{ __('btor.laki_laki') }}</th>
-                        <th style="width: 15%;" class="text-center">{{ __('btor.lainnya') }}</th>
-                        <th style="width: 15%;" class="text-center">{{ __('btor.sub_total') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ __('btor.dewasa') }} <em>({{ __('btor.umur_25_59') }})</em></td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
-                        <td class="text-center">0</td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>{{ __('btor.lansia') }} <em>({{ __('btor.umur_60') }})</em></td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
-                        <td class="text-center">0</td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>{{ __('btor.remaja') }} <em>({{ __('btor.umur_18_24') }})</em></td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
-                        <td class="text-center">0</td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>{{ __('btor.anak') }} <em>({{ __('btor.umur_18_kebawah') }})</em></td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
-                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
-                        <td class="text-center">0</td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</strong></td>
-                    </tr>
-                    <tr class="table-active">
-                        <td><strong>{{ __('btor.grand_total') }}</strong></td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
-                        <td class="text-center"><strong>0</strong></td>
-                        <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            {{-- 4b. Hasil Pertemuan --}}
-            <h5 style="font-size: 10pt; font-weight: bold; margin: 15px 0 10px 0;">b. {{ __('btor.hasil_pertemuan') }}</h5>
-            <div class="content-box">
-                {!! $kegiatan->deskripsikeluaran ?? '<em>Tidak ada data hasil pertemuan</em>' !!}
-            </div>
-        </div>
-
-        {{-- 5. Tantangan dan Solusi --}}
-        <div class="section">
-            <h4 class="section-title">{{ __('btor.tantangan_solusi') }}</h4>
-            @php
-                $kendala = $kegiatan->assessment?->assessmentkendala
-                        ?? $kegiatan->pelatihan?->pelatihanisu
-                        ?? $kegiatan->monitoring?->monitoringkendala
-                        ?? 'Tidak ada tantangan yang dicatat';
-            @endphp
-            <div class="content-box">{!! $kendala !!}</div>
-        </div>
-
-        {{-- 6. Isu yang Perlu Diperhatikan & Rekomendasi --}}
-        <div class="section">
-            <h4 class="section-title">Isu yang Perlu Diperhatikan & Rekomendasi</h4>
-            @php
-                $isu = $kegiatan->assessment?->assessmentisu
-                    ?? $kegiatan->pelatihan?->pelatihanisu
-                    ?? $kegiatan->monitoring?->monitoringisu
-                    ?? 'Tidak ada isu yang perlu diperhatikan.';
-            @endphp
-            <div class="content-box">{!! $isu !!}</div>
-        </div>
-
-        {{-- 7. Pembelajaran --}}
-        <div class="section">
-            <h4 class="section-title">Pembelajaran</h4>
-            @php
-                $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
-                             ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                             ?? $kegiatan->monitoring?->monitoringpembelajaran
-                             ?? 'Tidak ada data pembelajaran.';
-            @endphp
-            <div class="content-box">{!! $pembelajaran !!}</div>
-        </div>
-
-        {{-- 8. Dokumen Pendukung --}}
-        @include('tr.btor.partials.dokumen')
-
-        {{-- Footer --}}
-        <div class="report-footer">
-            <div class="company">Yayasan IDEP Selaras Alam</div>
-            <div class="address">Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</div>
-        </div>
-    </div>
-
-    @if(!$loop->last)
-        <div class="page-break-after"></div>
-    @endif
-@endforeach
-@endsection
+        @endforeach
+    </main>
+</body>
+</html>

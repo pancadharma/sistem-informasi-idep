@@ -199,18 +199,41 @@ class BTORController extends Controller
 
     public function exportPdf($id, Request $request)
     {
+        // 1. Get Data
         $kegiatan = BTOR::getData($id);
-        $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
 
-        // Use pdf-export.blade.php with inline CSS (most reliable for DomPDF)
-        $pdf = Pdf::loadView('tr.btor.pdf-export', compact('kegiatan', 'viewPath'))
+        if (!$kegiatan) {
+            return back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        // 2. Ensure Relations & Specific Data are loaded (Same logic as Bulk)
+        $this->ensureRelationshipsLoaded($kegiatan);
+
+        // Pre-calculate specific data (Challenges, Issues, etc.)
+        $specificData = $this->getSpecificKegiatanData($kegiatan);
+
+        // 3. Wrap in 'dataList' structure 
+        // This allows us to reuse the 'pdf-export-bulk' view perfectly
+        $dataList = [
+            (object) [
+                'kegiatan' => $kegiatan,
+                'specific' => $specificData
+            ]
+        ];
+
+        // 4. Load the Shared View
+        $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
                 'isRemoteEnabled' => true,
-                'encoding' => 'UTF-8',
+            'dpi' => 96,
+            'defaultFont' => 'Tahoma'
             ]);
 
-        $filename = 'BTOR_' . $kegiatan->id . '_' . date('Ymd_His') . '.pdf';
+        // 5. Generate Filename using your helper
+        // Note: generateFilename includes 'BTOR_' prefix and extension
+        $filename = $this->generateFilename($kegiatan, 'pdf');
+
         return $pdf->download($filename);
     }
 
@@ -358,96 +381,90 @@ class BTORController extends Controller
         }
     }
 
+    // public function exportBulkPdf(Request $request)
+    // {
+    //     $ids = is_string($request->input('ids')) 
+    //         ? array_filter(explode(',', $request->input('ids'))) 
+    //         : $request->input('ids', []);
+
+    //     if (empty($ids)) {
+    //         return back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
+    //     }
+
+    //     $kegiatanList = collect($ids)->map(function ($id) {
+    //         $kegiatan = BTOR::getData($id);
+    //         return [
+    //             'kegiatan' => $kegiatan,
+    //             'viewPath' => BTOR::getViewPath($kegiatan->jeniskegiatan_id)
+    //         ];
+    //     });
+
+    //     // Use pdf-export-bulk.blade.php with inline CSS (most reliable for DomPDF)
+    //     $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('kegiatanList'))
+    //         ->setPaper('a4', 'portrait')
+    //         ->setOption([
+    //             'isRemoteEnabled' => true,
+    //             'encoding' => 'UTF-8',
+    //         ]);
+
+    //     $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
+    //     return $pdf->download($filename);
+    // }
+
     public function exportBulkPdf(Request $request)
     {
-        $ids = is_string($request->input('ids')) 
-            ? array_filter(explode(',', $request->input('ids'))) 
+        // 1. Sanitize IDs
+        $ids = is_string($request->input('ids'))
+            ? array_filter(explode(',', $request->input('ids')))
             : $request->input('ids', []);
 
         if (empty($ids)) {
             return back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
         }
 
-        $kegiatanList = collect($ids)->map(function ($id) {
-            $kegiatan = BTOR::getData($id);
-            return [
-                'kegiatan' => $kegiatan,
-                'viewPath' => BTOR::getViewPath($kegiatan->jeniskegiatan_id)
-            ];
-        });
+        // 2. Prepare Data Collection
+        $dataList = [];
 
-        // Use pdf-export-bulk.blade.php with inline CSS (most reliable for DomPDF)
-        $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('kegiatanList'))
+        foreach ($ids as $id) {
+            // Use your existing getData model method
+            $kegiatan = BTOR::getData($id);
+
+            // SAFETY CHECK: If ID is invalid/deleted, skip it to prevent "on null" error
+            if (!$kegiatan) {
+                continue;
+            }
+
+            // Ensure relations are loaded (using your existing helper)
+            $this->ensureRelationshipsLoaded($kegiatan);
+
+            // Pre-calculate the "Specific Data" (Challenges, Issues, Lessons)
+            // We reuse the private helper logic you already wrote for DOCX
+            $specificData = $this->getSpecificKegiatanData($kegiatan);
+
+            // Add to list
+            $dataList[] = (object) [
+                'kegiatan' => $kegiatan,
+                'specific' => $specificData
+            ];
+        }
+
+        if (empty($dataList)) {
+            return back()->with('error', 'Data tidak ditemukan untuk ID yang dipilih.');
+        }
+
+        // 3. Load View with 'dataList'
+        $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
                 'isRemoteEnabled' => true,
-                'encoding' => 'UTF-8',
+                'dpi' => 96,
+                'defaultFont' => 'Tahoma'
             ]);
 
-        $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
+        $filename = 'BTOR_Bulk_' . count($dataList) . '_Reports_' . date('Ymd_His') . '.pdf';
+
         return $pdf->download($filename);
     }
-
-    // public function exportBulkDocx(Request $request)
-    // {
-    //     $ids = is_string($request->input('ids')) 
-    //         ? array_filter(explode(',', $request->input('ids')))
-    //         : $request->input('ids', []);
-
-    //     if (empty($ids)) {
-    //         return redirect()->back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
-    //     }
-
-    //     if (count($ids) > 20) {
-    //         return redirect()->back()->with('error', 'Maksimal 20 laporan sekaligus');
-    //     }
-
-    //     $tmpDoc = null;
-    //     try {
-    //         $phpWord = new PhpWord();
-    //         $sections = [];
-
-    //         // Create all sections first
-    //         foreach ($ids as $id) {
-    //             $sections[] = $phpWord->addSection();
-    //         }
-
-    //         // Then populate each section
-    //         foreach ($ids as $index => $id) {
-    //             $kegiatan = BTOR::getData($id);
-    //             $this->ensureRelationshipsLoaded($kegiatan);
-
-    //             $section = $sections[$index];  // Use array index directly
-
-    //             $this->addDocxHeader($section, $kegiatan);
-    //             $this->addDocxContent($section, $kegiatan);
-    //         }
-
-    //         $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_bulk_' . time() . '_');
-    //         $phpWord->save($tmpDoc, 'Word2007');
-
-    //         if (ob_get_level() > 0) {
-    //             ob_end_clean();
-    //         }
-
-    //         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('YmdHis') . '.docx';
-    //         return response()->download($tmpDoc, $filename)
-    //             ->deleteFileAfterSend(true);
-
-    //     } catch (\Exception $e) {
-    //         \Log::error('BTOR Bulk DOCX Export Error', [
-    //             'ids' => $ids,
-    //             'count' => count($ids),
-    //             'error' => $e->getMessage()
-    //         ]);
-
-    //         if ($tmpDoc && file_exists($tmpDoc)) {
-    //             @unlink($tmpDoc);
-    //         }
-
-    //         return redirect()->back()->with('error', 'Gagal mengekspor bulk laporan: ' . $e->getMessage());
-    //     }
-    // }
 
     public function exportBulkDocx(Request $request)
     {
