@@ -234,41 +234,45 @@ class BTORController extends Controller
                 // Continue anyway, but with defaults for missing data
             }
 
+            $h1Style = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+            $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+            $normalStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+
+            $h1ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 240];
+            $h2ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 120];
+            $normalParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 120];
+            
             // Create PHPWord document
             $phpWord = new PhpWord();
+            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+            
+            $phpWord->setDefaultFontName('Tahoma');
+            $phpWord->setDefaultFontSize(10);
+            
+
             $section = $phpWord->addSection();
-            // ✅ ADD HEADER (repeats on every page)
             $header = $section->addHeader();
 
             $section = $phpWord->addSection([
                 // Body content uses these margins
                 'marginTop' => 1417,       // 2.5 cm
-                'marginBottom' => 1417,    // 2.5 cm
-                'marginLeft' => 1417,      // 2.5 cm
-                'marginRight' => 1417,     // 2.5 cm
+                'marginBottom' => 1417,
+                'marginLeft' => 1417,
+                'marginRight' => 1417,
                 
-                // Header has its own space
-                'headerHeight' => 283,    // 2 cm for header image
-                'headerDistance' => 283,   // 0.5 cm gap after header
+                'headerHeight' => 283,
+                'headerDistance' => 283,
                 
-                // Footer has its own space
-                'footerHeight' => 567,     // 1 cm for footer
-                'footerDistance' => 283,   // 0.5 cm gap before footer
-
-                // 'headerFromTop' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), // 1.5 cm dari tepi atas
-
-                // // 3. MARGIN FOOTER (Posisi Footer dari tepi bawah kertas)
-                // // Harus lebih kecil dari marginBottom
-                // 'footerFromBottom' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(1),
+                'footerHeight' => 567,
+                'footerDistance' => 283,
             ]);
-
-            
             
             $imagePath = public_path('images/uploads/header.png');
             if (file_exists($imagePath)) {
                 $header->addImage($imagePath, [
-                    'width' => 395,      // Width in pixels
-                    'height' => 38,         // Height in pixels 
+                    'width' => 395,
+                    'height' => 38,
                     'alignment' => 'center'
                 ]);
             } else {
@@ -533,6 +537,7 @@ class BTORController extends Controller
         $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
         $normalStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
 
+
         $labelStyle = array_merge($h2Style, ['bold' => true]);
 
         $pNormalStyle = [
@@ -556,118 +561,185 @@ class BTORController extends Controller
 
 
         // A. Latar Belakang
-        // $section->addText('Departemen      	: Program', $hBodyStyle, $hStyle) ;
-        $section->addText('A. Latar Belakang Kegiatan', $h1Style, $hStyle);
+        $section->addTitle('A. Latar Belakang Kegiatan', 1);
         $section->addText($this->safeText($kegiatan->deskripsilatarbelakang), $normalStyle, $pNormalStyle);
-        $section->addTextBreak(1);
 
         // B. Tujuan
-        $section->addText('B. Tujuan Kegiatan', $h1Style, $hStyle);
+        $section->addTitle('B. Tujuan Kegiatan', 1);
         $section->addText($this->safeText($kegiatan->deskripsitujuan), $normalStyle, $pNormalStyle);
-        $section->addTextBreak(1);
 
         // C. Detail Kegiatan
-        $section->addText('C. Detail Kegiatan', $h1Style, $hStyle);
-        
-        // Date formatting
-        $tanggalMulai = $kegiatan->tanggalmulai 
-            ? Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y')
-            : 'Tidak ditentukan';
-        $tanggalSelesai = $kegiatan->tanggalselesai
-            ? Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y')
-            : 'Tidak ditentukan';
-        
-        $dateText = 'Hari, tanggal : ' . $tanggalMulai;
-        if ($kegiatan->tanggalmulai && $kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai) {
-            $dateText .= ' - ' . $tanggalSelesai;
-            if ($kegiatan->getDurationInDays()) {
+        $section->addTitle('C. Detail Kegiatan', 1);
+
+        // 2. Date Logic - Minimizing potential null errors
+        $m = $kegiatan->tanggalmulai ?? null;
+        $s = $kegiatan->tanggalselesai ?? null;
+
+        $tanggalMulaiText = $m ? Carbon::parse($m)->locale('id')->isoFormat('dddd, D MMMM Y') : 'Tidak ditentukan';
+        $tanggalSelesaiText = $s ? Carbon::parse($s)->locale('id')->isoFormat('dddd, D MMMM Y') : null;
+
+        $dateText = $this->safeValue($tanggalMulaiText);
+
+        // Append end date if it exists and is different from start date
+        if ($m && $s && $m != $s) {
+            $dateText .= ' - ' . $this->safeValue($tanggalSelesaiText);
+            
+            // Check if method exists before calling to prevent fatal error
+            if (method_exists($kegiatan, 'getDurationInDays') && $kegiatan->getDurationInDays()) {
                 $dateText .= ' (' . $kegiatan->getDurationInDays() . ' hari)';
             }
         }
-        $section->addText($dateText, $normalStyle, $pStyleLeft);
 
-        // Location
-        $lokasiList = $kegiatan->lokasi && $kegiatan->lokasi->count() > 0
-            ? $kegiatan->lokasi->map(fn($l) => $this->safeValue($l->lokasi))->toArray()
+        // 3. Location Logic - Using safeValue inside map
+        $lokasiList = ($kegiatan->lokasi && count($kegiatan->lokasi) > 0)
+            ? $kegiatan->lokasi->map(fn($l) => $this->safeValue($l->lokasi ?? ''))->filter()->toArray()
             : [];
-        
-        $section->addText('Tempat : ' . (count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-'), ['size' => 11]);
+        $lokasiString = count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-';
 
-        // Partners
-        if ($kegiatan->mitra && $kegiatan->mitra->count() > 0) {
-            $section->addText('Pihak yang terlibat :', ['size' => 11]);
-            foreach ($kegiatan->mitra as $index => $mitra) {
-                $section->addText(($index + 1) . '. ' . $this->safeValue($mitra->nama), ['size' => 11]);
-            }
-        }
+        // 4. Partners Logic
+        $mitraList = ($kegiatan->mitra && count($kegiatan->mitra) > 0)
+            ? $kegiatan->mitra->map(fn($m) => $this->safeValue($m->nama ?? ''))->filter()->toArray()
+            : [];
+        $mitraString = count($mitraList) > 0 ? implode(', ', $mitraList) : '-';
+
+        // 5. Table Rendering
+        $table = $section->addTable(['setBorderColor' => 'none']);
+
+        /**
+         * Closure to handle row adding with safety checks
+         */
+        $addRow = function($table, $label, $value) use ($labelStyle, $h2Style, $pStyleLeft) {
+            $table->addRow();
+            // Label
+            $table->addCell(2500)->addText($label, $labelStyle, $pStyleLeft); 
+            // Separator
+            $table->addCell(200)->addText(':', $h2Style, $pStyleLeft); 
+            // Value (Safe String)
+            $table->addCell(6000)->addText($value, $h2Style, $pStyleLeft); 
+        };
+
+        // Populate Table
+        $addRow($table, 'Hari, Tanggal', $dateText);
+        $addRow($table, 'Tempat', $lokasiString);
+        $addRow($table, 'Pihak yang terlibat', $mitraString);
+
+        // $section->addTextBreak(1);
+        // $section->addTitle('C. Detail Kegiatan', 1);
+        
+        // // Date formatting
+        // $tanggalMulai = $kegiatan->tanggalmulai 
+        //     ? Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y')
+        //     : 'Tidak ditentukan';
+        // $tanggalSelesai = $kegiatan->tanggalselesai
+        //     ? Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y')
+        //     : 'Tidak ditentukan';
+        
+        // $dateText = 'Hari, tanggal : ' . $tanggalMulai;
+        // if ($kegiatan->tanggalmulai && $kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai) {
+        //     $dateText .= ' - ' . $tanggalSelesai;
+        //     if ($kegiatan->getDurationInDays()) {
+        //         $dateText .= ' (' . $kegiatan->getDurationInDays() . ' hari)';
+        //     }
+        // }
+        // // $section->addText($dateText, $normalStyle, $pStyleLeft);
+
+        // // Location
+        // $lokasiList = $kegiatan->lokasi && $kegiatan->lokasi->count() > 0
+        //     ? $kegiatan->lokasi->map(fn($l) => $this->safeValue($l->lokasi))->toArray()
+        //     : [];
+        
+        // // $section->addText('Tempat : ' . (count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-'), ['size' => 11]);
+
+        // // Partners
+        // if ($kegiatan->mitra && $kegiatan->mitra->count() > 0) {
+        //     $section->addText('Pihak yang terlibat :', ['size' => 11]);
+        //     foreach ($kegiatan->mitra as $index => $mitra) {
+        //         $section->addText(($index + 1) . '. ' . $this->safeValue($mitra->nama), ['size' => 11]);
+        //     }
+        // }
+
+        // $table = $section->addTable(['setBorderColor' => 'none']);
+
+        // $addRow = function($table, $label, $value) use ($labelStyle, $h2Style, $pStyleLeft) {
+        //     $table->addRow();
+        //     // Kolom 1: Label (Bold) - Lebar 3000 twips (~5.3cm)
+        //     $table->addCell(2500)->addText($label, $labelStyle, $pStyleLeft); 
+        //     // Kolom 2: Titik Dua - Lebar 200 twips
+        //     $table->addCell(200)->addText(':', $h2Style, $pStyleLeft); 
+        //     // Kolom 3: Value - Lebar 6000 twips
+        //     $table->addCell(6000)->addText($value, $h2Style, $pStyleLeft); 
+        // };
+
+        // $addRow($table, 'Tanggal', $dateText);
+        // $addRow($table, 'Tempat', (count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-'));
+        // $addRow($table, 'Pihak yang terlibat', (count($kegiatan->mitra) > 0 ? implode(', ', $kegiatan->mitra->map(fn($mitra) => $mitra->nama)->toArray()) : '-'));
         
         $section->addTextBreak(1);
 
         // Location Table
         if ($kegiatan->lokasi && $kegiatan->lokasi->count() > 0) {
-            $section->addText('Tabel Lokasi', ['bold' => true, 'size' => 11]);
+            $section->addText('Tabel Lokasi', $labelStyle);
             $this->addLocationTable($section, $kegiatan);
-            $section->addTextBreak(1);
         }
 
         // D. Hasil Kegiatan - Beneficiaries
-        $section->addText('D. Hasil Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText('a. Jumlah partisipan yang terlibat dan disagregat', ['size' => 11]);
+        $section->addTitle('D. Hasil Kegiatan', 1);
+        $section->addText('a. Jumlah partisipan yang terlibat dan disagregat', $labelStyle);
+        $section->addText('Silakan mengisi tabel berikut:', $normalStyle, $pNormalStyle);
         
         if ($kegiatan->penerimamanfaattotal > 0) {
             $this->addBeneficiariesTable($section, $kegiatan);
         } else {
-            $section->addText('Tidak ada data penerima manfaat', ['size' => 11]);
+            $section->addText('Tidak ada data penerima manfaat', $normalStyle, $pNormalStyle);
         }
-        
-        $section->addText('b. Hasil pertemuan', ['size' => 11]);
-        $section->addText($this->safeText($kegiatan->deskripsikeluaran), ['size' => 11]);
+        $section->addTextBreak(1);
+        $section->addText('b. Hasil pertemuan', $labelStyle);
+        $section->addText($this->safeText($kegiatan->deskripsikeluaran), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // Get specific data based on jenis kegiatan
         $specificData = $this->getSpecificKegiatanData($kegiatan);
 
         // E. Tantangan dan Solusi
-        $section->addText('E. Tantangan dan Solusi', ['bold' => true, 'size' => 12]);
-        $section->addText($this->safeText($specificData['kendala'] ?? 'Tidak ada data tantangan.'), ['size' => 11]);
+        $section->addTitle('E. Tantangan dan Solusi', 1);
+        $section->addText($this->safeText($specificData['kendala'] ?? 'Tidak ada data tantangan.'), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // F. Isu yang Perlu Diperhatikan
-        $section->addText('F. Isu yang Perlu Diperhatikan / Rekomendasi', ['bold' => true, 'size' => 12]);
-        $section->addText($this->safeText($specificData['isu'] ?? 'Tidak ada data isu.'), ['size' => 11]);
+        $section->addTitle('F. Isu yang Perlu Diperhatikan / Rekomendasi', 1);
+        $section->addText($this->safeText($specificData['isu'] ?? 'Tidak ada data isu.'), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // G. Pembelajaran
-        $section->addText('G. Pembelajaran', ['bold' => true, 'size' => 12]);
-        $section->addText($this->safeText($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.'), ['size' => 11]);
+        $section->addTitle('G. Pembelajaran', 1);
+        $section->addText($this->safeText($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.'), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // H. Dokumen Pendukung
-        $section->addText('H. Dokumen Pendukung', ['bold' => true, 'size' => 12]);
+        $section->addTitle('H. Dokumen Pendukung', 1);
         $dokumen = $kegiatan->getDokumenPendukung();
         $media = $kegiatan->getMediaPendukung();
         
         if (($dokumen && $dokumen->count() > 0) || ($media && $media->count() > 0)) {
             if ($dokumen && $dokumen->count() > 0) {
-                $section->addText('Dokumen (' . $dokumen->count() . ')', ['size' => 11]);
+                $section->addText('Dokumen (' . $dokumen->count() . ')', $normalStyle, $pNormalStyle);
                 foreach ($dokumen as $doc) {
-                    $section->addText('- ' . $this->safeValue($doc->name), ['size' => 11]);
+                    $section->addText('- ' . $this->safeValue($doc->name), $normalStyle, $pNormalStyle);
                 }
             }
             if ($media && $media->count() > 0) {
-                $section->addText('Media Pendukung (' . $media->count() . ')', ['size' => 11]);
+                $section->addText('Media Pendukung (' . $media->count() . ')', $normalStyle, $pNormalStyle);
                 foreach ($media as $item) {
-                    $section->addText('- ' . $this->safeValue($item->name), ['size' => 11]);
+                    $section->addText('- ' . $this->safeValue($item->name), $normalStyle, $pNormalStyle);
                 }
             }
         } else {
-            $section->addText('Tidak ada dokumen pendukung.', ['size' => 11]);
+            $section->addText('Tidak ada dokumen pendukung.', $normalStyle, $pNormalStyle);
         }
         $section->addTextBreak(2);
     }
 
-
-        /**
+    /**
      * Get specific data based on jenis kegiatan
      * FIXES: Comprehensive null safety
      */
@@ -830,50 +902,56 @@ class BTORController extends Controller
      */
     private function addLocationTable($section, $kegiatan)
     {
+        // Width 5000 with unit 'pct' means 100% of the page width (within margins)
         $tableStyle = [
             'borderSize' => 6,
             'borderColor' => '000000',
-            'width' => 9000,
-            'unit' => 'pct'
+            'width' => 5000,
+            'unit' => 'pct',
+            'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER,
         ];
-        
+
         $table = $section->addTable($tableStyle);
+
+        // Header Style
+        $headerFontStyle = ['bold' => true, 'size' => 9, 'color' => 'FFFFFF']; // White Text
+        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 120];
+        $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
 
         // Header row
         $headerCells = ['No', 'Lokasi', 'Desa', 'Kecamatan', 'Kabupaten', 'Provinsi', 'Koordinat'];
         $row = $table->addRow();
         foreach ($headerCells as $cell) {
-            $row->addCell(1500, ['bgColor' => 'f0f0f0'])->addText(
-                $cell,
-                ['bold' => true, 'size' => 9],
-                ['alignment' => new Jc(Jc::CENTER)]
-            );
+            // We define specific widths for columns so they don't look uneven
+            // Total should roughly balance out; PHPWord handles the 'pct' math.
+            $width = ($cell === 'No') ? 500 : 1000;
+            $row->addCell($width, $headerCellStyles)->addText($cell, $headerFontStyle, $headerParagraphStyle);
         }
 
         // Data rows
         foreach ($kegiatan->lokasi as $index => $lokasi) {
             $row = $table->addRow();
-            
-            $row->addCell(500)->addText(
-                (string)($index + 1),
-                ['size' => 9],
-                ['alignment' => new Jc(Jc::CENTER)]
-            );
-            
-            $row->addCell(1500)->addText($this->safeValue($lokasi->lokasi), ['size' => 9]);
-            $row->addCell(1500)->addText($this->safeValue($lokasi->desa?->nama), ['size' => 9]);
-            $row->addCell(1500)->addText($this->safeValue($lokasi->desa?->kecamatan?->nama), ['size' => 9]);
-            $row->addCell(1500)->addText($this->safeValue($lokasi->desa?->kecamatan?->kabupaten?->nama), ['size' => 9]);
-            $row->addCell(1500)->addText($this->safeValue($lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama), ['size' => 9]);
-            
+
+            // No
+            $row->addCell(500)->addText((string)($index + 1), ['size' => 10], ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+
+            // Use safeValue and optional chaining for all location data
+            $row->addCell(1000)->addText($this->safeValue($lokasi->lokasi), ['size' => 10]);
+            $row->addCell(1000)->addText($this->safeValue($lokasi->desa?->nama), ['size' => 10]);
+            $row->addCell(1000)->addText($this->safeValue($lokasi->desa?->kecamatan?->nama), ['size' => 10]);
+            $row->addCell(1000)->addText($this->safeValue($lokasi->desa?->kecamatan?->kabupaten?->nama), ['size' => 10]);
+            $row->addCell(1000)->addText($this->safeValue($lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama), ['size' => 10]);
+
+            // Coordinate Logic
             $koordinat = '-';
-            if ($lokasi->lat && $lokasi->long) {
-                $koordinat = number_format($lokasi->lat, 6) . ', ' . number_format($lokasi->long, 6);
+            if (!empty($lokasi->lat) && !empty($lokasi->long)) {
+                $koordinat = number_format($lokasi->lat, 8) . ', ' . number_format($lokasi->long, 8);
             }
+
             $row->addCell(1500)->addText(
                 $koordinat,
-                ['size' => 9],
-                ['alignment' => new Jc(Jc::CENTER)]
+                ['size' => 10],
+                ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
             );
         }
     }
@@ -884,67 +962,96 @@ class BTORController extends Controller
      */
     private function addBeneficiariesTable($section, $kegiatan)
     {
+        $hBodyStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
+
         $tableStyle = [
             'borderSize' => 6,
             'borderColor' => '000000',
-            'width' => 9000,
-            'unit' => 'pct'
+            'width' => 5000,
+            'unit' => 'pct',
+            'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER,
         ];
-        
+
         $table = $section->addTable($tableStyle);
+
+        // Header Style
+        $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF']; // White Text
+        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => 'center', 'spaceBefore' => 120];
+        $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
+        $cellStyles = ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 120];
 
         // Header
         $headers = ['Kategori', 'Perempuan', 'Laki-laki', 'Sub Total'];
         $row = $table->addRow();
         foreach ($headers as $header) {
-            $row->addCell(2500, ['bgColor' => 'f0f0f0'])->addText(
+            // 'Kategori' gets more space, others are equal
+            $width = ($header === 'Kategori') ? 2000 : 1000;
+            $row->addCell($width, $headerCellStyles)->addText(
                 $header,
-                ['bold' => true, 'size' => 10],
-                ['alignment' => new Jc(Jc::CENTER)]
+                $headerFontStyle,
+                $headerParagraphStyle
             );
         }
 
-        // Data rows
-        $this->addTableRow($table, 'Dewasa (25-59 tahun)', 
-            $kegiatan->penerimamanfaatdewasaperempuan,
-            $kegiatan->penerimamanfaatdewasalakilaki,
-            $kegiatan->penerimamanfaatdewasatotal);
+        // Data rows - using (int) to handle nulls safely
+        $this->addTableRow(
+            $table,
+            'Dewasa (25-59 tahun)',
+            (int)$kegiatan->penerimamanfaatdewasaperempuan,
+            (int)$kegiatan->penerimamanfaatdewasalakilaki,
+            (int)$kegiatan->penerimamanfaatdewasatotal,
+        );
 
-        $this->addTableRow($table, 'Lansia (60+ tahun)', 
-            $kegiatan->penerimamanfaatlansiaperempuan,
-            $kegiatan->penerimamanfaatlansialakilaki,
-            $kegiatan->penerimamanfaatlansiatotal);
+        $this->addTableRow(
+            $table,
+            'Lansia (60+ tahun)',
+            (int)$kegiatan->penerimamanfaatlansiaperempuan,
+            (int)$kegiatan->penerimamanfaatlansialakilaki,
+            (int)$kegiatan->penerimamanfaatlansiatotal,
+        );
 
-        $this->addTableRow($table, 'Remaja (18-24 tahun)', 
-            $kegiatan->penerimamanfaatremajaperempuan,
-            $kegiatan->penerimamanfaatremajalakilaki,
-            $kegiatan->penerimamanfaatremajatotal);
+        $this->addTableRow(
+            $table,
+            'Remaja (18-24 tahun)',
+            (int)$kegiatan->penerimamanfaatremajaperempuan,
+            (int)$kegiatan->penerimamanfaatremajalakilaki,
+            (int)$kegiatan->penerimamanfaatremajatotal,
+        );
 
-        $this->addTableRow($table, 'Anak (< 18 tahun)', 
-            $kegiatan->penerimamanfaatanakperempuan,
-            $kegiatan->penerimamanfaatanaklakilaki,
-            $kegiatan->penerimamanfaatanaktotal);
+        $this->addTableRow(
+            $table,
+            'Anak (< 18 tahun)',
+            (int)$kegiatan->penerimamanfaatanakperempuan,
+            (int)$kegiatan->penerimamanfaatanaklakilaki,
+            (int)$kegiatan->penerimamanfaatanaktotal,
+        );
 
-        // Total
+        // Grand Total Row
         $row = $table->addRow();
-        $row->addCell(2500, ['bgColor' => 'f0f0f0'])->addText(
-            'TOTAL',
-            ['bold' => true, 'size' => 10]
-        );
-        $row->addCell(2500, ['bgColor' => 'f0f0f0'])->addText(
+
+        // Cell 1: Label
+        $row->addCell(2000)->addText('GRAND TOTAL', $labelStyle, $headerParagraphStyle);
+
+        // Cell 2: Total Perempuan
+        $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaatperempuantotal ?? 0),
-            ['bold' => true, 'size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            $labelStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
-        $row->addCell(2500, ['bgColor' => 'f0f0f0'])->addText(
+
+        // Cell 3: Total Laki-laki
+        $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0),
-            ['bold' => true, 'size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            $labelStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
-        $row->addCell(2500, ['bgColor' => 'f0f0f0'])->addText(
+
+        // Cell 4: Overall Total
+        $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaattotal ?? 0),
-            ['bold' => true, 'size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            $labelStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
     }
 
@@ -954,27 +1061,28 @@ class BTORController extends Controller
     private function addTableRow($table, $label, $female, $male, $total)
     {
         $row = $table->addRow();
-        
-        $row->addCell(2500)->addText($this->safeValue($label), ['size' => 10]);
-        
+
+        $row->addCell(2500)->addText($this->safeValue($label), ['size' => 10], ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+
         $row->addCell(2500)->addText(
             (string)($female ?? 0),
             ['size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
-        
+
         $row->addCell(2500)->addText(
             (string)($male ?? 0),
             ['size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
-        
+
         $row->addCell(2500)->addText(
             (string)($total ?? 0),
             ['size' => 10],
-            ['alignment' => new Jc(Jc::CENTER)]
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
     }
+
 
     // API methods for filters
     public function getPrograms(Request $request)
