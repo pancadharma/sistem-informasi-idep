@@ -2,7 +2,7 @@
     /* Print-specific CSS */
 
     @page {
-        size: A4 landscape; /* Changed to landscape for wider tables */
+        size: A4 portrait; /* Changed to landscape for wider tables */
         margin: 1.5cm 1cm;
     }
 
@@ -18,10 +18,13 @@
         line-height: 1.4;
         color: #000;
         background: white;
+        width: 600px;
+        max-width: 100%;
+        margin: 0 auto;
     }
 
     .print-container {
-        width: 100%;
+        /* width: 650px; */
         max-width: 100%;
         margin: 0 auto;
         padding: 10px;
@@ -30,8 +33,8 @@
     /* Header Styles */
     .report-header {
         margin-bottom: 15px;
-        border-bottom: 2px solid #000;
-        padding-bottom: 8px;
+        /* border-bottom: 2px solid #000; */
+        /* padding-bottom: 8px; */
     }
 
     .report-header h2 {
@@ -64,7 +67,7 @@
         font-weight: bold;
         margin-bottom: 8px;
         text-transform: uppercase;
-        border-bottom: 2px solid #333;
+        /* border-bottom: 2px solid #333; */
         padding-bottom: 3px;
     }
 
@@ -161,12 +164,13 @@
 
     /* Content Box */
     .content-box {
-        padding: 8px;
-        border: 1px solid #ccc;
-        background-color: #fafafa;
+        /* padding: 8px; */
+        /* border: 1px solid #ccc; */
+        /* background-color: #fafafa; */
         margin-bottom: 8px;
         min-height: 40px;
         word-wrap: break-word;
+        text-align: justify;
     }
 
     /* Alert Boxes */
@@ -286,10 +290,16 @@
 
     /* Report Footer */
     .report-footer {
-        margin-top: 20px;
+        /* margin-top: 20px;
         padding-top: 12px;
         border-top: 1px solid #ccc;
         font-size: 8pt;
+        color: #666; */
+        margin-top: 30px;
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+        font-size: 8pt;
+        text-align: center;
         color: #666;
     }
 
@@ -419,6 +429,8 @@
         body {
             print-color-adjust: exact;
             -webkit-print-color-adjust: exact;
+            /* width: 600px; */
+            max-width: 100%;
         }
 
         .no-print,

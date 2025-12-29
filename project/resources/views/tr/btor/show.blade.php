@@ -72,7 +72,7 @@
                             <td>{{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>{{ __('btor.penanggung_jawab') }}</strong></td>
+                            <td class="table-light"><strong>{{ __('btor.penulis_jabatan') }}</strong></td>
                             <td>{{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}</td>
                         </tr>
                     </tbody>
@@ -112,7 +112,7 @@
                         <tr>
                             <td width="25%" class="table-light"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
                             <td>
-                                : @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
+                                @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
                                     {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                                     @if($kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
                                         - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
@@ -126,7 +126,7 @@
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.lokasi_kegiatan') }}</strong></td>
                             <td>
-                                : @if($kegiatan->lokasi?->count() > 0)
+                                @if($kegiatan->lokasi?->count() > 0)
                                     @php
                                         $lokasiList = $kegiatan->lokasi->map(function($lok) {
                                             $parts = array_filter([
@@ -147,8 +147,8 @@
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.pihak_yang_terlibat') }}</strong></td>
                             <td>
-                                : @if($kegiatan->mitra?->count() > 0)
-                                    <ul class="mb-0 pl-3">
+                                @if($kegiatan->mitra?->count() > 0)
+                                    <ul class="mb-0 pl-0" style="list-style-type: none;">
                                         @foreach($kegiatan->mitra as $mitra)
                                             <li>{{ $mitra->nama }}</li>
                                         @endforeach
@@ -161,7 +161,7 @@
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
                             <td>
-                                : @if($kegiatan->sektor?->count() > 0)
+                                @if($kegiatan->sektor?->count() > 0)
                                     {{ $kegiatan->sektor->pluck('nama')->implode(', ') }}
                                 @else
                                     -
@@ -171,7 +171,7 @@
                         <tr>
                             <td class="table-light"><strong>Status</strong></td>
                             <td>
-                                : <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }} badge-lg">
+                                <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }} badge-lg">
                                     {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
                                 </span>
                             </td>
@@ -182,7 +182,7 @@
                 {{-- Activity Type Specific Content --}}
                 <div class="mt-4">
                     <h5 class="mb-3">
-                        <i class="fas fa-tasks text-info"></i> {{ __('btor.detail_kegiatan_spesifik') }}
+                        <i class="fas fa-tasks text-info"></i> {{ __('btor.jenis_kegiatan') }}
                         <span class="badge badge-info">{{ $kegiatan->jenisKegiatan?->nama }}</span>
                     </h5>
                     @include($viewPath, ['kegiatan' => $kegiatan])

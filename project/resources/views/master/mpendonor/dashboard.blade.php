@@ -220,7 +220,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover" id="donationTable">
+                        <table class="table table-bordered table-striped table-hover table-sm" id="donationTable" width="100%">
                             <thead class="bg-light">
                                 <tr>
                                     <th width="5%">No</th>
@@ -295,22 +295,64 @@ $(document).ready(function() {
 
     // Initialize DataTable
     donationDataTable = $('#donationTable').DataTable({
+        responsive: true,
+        processing: true,
+        deferRender: true,
+        stateSave: true,
+        stateSaveParams: function(settings, data) {
+            // Force tanggal column (index 5) to always be hidden
+            if (data.columns && data.columns[5]) {
+                data.columns[5].visible = false;
+            }
+        },
+        columnDefs: [
+            { targets: 5, visible: false } // Hide tanggal column (index 5)
+        ],
         data: [],
         columns: [
-            { data: null, render: function(data, type, row, meta) {
-                return meta.row + 1;
-            }},
-            { data: 'pendonor' },
-            { data: 'program' },
-            { data: 'program_year', className: 'text-center', render: function(data) {
-                return '<span class="badge badge-secondary">' + data + '</span>';
-            }},
-            { data: 'nilaidonasi', className: 'text-right', render: function(data) {
-                return 'Rp ' + parseFloat(data).toLocaleString(jsLocale);
-            }},
-            { data: 'tanggal', className: 'text-center', render: function(data) {
-                return '<span class="badge badge-info donation-badge"><i class="far fa-calendar"></i> ' + data + '</span>';
-            }}
+            { 
+                data: null, 
+                className: 'text-center align-middle',
+                width: '5%',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                }
+            },
+            { 
+                data: 'pendonor',
+                className: 'align-middle'
+            },
+            { 
+                data: 'program',
+                className: 'align-middle'
+            },
+            { 
+                data: 'program_year', 
+                className: 'text-center align-middle',
+                width: '8%',
+                render: function(data) {
+                    return '<span class="badge badge-secondary">' + data + '</span>';
+                }
+            },
+            { 
+                data: 'nilaidonasi', 
+                className: 'text-right align-middle',
+                width: '15%',
+                render: function(data) {
+                    return 'Rp ' + parseFloat(data).toLocaleString(jsLocale);
+                }
+            },
+            { 
+                data: 'tanggal', 
+                className: 'text-center align-middle ',
+                visible: false,
+                width: '12%',
+                render: function(data) {
+                    return '<span class="badge badge-info donation-badge"><i class="far fa-calendar"></i> ' + data + '</span>';
+                }
+            }
         ],
         order: [[0, 'asc']],
         pageLength: 10,

@@ -268,9 +268,9 @@
                     pageLength: 10,
                 }
             },
-            order: [
-                [0, 'asc']
-            ],
+            // order: [
+            //     [0, 'asc']
+            // ],
             lengthMenu: [10, 25, 50, 100, 500],
         });
 
