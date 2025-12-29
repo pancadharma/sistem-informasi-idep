@@ -387,7 +387,68 @@ class BTORController extends Controller
         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
         return $pdf->download($filename);
     }
-    
+
+    // public function exportBulkDocx(Request $request)
+    // {
+    //     $ids = is_string($request->input('ids')) 
+    //         ? array_filter(explode(',', $request->input('ids')))
+    //         : $request->input('ids', []);
+
+    //     if (empty($ids)) {
+    //         return redirect()->back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
+    //     }
+
+    //     if (count($ids) > 20) {
+    //         return redirect()->back()->with('error', 'Maksimal 20 laporan sekaligus');
+    //     }
+
+    //     $tmpDoc = null;
+    //     try {
+    //         $phpWord = new PhpWord();
+    //         $sections = [];
+
+    //         // Create all sections first
+    //         foreach ($ids as $id) {
+    //             $sections[] = $phpWord->addSection();
+    //         }
+
+    //         // Then populate each section
+    //         foreach ($ids as $index => $id) {
+    //             $kegiatan = BTOR::getData($id);
+    //             $this->ensureRelationshipsLoaded($kegiatan);
+
+    //             $section = $sections[$index];  // Use array index directly
+
+    //             $this->addDocxHeader($section, $kegiatan);
+    //             $this->addDocxContent($section, $kegiatan);
+    //         }
+
+    //         $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_bulk_' . time() . '_');
+    //         $phpWord->save($tmpDoc, 'Word2007');
+
+    //         if (ob_get_level() > 0) {
+    //             ob_end_clean();
+    //         }
+
+    //         $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('YmdHis') . '.docx';
+    //         return response()->download($tmpDoc, $filename)
+    //             ->deleteFileAfterSend(true);
+
+    //     } catch (\Exception $e) {
+    //         \Log::error('BTOR Bulk DOCX Export Error', [
+    //             'ids' => $ids,
+    //             'count' => count($ids),
+    //             'error' => $e->getMessage()
+    //         ]);
+
+    //         if ($tmpDoc && file_exists($tmpDoc)) {
+    //             @unlink($tmpDoc);
+    //         }
+
+    //         return redirect()->back()->with('error', 'Gagal mengekspor bulk laporan: ' . $e->getMessage());
+    //     }
+    // }
+
     public function exportBulkDocx(Request $request)
     {
         $ids = is_string($request->input('ids')) 
@@ -404,41 +465,111 @@ class BTORController extends Controller
 
         $tmpDoc = null;
         try {
-            $phpWord = new PhpWord();
-            $sections = [];
+            $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-            // Create all sections first
+            // --- 1. GLOBAL STYLES (Matches exportDocx) ---
+            $phpWord->setDefaultFontName('Tahoma');
+            $phpWord->setDefaultFontSize(10);
+
+            // Define Heading Styles globally
+            $h1Style = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+            $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+
+            // Register Title Styles so addTitle() works correctly in the content
+            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+
+            // --- 2. LOOP THROUGH DATA ---
             foreach ($ids as $id) {
-                $sections[] = $phpWord->addSection();
-            }
-
-            // Then populate each section
-            foreach ($ids as $index => $id) {
                 $kegiatan = BTOR::getData($id);
+                // Ensure all relations are loaded prevents lazy loading errors
                 $this->ensureRelationshipsLoaded($kegiatan);
-                
-                $section = $sections[$index];  // Use array index directly
-                
+
+                // --- 3. CREATE SECTION (New Page per ID) ---
+                // Using exact margins from your single export
+                $section = $phpWord->addSection([
+                    'marginTop' => 1417,       // 2.5 cm
+                    'marginBottom' => 1417,
+                    'marginLeft' => 1417,
+                    'marginRight' => 1417,
+                    'headerHeight' => 283,
+                    'headerDistance' => 283,
+                    'footerHeight' => 567,
+                    'footerDistance' => 283,
+                ]);
+
+                // --- 4. ADD HEADER (Per Section) ---
+                $header = $section->addHeader();
+                $imagePath = public_path('images/uploads/header.png');
+                if (file_exists($imagePath)) {
+                    $header->addImage($imagePath, [
+                        'width' => 395,
+                        'height' => 38,
+                        'alignment' => 'center'
+                    ]);
+                } else {
+                    $header->addText('YAYASAN IDEP', ['bold' => true, 'size' => 14], ['alignment' => 'center']);
+                }
+
+                // --- 5. ADD FOOTER (Per Section) ---
+                $footer = $section->addFooter();
+
+                // Footer Styles
+                $footerStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 8, 'color' => '0D654D'];
+                $footerBodyStyle = ['name' => 'Tahoma', 'size' => 8, 'color' => '0F7001'];
+                $footerPStyle = [
+                    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+                    'spaceBefore' => 0.25,
+                    'spaceAfter' => 0.25,
+                    'lineHeight' => 1.0
+                ];
+                $footerLineStyle = [
+                    'borderBottomStyle' => 'thinThickMediumGap',
+                    'borderBottomSize'  => 25,
+                    'borderBottomColor' => '000000',
+                    'spaceBefore'    => 1,
+                    'lineHeight' => 1.0,
+                    'spaceAfter'     => 1,
+                    'alignment'      => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+                ];
+
+                // Add Footer Content
+                $footer->addText('', [], $footerLineStyle);
+                $footer->addPreserveText('Yayasan IDEP Selaras Alam', $footerStyle, $footerPStyle);
+                $footer->addPreserveText('Office &amp; Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia', $footerBodyStyle, $footerPStyle);
+                $footer->addPreserveText(' Telp/Fax : +62-361-908-2983 / +62-812 4658 5137', $footerBodyStyle, $footerPStyle);
+                $footer->addPreserveText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), $footerBodyStyle, $footerPStyle);
+
+                // --- 6. ADD CONTENT ---
+                // Reusing your existing helper functions
                 $this->addDocxHeader($section, $kegiatan);
                 $this->addDocxContent($section, $kegiatan);
             }
 
+            // --- 7. SAVE & DOWNLOAD ---
             $tmpDoc = tempnam(sys_get_temp_dir(), 'btor_bulk_' . time() . '_');
+            if (!$tmpDoc) {
+                throw new \Exception('Tidak dapat membuat file temporary');
+            }
+
             $phpWord->save($tmpDoc, 'Word2007');
 
+            // Clean output buffer to prevent corrupted files
             if (ob_get_level() > 0) {
                 ob_end_clean();
             }
 
             $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('YmdHis') . '.docx';
+
             return response()->download($tmpDoc, $filename)
                 ->deleteFileAfterSend(true);
 
         } catch (\Exception $e) {
-            \Log::error('BTOR Bulk DOCX Export Error', [
+            Log::error('BTOR Bulk DOCX Export Error', [
                 'ids' => $ids,
                 'count' => count($ids),
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             if ($tmpDoc && file_exists($tmpDoc)) {
