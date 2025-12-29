@@ -113,13 +113,13 @@
 <div class="print-container">
 
     {{-- Header Section (Matches PDF Image Logic) --}}
-    <div class="report-header text-center" style="margin-bottom: 20px;">
+    {{-- <div class="report-header text-center" style="margin-bottom: 20px;">
         @if(file_exists(public_path('images/uploads/header.png')))
             <img src="{{ asset('images/uploads/header.png') }}" style="height: 38px; width: auto;">
         @else
             <h2 style="font-size: 14pt; font-weight: bold; margin: 0;">YAYASAN IDEP</h2>
         @endif
-    </div>
+    </div> --}}
 
     {{-- Basic Information Table --}}
     <div class="section">
@@ -355,11 +355,11 @@
     </div>
 
     {{-- Footer --}}
-    <div class="report-footer">
+    {{-- <div class="report-footer">
         <p><strong>Yayasan IDEP Selaras Alam</strong></p>
         <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
         <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
         <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
-    </div>
+    </div> --}}
 </div>
 @endsection

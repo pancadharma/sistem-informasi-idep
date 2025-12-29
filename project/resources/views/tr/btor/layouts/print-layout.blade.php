@@ -1,4 +1,3 @@
-{{-- resources/views/tr/btor/layouts/print-layout.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,62 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
-    {{-- Base Styles --}}
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
     
     <title>@yield('title', 'BTOR Print')</title>
 
-    <style>
-        /* BASE PRINT RESET */
-        @media print {
-            @page {
-                margin: 2.5cm; /* Matches DOCX/PDF Standard */
-                size: A4 portrait;
-            }
-
-            td.media-item {
-                text-align: center !important;
-            }
-
-            body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                background-color: #fff !important;
-                font-family: 'Tahoma', sans-serif !important;
-                color: #000 !important;
-            }
-
-            /* Hide Buttons */
-            .no-print, .print-controls {
-                display: none !important;
-            }
-            
-            /* Ensure Links look like text unless it's a map */
-            a { text-decoration: none; color: #000; }
-        }
-
-        /* SCREEN CONTROLS */
-        .print-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: #fff;
-            padding: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 5px;
-        }
-        
-        .btn-print {
-            background: #007bff; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;
-        }
-        .btn-close {
-            background: #6c757d; color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-left: 5px;
-        }
-    </style>
-    
-    {{-- Stack for specific print styles (Green Headers, etc.) --}}
+    {{-- Include Custom Styles --}}
+    @include('tr.btor.custom.style')
     @stack('print-styles')
 </head>
 <body>
@@ -70,8 +20,34 @@
         <button onclick="window.close()" class="btn-close"><i class="fas fa-times"></i> Close</button>
     </div>
 
-    @yield('content')
+    {{-- 1. FIXED HEADER (Repeats on every page) --}}
+    <div class="fixed-header">
+        <div class="text-center">
+            @if(file_exists(public_path('images/uploads/header.png')))
+                <img src="{{ asset('images/uploads/header.png') }}" style="height: 38px; width: auto;">
+            @else
+                <h2 style="font-size: 14pt; font-weight: bold; margin: 0; color: #000;">YAYASAN IDEP</h2>
+            @endif
+        </div>
+    </div>
 
+
+
+    {{-- 3. MAIN CONTENT (Scrolls) --}}
+    {{-- We wrap content in a table logic to ensure margins work nicely if needed, 
+         but mostly padding handles it --}}
+    <div class="content-wrapper">
+        @yield('content')
+    </div>
+    {{-- 2. FIXED FOOTER (Repeats on every page) --}}
+    <div class="fixed-footer">
+        <div class="report-footer-content">
+            <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+            <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
+            <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
+            <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
+        </div>
+    </div>
     @stack('print-scripts')
 </body>
 </html>
