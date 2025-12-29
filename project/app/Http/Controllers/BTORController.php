@@ -446,8 +446,10 @@ class BTORController extends Controller
 
     private function addDocxHeader($section, $kegiatan)
     {
+        // --- DEFINISI STYLE ---
         $reportTitleStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
         $hBodyStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
 
         $hStyle = [
             'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
@@ -457,37 +459,60 @@ class BTORController extends Controller
         ];
 
         $borderStyle = [
-            'lineHeight' => 1.5,
-            'borderTopSize'  => 10, // Pakai Bottom untuk di bawah teks
+            // 'lineHeight' => 1.5,
+            'borderTopSize'  => 10,
             'borderTopColor' => '000000',
-            'borderTopStyle' => 'single', // Style tebal-tipis yang tadi
-            'spaceAfter'        => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(6),
-            'spaceBefore'        => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(6),
-            'alignment'         => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+            'borderTopStyle' => 'single',
+            'spaceAfter'     => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(0),
+            'spaceBefore'    => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(6),
+            'alignment'      => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
         ];
         
-        $section->addPreserveText('BACK TO OFFICE REPORT', $reportTitleStyle, ['alignment' => Jc::CENTER]);
+        $pStyleLeft = [
+            'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::START,
+        ];
 
-        // Basic information with proper null handling and encoding
-        $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
-        
-        $section->addText('Departemen      	: Program', $hBodyStyle, $hStyle) ;
-        $section->addText('Program      		: ' . $this->safeValue($program?->nama), $hBodyStyle, $hStyle);
-        $section->addText('Nama Kegiatan      	: ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->nama), $hBodyStyle, $hStyle);
-        $section->addText('Kode Budget      	: ' . $this->safeValue($kegiatan->programOutcomeOutputActivity?->kode), $hBodyStyle, $hStyle);
+        // --- LOGIKA DATA ---
+        $programNama = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama;
+        $kegiatanNama = $kegiatan->programOutcomeOutputActivity?->nama;
+        $kodeBudget = $kegiatan->programOutcomeOutputActivity?->kode;
 
-        // Penulis (authors)
-        $penulis = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
-            ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->user?->nama))->filter()->implode(', ')
+        // Ambil daftar penulis dari relasi kegiatan_penulis
+        $penulisList = $kegiatan->kegiatan_penulis ?? collect();
+
+        $penulis = $penulisList->count() > 0
+            ? $penulisList->map(fn($p) => $this->safeValue($p->user?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Penulis Laporan      	: ' . $penulis, $hBodyStyle, $hStyle);
-
-        // Jabatan (positions)
-        $jabatan = $kegiatan->kegiatan_penulis && $kegiatan->kegiatan_penulis->count() > 0
-            ? $kegiatan->kegiatan_penulis->map(fn($p) => $this->safeValue($p->peran?->nama))->filter()->implode(', ')
+        $jabatan = $penulisList->count() > 0
+            ? $penulisList->map(fn($p) => $this->safeValue($p->peran?->nama))->filter()->implode(', ')
             : '-';
-        $section->addText('Jabatan      		: ' . $jabatan, $hBodyStyle, $hStyle);
+
+        // --- PEMBUATAN TABEL ---
+
+        $table = $section->addTable(['setBorderColor' => 'none']);
         
+
+        // Helper function untuk baris tabel
+        $addRow = function($table, $label, $value) use ($labelStyle, $hBodyStyle, $pStyleLeft) {
+            $table->addRow();
+            // Kolom 1: Label (Bold) - Lebar 3000 twips (~5.3cm)
+            $table->addCell(2500)->addText($label, $labelStyle, $pStyleLeft); 
+            // Kolom 2: Titik Dua - Lebar 200 twips
+            $table->addCell(200)->addText(':', $hBodyStyle, $pStyleLeft); 
+            // Kolom 3: Value - Lebar 6000 twips
+            $table->addCell(6000)->addText($value, $hBodyStyle, $pStyleLeft); 
+        };
+
+        // Eksekusi pengisian tabel
+        $addRow($table, 'Departemen', 'Program');
+        $addRow($table, 'Program', $this->safeValue($programNama));
+        $addRow($table, 'Nama Kegiatan', $this->safeValue($kegiatanNama));
+        $addRow($table, 'Kode Budget', $this->safeValue($kodeBudget));
+        $addRow($table, 'Penulis Laporan', $penulis);
+        $addRow($table, 'Jabatan', $jabatan);
+
         $section->addText('', [], $borderStyle);
         
     }
@@ -499,22 +524,50 @@ class BTORController extends Controller
     /**
      * Add DOCX content with proper encoding
      * FIXES: Character encoding, null safety, consistent formatting
+     * Isi Dari File Docx Konten Dinamis
      */
     private function addDocxContent($section, $kegiatan)
     {
+        // --- DEFINISI STYLE ---
+        $h1Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000', 'bold' => true];
+        $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $normalStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+
+        $labelStyle = array_merge($h2Style, ['bold' => true]);
+
+        $pNormalStyle = [
+            'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
+        ];
+
+        $pStyleLeft = [
+            'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::START,
+        ];
+        
+        $hStyle = [
+            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
+            'spaceBefore' => 0.25,
+            'spaceAfter' => 0.25,
+            'lineHeight' => 1.0,
+        ];
+
 
         // A. Latar Belakang
-        $section->addText('A. Latar Belakang Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText($this->safeText($kegiatan->deskripsilatarbelakang), ['size' => 11]);
+        // $section->addText('Departemen      	: Program', $hBodyStyle, $hStyle) ;
+        $section->addText('A. Latar Belakang Kegiatan', $h1Style, $hStyle);
+        $section->addText($this->safeText($kegiatan->deskripsilatarbelakang), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // B. Tujuan
-        $section->addText('B. Tujuan Kegiatan', ['bold' => true, 'size' => 12]);
-        $section->addText($this->safeText($kegiatan->deskripsitujuan), ['size' => 11]);
+        $section->addText('B. Tujuan Kegiatan', $h1Style, $hStyle);
+        $section->addText($this->safeText($kegiatan->deskripsitujuan), $normalStyle, $pNormalStyle);
         $section->addTextBreak(1);
 
         // C. Detail Kegiatan
-        $section->addText('C. Detail Kegiatan', ['bold' => true, 'size' => 12]);
+        $section->addText('C. Detail Kegiatan', $h1Style, $hStyle);
         
         // Date formatting
         $tanggalMulai = $kegiatan->tanggalmulai 
@@ -531,7 +584,7 @@ class BTORController extends Controller
                 $dateText .= ' (' . $kegiatan->getDurationInDays() . ' hari)';
             }
         }
-        $section->addText($dateText, ['size' => 11]);
+        $section->addText($dateText, $normalStyle, $pStyleLeft);
 
         // Location
         $lokasiList = $kegiatan->lokasi && $kegiatan->lokasi->count() > 0
