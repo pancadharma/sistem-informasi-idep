@@ -1,10 +1,25 @@
 <style>
-    /* --- GLOBAL SETTINGS --- */
+    /* =====================================================
+       TABLE-BASED REPEATING HEADER/FOOTER
+       =====================================================
+       This is the ONLY reliable pure-CSS method for 
+       repeating headers/footers in browser print.
+       
+       Structure:
+       <table class="print-wrapper">
+         <thead> = repeating header
+         <tfoot> = repeating footer  
+         <tbody> = content
+       </table>
+    */
+
     @page {
         size: A4 portrait;
-        /* We use smaller margins here because the Body Padding below 
-           will act as the "visual" margin for the content */
-        margin: 1cm; 
+        margin: 10mm;
+    }
+
+    * {
+        box-sizing: border-box;
     }
 
     body {
@@ -13,79 +28,167 @@
         line-height: 1.3;
         color: #000;
         background: white;
+        margin: 0;
+        padding: 0;
     }
 
-    /* --- FIXED HEADER & FOOTER STYLES --- */
-    .fixed-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 50px; /* Adjust based on your Logo height */
+    /* --- PRINT WRAPPER TABLE --- */
+    .print-wrapper {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .print-wrapper > thead,
+    .print-wrapper > tfoot {
+        display: table-header-group;
+    }
+
+    .print-wrapper > tfoot {
+        display: table-footer-group;
+    }
+
+    .print-wrapper > tbody {
+        display: table-row-group;
+    }
+
+    /* --- HEADER STYLES --- */
+    .print-header-row th {
+        padding: 0;
+        border: none;
+        background: white;
+    }
+
+    .print-header-content {
         text-align: center;
-        background: white;
-        z-index: 1000;
+        padding: 10px 0 15px 0;
+        border-bottom: 2px solid #0D654D;
     }
 
-    .fixed-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 80px; /* Adjust based on footer text amount */
-        background: white;
-        z-index: 1000;
-        border-top: 3px double #000; /* Aesthetic border */
-        padding-top: 10px;
+    .print-header-content img {
+        height: 38px;
+        width: auto;
     }
 
-    .report-footer-content {
+    .print-header-content h2 {
+        font-size: 14pt;
+        font-weight: bold;
+        margin: 0;
+        color: #000;
+    }
+
+    /* --- FOOTER STYLES --- */
+    .print-footer-row td {
+        padding: 0;
+        border: none;
+        background: white;
+    }
+
+    .print-footer-content {
         text-align: center;
         font-size: 8pt;
         color: #0F7001;
+        border-top: 3px double #000;
+        padding: 10px 0;
+        margin-top: 15px;
     }
-    .report-footer-content strong { color: #0D654D; }
-    .report-footer-content p { margin: 2px 0; }
 
-    /* --- CONTENT SPACING (Crucial) --- */
-    /* This pushes the text away from the fixed header/footer */
+    .print-footer-content strong {
+        color: #0D654D;
+    }
+
+    .print-footer-content p {
+        margin: 2px 0;
+    }
+
+    /* --- BODY CONTENT --- */
+    .print-body-row td {
+        padding: 15px 0;
+        vertical-align: top;
+    }
+
+    .print-container {
+        background-color: white;
+    }
+
+    /* --- PRINT MEDIA --- */
     @media print {
         body {
-            /* Top Padding = Header Height + Space */
-            padding-top: 80px; 
-            /* Bottom Padding = Footer Height + Space */
-            padding-bottom: 100px; 
-        }
-        
-        /* Ensure fixed elements print */
-        .fixed-header, .fixed-footer {
-            display: block !important;
-            z-index: 1000;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
 
-        .no-print { display: none !important; }
+        .no-print {
+            display: none !important;
+        }
+
+        /* CRITICAL: These make thead/tfoot repeat on each page */
+        .print-wrapper > thead {
+            display: table-header-group !important;
+        }
+
+        .print-wrapper > tfoot {
+            display: table-footer-group !important;
+        }
+
+        .section {
+            page-break-inside: avoid;
+        }
+
+        .page-break-before {
+            page-break-before: always;
+        }
+
+        .page-break-after {
+            page-break-after: always;
+        }
     }
 
-    /* On Screen, we simulate the look */
+    /* --- SCREEN PREVIEW --- */
     @media screen {
-        .fixed-header { position: sticky; top: 0; border-bottom: 1px dashed #ccc; margin-bottom: 20px; z-index: 1000; padding: 10px; }
-        .fixed-footer { position: static; border-top: 1px solid #ccc; margin-top: 20px; }
+        body {
+            background: #e0e0e0;
+            padding: 20px;
+        }
+
+        .print-wrapper {
+            max-width: 21cm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        }
+
+        .print-body-row td {
+            padding: 20px;
+        }
     }
 
-    /* --- TABLE STYLES --- */
-    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 10pt; }
-    
+    /* --- DATA TABLE STYLES --- */
+    table:not(.print-wrapper) {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        font-size: 10pt;
+    }
+
     .table-bordered th, .table-bordered td {
         border: 1px solid #000 !important;
         padding: 4px;
         vertical-align: middle;
     }
+
     .table-bordered thead th, .table-bordered th {
         background-color: #385623 !important;
         color: #FFFFFF !important;
         font-weight: bold;
         text-align: center;
-        -webkit-print-color-adjust: exact;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .table-print td {
+        padding: 2px 4px;
+        vertical-align: top;
+        border: none;
     }
 
     /* --- GALLERY STYLES --- */
@@ -100,11 +203,13 @@
     .media-caption { font-size: 8pt; text-align: center; padding: 3px; }
     .media-meta { font-size: 7pt; color: #666; text-align: center; }
 
-    /* Utils */
+    /* --- UTILITY CLASSES --- */
     .section-title { font-size: 10pt; font-weight: bold; margin-top: 15pt; margin-bottom: 5pt; }
     .content-box { text-align: justify; }
-    .page-break { page-break-before: always; }
+    .text-center { text-align: center; }
+
+    /* Print Controls */
     .btn-print { background-color: #007bff; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
     .btn-close { background-color: #6c757d; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 5px; }
-    .print-controls { position: fixed; top: 70px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .print-controls { position: fixed; top: 20px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 9999; }
 </style>

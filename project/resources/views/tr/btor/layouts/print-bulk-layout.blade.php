@@ -5,20 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
-    <title>@yield('title', 'BTOR Print')</title>
+    <title>@yield('title', 'BTOR Bulk Print')</title>
 
     {{-- Include Custom Styles --}}
     @include('tr.btor.custom.style')
+    
+    <style>
+        /* Bulk-specific styles */
+        @media screen {
+            .report-wrapper {
+                margin-bottom: 40px;
+                padding-bottom: 40px;
+                border-bottom: 3px dashed #ccc;
+            }
+            .report-wrapper:last-child {
+                border-bottom: none;
+            }
+        }
+        
+        .report-badge {
+            background: #eee;
+            padding: 5px 10px;
+            font-size: 10pt;
+            margin-bottom: 20px;
+            display: inline-block;
+            border: 1px solid #ccc;
+        }
+    </style>
+    
     @stack('print-styles')
 </head>
 <body>
     {{-- Print Controls (Screen Only) --}}
     <div class="print-controls no-print">
-        <button onclick="window.print()" class="btn-print"><i class="fas fa-print"></i> Print</button>
+        <button onclick="window.print()" class="btn-print"><i class="fas fa-print"></i> Print All</button>
         <button onclick="window.close()" class="btn-close"><i class="fas fa-times"></i> Close</button>
     </div>
 
-    {{-- TABLE-BASED LAYOUT: thead=header, tfoot=footer, tbody=content --}}
+    {{-- TABLE-BASED LAYOUT --}}
     <table class="print-wrapper">
         {{-- REPEATING HEADER --}}
         <thead>

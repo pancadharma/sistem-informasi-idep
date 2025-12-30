@@ -4,34 +4,13 @@
 
 @push('print-styles')
     <style>
-        /* --- GLOBAL DOCX/PDF MIMIC STYLES --- */
-        @media print {
-            @page {
-                margin: 2.5cm; /* Matches DOCX Margins */
-                size: A4 portrait;
-            }
-            body {
-                -webkit-print-color-adjust: exact !important; /* Forces Green Backgrounds to print */
-                print-color-adjust: exact !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
-
-        body {
-            font-family: 'Tahoma', sans-serif; /* Matches DOCX Font */
-            font-size: 10pt;
-            line-height: 1.3;
-            color: #000;
-            background: #fff;
-        }
+        /* --- VIEW-SPECIFIC STYLES (print.blade.php) --- */
+        /* Note: Base print layout is handled by style.blade.php */
 
         .print-container {
             max-width: 21cm; /* A4 Width */
-            margin: 0 auto;
-            background: white;
-            padding: 0; /* Padding handled by @page in print, or margin in screen */
+            background-color: white;
+            padding: 0;
         }
 
         /* HEADINGS */
