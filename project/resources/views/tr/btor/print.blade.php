@@ -264,10 +264,17 @@
         <h4 class="section-title">E. {{ __('btor.tantangan_solusi') }}</h4>
         
         @php
+            // Extract kendala (challenges) from all 11 jenis kegiatan types
             $kendala = $kegiatan->assessment?->assessmentkendala
-                    ?? $kegiatan->pelatihan?->pelatihanisu
-                    ?? $kegiatan->monitoring?->monitoringkendala
                     ?? $kegiatan->sosialisasi?->sosialisasikendala
+                    ?? $kegiatan->pelatihan?->pelatihankendala
+                    ?? $kegiatan->pembelanjaan?->pembelanjaankendala
+                    ?? $kegiatan->pengembangan?->pengembangankendala
+                    ?? $kegiatan->kampanye?->kampanyekendala
+                    ?? $kegiatan->monitoring?->monitoringkendala
+                    ?? $kegiatan->kunjungan?->kunjungankendala
+                    ?? $kegiatan->konsultasi?->konsultasikendala
+                    ?? $kegiatan->pemetaan?->pemetaankendala
                     ?? $kegiatan->lainnya?->lainnyakendala
                     ?? null;
         @endphp
@@ -282,9 +289,17 @@
         <h4 class="section-title">F. Isu yang Perlu Diperhatikan / Rekomendasi</h4>
         
         @php
+            // Extract isu (issues) from all 11 jenis kegiatan types
             $isu = $kegiatan->assessment?->assessmentisu
+                ?? $kegiatan->sosialisasi?->sosialisasiisu
                 ?? $kegiatan->pelatihan?->pelatihanisu
+                ?? $kegiatan->pembelanjaan?->pembelanjaanisu
+                ?? $kegiatan->pengembangan?->pengembanganisu
+                ?? $kegiatan->kampanye?->kampanyeisu
+                ?? $kegiatan->pemetaan?->pemetaanisu
                 ?? $kegiatan->monitoring?->monitoringisu
+                ?? $kegiatan->kunjungan?->kunjunganisu
+                ?? $kegiatan->konsultasi?->konsultasiisu
                 ?? $kegiatan->lainnya?->lainnyaisu
                 ?? null;
         @endphp

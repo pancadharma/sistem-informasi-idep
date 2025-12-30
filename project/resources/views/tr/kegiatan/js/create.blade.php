@@ -892,6 +892,12 @@
                         type: 'textarea'
                     },
                     {
+                        i: '{{ __('cruds.kegiatan.hasil.i_pemetaankendala') }}',
+                        label: '{{ __('cruds.kegiatan.hasil.pemetaankendala') }}',
+                        name: 'pemetaankendala',
+                        type: 'textarea'
+                    },  
+                    {
                         i: '{{ __('cruds.kegiatan.hasil.i_pemetaanisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pemetaanisu') }}',
                         name: 'pemetaanisu',
