@@ -129,6 +129,22 @@
                         {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
                     </td>
                 </tr>
+                {{-- REVIEW: Added Sektor Kegiatan field to print layout --}}
+                <tr>
+                    <td><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
+                    <td>:</td>
+                    <td>
+                        {{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}
+                    </td>
+                </tr>
+                {{-- REVIEW: Added Fase Pelaporan field --}}
+                <tr>
+                    <td><strong>{{ __('btor.fase_pelaporan') }}</strong></td>
+                    <td>:</td>
+                    <td>
+                        {{ $kegiatan->fasepelaporan ?: '-' }}
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -191,19 +207,26 @@
             @include('tr.btor.partials.location')
         @endif
         
-        {{-- Activity Specifics --}}
-        {{-- <div class="mt-3">
-            @include($viewPath, ['kegiatan' => $kegiatan])
-        </div> --}}
     </div>
 
     {{-- 4. Hasil Kegiatan --}}
     <div class="section">
         <h4 class="section-title">D. {{ __('btor.hasil.label') }}</h4>
 
+        {{-- Type-Specific Activity Data --}}
+        @if(isset($viewPath))
+            <div class="print-jenis-kegiatan" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; background-color: #fafafa;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #385623;">
+                    <i class="fas fa-clipboard-list"></i> 
+                    Detail {{ $kegiatan->jenisKegiatan?->nama ?? 'Kegiatan' }}
+                </div>
+                @include($viewPath, ['kegiatan' => $kegiatan])
+            </div>
+        @endif
+
         {{-- 4a. Jumlah Partisipan --}}
         <div style="font-weight: bold; margin-bottom: 5px;">a. {{ __('btor.partisipan_disagregat') }}</div>
-        <p style="margin-bottom: 5px;">Silakan mengisi tabel berikut:</p>
+        {{-- REVIEW: Removed "Silakan mengisi tabel berikut" placeholder --}}
 
         @if($kegiatan->penerimamanfaattotal > 0)
             <table class="table-bordered">

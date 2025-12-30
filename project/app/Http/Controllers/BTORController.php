@@ -890,53 +890,82 @@ class BTORController extends Controller
 
     /**
      * Get specific data based on jenis kegiatan
-     * FIXES: Comprehensive null safety
+     * REVIEW: Refactored field mapping to use correct prefixed fields (e.g., assessmentkendala) 
+     * for Word export extraction.
      */
     private function getSpecificKegiatanData($kegiatan)
     {
-        $specificData = null;
+        $data = [
+            'kendala' => null,
+            'isu' => null,
+            'pembelajaran' => null,
+        ];
 
-        switch ($kegiatan->jenis_kegiatan_id) {
-            case 1:
-                $specificData = $kegiatan->assessment;
+        // Specific fields mapping based on jeniskegiatan_id
+        // This ensures the generic 'kendala', 'isu', and 'pembelajaran' keys
+        // used in the export logic are correctly populated from model-specific fields.
+        switch ($kegiatan->jeniskegiatan_id) {
+            case 1: // Assessment
+                $data['kendala'] = $kegiatan->assessment?->assessmentkendala;
+                $data['isu'] = $kegiatan->assessment?->assessmentisu;
+                $data['pembelajaran'] = $kegiatan->assessment?->assessmentpembelajaran;
                 break;
-            case 2:
-                $specificData = $kegiatan->sosialisasi;
+            case 2: // Sosialisasi
+                $data['kendala'] = $kegiatan->sosialisasi?->sosialisasikendala;
+                $data['isu'] = $kegiatan->sosialisasi?->sosialisasiisu;
+                $data['pembelajaran'] = $kegiatan->sosialisasi?->sosialisasipembelajaran;
                 break;
-            case 3:
-                $specificData = $kegiatan->pelatihan;
+            case 3: // Pelatihan
+                $data['kendala'] = $kegiatan->pelatihan?->pelatihankendala;
+                $data['isu'] = $kegiatan->pelatihan?->pelatihanisu;
+                $data['pembelajaran'] = $kegiatan->pelatihan?->pelatihanpembelajaran;
                 break;
-            case 4:
-                $specificData = $kegiatan->pembelanjaan;
+            case 4: // Pembelanjaan
+                $data['kendala'] = $kegiatan->pembelanjaan?->pembelanjaankendala;
+                $data['isu'] = $kegiatan->pembelanjaan?->pembelanjaanisu;
+                $data['pembelajaran'] = $kegiatan->pembelanjaan?->pembelanjaanpembelajaran;
                 break;
-            case 5:
-                $specificData = $kegiatan->pengembangan;
+            case 5: // Pengembangan
+                $data['kendala'] = $kegiatan->pengembangan?->pengembangankendala;
+                $data['isu'] = $kegiatan->pengembangan?->pengembanganisu;
+                $data['pembelajaran'] = $kegiatan->pengembangan?->pengembanganpembelajaran;
                 break;
-            case 6:
-                $specificData = $kegiatan->kampanye;
+            case 6: // Kampanye
+                $data['kendala'] = $kegiatan->kampanye?->kampanyekendala;
+                $data['isu'] = $kegiatan->kampanye?->kampanyeisu;
+                $data['pembelajaran'] = $kegiatan->kampanye?->kampanyepembelajaran;
                 break;
-            case 7:
-                $specificData = $kegiatan->pemetaan;
+            case 7: // Pemetaan
+                $data['kendala'] = $kegiatan->pemetaan?->pemetaankendala;
+                $data['isu'] = $kegiatan->pemetaan?->pemetaanisu;
+                $data['pembelajaran'] = $kegiatan->pemetaan?->pemetaanpembelajaran;
                 break;
-            case 8:
-                $specificData = $kegiatan->monitoring;
+            case 8: // Monitoring
+                $data['kendala'] = $kegiatan->monitoring?->monitoringkendala;
+                $data['isu'] = $kegiatan->monitoring?->monitoringisu;
+                $data['pembelajaran'] = $kegiatan->monitoring?->monitoringpembelajaran;
                 break;
-            case 9:
-                $specificData = $kegiatan->kunjungan;
+            case 9: // Kunjungan
+                $data['kendala'] = $kegiatan->kunjungan?->kunjungankendala;
+                $data['isu'] = $kegiatan->kunjungan?->kunjunganisu;
+                $data['pembelajaran'] = $kegiatan->kunjungan?->kunjunganpembelajaran;
                 break;
-            case 10:
-                $specificData = $kegiatan->konsultasi;
+            case 10: // Konsultasi
+                $data['kendala'] = $kegiatan->konsultasi?->konsultasikendala;
+                $data['isu'] = $kegiatan->konsultasi?->konsultasiisu;
+                $data['pembelajaran'] = $kegiatan->konsultasi?->konsultasipembelajaran;
                 break;
-            case 11:
-                $specificData = $kegiatan->lainnya;
+            case 11: // Lainnya
+                $data['kendala'] = $kegiatan->lainnya?->lainnyakendala;
+                $data['isu'] = $kegiatan->lainnya?->lainnyaisu;
+                $data['pembelajaran'] = $kegiatan->lainnya?->lainnyapembelajaran;
                 break;
         }
 
-        // Extract data with proper null handling
         return [
-            'kendala' => $specificData?->kendala ?? $specificData?->unggahan ?? 'Tidak ada data tantangan.',
-            'isu' => $specificData?->isu ?? 'Tidak ada data isu.',
-            'pembelajaran' => $specificData?->pembelajaran ?? 'Tidak ada data pembelajaran.',
+            'kendala'      => $data['kendala'] ?: 'Tidak ada data tantangan.',
+            'isu'          => $data['isu'] ?: 'Tidak ada data isu.',
+            'pembelajaran' => $data['pembelajaran'] ?: 'Tidak ada data pembelajaran.',
         ];
     }
 

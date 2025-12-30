@@ -29,18 +29,7 @@
                             <td width="20%" class="table-secondary"><strong>{{ __('btor.hasil.assessmenttambahan_ket') }}</strong></td>
                             <td>{!! $kegiatan->assessment->assessmenttambahan_ket ?? '<em class="text-muted">No data</em>' !!}</td>
                         </tr>
-                        <tr>
-                            <td width="20%" class="table-secondary"><strong>{{ __('btor.hasil.assessmentkendala') }}</strong></td>
-                            <td>{!! $kegiatan->assessment->assessmentkendala ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>{{ __('btor.hasil.assessmentisu') }}</strong></td>
-                            <td>{!! $kegiatan->assessment->assessmentisu ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>{{ __('btor.hasil.assessmentpembelajaran') }}</strong></td>
-                            <td>{!! $kegiatan->assessment->assessmentpembelajaran ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
+                        {{-- REVIEW: Redundant fields (kendala, isu, pembelajaran) removed to avoid duplication with summary sections --}}
                     </tbody>
                 </table>
             </div>
