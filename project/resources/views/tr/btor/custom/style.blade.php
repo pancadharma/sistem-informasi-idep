@@ -112,6 +112,10 @@
 
     /* --- PRINT MEDIA --- */
     @media print {
+        html, body {
+            height: 100%;
+        }
+
         body {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -121,6 +125,11 @@
             display: none !important;
         }
 
+        /* Make table fill the entire page height to push footer to bottom */
+        .print-wrapper {
+            height: 100%;
+        }
+
         /* CRITICAL: These make thead/tfoot repeat on each page */
         .print-wrapper > thead {
             display: table-header-group !important;
@@ -128,6 +137,16 @@
 
         .print-wrapper > tfoot {
             display: table-footer-group !important;
+        }
+
+        /* Make body row fill available space */
+        .print-body-row {
+            height: 100%;
+        }
+
+        .print-body-row td {
+            height: 100%;
+            vertical-align: top;
         }
 
         .section {
