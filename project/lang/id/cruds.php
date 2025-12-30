@@ -650,7 +650,7 @@ return [
             'latar_belakang_helper' => 'Apa yang menjadi latar belakang kegiatan ini ?',
             'tujuan' => 'Tujuan Kegiatan',
             'tujuan_helper' => 'Tolong tuliskan tujuan kegiatan, bisa mengacu dari ToR kegiatan!',
-            'deskripsikeluaran' => 'Deskripsi Keluaran',
+            'deskripsikeluaran' => 'Deskripsi Keluaran / Hasil Pertemuan',
             'keluaran_helper' => 'Tolong tuliskan keluaran kegiatan, bisa mengacu dari ToR kegiatan',
             'involved' => 'Siapa yang terlibat ?',
             'yang_terlibat' => 'Orang Terlibat',

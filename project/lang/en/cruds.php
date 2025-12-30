@@ -652,7 +652,7 @@ return [
             'latar_belakang' => 'Background Description',
             'tujuan' => 'Activity Purpose',
             'tujuan_helper' => 'Please write the purpose of the activity, can be derived from the ToR of the activity!',
-            'deskripsikeluaran' => 'Output Description',
+            'deskripsikeluaran' => 'Output Description / Meeting Result',
             'keluaran_helper' => 'Please write the output description of the activity, can be derived from the ToR of the activity!',
             'involved' => 'Who Involved',
             'yang_terlibat' => 'Involved People',

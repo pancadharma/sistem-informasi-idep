@@ -153,7 +153,7 @@
                         <p>Tidak ada data penerima manfaat.</p>
                     @endif
 
-                    <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('btor.hasil_pertemuan') }}</div>
+                    <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
                     <div class="content-box">{!! $kegiatan->deskripsikeluaran ?? '-' !!}</div>
                 </div>
 

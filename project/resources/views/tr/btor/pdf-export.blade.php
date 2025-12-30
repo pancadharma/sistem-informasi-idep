@@ -274,7 +274,7 @@
         </table>
 
         {{-- 4b. Hasil Pertemuan --}}
-        <h5 style="font-size: 10pt; font-weight: bold; margin: 15px 0 10px 0;">b. {{ __('btor.hasil_pertemuan') }}</h5>
+        <h5 style="font-size: 10pt; font-weight: bold; margin: 15px 0 10px 0;">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</h5>
         <div class="content-box">
             {!! $kegiatan->deskripsikeluaran ?? '<em>Tidak ada data hasil pertemuan</em>' !!}
         </div>

@@ -90,16 +90,6 @@
 
 @section('content')
 <div class="print-container">
-
-    {{-- Header Section (Matches PDF Image Logic) --}}
-    {{-- <div class="report-header text-center" style="margin-bottom: 20px;">
-        @if(file_exists(public_path('images/uploads/header.png')))
-            <img src="{{ asset('images/uploads/header.png') }}" style="height: 38px; width: auto;">
-        @else
-            <h2 style="font-size: 14pt; font-weight: bold; margin: 0;">YAYASAN IDEP</h2>
-        @endif
-    </div> --}}
-
     {{-- Basic Information Table --}}
     <div class="section">
         {{-- Metadata Table (No Borders) --}}
@@ -263,7 +253,7 @@
         @endif
 
         {{-- 4b. Hasil Pertemuan --}}
-        <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('btor.hasil_pertemuan') }}</div>
+        <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
         <div class="content-box">
             {!! $kegiatan->deskripsikeluaran ?? '-' !!}
         </div>
