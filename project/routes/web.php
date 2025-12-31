@@ -142,15 +142,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('permissions', PermissionsController::class);
 
     // Roles 2
-    Route::resource('roles2', 'App\Http\Controllers\Admin\RoleController2')->parameters([
-        'roles2' => 'role'
+    Route::resource('roles', 'App\Http\Controllers\Admin\RoleController2')->parameters([
+        'roles' => 'role'
     ])->middleware('auth');
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
     Route::get('roles-permission', [RolesController::class, 'getPermission'])->name('roles.permission');
     Route::get('roles-api', [RolesController::class, 'getRole'])->name('roles.api');
-    Route::resource('roles', RolesController::class);
+    Route::resource('roles-old', RolesController::class);
 
 
 

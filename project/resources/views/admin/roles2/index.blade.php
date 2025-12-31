@@ -74,7 +74,7 @@
                 responsive: true,
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('roles2.index') }}",
+                ajax: "{{ route('roles.index') }}",
                 columns: [
                     {
                         "data": null,
@@ -98,7 +98,7 @@
 
             function populatePermissionsCheckboxes(selectedPermissions = []) {
                 $.ajax({
-                    url: "{{ route('roles2.create') }}", // This route returns all available permissions
+                    url: "{{ route('roles.create') }}", // This route returns all available permissions
                     method: 'GET',
                     success: function(allPermissions) {
                         var container = $('#permissions-checkboxes');
@@ -152,7 +152,7 @@
                     console.error("Error: #role-form not found in DOM when trying to reset in edit-btn click handler.");
                 }
                 $.ajax({
-                    url: '/roles2/' + id + '/edit',
+                    url: '/roles/' + id + '/edit',
                     method: 'GET',
                     success: function(data) {
                         $('#role-id').val(data.id);
@@ -172,7 +172,7 @@
             $('#roles-table').on('click', '.view-permissions-btn', function () {
                 var id = $(this).data('id');
                 $.ajax({
-                    url: '/roles2/' + id + '/edit',
+                    url: '/roles/' + id + '/edit',
                     method: 'GET',
                     success: function(data) {
                         console.log('Data received for View Permissions modal:', data);
@@ -206,7 +206,7 @@
                     selectedPermissions.push(parseInt($(this).val()));
                 });
 
-                var url = id ? '/roles2/' + id : '/roles2';
+                var url = id ? '/roles/' + id : '/roles';
                 var method = id ? 'PUT' : 'POST';
 
                 $.ajax({
@@ -264,7 +264,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/roles2/' + id,
+                            url: '/roles/' + id,
                             method: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
