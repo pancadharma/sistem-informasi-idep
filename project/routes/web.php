@@ -604,5 +604,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('beneficiary');
         Route::get('/beneficiary/data', [App\Http\Controllers\Revisi\Beneficiaries::class, 'getData'])
             ->name('beneficiary.data');
+
+        // Model Dashboard
+        Route::get('/model', [App\Http\Controllers\Revisi\KomponenModel::class, 'index'])
+            ->name('model');
+        Route::get('/model/data', [App\Http\Controllers\Revisi\KomponenModel::class, 'getData'])
+            ->name('model.data');
     });
 });

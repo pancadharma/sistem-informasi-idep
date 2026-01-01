@@ -84,14 +84,38 @@ WHERE kl.lat IS NOT NULL AND kl.long IS NOT NULL
 
 ### Requirements Summary
 
-- Title: "Model Dashboard"
-- Pin points per province per location (with lat/long)
-- Line chart: Trend per year
-- Bar chart: Distribution by jenis model
-- New chart: Kontribusi sektor terhadap komponen
-- Add sektor filter
+- **Title**: "Model Dashboard"
+- **Filters**: Program, Province, Year, **Sektor**
+- **Data Source**: `trmeals_komponen_model` and `trmeals_komponen_model_lokasi`
+- **Visualizations**:
+  - **Map**: Pin points per province/location (using `lat`/`long` from `trmeals_komponen_model_lokasi`).
+  - **Line Chart**: Trend of model count per year.
+  - **Doughnut/Pie Chart**: Sektor contribution (count of models per sector).
+  - **Bar Chart**: Distribution by Jenis Model (`mkomponenmodel`).
+- **Stats Cards**:
+  - Total Model
+  - Total Lokasi
+  - Total Estimasi Nilai (if available)
 
----
+### Key Queries
+
+**Get Model Locations:**
+
+```sql
+SELECT
+    l.lat, l.long,
+    c.nama as model_nama,
+    s.nama as sektor_nama,
+    kab.nama as kabupaten_nama
+FROM trmeals_komponen_model_lokasi l
+JOIN trmeals_komponen_model m ON l.mealskomponenmodel_id = m.id
+JOIN mkomponenmodel c ON m.komponenmodel_id = c.id
+LEFT JOIN msektor s ON m.sektor_id = s.id -- Assuming connection via pivot or direct
+JOIN mkelurahan kel ON l.desa_id = kel.id
+JOIN mkecamatan kec ON kel.kecamatan_id = kec.id
+JOIN mkabupaten kab ON kec.kabupaten_id = kab.id
+WHERE l.lat IS NOT NULL
+```
 
 ## 3. Dashboard Pendanaan (Pendonor Dashboard)
 
