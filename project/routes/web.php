@@ -595,4 +595,14 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/data/pendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
+
+
+    // this route are for revisi dashboard testing
+    Route::middleware(['auth'])->prefix('revisi/dashboard')->name('revisi.dashboard.')->group(function () {
+        // Beneficiaries Dashboard
+        Route::get('/beneficiary', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('beneficiary');
+        Route::get('/beneficiary/data', [App\Http\Controllers\Revisi\Beneficiaries::class, 'getData'])
+            ->name('beneficiary.data');
+    });
 });
