@@ -13,13 +13,17 @@ class BTORKampanye extends BTOR
         }
 
         return [
-            'yang_dipantau' => $kegiatan->kampanye->kampanyeyangdipantau,
-            'data' => $kegiatan->kampanye->kampanyedata,
-            'yang_terlibat' => $kegiatan->kampanye->kampanyeyangterlibat,
-            'hasil' => $kegiatan->kampanye->kampanyehasil,
-            'kendala' => $kegiatan->kampanye->kampanyekendala,
-            'isu' => $kegiatan->kampanye->kampanyeisu,
-            'pembelajaran' => $kegiatan->kampanye->kampanyepembelajaran,
+            'yang_dikampanyekan' => $kegiatan->kampanye->kampanyeyangdikampanyekan,
+            'jenis'              => $kegiatan->kampanye->kampanyejenis,
+            'bentuk_kegiatan'    => $kegiatan->kampanye->kampanyebentukkegiatan,
+            'yang_terlibat'      => $kegiatan->kampanye->kampanyeyangterlibat,
+            'yang_disasar'       => $kegiatan->kampanye->kampanyeyangdisasar,
+            'jangkauan'          => $kegiatan->kampanye->kampanyejangkauan,
+            'rencana'            => $kegiatan->kampanye->kampanyerencana,
+            'hasil'              => $kegiatan->kampanye->kampanyehasil,
+            'kendala'            => $kegiatan->kampanye->kampanyekendala,
+            'isu'                => $kegiatan->kampanye->kampanyeisu,
+            'pembelajaran'       => $kegiatan->kampanye->kampanyepembelajaran,
         ];
     }
 }
