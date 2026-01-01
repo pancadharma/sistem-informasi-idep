@@ -150,12 +150,12 @@ return [
             'icon' => 'fas fa-tachometer-alt',
             'submenu' => [
                 [
-                    'text' => 'Main Dashboard',
+                    'text' => 'Beneficiaries Dashboard',
                     'url' => 'dashboard',
                     'icon' => 'fas fa-tachometer-alt',
                 ],
                 [
-                    'text' => 'Komodel Dashboard',
+                    'text' => 'Model Dashboard',
                     'route' => 'dashboard.komodel_v3',
                     'icon' => 'fas fa-chart-pie',
                     'active' => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],

@@ -111,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
         // Komodel Dashboards
-        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
+        Route::get('/model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
         // Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
 
         // Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
