@@ -672,6 +672,12 @@
                         type: 'radio'
                     },
                     {
+                        i: '{{ __('cruds.kegiatan.hasil.i_pelatihankendala') }}',
+                        label: '{{ __('cruds.kegiatan.hasil.pelatihankendala') }}',
+                        name: 'pelatihankendala',
+                        type: 'textarea'
+                    },
+                    {
                         i: '{{ __('cruds.kegiatan.hasil.i_pelatihanisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pelatihanisu') }}',
                         name: 'pelatihanisu',
@@ -702,18 +708,18 @@
                         name: 'pembelanjaanselesai',
                         type: 'datetime-local'
                     },
-                    {
-                        i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
-                        label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
-                        name: 'pembelanjaandistribusimulai',
-                        type: 'datetime-local'
-                    },
-                    {
-                        i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
-                        label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
-                        name: 'pembelanjaandistribusiselesai',
-                        type: 'datetime-local'
-                    },
+                    // {
+                    //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
+                    //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
+                    //     name: 'pembelanjaandistribusimulai',
+                    //     type: 'datetime-local'
+                    // },
+                    // {
+                    //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
+                    //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
+                    //     name: 'pembelanjaandistribusiselesai',
+                    //     type: 'datetime-local'
+                    // },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaanterdistribusi') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pembelanjaanterdistribusi') }}',
@@ -886,17 +892,17 @@
                         type: 'textarea'
                     },
                     {
+                        i: '{{ __('cruds.kegiatan.hasil.i_pemetaankendala') }}',
+                        label: '{{ __('cruds.kegiatan.hasil.pemetaankendala') }}',
+                        name: 'pemetaankendala',
+                        type: 'textarea'
+                    },
+                    {
                         i: '{{ __('cruds.kegiatan.hasil.i_pemetaanrencana') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pemetaanrencana') }}',
                         name: 'pemetaanrencana',
                         type: 'textarea'
                     },
-                    {
-                        i: '{{ __('cruds.kegiatan.hasil.i_pemetaankendala') }}',
-                        label: '{{ __('cruds.kegiatan.hasil.pemetaankendala') }}',
-                        name: 'pemetaankendala',
-                        type: 'textarea'
-                    },  
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_pemetaanisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pemetaanisu') }}',
