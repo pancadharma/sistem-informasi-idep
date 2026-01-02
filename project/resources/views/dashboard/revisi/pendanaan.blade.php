@@ -1,37 +1,57 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Pendanaan Dashboard')
-@section('content_header_title', 'Pendanaan Dashboard')
+@section('subtitle', __('cruds.mpendonor.dashboard'))
+@section('content_header_title', __('cruds.mpendonor.dashboard'))
+@section('content_header_right')
+    
+@endsection
 
 @section('content_body')
 <!-- Filter Section -->
 <div class="row mb-3">
-    <div class="col-md-4">
-        <label for="programFilter">{{ __('cruds.program.title') }}:</label>
-        <select id="programFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all') }}</option>
-            @foreach($programs as $p)
-                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-4">
-        <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
-        <select id="tahunFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all_years') }}</option>
-            @foreach($years as $y)
-                <option value="{{ $y }}">{{ $y }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-4">
-        <label for="donorFilter">Donor:</label>
-        <select id="donorFilter" class="form-control select2">
-            <option value="">All Donors</option>
-            @foreach($donors as $d)
-                <option value="{{ $d->id }}">{{ $d->nama }}</option>
-            @endforeach
-        </select>
+
+    <div class="col-lg-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-filter"></i> {{ __('cruds.mpendonor.filter') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                <div class="col-md-4">
+                    <label for="programFilter">{{ __('cruds.program.title') }}</label>
+                    <select id="programFilter" class="form-control select2">
+                        <option value="">{{ __('cruds.program.all') }}</option>
+                        @foreach($programs as $p)
+                            <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="tahunFilter">{{ __('cruds.program.periode') }}</label>
+                    <select id="tahunFilter" class="form-control select2">
+                        <option value="">{{ __('cruds.program.all_years') }}</option>
+                        @foreach($years as $y)
+                            <option value="{{ $y }}">{{ $y }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="donorFilter">{{ __('cruds.mpendonor.pendonor') }}</label>
+                    <select id="donorFilter" class="form-control select2">
+                        <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
+                        @foreach($donors as $d)
+                            <option value="{{ $d->id }}">{{ $d->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>      
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -41,7 +61,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3 id="totalFunding">Rp 0</h3>
-                <p>Total Pendanaan</p>
+                <p>{{ __('cruds.mpendonor.total_pendanaan') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-holding-usd"></i>
@@ -52,7 +72,7 @@
         <div class="small-box bg-success">
             <div class="inner">
                 <h3 id="totalDonors">0</h3>
-                <p>Total Pendonor</p>
+                <p>{{ __('cruds.mpendonor.total_pendonor') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-users"></i>
@@ -63,7 +83,7 @@
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3 id="totalPrograms">0</h3>
-                <p>Program Didanai</p>
+                <p>{{ __('cruds.mpendonor.total_program') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-project-diagram"></i>
@@ -74,7 +94,7 @@
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3 id="avgDonation">Rp 0</h3>
-                <p>Rata-rata Donasi</p>
+                <p>{{ __('cruds.mpendonor.rata_rata_donasi') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-chart-line"></i>
@@ -85,8 +105,8 @@
 
 <!-- Info Callout -->
 <div class="callout callout-info">
-    <h5><i class="fas fa-info"></i> Informasi:</h5>
-    Dashboard ini menampilkan ringkasan pendanaan program IDEP dari berbagai pendonor, termasuk kontribusi terhadap SDGs dan sektor.
+    <h5><i class="fas fa-info"></i> {{ __('cruds.mpendonor.information') }}</h5>
+    {{ __('cruds.mpendonor.ket_dashboard') }}
 </div>
 
 <div class="row">
@@ -94,7 +114,7 @@
     <div class="col-lg-6">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-globe mr-1"></i> Kontribusi terhadap SDGs</h3>
+                <h3 class="card-title"><i class="fas fa-globe mr-1"></i> {{ __('cruds.mpendonor.sdg_contribution') }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -113,7 +133,7 @@
     <div class="col-lg-6">
         <div class="card card-success card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> Kontribusi terhadap Sektor</h3>
+                <h3 class="card-title"><i class="fas fa-chart-pie mr-1"></i> {{ __('cruds.mpendonor.sector_contribution') }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -137,7 +157,7 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-chart-line mr-1"></i>
-                        Timeline Pendanaan
+                        {{ __('cruds.mpendonor.timeline_pendanaan') }}
                     </h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -159,7 +179,9 @@
     <div class="col-lg-12">
         <div class="card card-warning card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-list mr-1"></i> Daftar Pendonor</h3>
+                <h3 class="card-title"><i class="fas fa-list mr-1"></i>
+                {{ __('cruds.mpendonor.donor_list') }}
+                </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -167,26 +189,27 @@
                 </div>
             </div>
             <div class="card-body">
-                <table id="donorTable" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nama Pendonor</th>
-                            {{-- <th>Email</th> --}}
-                            <th class="text-center align-middle">Jumlah Program</th>
-                            <th class="text-right align-middle">Total Donasi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Populated by DataTables -->
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th class="text-right">Total:</th>
-                            <th class="text-right" id="footerTotalPrograms"></th>
-                            <th class="text-right" id="footerTotalDonations"></th>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="table-responsive">
+                    <table id="donorTable" class="table table-bordered table-striped" width="100%">
+                        <thead>
+                            <tr>
+                                <th>{{ __('cruds.mpendonor.nama') }}</th>
+                                <th class="text-center align-middle">{{ __('cruds.mpendonor.total_program') }}</th>
+                                <th class="text-right align-middle">{{ __('cruds.mpendonor.total_pendanaan') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by DataTables -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="text-right">Total:</th>
+                                <th class="text-right" id="footerTotalPrograms"></th>
+                                <th class="text-right" id="footerTotalDonations"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -223,12 +246,14 @@
         
         // Initialize DataTable
         donorDataTable = $('#donorTable').DataTable({
+            responsive: true,
             processing: true,
+            deferRender: true,
+            stateSave: true,
             data: [],
             columns: [
-                { data: 'nama' },
-                //{ data: 'email' },
-                { data: 'program_count' },
+                { data: 'nama', width: '60%' },
+                { data: 'program_count', width: '15%' },
                 { 
                     data: 'total_donated',
                     className: 'text-right align-middle',

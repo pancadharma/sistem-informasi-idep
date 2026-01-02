@@ -308,6 +308,21 @@ return [
         'chart_donation_count' => 'Jumlah Donasi',
         'chart_total_donation' => 'Total Donasi',
         'chart_donation_value' => 'Nilai Donasi',
+        'dashboard' => 'Pendanaan Dashboard',
+        'information' => 'Informasi',
+        'ket_dashboard' => 'Dashboard ini menampilkan ringkasan pendanaan program IDEP dari berbagai pendonor, termasuk kontribusi terhadap SDGs dan sektor',
+        'sdg_contribution' => 'Kontribusi terhadap SDGs',
+        'sector_contribution' => 'Kontribusi terhadap Sektor',
+        'donor_list' => 'Daftar Donatur',
+        'timeline_pendanaan' => 'Timeline Pendanaan',
+        'total_pendanaan' => 'Total Pendanaan',
+        'total_pendonor' => 'Total Pendonor',
+        'total_program' => 'Program Didanai',
+        'rata_rata_donasi' => 'Rata-rata Donasi',
+
+
+
+
     ],
     'kelompokmarjinal' => [
         'title_singular' => 'Kelompok Marjinal',

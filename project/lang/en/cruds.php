@@ -309,6 +309,18 @@ return [
         'chart_donation_count' => 'Donation Count',
         'chart_total_donation' => 'Total Donation',
         'chart_donation_value' => 'Donation Value',
+        'dashboard' => 'Funding Dashboard',
+        'information' => 'Information',
+        'ket_dashboard' =>  'This dashboard shows a summary of IDEP program funding from various donors, including contributions to SDGs and sectors',
+        'sdg_contribution' =>   'SDG Contribution',
+        'sector_contribution' => 'Sector Contribution',
+        'donor_list' => 'Funding List',
+        'timeline_pendanaan' => 'Funding Timeline',
+        'total_pendanaan' => 'Total Funding',
+        'total_pendonor' => 'Total Donor',
+        'total_program' => 'Program Funded',
+        'rata_rata_donasi' => 'Average Donation',
+
     ],
     'kelompokmarjinal' => [
         'list' => 'List of Vulnerable Groups',
