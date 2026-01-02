@@ -145,16 +145,44 @@ class Pendanaan extends Controller
             })
             ->filter(fn($d) => $d['total_donated'] > 0); // Only show donors with contributions
 
-        // --- 4. Timeline Data (Funding by Year) ---
-        $timelineData = DB::table('trprogrampendonor as pp')
-            ->join('trprogram as p', 'pp.program_id', '=', 'p.id')
-            ->selectRaw('YEAR(p.tanggalmulai) as year, SUM(pp.nilaidonasi) as total')
-            ->when($programId, fn($q) => $q->where('pp.program_id', $programId))
-            ->when($donorId, fn($q) => $q->where('pp.pendonor_id', $donorId))
-            ->whereNotNull('p.tanggalmulai')
-            ->groupBy('year')
-            ->orderBy('year', 'asc')
-            ->get();
+        // --- 4. Timeline Data (Funding by Year or Month) ---
+        if ($tahun) {
+            // If year filter is active, show monthly breakdown
+            $timelineData = DB::table('trprogrampendonor as pp')
+                ->join('trprogram as p', 'pp.program_id', '=', 'p.id')
+                ->selectRaw('MONTH(p.tanggalmulai) as month, SUM(pp.nilaidonasi) as total')
+                ->when($programId, fn($q) => $q->where('pp.program_id', $programId))
+                ->when($donorId, fn($q) => $q->where('pp.pendonor_id', $donorId))
+                ->whereYear('p.tanggalmulai', $tahun)
+                ->whereNotNull('p.tanggalmulai')
+                ->groupBy('month')
+                ->orderBy('month', 'asc')
+                ->get()
+                ->map(function ($item) {
+                    $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return [
+                        'label' => $monthNames[$item->month],
+                        'total' => $item->total
+                    ];
+                });
+        } else {
+            // If no year filter, show yearly data
+            $timelineData = DB::table('trprogrampendonor as pp')
+                ->join('trprogram as p', 'pp.program_id', '=', 'p.id')
+                ->selectRaw('YEAR(p.tanggalmulai) as year, SUM(pp.nilaidonasi) as total')
+                ->when($programId, fn($q) => $q->where('pp.program_id', $programId))
+                ->when($donorId, fn($q) => $q->where('pp.pendonor_id', $donorId))
+                ->whereNotNull('p.tanggalmulai')
+                ->groupBy('year')
+                ->orderBy('year', 'asc')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'label' => (string)$item->year,
+                        'total' => $item->total
+                    ];
+                });
+        }
 
         return response()->json([
             'stats' => $stats,

@@ -387,7 +387,7 @@
     }
     
     function updateTimelineChart(data) {
-        const labels = data.map(item => item.year);
+        const labels = data.map(item => item.label);
         const values = data.map(item => item.total);
         
         timelineChart.data.labels = labels;
