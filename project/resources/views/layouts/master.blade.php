@@ -20,6 +20,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet" />
     <style>
+        /* Apply Figtree font as default */
+        body, html, * {
+            font-family: 'Figtree', sans-serif !important;
+        }
+        
+        /* Preserve Font Awesome and Material Icons */
+        .fa, .fas, .far, .fal, .fab, .fad, .material-symbols-outlined, .material-symbols-sharp,
+        [class^="fa-"], [class*=" fa-"],
+        [class^="icon-"], [class*=" icon-"],
+        .bi, [class^="bi-"], [class*=" bi-"] {
+            font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands', 'FontAwesome', 'Material Symbols Outlined', 'Material Symbols Sharp', 'bootstrap-icons' !important;
+        }
+        
         .self-center {
             align-self: center;
         }
