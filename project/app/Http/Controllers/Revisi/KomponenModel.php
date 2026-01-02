@@ -90,7 +90,7 @@ class KomponenModel extends Controller
         ];
 
         // --- 1. Map Markers (Locations) ---
-        $locations = Meals_Komponen_Model_Lokasi::with(['mealsKomponenModel.komponenmodel', 'mealsKomponenModel.program', 'provinsi', 'kabupaten', 'kecamatan', 'desa'])
+        $locations = Meals_Komponen_Model_Lokasi::with(['mealsKomponenModel.komponenmodel', 'mealsKomponenModel.program', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'dusun'])
             ->whereIn('mealskomponenmodel_id', $modelIds)
             ->whereNotNull('lat')
             ->whereNotNull('long')
@@ -104,6 +104,7 @@ class KomponenModel extends Controller
                     'kabupaten' => $loc->kabupaten->nama ?? '-',
                     'kecamatan' => $loc->kecamatan->nama ?? '-',
                     'desa' => $loc->desa->nama ?? '-',
+                'dusun' => $loc->dusun->nama ?? '-',
                     'jumlah' => (float) $loc->jumlah ?? 0,
                     'satuan' => $loc->satuan->nama ?? 'unit', // Adjust if relation differs
                     'lat' => (float) $loc->lat,

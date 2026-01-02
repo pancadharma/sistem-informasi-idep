@@ -1,152 +1,171 @@
-# Dashboard Revision Implementation Plan
+# Funding Dashboard Implementation Plan
 
 ## Overview
 
-This plan provides comprehensive guidance for implementing three revised dashboards: **Beneficiaries Dashboard**, **Model Dashboard**, and **Pendanaan Dashboard**. Each dashboard requires specific database queries, controller logic, and Blade view implementations.
+Implement the **Funding Dashboard (Pendanaan)** to visualize donation data, SDG contributions, and sector funding breakdown.
 
----
+## Database Structure
 
-## Database Structure Analysis
-
-### Key Tables and Relationships
+### Key Relationships
 
 ```mermaid
 graph TD
-    A[trprogram] -->|hasMany| B[trkegiatan via activity]
-    A -->|belongsToMany| C[mpendonor via trprogrampendonor]
-    A -->|belongsToMany| D[kaitansdg via trprogramkaitansdg]
-    A -->|hasMany| E[trmeals_komponen_model]
-    A -->|hasMany| F[trmeals_penerima_manfaat]
+    A[Program] -->|belongsToMany| B[MPendonor via trprogrampendonor]
+    A -->|belongsToMany| C[KaitanSdg via trprogramkaitansdg]
+    A -->|hasMany| D[Kegiatan]
+    D -->|belongsToMany| E[TargetReinstra/Sektor via trkegiatan_sektor]
 
-    B -->|hasMany| G[trkegiatan_lokasi]
-    B -->|belongsToMany| H[msektor via trkegiatan_sektor]
-
-    G -->|belongsTo| I[mkelurahan desa]
-    I -->|belongsTo| J[mkecamatan]
-    J -->|belongsTo| K[mkabupaten]
-    K -->|belongsTo| L[mprovinsi]
-
-    E -->|hasMany| M[trmeals_komponen_model_lokasi]
-    E -->|belongsTo| N[mkomponenmodel]
-    E -->|belongsToMany| O[targetreinstra sektor]
-
-    F -->|belongsToMany| P[kelompok_marjinal]
+    B -->|pivot| F[nilaidonasi]
 ```
 
 ### Critical Tables
 
-1. **trprogram** - Main program table with status field
-2. **trkegiatan** - Activities/transactions table
-3. **trkegiatan_lokasi** - Location data with lat/long coordinates
-4. **trmeals_penerima_manfaat** - Beneficiary data with gender
-5. **trmeals_komponen_model** - Model components
-6. **trmeals_komponen_model_lokasi** - Model locations with coordinates
-7. **trprogrampendonor** - Program-donor relationship with donation amounts
-8. **mkelurahan** - Village/desa data
+1. **`mpendonor`** - Master donor list
+2. **`trprogrampendonor`** - Program-Donor pivot with `nilaidonasi` field
+3. **`mkaitansdg`** - SDG master data
+4. **`trprogramkaitansdg`** - Program-SDG pivot
+5. **`trkegiatan`** - Activities/transactions
+6. **`trkegiatan_sektor`** - Activity-Sector pivot
+7. **`mtargetreinstra/msektor`** - Sector master data
 
 ---
 
-## 1. Dashboard Beneficiaries (Main Dashboard)
+## Proposed Changes
 
-### Requirements Summary
+### 1. Controller (`app/Http/Controllers/Revisi/Pendanaan.php`)
 
-- Display per program/project per desa (not per province)
-- Source data from `trkegiatan` → `trkegiatan_lokasi`
-- Show program status (running, completed, etc.)
-- Pie chart: Gender distribution
-- Bar chart: Kelompok marjinal
-- Use Figtree font
+**New controller** to handle funding dashboard logic.
 
-### Controller Implementation
+#### Methods:
 
-See full controller code in the implementation plan document.
+**`index()`**
 
-### Key Queries
+- Fetch filter data (Programs, Years, Donors)
+- Return dashboard view
 
-**Get Kegiatan Locations (per desa):**
+**`getData(Request $request)`**
 
-```sql
-SELECT
-    kl.lat, kl.long,
-    k.tanggalmulai, k.tanggalselesai, k.penerimamanfaattotal,
-    kel.nama as desa_nama,
-    kec.nama as kecamatan_nama,
-    p.nama as program_nama
-FROM trkegiatan_lokasi kl
-JOIN trkegiatan k ON kl.kegiatan_id = k.id
-JOIN mkelurahan kel ON kl.desa_id = kel.id
-WHERE kl.lat IS NOT NULL AND kl.long IS NOT NULL
+- Process AJAX requests
+- Apply filters (Program, Year, Donor)
+- Return JSON with:
+  - `stats`: Total funding, total donors, total programs
+  - `sdgContribution`: Grouped by SDG with total funding
+  - `sektorContribution`: Grouped by Sector with total funding
+  - `donorList`: Donors with their contribution amounts
+
+---
+
+### 2. View (`resources/views/dashboard/revisi/pendanaan.blade.php`)
+
+**New Blade view** matching AdminLTE style.
+
+#### Components:
+
+1. **Filter Section** - Program, Year, Donor dropdowns (Select2)
+2. **Statistics Cards** (`small-box`) - Total Funding, Total Donors, Total Programs, Avg Donation
+3. **SDG Contribution Chart** - Horizontal Bar Chart (Chart.js)
+4. **Sector Contribution Chart** - Pie/Doughnut Chart (Chart.js)
+5. **Donor List Table** - DataTables with donor name, total donated, formatted in Rupiah
+
+---
+
+## Detailed Query Logic
+
+### Stats Calculation
+
+```php
+// Total Funding
+$totalFunding = DB::table('trprogrampendonor')
+    ->when($programId, fn($q) => $q->where('program_id', $programId))
+    ->sum('nilaidonasi');
+
+// Total Donors
+$totalDonors = DB::table('trprogrampendonor')
+    ->when($programId, fn($q) => $q->where('program_id', $programId))
+    ->distinct('pendonor_id')
+    ->count();
+
+// Total Programs with Funding
+$totalPrograms = DB::table('trprogrampendonor')
+    ->distinct('program_id')
+    ->count();
+```
+
+### SDG Contribution
+
+```php
+$sdgContribution = DB::table('trprogramkaitansdg as psdg')
+    ->join('mkaitansdg as sdg', 'psdg.kaitansdg_id', '=', 'sdg.id')
+    ->join('trprogrampendonor as pp', 'psdg.program_id', '=', 'pp.program_id')
+    ->select('sdg.nama as sdg_name', DB::raw('SUM(pp.nilaidonasi) as total'))
+    ->when($programId, fn($q) => $q->where('psdg.program_id', $programId))
+    ->groupBy('sdg.id', 'sdg.nama')
+    ->get();
+```
+
+### Sector Contribution
+
+```php
+$sektorContribution = DB::table('trkegiatan as k')
+    ->join('trkegiatan_sektor as ks', 'k.id', '=', 'ks.kegiatan_id')
+    ->join('mtargetreinstra as s', 'ks.sektor_id', '=', 's.id')
+    ->join('trprogrampendonor as pp', 'k.program_id', '=', 'pp.program_id')
+    ->select('s.nama as sektor_name', DB::raw('SUM(pp.nilaidonasi) as total'))
+    ->when($programId, fn($q) => $q->where('k.program_id', $programId))
+    ->groupBy('s.id', 's.nama')
+    ->get();
+```
+
+### Donor List
+
+```php
+$donorList = MPendonor::withDonationCount()
+    ->with('programs')
+    ->get()
+    ->map(fn($donor) => [
+        'nama' => $donor->nama,
+        'email' => $donor->email,
+        'total_donated' => $donor->total_donation_value,
+        'program_count' => $donor->programs->count()
+    ]);
 ```
 
 ---
 
-## 2. Dashboard Model (Komodel Dashboard)
+## Verification Plan
 
-### Requirements Summary
+### Automated Tests
 
-- **Title**: "Model Dashboard"
-- **Filters**: Program, Province, Year, **Sektor**
-- **Data Source**: `trmeals_komponen_model` and `trmeals_komponen_model_lokasi`
-- **Visualizations**:
-  - **Map**: Pin points per province/location (using `lat`/`long` from `trmeals_komponen_model_lokasi`).
-  - **Line Chart**: Trend of model count per year.
-  - **Doughnut/Pie Chart**: Sektor contribution (count of models per sector).
-  - **Bar Chart**: Distribution by Jenis Model (`mkomponenmodel`).
-- **Stats Cards**:
-  - Total Model
-  - Total Lokasi
-  - Total Estimasi Nilai (if available)
+- Run `php artisan serve` and navigate to `/revisi/dashboard/pendanaan`
+- Verify filter functionality (Program, Year)
+- Check chart rendering
+- Verify Rupiah formatting (e.g., `Rp 1.000.000`)
 
-### Key Queries
+### Manual Verification
 
-**Get Model Locations:**
+- Compare dashboard totals with database query results
+- Verify SDG and Sector charts group data correctly
+- Check donor list table sorting and searching
 
-```sql
-SELECT
-    l.lat, l.long,
-    c.nama as model_nama,
-    s.nama as sektor_nama,
-    kab.nama as kabupaten_nama
-FROM trmeals_komponen_model_lokasi l
-JOIN trmeals_komponen_model m ON l.mealskomponenmodel_id = m.id
-JOIN mkomponenmodel c ON m.komponenmodel_id = c.id
-LEFT JOIN msektor s ON m.sektor_id = s.id -- Assuming connection via pivot or direct
-JOIN mkelurahan kel ON l.desa_id = kel.id
-JOIN mkecamatan kec ON kel.kecamatan_id = kec.id
-JOIN mkabupaten kab ON kec.kabupaten_id = kab.id
-WHERE l.lat IS NOT NULL
+---
+
+## Routes
+
+Add to `routes/web.php`:
+
+```php
+Route::prefix('revisi/dashboard')->group(function() {
+    Route::get('/pendanaan', [App\Http\Controllers\Revisi\Pendanaan::class, 'index'])
+        ->name('revisi.dashboard.pendanaan');
+    Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
+        ->name('revisi.dashboard.pendanaan.data');
+});
 ```
 
-## 3. Dashboard Pendanaan (Pendonor Dashboard)
-
-### Requirements Summary
-
-- Title: "Pendanaan Dashboard"
-- Chart 1: Kontribusi terhadap SDGs
-- Chart 2: Kontribusi terhadap sektor (from transaksi program)
-- Show total donation amounts in Rupiah format
-
 ---
 
-## Implementation Notes
+## Notes
 
-> [!IMPORTANT] > **Critical Points for Developers**
->
-> 1. **Data Source for Beneficiaries**: Use `trkegiatan_lokasi` as the primary source for location markers
-> 2. **Status Calculation**: Program status should be calculated dynamically based on dates
-> 3. **Sektor Relationship**: Sektor data comes from `trkegiatan_sektor` table
-> 4. **Model Locations**: Use `trmeals_komponen_model_lokasi` which has lat/long coordinates
-> 5. **Donation Amounts**: Stored in `trprogrampendonor.nilaidonasi` field
-
----
-
-## Next Steps
-
-1. ✅ Review this implementation plan
-2. Create controller files with the provided methods
-3. Implement Blade views based on existing structure
-4. Test each dashboard individually
-5. Implement filter functionality
-6. Perform user acceptance testing
-
-**Full detailed implementation with complete controller code, SQL queries, and examples is available in the complete plan document.**
+> [!IMPORTANT]
+> Currency formatting uses Indonesian locale: `number_format($value, 0, ',', '.')` with "Rp" prefix.
+> DataTables should include export buttons (Excel, PDF) if needed.

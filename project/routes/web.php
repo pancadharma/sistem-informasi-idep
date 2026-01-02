@@ -610,5 +610,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('model');
         Route::get('/model/data', [App\Http\Controllers\Revisi\KomponenModel::class, 'getData'])
             ->name('model.data');
+
+        // Funding Dashboard
+        Route::get('/pendanaan', [App\Http\Controllers\Revisi\Pendanaan::class, 'index'])
+            ->name('pendanaan');
+        Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
+            ->name('pendanaan.data');
     });
 });

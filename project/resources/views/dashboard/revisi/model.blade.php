@@ -4,9 +4,6 @@
 @section('content_header_title', 'Model Dashboard')
 
 @section('content_body')
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <!-- Filter Section -->
 <div class="row mb-3">
     <div class="col-md-3">
@@ -215,8 +212,11 @@
 
 @push('js')
 @section('plugins.Select2', true)
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- ChartJS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Google Maps -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap" async defer></script>
 
 <script>
     // Global variables
@@ -224,34 +224,33 @@
     let markers = [];
     let trendChart, sektorChart, distributionChart;
     let colorMap = {}; // Name -> Color
+    let infoWindow;
     
     $(document).ready(function() {
-        // Initialize Select2 with Bootstrap 4 theme if available, otherwise default
         $('.select2').select2({
             width: '100%'
         });
         
-        initDashboard();
+        // initMap is called by callback
+        initCharts(); // Init empty charts
+    });
+    
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -2.5489, lng: 118.0149 },
+            zoom: 5,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+        
+        infoWindow = new google.maps.InfoWindow();
+        
+        // Load data after map is ready
+        loadDashboardData();
         
         // Filter Changes
         $('#programFilter, #tahunFilter, #provinsiFilter, #sektorFilter').change(function() {
             loadDashboardData();
         });
-    });
-    
-    function initDashboard() {
-        initMap();
-        initCharts(); // Init empty charts
-        loadDashboardData();
-    }
-    
-    function initMap() {
-        // Center on Indonesia
-        map = L.map('map').setView([-2.5489, 118.0149], 5);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
-        }).addTo(map);
     }
     
     function loadDashboardData() {
@@ -299,52 +298,77 @@
     }
     
     function updateMapMarkers(locations) {
-        markers.forEach(marker => map.removeLayer(marker));
+        // Clear existing markers
+        markers.forEach(marker => marker.setMap(null));
         markers = [];
         
-        const bounds = new L.LatLngBounds();
+        const bounds = new google.maps.LatLngBounds();
 
         locations.forEach(location => {
             if (location.lat && location.long) {
                 const modelColor = colorMap[location.jenis_model] || '#667eea';
                 
-                 const customIcon = L.divIcon({
-                    className: 'custom-marker',
-                    html: `<div style="background-color: ${modelColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>`,
-                    iconSize: [14, 14],
-                    iconAnchor: [7, 7]
+                // Create SVG Circle Icon
+                const markerIcon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: modelColor,
+                    fillOpacity: 1,
+                    strokeColor: '#FFFFFF',
+                    strokeWeight: 2,
+                    scale: 7 // Size roughly matches the 14px (radius 7)
+                };
+
+                const position = { lat: location.lat, lng: location.long };
+                const marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    icon: markerIcon,
+                    title: location.program_nama
                 });
-                
-                const marker = L.marker([location.lat, location.long], { icon: customIcon }).addTo(map);
-                
-                const popupContent = `
-                    <div class='p-2'>
-                        <h6 class="text-primary font-weight-bold mb-1">${location.program_nama}</h6>
-                        <hr class="my-1">
-                        <div class="mb-1">
-                            <span class="badge" style="background-color: ${modelColor}; color: white;">
+
+                const contentString = `
+                    <div style="font-family: inherit; width: 200px;">
+                         <h6 style="color: #007bff; font-weight: bold; margin-bottom: 5px;">${location.program_nama}</h6>
+                        <hr style="margin: 5px 0;">
+                        <div style="margin-bottom: 5px;">
+                            <span style="background-color: ${modelColor}; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600;">
                                 ${location.jenis_model}
                             </span>
                         </div>
-                        <div class="small"><strong>Jumlah:</strong> ${location.jumlah} ${location.satuan}</div>
-                        <div class="small text-muted mt-1">
-                            ${location.desa}, ${location.kecamatan}, <br>${location.kabupaten}, ${location.provinsi}
+                        <div style="font-size: 13px;"><strong>Jumlah:</strong> ${location.jumlah} ${location.satuan}</div>
+                        <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
+                            ${location.dusun}, ${location.desa}, ${location.kecamatan}, <br>${location.kabupaten}, ${location.provinsi}
                         </div>
                     </div>
                 `;
+
+                marker.addListener("click", () => {
+                    infoWindow.setContent(contentString);
+                    infoWindow.open(map, marker);
+                });
                 
-                marker.bindPopup(popupContent);
                 markers.push(marker);
-                bounds.extend([location.lat, location.long]);
+                bounds.extend(position);
             }
         });
         
         $('#markerCount').text(`${markers.length} Lokasi`);
         
         if (markers.length > 0) {
-            map.fitBounds(bounds.pad(0.1));
+            // Check if Province Filter is active
+            const provinceId = $('#provinsiFilter').val();
+            
+            if (provinceId && provinceId !== "") {
+                // If filtering by province, zoom to fit markers
+                map.fitBounds(bounds);
+            } else {
+                // If "All Provinces" (or initial load), default to Indonesia view
+                map.setCenter({ lat: -2.5489, lng: 118.0149 });
+                map.setZoom(5); 
+            }
         } else {
-             map.setView([-2.5489, 118.0149], 5);
+             map.setCenter({ lat: -2.5489, lng: 118.0149 });
+             map.setZoom(5);
         }
     }
     
@@ -374,7 +398,7 @@
          // Distribution
         const ctxDist = document.getElementById('distributionChart').getContext('2d');
         distributionChart = new Chart(ctxDist, {
-            type: 'bar',
+            type: 'bar', // Horizontal bar is type 'bar' with indexAxis 'y' in Chart.js 3+
             data: { labels: [], datasets: [] },
             options: { 
                 indexAxis: 'y',
@@ -449,14 +473,16 @@
         }
 
         // 3. Distribution Chart
-        const distMap = {};
+        let distMap = {};
         response.locations.forEach(loc => {
             if (!distMap[loc.jenis_model]) distMap[loc.jenis_model] = 0;
             distMap[loc.jenis_model] += loc.jumlah;
         });
         
-        const distLabels = Object.keys(distMap);
-        const distValues = Object.values(distMap);
+        // Sort by value desc
+        const sortedEntries = Object.entries(distMap).sort((a,b) => b[1] - a[1]);
+        const distLabels = sortedEntries.map(e => e[0]);
+        const distValues = sortedEntries.map(e => e[1]);
         const distColors = distLabels.map(l => colorMap[l] || '#ccc');
         
         distributionChart.data.labels = distLabels;

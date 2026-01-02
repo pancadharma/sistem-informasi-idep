@@ -2,10 +2,10 @@
 
 ## Planning Phase
 
-- [ ] Analyze database relationships and data flow
-- [ ] Create comprehensive implementation plan
-- [ ] Document query strategies for each dashboard
-- [ ] Define controller structure and methods
+- [x] Analyze database relationships and data flow
+- [x] Create comprehensive implementation plan
+- [x] Document query strategies for each dashboard
+- [x] Define controller structure and methods
 
 ## Dashboard Beneficiaries
 
@@ -27,16 +27,21 @@
 - [x] Implement query for distribution by jenis model
 - [x] Create Blade view with filters
   - [x] Fix script stack (@push vs @section) and map initialization
+  - [x] Redesign UI with gradients and glassmorphism (v3) (Reverted to AdminLTE standard)
+  - [x] Revert to Google Maps integration (Switched back from Leaflet)
+  - [x] Set default map view to Indonesia (zoom 5) on load
+  - [x] Display 'Dusun' name in map InfoWindow
+  - [x] Refine styling to match AdminLTE/Home dashboard
 - [x] Add sektor filter functionality
 
 ## Dashboard Pendanaan
 
-- [ ] Create controller for funding dashboard
-- [ ] Implement query for SDG contribution
-- [ ] Implement query for sektor contribution from transaksi
-- [ ] Create summary cards for funding stats
-- [ ] Create Blade view with donor list table
-- [ ] Format currency display (Rupiah)
+- [x] Create controller for funding dashboard
+- [x] Implement query for SDG contribution
+- [x] Implement query for sektor contribution from transaksi
+- [x] Create summary cards for funding stats
+- [x] Create Blade view with donor list table
+- [x] Format currency display (Rupiah)
 
 ## Testing & Verification
 
