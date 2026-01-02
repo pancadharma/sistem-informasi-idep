@@ -6,7 +6,7 @@
 @section('content_body')
 <!-- Filter Section -->
 <div class="row mb-3">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label for="programFilter">{{ __('cruds.program.title') }}:</label>
         <select id="programFilter" class="form-control select2">
             <option value="">{{ __('cruds.program.all') }}</option>
@@ -15,7 +15,7 @@
             @endforeach
         </select>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
         <select id="tahunFilter" class="form-control select2">
             <option value="">{{ __('cruds.program.all_years') }}</option>
@@ -24,13 +24,22 @@
             @endforeach
         </select>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
         <select id="provinsiFilter" class="form-control select2">
             <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
             @foreach($provinsis as $pr)
                 <option value="{{ $pr->id }}">{{ $pr->nama }}</option>
              @endforeach
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="komponenModelFilter">Jenis Model:</label>
+        <select id="komponenModelFilter" class="form-control select2">
+            <option value="">Semua Jenis Model</option>
+            @foreach($komponenModels as $km)
+                <option value="{{ $km->id }}">{{ $km->nama }}</option>
+            @endforeach
         </select>
     </div>
     <div class="col-md-3">
@@ -197,6 +206,78 @@
         </div>
     </div>
 </div>
+
+{{-- Data Table Section --}}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-table mr-1"></i> Rincian Komponen Program</h3>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-hover text-nowrap" id="komponenTable">
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Tipe Komponen</th>
+                            <th>Total</th>
+                            <th>Satuan</th>
+                            <th>Tahun</th>
+                            <th>Jml. Lokasi</th>
+                            <th>Status</th>
+                            <th class="text-center" title="Lihat Detail">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="komponen-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Detail Modal --}}
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="modal-title-heading" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="modal-title-heading">Detail Komponen</h5>
+                    <p id="modal-subtitle" class="text-muted mb-0"></p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="callout callout-info">
+                    <p id="modal-key-info" class="mb-0"></p>
+                </div>
+                <div class="mb-3">
+                    <h5 class="mb-2">Target Reinstra yang Didukung</h5>
+                    <ul id="modal-targets" class="list-unstyled"></ul>
+                </div>
+                <div>
+                    <h5>Rincian Lokasi Implementasi</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Provinsi</th>
+                                    <th>Kabupaten</th>
+                                    <th>Kecamatan</th>
+                                    <th>Desa</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal-locations-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('css')
@@ -212,11 +293,13 @@
 
 @push('js')
 @section('plugins.Select2', true)
+@section('plugins.DatatablesNew', true)
 
 <!-- ChartJS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- Google Maps -->
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}&callback=initMap" async defer></script>
+
+<!-- Google Maps - loaded without callback, will init manually -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}" async defer></script>
 
 <script>
     // Global variables
@@ -225,15 +308,27 @@
     let trendChart, sektorChart, distributionChart;
     let colorMap = {}; // Name -> Color
     let infoWindow;
+    let komponenDT = null; // DataTable instance
+    let allTableData = []; // Store table data globally
     
     $(document).ready(function() {
         $('.select2').select2({
             width: '100%'
         });
         
-        // initMap is called by callback
         initCharts(); // Init empty charts
+        
+        // Wait for Google Maps to load, then initialize
+        waitForGoogleMaps();
     });
+    
+    function waitForGoogleMaps() {
+        if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+            initMap();
+        } else {
+            setTimeout(waitForGoogleMaps, 100);
+        }
+    }
     
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
@@ -247,17 +342,20 @@
         // Load data after map is ready
         loadDashboardData();
         
-        // Filter Changes
-        $('#programFilter, #tahunFilter, #provinsiFilter, #sektorFilter').change(function() {
+        // Filter Changes - include komponenModelFilter
+        $('#programFilter, #tahunFilter, #provinsiFilter, #komponenModelFilter, #sektorFilter').change(function() {
             loadDashboardData();
         });
     }
+    
+
     
     function loadDashboardData() {
         const filters = {
             program_id: $('#programFilter').val(),
             provinsi_id: $('#provinsiFilter').val(),
             tahun: $('#tahunFilter').val(),
+            komponenmodel_id: $('#komponenModelFilter').val(),
             sektor_id: $('#sektorFilter').val()
         };
         
@@ -273,6 +371,10 @@
                 updateStatistics(response.stats);
                 updateMapMarkers(response.locations);
                 updateChartsData(response);
+                
+                // Store and render table data
+                allTableData = response.tableData || [];
+                renderTable(allTableData);
             },
             error: function(err) {
                 console.error("Error loading data", err);
@@ -507,6 +609,92 @@
             `;
             container.append(html);
         });
+    }
+    
+    function renderTable(tableData) {
+        const tableBody = $('#komponen-table-body');
+        
+        // Destroy existing DataTable instance completely
+        if (komponenDT) {
+            komponenDT.destroy();
+            komponenDT = null;
+        }
+        
+        // Clear table body completely
+        tableBody.empty();
+        
+        if (!tableData || tableData.length === 0) {
+            tableBody.html('<tr><td colspan="8" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>');
+            return;
+        }
+        
+        tableData.forEach(item => {
+            const statusClass = item.status_program === 'Active' ? 'badge-success' : 'badge-warning';
+            const total = (item.total_unit || 0).toLocaleString('id-ID');
+            const rawTotal = Number(item.total_unit) || 0;
+            const tahun = item.tahun_program || '-';
+            
+            const row = $(`<tr style="cursor: pointer;" data-komponen-id="${item.komponen_id}"></tr>`).html(
+                `<td>${item.nama_program || '-'}</td>` +
+                `<td><strong>${item.komponen_tipe || '-'}</strong></td>` +
+                `<td class="text-right" data-order="${rawTotal}">${total}</td>` +
+                `<td>${item.satuan_unit || ''}</td>` +
+                `<td data-order="${tahun}">${tahun}</td>` +
+                `<td class="text-right" data-order="${item.location_count}">${item.location_count}</td>` +
+                `<td><span class="badge ${statusClass}">${item.status_program || 'Unknown'}</span></td>` +
+                `<td class="text-center" title="Lihat Detail"><i class="fas fa-eye text-primary"></i></td>`
+            );
+            
+            row.on('click', () => showDetailModal(item.komponen_id));
+            tableBody.append(row);
+        });
+        
+        // Initialize DataTable fresh
+        komponenDT = $('#komponenTable').DataTable({
+            order: [[4, 'desc'], [2, 'desc']],
+            lengthChange: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [7] }
+            ],
+            destroy: true  // Allow re-initialization
+        });
+    }
+    
+    function showDetailModal(komponenId) {
+        const data = allTableData.find(item => item.komponen_id == komponenId);
+        if (!data) return;
+        
+        $('#modal-title-heading').text(data.komponen_tipe);
+        $('#modal-subtitle').text(`Bagian dari ${data.nama_program} (Tahun ${data.tahun_program})`);
+        
+        const locs = data.locations || [];
+        const total = Number(data.total_unit) || 0;
+        const satuan = data.satuan_unit || '';
+        
+        let keyInfo = satuan
+            ? `Total ${total.toLocaleString('id-ID')} ${satuan} diimplementasikan di ${locs.length} lokasi.`
+            : `Diimplementasikan di ${locs.length} lokasi.`;
+        
+        $('#modal-key-info').html(keyInfo);
+        $('#modal-targets').html(
+            data.targets && data.targets.length > 0
+                ? data.targets.map(t => `<li><i class="fas fa-check-circle text-success mr-2"></i>${t}</li>`).join('')
+                : '<li>Tidak ada target yang terhubung.</li>'
+        );
+        
+        $('#modal-locations-body').html(locs.map(loc => `
+            <tr>
+                <td>${loc.provinsi || '-'}</td>
+                <td>${loc.kabupaten || '-'}</td>
+                <td>${loc.kecamatan || '-'}</td>
+                <td>${loc.desa || '-'}</td>
+                <td>${(loc.jumlah_per_lokasi || 0).toLocaleString('id-ID')} ${loc.satuan_per_lokasi || ''}</td>
+            </tr>
+        `).join(''));
+        
+        $('#detailModal').modal('show');
     }
 </script>
 @endpush

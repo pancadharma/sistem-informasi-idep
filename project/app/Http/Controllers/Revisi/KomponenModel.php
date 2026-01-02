@@ -9,6 +9,7 @@ use App\Models\Meals_Komponen_Model_Lokasi;
 use App\Models\Program;
 use App\Models\Provinsi;
 use App\Models\TargetReinstra;
+use App\Models\KomponenModel as Master_KomponenModel;
 use DB;
 
 class KomponenModel extends Controller
@@ -33,7 +34,10 @@ class KomponenModel extends Controller
         // Fetch Sektors (TargetReinstra)
         $sektors = TargetReinstra::select('id', 'nama')->where('aktif', 1)->orderBy('nama')->get();
 
-        return view('dashboard.revisi.model', compact('programs', 'provinsis', 'years', 'sektors'));
+        // Fetch Komponen Models for Jenis Model filter
+        $komponenModels = Master_KomponenModel::select('id', 'nama')->orderBy('nama')->get();
+
+        return view('dashboard.revisi.model', compact('programs', 'provinsis', 'years', 'sektors', 'komponenModels'));
     }
 
     /**
@@ -48,6 +52,7 @@ class KomponenModel extends Controller
         $provinsiId = $request->input('provinsi_id');
         $tahun = $request->input('tahun');
         $sektorId = $request->input('sektor_id');
+        $komponenModelId = $request->input('komponenmodel_id');
 
         // Base Query for Models
         $query = Meals_Komponen_Model::with(['komponenmodel', 'sektors', 'program', 'lokasi']);
@@ -69,6 +74,11 @@ class KomponenModel extends Controller
             $query->whereHas('sektors', function ($q) use ($sektorId) {
                 $q->where('mtargetreinstra.id', $sektorId);
             });
+        }
+
+        // Filter by Komponen Model (Jenis Model)
+        if ($komponenModelId) {
+            $query->where('komponenmodel_id', $komponenModelId);
         }
 
         // Filter by Province (via Lokasi)
@@ -158,12 +168,51 @@ class KomponenModel extends Controller
             ];
         });
 
+        // --- 5. Table Data (Grouped by Komponen Model ID) ---
+        $tableData = [];
+        $groupedModels = $models->groupBy('id');
+
+        foreach ($groupedModels as $modelId => $modelGroup) {
+            $model = $modelGroup->first();
+            $modelLocations = Meals_Komponen_Model_Lokasi::with(['provinsi', 'kabupaten', 'kecamatan', 'desa', 'satuan'])
+                ->where('mealskomponenmodel_id', $modelId)
+                ->get();
+
+            $tableData[] = [
+                'komponen_id' => $modelId,
+                'nama_program' => $model->program->nama ?? '-',
+                'kode_program' => $model->program->kode ?? '-',
+                'komponen_tipe' => $model->komponenmodel->nama ?? 'Lainnya',
+                'total_unit' => $modelLocations->sum('jumlah'),
+                'satuan_unit' => $modelLocations->first()->satuan->nama ?? 'unit',
+                'tahun_program' => $model->program && $model->program->tanggalmulai
+                    ? \Carbon\Carbon::parse($model->program->tanggalmulai)->format('Y')
+                    : '-',
+                'status_program' => $model->program && $model->program->tanggalselesai
+                    ? (\Carbon\Carbon::parse($model->program->tanggalselesai)->isFuture() ? 'Active' : 'Completed')
+                    : 'Unknown',
+                'location_count' => $modelLocations->count(),
+                'targets' => $model->sektors->pluck('nama')->toArray(),
+                'locations' => $modelLocations->map(function ($loc) {
+                    return [
+                        'provinsi' => $loc->provinsi->nama ?? '-',
+                        'kabupaten' => $loc->kabupaten->nama ?? '-',
+                        'kecamatan' => $loc->kecamatan->nama ?? '-',
+                        'desa' => $loc->desa->nama ?? '-',
+                        'jumlah_per_lokasi' => (float) $loc->jumlah ?? 0,
+                        'satuan_per_lokasi' => $loc->satuan->nama ?? 'unit',
+                    ];
+                })->toArray()
+            ];
+        }
+
         return response()->json([
             'stats' => $stats,
             'locations' => $locations,
             'trendData' => $trendData,
             'sektorKontribusi' => $sektorKontribusi,
-            'jenisModel' => $jenisModel
+            'jenisModel' => $jenisModel,
+            'tableData' => $tableData
         ]);
     }
 }
