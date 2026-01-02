@@ -575,14 +575,12 @@
                         label: '{{ __('cruds.kegiatan.hasil.assessmentkendala') }}',
                         name: 'assessmentkendala',
                         type: 'textarea',
-                        placeholder: '{{ __('cruds.kegiatan.hasil.assessmentkendala') }}'
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_assessmentisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.assessmentisu') }}',
                         name: 'assessmentisu',
                         type: 'textarea',
-                        placeholder: '{{ __('cruds.kegiatan.hasil.assessmentisu') }}'
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_assessmentpembelajaran') }}',
@@ -620,7 +618,7 @@
                         i: '{{ __('cruds.kegiatan.hasil.i_sosialisasikendala') }}',
                         label: '{{ __('cruds.kegiatan.hasil.sosialisasikendala') }}',
                         name: 'sosialisasikendala',
-                        type: 'textarea'
+                        type: 'textarea',
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_sosialisasiisu') }}',
@@ -675,7 +673,7 @@
                         i: '{{ __('cruds.kegiatan.hasil.i_pelatihankendala') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pelatihankendala') }}',
                         name: 'pelatihankendala',
-                        type: 'textarea'
+                        type: 'textarea',
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_pelatihanisu') }}',

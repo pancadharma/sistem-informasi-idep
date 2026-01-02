@@ -686,11 +686,13 @@ return [
             'tantangan' => 'Tantangan',
             'rekomendasi' => 'Recommendations',
 
+
             'deskripsilatarbelakang' => 'Latar Belakang Kegiatan',
             'deskripsitujuan' => 'Tujuan',
             'deskripsikeluaran' => 'Keluaran',
-            'deskripsiyangdikaji' => 'Apa Yang Ingin Dikaji / Di-Assess?',
+            'deskripsiyangdikaji' => 'Apa yang ingin dikaji / di-assess?',
 
+            'assessmentyangdikaji' => 'Apa Yang Ingin Dikaji / Di-Assess?',
             'assessmentyangterlibat' => 'Pihak Yang Terlibat',
             'assessmenttemuan' => 'Temuan/Hasil Assessment',
             'assessmenttambahan' => 'Apakah Membutuhkan Assessment Tambahan?',
@@ -713,45 +715,43 @@ return [
             'pelatihanhasil' => 'Hasil Pelatihan',
             'pelatihandistribusi' => 'Apakah Ada Distribusi Yang Dilakukan Bersama Dengan Pelatihan?',
             'pelatihandistribusi_ket' => 'Jika Ya, Jelaskan!',
-            'pelatihanrencana' => 'Rencana Tindak Lanjut (RTL) pelatihan',
+            'pelatihanrencana' => 'Rencana Tindak Lanjut (Rtl) Pelatihan',
             'pelatihanunggahan' => 'Unggah Tabulasi Pre-Post Test',
-            'pelatihankendala' => 'Kendala/tantangan dan solusi yang diterapkan',
-            'pelatihanisu' => 'Isu yang perlu dipehatikan dan rekomendasinya',
+            'pelatihankendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
+            'pelatihanisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'pelatihanpembelajaran' => 'Pembelajaran',
 
 
             'pembelanjaandetailbarang' => 'Detil Barang Yang Dibelanjakan',
-            'pembelanjaanmulai' => 'Kapan waktu pembelanjaan?',
-            'pembelanjaanselesai' => 'Sampai kapan waktu distribusi berlangsung?',
-            'pembelanjaandistribusimulai' => 'Mulai Waktu Distribusi',
-            'pembelanjaandistribusiselesai' => 'Selesai Waktu Distribusi',
-
-            'pembelanjaanterdistribusi' => 'Apakah semua barang yang dibelanjakan terdistribusikan?',
-            'pembelanjaanakandistribusi' => 'Apakah masih akan ada distribusi berikutnya?',
-            'pembelanjaanakandistribusi_ket' => 'Jika ya, jelaskan!',
-            'pembelanjaankendala' => 'Kendala/tantangan dan solusi yang diterapkan',
-            'pembelanjaanisu' => 'Isu yang perlu dipehatikan dan rekomendasinya',
-            'pembelanjaanpembelajaran' => 'Apakah ada pembelajaran?',
+            'pembelanjaanmulai' => 'Kapan Waktu Pembelanjaan?',
+            'pembelanjaanselesai' => 'Kapan Waktu Distribusi Berlangsung?',
+            'pembelanjaanterdistribusi' => 'Apakah Semua Barang Yang Dibelanjakan Terdistribusikan?',
+            'pembelanjaanakandistribusi' => 'Apakah Masih Akan Ada Distribusi Berikutnya?',
+            'pembelanjaanakandistribusi_ket' => 'Jika Ya, Jelaskan!',
+            'pembelanjaankendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
+            'pembelanjaanisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
+            'pembelanjaanpembelajaran' => 'Pembelajaran',
 
 
-            'pengembanganjeniskomponen' => 'Berapa Komponen Yang Dikembangkan?',
-            'pengembanganberapakomponen' => 'Dimana Lokasi Komponen Dikembangkan?',
-            'pengembanganlokasikomponen' => 'Siapa Saja Yang Dilibatkan Dalam Pengembangan Komponen?',
-            'pengembanganyangterlibat' => 'Rencana Tindak Lanjut (RTL) Pengembangan Komponen',
-            'pengembanganrencana' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
-            'pengembangankendala' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
-            'pengembanganisu' => 'Pembelajaran',
-            'pengembanganpembelajaran' => 'Apa Isu Yang Dikampanyekan?',
+            'pengembanganjeniskomponen' => 'Apa Saja Jenis Komponen/Model Yang Dikembangkan',
+            'pengembanganberapakomponen' => 'Berapa Komponen Yang Dikembangkan?',
+            'pengembanganlokasikomponen' => 'Dimana Lokasi Komponen Dikembangkan?',
+            'pengembanganyangterlibat' => 'Siapa Saja Yang Dilibatkan Dalam Pengembangan Komponen?',
+            'pengembanganrencana' => 'Rencana Tindak Lanjut (Rtl) Pengembangan Komponen',
+            'pengembangankendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
+            'pengembanganisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
+            'pengembanganpembelajaran' => 'Pembelajaran',
 
-            'kampanyeyangdikampanyekan' => 'Jenis Kampanye Yang Dilakukan',
-            'kampanyejenis' => 'Apa Bentuk Kegiatan Dari Kampanye Dilakukan?',
+
+            'kampanyeyangdikampanyekan' => 'Apa Isu Yang Dikampanyekan?',
+            'kampanyejenis' => 'Jenis Kampanye Yang Dilakukan',
             'kampanyebentukkegiatan' => 'Apa Bentuk Kegiatan Dari Kampanye Dilakukan?',
-            'kampanyeyangterlibat' => 'Siapa Yang Disasar Dari Kampanye Ini?',
-            'kampanyeyangdisasar' => 'Berapa Banyak Outreach/Jangkauan Dari Kampanye Ini?',
-            'kampanyejangkauan' => 'Rencana Tindak Lanjut (Rtl) Pengembangan Komponen?',
-            'kampanyerencana' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
-            'kampanyekendala' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
-            'kampanyeisu' => 'Isu yang perlu dipehatikan dan rekomendasinya',
+            'kampanyeyangterlibat' => 'Siapa Saja Yang Dilibatkan Dalam Kampanye Ini?',
+            'kampanyeyangdisasar' => 'Siapa Yang Disasar Dari Kampanye Ini?',
+            'kampanyejangkauan' => 'Berapa Banyak Outreach/Jangkauan Dari Kampanye Ini?',
+            'kampanyerencana' => 'Rencana Tindak Lanjut (Rtl) Pengembangan Komponen?',
+            'kampanyekendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
+            'kampanyeisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'kampanyepembelajaran' => 'Pembelajaran',
 
 
@@ -759,9 +759,9 @@ return [
             'pemetaanluasan' => 'Berapa Luasan Yang Diintervensi?',
             'pemetaanunit' => 'Unit Dari Luasan Yang Diintervesi',
             'pemetaanyangterlibat' => 'Siapa Saya Yang Dilibatkan Dalam Kegiatan Ini?',
-            'pemetaanrencana' => 'Rencana Tindak Lanjut (RTL) pengembangan komponen?',
+            'pemetaanrencana' => 'Rencana Tindak Lanjut (Rtl) Pengembangan Komponen?',
             'pemetaankendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
-            'pemetaanisu' => 'Isu yang perlu dipehatikan dan rekomendasinya',
+            'pemetaanisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'pemetaanpembelajaran' => 'Pembelajaran',
 
 
@@ -775,6 +775,8 @@ return [
             'monitoringkendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
             'monitoringisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'monitoringpembelajaran' => 'Pembelajaran',
+
+
             'kunjunganlembaga' => 'Lembaga Apa Yang Terlibat Dalam Kegiatan Ini?',
             'kunjunganpeserta' => 'Siapa Peserta Dari Kegiatan Ini?',
             'kunjunganyangdilakukan' => 'Apa Yang Dilakukan Dalam Kegiatan Ini?',
@@ -784,6 +786,8 @@ return [
             'kunjungankendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
             'kunjunganisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'kunjunganpembelajaran' => 'Pembelajaran',
+
+
             'konsultasilembaga' => 'Lembaga Apa Yang Terlibat Dalam Kegiatan Ini?',
             'konsultasikomponen' => 'Komponen Yang Hendak Dihasilkan Client',
             'konsultasiyangdilakukan' => 'Apa Yang Dilakukan Tim Konsultansi Idep?',
@@ -793,6 +797,8 @@ return [
             'konsultasikendala' => 'Kendala/Tantangan Dan Solusi Yang Diterapkan',
             'konsultasiisu' => 'Isu Yang Perlu Dipehatikan Dan Rekomendasinya',
             'konsultasipembelajaran' => 'Pembelajaran',
+
+
             'lainnyamengapadilakukan' => 'Mengapa Kegiatan Ini Dilakukan?',
             'lainnyadampak' => 'Apa Dampak Signifikan Dari Dilakukannya Kegiatan Ini?',
             'lainnyasumberpendanaan' => 'Dari Mana Sumber Pendanaan Kegiatan Ini?',
