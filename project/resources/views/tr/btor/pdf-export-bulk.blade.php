@@ -293,7 +293,7 @@
                     <p>Tidak ada data penerima manfaat.</p>
                 @endif
 
-                <div class="text-bold mt-2">b. Hasil pertemuan</div>
+                <div class="text-bold mt-2">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
                 {{-- FIX: Removed e() and nl2br() --}}
                 <div class="html-content">{!! $kegiatan->deskripsikeluaran !!}</div>
 

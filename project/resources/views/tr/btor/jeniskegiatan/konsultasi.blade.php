@@ -32,18 +32,7 @@
                                 @endif
                             </td>
                         </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Challenges</strong></td>
-                            <td>{!! $kegiatan->konsultasi->konsultasikendala ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Issues</strong></td>
-                            <td>{!! $kegiatan->konsultasi->konsultasiisu ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Lessons Learned</strong></td>
-                            <td>{!! $kegiatan->konsultasi->konsultasipembelajaran ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
+                        {{-- REVIEW: Redundant fields (kendala, isu, pembelajaran) removed to avoid duplication with summary sections --}}
                     </tbody>
                 </table>
             </div>

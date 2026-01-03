@@ -672,7 +672,108 @@
                 </div>
             @endif
 
-            @if(!$kegiatan->assessment && !$kegiatan->pelatihan && !$kegiatan->sosialisasi && !$kegiatan->monitoring && !$kegiatan->kampanye && !$kegiatan->pemetaan && !$kegiatan->kunjungan && !$kegiatan->konsultasi)
+            @if($kegiatan->kampanye)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-bullhorn me-1"></i> Kampanye Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->kampanye->kampanyeyangdikampanyekan)
+                            <p><strong>Yang Dikampanyekan:</strong> {!! $kegiatan->kampanye->kampanyeyangdikampanyekan !!}</p>
+                        @endif
+                        @if($kegiatan->kampanye->kampanyejenis)
+                            <p><strong>Jenis Kampanye:</strong> {!! $kegiatan->kampanye->kampanyejenis !!}</p>
+                        @endif
+                        @if($kegiatan->kampanye->kampanyebentukkegiatan)
+                            <p><strong>Bentuk Kegiatan:</strong> {!! $kegiatan->kampanye->kampanyebentukkegiatan !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->pembelanjaan)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-shopping-cart me-1"></i> Pembelanjaan Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->pembelanjaan->pembelanjaandetailbarang)
+                            <p><strong>Detail Barang:</strong> {!! $kegiatan->pembelanjaan->pembelanjaandetailbarang !!}</p>
+                        @endif
+                        @if($kegiatan->pembelanjaan->pembelanjaanterdistribusi)
+                            <p><strong>Terdistribusi:</strong> {!! $kegiatan->pembelanjaan->pembelanjaanterdistribusi !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->pengembangan)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-cogs me-1"></i> Pengembangan Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->pengembangan->pengembanganjeniskomponen)
+                            <p><strong>Jenis Komponen:</strong> {!! $kegiatan->pengembangan->pengembanganjeniskomponen !!}</p>
+                        @endif
+                        @if($kegiatan->pengembangan->pengembanganberapakomponen)
+                            <p><strong>Jumlah Komponen:</strong> {!! $kegiatan->pengembangan->pengembanganberapakomponen !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->pemetaan)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-map me-1"></i> Pemetaan Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->pemetaan->pemetaanyangdihasilkan)
+                            <p><strong>Yang Dihasilkan:</strong> {!! $kegiatan->pemetaan->pemetaanyangdihasilkan !!}</p>
+                        @endif
+                        @if($kegiatan->pemetaan->pemetaanluasan)
+                            <p><strong>Luasan:</strong> {{ $kegiatan->pemetaan->pemetaanluasan }} {{ $kegiatan->pemetaan->pemetaanunit }}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->kunjungan)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-walking me-1"></i> Kunjungan Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->kunjungan->kunjunganlembaga)
+                            <p><strong>Lembaga:</strong> {!! $kegiatan->kunjungan->kunjunganlembaga !!}</p>
+                        @endif
+                        @if($kegiatan->kunjungan->kunjunganhasil)
+                            <p><strong>Hasil:</strong> {!! $kegiatan->kunjungan->kunjunganhasil !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->konsultasi)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-comments me-1"></i> Konsultasi Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->konsultasi->konsultasilembaga)
+                            <p><strong>Lembaga:</strong> {!! $kegiatan->konsultasi->konsultasilembaga !!}</p>
+                        @endif
+                        @if($kegiatan->konsultasi->konsultasihasil)
+                            <p><strong>Hasil:</strong> {!! $kegiatan->konsultasi->konsultasihasil !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if($kegiatan->lainnya)
+                <div class="mb-3">
+                    <h6 class="text-secondary"><i class="fas fa-ellipsis-h me-1"></i> Kegiatan Lainnya Details</h6>
+                    <div class="bg-light p-3 rounded">
+                        @if($kegiatan->lainnya->lainnyamengapadilakukan)
+                            <p><strong>Mengapa Dilakukan:</strong> {!! $kegiatan->lainnya->lainnyamengapadilakukan !!}</p>
+                        @endif
+                        @if($kegiatan->lainnya->lainnyadampak)
+                            <p><strong>Dampak:</strong> {!! $kegiatan->lainnya->lainnyadampak !!}</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+            @if(!$kegiatan->assessment && !$kegiatan->pelatihan && !$kegiatan->sosialisasi && !$kegiatan->monitoring && !$kegiatan->kampanye && !$kegiatan->pemetaan && !$kegiatan->kunjungan && !$kegiatan->konsultasi && !$kegiatan->pembelanjaan && !$kegiatan->pengembangan && !$kegiatan->lainnya)
                 <div class="text-center py-3 text-muted">
                     <i class="fas fa-info-circle me-1"></i> {{ __('Tidak ada detail kegiatan spesifik yang tersedia') }}
                 </div>
@@ -685,12 +786,28 @@
             
             @php
                 $kendala = $kegiatan->assessment?->assessmentkendala 
-                        ?? $kegiatan->pelatihan?->pelatihanisu
+                        ?? $kegiatan->sosialisasi?->sosialisasikendala
+                        ?? $kegiatan->pelatihan?->pelatihankendala
+                        ?? $kegiatan->pembelanjaan?->pembelanjaankendala
+                        ?? $kegiatan->pengembangan?->pengembangankendala
+                        ?? $kegiatan->kampanye?->kampanyekendala
+                        ?? $kegiatan->pemetaan?->pemetaankendala
                         ?? $kegiatan->monitoring?->monitoringkendala
+                        ?? $kegiatan->kunjungan?->kunjungankendala
+                        ?? $kegiatan->konsultasi?->konsultasikendala
+                        ?? $kegiatan->lainnya?->lainnyakendala
                         ?? null;
                 $solusi = $kegiatan->assessment?->assessmentpembelajaran 
+                       ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
                        ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                       ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
+                       ?? $kegiatan->pengembangan?->pengembanganpembelajaran
+                       ?? $kegiatan->kampanye?->kampanyepembelajaran
+                       ?? $kegiatan->pemetaan?->pemetaanpembelajaran
                        ?? $kegiatan->monitoring?->monitoringpembelajaran
+                       ?? $kegiatan->kunjungan?->kunjunganpembelajaran
+                       ?? $kegiatan->konsultasi?->konsultasipembelajaran
+                       ?? $kegiatan->lainnya?->lainnyapembelajaran
                        ?? null;
             @endphp
 
@@ -724,8 +841,16 @@
             
             @php
                 $isu = $kegiatan->assessment?->assessmentisu 
+                    ?? $kegiatan->sosialisasi?->sosialisasiisu
                     ?? $kegiatan->pelatihan?->pelatihanisu
+                    ?? $kegiatan->pembelanjaan?->pembelanjaanisu
+                    ?? $kegiatan->pengembangan?->pengembanganisu
+                    ?? $kegiatan->kampanye?->kampanyeisu
+                    ?? $kegiatan->pemetaan?->pemetaanisu
                     ?? $kegiatan->monitoring?->monitoringisu
+                    ?? $kegiatan->kunjungan?->kunjunganisu
+                    ?? $kegiatan->konsultasi?->konsultasiisu
+                    ?? $kegiatan->lainnya?->lainnyaisu
                     ?? null;
             @endphp
 

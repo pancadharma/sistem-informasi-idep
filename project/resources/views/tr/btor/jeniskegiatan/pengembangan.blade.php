@@ -27,18 +27,7 @@
                             <td class="table-secondary"><strong>Future Plans</strong></td>
                             <td>{!! $kegiatan->pengembangan->pengembanganrencana ?? '<em class="text-muted">No data</em>' !!}</td>
                         </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Challenges</strong></td>
-                            <td>{!! $kegiatan->pengembangan->pengembangankendala ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Issues</strong></td>
-                            <td>{!! $kegiatan->pengembangan->pengembanganisu ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Lessons Learned</strong></td>
-                            <td>{!! $kegiatan->pengembangan->pengembanganpembelajaran ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
+                        {{-- REVIEW: Redundant fields (kendala, isu, pembelajaran) removed to avoid duplication with summary sections --}}
                     </tbody>
                 </table>
             </div>

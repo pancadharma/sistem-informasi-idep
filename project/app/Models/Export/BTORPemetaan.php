@@ -13,13 +13,14 @@ class BTORPemetaan extends BTOR
         }
 
         return [
-            'yang_dihasilkan' => $kegiatan->pemetaan->pemetaanyangdihasilkan,
-            'luasan' => $kegiatan->pemetaan->pemetaanluasan,
-            'unit' => $kegiatan->pemetaan->pemetaanunit,
-            'yang_terlibat' => $kegiatan->pemetaan->pemetaanyangterlibat,
-            'rencana' => $kegiatan->pemetaan->pemetaanrencana,
-            'isu' => $kegiatan->pemetaan->pemetaanisu,
-            'pembelajaran' => $kegiatan->pemetaan->pemetaanpembelajaran,
+            'yang_dihasilkan'      => $kegiatan->pemetaan->pemetaanyangdihasilkan,
+            'luasan'               => $kegiatan->pemetaan->pemetaanluasan,
+            'unit'                 => $kegiatan->pemetaan->pemetaanunit,
+            'yang_terlibat'        => $kegiatan->pemetaan->pemetaanyangterlibat,
+            'rencana'              => $kegiatan->pemetaan->pemetaanrencana,
+            'kendala'              => $kegiatan->pemetaan->pemetaankendala,
+            'isu'                  => $kegiatan->pemetaan->pemetaanisu,
+            'pembelajaran'         => $kegiatan->pemetaan->pemetaanpembelajaran,
         ];
     }
 }

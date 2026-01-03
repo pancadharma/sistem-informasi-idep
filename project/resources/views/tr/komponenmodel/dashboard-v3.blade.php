@@ -13,9 +13,9 @@
             </select>
         </div>
         <div class="col-md-2">
-            <label for="komponenmodel_id">Tipe Komponen:</label>
+            <label for="komponenmodel_id">Jenis Model:</label>
             <select id="komponenmodel_id" class="form-control select2">
-                <option value="all">Semua Tipe</option>
+                <option value="all">Semua Jenis Model</option>
             </select>
         </div>
         <div class="col-md-2">
@@ -63,7 +63,7 @@
                         <h3 class="card-title">Distribusi Tipe Komponen (Pie)</h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="komponenPieChart"></canvas>
+                        <canvas id="komponenPieChart" style="height: 300px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                         <h3 class="card-title">Distribusi Tipe Komponen (Bar)</h3>
                     </div>
                     <div class="card-body">
-                        <canvas id="komponenBarChart"></canvas>
+                        <canvas id="komponenBarChart" style="height: 300px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -594,5 +594,38 @@
             exportDashboard();
         });
     });
+</script>
+
+<script>
+    //buat chart untuk trend distribusi Distribusi Tipe Komponen / Jenis Model 
+    const createDistributionChart = () => {
+        const ctx = document.getElementById('komponenPieChart').getContext('2d');
+        const komponenPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: komponenDistribution.map(k => k.komponen_model),
+                datasets: [
+                    {
+                        data: komponenDistribution.map(k => k.total),
+                        backgroundColor: komponenDistribution.map(k => k.color),
+                        borderColor: komponenDistribution.map(k => k.color),
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribusi Tipe Komponen'
+                    }
+                }
+            }
+        });
+    };
 </script>
 @endpush

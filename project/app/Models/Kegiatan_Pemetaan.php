@@ -23,6 +23,7 @@ class Kegiatan_Pemetaan extends Model
         'pemetaanunit',
         'pemetaanyangterlibat',
         'pemetaanrencana',
+        'pemetaankendala',
         'pemetaanisu',
         'pemetaanpembelajaran',
         'created_at',
@@ -37,9 +38,9 @@ class Kegiatan_Pemetaan extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
-    
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

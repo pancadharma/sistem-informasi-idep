@@ -274,7 +274,7 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Beneficiaries Breakdown</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.program.expektasi') }}  Breakdown</h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="beneficiariesChart" height="300"></canvas>
@@ -284,32 +284,32 @@
                     <div class="col-md-6">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Beneficiary Details</h5>
+                                <h5 class="card-title mb-0">{{ __('cruds.program.expektasi') }}</h5>
                             </div>
                             <div class="card-body">
                                 <table class="table table-striped">
                                     <tr>
-                                        <th>Women:</th>
+                                        <th>{{__('cruds.program.ekspektasipenerimamanfaatwoman')}}:</th>
                                         <td>{{ $program->ekspektasipenerimamanfaatwoman ?: 0 }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Men:</th>
+                                        <th>{{__('cruds.program.ekspektasipenerimamanfaatman')}}:</th>
                                         <td>{{ $program->ekspektasipenerimamanfaatman ?: 0 }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Girls:</th>
+                                        <th>{{__('cruds.program.ekspektasipenerimamanfaatgirl')}}:</th>
                                         <td>{{ $program->ekspektasipenerimamanfaatgirl ?: 0 }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Boys:</th>
+                                        <th>{{__('cruds.program.ekspektasipenerimamanfaatboy')}}:</th>
                                         <td>{{ $program->ekspektasipenerimamanfaatboy ?: 0 }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Indirect:</th>
+                                        <th>{{__('cruds.program.ekspektasipenerimamanfaattidaklangsung')}}:</th>
                                         <td>{{ $program->ekspektasipenerimamanfaattidaklangsung ?: 0 }}</td>
                                     </tr>
                                     <tr class="table-active">
-                                        <th><strong>Total:</strong></th>
+                                        <th><strong>{{__('Total ') . __('cruds.program.expektasi') }}:</strong></th>
                                         <td><strong>{{ $totalBeneficiaries }}</strong></td>
                                     </tr>
                                 </table>
@@ -333,14 +333,14 @@
                                         <div class="card">
                                             <div class="card-body text-center">
                                                 <div class="mb-3">
-                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center"
+                                                    {{-- <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center"
                                                          style="width: 64px; height: 64px;">
-                                                        <span class="text-white h4 mb-0">{{ strtoupper(substr($staff->name, 0, 1)) }}</span>
-                                                    </div>
+                                                        <span class="text-white h4 mb-0">{{ strtoupper(substr($staff->nama, 0, 1)) }}</span>
+                                                    </div> --}}
+                                                    <h6 class="staff">{{ $staff->nama }}</h6>
+                                                    <span class="badge badge-info">{{ $staff->pivot->peran_id ? (\App\Models\Peran::find($staff->pivot->peran_id)->nama ?? 'Team Member') : 'Team Member' }}</span>
+                                                    <p class="text-muted">{{ $staff->email }}</p>
                                                 </div>
-                                                <h6 class="card-title">{{ $staff->name }}</h6>
-                                                <p class="text-muted">{{ $staff->email }}</p>
-                                                <span class="badge badge-info">{{ $staff->pivot->peran_id ? (\App\Models\Peran::find($staff->pivot->peran_id)->nama ?? 'Team Member') : 'Team Member' }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -370,7 +370,6 @@
                                         <div class="card mb-3">
                                             <div class="card-body">
                                                 <h6 class="card-title">{{ $partner->nama }}</h6>
-                                                {{-- <p class="card-text text-muted">{{ $partner->alamat ?: 'No address available' }}</p> --}}
                                                 @if($partner->telepon)
                                                     <p class="mb-0"><i class="fas fa-phone"></i> {{ $partner->telepon }}</p>
                                                 @endif
@@ -420,7 +419,7 @@
             <div class="tab-pane fade" id="locations" role="tabpanel">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Implementation Locations</h5>
+                        <h5 class="card-title mb-0">Program Locations</h5>
                     </div>
                     <div class="card-body">
                         @if($program->lokasi->count() > 0)
@@ -429,9 +428,11 @@
                                     <div class="col-md-6 col-lg-4 mb-3">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h5 class="lokasi">{{ $lokasi->nama }}</h5>
-                                                <span class="text-muted mb-0">{{ __('cruds.provinsi.title') }}: {{ $lokasi->nama }}</span>
-                                                <div class="text-muted">ID: {{ $lokasi->id }}</div>
+                                                <h5 class="lokasi">{{ __('cruds.provinsi.title') }}: {{ $lokasi->nama }}</h5>
+                                                {{-- <span class="text-muted mb-0">
+                                                    {{ __('cruds.provinsi.title') }}: {{ $lokasi->nama }}
+                                                </span> --}}
+                                                {{-- <div class="text-muted">ID: {{ $lokasi->id }}</div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -694,8 +695,8 @@
             </div>
 
             <!-- Progress Tab -->
-            <div class="tab-pane fade" id="progress" role="tabpanel">
-                <div class="row">
+            <div class="tab-pane fade d-none" id="progress" role="tabpanel">
+                {{-- <div class="row">
                     <!-- Progress Overview -->
                     <div class="col-md-4">
                         <div class="card">
@@ -843,7 +844,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Collaboration Tab -->
@@ -852,11 +853,13 @@
                     <!-- Active Collaborators -->
                     <div class="col-md-6">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="card-title mb-0">Active Collaborators</h5>
-                                <span class="badge badge-success" id="active-users-count">
-                                    {{ $program->staff->count() }} Online
-                                </span>
+                            <div class="card-header {{-- d-flex justify-content-between align-items-center --}}">
+                                <h5 class="card-title mb-0">Collaborators</h5>
+                                <div class="card-tools">
+                                    <span class="badge badge-success" id="active-users-count">
+                                        {{ $program->staff->count() }}
+                                    </span>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div id="active-users-list">
