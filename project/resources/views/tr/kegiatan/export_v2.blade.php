@@ -146,12 +146,3 @@ Tidak ada dokumen pendukung.
 @else
 Tidak ada media pendukung.
 @endif
-
-## Tanda Tangan
-
-**Disusun oleh:** @if($kegiatan->datapenulis->first()) {{ $kegiatan->datapenulis->first()->nama }} ({{ $kegiatan->datapenulis->first()->kegiatanPeran?->nama ?? 'Staff' }}) @else Penulis Laporan @endif
-**Tanggal:** {{ now()->locale('id')->isoFormat('D MMMM Y') }}
-
-**Disetujui oleh:** @if($kegiatan->user) {{ $kegiatan->user->name }} (Program Coordinator) @else Supervisor @endif
-**Tanggal:** _________________
-

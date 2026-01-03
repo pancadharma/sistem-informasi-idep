@@ -13,21 +13,11 @@ return new class extends Migration
     {
         //update the table  master_jenis_kelompok add column deleted_at
         // check if table already has deleted_at column
-        if (Schema::hasColumn('master_jenis_kelompok', 'deleted_at')) {
-            echo "Column 'deleted_at' already exists in table \n type yes to proceed : ";
-            $confirmation = strtolower(trim(fgets(STDIN)));
-            if ($confirmation !== 'yes') {
-                return;
-            }
-
+        if (!Schema::hasColumn('master_jenis_kelompok', 'deleted_at')) {
             Schema::table('master_jenis_kelompok', function (Blueprint $table) {
-                $table->dropColumn(['deleted_at']);
+                $table->softDeletes();
             });
         }
-
-        Schema::table('master_jenis_kelompok', function (Blueprint $table) {
-            $table->softDeletes();
-        });
     }
 
     /**

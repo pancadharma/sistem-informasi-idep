@@ -13,16 +13,17 @@ class BTORMonitoring extends BTOR
         }
 
         return [
-            'yang_dipantau' => $kegiatan->monitoring->monitoringyangdipantau,
-            'data' => $kegiatan->monitoring->monitoringdata,
-            'yang_terlibat' => $kegiatan->monitoring->monitoringyangterlibat,
-            'metode' => $kegiatan->monitoring->monitoringmetode,
-            'hasil' => $kegiatan->monitoring->monitoringhasil,
-            'kegiatan_selanjutnya' => $kegiatan->monitoring->monitoringkegiatanselanjutnya,
-            'kegiatan_selanjutnya_ket' => $kegiatan->monitoring->monitoringkegiatanselanjutnyaket,
-            'kendala' => $kegiatan->monitoring->monitoringkendala,
-            'isu' => $kegiatan->monitoring->monitoringisu,
-            'pembelajaran' => $kegiatan->monitoring->monitoringpembelajaran,
+            'yang_dipantau'            => $kegiatan->monitoring->monitoringyangdipantau,
+            'data'                     => $kegiatan->monitoring->monitoringdata,
+            'yang_terlibat'            => $kegiatan->monitoring->monitoringyangterlibat,
+            'metode'                   => $kegiatan->monitoring->monitoringmetode,
+            'hasil'                    => $kegiatan->monitoring->monitoringhasil,
+            'kegiatan_selanjutnya'     => $kegiatan->monitoring->monitoringkegiatanselanjutnya,
+            'kegiatan_selanjutnya_ket' => $kegiatan->monitoring->monitoringkegiatanselanjutnya_ket,
+            'kendala'                  => $kegiatan->monitoring->monitoringkendala,
+            'isu'                      => $kegiatan->monitoring->monitoringisu,
+            'pembelajaran'             => $kegiatan->monitoring->monitoringpembelajaran,
         ];
     }
 }
+

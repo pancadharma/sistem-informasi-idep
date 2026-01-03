@@ -24,6 +24,7 @@ class Kegiatan_Pelatihan extends Model
         'pelatihandistribusi_ket',
         'pelatihanrencana',
         'pelatihanunggahan',
+        'pelatihankendala',
         'pelatihanisu',
         'pelatihanpembelajaran',
         'created_at',
@@ -38,14 +39,14 @@ class Kegiatan_Pelatihan extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);  // Pastikan log yang diinginkan
+            ->logOnly(['*']);  // Pastikan log yang diinginkan
     }
-    
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
-    
+
     public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');

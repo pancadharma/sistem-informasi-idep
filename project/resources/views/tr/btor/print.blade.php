@@ -4,34 +4,13 @@
 
 @push('print-styles')
     <style>
-        /* --- GLOBAL DOCX/PDF MIMIC STYLES --- */
-        @media print {
-            @page {
-                margin: 2.5cm; /* Matches DOCX Margins */
-                size: A4 portrait;
-            }
-            body {
-                -webkit-print-color-adjust: exact !important; /* Forces Green Backgrounds to print */
-                print-color-adjust: exact !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
-
-        body {
-            font-family: 'Tahoma', sans-serif; /* Matches DOCX Font */
-            font-size: 10pt;
-            line-height: 1.3;
-            color: #000;
-            background: #fff;
-        }
+        /* --- VIEW-SPECIFIC STYLES (print.blade.php) --- */
+        /* Note: Base print layout is handled by style.blade.php */
 
         .print-container {
             max-width: 21cm; /* A4 Width */
-            margin: 0 auto;
-            background: white;
-            padding: 0; /* Padding handled by @page in print, or margin in screen */
+            background-color: white;
+            padding: 0;
         }
 
         /* HEADINGS */
@@ -111,16 +90,6 @@
 
 @section('content')
 <div class="print-container">
-
-    {{-- Header Section (Matches PDF Image Logic) --}}
-    {{-- <div class="report-header text-center" style="margin-bottom: 20px;">
-        @if(file_exists(public_path('images/uploads/header.png')))
-            <img src="{{ asset('images/uploads/header.png') }}" style="height: 38px; width: auto;">
-        @else
-            <h2 style="font-size: 14pt; font-weight: bold; margin: 0;">YAYASAN IDEP</h2>
-        @endif
-    </div> --}}
-
     {{-- Basic Information Table --}}
     <div class="section">
         {{-- Metadata Table (No Borders) --}}
@@ -158,6 +127,22 @@
                     <td>:</td>
                     <td>
                         {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
+                    </td>
+                </tr>
+                {{-- REVIEW: Added Sektor Kegiatan field to print layout --}}
+                <tr>
+                    <td><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
+                    <td>:</td>
+                    <td>
+                        {{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}
+                    </td>
+                </tr>
+                {{-- REVIEW: Added Fase Pelaporan field --}}
+                <tr>
+                    <td><strong>{{ __('btor.fase_pelaporan') }}</strong></td>
+                    <td>:</td>
+                    <td>
+                        {{ $kegiatan->fasepelaporan ?: '-' }}
                     </td>
                 </tr>
             </table>
@@ -222,19 +207,26 @@
             @include('tr.btor.partials.location')
         @endif
         
-        {{-- Activity Specifics --}}
-        {{-- <div class="mt-3">
-            @include($viewPath, ['kegiatan' => $kegiatan])
-        </div> --}}
     </div>
 
     {{-- 4. Hasil Kegiatan --}}
     <div class="section">
         <h4 class="section-title">D. {{ __('btor.hasil.label') }}</h4>
 
+        {{-- Type-Specific Activity Data --}}
+        @if(isset($viewPath))
+            <div class="print-jenis-kegiatan" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; background-color: #fafafa;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #385623;">
+                    <i class="fas fa-clipboard-list"></i> 
+                    Detail {{ $kegiatan->jenisKegiatan?->nama ?? 'Kegiatan' }}
+                </div>
+                @include($viewPath, ['kegiatan' => $kegiatan])
+            </div>
+        @endif
+
         {{-- 4a. Jumlah Partisipan --}}
         <div style="font-weight: bold; margin-bottom: 5px;">a. {{ __('btor.partisipan_disagregat') }}</div>
-        <p style="margin-bottom: 5px;">Silakan mengisi tabel berikut:</p>
+        {{-- REVIEW: Removed "Silakan mengisi tabel berikut" placeholder --}}
 
         @if($kegiatan->penerimamanfaattotal > 0)
             <table class="table-bordered">
@@ -284,7 +276,7 @@
         @endif
 
         {{-- 4b. Hasil Pertemuan --}}
-        <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('btor.hasil_pertemuan') }}</div>
+        <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
         <div class="content-box">
             {!! $kegiatan->deskripsikeluaran ?? '-' !!}
         </div>
@@ -295,10 +287,17 @@
         <h4 class="section-title">E. {{ __('btor.tantangan_solusi') }}</h4>
         
         @php
+            // Extract kendala (challenges) from all 11 jenis kegiatan types
             $kendala = $kegiatan->assessment?->assessmentkendala
-                    ?? $kegiatan->pelatihan?->pelatihanisu
-                    ?? $kegiatan->monitoring?->monitoringkendala
                     ?? $kegiatan->sosialisasi?->sosialisasikendala
+                    ?? $kegiatan->pelatihan?->pelatihankendala
+                    ?? $kegiatan->pembelanjaan?->pembelanjaankendala
+                    ?? $kegiatan->pengembangan?->pengembangankendala
+                    ?? $kegiatan->kampanye?->kampanyekendala
+                    ?? $kegiatan->monitoring?->monitoringkendala
+                    ?? $kegiatan->kunjungan?->kunjungankendala
+                    ?? $kegiatan->konsultasi?->konsultasikendala
+                    ?? $kegiatan->pemetaan?->pemetaankendala
                     ?? $kegiatan->lainnya?->lainnyakendala
                     ?? null;
         @endphp
@@ -313,9 +312,17 @@
         <h4 class="section-title">F. Isu yang Perlu Diperhatikan / Rekomendasi</h4>
         
         @php
+            // Extract isu (issues) from all 11 jenis kegiatan types
             $isu = $kegiatan->assessment?->assessmentisu
+                ?? $kegiatan->sosialisasi?->sosialisasiisu
                 ?? $kegiatan->pelatihan?->pelatihanisu
+                ?? $kegiatan->pembelanjaan?->pembelanjaanisu
+                ?? $kegiatan->pengembangan?->pengembanganisu
+                ?? $kegiatan->kampanye?->kampanyeisu
+                ?? $kegiatan->pemetaan?->pemetaanisu
                 ?? $kegiatan->monitoring?->monitoringisu
+                ?? $kegiatan->kunjungan?->kunjunganisu
+                ?? $kegiatan->konsultasi?->konsultasiisu
                 ?? $kegiatan->lainnya?->lainnyaisu
                 ?? null;
         @endphp

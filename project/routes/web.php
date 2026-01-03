@@ -111,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export', [DashboardExportController::class, 'export'])->name('export');
 
         // Komodel Dashboards
-        Route::get('/komodel', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
+        Route::get('/model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
         // Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
 
         // Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
@@ -142,15 +142,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('permissions', PermissionsController::class);
 
     // Roles 2
-    Route::resource('roles2', 'App\Http\Controllers\Admin\RoleController2')->parameters([
-        'roles2' => 'role'
+    Route::resource('roles', 'App\Http\Controllers\Admin\RoleController2')->parameters([
+        'roles' => 'role'
     ])->middleware('auth');
 
     // Roles
     Route::delete('roles/destroy', [RolesController::class, 'massDestroy'])->name('roles.massDestroy');
     Route::get('roles-permission', [RolesController::class, 'getPermission'])->name('roles.permission');
     Route::get('roles-api', [RolesController::class, 'getRole'])->name('roles.api');
-    Route::resource('roles', RolesController::class);
+    Route::resource('roles-old', RolesController::class);
 
 
 
@@ -595,4 +595,26 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/data/pendonor', [MPendonorController::class, 'datapendonor'])->name('data.pendonor');
+
+
+    // this route are for revisi dashboard testing
+    Route::middleware(['auth'])->prefix('revisi/dashboard')->name('revisi.dashboard.')->group(function () {
+        // Beneficiaries Dashboard
+        Route::get('/beneficiary', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('beneficiary');
+        Route::get('/beneficiary/data', [App\Http\Controllers\Revisi\Beneficiaries::class, 'getData'])
+            ->name('beneficiary.data');
+
+        // Model Dashboard
+        Route::get('/model', [App\Http\Controllers\Revisi\KomponenModel::class, 'index'])
+            ->name('model');
+        Route::get('/model/data', [App\Http\Controllers\Revisi\KomponenModel::class, 'getData'])
+            ->name('model.data');
+
+        // Funding Dashboard
+        Route::get('/pendanaan', [App\Http\Controllers\Revisi\Pendanaan::class, 'index'])
+            ->name('pendanaan');
+        Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
+            ->name('pendanaan.data');
+    });
 });

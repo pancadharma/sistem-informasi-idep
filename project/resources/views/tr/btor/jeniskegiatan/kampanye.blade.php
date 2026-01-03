@@ -23,18 +23,7 @@
                             <td class="table-secondary"><strong>Campaign Results</strong></td>
                             <td>{!! $kegiatan->kampanye->kampanyehasil ?? '<em class="text-muted">No data</em>' !!}</td>
                         </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Challenges</strong></td>
-                            <td>{!! $kegiatan->kampanye->kampanyekendala ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Issues</strong></td>
-                            <td>{!! $kegiatan->kampanye->kampanyeisu ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
-                        <tr>
-                            <td class="table-secondary"><strong>Lessons Learned</strong></td>
-                            <td>{!! $kegiatan->kampanye->kampanyepembelajaran ?? '<em class="text-muted">No data</em>' !!}</td>
-                        </tr>
+                        {{-- REVIEW: Redundant fields (kendala, isu, pembelajaran) removed to avoid duplication with summary sections --}}
                     </tbody>
                 </table>
             </div>
