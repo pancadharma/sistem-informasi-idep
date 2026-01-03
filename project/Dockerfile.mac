@@ -1,35 +1,51 @@
-FROM php:8.3-fpm
+FROM php:8.3-fpm-alpine
 
-# System dependencies
-RUN apt-get update && apt-get install -y \
+# --------------------------------------------------
+# System & PHP dependencies
+# --------------------------------------------------
+RUN apk add --no-cache \
+    bash \
     git \
     curl \
     unzip \
+    icu-dev \
+    oniguruma-dev \
     libpng-dev \
-    libonig-dev \
-    libxml2-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
     libzip-dev \
-    zip \
+    mysql-client \
     nodejs \
     npm \
+    $PHPIZE_DEPS \
+    && docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
     && docker-php-ext-install \
     pdo_mysql \
     mbstring \
+    intl \
     exif \
     pcntl \
     bcmath \
     gd \
     zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apk del $PHPIZE_DEPS
 
-# PHP memory & execution limits (same idea as Ubuntu)
-RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory.ini \
-    && echo "upload_max_filesize=100M" >> /usr/local/etc/php/conf.d/memory.ini \
-    && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/memory.ini \
-    && echo "max_execution_time=300" >> /usr/local/etc/php/conf.d/memory.ini
+# --------------------------------------------------
+# PHP limits (Ubuntu-equivalent)
+# --------------------------------------------------
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "upload_max_filesize=100M" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "max_execution_time=300" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/99-opcache.ini \
+    && echo "opcache.validate_timestamps=1" >> /usr/local/etc/php/conf.d/99-opcache.ini \
+    && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/99-opcache.ini
 
+# --------------------------------------------------
 # Composer
+# --------------------------------------------------
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html

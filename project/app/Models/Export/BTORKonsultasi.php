@@ -13,14 +13,15 @@ class BTORKonsultasi extends BTOR
         }
 
         return [
-            'konsultan' => $kegiatan->konsultasi->konsultasikonsultan,
-            'hal' => $kegiatan->konsultasi->konsultasihal,
-            'hasil' => $kegiatan->konsultasi->konsultasihasil,
-            'rencana' => $kegiatan->konsultasi->konsultasirencana,
-            'rencana_ket' => $kegiatan->konsultasi->konsultasirencana_ket,
-            'kendala' => $kegiatan->konsultasi->konsultasikendala,
-            'isu' => $kegiatan->konsultasi->konsultasiisu,
-            'pembelajaran' => $kegiatan->konsultasi->konsultasipembelajaran,
+            'lembaga'            => $kegiatan->konsultasi->konsultasilembaga,
+            'komponen'           => $kegiatan->konsultasi->konsultasikomponen,
+            'yang_dilakukan'     => $kegiatan->konsultasi->konsultasiyangdilakukan,
+            'hasil'              => $kegiatan->konsultasi->konsultasihasil,
+            'potensi_pendapatan' => $kegiatan->konsultasi->konsultasipotensipendapatan,
+            'rencana'            => $kegiatan->konsultasi->konsultasirencana,
+            'kendala'            => $kegiatan->konsultasi->konsultasikendala,
+            'isu'                => $kegiatan->konsultasi->konsultasiisu,
+            'pembelajaran'       => $kegiatan->konsultasi->konsultasipembelajaran,
         ];
     }
 }
