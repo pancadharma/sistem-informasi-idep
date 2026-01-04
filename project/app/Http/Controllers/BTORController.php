@@ -889,7 +889,6 @@ class BTORController extends Controller
         
         // 2. Ensure it's wrapped for UTF-8 and is a full document
         // PHPWord's addHtml works best when it receives a full <html><body> structure
-        // $fullHtml = '<html><head><meta charset="UTF-8"></head><body>' . $cleaned . '</body></html>';
         $fullHtml = '<html><head><meta charset="UTF-8" /></head><body>' . $cleaned . '</body></html>';
         
         try {
@@ -909,34 +908,87 @@ class BTORController extends Controller
      * Fixes common issues from Google Docs and Summernote editors
      * Preserves as much formatting as possible while ensuring XML compliance
      */
+    // private function sanitizeHtmlForPhpWord($html)
+    // {
+    //     if (empty($html)) {
+    //         return '';
+    //     }
+
+    //     // 1. CRITICAL: Fix &nbsp; to prevent Entity errors
+    //     $html = str_replace('&nbsp;', ' ', $html);
+        
+    //     // 2. CRITICAL: Remove <colgroup> and <col> tags
+    //     // These are valid HTML but invalid XML if not self-closed, causing the crash.
+    //     $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
+    //     $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
+
+    //     // 3. Fix other void tags that might be missing closing slashes (br, hr, img)
+    //     // Converts <br> to <br /> 
+    //     $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
+
+    //     // 4. Clean up Google Docs/Summernote metadata
+    //     $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
+
+    //     // 5. Convert <font> to <span> (Deprecated tag fix)
+    //     $html = preg_replace_callback(
+    //         '/<font([^>]*)>(.*?)<\/font>/is',
+    //         function ($matches) {
+    //             $attrs = $matches[1];
+    //             $content = $matches[2];
+    //             // Extract color if present
+    //             if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
+    //                 return '<span style="color:' . $c[1] . '">' . $content . '</span>';
+    //             }
+    //             return '<span>' . $content . '</span>';
+    //         },
+    //         $html
+    //     );
+
+    //     // 6. Fix "RGB" colors to Hex (PHPWord struggles with rgb() css)
+    //     $html = preg_replace_callback(
+    //         '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
+    //         function ($m) {
+    //             return sprintf("#%02x%02x%02x", $m[1], $m[2], $m[3]);
+    //         },
+    //         $html
+    //     );
+
+    //     // 7. Remove problematic attributes
+    //     $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
+
+    //     // 8. Final cleanup of empty tags
+    //     $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
+
+    //     return $html;
+    // }
+
     private function sanitizeHtmlForPhpWord($html)
     {
         if (empty($html)) {
             return '';
         }
 
-        // 1. CRITICAL: Fix &nbsp; to prevent Entity errors
+        // --- STEP 1: CLEANING (Your existing working logic) ---
+
+        // 1. Fix &nbsp; 
         $html = str_replace('&nbsp;', ' ', $html);
         
-        // 2. CRITICAL: Remove <colgroup> and <col> tags
-        // These are valid HTML but invalid XML if not self-closed, causing the crash.
+        // 2. Remove <colgroup> and <col> (Crucial)
         $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
         $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
 
-        // 3. Fix other void tags that might be missing closing slashes (br, hr, img)
-        // Converts <br> to <br /> 
+        // 3. Fix void tags (br, hr, img, meta, link, input)
         $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
 
-        // 4. Clean up Google Docs/Summernote metadata
+        // 4. Remove metadata
         $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
 
-        // 5. Convert <font> to <span> (Deprecated tag fix)
+        // 5. Convert <font> to <span>
         $html = preg_replace_callback(
             '/<font([^>]*)>(.*?)<\/font>/is',
             function ($matches) {
                 $attrs = $matches[1];
                 $content = $matches[2];
-                // Extract color if present
                 if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
                     return '<span style="color:' . $c[1] . '">' . $content . '</span>';
                 }
@@ -945,7 +997,7 @@ class BTORController extends Controller
             $html
         );
 
-        // 6. Fix "RGB" colors to Hex (PHPWord struggles with rgb() css)
+        // 6. Fix "RGB" colors to Hex
         $html = preg_replace_callback(
             '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
             function ($m) {
@@ -954,11 +1006,60 @@ class BTORController extends Controller
             $html
         );
 
-        // 7. Remove problematic attributes
+        // 7. Remove problematic attributes 
         $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
 
         // 8. Final cleanup of empty tags
         $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
+
+
+        // --- STEP 2: THE ROBUST BORDER FIX (PRESERVES COLORS) ---
+
+        // A. Remove "border: none" styles
+        $html = preg_replace('/border(-style)?\s*:\s*(none|0|hidden)\s*;?/i', '', $html);
+
+        // B. Rebuild TABLE tag: Force width and Borders
+        $html = preg_replace_callback('/<table([^>]*)>/i', function($matches) {
+            $existingAttrs = $matches[1];
+            
+            // Remove style, border, spacing, AND WIDTH to prevents conflicts
+            $cleanAttrs = preg_replace('/(style|border|cellspacing|cellpadding|width)=["\'][^"\']*["\']/i', '', $existingAttrs);
+            
+            // Return clean tag with 100% width and borders
+            // Note: 'table-layout: fixed' ensures it respects the page margins
+            return '<table width="50%" border="1" cellspacing="0" cellpadding="3" style="border-collapse: collapse; width: 50%; table-layout: fixed; border: 1px solid #000000;" ' . $cleanAttrs . '>';
+        }, $html);
+
+        // C. Rebuild CELL tags (td/th): Remove fixed widths but PRESERVE BACKGROUND COLOR
+        $html = preg_replace_callback('/<(td|th)([^>]*)>/i', function($matches) {
+            $tag = $matches[1];
+            $existingAttrs = $matches[2];
+
+            // 1. Detect existing Background Color
+            $preservedColor = '';
+            
+            // Check inside style="..."
+            if (preg_match('/style=["\']([^"\']*)["\']/i', $existingAttrs, $styleMatch)) {
+                $styleContent = $styleMatch[1];
+                // Regex to grab background-color: #...; or background: #...;
+                if (preg_match('/background(-color)?\s*:\s*([^;"]+)/i', $styleContent, $bgMatch)) {
+                    $preservedColor = 'background-color: ' . trim($bgMatch[2]) . ';';
+                }
+            }
+            
+            // Check for legacy bgcolor="..." attribute
+            if (empty($preservedColor) && preg_match('/bgcolor=["\']([^"\']+)["\']/i', $existingAttrs, $bgAttrMatch)) {
+                $preservedColor = 'background-color: ' . trim($bgAttrMatch[1]) . ';';
+            }
+
+            // 2. Clean the attributes (Remove width, style, and bgcolor to avoid duplicates)
+            $cleanAttrs = preg_replace('/(width|style|bgcolor)=["\'][^"\']*["\']/i', '', $existingAttrs);
+
+            // 3. Construct new style: Mandatory Border/Padding + Preserved Color
+            $newStyle = "border: 1px solid #000000; padding: 5px; word-wrap: break-word; " . $preservedColor;
+
+            return "<$tag style=\"$newStyle\" $cleanAttrs>";
+        }, $html);
 
         return $html;
     }
