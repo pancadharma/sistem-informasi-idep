@@ -142,18 +142,18 @@ return [
             'icon' => 'fas fa-tachometer-alt',
             'submenu' => [
                 [
-                    'text' => 'Beneficiaries Dashboard',
+                    'text' => 'Main Dashboard',
                     'url' => 'dashboard',
                     'icon' => 'fas fa-tachometer-alt',
                 ],
                 [
-                    'text' => 'Model Dashboard',
+                    'text' => 'Komodel Dashboard',
                     'route' => 'dashboard.komodel_v3',
                     'icon' => 'fas fa-chart-pie',
                     'active' => ['dashboard/komodel*', 'regex:@^dashboard/komodel[0-9]+$@'],
                 ],
                 [
-                    'text' => 'Pendanaan Dashboard',
+                    'text' => 'Pendonor Dashboard',
                     'route' => 'dashboard.pendonor',
                     'icon' => 'fas fa-hand-holding-heart',
                     'active' => ['dashboard/pendonor*', 'regex:@^dashboard/pendonor/[0-9]+$@'],
