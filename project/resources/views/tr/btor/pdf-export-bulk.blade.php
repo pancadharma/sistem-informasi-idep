@@ -4,12 +4,33 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>BTOR Export</title>
     <style>
+        /* Apply Figtree font as default */
+        body, html, * {
+            font-family: 'Figtree', sans-serif !important;
+        }
+        
+        /* Preserve Font Awesome and Material Icons */
+        .fa, .fas, .far, .fal, .fab, .fad, .material-symbols-outlined, .material-symbols-sharp,
+        [class^="fa-"], [class*=" fa-"],
+        [class^="icon-"], [class*=" icon-"],
+        .bi, [class^="bi-"], [class*=" bi-"] {
+            font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands', 'FontAwesome', 'Material Symbols Outlined', 'Material Symbols Sharp', 'bootstrap-icons' !important;
+        }
+        
+        .self-center {
+            align-self: center;
+        }
+        .col-sm-6.col-md-6.col-lg-6.order-1.order-md-2.self-center {
+            align-self: end;
+        }
+    </style>
+    <style>
         @page {
             margin: 2.5cm 2.5cm 2.5cm 2.5cm;
-        }
+        }   
 
         body {
-            font-family: 'Tahoma', sans-serif;
+            font-family: 'Figtree', sans-serif;
             font-size: 10pt;
             line-height: 1.3;
             color: #000000;

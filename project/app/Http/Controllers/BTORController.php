@@ -1,21 +1,25 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Kegiatan;
 use App\Models\Export\BTOR;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\Jenis_Kegiatan;
+use App\Models\Kegiatan;
+use App\Models\Program;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PhpOffice\PhpWord\PhpWord;
+use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Helper\Html;
 use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\Style\Font;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\SimpleType\JcTable;
 use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
+use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Writer\Word2007\Element\ParagraphAlignment;
+
 
 class BTORController extends Controller
 {
@@ -31,132 +35,6 @@ class BTORController extends Controller
         $kegiatanList = BTOR::getFilteredList($filters);
         return view('tr.btor.index', compact('kegiatanList', 'filters'));
     }
-
-    /**
-     * API: Get all programs for Select2
-     */
-    // public function getPrograms(Request $request)
-    // {
-    //     $search = $request->input('search');
-    //     $page = $request->input('page', 1);
-    //     $perPage = 20;
-
-    //     $query = \App\Models\Program::query();
-
-    //     if ($search) {
-    //         $query->where('nama', 'like', "%{$search}%")
-    //             ->orWhere('kode', 'like', "%{$search}%");
-    //     }
-
-    //     $total = $query->count();
-    //     $programs = $query->skip(($page - 1) * $perPage)
-    //         ->take($perPage)
-    //         ->get();
-
-    //     $results = $programs->map(function ($program) {
-    //         return [
-    //             'id' => $program->id,
-    //             'text' => $program->kode . ' - ' . $program->nama
-    //         ];
-    //     });
-
-    //     return response()->json([
-    //         'results' => $results,
-    //         'pagination' => [
-    //             'more' => ($page * $perPage) < $total
-    //         ]
-    //     ]);
-    // }
-
-    /**
-     * API: Get activities (programoutcomeoutputactivity) that have kegiatan in trkegiatan
-     * Returns unique activities based on program filter
-     */
-    // public function getKegiatanByProgram(Request $request)
-    // {
-    //     $programId = $request->input('program_id');
-    //     $search = $request->input('search');
-
-    //     // Get distinct activity IDs that have kegiatan records
-    //     $query = Kegiatan::select('programoutcomeoutputactivity_id')
-    //         ->distinct()
-    //         ->with('programOutcomeOutputActivity');
-
-    //     // Filter by program if selected
-    //     if ($programId) {
-    //         $query->whereHas('programOutcomeOutputActivity.program_outcome_output.program_outcome.program', function ($q) use ($programId) {
-    //             $q->where('id', $programId);
-    //         });
-    //     }
-
-    //     // Search by activity kode or nama
-    //     if ($search) {
-    //         $query->whereHas('programOutcomeOutputActivity', function ($q) use ($search) {
-    //             $q->where('nama', 'like', "%{$search}%")
-    //                 ->orWhere('kode', 'like', "%{$search}%");
-    //         });
-    //     }
-
-    //     $activities = $query->get()
-    //         ->map(function ($kegiatan) {
-    //             $activity = $kegiatan->programOutcomeOutputActivity;
-    //             if (!$activity)
-    //                 return null;
-    //             return [
-    //                 'id' => $activity->id,
-    //                 'text' => ($activity->kode ?? '') . ' - ' . ($activity->nama ?? 'N/A')
-    //             ];
-    //         })
-    //         ->filter()
-    //         ->unique('id')
-    //         ->values();
-
-    //     return response()->json([
-    //         'results' => $activities,
-    //         'pagination' => ['more' => false]
-    //     ]);
-    // }
-
-    /**
-     * API: Get jenis kegiatan based on selected activity (programoutcomeoutputactivity_id)
-     * Returns distinct jenis kegiatan types that exist in trkegiatan for the selected activity
-     */
-    // public function getJenisKegiatanByKegiatan(Request $request)
-    // {
-    //     $activityId = $request->input('activity_id');
-    //     $search = $request->input('search');
-
-    //     // If activity selected, get distinct jenis kegiatan from trkegiatan for this activity
-    //     if ($activityId) {
-    //         $jenisIds = Kegiatan::where('programoutcomeoutputactivity_id', $activityId)
-    //             ->distinct()
-    //             ->pluck('jeniskegiatan_id')
-    //             ->filter();
-
-    //         $query = \App\Models\Jenis_Kegiatan::whereIn('id', $jenisIds);
-    //     } else {
-    //         // Return all jenis kegiatan if no activity selected
-    //         $query = \App\Models\Jenis_Kegiatan::query();
-    //     }
-
-    //     if ($search) {
-    //         $query->where('nama', 'like', "%{$search}%");
-    //     }
-
-    //     $jenisList = $query->get();
-
-    //     $results = $jenisList->map(function ($jenis) {
-    //         return [
-    //             'id' => $jenis->id,
-    //             'text' => $jenis->nama
-    //         ];
-    //     });
-
-    //     return response()->json([
-    //         'results' => $results,
-    //         'pagination' => ['more' => false]
-    //     ]);
-    // }
 
     /**
      * Display the specified BTOR report
@@ -226,8 +104,8 @@ class BTORController extends Controller
             ->setPaper('a4', 'portrait')
             ->setOption([
                 'isRemoteEnabled' => true,
-            'dpi' => 96,
-            'defaultFont' => 'Tahoma'
+                'dpi' => 96,
+                'defaultFont' => 'Figtree'
             ]);
 
         // 5. Generate Filename using your helper
@@ -257,9 +135,9 @@ class BTORController extends Controller
                 // Continue anyway, but with defaults for missing data
             }
 
-            $h1Style = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
-            $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
-            $normalStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $normalStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
             $h1ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 240];
             $h2ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 120];
@@ -269,8 +147,8 @@ class BTORController extends Controller
             $phpWord = new PhpWord();
             $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
             $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
-            
-            $phpWord->setDefaultFontName('Tahoma');
+
+            $phpWord->setDefaultFontName('Figtree');
             $phpWord->setDefaultFontSize(10);
 
 
@@ -307,8 +185,8 @@ class BTORController extends Controller
             // ✅ ADD FOOTER (repeats on every page)
             $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
 
-            $footerStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 8, 'color' => '0D654D'];
-            $footerBodyStyle = ['name' => 'Tahoma', 'size' => 8, 'color' => '0F7001'];
+            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '0D654D'];
+            $footerBodyStyle = ['name' => 'Figtree', 'size' => 8, 'color' => '0F7001'];
             $pStyle = [
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                 'spaceBefore' => 0.25,
@@ -458,7 +336,7 @@ class BTORController extends Controller
             ->setOption([
                 'isRemoteEnabled' => true,
                 'dpi' => 96,
-                'defaultFont' => 'Tahoma'
+                'defaultFont' => 'Figtree'
             ]);
 
         $filename = 'BTOR_Bulk_' . count($dataList) . '_Reports_' . date('Ymd_His') . '.pdf';
@@ -485,12 +363,12 @@ class BTORController extends Controller
             $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
             // --- 1. GLOBAL STYLES (Matches exportDocx) ---
-            $phpWord->setDefaultFontName('Tahoma');
+            $phpWord->setDefaultFontName('Figtree');
             $phpWord->setDefaultFontSize(10);
 
             // Define Heading Styles globally
-            $h1Style = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
-            $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
             // Register Title Styles so addTitle() works correctly in the content
             $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
@@ -532,8 +410,8 @@ class BTORController extends Controller
                 $footer = $section->addFooter();
 
                 // Footer Styles
-                $footerStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 8, 'color' => '0D654D'];
-                $footerBodyStyle = ['name' => 'Tahoma', 'size' => 8, 'color' => '0F7001'];
+                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '0D654D'];
+                $footerBodyStyle = ['name' => 'Figtree', 'size' => 8, 'color' => '0F7001'];
                 $footerPStyle = [
                     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                     'spaceBefore' => 0.25,
@@ -600,8 +478,8 @@ class BTORController extends Controller
     private function addDocxHeader($section, $kegiatan)
     {
         // --- DEFINISI STYLE ---
-        $reportTitleStyle = ['bold' => true, 'name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
-        $hBodyStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $reportTitleStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+        $hBodyStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
         $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
 
         $hStyle = [
@@ -679,12 +557,31 @@ class BTORController extends Controller
      * FIXES: Character encoding, null safety, consistent formatting
      * Isi Dari File Docx Konten Dinamis
      */
+
+    function cleanHtmlForPhpWord($html) {
+        // 1. Fix the &nbsp; issue (The #1 cause of your error)
+        // We convert it to a space or a numeric entity that XML understands
+        $html = str_replace('&nbsp;', ' ', $html);
+
+        // 2. Fix other common entities
+        $html = str_replace('&', '&amp;', $html); // Only if not already part of an entity
+        $html = str_replace('&amp;amp;', '&amp;', $html); // Prevent double encoding
+
+        // 3. Remove unsupported CSS that confuses the parser
+        // PHPWord doesn't know 'overflow-wrap' or 'white-space'
+        $html = preg_replace('/white-space:[^;]+;?/', '', $html);
+        $html = preg_replace('/overflow-wrap:[^;]+;?/', '', $html);
+
+        return $html;
+    }
+
+
     private function addDocxContent($section, $kegiatan)
     {
         // --- DEFINISI STYLE ---
-        $h1Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000', 'bold' => true];
-        $h2Style = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
-        $normalStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $h1Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000', 'bold' => true];
+        $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+        $normalStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
 
         $labelStyle = array_merge($h2Style, ['bold' => true]);
@@ -711,11 +608,11 @@ class BTORController extends Controller
 
         // A. Latar Belakang
         $section->addTitle('A. Latar Belakang Kegiatan', 1);
-        $section->addText($this->safeText($kegiatan->deskripsilatarbelakang), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $kegiatan->deskripsilatarbelakang);
 
         // B. Tujuan
         $section->addTitle('B. Tujuan Kegiatan', 1);
-        $section->addText($this->safeText($kegiatan->deskripsitujuan), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $kegiatan->deskripsitujuan);
 
         // C. Detail Kegiatan
         $section->addTitle('C. Detail Kegiatan', 1);
@@ -771,58 +668,6 @@ class BTORController extends Controller
         $addRow($table, 'Hari, Tanggal', $dateText);
         $addRow($table, 'Tempat', $lokasiString);
         $addRow($table, 'Pihak yang terlibat', $mitraString);
-
-        // $section->addTextBreak(1);
-        // $section->addTitle('C. Detail Kegiatan', 1);
-        
-        // // Date formatting
-        // $tanggalMulai = $kegiatan->tanggalmulai 
-        //     ? Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y')
-        //     : 'Tidak ditentukan';
-        // $tanggalSelesai = $kegiatan->tanggalselesai
-        //     ? Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y')
-        //     : 'Tidak ditentukan';
-        
-        // $dateText = 'Hari, tanggal : ' . $tanggalMulai;
-        // if ($kegiatan->tanggalmulai && $kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai) {
-        //     $dateText .= ' - ' . $tanggalSelesai;
-        //     if ($kegiatan->getDurationInDays()) {
-        //         $dateText .= ' (' . $kegiatan->getDurationInDays() . ' hari)';
-        //     }
-        // }
-        // // $section->addText($dateText, $normalStyle, $pStyleLeft);
-
-        // // Location
-        // $lokasiList = $kegiatan->lokasi && $kegiatan->lokasi->count() > 0
-        //     ? $kegiatan->lokasi->map(fn($l) => $this->safeValue($l->lokasi))->toArray()
-        //     : [];
-        
-        // // $section->addText('Tempat : ' . (count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-'), ['size' => 11]);
-
-        // // Partners
-        // if ($kegiatan->mitra && $kegiatan->mitra->count() > 0) {
-        //     $section->addText('Pihak yang terlibat :', ['size' => 11]);
-        //     foreach ($kegiatan->mitra as $index => $mitra) {
-        //         $section->addText(($index + 1) . '. ' . $this->safeValue($mitra->nama), ['size' => 11]);
-        //     }
-        // }
-
-        // $table = $section->addTable(['setBorderColor' => 'none']);
-
-        // $addRow = function($table, $label, $value) use ($labelStyle, $h2Style, $pStyleLeft) {
-        //     $table->addRow();
-        //     // Kolom 1: Label (Bold) - Lebar 3000 twips (~5.3cm)
-        //     $table->addCell(2500)->addText($label, $labelStyle, $pStyleLeft); 
-        //     // Kolom 2: Titik Dua - Lebar 200 twips
-        //     $table->addCell(200)->addText(':', $h2Style, $pStyleLeft); 
-        //     // Kolom 3: Value - Lebar 6000 twips
-        //     $table->addCell(6000)->addText($value, $h2Style, $pStyleLeft); 
-        // };
-
-        // $addRow($table, 'Tanggal', $dateText);
-        // $addRow($table, 'Tempat', (count($lokasiList) > 0 ? implode(', ', $lokasiList) : '-'));
-        // $addRow($table, 'Pihak yang terlibat', (count($kegiatan->mitra) > 0 ? implode(', ', $kegiatan->mitra->map(fn($mitra) => $mitra->nama)->toArray()) : '-'));
-        
         $section->addTextBreak(1);
 
         // Location Table
@@ -843,7 +688,7 @@ class BTORController extends Controller
         }
         $section->addTextBreak(1);
         $section->addText('b. Hasil pertemuan', $labelStyle);
-        $section->addText($this->safeText($kegiatan->deskripsikeluaran), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $kegiatan->deskripsikeluaran);
         $section->addTextBreak(1);
 
         // Get specific data based on jenis kegiatan
@@ -851,17 +696,32 @@ class BTORController extends Controller
 
         // E. Tantangan dan Solusi
         $section->addTitle('E. Tantangan dan Solusi', 1);
-        $section->addText($this->safeText($specificData['kendala'] ?? 'Tidak ada data tantangan.'), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $specificData['kendala'] ?? 'Tidak ada data tantangan.');
         $section->addTextBreak(1);
 
         // F. Isu yang Perlu Diperhatikan
         $section->addTitle('F. Isu yang Perlu Diperhatikan / Rekomendasi', 1);
-        $section->addText($this->safeText($specificData['isu'] ?? 'Tidak ada data isu.'), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
         $section->addTextBreak(1);
+        
+        // F. Isu yang Perlu Diperhatikan
+        // Usage
+        // $richTextHTML =  $specificData['isu'] ?? '';
+        // $this->addHtmlToSection($section, $richTextHTML);
+        // $cleanHtml = $this->cleanHtmlForPhpWord($richTextHTML);
+        // Log::INFO($cleanHtml);
+        // $fullHtml = '<html><head><meta charset="UTF-8"></head><body>' . $cleanHtml . '</body></html>';
+        // $section->addHtml($fullHtml);
+        // $section->addTextBreak(1);
+        // Log::INFO($fullHtml);
+        // $section->addHtml($cleanHtml);
+        
+        // $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
+        // $section->addTextBreak(1);
 
         // G. Pembelajaran
         $section->addTitle('G. Pembelajaran', 1);
-        $section->addText($this->safeText($specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.'), $normalStyle, $pNormalStyle);
+        $this->addHtmlToSection($section, $specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.');
         $section->addTextBreak(1);
 
         // H. Dokumen Pendukung
@@ -979,8 +839,15 @@ class BTORController extends Controller
             return $default;
         }
 
+        // Decode HTML entities (like &nbsp;) to actual characters
+        $decoded = html_entity_decode((string)$text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Remove HTML tags
+        $stripped = strip_tags($decoded);
+
+        // Encode for XML output
         return htmlspecialchars(
-            strip_tags((string)$text),
+            $stripped,
             ENT_XML1,
             'UTF-8'
         );
@@ -1002,6 +869,201 @@ class BTORController extends Controller
             'UTF-8'
         );
     }
+
+    /**
+     * Add HTML content to DOCX section
+     * Converts HTML from rich text editors (Summernote) to Word formatting
+     * Preserves paragraphs, line breaks, tables, and text formatting
+     */
+
+    private function addHtmlToSection($section, $html, $fontStyle = [], $paragraphStyle = [])
+    {
+        if (empty($html) || trim(strip_tags($html)) == '') {
+            $section->addText('-', $fontStyle);
+            return;
+        }
+        
+        $html = str_replace('&nbsp;', ' ', $html);
+        // 1. Clean the HTML using your existing cleaner
+        $cleaned = $this->sanitizeHtmlForPhpWord($html);
+        
+        // 2. Ensure it's wrapped for UTF-8 and is a full document
+        // PHPWord's addHtml works best when it receives a full <html><body> structure
+        $fullHtml = '<html><head><meta charset="UTF-8" /></head><body>' . $cleaned . '</body></html>';
+        
+        try {
+            // The third parameter 'true' tells PHPWord this is a full HTML document
+            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $fullHtml, true, false);
+        } catch (\Exception $e) {
+            Log::warning('HTML parsing failed, falling back to plain text', ['error' => $e->getMessage()]);
+            
+            // Fallback to plain text if the HTML is still too messy
+            $text = strip_tags(str_replace(['<p>', '<br>', '</tr>'], ["\n", "\n", "\n"], $html));
+            $section->addText($text, $fontStyle, $paragraphStyle);
+        }
+    }
+
+    /**
+     * Sanitize HTML to make it compatible with PHPWord's XML parser
+     * Fixes common issues from Google Docs and Summernote editors
+     * Preserves as much formatting as possible while ensuring XML compliance
+     */
+    // private function sanitizeHtmlForPhpWord($html)
+    // {
+    //     if (empty($html)) {
+    //         return '';
+    //     }
+
+    //     // 1. CRITICAL: Fix &nbsp; to prevent Entity errors
+    //     $html = str_replace('&nbsp;', ' ', $html);
+        
+    //     // 2. CRITICAL: Remove <colgroup> and <col> tags
+    //     // These are valid HTML but invalid XML if not self-closed, causing the crash.
+    //     $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
+    //     $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
+
+    //     // 3. Fix other void tags that might be missing closing slashes (br, hr, img)
+    //     // Converts <br> to <br /> 
+    //     $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
+
+    //     // 4. Clean up Google Docs/Summernote metadata
+    //     $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
+
+    //     // 5. Convert <font> to <span> (Deprecated tag fix)
+    //     $html = preg_replace_callback(
+    //         '/<font([^>]*)>(.*?)<\/font>/is',
+    //         function ($matches) {
+    //             $attrs = $matches[1];
+    //             $content = $matches[2];
+    //             // Extract color if present
+    //             if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
+    //                 return '<span style="color:' . $c[1] . '">' . $content . '</span>';
+    //             }
+    //             return '<span>' . $content . '</span>';
+    //         },
+    //         $html
+    //     );
+
+    //     // 6. Fix "RGB" colors to Hex (PHPWord struggles with rgb() css)
+    //     $html = preg_replace_callback(
+    //         '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
+    //         function ($m) {
+    //             return sprintf("#%02x%02x%02x", $m[1], $m[2], $m[3]);
+    //         },
+    //         $html
+    //     );
+
+    //     // 7. Remove problematic attributes
+    //     $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
+
+    //     // 8. Final cleanup of empty tags
+    //     $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
+
+    //     return $html;
+    // }
+
+    private function sanitizeHtmlForPhpWord($html)
+    {
+        if (empty($html)) {
+            return '';
+        }
+
+        // --- STEP 1: CLEANING (Your existing working logic) ---
+
+        // 1. Fix &nbsp; 
+        $html = str_replace('&nbsp;', ' ', $html);
+        
+        // 2. Remove <colgroup> and <col> (Crucial)
+        $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
+        $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
+
+        // 3. Fix void tags (br, hr, img, meta, link, input)
+        $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
+
+        // 4. Remove metadata
+        $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
+
+        // 5. Convert <font> to <span>
+        $html = preg_replace_callback(
+            '/<font([^>]*)>(.*?)<\/font>/is',
+            function ($matches) {
+                $attrs = $matches[1];
+                $content = $matches[2];
+                if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
+                    return '<span style="color:' . $c[1] . '">' . $content . '</span>';
+                }
+                return '<span>' . $content . '</span>';
+            },
+            $html
+        );
+
+        // 6. Fix "RGB" colors to Hex
+        $html = preg_replace_callback(
+            '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
+            function ($m) {
+                return sprintf("#%02x%02x%02x", $m[1], $m[2], $m[3]);
+            },
+            $html
+        );
+
+        // 7. Remove problematic attributes 
+        $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
+
+        // 8. Final cleanup of empty tags
+        $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
+
+
+        // --- STEP 2: THE ROBUST BORDER FIX (PRESERVES COLORS) ---
+
+        // A. Remove "border: none" styles
+        $html = preg_replace('/border(-style)?\s*:\s*(none|0|hidden)\s*;?/i', '', $html);
+
+        // B. Rebuild TABLE tag: Force width and Borders
+        $html = preg_replace_callback('/<table([^>]*)>/i', function($matches) {
+            $existingAttrs = $matches[1];
+            
+            // Remove style, border, spacing, AND WIDTH to prevents conflicts
+            $cleanAttrs = preg_replace('/(style|border|cellspacing|cellpadding|width)=["\'][^"\']*["\']/i', '', $existingAttrs);
+            
+            // Return clean tag with 100% width and borders
+            // Note: 'table-layout: fixed' ensures it respects the page margins
+            return '<table width="50%" border="1" cellspacing="0" cellpadding="3" style="border-collapse: collapse; width: 50%; table-layout: fixed; border: 1px solid #000000;" ' . $cleanAttrs . '>';
+        }, $html);
+
+        // C. Rebuild CELL tags (td/th): Remove fixed widths but PRESERVE BACKGROUND COLOR
+        $html = preg_replace_callback('/<(td|th)([^>]*)>/i', function($matches) {
+            $tag = $matches[1];
+            $existingAttrs = $matches[2];
+
+            // 1. Detect existing Background Color
+            $preservedColor = '';
+            
+            // Check inside style="..."
+            if (preg_match('/style=["\']([^"\']*)["\']/i', $existingAttrs, $styleMatch)) {
+                $styleContent = $styleMatch[1];
+                // Regex to grab background-color: #...; or background: #...;
+                if (preg_match('/background(-color)?\s*:\s*([^;"]+)/i', $styleContent, $bgMatch)) {
+                    $preservedColor = 'background-color: ' . trim($bgMatch[2]) . ';';
+                }
+            }
+            
+            // Check for legacy bgcolor="..." attribute
+            if (empty($preservedColor) && preg_match('/bgcolor=["\']([^"\']+)["\']/i', $existingAttrs, $bgAttrMatch)) {
+                $preservedColor = 'background-color: ' . trim($bgAttrMatch[1]) . ';';
+            }
+
+            // 2. Clean the attributes (Remove width, style, and bgcolor to avoid duplicates)
+            $cleanAttrs = preg_replace('/(width|style|bgcolor)=["\'][^"\']*["\']/i', '', $existingAttrs);
+
+            // 3. Construct new style: Mandatory Border/Padding + Preserved Color
+            $newStyle = "border: 1px solid #000000; padding: 5px; word-wrap: break-word; " . $preservedColor;
+
+            return "<$tag style=\"$newStyle\" $cleanAttrs>";
+        }, $html);
+
+        return $html;
+    }
+
     /**
      * Ensure critical relationships are loaded
      */
@@ -1140,7 +1202,7 @@ class BTORController extends Controller
      */
     private function addBeneficiariesTable($section, $kegiatan)
     {
-        $hBodyStyle = ['name' => 'Tahoma', 'size' => 10, 'color' => '000000'];
+        $hBodyStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
         $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
 
         $tableStyle = [
