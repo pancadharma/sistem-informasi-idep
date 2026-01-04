@@ -557,6 +557,25 @@ class BTORController extends Controller
      * FIXES: Character encoding, null safety, consistent formatting
      * Isi Dari File Docx Konten Dinamis
      */
+
+    function cleanHtmlForPhpWord($html) {
+        // 1. Fix the &nbsp; issue (The #1 cause of your error)
+        // We convert it to a space or a numeric entity that XML understands
+        $html = str_replace('&nbsp;', ' ', $html);
+
+        // 2. Fix other common entities
+        $html = str_replace('&', '&amp;', $html); // Only if not already part of an entity
+        $html = str_replace('&amp;amp;', '&amp;', $html); // Prevent double encoding
+
+        // 3. Remove unsupported CSS that confuses the parser
+        // PHPWord doesn't know 'overflow-wrap' or 'white-space'
+        $html = preg_replace('/white-space:[^;]+;?/', '', $html);
+        $html = preg_replace('/overflow-wrap:[^;]+;?/', '', $html);
+
+        return $html;
+    }
+
+
     private function addDocxContent($section, $kegiatan)
     {
         // --- DEFINISI STYLE ---
@@ -682,13 +701,23 @@ class BTORController extends Controller
 
         // F. Isu yang Perlu Diperhatikan
         $section->addTitle('F. Isu yang Perlu Diperhatikan / Rekomendasi', 1);
-
-        $richTextHTML =  $specificData['isu'] ?? '';
-        \Log::info($richTextHTML);
-        $this->addHtmlToSection($section, $richTextHTML);
+        $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
+        $section->addTextBreak(1);
+        
+        // F. Isu yang Perlu Diperhatikan
+        // Usage
+        // $richTextHTML =  $specificData['isu'] ?? '';
+        // $this->addHtmlToSection($section, $richTextHTML);
+        // $cleanHtml = $this->cleanHtmlForPhpWord($richTextHTML);
+        // Log::INFO($cleanHtml);
+        // $fullHtml = '<html><head><meta charset="UTF-8"></head><body>' . $cleanHtml . '</body></html>';
+        // $section->addHtml($fullHtml);
+        // $section->addTextBreak(1);
+        // Log::INFO($fullHtml);
+        // $section->addHtml($cleanHtml);
         
         // $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
-        $section->addTextBreak(1);
+        // $section->addTextBreak(1);
 
         // G. Pembelajaran
         $section->addTitle('G. Pembelajaran', 1);
@@ -846,48 +875,39 @@ class BTORController extends Controller
      * Converts HTML from rich text editors (Summernote) to Word formatting
      * Preserves paragraphs, line breaks, tables, and text formatting
      */
+
     private function addHtmlToSection($section, $html, $fontStyle = [], $paragraphStyle = [])
     {
-        if (empty($html)) {
+        if (empty($html) || trim(strip_tags($html)) == '') {
+            $section->addText('-', $fontStyle);
             return;
         }
         
-        // Decode HTML entities first (e.g., &nbsp; to actual space)
-        $decoded = html_entity_decode($html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $html = str_replace('&nbsp;', ' ', $html);
+        // 1. Clean the HTML using your existing cleaner
+        $cleaned = $this->sanitizeHtmlForPhpWord($html);
         
-        // Clean and sanitize HTML to make it XML-compatible
-        $cleaned = $this->sanitizeHtmlForPhpWord($decoded);
+        // 2. Ensure it's wrapped for UTF-8 and is a full document
+        // PHPWord's addHtml works best when it receives a full <html><body> structure
+        // $fullHtml = '<html><head><meta charset="UTF-8"></head><body>' . $cleaned . '</body></html>';
+        $fullHtml = '<html><head><meta charset="UTF-8" /></head><body>' . $cleaned . '</body></html>';
         
         try {
-            // Use PHPWord's HTML parser to add HTML content
-            // This preserves <p>, <br>, <table>, <b>, <i>, <ul>, <ol>, etc.
-            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $cleaned, false, false);
+            // The third parameter 'true' tells PHPWord this is a full HTML document
+            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $fullHtml, true, false);
         } catch (\Exception $e) {
-            // Fallback: if HTML parsing fails, add as plain text
-            Log::warning('HTML parsing failed in DOCX export, using plain text fallback', [
-                'error' => $e->getMessage(),
-                'html_preview' => substr($cleaned, 0, 200)
-            ]);
+            Log::warning('HTML parsing failed, falling back to plain text', ['error' => $e->getMessage()]);
             
-            // Use default styles if not provided
-            if (empty($fontStyle)) {
-                $fontStyle = ['name' => 'Figtree', 'size' => 10];
-            }
-            if (empty($paragraphStyle)) {
-                $paragraphStyle = [
-                    'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
-                    'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
-                    'spaceAfter' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
-                ];
-            }
-            
-            $section->addText($this->safeText($html), $fontStyle, $paragraphStyle);
+            // Fallback to plain text if the HTML is still too messy
+            $text = strip_tags(str_replace(['<p>', '<br>', '</tr>'], ["\n", "\n", "\n"], $html));
+            $section->addText($text, $fontStyle, $paragraphStyle);
         }
     }
 
     /**
      * Sanitize HTML to make it compatible with PHPWord's XML parser
      * Fixes common issues from Google Docs and Summernote editors
+     * Preserves as much formatting as possible while ensuring XML compliance
      */
     private function sanitizeHtmlForPhpWord($html)
     {
@@ -895,21 +915,53 @@ class BTORController extends Controller
             return '';
         }
 
-        // Remove problematic Google Docs metadata
-        $html = preg_replace('/\<span[^\>]*id=\"docs-internal-guid[^\"]*\"[^\>]*\>\<\/span\>/i', '', $html);
+        // 1. CRITICAL: Fix &nbsp; to prevent Entity errors
+        $html = str_replace('&nbsp;', ' ', $html);
+        
+        // 2. CRITICAL: Remove <colgroup> and <col> tags
+        // These are valid HTML but invalid XML if not self-closed, causing the crash.
+        $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
+        $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
 
-        // Fix critical self-closing tags to XML format
-        $selfClosingTags = ['br', 'hr', 'img', 'col'];
-        foreach ($selfClosingTags as $tag) {
-            $html = preg_replace('/\<' . $tag . '(\s+[^\>\/]*)?\s*\>/i', '\<' . $tag . '$1 /\>', $html);
-        }
+        // 3. Fix other void tags that might be missing closing slashes (br, hr, img)
+        // Converts <br> to <br /> 
+        $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
 
-        // Remove colgroup tags - they cause XML parsing issues
-        $html = preg_replace('/\<\/?colgroup[^\>]*\>/i', '', $html);
+        // 4. Clean up Google Docs/Summernote metadata
+        $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
+
+        // 5. Convert <font> to <span> (Deprecated tag fix)
+        $html = preg_replace_callback(
+            '/<font([^>]*)>(.*?)<\/font>/is',
+            function ($matches) {
+                $attrs = $matches[1];
+                $content = $matches[2];
+                // Extract color if present
+                if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
+                    return '<span style="color:' . $c[1] . '">' . $content . '</span>';
+                }
+                return '<span>' . $content . '</span>';
+            },
+            $html
+        );
+
+        // 6. Fix "RGB" colors to Hex (PHPWord struggles with rgb() css)
+        $html = preg_replace_callback(
+            '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
+            function ($m) {
+                return sprintf("#%02x%02x%02x", $m[1], $m[2], $m[3]);
+            },
+            $html
+        );
+
+        // 7. Remove problematic attributes
+        $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
+
+        // 8. Final cleanup of empty tags
+        $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
 
         return $html;
     }
-
 
     /**
      * Ensure critical relationships are loaded
