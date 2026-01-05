@@ -337,17 +337,11 @@
 
     {{-- Footer --}}
     <div class="report-footer">
-        <table style="width: 100%; border: none; font-size: 8pt;">
-            <tr>
-                <td style="width: 70%;">
-                    <strong>Note:</strong> This is an official report of IDEP Foundation.
-                    For inquiries, please contact the Program Department.
-                </td>
-                <td style="width: 30%; text-align: right;">
-                    Page <span class="pagenum"></span>
-                </td>
-            </tr>
-        </table>
+        {{-- Use the official IDEP footer style from DOCX --}}
+        <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+        <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
+        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
+        <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
     </div>
 </div>
 @endsection

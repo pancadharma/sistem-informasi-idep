@@ -13,14 +13,15 @@ class BTORPelatihan extends BTOR
         }
 
         return [
-            'pelatih' => $kegiatan->pelatihan->pelatihanpelatih,
-            'hasil' => $kegiatan->pelatihan->pelatihanhasil,
-            'distribusi' => $kegiatan->pelatihan->pelatihandistribusi,
+            'pelatih'        => $kegiatan->pelatihan->pelatihanpelatih,
+            'hasil'          => $kegiatan->pelatihan->pelatihanhasil,
+            'distribusi'     => $kegiatan->pelatihan->pelatihandistribusi,
             'distribusi_ket' => $kegiatan->pelatihan->pelatihandistribusi_ket,
-            'rencana' => $kegiatan->pelatihan->pelatihanrencana,
-            'unggahan' => $kegiatan->pelatihan->pelatihanunggahan,
-            'isu' => $kegiatan->pelatihan->pelatihanisu,
-            'pembelajaran' => $kegiatan->pelatihan->pelatihanpembelajaran,
+            'rencana'        => $kegiatan->pelatihan->pelatihanrencana,
+            'unggahan'       => $kegiatan->pelatihan->pelatihanunggahan,
+            'kendala'        => $kegiatan->pelatihan->pelatihankendala,
+            'isu'            => $kegiatan->pelatihan->pelatihanisu,
+            'pembelajaran'   => $kegiatan->pelatihan->pelatihanpembelajaran,
         ];
     }
 }

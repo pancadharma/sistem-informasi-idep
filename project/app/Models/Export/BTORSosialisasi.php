@@ -13,13 +13,13 @@ class BTORSosialisasi extends BTOR
         }
 
         return [
-            'yang_terlibat' => $kegiatan->sosialisasi->sosialisasiyangterlibat,
-            'temuan' => $kegiatan->sosialisasi->sosialisasitemuan,
+            'yang_terlibat'        => $kegiatan->sosialisasi->sosialisasiyangterlibat,
+            'temuan'               => $kegiatan->sosialisasi->sosialisasitemuan,
             'sosialisasi_tambahan' => $kegiatan->sosialisasi->sosialisasitambahan,
             'sosialisasi_tambahan_ket' => $kegiatan->sosialisasi->sosialisasitambahan_ket,
-            'kendala' => $kegiatan->sosialisasi->sosialisasikendala,
-            'isu' => $kegiatan->sosialisasi->sosialisasiisu,
-            'pembelajaran' => $kegiatan->sosialisasi->sosialisasipembelajaran,
+            'kendala'              => $kegiatan->sosialisasi->sosialisasikendala,
+            'isu'                  => $kegiatan->sosialisasi->sosialisasiisu,
+            'pembelajaran'         => $kegiatan->sosialisasi->sosialisasipembelajaran,
         ];
     }
 }

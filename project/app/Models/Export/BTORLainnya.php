@@ -13,10 +13,15 @@ class BTORLainnya extends BTOR
         }
 
         return [
-            'deskripsi' => $kegiatan->lainnya->lainnyadeskrip,
-            'kendala' => $kegiatan->lainnya->lainnyakendala,
-            'isu' => $kegiatan->lainnya->lainnyaisu,
-            'pembelajaran' => $kegiatan->lainnya->lainnyapembelajaran,
+            'mengapa_dilakukan'   => $kegiatan->lainnya->lainnyamengapadilakukan,
+            'dampak'              => $kegiatan->lainnya->lainnyadampak,
+            'sumber_pendanaan'    => $kegiatan->lainnya->lainnyasumberpendanaan,
+            'sumber_pendanaan_ket' => $kegiatan->lainnya->lainnyasumberpendanaan_ket,
+            'yang_terlibat'       => $kegiatan->lainnya->lainnyayangterlibat,
+            'rencana'             => $kegiatan->lainnya->lainnyarencana,
+            'kendala'             => $kegiatan->lainnya->lainnyakendala,
+            'isu'                 => $kegiatan->lainnya->lainnyaisu,
+            'pembelajaran'        => $kegiatan->lainnya->lainnyapembelajaran,
         ];
     }
 }

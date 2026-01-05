@@ -116,7 +116,6 @@ class BTOR extends Model
             'pengembangan',
             'kampanye',
             'pemetaan',
-            'monitoring',
             'kunjungan',
             'konsultasi',
             'lainnya',

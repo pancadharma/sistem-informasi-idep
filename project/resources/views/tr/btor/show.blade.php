@@ -501,12 +501,12 @@
                 {{-- Checklist --}}
                 <div class="mb-3">
                     <ul class="list-unstyled">
-                        <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Daftar Hadir</li>
-                        <li><i class="fas fa-{{ $hasMedia ? 'check-square text-success' : 'square text-muted' }}"></i> Foto & Video</li>
-                        <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Notulensi dan Rencana Tindak Lanjut (RTL)</li>
-                        <li><i class="fas fa-square text-muted"></i> Evaluasi Harian</li>
+                        <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Dokumen Pendukung</li>
+                        <li><i class="fas fa-{{ $hasMedia ? 'check-square text-success' : 'square text-muted' }}"></i> Media Pendukung</li>
+                        {{-- <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Notulensi dan Rencana Tindak Lanjut (RTL)</li> --}}
+                        {{-- <li><i class="fas fa-square text-muted"></i> Evaluasi Harian</li>
                         <li><i class="fas fa-square text-muted"></i> Hasil Skoring Pre-Test dan Post-Test</li>
-                        <li><i class="fas fa-square text-muted"></i> Lainnya</li>
+                        <li><i class="fas fa-square text-muted"></i> Lainnya</li> --}}
                     </ul>
                 </div>
 
@@ -643,73 +643,6 @@
 
                 <div class="p-3 bg-light rounded" style="min-height: 80px;">
                     <p class="text-muted">-</p>
-                </div>
-            </div>
-
-            {{-- Signature Section --}}
-            <div class="section mt-5">
-                <h4 class="border-bottom pb-2 mb-4">
-                    <i class="fas fa-signature text-primary"></i> Persetujuan
-                </h4>
-
-                <div class="row">
-                    <div class="col-md-6 text-center">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="mb-4"><strong>Disusun oleh:</strong></p>
-                                <div style="height: 80px;"></div>
-                                <div>
-                                    @if($kegiatan->kegiatan_penulis?->first())
-                                        <p class="mb-1">
-                                            <strong><u>{{ $kegiatan->kegiatan_penulis->first()->user?->nama }}</u></strong>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <em>{{ $kegiatan->kegiatan_penulis->first()->peran?->nama ?? 'Staff' }}</em>
-                                        </p>
-                                    @else
-                                        <p class="mb-1">
-                                            <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <em>Penulis Laporan</em>
-                                        </p>
-                                    @endif
-                                    <p class="mt-2">
-                                        <small>Tanggal: {{ now()->locale('id')->isoFormat('D MMMM Y') }}</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 text-center">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="mb-4"><strong>Disetujui oleh:</strong></p>
-                                <div style="height: 80px;"></div>
-                                <div>
-                                    @if($kegiatan->user)
-                                        <p class="mb-1">
-                                            <strong><u>{{ $kegiatan->user->name }}</u></strong>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <em>Program Coordinator</em>
-                                        </p>
-                                    @else
-                                        <p class="mb-1">
-                                            <strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></strong>
-                                        </p>
-                                        <p class="text-muted mb-1">
-                                            <em>Supervisor</em>
-                                        </p>
-                                    @endif
-                                    <p class="mt-2">
-                                        <small>Tanggal: _________________</small>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

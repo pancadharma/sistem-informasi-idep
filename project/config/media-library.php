@@ -39,7 +39,7 @@ return [
         Kegiatan::class =>KegiatanPathGenerator::class,
     ],
 
-    'max_file_size' => 1024 * 1024 * 15, // 10MB
+    'max_file_size' => 1024 * 1024 * 50, // 50MB
 
     'queue_connection_name' => env('QUEUE_CONNECTION', 'sync'),
     'queue_name' => env('MEDIA_QUEUE', ''),

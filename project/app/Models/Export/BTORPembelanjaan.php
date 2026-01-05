@@ -13,15 +13,17 @@ class BTORPembelanjaan extends BTOR
         }
 
         return [
-            'detail_barang' => $kegiatan->pembelanjaan->pembelanjaandetailbarang,
-            'mulai' => $kegiatan->pembelanjaan->pembelanjaanmulai,
-            'selesai' => $kegiatan->pembelanjaan->pembelanjaanselesai,
-            'distribusi_mulai' => $kegiatan->pembelanjaan->pembelanjaandistribusimulai,
+            'detail_barang'      => $kegiatan->pembelanjaan->pembelanjaandetailbarang,
+            'mulai'              => $kegiatan->pembelanjaan->pembelanjaanmulai,
+            'selesai'            => $kegiatan->pembelanjaan->pembelanjaanselesai,
+            'distribusi_mulai'   => $kegiatan->pembelanjaan->pembelanjaandistribusimulai,
             'distribusi_selesai' => $kegiatan->pembelanjaan->pembelanjaandistribusiselesai,
-            'terdistribusi' => $kegiatan->pembelanjaan->pembelanjaanterdistribusi,
-            'kendala' => $kegiatan->pembelanjaan->pembelanjaankendala,
-            'isu' => $kegiatan->pembelanjaan->pembelanjaanisu,
-            'pembelajaran' => $kegiatan->pembelanjaan->pembelanjaanpembelajaran,
+            'terdistribusi'      => $kegiatan->pembelanjaan->pembelanjaanterdistribusi,
+            'akandistribusi'     => $kegiatan->pembelanjaan->pembelanjaanakandistribusi,
+            'akandistribusi_ket' => $kegiatan->pembelanjaan->pembelanjaanakandistribusi_ket,
+            'kendala'            => $kegiatan->pembelanjaan->pembelanjaankendala,
+            'isu'                => $kegiatan->pembelanjaan->pembelanjaanisu,
+            'pembelajaran'       => $kegiatan->pembelanjaan->pembelanjaanpembelajaran,
         ];
     }
 }

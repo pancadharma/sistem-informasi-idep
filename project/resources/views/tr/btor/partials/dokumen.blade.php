@@ -1,50 +1,42 @@
+{{-- resources/views/tr/btor/partials/dokumen.blade.php --}}
 <div class="section">
-    <h4 class="section-title">Media & Dokumen Pendukung</h4>
+    {{-- Only show title if there is content --}}
     @php
         $dokumen = $kegiatan->getDokumenPendukung();
         $media = $kegiatan->getMediaPendukung();
     @endphp
 
     @if(($dokumen && $dokumen->count() > 0) || ($media && $media->count() > 0))
-
+        
         {{-- Dokumen Pendukung --}}
         @if($dokumen && $dokumen->count() > 0)
             <div class="mb-4">
-                <h5 class="subsection"><i class="fas fa-file-alt"></i> Dokumen ({{ $dokumen->count() }})</h5>
-                <table class="table table-hover table-bordered">
-                    <thead class="thead-light">
+                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">Dokumen Pendukung ({{ $dokumen->count() }})</h5>
+                <table class="table-bordered" style="width: 100%; font-size: 9pt;">
+                    <thead>
                         <tr>
-                            <th width="25%">Nama File</th>
-                            <th width="35%">Caption</th>
-                            <th width="5%">Tipe</th>
-                            <th width="5%" class="text-center">Ukuran</th>
-                            <th width="5%" class="text-center no-print">Aksi</th>
+                            <th width="30%">Nama File</th>
+                            <th width="40%">Keterangan</th>
+                            <th width="10%" class="text-center">Tipe</th>
+                            <th width="10%" class="text-center">Ukuran</th>
+                            <th width="10%" class="text-center no-print">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($dokumen as $index => $doc)
+                        @foreach($dokumen as $doc)
                             <tr>
-                                <td class="pl-2">
-                                    <i class="fas fa-file-{{ $doc->extension === 'pdf' ? 'pdf text-danger' : ($doc->extension === 'docx' || $doc->extension === 'doc' ? 'word text-primary' : ($doc->extension === 'xlsx' || $doc->extension === 'xls' ? 'excel text-success' : 'alt')) }}"></i>
+                                <td>
+                                    <span class="no-print">
+                                        <i class="fas fa-file-alt"></i>
+                                    </span>
                                     {{ $doc->name }}
                                 </td>
-                                <td>
-                                    {{ $doc->getCustomProperty('keterangan') ?? $doc->name }}
-                                </td>
-                                <td>
-                                    <span class="badge badge-secondary">{{ strtoupper($doc->extension) }}</span>
-                                </td>
-                                <td>{{ $doc->human_readable_size }}</td>
+                                <td>{{ $doc->getCustomProperty('keterangan') ?? '-' }}</td>
+                                <td class="text-center">{{ strtoupper($doc->extension) }}</td>
+                                <td class="text-center">{{ $doc->human_readable_size }}</td>
                                 <td class="no-print text-center">
-                                    <a href="{{ $doc->getUrl() }}"
-                                    target="_blank"
-                                    class="btn btn-sm btn-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ $doc->getUrl() }}"
-                                    download
-                                    class="btn btn-sm btn-success">
-                                        <i class="fas fa-download"></i>
+                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="btn btn-sm btn-link">
+                                        <i class="fas fa-download"></i> Unduh
                                     </a>
                                 </td>
                             </tr>
@@ -57,58 +49,43 @@
         {{-- Media Pendukung --}}
         @if($media && $media->count() > 0)
             <div class="mb-4">
-                <h5 class="subsection"><i class="fas fa-images"></i> Media Pendukung ({{ $media->count() }})</h5>
-
-                {{-- Grid View for Images --}}
-                {{-- use table format --}}
-                <table class="table table-hover table-bordered">
-                    <thead class="thead-light">
+                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">Media Pendukung ({{ $media->count() }})</h5>
+                <table class="table-bordered" style="width: 100%; font-size: 9pt;">
+                    <thead>
                         <tr>
-                            <th width="25%">Nama File</th>
-                            <th width="35%">Caption</th>
-                            <th width="5%">Tipe</th>
-                            <th width="5%" class="text-center">Ukuran</th>
-                            <th width="5%" class="text-center no-print">Aksi</th>
+                            <th width="30%">Nama File</th>
+                            <th width="40%">Keterangan</th>
+                            <th width="10%" class="text-center">Tipe</th>
+                            <th width="10%" class="text-center">Ukuran</th>
+                            <th width="10%" class="text-center no-print">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($media as $index => $item)
+                        @foreach($media as $item)
                             <tr>
-                                <td class="pl-2">
-                                    <i class="fas fa-{{ $item->extension === 'jpg' || $item->extension === 'jpeg' || $item->extension === 'png' || $item->extension === 'gif' ? 'image' : 'video' }}"></i>
-                                    {{ $item->name }}
+                                <td class="media-item">
+                                    <span class="print">
+                                        <a href="{{ $item->getUrl() }}" target="_blank">
+                                            <img src="{{ $item->getUrl() }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
+                                        </a>
+                                    </span>
                                 </td>
-                                <td> {{ $item->getCustomProperty('keterangan') ?? $item->name }}</td>
-                                <td>
-                                    <span class="badge badge-secondary">{{ strtoupper($item->extension) }}</span>
-                                </td>
-                                <td>{{ $item->human_readable_size }}</td>
-                                <td class="no-print">
-                                    <a href="{{ $item->getUrl() }}"
-                                    target="_blank"
-                                    class="btn btn-sm btn-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ $item->getUrl() }}"
-                                    download
-                                    class="btn btn-sm btn-success">
-                                        <i class="fas fa-download"></i>
+                                <td>{{ $item->getCustomProperty('keterangan') ?? '-' }}</td>
+                                <td class="text-center">{{ strtoupper($item->extension) }}</td>
+                                <td class="text-center">{{ $item->human_readable_size }}</td>
+                                <td class="no-print text-center">
+                                    <a href="{{ $item->getUrl() }}" target="_blank" class="btn btn-sm btn-link">
+                                        <i class="fas fa-download"></i> Unduh
                                     </a>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-
             </div>
         @endif
+
     @else
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i>
-            Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.
-        </div>
+        <p><em>Tidak ada dokumen atau media pendukung.</em></p>
     @endif
 </div>
-
-
-

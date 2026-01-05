@@ -56,13 +56,11 @@
             </div>
         </div>
         <!--End Activity Metrics Section -->
-        <!--End Activity Metrics Section -->
         <div class="card-body bg-light m-0 p-3">
             <div class="details container-fluid">
-                
                 <!-- Basic Information Card -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
+                <div class="card shadow-sm mb-4 border-top">
+                    <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
                         <h5 class="text-primary mb-0"><i class="fas fa-info-circle me-2"></i>{{ __('Basic Information') }}</h5>
                     </div>
                     <div class="card-body pt-0">
@@ -159,17 +157,17 @@
                     <!-- Location Information -->
                     <div class="col-md-6">
                         <div class="card shadow-sm mb-4 h-100">
-                            <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
-                                <h6 class="text-success mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ __('Location Information') }}</h6>
+                            <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
+                                <h5 class="text-success mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ __('Location Information') }}</h5>
                             </div>
-                            <div class="card-body pt-0">
+                            <div class="card-body pt-1">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-sm border-0 mb-0">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>{{ __('Kecamatan/Desa') }}</th>
                                                 <th>{{ __('Lokasi') }}</th>
-                                                <th class="text-end">{{ __('Coords') }}</th>
+                                                <th class="text-end">{{ __('Coordinate') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -208,10 +206,10 @@
                     <!-- Penulis Information -->
                     <div class="col-md-6">
                         <div class="card shadow-sm mb-4 h-100">
-                            <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
-                                <h6 class="text-info mb-0"><i class="fas fa-users me-2"></i>{{ __('Penulis Information') }}</h6>
+                            <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
+                                <h5 class="text-info mb-0"><i class="fas fa-users me-2"></i>{{ __('Penulis Laporan') }}</h5>
                             </div>
-                            <div class="card-body pt-0">
+                            <div class="card-body pt-1">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-sm border-0 mb-0">
                                         <thead class="table-light">
@@ -247,28 +245,39 @@
                 </div>
 
                 <!-- Program Hierarchy & Progress -->
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4 mt-4">
                     <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
-                        <h6 class="text-warning text-dark mb-0"><i class="fas fa-sitemap me-2"></i>{{ __('Program Hierarchy & Progress') }}</h6>
+                        <h5 class="text-warning text-dark mb-0"><i class="fas fa-sitemap me-2"></i>{{ __('Program Hierarchy & Progress') }}</h5>
                     </div>
                     <div class="card-body pt-0">
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Program Outcome Target') }}</small>
-                                    <h5 class="mb-0 text-primary">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-' }}</h5>
+                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Program Outcome Target') }}</h6>
+                                    <p class="mb-0 text-primary">
+                                        {{-- {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-' }} --}}
+                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-')) !!}
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Outcome Output Target') }}</small>
-                                    <h5 class="mb-0 text-info">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-' }}</h5>
+                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">
+                                        {{ __('Outcome Output Target') }}
+                                    </h6>
+                                    <p class="mb-0 text-info">
+                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-')) !!}
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <small class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Activity Target') }}</small>
-                                    <h5 class="mb-0 text-success">{{ $kegiatan->programOutcomeOutputActivity?->target ?? '-' }}</h5>
+                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">
+                                        {{ __('Output Activit Target') }}
+                                    </h6>
+                                    <p class="mb-0 text-success">
+                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->target ?? '-')) !!}
+                                    </p>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -280,9 +289,14 @@
                                     @endphp
                                     @if($goal)
                                         <div class="mt-2 d-flex flex-wrap gap-2">
-                                            @if($goal->deskripsi)<span class="badge bg-primary bg-opacity-10 text-primary border border-primary">{{ $goal->deskripsi }}</span>@endif
-                                            @if($goal->indikator)<span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $goal->indikator }}</span>@endif
-                                            @if($goal->target)<span class="badge bg-warning bg-opacity-10 text-dark border border-warning">{{ $goal->target }}</span>@endif
+                                            @if($goal->deskripsi)<div class="input-group mt-2">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">{{ $goal->deskripsi }}</span></div>
+                                            @endif
+                                            @if($goal->indikator)<div class="input-group mt-2">
+                                            <span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $goal->indikator }}</span></div>
+                                            @endif
+                                            @if($goal->target)
+                                            <div class="input-group mt-2"><span class="badge bg-warning bg-opacity-10 text-dark border border-warning">{{ $goal->target }}</span></div>@endif
                                         </div>
                                     @else
                                         <span class="text-muted fst-italic ms-2">{{ __('No goals defined') }}</span>
@@ -296,12 +310,14 @@
             </div>
         </div>
 
-        <div class="card-body">
-            <!-- deskripsi kegiatan -->
+        <div class="card-body border-top">
+            <!-- latar belakang kegiatan -->
             <div class="form-group row">
                 <div class="col-sm col-md col-lg self-center">
                     <label for="deskripsilatarbelakang" class="input-group">
-                        {{ __('cruds.kegiatan.description.latar_belakang') }}
+                       <h5>
+                           {{ __('cruds.kegiatan.description.latar_belakang') }}
+                        </h5>
                         <i class="fas fa-info-circle text-success" data-toggle="tooltip"
                             title="{{ __('cruds.kegiatan.description.latar_belakang_helper') }}"></i>
                     </label>
@@ -312,24 +328,52 @@
             <div class="form-group row">
                 <div class="col-sm col-md col-lg self-center">
                     <label for="deskripsitujuan" class="mb-0 input-group">
-                        {{ __('cruds.kegiatan.description.tujuan') }}
+                        <h5>
+                            {{ __('cruds.kegiatan.description.tujuan') }}
+                        </h5>
                         <i class="fas fa-info-circle text-success" data-toggle="tooltip"
                             title="{{ __('cruds.kegiatan.description.tujuan_helper') }}"></i>
                     </label>
                     {!! $kegiatan->deskripsitujuan ?? '' !!}
                 </div>
             </div>
-            <!-- siapa deskripsi keluaran kegiatan -->
+            <!-- deskripsi keluaran / Hasil Pertemuan kegiatan -->
             <div class="form-group row">
                 <div class="col-sm col-md col-lg self-center">
                     <label for="deskripsikeluaran" class="mb-0 input-group">
-                        {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
+                        <h5>
+                            {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
+
+                        </h5>
+                            
                         <i class="fas fa-info-circle text-success" data-toggle="tooltip"
                             title="{{ __('cruds.kegiatan.description.keluaran_helper') }}"></i>
                     </label>
                     {!! $kegiatan->deskripsikeluaran ?? '' !!}
                 </div>
             </div>
+
+            <!-- Details Kegiatan Section -->
+            <div class="card-body border-top">
+
+                @php
+                    $jenisId = $kegiatan->jeniskegiatan_id;
+                    $viewPath = App\Models\Export\BTOR::getViewPath($kegiatan->jeniskegiatan_id);
+                @endphp
+                <h5 class="text-primary mb-4"><i class="fas fa-clipboard-list me-2"></i>
+                    {{ __('Hasil Kegiatan') }}
+                </h5>  
+                @if(isset($viewPath))
+                    <div class="print-jenis-kegiatan">
+                        <h5>
+                            {{ $kegiatan->jenisKegiatan?->nama ?? 'Jenis Kegiatan' }}
+                        </h5>
+                        @include($viewPath, ['kegiatan' => $kegiatan])
+                    </div>
+                @endif
+            </div>
+
+
             <!-- Peserta yang terlibat -->
             <div class="form-group row mb-0">
                 <div class="col-sm col-md col-lg self-center">
@@ -341,7 +385,7 @@
                 </div>
             </div>
 
-            <!-- Jumlah Peserta Kegiatan -->
+            
             {{-- Tabel Jumlah Peserta Kegiatan --}}
             <div class="form-group row">
                 <div class="col-sm col-md col-lg self-center">
@@ -608,76 +652,6 @@
 
         </div>
 
-        <!-- Activity Type Specific Details Section -->
-        <div class="card-body border-top">
-            <h5 class="text-primary mb-4"><i class="fas fa-clipboard-list me-2"></i>{{ __('Detail Kegiatan Spesifik') }}</h5>
-            
-            @php
-                $jenisId = $kegiatan->jeniskegiatan_id;
-            @endphp
-
-            @if($kegiatan->assessment)
-                <div class="mb-3">
-                    <h6 class="text-secondary"><i class="fas fa-search me-1"></i> Assessment Details</h6>
-                    <div class="bg-light p-3 rounded">
-                        @if($kegiatan->assessment->assessmentdeskripsi)
-                            <p><strong>Deskripsi:</strong> {!! $kegiatan->assessment->assessmentdeskripsi !!}</p>
-                        @endif
-                        @if($kegiatan->assessment->assessmentmetode)
-                            <p><strong>Metode:</strong> {!! $kegiatan->assessment->assessmentmetode !!}</p>
-                        @endif
-                        @if($kegiatan->assessment->assessmenttemuan)
-                            <p><strong>Temuan:</strong> {!! $kegiatan->assessment->assessmenttemuan !!}</p>
-                        @endif
-                    </div>
-                </div>
-            @endif
-
-            @if($kegiatan->pelatihan)
-                <div class="mb-3">
-                    <h6 class="text-secondary"><i class="fas fa-chalkboard-teacher me-1"></i> Pelatihan Details</h6>
-                    <div class="bg-light p-3 rounded">
-                        @if($kegiatan->pelatihan->pelatihantopik)
-                            <p><strong>Topik:</strong> {!! $kegiatan->pelatihan->pelatihantopik !!}</p>
-                        @endif
-                        @if($kegiatan->pelatihan->pelatihanmateri)
-                            <p><strong>Materi:</strong> {!! $kegiatan->pelatihan->pelatihanmateri !!}</p>
-                        @endif
-                    </div>
-                </div>
-            @endif
-
-            @if($kegiatan->sosialisasi)
-                <div class="mb-3">
-                    <h6 class="text-secondary"><i class="fas fa-bullhorn me-1"></i> Sosialisasi Details</h6>
-                    <div class="bg-light p-3 rounded">
-                        @if($kegiatan->sosialisasi->sosialisasitopik)
-                            <p><strong>Topik:</strong> {!! $kegiatan->sosialisasi->sosialisasitopik !!}</p>
-                        @endif
-                    </div>
-                </div>
-            @endif
-
-            @if($kegiatan->monitoring)
-                <div class="mb-3">
-                    <h6 class="text-secondary"><i class="fas fa-chart-line me-1"></i> Monitoring Details</h6>
-                    <div class="bg-light p-3 rounded">
-                        @if($kegiatan->monitoring->monitoringdeskripsi)
-                            <p><strong>Deskripsi:</strong> {!! $kegiatan->monitoring->monitoringdeskripsi !!}</p>
-                        @endif
-                        @if($kegiatan->monitoring->monitoringtemuan)
-                            <p><strong>Temuan:</strong> {!! $kegiatan->monitoring->monitoringtemuan !!}</p>
-                        @endif
-                    </div>
-                </div>
-            @endif
-
-            @if(!$kegiatan->assessment && !$kegiatan->pelatihan && !$kegiatan->sosialisasi && !$kegiatan->monitoring && !$kegiatan->kampanye && !$kegiatan->pemetaan && !$kegiatan->kunjungan && !$kegiatan->konsultasi)
-                <div class="text-center py-3 text-muted">
-                    <i class="fas fa-info-circle me-1"></i> {{ __('Tidak ada detail kegiatan spesifik yang tersedia') }}
-                </div>
-            @endif
-        </div>
 
         <!-- Tantangan & Solusi Section -->
         <div class="card-body border-top">
@@ -685,12 +659,28 @@
             
             @php
                 $kendala = $kegiatan->assessment?->assessmentkendala 
-                        ?? $kegiatan->pelatihan?->pelatihanisu
+                        ?? $kegiatan->sosialisasi?->sosialisasikendala
+                        ?? $kegiatan->pelatihan?->pelatihankendala
+                        ?? $kegiatan->pembelanjaan?->pembelanjaankendala
+                        ?? $kegiatan->pengembangan?->pengembangankendala
+                        ?? $kegiatan->kampanye?->kampanyekendala
+                        ?? $kegiatan->pemetaan?->pemetaankendala
                         ?? $kegiatan->monitoring?->monitoringkendala
+                        ?? $kegiatan->kunjungan?->kunjungankendala
+                        ?? $kegiatan->konsultasi?->konsultasikendala
+                        ?? $kegiatan->lainnya?->lainnyakendala
                         ?? null;
                 $solusi = $kegiatan->assessment?->assessmentpembelajaran 
+                       ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
                        ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+                       ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
+                       ?? $kegiatan->pengembangan?->pengembanganpembelajaran
+                       ?? $kegiatan->kampanye?->kampanyepembelajaran
+                       ?? $kegiatan->pemetaan?->pemetaanpembelajaran
                        ?? $kegiatan->monitoring?->monitoringpembelajaran
+                       ?? $kegiatan->kunjungan?->kunjunganpembelajaran
+                       ?? $kegiatan->konsultasi?->konsultasipembelajaran
+                       ?? $kegiatan->lainnya?->lainnyapembelajaran
                        ?? null;
             @endphp
 
@@ -724,8 +714,16 @@
             
             @php
                 $isu = $kegiatan->assessment?->assessmentisu 
+                    ?? $kegiatan->sosialisasi?->sosialisasiisu
                     ?? $kegiatan->pelatihan?->pelatihanisu
+                    ?? $kegiatan->pembelanjaan?->pembelanjaanisu
+                    ?? $kegiatan->pengembangan?->pengembanganisu
+                    ?? $kegiatan->kampanye?->kampanyeisu
+                    ?? $kegiatan->pemetaan?->pemetaanisu
                     ?? $kegiatan->monitoring?->monitoringisu
+                    ?? $kegiatan->kunjungan?->kunjunganisu
+                    ?? $kegiatan->konsultasi?->konsultasiisu
+                    ?? $kegiatan->lainnya?->lainnyaisu
                     ?? null;
             @endphp
 

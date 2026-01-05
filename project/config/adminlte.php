@@ -10,7 +10,7 @@ return [
     'use_ico_only' => false,
     'use_full_favicon' => true,
     'google_fonts' => [
-        'allowed' => false,
+        'allowed' => true,
     ],
     'logo' => '<b>IDEP </b>Foundation',
     'logo_img' => '/vendor/adminlte/dist/img/idep.png',
@@ -112,14 +112,6 @@ return [
 
     'menu' => [
         // Navbar items:
-        // [
-        //     'text' => 'Dashboard',
-        //     'type' => 'user-panel',
-        //     'url' => 'home',
-        //     'class' => 'img-circle elevation-2',
-        //     // 'active' => ['home', 'content', 'content*', 'regex:@^content/[0-9]+$@']
-        // ],
-
         [
             'text' => 'User Profile',
             'route' => 'user.profile',

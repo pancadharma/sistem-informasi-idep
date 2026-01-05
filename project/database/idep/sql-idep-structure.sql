@@ -29,15 +29,16 @@ CREATE TABLE `activity_log` (
   `subject_id` bigint unsigned DEFAULT NULL,
   `causer_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `causer_id` bigint unsigned DEFAULT NULL,
-  `properties` json DEFAULT NULL,
+  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `batch_uuid` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `subject` (`subject_type`,`subject_id`),
   KEY `causer` (`causer_type`,`causer_id`),
-  KEY `activity_log_log_name_index` (`log_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=325 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `activity_log_log_name_index` (`log_name`),
+  CONSTRAINT `activity_log_chk_1` CHECK (json_valid(`properties`))
+) ENGINE=InnoDB AUTO_INCREMENT=646 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `audit_logs` */
 
@@ -54,7 +55,69 @@ CREATE TABLE `audit_logs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1751 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1279 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `benchmark` */
+
+DROP TABLE IF EXISTS `benchmark`;
+
+CREATE TABLE `benchmark` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `program_id` bigint unsigned NOT NULL,
+  `jeniskegiatan_id` bigint unsigned NOT NULL,
+  `kegiatan_id` bigint unsigned NOT NULL,
+  `desa_id` bigint unsigned NOT NULL,
+  `kecamatan_id` bigint unsigned NOT NULL,
+  `kabupaten_id` bigint unsigned NOT NULL,
+  `provinsi_id` bigint unsigned NOT NULL,
+  `tanggalimplementasi` date NOT NULL,
+  `handler` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `usercompiler_id` bigint unsigned NOT NULL,
+  `score` decimal(5,2) NOT NULL,
+  `catatanevaluasi` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `area` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `benchmark_program_id_foreign` (`program_id`),
+  KEY `benchmark_jeniskegiatan_id_foreign` (`jeniskegiatan_id`),
+  KEY `benchmark_kegiatan_id_foreign` (`kegiatan_id`),
+  KEY `benchmark_desa_id_foreign` (`desa_id`),
+  KEY `benchmark_kecamatan_id_foreign` (`kecamatan_id`),
+  KEY `benchmark_kabupaten_id_foreign` (`kabupaten_id`),
+  KEY `benchmark_provinsi_id_foreign` (`provinsi_id`),
+  KEY `benchmark_usercompiler_id_foreign` (`usercompiler_id`),
+  CONSTRAINT `benchmark_desa_id_foreign` FOREIGN KEY (`desa_id`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_jeniskegiatan_id_foreign` FOREIGN KEY (`jeniskegiatan_id`) REFERENCES `mjeniskegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_kabupaten_id_foreign` FOREIGN KEY (`kabupaten_id`) REFERENCES `kabupaten` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_kecamatan_id_foreign` FOREIGN KEY (`kecamatan_id`) REFERENCES `kecamatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_provinsi_id_foreign` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `benchmark_usercompiler_id_foreign` FOREIGN KEY (`usercompiler_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `cache` */
+
+DROP TABLE IF EXISTS `cache`;
+
+CREATE TABLE `cache` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `cache_locks` */
+
+DROP TABLE IF EXISTS `cache_locks`;
+
+CREATE TABLE `cache_locks` (
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expiration` int NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `country` */
 
@@ -91,7 +154,7 @@ CREATE TABLE `dusun` (
   PRIMARY KEY (`id`),
   KEY `dusun_desa_id_foreign` (`desa_id`),
   CONSTRAINT `dusun_desa_id_foreign` FOREIGN KEY (`desa_id`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `failed_jobs` */
 
@@ -108,6 +171,46 @@ CREATE TABLE `failed_jobs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Table structure for table `feedback` */
+
+DROP TABLE IF EXISTS `feedback`;
+
+CREATE TABLE `feedback` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `program` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_registrasi` date NOT NULL,
+  `field_office` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `umur` int DEFAULT NULL,
+  `penerima` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sort_of_complaint` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `age_group` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `position` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_selesai` date DEFAULT NULL,
+  `sex` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kontak_penerima` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `handler_id` bigint unsigned DEFAULT NULL,
+  `phone_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `channels` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `position_handler` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `handler_description` text COLLATE utf8mb4_unicode_ci,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `other_channel` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kontak_handler` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori_komplain` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status_complaint` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_hidden` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `program_id` bigint unsigned DEFAULT NULL,
+  `nama_pelapor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `feedback_program_id_foreign` (`program_id`),
+  KEY `feedback_handler_id_foreign` (`handler_id`),
+  CONSTRAINT `feedback_handler_id_foreign` FOREIGN KEY (`handler_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `feedback_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `kabupaten` */
 
@@ -130,7 +233,7 @@ CREATE TABLE `kabupaten` (
   PRIMARY KEY (`id`),
   KEY `kabupaten_provinsi_id_foreign` (`provinsi_id`),
   CONSTRAINT `kabupaten_provinsi_id_foreign` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9514 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9509 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `kecamatan` */
 
@@ -147,7 +250,7 @@ CREATE TABLE `kecamatan` (
   PRIMARY KEY (`id`),
   KEY `kecamatan_kabupaten_id_foreign` (`kabupaten_id`),
   CONSTRAINT `kecamatan_kabupaten_id_foreign` FOREIGN KEY (`kabupaten_id`) REFERENCES `kabupaten` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=950837 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=950833 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `kelurahan` */
 
@@ -164,7 +267,7 @@ CREATE TABLE `kelurahan` (
   PRIMARY KEY (`id`),
   KEY `kelurahan_kecamatan_id_foreign` (`kecamatan_id`),
   CONSTRAINT `kelurahan_kecamatan_id_foreign` FOREIGN KEY (`kecamatan_id`) REFERENCES `kecamatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9508322006 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9508322005 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `master_jenis_kelompok` */
 
@@ -179,7 +282,7 @@ CREATE TABLE `master_jenis_kelompok` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `master_jenis_kelompok_nama_unique` (`nama`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `media` */
 
@@ -197,18 +300,22 @@ CREATE TABLE `media` (
   `disk` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `conversions_disk` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `size` bigint unsigned NOT NULL,
-  `manipulations` json NOT NULL,
-  `custom_properties` json NOT NULL,
-  `generated_conversions` json NOT NULL,
-  `responsive_images` json NOT NULL,
+  `manipulations` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `custom_properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `generated_conversions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `responsive_images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `order_column` int unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `media_uuid_unique` (`uuid`),
   KEY `media_model_type_model_id_index` (`model_type`,`model_id`),
-  KEY `media_order_column_index` (`order_column`)
-) ENGINE=InnoDB AUTO_INCREMENT=381 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `media_order_column_index` (`order_column`),
+  CONSTRAINT `media_chk_1` CHECK (json_valid(`manipulations`)),
+  CONSTRAINT `media_chk_2` CHECK (json_valid(`custom_properties`)),
+  CONSTRAINT `media_chk_3` CHECK (json_valid(`generated_conversions`)),
+  CONSTRAINT `media_chk_4` CHECK (json_valid(`responsive_images`))
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `migrations` */
 
@@ -219,7 +326,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=236 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mjabatan` */
 
@@ -232,7 +339,7 @@ CREATE TABLE `mjabatan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mjenisbantuan` */
 
@@ -245,7 +352,7 @@ CREATE TABLE `mjenisbantuan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mjeniskegiatan` */
 
@@ -271,7 +378,7 @@ CREATE TABLE `mkaitansdg` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mkategorilokasikegiatan` */
 
@@ -297,7 +404,7 @@ CREATE TABLE `mkelompokmarjinal` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mkomponenmodel` */
 
@@ -309,7 +416,7 @@ CREATE TABLE `mkomponenmodel` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `model_has_permissions` */
 
@@ -350,7 +457,7 @@ CREATE TABLE `mpartner` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mpendonor` */
 
@@ -369,7 +476,7 @@ CREATE TABLE `mpendonor` (
   PRIMARY KEY (`id`),
   KEY `mpendonor_mpendonorkategori_id_foreign` (`mpendonorkategori_id`),
   CONSTRAINT `mpendonor_mpendonorkategori_id_foreign` FOREIGN KEY (`mpendonorkategori_id`) REFERENCES `mpendonorkategori` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mpendonorkategori` */
 
@@ -382,7 +489,7 @@ CREATE TABLE `mpendonorkategori` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `mperan` */
 
@@ -395,7 +502,7 @@ CREATE TABLE `mperan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `msatuan` */
 
@@ -409,7 +516,7 @@ CREATE TABLE `msatuan` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `msektor` */
 
@@ -435,7 +542,7 @@ CREATE TABLE `mtargetreinstra` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=551 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `password_reset_tokens` */
 
@@ -474,7 +581,7 @@ CREATE TABLE `permission_role` (
   KEY `permission_role_role_id_foreign` (`role_id`),
   CONSTRAINT `permission_role_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
   CONSTRAINT `permission_role_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=194 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=428 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `permissions` */
 
@@ -490,7 +597,7 @@ CREATE TABLE `permissions` (
   `guard_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT 'web',
   PRIMARY KEY (`id`),
   UNIQUE KEY `permissions_nama_guard_name_unique` (`nama`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `personal_access_tokens` */
 
@@ -532,7 +639,7 @@ CREATE TABLE `provinsi` (
   PRIMARY KEY (`id`),
   KEY `provinsi_negara_id_foreign` (`negara_id`),
   CONSTRAINT `provinsi_negara_id_foreign` FOREIGN KEY (`negara_id`) REFERENCES `country` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `role_user` */
 
@@ -549,7 +656,7 @@ CREATE TABLE `role_user` (
   KEY `role_user_user_id_foreign` (`user_id`),
   CONSTRAINT `role_user_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
   CONSTRAINT `role_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `roles` */
 
@@ -565,7 +672,7 @@ CREATE TABLE `roles` (
   `guard_name` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT 'web',
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_nama_guard_name_unique` (`nama`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `sessions` */
 
@@ -633,7 +740,7 @@ CREATE TABLE `trkegiatan` (
   CONSTRAINT `trkegiatan_jeniskegiatan_id_foreign` FOREIGN KEY (`jeniskegiatan_id`) REFERENCES `mjeniskegiatan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatan_programoutcomeoutputactivity_id_foreign` FOREIGN KEY (`programoutcomeoutputactivity_id`) REFERENCES `trprogramoutcomeoutputactivity` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatan_lokasi` */
 
@@ -653,7 +760,7 @@ CREATE TABLE `trkegiatan_lokasi` (
   KEY `trkegiatan_lokasi_desa_id_foreign` (`desa_id`),
   CONSTRAINT `trkegiatan_lokasi_desa_id_foreign` FOREIGN KEY (`desa_id`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatan_lokasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatan_mitra` */
 
@@ -670,7 +777,7 @@ CREATE TABLE `trkegiatan_mitra` (
   KEY `trkegiatan_mitra_mitra_id_foreign` (`mitra_id`),
   CONSTRAINT `trkegiatan_mitra_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatan_mitra_mitra_id_foreign` FOREIGN KEY (`mitra_id`) REFERENCES `mpartner` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatan_sektor` */
 
@@ -687,7 +794,7 @@ CREATE TABLE `trkegiatan_sektor` (
   KEY `trkegiatan_sektor_sektor_id_foreign` (`sektor_id`),
   CONSTRAINT `trkegiatan_sektor_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatan_sektor_sektor_id_foreign` FOREIGN KEY (`sektor_id`) REFERENCES `mtargetreinstra` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanassessment` */
 
@@ -708,7 +815,7 @@ CREATE TABLE `trkegiatanassessment` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanassessment_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanassessment_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatankampanye` */
 
@@ -732,7 +839,7 @@ CREATE TABLE `trkegiatankampanye` (
   PRIMARY KEY (`id`),
   KEY `trkegiatankampanye_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatankampanye_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatankonsultasi` */
 
@@ -755,7 +862,7 @@ CREATE TABLE `trkegiatankonsultasi` (
   PRIMARY KEY (`id`),
   KEY `trkegiatankonsultasi_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatankonsultasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatankunjungan` */
 
@@ -778,7 +885,7 @@ CREATE TABLE `trkegiatankunjungan` (
   PRIMARY KEY (`id`),
   KEY `trkegiatankunjungan_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatankunjungan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanlainnya` */
 
@@ -801,7 +908,7 @@ CREATE TABLE `trkegiatanlainnya` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanlainnya_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanlainnya_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanmonitoring` */
 
@@ -825,7 +932,7 @@ CREATE TABLE `trkegiatanmonitoring` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanmonitoring_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanmonitoring_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanpelatihan` */
 
@@ -840,6 +947,7 @@ CREATE TABLE `trkegiatanpelatihan` (
   `pelatihandistribusi_ket` longtext COLLATE utf8mb4_unicode_ci,
   `pelatihanrencana` longtext COLLATE utf8mb4_unicode_ci,
   `pelatihanunggahan` tinyint(1) NOT NULL DEFAULT '0',
+  `pelatihankendala` longtext COLLATE utf8mb4_unicode_ci,
   `pelatihanisu` longtext COLLATE utf8mb4_unicode_ci,
   `pelatihanpembelajaran` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -847,7 +955,7 @@ CREATE TABLE `trkegiatanpelatihan` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanpelatihan_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanpelatihan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanpembelanjaan` */
 
@@ -872,7 +980,7 @@ CREATE TABLE `trkegiatanpembelanjaan` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanpembelanjaan_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanpembelanjaan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanpemetaan` */
 
@@ -886,6 +994,7 @@ CREATE TABLE `trkegiatanpemetaan` (
   `pemetaanunit` longtext COLLATE utf8mb4_unicode_ci,
   `pemetaanyangterlibat` longtext COLLATE utf8mb4_unicode_ci,
   `pemetaanrencana` longtext COLLATE utf8mb4_unicode_ci,
+  `pemetaankendala` longtext COLLATE utf8mb4_unicode_ci,
   `pemetaanisu` longtext COLLATE utf8mb4_unicode_ci,
   `pemetaanpembelajaran` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -893,7 +1002,7 @@ CREATE TABLE `trkegiatanpemetaan` (
   PRIMARY KEY (`id`),
   KEY `trkegiatanpemetaan_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatanpemetaan_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatanpengembangan` */
 
@@ -930,12 +1039,12 @@ CREATE TABLE `trkegiatanpenulis` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `trkegiatanpenulis_kegiatan_id_foreign` (`kegiatan_id`),
-  KEY `trkegiatanpenulis_peran_id_foreign` (`peran_id`),
   KEY `trkegiatanpenulis_user_id_foreign` (`penulis_id`),
+  KEY `trkegiatanpenulis_peran_id_foreign` (`peran_id`),
   CONSTRAINT `trkegiatanpenulis_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatanpenulis_peran_id_foreign` FOREIGN KEY (`peran_id`) REFERENCES `mperan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trkegiatanpenulis_user_id_foreign` FOREIGN KEY (`penulis_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trkegiatansosialisasi` */
 
@@ -956,7 +1065,7 @@ CREATE TABLE `trkegiatansosialisasi` (
   PRIMARY KEY (`id`),
   KEY `trkegiatansosialisasi_kegiatan_id_foreign` (`kegiatan_id`),
   CONSTRAINT `trkegiatansosialisasi_kegiatan_id_foreign` FOREIGN KEY (`kegiatan_id`) REFERENCES `trkegiatan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_komponen_model` */
 
@@ -978,7 +1087,7 @@ CREATE TABLE `trmeals_komponen_model` (
   CONSTRAINT `trmeals_komponen_model_komponenmodel_id_foreign` FOREIGN KEY (`komponenmodel_id`) REFERENCES `mkomponenmodel` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_komponen_model_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_komponen_model_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_komponen_model_lokasi` */
 
@@ -1014,7 +1123,7 @@ CREATE TABLE `trmeals_komponen_model_lokasi` (
   CONSTRAINT `trmeals_komponen_model_lokasi_mealskomponenmodel_id_foreign` FOREIGN KEY (`mealskomponenmodel_id`) REFERENCES `trmeals_komponen_model` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_komponen_model_lokasi_provinsi_id_foreign` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_komponen_model_lokasi_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `msatuan` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_komponen_model_targetreinstra` */
 
@@ -1032,7 +1141,7 @@ CREATE TABLE `trmeals_komponen_model_targetreinstra` (
   KEY `trmeals_komponen_model_targetreinstra_targetreinstra_id_foreign` (`targetreinstra_id`),
   CONSTRAINT `mealskomodel_fk` FOREIGN KEY (`mealskomponenmodel_id`) REFERENCES `trmeals_komponen_model` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_komponen_model_targetreinstra_targetreinstra_id_foreign` FOREIGN KEY (`targetreinstra_id`) REFERENCES `mtargetreinstra` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_penerima_manfaat` */
 
@@ -1063,7 +1172,7 @@ CREATE TABLE `trmeals_penerima_manfaat` (
   CONSTRAINT `trmeals_penerima_manfaat_dusun_id_foreign` FOREIGN KEY (`dusun_id`) REFERENCES `dusun` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_penerima_manfaat_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_penerima_manfaat_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_penerima_manfaat_activity` */
 
@@ -1081,7 +1190,7 @@ CREATE TABLE `trmeals_penerima_manfaat_activity` (
   KEY `trmeals_pm_activity_id_fk` (`programoutcomeoutputactivity_id`),
   CONSTRAINT `trmeals_pm_activity_id_fk` FOREIGN KEY (`programoutcomeoutputactivity_id`) REFERENCES `trprogramoutcomeoutputactivity` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_pm_fk` FOREIGN KEY (`trmeals_penerima_manfaat_id`) REFERENCES `trmeals_penerima_manfaat` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_penerima_manfaat_jenis_kelompok` */
 
@@ -1099,7 +1208,7 @@ CREATE TABLE `trmeals_penerima_manfaat_jenis_kelompok` (
   KEY `trmeasl_mjk` (`jenis_kelompok_id`),
   CONSTRAINT `trmeals_pm_mjk_fk` FOREIGN KEY (`trmeals_penerima_manfaat_id`) REFERENCES `trmeals_penerima_manfaat` (`id`),
   CONSTRAINT `trmeasl_mjk` FOREIGN KEY (`jenis_kelompok_id`) REFERENCES `master_jenis_kelompok` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_penerima_manfaat_kelompok_marjinal` */
 
@@ -1117,7 +1226,7 @@ CREATE TABLE `trmeals_penerima_manfaat_kelompok_marjinal` (
   KEY `trmeals_km_pm_fk` (`kelompok_marjinal_id`),
   CONSTRAINT `trmeals_km_pm_fk` FOREIGN KEY (`kelompok_marjinal_id`) REFERENCES `mkelompokmarjinal` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmeals_pm_km_fk` FOREIGN KEY (`trmeals_penerima_manfaat_id`) REFERENCES `trmeals_penerima_manfaat` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_target_progress` */
 
@@ -1132,7 +1241,7 @@ CREATE TABLE `trmeals_target_progress` (
   PRIMARY KEY (`id`),
   KEY `trmeals_target_progress_program_id_foreign` (`program_id`),
   CONSTRAINT `trmeals_target_progress_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmeals_target_progress_detail` */
 
@@ -1159,7 +1268,7 @@ CREATE TABLE `trmeals_target_progress_detail` (
   KEY `trmeals_target_progress_detail_id_meals_target_progress_foreign` (`id_meals_target_progress`),
   KEY `targetable_index` (`targetable_id`,`targetable_type`),
   CONSTRAINT `trmeals_target_progress_detail_id_meals_target_progress_foreign` FOREIGN KEY (`id_meals_target_progress`) REFERENCES `trmeals_target_progress` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmealsfrm` */
 
@@ -1221,7 +1330,7 @@ CREATE TABLE `trmealspreposttest` (
   KEY `trmealspreposttest_user_id_foreign` (`user_id`),
   CONSTRAINT `trmealspreposttest_programoutcomeoutputactivity_id_foreign` FOREIGN KEY (`programoutcomeoutputactivity_id`) REFERENCES `trprogramoutcomeoutputactivity` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmealspreposttest_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trmealspreposttestpeserta` */
 
@@ -1248,7 +1357,7 @@ CREATE TABLE `trmealspreposttestpeserta` (
   KEY `trmealspreposttestpeserta_dusun_id_foreign` (`dusun_id`),
   CONSTRAINT `trmealspreposttestpeserta_dusun_id_foreign` FOREIGN KEY (`dusun_id`) REFERENCES `dusun` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trmealspreposttestpeserta_preposttest_id_foreign` FOREIGN KEY (`preposttest_id`) REFERENCES `trmealspreposttest` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogram` */
 
@@ -1276,7 +1385,7 @@ CREATE TABLE `trprogram` (
   PRIMARY KEY (`id`),
   KEY `trprogram_user_id_foreign` (`user_id`),
   CONSTRAINT `trprogram_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramgoal` */
 
@@ -1293,7 +1402,7 @@ CREATE TABLE `trprogramgoal` (
   PRIMARY KEY (`id`),
   KEY `trprogramgoal_program_id_foreign` (`program_id`),
   CONSTRAINT `trprogramgoal_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramkaitansdg` */
 
@@ -1310,7 +1419,7 @@ CREATE TABLE `trprogramkaitansdg` (
   KEY `trprogramkaitansdg_kaitansdg_id_foreign` (`kaitansdg_id`),
   CONSTRAINT `trprogramkaitansdg_kaitansdg_id_foreign` FOREIGN KEY (`kaitansdg_id`) REFERENCES `mkaitansdg` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogramkaitansdg_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramkelompokmarjinal` */
 
@@ -1327,7 +1436,7 @@ CREATE TABLE `trprogramkelompokmarjinal` (
   KEY `trprogramkelompokmarjinals_kelompokmarjinal_id_foreign` (`kelompokmarjinal_id`),
   CONSTRAINT `trprogramkelompokmarjinals_kelompokmarjinal_id_foreign` FOREIGN KEY (`kelompokmarjinal_id`) REFERENCES `mkelompokmarjinal` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogramkelompokmarjinals_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramlokasi` */
 
@@ -1340,11 +1449,11 @@ CREATE TABLE `trprogramlokasi` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `trprogramlokasis_program_id_foreign` (`program_id`),
-  KEY `trprogramlokasis_provinsi_id_foreign` (`provinsi_id`),
-  CONSTRAINT `trprogramlokasis_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `trprogramlokasis_provinsi_id_foreign` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `trprogramlokasi_program_id_foreign` (`program_id`),
+  KEY `trprogramlokasi_provinsi_id_foreign` (`provinsi_id`),
+  CONSTRAINT `trprogramlokasi_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `trprogramlokasi_provinsi_id_foreign` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramobjektif` */
 
@@ -1361,7 +1470,7 @@ CREATE TABLE `trprogramobjektif` (
   PRIMARY KEY (`id`),
   KEY `trprogramobjektif_program_id_foreign` (`program_id`),
   CONSTRAINT `trprogramobjektif_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramoutcome` */
 
@@ -1370,15 +1479,15 @@ DROP TABLE IF EXISTS `trprogramoutcome`;
 CREATE TABLE `trprogramoutcome` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `program_id` bigint unsigned NOT NULL,
-  `deskripsi` longtext COLLATE utf8mb4_unicode_ci,
   `indikator` longtext COLLATE utf8mb4_unicode_ci,
   `target` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deskripsi` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `trprogramoutcome_program_id_foreign` (`program_id`),
   CONSTRAINT `trprogramoutcome_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramoutcomeoutput` */
 
@@ -1387,15 +1496,15 @@ DROP TABLE IF EXISTS `trprogramoutcomeoutput`;
 CREATE TABLE `trprogramoutcomeoutput` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `programoutcome_id` bigint unsigned NOT NULL,
-  `deskripsi` longtext COLLATE utf8mb4_unicode_ci,
   `indikator` longtext COLLATE utf8mb4_unicode_ci,
   `target` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deskripsi` longtext COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `trprogramoutcomeoutput_programoutcome_id_foreign` (`programoutcome_id`),
   CONSTRAINT `trprogramoutcomeoutput_programoutcome_id_foreign` FOREIGN KEY (`programoutcome_id`) REFERENCES `trprogramoutcome` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramoutcomeoutputactivity` */
 
@@ -1414,7 +1523,7 @@ CREATE TABLE `trprogramoutcomeoutputactivity` (
   PRIMARY KEY (`id`),
   KEY `trprogramoutcomeoutputactivity_programoutcomeoutput_id_foreign` (`programoutcomeoutput_id`),
   CONSTRAINT `trprogramoutcomeoutputactivity_programoutcomeoutput_id_foreign` FOREIGN KEY (`programoutcomeoutput_id`) REFERENCES `trprogramoutcomeoutput` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogrampartner` */
 
@@ -1433,7 +1542,7 @@ CREATE TABLE `trprogrampartner` (
   KEY `trprogrampartner_partner_id_foreign` (`partner_id`),
   CONSTRAINT `trprogrampartner_partner_id_foreign` FOREIGN KEY (`partner_id`) REFERENCES `mpartner` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogrampartner_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogrampendonor` */
 
@@ -1451,7 +1560,7 @@ CREATE TABLE `trprogrampendonor` (
   KEY `trprogrampendonor_pendonor_id_foreign` (`pendonor_id`),
   CONSTRAINT `trprogrampendonor_pendonor_id_foreign` FOREIGN KEY (`pendonor_id`) REFERENCES `mpendonor` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogrampendonor_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramreportschedule` */
 
@@ -1467,7 +1576,7 @@ CREATE TABLE `trprogramreportschedule` (
   PRIMARY KEY (`id`),
   KEY `trprogramreportschedule_program_id_foreign` (`program_id`),
   CONSTRAINT `trprogramreportschedule_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramtargetreinstra` */
 
@@ -1484,7 +1593,7 @@ CREATE TABLE `trprogramtargetreinstra` (
   KEY `trprogramtargetreinstra_targetreinstra_id_foreign` (`targetreinstra_id`),
   CONSTRAINT `trprogramtargetreinstra_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogramtargetreinstra_targetreinstra_id_foreign` FOREIGN KEY (`targetreinstra_id`) REFERENCES `mtargetreinstra` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `trprogramuser` */
 
@@ -1504,7 +1613,7 @@ CREATE TABLE `trprogramuser` (
   CONSTRAINT `trprogramuser_peran_id_foreign` FOREIGN KEY (`peran_id`) REFERENCES `mperan` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogramuser_program_id_foreign` FOREIGN KEY (`program_id`) REFERENCES `trprogram` (`id`) ON DELETE CASCADE,
   CONSTRAINT `trprogramuser_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Table structure for table `users` */
 
@@ -1517,7 +1626,7 @@ CREATE TABLE `users` (
   `jabatan_id` bigint unsigned DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `aktif` tinyint(1) DEFAULT '0',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1530,18 +1639,6 @@ CREATE TABLE `users` (
   KEY `users_jabatan_id_foreign` (`jabatan_id`),
   CONSTRAINT `users_jabatan_id_foreign` FOREIGN KEY (`jabatan_id`) REFERENCES `mjabatan` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Table structure for table `wilayah` */
-
-DROP TABLE IF EXISTS `wilayah`;
-
-CREATE TABLE `wilayah` (
-  `kode` varchar(10) NOT NULL,
-  `nama` varchar(255) DEFAULT NULL,
-  `provinsi` varchar(255) DEFAULT NULL,
-  `geom` multipolygon /*!80003 SRID 4326 */ DEFAULT NULL,
-  PRIMARY KEY (`kode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -575,14 +575,12 @@
                         label: '{{ __('cruds.kegiatan.hasil.assessmentkendala') }}',
                         name: 'assessmentkendala',
                         type: 'textarea',
-                        placeholder: '{{ __('cruds.kegiatan.hasil.assessmentkendala') }}'
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_assessmentisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.assessmentisu') }}',
                         name: 'assessmentisu',
                         type: 'textarea',
-                        placeholder: '{{ __('cruds.kegiatan.hasil.assessmentisu') }}'
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_assessmentpembelajaran') }}',
@@ -620,7 +618,7 @@
                         i: '{{ __('cruds.kegiatan.hasil.i_sosialisasikendala') }}',
                         label: '{{ __('cruds.kegiatan.hasil.sosialisasikendala') }}',
                         name: 'sosialisasikendala',
-                        type: 'textarea'
+                        type: 'textarea',
                     },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_sosialisasiisu') }}',
@@ -672,6 +670,12 @@
                         type: 'radio'
                     },
                     {
+                        i: '{{ __('cruds.kegiatan.hasil.i_pelatihankendala') }}',
+                        label: '{{ __('cruds.kegiatan.hasil.pelatihankendala') }}',
+                        name: 'pelatihankendala',
+                        type: 'textarea',
+                    },
+                    {
                         i: '{{ __('cruds.kegiatan.hasil.i_pelatihanisu') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pelatihanisu') }}',
                         name: 'pelatihanisu',
@@ -702,18 +706,18 @@
                         name: 'pembelanjaanselesai',
                         type: 'datetime-local'
                     },
-                    {
-                        i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
-                        label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
-                        name: 'pembelanjaandistribusimulai',
-                        type: 'datetime-local'
-                    },
-                    {
-                        i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
-                        label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
-                        name: 'pembelanjaandistribusiselesai',
-                        type: 'datetime-local'
-                    },
+                    // {
+                    //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
+                    //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
+                    //     name: 'pembelanjaandistribusimulai',
+                    //     type: 'datetime-local'
+                    // },
+                    // {
+                    //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
+                    //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
+                    //     name: 'pembelanjaandistribusiselesai',
+                    //     type: 'datetime-local'
+                    // },
                     {
                         i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaanterdistribusi') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pembelanjaanterdistribusi') }}',
@@ -883,6 +887,12 @@
                         i: '{{ __('cruds.kegiatan.hasil.i_pemetaanyangterlibat') }}',
                         label: '{{ __('cruds.kegiatan.hasil.pemetaanyangterlibat') }}',
                         name: 'pemetaanyangterlibat',
+                        type: 'textarea'
+                    },
+                    {
+                        i: '{{ __('cruds.kegiatan.hasil.i_pemetaankendala') }}',
+                        label: '{{ __('cruds.kegiatan.hasil.pemetaankendala') }}',
+                        name: 'pemetaankendala',
                         type: 'textarea'
                     },
                     {

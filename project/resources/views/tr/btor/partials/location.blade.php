@@ -1,15 +1,17 @@
+{{-- resources/views/tr/btor/partials/location.blade.php --}}
 <div class="location-section">
     @if($kegiatan->lokasi?->count() > 0)
-        <table class="table-bordered" style="font-size: 8pt; width: 100%;">
+        {{-- Use table-bordered to inherit the green header style from print.blade.php --}}
+        <table class="table-bordered" style="font-size: 9pt; width: 100%; margin-top: 10px;">
             <thead>
                 <tr>
-                    <th style="width: 5%;">No</th>
-                    <th style="width: 18%;">{{ __('btor.lokasi') }}</th>
+                    <th style="width: 5%;" class="text-center">No</th>
+                    <th style="width: 20%;">{{ __('btor.lokasi') }}</th>
                     <th style="width: 15%;">{{ __('btor.desa') }}</th>
                     <th style="width: 15%;">{{ __('btor.kecamatan') }}</th>
-                    <th style="width: 17%;">{{ __('btor.kabupaten') }}</th>
+                    <th style="width: 15%;">{{ __('btor.kabupaten') }}</th>
                     <th style="width: 15%;">{{ __('btor.provinsi') }}</th>
-                    <th style="width: 15%;">{{ __('btor.koordinat') }}</th>
+                    <th style="width: 15%;" class="text-center">{{ __('btor.koordinat') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,66 +19,40 @@
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
                         <td>
+                            {{-- Google Maps Link Logic --}}
                             @if ($lokasi->lat && $lokasi->long)
-                                <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
-                                    {{ ucwords(strtoupper($lokasi->lokasi ?? 'Maps')) }}
+                                <a href="https://www.google.com/maps/search/?api=1&query={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank" style="text-decoration: none; color: inherit;">
+                                    {{ $lokasi->lokasi ?? 'Lokasi ' . ($index + 1) }} 
+                                    <span class="no-print" style="font-size: 0.8em; color: #007bff;"><i class="fas fa-map-marker-alt"></i></span>
                                 </a>
                             @else
-                                {{ $lokasi->lokasi ?? '—' }}
+                                {{ $lokasi->lokasi ?? '-' }}
                             @endif
                         </td>
-                        
                         <td>{{ $lokasi->desa?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->nama ?? '-' }}</td>
                         <td>{{ $lokasi->desa?->kecamatan?->kabupaten?->provinsi?->nama ?? '-' }}</td>
                         <td class="text-center">
                             @if($lokasi->lat && $lokasi->long)
-                                {{ number_format($lokasi->lat, 8) }},{{ number_format($lokasi->long, 8) }}
+                                <span style="font-size: 8pt;">
+                                    {{ number_format($lokasi->lat, 6) }},<br>
+                                    {{ number_format($lokasi->long, 6) }}
+                                </span>
                             @else
                                 -
                             @endif
-{{-- 
-                            @if ($lokasi->lat && $lokasi->long)
-                                <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank">
-                                    {{ ucwords(strtolower($lokasi->lokasi ?? 'Maps')) }}
-                                </a>
-                            @else
-                                {{ $lokasi->lokasi ?? '—' }}
-                            @endif --}}
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        {{-- Summary --}}
-        <div style="margin-top: 10px; padding: 8px; background-color: #f0f0f0; border: 1px solid #ccc; font-size: 9pt;">
-            <strong>Location Summary:</strong>
-            @php
-                $provinces = $kegiatan->lokasi
-                    ->pluck('desa.kecamatan.kabupaten.provinsi.nama')
-                    ->filter()
-                    ->unique()
-                    ->values();
-
-                $districts = $kegiatan->lokasi
-                    ->pluck('desa.kecamatan.kabupaten.nama')
-                    ->filter()
-                    ->unique()
-                    ->values();
-            @endphp
-
-            {{ $kegiatan->lokasi->count() }} location(s) in
-            {{ $districts->count() }} district(s) across
-            {{ $provinces->count() }} province(s)
-
-            @if($provinces->count() > 0)
-                <br>
-                <small>Provinces: {{ $provinces->implode(', ') }}</small>
-            @endif
-        </div>
+        {{-- Optional Summary (Hidden in formal print if desired, currently visible) --}}
+        {{-- <div class="no-print" style="margin-top: 10px; padding: 8px; background-color: #f0f0f0; border: 1px solid #ccc; font-size: 9pt;">
+             ... summary logic ...
+        </div> --}}
     @else
-        <p><em>No location data available for this activity.</em></p>
+        <p><em>Tidak ada data lokasi.</em></p>
     @endif
 </div>

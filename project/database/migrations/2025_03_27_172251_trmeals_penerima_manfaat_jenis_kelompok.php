@@ -11,26 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //jenis_kelompok -> master_jenis_kelompok
-
-        // check if the table is already exists and ask the user confirmation
-        if (Schema::hasTable('trmeals_penerima_manfaat_jenis_kelompok')) {
-            echo "Table 'trmeals_penerima_manfaat_jenis_kelompok' already exists. Do you want to drop it and create a new one? \n type 'yes' to proceed : ";
-
-            $confirmation = strtolower(trim(fgets(STDIN)));
-            if ($confirmation !== 'yes') {
-                return;
-            }
+        if (!Schema::hasTable('trmeals_penerima_manfaat_jenis_kelompok')) {
+            Schema::create('trmeals_penerima_manfaat_jenis_kelompok', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('trmeals_penerima_manfaat_id')->constrained('trmeals_penerima_manfaat')->index('trmeals_pm_mjk_fk');
+                $table->foreignId('jenis_kelompok_id')->constrained('master_jenis_kelompok')->onDelete('cascade')->index('trmeasl_mjk');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        } else {
+            Schema::table('trmeals_penerima_manfaat_jenis_kelompok', function (Blueprint $table) {
+                if (!Schema::hasColumn('trmeals_penerima_manfaat_jenis_kelompok', 'trmeals_penerima_manfaat_id')) {
+                    $table->foreignId('trmeals_penerima_manfaat_id')->constrained('trmeals_penerima_manfaat')->index('trmeals_pm_mjk_fk');
+                }
+                if (!Schema::hasColumn('trmeals_penerima_manfaat_jenis_kelompok', 'jenis_kelompok_id')) {
+                    $table->foreignId('jenis_kelompok_id')->constrained('master_jenis_kelompok')->onDelete('cascade')->index('trmeasl_mjk');
+                }
+                if (!Schema::hasColumn('trmeals_penerima_manfaat_jenis_kelompok', 'deleted_at')) {
+                    $table->softDeletes();
+                }
+            });
         }
-        Schema::dropIfExists('trmeals_penerima_manfaat_jenis_kelompok');
-
-        Schema::create('trmeals_penerima_manfaat_jenis_kelompok', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('trmeals_penerima_manfaat_id')->constrained('trmeals_penerima_manfaat')->index('trmeals_pm_mjk_fk');
-            $table->foreignId('jenis_kelompok_id')->constrained('master_jenis_kelompok')->onDelete('cascade')->index('trmeasl_mjk');
-            $table->timestamps();
-            $table->softDeletes();
-        });
     }
 
     /**
