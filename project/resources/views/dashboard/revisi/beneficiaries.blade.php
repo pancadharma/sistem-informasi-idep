@@ -389,14 +389,26 @@
         });
         
         async function initMap() {
-            const { Map } = await google.maps.importLibrary("maps");
-            ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-            
-            map = new Map(document.getElementById("map"), {
-                center: { lat: -2.711614, lng: 121.631757 }, // Indonesia center
-                zoom: 5,
-                mapId: "7e7fb1bfd929ec61",
-            });
+            try {
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement: MarkerElement } = await google.maps.importLibrary("marker");
+                
+                // Assign to global for fallback/other usages
+                AdvancedMarkerElement = MarkerElement;
+                
+                console.log("Google Maps Libraries Loaded. AdvancedMarkerElement:", !!AdvancedMarkerElement);
+
+                map = new Map(document.getElementById("map"), {
+                    center: { lat: -2.711614, lng: 121.631757 }, // Indonesia center
+                    zoom: 5,
+                    mapId: "7e7fb1bfd929ec61",
+                });
+                
+                return { Map, AdvancedMarkerElement: MarkerElement };
+            } catch (error) {
+                console.error("Error initializing map:", error);
+                throw error;
+            }
         }
         
         function loadDashboardData() {
@@ -420,8 +432,12 @@
                     
                     // Wait for map to be ready
                     if (mapReadyPromise) {
-                        mapReadyPromise.then(() => {
-                            updateMapMarkers(data.locations);
+                        mapReadyPromise.then((libraries) => {
+                            // Use the explicitly returned class if available, or fall back to global
+                            const MarkerClass = libraries ? libraries.AdvancedMarkerElement : AdvancedMarkerElement;
+                            updateMapMarkers(data.locations, MarkerClass);
+                        }).catch(err => {
+                            console.error("Map initialization failed, cannot update markers:", err);
                         });
                     }
                     
@@ -479,7 +495,15 @@
             });
         }
         
-        function updateMapMarkers(locations) {
+        function updateMapMarkers(locations, MarkerClass) {
+            // Use passed class or global variable
+            const AMElement = MarkerClass || AdvancedMarkerElement;
+
+            if (!AMElement) {
+                console.error("AdvancedMarkerElement is not ready yet. Skipping marker update.");
+                return;
+            }
+
             // Clear existing markers
             markers.forEach(marker => marker.map = null);
             markers = [];
@@ -492,35 +516,39 @@
             // Add new markers
             locations.forEach(location => {
                 if (location.lat && location.long) {
-                    const marker = new AdvancedMarkerElement({
-                        map: map,
-                        position: { lat: location.lat, lng: location.long },
-                        title: location.program_nama
-                    });
-                    
-                    const infoWindow = new google.maps.InfoWindow({
-                        content: `
-                            <div style="font-family: Figtree, sans-serif; min-width: 250px;">
-                                <h6 style="color: #667eea; font-weight: 700;">${location.program_nama}</h6>
-                                <p><strong>Kode:</strong> ${location.program_kode}</p>
-                                <hr>
-                                <p><strong>Desa:</strong> ${location.desa_nama}<br>
-                                <strong>Kecamatan:</strong> ${location.kecamatan_nama}<br>
-                                <strong>Kabupaten:</strong> ${location.kabupaten_nama}<br>
-                                <strong>Provinsi:</strong> ${location.provinsi_nama}</p>
-                                <hr>
-                                <p><strong>Aktivitas:</strong><br>${location.aktivitas_list}</p>
-                                <p><strong>Penerima Manfaat:</strong> ${location.penerimamanfaattotal} orang</p>
-                                <p><small><i class="far fa-calendar"></i> ${location.kegiatan_mulai} - ${location.kegiatan_selesai}</small></p>
-                            </div>
-                        `
-                    });
-                    
-                    marker.addListener('click', () => {
-                        infoWindow.open(map, marker);
-                    });
-                    
-                    markers.push(marker);
+                    try {
+                        const marker = new AMElement({
+                            map: map,
+                            position: { lat: location.lat, lng: location.long },
+                            title: location.program_nama
+                        });
+                        
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `
+                                <div style="font-family: Figtree, sans-serif; min-width: 250px;">
+                                    <h6 style="color: #667eea; font-weight: 700;">${location.program_nama}</h6>
+                                    <p><strong>Kode:</strong> ${location.program_kode}</p>
+                                    <hr>
+                                    <p><strong>Desa:</strong> ${location.desa_nama}<br>
+                                    <strong>Kecamatan:</strong> ${location.kecamatan_nama}<br>
+                                    <strong>Kabupaten:</strong> ${location.kabupaten_nama}<br>
+                                    <strong>Provinsi:</strong> ${location.provinsi_nama}</p>
+                                    <hr>
+                                    <p><strong>Aktivitas:</strong><br>${location.aktivitas_list}</p>
+                                    <p><strong>Penerima Manfaat:</strong> ${location.penerimamanfaattotal} orang</p>
+                                    <p><small><i class="far fa-calendar"></i> ${location.kegiatan_mulai} - ${location.kegiatan_selesai}</small></p>
+                                </div>
+                            `
+                        });
+                        
+                        marker.addListener('click', () => {
+                            infoWindow.open(map, marker);
+                        });
+                        
+                        markers.push(marker);
+                    } catch (e) {
+                         console.error("Error creating marker:", e);
+                    }
                 }
             });
             
