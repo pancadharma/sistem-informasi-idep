@@ -40,7 +40,7 @@
     <div class="card shadow-sm">
 
         {{-- Header --}}
-        <div class="card-header bg-primary text-white">
+        <div class="card-header text-white" style="background-color: #2f6c01">
             <h3 class="mb-0 text-center">{{ __('btor.btor') }}</h3>
             <p class="text-center mb-0"><small>Report ID: {{ $kegiatan->id }}</small></p>
         </div>
@@ -49,10 +49,10 @@
 
             {{-- Basic Information Table --}}
             <div class="mb-4">
-                <table class="table table-bordered">
+                <table class="table table-sm">
                     <tbody>
                         <tr>
-                            <td width="25%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
+                            <td width="15%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
                             <td>Program</td>
                         </tr>
                         <tr>
