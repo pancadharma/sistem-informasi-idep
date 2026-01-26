@@ -342,13 +342,14 @@
         let AdvancedMarkerElement;
         // Store programs data globally to access in modal
         let currentPrograms = [];
+        let mapReadyPromise;
         
         $(document).ready(function() {
             // Initialize Select2
             $('#programFilter, #provinsiFilter, #tahunFilter, #statusFilter').select2();
             
             // Initialize Google Maps
-            initMap();
+            mapReadyPromise = initMap();
             
             // Load initial data
             loadDashboardData();
@@ -416,7 +417,14 @@
 
                     updateStatistics(data.stats);
                     updateProgramTable(data.programs);
-                    updateMapMarkers(data.locations);
+                    
+                    // Wait for map to be ready
+                    if (mapReadyPromise) {
+                        mapReadyPromise.then(() => {
+                            updateMapMarkers(data.locations);
+                        });
+                    }
+                    
                     updateCharts(data.genderData, data.marjinalData);
                 },
                 error: function(xhr) {
