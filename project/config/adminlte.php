@@ -145,6 +145,7 @@ return [
                     'text' => 'Beneficiaries',
                     'route' => 'dashboard.beneficiary',
                     'icon' => 'fas fa-user',
+                    'active' => ['dashboard/beneficiary', 'regex:@^dashboard/beneficiary[0-9]+$@'],
                 ],
                 [
                     'text' => 'Model',

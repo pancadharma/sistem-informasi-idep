@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="m-0 text-dark" style="font-family: 'Figtree', sans-serif; font-weight: 700;">Beneficiaries Dashboard</h1>
-            <p class="text-muted" style="font-family: 'Figtree', sans-serif;">Monitoring penerima manfaat dan sebaran lokasi kegiatan.</p>
+    <div class="row">
+        <div class="col-12 mt-2">
+            <h2 class="text-muted" style="font-family: 'Figtree', sans-serif; font-weight: 700;">Dashboard Beneficiaries</h2>
+            {{-- <p class="text-muted" style="font-family: 'Figtree', sans-serif;">Monitoring penerima manfaat dan sebaran lokasi kegiatan.</p> --}}
         </div>
     </div>
 
     {{-- Statistics Cards - Original & New --}}
-    <div class="row mb-4">
+    <div class="row">
         {{-- Row 1: Programs, Locations, Total Beneficiaries (Blue), Family (Yellow/Orange) --}}
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="row mb-4">
+    <div class="row">
         {{-- Row 2: Male (Green), Female (Yellow), Child Male (Red), Child Female (Teal/Blue) --}}
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <div class="row mb-4">
+    <div class="row">
         {{-- Row 3: Disability (Green) --}}
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
@@ -123,45 +123,47 @@
     </div>
 
     {{-- Filter Section --}}
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <label for="programFilter">{{ __('cruds.program.title') }}:</label>
-            <select id="programFilter" class="form-control">
-                <option value="">{{ __('cruds.program.all') }}</option>
-                @foreach ($programs as $program)
-                    <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
-            <select id="provinsiFilter" class="form-control">
-                <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
-                @foreach ($provinsis as $provinsi)
-                    <option value="{{ $provinsi->id }}">{{ $provinsi->nama ?? 'Tanpa Nama' }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
-            <select id="tahunFilter" class="form-control">
-                <option value="">{{ __('cruds.program.all_years') }}</option>
-                @foreach ($years as $year)
-                    <option value="{{ $year }}">{{ $year }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label for="statusFilter">Status:</label>
-            <select id="statusFilter" class="form-control">
-                <option value="">Semua Status</option>
-                <option value="running">Sedang Berjalan</option>
-                <option value="completed">Sudah Selesai</option>
-                <option value="pending">Belum Dimulai</option>
-            </select>
-        </div>
-    </div>
-
+    <fieldset class="mb-4 border p-3 rounded">
+        <legend class="w-auto px-2 h6 fw-bold text-primary">Filter</legend>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="programFilter">{{ __('cruds.program.title') }}:</label>
+                    <select id="programFilter" class="form-control">
+                        <option value="">{{ __('cruds.program.all') }}</option>
+                        @foreach ($programs as $program)
+                            <option value="{{ $program->id }}">{{ $program->kode ?? '' }} - {{ $program->nama ?? 'Tanpa Nama' }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
+                    <select id="provinsiFilter" class="form-control">
+                        <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
+                        @foreach ($provinsis as $provinsi)
+                            <option value="{{ $provinsi->id }}">{{ $provinsi->nama ?? 'Tanpa Nama' }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
+                    <select id="tahunFilter" class="form-control">
+                        <option value="">{{ __('cruds.program.all_years') }}</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="">Semua Status</option>
+                        <option value="running">Sedang Berjalan</option>
+                        <option value="completed">Sudah Selesai</option>
+                        <option value="pending">Belum Dimulai</option>
+                    </select>
+                </div>
+            </div>
+    </fieldset> 
 
     <div class="row">
         {{-- Map Section --}}
@@ -306,7 +308,15 @@
         
         .badge-running {
             background: #10b981;
-            color: white;
+            color: rgb(255, 255, 255);
+        }
+        .badge-submit {
+            background: #1097b9;
+            color: rgb(255, 255, 255);
+        }
+        .badge-draft {
+            background: #1b1b1b;
+            color: rgb(255, 255, 255);
         }
         
         .badge-completed {
@@ -321,6 +331,9 @@
 
         .table-hover tbody tr {
             cursor: pointer;
+        }
+        b, strong {
+            font-weight: 800!important;
         }
     </style>
 @endpush
@@ -527,15 +540,17 @@
                             content: `
                                 <div style="font-family: Figtree, sans-serif; min-width: 250px;">
                                     <h6 style="color: #667eea; font-weight: 700;">${location.program_nama}</h6>
-                                    <p><strong>Kode:</strong> ${location.program_kode}</p>
+                                    <p><strong>Kode:</strong> ${location.program_kode}<br>
+                                    <strong>Objektif:</strong> ${location.program_objektif}<br>
+                                    <strong>Status:</strong> <span class="badge badge-${location.program_status}">${location.program_status}</span></p>
                                     <hr>
                                     <p><strong>Desa:</strong> ${location.desa_nama}<br>
                                     <strong>Kecamatan:</strong> ${location.kecamatan_nama}<br>
                                     <strong>Kabupaten:</strong> ${location.kabupaten_nama}<br>
                                     <strong>Provinsi:</strong> ${location.provinsi_nama}</p>
                                     <hr>
-                                    <p><strong>Aktivitas:</strong><br>${location.aktivitas_list}</p>
-                                    <p><strong>Penerima Manfaat:</strong> ${location.penerimamanfaattotal} orang</p>
+                                    <p><strong>Jenis Kegiatan:</strong><br>${location.aktivitas_list}</p>
+                                    <p><strong>Penerima Manfaat Program:</strong> ${location.penerimamanfaattotal} orang</p>
                                     <p><small><i class="far fa-calendar"></i> ${location.kegiatan_mulai} - ${location.kegiatan_selesai}</small></p>
                                 </div>
                             `
@@ -575,7 +590,8 @@
                         data: [],
                         backgroundColor: [
                             'rgba(236, 72, 153, 0.8)',
-                            'rgba(59, 130, 246, 0.8)'
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(36, 150, 44, 0.8)',
                         ],
                         borderWidth: 2
                     }]

@@ -91,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     
     
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
-        Route::get('/', [HomeController::class, 'index'])->name('index');
+        // Route::get('/', [HomeController::class, 'index'])->name('index');
         Route::get('/print', [HomeController::class, 'index'])->name('print');
         Route::get('/data', [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data', [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
@@ -126,6 +126,9 @@ Route::middleware(['auth'])->group(function () {
         // Beneficiaries Dashboard
         // 
         // 
+
+        Route::get('/', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('index');
 
         Route::get('/beneficiary', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
             ->name('beneficiary');
@@ -639,5 +642,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('pendanaan');
         Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
             ->name('pendanaan.data');
+
+        Route::get('/', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('index');
     });
 });
