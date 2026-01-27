@@ -360,7 +360,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.model.data') }}",
+            url: "{{ route('dashboard.model.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {

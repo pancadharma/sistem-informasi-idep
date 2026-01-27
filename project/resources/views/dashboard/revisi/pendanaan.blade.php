@@ -362,7 +362,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.pendanaan.data') }}",
+            url: "{{ route('dashboard.pendanaan.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {

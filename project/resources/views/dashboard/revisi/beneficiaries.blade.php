@@ -420,7 +420,7 @@
             };
             
             $.ajax({
-                url: "{{ route('revisi.dashboard.beneficiary.data') }}",
+                url: "{{ route('dashboard.beneficiary.data') }}",
                 method: 'GET',
                 data: filters,
                 success: function(data) {
