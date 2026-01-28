@@ -228,7 +228,7 @@
 @section('plugins.DatatablesNew', true)
 
 <!-- ChartJS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
 <script>
     // Global variables
