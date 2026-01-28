@@ -642,7 +642,14 @@
         function updateCharts(genderData, marjinalData) {
             // Update Gender Chart
             if (genderData && genderData.length > 0) {
-                genderChart.data.labels = genderData.map(item => item.jenis_kelamin);
+                const totalGender = genderData.reduce((acc, item) => acc + (parseInt(item.total) || 0), 0);
+                
+                genderChart.data.labels = genderData.map(item => {
+                    const val = parseInt(item.total) || 0;
+                    const percentage = totalGender > 0 ? ((val / totalGender) * 100).toFixed(1) : 0;
+                    return `${item.jenis_kelamin} (${percentage}%)`;
+                });
+                
                 genderChart.data.datasets[0].data = genderData.map(item => item.total);
                 genderChart.update();
             }
