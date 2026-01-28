@@ -186,7 +186,7 @@
             {{-- Gender Distribution --}}
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-venus-mars"></i> Persebaran Gender</h3>
+                    <h3 class="card-title">Persebaran Gender</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="genderChart" style="height: 300px;"></canvas>
@@ -214,13 +214,14 @@
                     {{-- <h3 class="card-title"><i class="fas fa-list-check"></i> Status Program</h3> --}}
                 {{-- </div> --}}
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-sm table-hover text-nowrap">
+                    <table class="table table-sm table-hover text-nowrap datatable" width="100%">
                         <thead>
                             <tr>
                                 <th>Nama Program</th>
                                 <th>Kode</th>
                                 <th>Tanggal Mulai</th>
                                 <th>Tanggal Selesai</th>
+                                <th>Beneficiary (BTOR/MEALS)</th>
                                 <th>Status</th>
                                 {{-- <th>PIC</th> --}}
                                 <th>Aksi</th>
@@ -264,6 +265,9 @@
 
                         <dt class="col-sm-3">Total Nilai</dt>
                         <dd class="col-sm-9" id="modalProgramValue"></dd>
+
+                        <dt class="col-sm-3">BTOR / Meals Beneficiary</dt>
+                        <dd class="col-sm-9" id="modalProgramBeneficiaries"></dd>
 
                         <dt class="col-sm-3">Deskripsi</dt>
                         <dd class="col-sm-9" id="modalProgramDescription"></dd>
@@ -343,7 +347,7 @@
     @section('plugins.Sweetalert2', true)
     
     {{-- Chart.js --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     
     {{-- Google Maps API --}}
     <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
@@ -387,6 +391,7 @@
                     $('#modalProgramPeriod').text(`${program.tanggal_mulai} - ${program.tanggal_selesai}`);
                     // $('#modalProgramPic').text(program.pic);
                     $('#modalProgramValue').text(program.total_nilai);
+                    $('#modalProgramBeneficiaries').text(`${program.target_beneficiaries} / ${program.actual_beneficiaries}`);
                     
                     // Decode HTML entities if description contains HTML, or just text
                     const description = program.deskripsi;
@@ -498,6 +503,9 @@
                         <td>${program.kode}</td>
                         <td>${program.tanggal_mulai}</td>
                         <td>${program.tanggal_selesai}</td>
+                        <td>
+                            <strong class="text-primary">${program.target_beneficiaries}</strong> / <strong class="text-success">${program.actual_beneficiaries}</strong>
+                        </td>
                         <td><span class="status-badge badge-${program.statusClass}">${program.status}</span></td>
                         <td>
                              <button class="btn btn-sm btn-info view-details" title="Lihat Detail"><i class="fas fa-eye"></i></button>
@@ -508,6 +516,9 @@
             });
         }
         
+        const beneficiaryUrlTemplate = "{{ route('beneficiary.show.data', ':id') }}";
+        const kegiatanUrlTemplate = "{{ route('kegiatan.show', ':id') }}";
+
         function updateMapMarkers(locations, MarkerClass) {
             // Use passed class or global variable
             const AMElement = MarkerClass || AdvancedMarkerElement;
@@ -535,7 +546,11 @@
                             position: { lat: location.lat, lng: location.long },
                             title: location.program_nama
                         });
+
                         
+                        const beneficiaryUrl = beneficiaryUrlTemplate.replace(':id', location.program_id);
+                        const kegiatanUrl = kegiatanUrlTemplate.replace(':id', location.kegiatan_id);
+
                         const infoWindow = new google.maps.InfoWindow({
                             content: `
                                 <div style="font-family: Figtree, sans-serif; min-width: 250px;">
@@ -549,8 +564,15 @@
                                     <strong>Kabupaten:</strong> ${location.kabupaten_nama}<br>
                                     <strong>Provinsi:</strong> ${location.provinsi_nama}</p>
                                     <hr>
-                                    <p><strong>Jenis Kegiatan:</strong><br>${location.aktivitas_list}</p>
-                                    <p><strong>Penerima Manfaat Program:</strong> ${location.penerimamanfaattotal} orang</p>
+                                    <strong>Kode Kegiatan:</strong> ${location.kode_kegiatan}<br>
+                                    <strong>Nama Kegiatan:</strong> ${location.nama_kegiatan}<br>
+                                    <strong>Jenis Kegiatan:</strong> ${location.aktivitas_list}<br>
+                                    <strong>Status Kegiatan:</strong> <span class="badge badge-${location.kegiatan_status}">${location.kegiatan_status}</span><br><br>
+                                    <strong>Beneficiary:</strong>
+                                        <ul class="m-0">
+                                            <li><strong><a href="${kegiatanUrl}" title="Lihat Detail Kegiatan">BTOR : <span class="text-danger">${location.penerimamanfaat_btor_total}</span> </a></strong></li>
+                                            <li><strong><a href="${beneficiaryUrl}" title="Lihat Detail Penerima Manfaat">MEALS : <span class="text-success">${location.penerimamanfaat_meals_total}</span></a></strong></li>
+                                        </ul>
                                     <p><small><i class="far fa-calendar"></i> ${location.kegiatan_mulai} - ${location.kegiatan_selesai}</small></p>
                                 </div>
                             `
