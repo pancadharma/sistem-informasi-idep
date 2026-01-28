@@ -159,7 +159,7 @@
     <div class="col-lg-6">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-chart-line mr-1"></i> Trend Jenis Model per Tahun</h3>
+                <h3 class="card-title"><i class="fas fa-chart-line mr-1"></i> Jumlah Jenis Model per Tahun</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -174,27 +174,6 @@
         </div>
     </div>
     
-    <!-- Sektor Contribution -->
-    <div class="col-lg-6">
-        <div class="card card-success card-outline">
-            <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-layer-group mr-1"></i> Kontribusi Sektor terhadap Komponen</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="chart-container" style="position: relative; height: 350px;">
-                    <canvas id="sektorChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
     <!-- Distribution Chart -->
     <div class="col-lg-6">
         <div class="card card-warning card-outline">
@@ -213,9 +192,30 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="row">
+    <!-- Sektor Contribution -->
+    <div class="col-lg-6 d-none">
+        <div class="card card-success card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-layer-group mr-1"></i> Kontribusi Sektor terhadap Komponen</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 350px;">
+                    <canvas id="sektorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Legend -->
-    <div class="col-lg-6">
+
+    {{-- <div class="col-lg-6 d-none">
         <div class="card card-secondary card-outline">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-info-circle mr-1"></i> Legend Jenis Model</h3>
@@ -226,7 +226,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 {{-- Data Table Section --}}
@@ -318,7 +318,7 @@
 @section('plugins.DatatablesNew', true)
 
 <!-- ChartJS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
 <!-- Google Maps - loaded without callback, will init manually -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}" async defer></script>
@@ -506,7 +506,7 @@
         // Trend
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
         trendChart = new Chart(ctxTrend, {
-            type: 'line',
+            type: 'bar',
             data: { labels: [], datasets: [] },
             options: { ...commonOptions, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
         });
@@ -550,11 +550,11 @@
                 let val = found ? found.total : 0;
                 
                 // Forward Fill Logic: If current value is 0 and we have a previous value, use it.
-                if (val === 0 && lastValue !== 0) {
-                    val = lastValue;
-                } else if (val !== 0) {
-                    lastValue = val;
-                }
+                // if (val === 0 && lastValue !== 0) {
+                //     val = lastValue;
+                // } else if (val !== 0) {
+                //     lastValue = val;
+                // }
                 
                 return val;
             });
