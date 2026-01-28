@@ -150,6 +150,18 @@ class Beneficiaries extends Controller
             // Added deskripsiprojek and totalnilai for the modal details
             ->select('id', 'nama', 'kode', 'tanggalmulai', 'tanggalselesai', 'status', 'user_id', 'deskripsiprojek', 'totalnilai', 'ekspektasipenerimamanfaat');
 
+        // if ($provinsiId) {
+        //     $programIds = ProgramLokasi::where('provinsi_id', $provinsiId)->pluck('program_id')->toArray();
+        //     $query->whereIn('id', $programIds);
+        // }
+
+        if ($provinsiId) {
+            $programIds = DB::table('trprogramlokasi')
+                ->where('provinsi_id', $provinsiId)
+                ->whereIn('program_id', $programIds)
+                ->pluck('program_id')->toArray();
+            $query->whereIn('id', $programIds);
+        }
         $programs = $query->get()->map(function ($program) use ($actualCountsMap) {
             $now = now();
             // Robust parsing
