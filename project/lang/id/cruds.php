@@ -308,7 +308,7 @@ return [
         'chart_donation_count' => 'Jumlah Donasi',
         'chart_total_donation' => 'Total Donasi',
         'chart_donation_value' => 'Nilai Donasi',
-        'dashboard' => 'Pendanaan Dashboard',
+        'dashboard' => 'Dashboard Pendanaan',
         'information' => 'Informasi',
         'ket_dashboard' => 'Dashboard ini menampilkan ringkasan pendanaan program IDEP dari berbagai pendonor, termasuk kontribusi terhadap SDGs dan sektor',
         'sdg_contribution' => 'Kontribusi terhadap SDGs',

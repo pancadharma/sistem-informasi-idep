@@ -309,7 +309,7 @@ return [
         'chart_donation_count' => 'Donation Count',
         'chart_total_donation' => 'Total Donation',
         'chart_donation_value' => 'Donation Value',
-        'dashboard' => 'Funding Dashboard',
+        'dashboard' => 'Dashboard Funding',
         'information' => 'Information',
         'ket_dashboard' =>  'This dashboard shows a summary of IDEP program funding from various donors, including contributions to SDGs and sectors',
         'sdg_contribution' =>   'SDG Contribution',

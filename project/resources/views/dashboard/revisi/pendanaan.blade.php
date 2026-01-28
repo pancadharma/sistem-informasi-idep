@@ -22,33 +22,33 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                <div class="col-md-4">
-                    <label for="programFilter">{{ __('cruds.program.title') }}</label>
-                    <select id="programFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.program.all') }}</option>
-                        @foreach($programs as $p)
-                            <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="tahunFilter">{{ __('cruds.program.periode') }}</label>
-                    <select id="tahunFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.program.all_years') }}</option>
-                        @foreach($years as $y)
-                            <option value="{{ $y }}">{{ $y }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="donorFilter">{{ __('cruds.mpendonor.pendonor') }}</label>
-                    <select id="donorFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
-                        @foreach($donors as $d)
-                            <option value="{{ $d->id }}">{{ $d->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>      
+                    <div class="col-md-4">
+                        <label for="programFilter">{{ __('cruds.program.title') }}</label>
+                        <select id="programFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all') }}</option>
+                            @foreach($programs as $p)
+                                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="tahunFilter">{{ __('cruds.program.periode') }}</label>
+                        <select id="tahunFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all_years') }}</option>
+                            @foreach($years as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="donorFilter">{{ __('cruds.mpendonor.pendonor') }}</label>
+                        <select id="donorFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
+                            @foreach($donors as $d)
+                                <option value="{{ $d->id }}">{{ $d->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>      
                 </div>
             </div>
         </div>
@@ -362,7 +362,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.pendanaan.data') }}",
+            url: "{{ route('dashboard.pendanaan.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {

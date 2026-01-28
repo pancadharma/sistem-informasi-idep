@@ -1,57 +1,79 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Model Dashboard')
-@section('content_header_title', 'Model Dashboard')
+@section('subtitle', 'Dashboard Model')
+@section('content_header_title', 'Dashboard Model')
 
 @section('content_body')
 <!-- Filter Section -->
+
 <div class="row mb-3">
-    <div class="col-md-2">
-        <label for="programFilter">{{ __('cruds.program.title') }}:</label>
-        <select id="programFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all') }}</option>
-            @foreach($programs as $p)
-                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
-        <select id="tahunFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all_years') }}</option>
-            @foreach($years as $y)
-                <option value="{{ $y }}">{{ $y }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
-        <select id="provinsiFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
-            @foreach($provinsis as $pr)
-                <option value="{{ $pr->id }}">{{ $pr->nama }}</option>
-             @endforeach
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="komponenModelFilter">Jenis Model:</label>
-        <select id="komponenModelFilter" class="form-control select2">
-            <option value="">Semua Jenis Model</option>
-            @foreach($komponenModels as $km)
-                <option value="{{ $km->id }}">{{ $km->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="sektorFilter">Sektor:</label>
-        <select id="sektorFilter" class="form-control select2">
-            <option value="">Semua Sektor</option>
-            @foreach($sektors as $s)
-                <option value="{{ $s->id }}">{{ $s->nama }}</option>
-            @endforeach
-        </select>
+
+    <div class="col-lg-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-filter"></i> {{ __('cruds.mpendonor.filter') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label for="programFilter">{{ __('cruds.program.title') }}:</label>
+                        <select id="programFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all') }}</option>
+                            @foreach($programs as $p)
+                                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
+                        <select id="tahunFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all_years') }}</option>
+                            @foreach($years as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
+                        <select id="provinsiFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
+                            @foreach($provinsis as $pr)
+                                <option value="{{ $pr->id }}">{{ $pr->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="komponenModelFilter">Jenis Model:</label>
+                        <select id="komponenModelFilter" class="form-control select2">
+                            <option value="">Semua Jenis Model</option>
+                            @foreach($komponenModels as $km)
+                                <option value="{{ $km->id }}">{{ $km->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sektorFilter">Sektor:</label>
+                        <select id="sektorFilter" class="form-control select2">
+                            <option value="">Semua Sektor</option>
+                            @foreach($sektors as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
+
 
 <!-- Statistics Grid (Small Boxes) -->
 <div class="row">
@@ -360,7 +382,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.model.data') }}",
+            url: "{{ route('dashboard.model.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {
