@@ -544,9 +544,19 @@
         allTypes = Array.from(allTypes);
         
         const trendDatasets = allTypes.map(type => {
+            let lastValue = 0;
             const data = years.map(year => {
                 const found = response.trendData[year].find(d => d.jenis_model === type);
-                return found ? found.total : 0;
+                let val = found ? found.total : 0;
+                
+                // Forward Fill Logic: If current value is 0 and we have a previous value, use it.
+                if (val === 0 && lastValue !== 0) {
+                    val = lastValue;
+                } else if (val !== 0) {
+                    lastValue = val;
+                }
+                
+                return val;
             });
             const c = colorMap[type] || '#ccc';
             return {
