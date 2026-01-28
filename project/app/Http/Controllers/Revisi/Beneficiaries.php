@@ -242,6 +242,8 @@ class Beneficiaries extends Controller
                 'program_id' => $program->id ?? null,
                 'program_nama' => $program->nama ?? 'N/A',
                 'program_kode' => $program->kode ?? 'N/A',
+                'program_status' => $program->status ?? 'N/A',
+                'program_objektif' => $program->objektif->deskripsi ?? 'N/A',
                 'desa_nama' => optional($lokasi->desa)->nama ?? 'N/A',
                 'kecamatan_nama' => optional(optional($lokasi->desa)->kecamatan)->nama ?? 'N/A',
                 'kabupaten_nama' => optional(optional(optional($lokasi->desa)->kecamatan)->kabupaten)->nama ?? 'N/A',
@@ -288,7 +290,7 @@ class Beneficiaries extends Controller
             // Assuming standard 'L'/'P' or checking value.
             // Use strtolower to be safe
             $jk = strtolower($item->jenis_kelamin);
-            $label = ($jk === 'laki' || $jk === 'l' || $jk === 'laki-laki') ? 'Laki-laki' : 'Perempuan';
+            $label = ($jk === 'laki' || $jk === 'laki-laki') ? 'Laki-laki' : ($jk === 'perempuan' || $jk === 'p' ? 'Perempuan' : ($jk === 'lainnya' ? 'Lainnya' : 'Tidak Diketahui'));
 
             return [
                 'jenis_kelamin' => $label,

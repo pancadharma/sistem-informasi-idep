@@ -73,7 +73,7 @@ Auth::routes(['register' => false]);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    // Report
+    
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
         Route::post('/generate', [ReportController::class, 'generate'])->name('generate');
@@ -82,12 +82,16 @@ Route::middleware(['auth'])->group(function () {
             return view('report.report-test');
         })->name('test');
     });
+
+
     Route::group(['prefix' => 'report/api', 'as' => 'report.api.'], function () {
         Route::get('/programs', [ReportController::class, 'getPrograms'])->name('programs');
         Route::get('/jenis-kegiatan', [ReportController::class, 'getJenisKegiatan'])->name('jenis_kegiatan');
     });
+    
+    
     Route::group(['prefix' => '/dashboard', 'as' => 'dashboard.'], function () {
-        Route::get('/', [HomeController::class, 'index'])->name('index');
+        // Route::get('/', [HomeController::class, 'index'])->name('index');
         Route::get('/print', [HomeController::class, 'index'])->name('print');
         Route::get('/data', [HomeController::class, 'getDashboardData'])->name('data');
         Route::get('/data/get-desa-chart-data', [HomeController::class, 'getDesaPerProvinsiChartData'])->name('chart.desa');
@@ -114,19 +118,41 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/model', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index'])->name('komodel_v3');
         // Route::get('/komodel-v2', [\App\Http\Controllers\KomponenModelDashboardController::class, 'indexV2'])->name('komodel_v2');
 
-        // Route::get('/komodel-v4', [DashboardKomponenModelV4Controller::class, 'index'])->name('komodel_v4');
-        // Route::post('/komodel-v4/export/pdf', [DashboardKomponenModelV4Controller::class, 'exportPdf'])->name('komodel_v4.export.pdf');
-        // Route::post('/komodel-v4/export/xls', [DashboardKomponenModelV4Controller::class, 'exportXls'])->name('komodel_v4.export.xls');
-        // Route::get('/komodel-old', [\App\Http\Controllers\KomponenModelDashboardController::class, 'index_old'])->name('komodel_old');
-
-        // Route::get('/meals-dashboard', [\App\Http\Controllers\MealsDashboardController::class, 'index'])->name('meals_dashboard');
-        // Route::post('/meals-dashboard/filter', [\App\Http\Controllers\MealsDashboardController::class, 'filterDashboardData'])->name('dashboard.filter');
-
         // Pendonor Dashboard
         Route::get('/pendonor/{id?}', [MPendonorController::class, 'dashboard'])->name('pendonor');
+
+        // 
+        // 
+        // Beneficiaries Dashboard
+        // 
+        // 
+
+        Route::get('/', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('index');
+
+        Route::get('/beneficiary', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('beneficiary');
+        Route::get('/beneficiary/data', [App\Http\Controllers\Revisi\Beneficiaries::class, 'getData'])
+            ->name('beneficiary.data');
+
+        // Model Dashboard
+        Route::get('/model', [App\Http\Controllers\Revisi\KomponenModel::class, 'index'])
+            ->name('model');
+        Route::get('/model/data', [App\Http\Controllers\Revisi\KomponenModel::class, 'getData'])
+            ->name('model.data');
+
+        // Funding Dashboard
+        Route::get('/pendanaan', [App\Http\Controllers\Revisi\Pendanaan::class, 'index'])
+            ->name('pendanaan');
+        Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
+            ->name('pendanaan.data');
     });
+
+
+
+
+
     Route::get('/api/dashboard-init', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getInitialData']);
-    // This route provides filtered data when the user applies filters.
     Route::get('/api/dashboard-data', [\App\Http\Controllers\KomponenModelDashboardController::class, 'getDashboardData']);
 
     // Komponen Model Dashboard routes
@@ -136,7 +162,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/export/docx', [KomodelDashboardExport::class, 'exportDocx'])->name('export.docx');
         Route::get('/aggregates', [KomodelDashboardExport::class, 'aggregates'])->name('aggregates');
     });
-    // });
+    
     // Permissions
     // Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', PermissionsController::class);
@@ -616,5 +642,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('pendanaan');
         Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
             ->name('pendanaan.data');
+
+        Route::get('/', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
+            ->name('index');
     });
 });
