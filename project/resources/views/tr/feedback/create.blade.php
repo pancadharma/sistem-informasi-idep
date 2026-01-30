@@ -62,7 +62,7 @@
                                 <input type="date" class="form-control @error('tanggal_registrasi') is-invalid @enderror" id="add_tanggal_registrasi" name="tanggal_registrasi" value="{{ old('tanggal_registrasi', date('Y-m-d')) }}" required>
                                 @error('tanggal_registrasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 d-none">
                                 <label for="field_office" class="form-label">Field Office</label>
                                 <div class="select2-purple"> {{-- Jika menggunakan Select2 --}}
                                     <select class="form-select form-control select2 @error('field_office') is-invalid @enderror" id="field_office" name="field_office">

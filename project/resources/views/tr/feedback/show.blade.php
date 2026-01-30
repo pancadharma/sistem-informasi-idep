@@ -80,8 +80,8 @@
                             <dd class="col-sm-8">{{ optional($feedback->tanggal_registrasi)->format('d M Y') ?? '-' }}</dd>
                             
                             {{-- FIELD BARU: Field Office --}}
-                            <dt class="col-sm-4">Field Office</dt>
-                            <dd class="col-sm-8">{{ $feedback->field_office ?? '-' }}</dd>
+                            <dt class="col-sm-4 d-none">Field Office</dt>
+                            <dd class="col-sm-8 d-none">{{ $feedback->field_office ?? '-' }}</dd>
                         </dl>
                     </div>
                 </div>

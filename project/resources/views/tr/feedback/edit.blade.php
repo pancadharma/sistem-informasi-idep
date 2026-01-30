@@ -79,7 +79,7 @@
                         </div>
 
                         {{-- FIELD BARU: Field Office --}}
-                        <div class="mb-3">
+                        <div class="mb-3 d-none">
                             <label for="edit_field_office" class="form-label">Field Office</label>
                             <div class="select2-purple">
                                 <select class="form-select form-control select2 @error('field_office') is-invalid @enderror" 
