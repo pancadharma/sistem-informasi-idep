@@ -3,18 +3,18 @@
 @extends('layouts.app')
 
 {{-- Sesuaikan Judul dan Breadcrumb untuk halaman create --}}
-@section('subtitle', __('Tambah Feedback & Response Baru'))
-@section('content_header_title', __('Add New Feedback & Response'))
+@section('subtitle', __('cruds.feedback.add_new'))
+@section('content_header_title', __('cruds.feedback.add_new'))
 @section('sub_breadcumb')
     {{-- Link kembali ke halaman index --}}
-    <a href="{{ route('feedback.index') }}">{{ __('Feedback & Response') }}</a>
-    <li class="breadcrumb-item active">{{ __('Tambah Baru') }}</li>
+    <a href="{{ route('feedback.index') }}">{{ __('cruds.feedback.title') }}</a>
+    <li class="breadcrumb-item active">{{ __('global.add') }}</li>
 @endsection
 
 @section('content_body')
 <div class="card card-outline card-primary">
         <div class="card-header">
-            <h3 class="card-title">{{ __('Formulir Tambah Feedback') }}</h3>
+            <h3 class="card-title">{{ __('cruds.feedback.create_form') }}</h3>
         </div>
         <form action="{{ route('feedback.store') }}" method="POST" id="createFeedbackForm">
             @csrf
@@ -45,28 +45,29 @@
 
                         {{-- Grup: Informasi Program & Registrasi --}}
                         <fieldset class="mb-4 border p-3 rounded">
-                            <legend class="w-auto px-2 h6 fw-bold text-primary">Informasi Program & Registrasi</legend>
+                            <legend class="w-auto px-2 h6 fw-bold text-primary">{{ __('cruds.feedback.sections.program_info') }}</legend>
 
                             <div class="mb-3">
-                                <label for="add_kode_program_display" class="form-label">Kode Program <span class="text-info">(Klik untuk memilih)</span></label>
-                                <input type="text" class="form-control @error('program_id') is-invalid @enderror" id="add_kode_program_display" placeholder="Pilih Kode Program..." readonly data-bs-toggle="modal" data-bs-target="#programSelectionModal" style="cursor: pointer;" value="{{ old('kode_program_display') }}">
+                                <label for="add_kode_program_display" class="form-label">{{ __('cruds.feedback.fields.kode_program') }} <span class="text-info">({{ __('cruds.feedback.placeholders.click_to_select') }})</span></label>
+                                <input type="text" class="form-control @error('program_id') is-invalid @enderror" id="add_kode_program_display" placeholder="{{ __('cruds.feedback.placeholders.pilih_kode_program') }}" readonly data-bs-toggle="modal" data-bs-target="#programSelectionModal" style="cursor: pointer;" value="{{ old('kode_program_display') }}">
                                 <input type="hidden" id="add_program_id" name="program_id" value="{{ old('program_id') }}">
                                 @error('program_id') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="add_nama_program_display" class="form-label">Nama Program</label>
-                                <input type="text" class="form-control" id="add_nama_program_display" placeholder="Nama program akan terisi otomatis" readonly value="{{ old('nama_program_display') }}">
+                                <label for="add_nama_program_display" class="form-label">{{ __('cruds.feedback.fields.nama_program') }}</label>
+                                <input type="text" class="form-control" id="add_nama_program_display" placeholder="{{ __('cruds.feedback.placeholders.nama_program_auto') }}" readonly value="{{ old('nama_program_display') }}">
                             </div>
                             <div class="mb-3">
-                                <label for="add_tanggal_registrasi" class="form-label">Tanggal Registrasi <span class="text-danger">*</span></label>
+                                <label for="add_tanggal_registrasi" class="form-label">{{ __('cruds.feedback.fields.tanggal_registrasi') }} <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control @error('tanggal_registrasi') is-invalid @enderror" id="add_tanggal_registrasi" name="tanggal_registrasi" value="{{ old('tanggal_registrasi', date('Y-m-d')) }}" required>
                                 @error('tanggal_registrasi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="mb-3">
-                                <label for="field_office" class="form-label">Field Office</label>
-                                <div class="select2-purple"> {{-- Jika menggunakan Select2 --}}
+                            {{-- 
+                            <div class="mb-3 d-none">
+                                <label for="field_office" class="form-label">{{ __('cruds.feedback.fields.field_office') }}</label>
+                                <div class="select2-purple">
                                     <select class="form-select form-control select2 @error('field_office') is-invalid @enderror" id="field_office" name="field_office">
-                                        <option value="" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == '' ? 'selected' : '' }}>-- Pilih Field Office --</option>
+                                        <option value="" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == '' ? 'selected' : '' }}>{{ __('cruds.feedback.placeholders.pilih_field_office') }}</option>
                                         <option value="Bali" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Bali' ? 'selected' : '' }}>Bali</option>
                                         <option value="Bangka Belitung" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Bangka Belitung' ? 'selected' : '' }}>Bangka Belitung</option>
                                         <option value="Jawa Timur" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Jawa Timur' ? 'selected' : '' }}>Jawa Timur</option>
@@ -76,64 +77,64 @@
                                         <option value="Papua Barat" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Papua Barat' ? 'selected' : '' }}>Papua Barat</option>
                                         <option value="Sulawesi Tengah" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Sulawesi Tengah' ? 'selected' : '' }}>Sulawesi Tengah</option>
                                         <option value="Yogyakarta" {{ old('field_office', isset($feedback) ? $feedback->field_office : '') == 'Yogyakarta' ? 'selected' : '' }}>Yogyakarta</option>
-                                        {{-- Tambahkan opsi lain atau muat dari database --}}
                                     </select>
                                 </div>
                                 @error('field_office') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                            </div> 
+                            --}}
                         </fieldset>
 
                         {{-- Grup: Informasi Penerima Manfaat --}}
                         <fieldset class="mb-4 border p-3 rounded">
-                            <legend class="w-auto px-2 h6 fw-bold text-primary">Informasi Penerima Manfaat</legend>
+                            <legend class="w-auto px-2 h6 fw-bold text-primary">{{ __('cruds.feedback.sections.beneficiary_info') }}</legend>
 
                             <div class="mb-3">
-                                <label for="add_penerima" class="form-label">Nama Penerima</label>
+                                <label for="add_penerima" class="form-label">{{ __('cruds.feedback.fields.penerima') }}</label>
                                 <input type="text" class="form-control @error('penerima') is-invalid @enderror" id="add_penerima" name="penerima" value="{{ old('penerima') }}">
                                 @error('penerima') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                              <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="add_umur" class="form-label">Umur</label>
+                                        <label for="add_umur" class="form-label">{{ __('cruds.feedback.fields.umur') }}</label>
                                         <input type="number" class="form-control @error('umur') is-invalid @enderror" id="add_umur" name="umur" value="{{ old('umur') }}" min="0">
                                         @error('umur') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="add_age_group" class="form-label">Kelompok Usia</label>
+                                        <label for="add_age_group" class="form-label">{{ __('cruds.feedback.fields.age_group') }}</label>
                                         <input type="text" class="form-control @error('age_group') is-invalid @enderror" id="add_age_group" name="age_group" value="{{ old('age_group') }}" readonly>
                                         @error('age_group') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                     </div>
                                 </div>
                              </div>
                             <div class="mb-3">
-                                <label for="add_sex" class="form-label">Jenis Kelamin</label>
+                                <label for="add_sex" class="form-label">{{ __('cruds.feedback.fields.sex') }}</label>
                                 <div class="select2-purple">
                                     <select class="form-select form-control select2 @error('sex') is-invalid @enderror" id="add_sex" name="sex">
-                                        <option value="" {{ old('sex') == '' ? 'selected' : '' }}>-- Pilih --</option>
-                                        <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
-                                        <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
-                                        <option value="Boy" {{ old('sex') == 'Boy' ? 'selected' : '' }}>Boy</option>
-                                        <option value="Girl" {{ old('sex') == 'Girl' ? 'selected' : '' }}>Girl</option>
+                                        <option value="" {{ old('sex') == '' ? 'selected' : '' }}>{{ __('cruds.feedback.placeholders.pilih') }}</option>
+                                        <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.male') }}</option>
+                                        <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.female') }}</option>
+                                        {{-- <option value="Boy" {{ old('sex') == 'Boy' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.laki') }}</option>
+                                        <option value="Girl" {{ old('sex') == 'Girl' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.perempuan') }}</option> --}}
                                         <option value="Unspecified" {{ old('sex') == 'Unspecified' ? 'selected' : '' }}>Unspecified</option>
                                     </select>
                                 </div>
                                 @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                              <div class="mb-3">
-                                <label for="add_position" class="form-label">Posisi Penerima</label>
+                                <label for="add_position" class="form-label">{{ __('cruds.feedback.fields.position') }}</label>
                                 <input type="text" class="form-control @error('position') is-invalid @enderror" id="add_position" name="position" value="{{ old('position') }}">
                                 @error('position') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
                              <div class="mb-3">
-                                <label for="add_kontak_penerima" class="form-label">Kontak Penerima</label>
+                                <label for="add_kontak_penerima" class="form-label">{{ __('cruds.feedback.fields.kontak_penerima') }}</label>
                                 <input type="text" class="form-control @error('kontak_penerima') is-invalid @enderror" id="add_kontak_penerima" name="kontak_penerima" value="{{ old('kontak_penerima') }}">
                                 @error('kontak_penerima') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
                              <div class="mb-3">
-                                <label for="add_address" class="form-label">Alamat</label>
+                                <label for="add_address" class="form-label">{{ __('cruds.feedback.fields.address') }}</label>
                                 <textarea class="form-control @error('address') is-invalid @enderror" id="add_address" name="address" rows="3">{{ old('address') }}</textarea>
                                 @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
@@ -148,15 +149,15 @@
 
                         {{-- Grup: Informasi Pelapor --}}
                         <fieldset class="mb-4 border p-3 rounded">
-                            <legend class="w-auto px-2 h6 fw-bold text-primary">Informasi Pelapor</legend>
+                            <legend class="w-auto px-2 h6 fw-bold text-primary">{{ __('cruds.feedback.sections.reporter_info') }}</legend>
 
                              <div class="mb-3">
-                                <label for="nama_pelapor" class="form-label">Nama Pelapor</label>
+                                <label for="nama_pelapor" class="form-label">{{ __('cruds.feedback.fields.nama_pelapor') }}</label>
                                 <input type="text" class="form-control @error('nama_pelapor') is-invalid @enderror" id="nama_pelapor" name="nama_pelapor" value="{{ old('nama_pelapor') }}">
                                 @error('nama_pelapor') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="add_phone_number" class="form-label">Phone Number (Pelapor)</label>
+                                <label for="add_phone_number" class="form-label">{{ __('cruds.feedback.fields.phone_number') }}</label>
                                 <input type="tel" class="form-control @error('phone_number') is-invalid @enderror" id="add_phone_number" name="phone_number" value="{{ old('phone_number') }}">
                                 @error('phone_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
@@ -164,24 +165,41 @@
 
                         {{-- Grup: Detail Keluhan / Feedback --}}
                         <fieldset class="mb-4 border p-3 rounded">
-                            <legend class="w-auto px-2 h6 fw-bold text-primary">Detail Keluhan / Feedback</legend>
+                            <legend class="w-auto px-2 h6 fw-bold text-primary">{{ __('cruds.feedback.sections.feedback_detail') }}</legend>
 
                              <div class="mb-3">
-                                <label for="add_sort_of_complaint" class="form-label">Jenis Keluhan <span class="text-danger">*</span></label>
+                                <label for="add_sort_of_complaint" class="form-label">{{ __('cruds.feedback.fields.sort_of_complaint') }} <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('sort_of_complaint') is-invalid @enderror" id="add_sort_of_complaint" name="sort_of_complaint" value="{{ old('sort_of_complaint') }}" required>
                                 @error('sort_of_complaint') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
+
                              <div class="mb-3">
-                                <label for="add_kategori_komplain" class="form-label">Kategori Komplain</label>
-                                <input type="text" class="form-control @error('kategori_komplain') is-invalid @enderror" id="add_kategori_komplain" name="kategori_komplain" value="{{ old('kategori_komplain') }}">
-                                @error('kategori_komplain') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                             </div>
-                             {{-- Channel Pengaduan --}}
+                                <label for="add_kategori_komplain" class="form-label">{{ __('cruds.feedback.fields.kategori_komplain') }}</label>
+                                <select class="form-select form-control select2 @error('kategori_komplain') is-invalid @enderror"
+                                        id="add_kategori_komplain"
+                                        name="kategori_komplain">
+
+                                    <option value="">{{ __('cruds.feedback.placeholders.pilih_kategori') }}</option>
+
+                                    @foreach ($categoryComplaints as $category)
+                                        <option value="{{ $category['id'] }}"
+                                            {{ old('kategori_komplain') == $category['id'] ? 'selected' : '' }}>
+                                            {{ $category['text'] }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                                @error('kategori_komplain')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                        {{-- Channel Pengaduan --}}
                         <div class="mb-3">
-                            <label for="add_channels" class="form-label">Channel Pengaduan</label>
+                            <label for="add_channels" class="form-label">{{ __('cruds.feedback.fields.channels') }}</label>
                             <div class="select2-purple">
                                 <select class="form-select form-control select2 @error('channels') is-invalid @enderror" id="add_channels" name="channels">
-                                    <option value="" {{ old('channels') == '' ? 'selected' : '' }}>-- Pilih Channel --</option>
+                                    <option value="">{{ __('cruds.feedback.placeholders.pilih_channel') }}</option>
                                     <option value="Complaint Form" {{ old('channels') == 'Complaint Form' ? 'selected' : '' }}>Complaint Form</option>
                                     <option value="Complaint Box" {{ old('channels') == 'Complaint Box' ? 'selected' : '' }}>Complaint Box</option>
                                     <option value="Face to Face" {{ old('channels') == 'Face to Face' ? 'selected' : '' }}>Face to Face</option>
@@ -199,17 +217,17 @@
 
                         {{-- Channel Lain (Awalnya mungkin tersembunyi) --}}
                         <div class="mb-3" id="other_channel_group" style="display: none;"> {{-- Tambahkan ID dan style display none --}}
-                            <label for="add_other_channel" class="form-label">Channel Lain</label>
+                            <label for="add_other_channel" class="form-label">{{ __('cruds.feedback.fields.other_channel') }}</label>
                             <input type="text" class="form-control @error('other_channel') is-invalid @enderror" id="add_other_channel" name="other_channel" value="{{ old('other_channel') }}">
                             @error('other_channel') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                              <div class="mb-3">
-                                <label for="add_deskripsi" class="form-label">Deskripsi Keluhan <span class="text-danger">*</span></label>
+                                <label for="add_deskripsi" class="form-label">{{ __('cruds.feedback.fields.deskripsi') }} <span class="text-danger">*</span></label>
                                 <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="add_deskripsi" name="deskripsi" rows="5" required>{{ old('deskripsi') }}</textarea>
                                 @error('deskripsi') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
                              <div class="mb-3">
-                                <label for="add_status_complaint" class="form-label">Status Complaint</label>
+                                <label for="add_status_complaint" class="form-label">{{ __('cruds.feedback.fields.status_complaint') }}</label>
                                 <div class="select2-purple">
                                     <select class="form-select form-control select2 @error('status_complaint') is-invalid @enderror" id="add_status_complaint" name="status_complaint">
                                         <option value="Process" {{ old('status_complaint') == 'Process' ? 'selected' : '' }}>Process</option>
@@ -221,11 +239,11 @@
                                 @error('status_complaint') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="mb-3">
-                            <label for="is_hidden" class="form-label">Status Tampilan</label>
+                            <label for="is_hidden" class="form-label">{{ __('cruds.feedback.fields.is_hidden') }}</label>
                             <div class="select2-purple">
                                 <select class="form-select form-control select2 @error('is_hidden') is-invalid @enderror" id="is_hidden" name="is_hidden">
-                                    <option value="0" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 0 ? 'selected' : '' }}>Tampilkan (Unhide)</option>
-                                    <option value="1" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 1 ? 'selected' : '' }}>Sembunyikan (Hide)</option>
+                                    <option value="0" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 0 ? 'selected' : '' }}>{{ __('cruds.feedback.status.unhide') }}</option>
+                                    <option value="1" {{ old('is_hidden', isset($feedback) ? (int)$feedback->is_hidden : 0) == 1 ? 'selected' : '' }}>{{ __('cruds.feedback.status.hide') }}</option>
                                 </select>
                             </div>
                             @error('is_hidden') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -235,15 +253,15 @@
 
                          {{-- Grup: Informasi Penanganan (Handler) --}}
                         <fieldset class="mb-4 border p-3 rounded">
-                             <legend class="w-auto px-2 h6 fw-bold text-primary">Informasi Penanganan (Handler)</legend>
+                             <legend class="w-auto px-2 h6 fw-bold text-primary">{{ __('cruds.feedback.sections.handler_info') }}</legend>
 
                                <div class="mb-3">
-                                <label for="add_handler_id" class="form-label">Handler (Petugas)</label>
+                                <label for="add_handler_id" class="form-label">{{ __('cruds.feedback.fields.handler') }}</label>
                                 <div class="select2-purple">
                                     {{-- Menggunakan name="handler_id" --}}
                                     <select class="form-select form-control select2 @error('handler_id') is-invalid @enderror" 
                                             id="add_handler_id" name="handler_id"> 
-                                        <option value="" data-position="">-- Pilih Handler --</option>
+                                        <option value="" data-position="">{{ __('cruds.feedback.placeholders.pilih_handler') }}</option>
                                         @if(isset($handlers))
                                             @foreach($handlers as $user)
                                                 <option value="{{ $user->id }}" 
@@ -258,36 +276,37 @@
                                 @error('handler_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                               <div class="mb-3">
-                        <label for="add_position_handler" class="form-label">Posisi Handler</label>
-                        {{-- Dijadikan readonly karena akan diisi otomatis --}}
+                        <label for="add_position_handler" class="form-label">{{ __('cruds.feedback.fields.position_handler') }}</label>
+                        {{-- Dijadikan readonly because it will be filled automatically --}}
                         <input type="text" class="form-control @error('position_handler') is-invalid @enderror" 
                                id="add_position_handler" name="position_handler" 
                                value="{{ old('position_handler') }}" readonly> 
                         @error('position_handler') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
                              <div class="mb-3">
-                                <label for="add_kontak_handler" class="form-label">Kontak Handler</label>
+                                <label for="add_kontak_handler" class="form-label">{{ __('cruds.feedback.fields.kontak_handler') }}</label>
                                 <input type="text" class="form-control @error('kontak_handler') is-invalid @enderror" id="add_kontak_handler" name="kontak_handler" value="{{ old('kontak_handler') }}">
                                 @error('kontak_handler') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                              <div class="mb-3">
-                                <label for="add_tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                <label for="add_tanggal_selesai" class="form-label">{{ __('cruds.feedback.fields.tanggal_selesai') }}</label>
                                 <input type="date" class="form-control @error('tanggal_selesai') is-invalid @enderror" id="add_tanggal_selesai" name="tanggal_selesai" value="{{ old('tanggal_selesai') }}">
                                 @error('tanggal_selesai') <div class="invalid-feedback">{{ $message }}</div> @enderror
                              </div>
                              <div class="mb-3">
-                            <label for="handler_description" class="form-label">Handler Description</label>
+                            <label for="handler_description" class="form-label">{{ __('cruds.feedback.fields.handler_description') }}</label>
                             <textarea class="form-control @error('handler_description') is-invalid @enderror" id="handler_description" name="handler_description" rows="3">{{ old('handler_description', isset($feedback) ? $feedback->handler_description : '') }}</textarea>
                             @error('handler_description') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        </div>      
+                        </div>
+ 
                         </fieldset>
 
                     </div> {{-- End Kolom Kanan --}}
                 </div> {{-- End row g-3 --}}
             </div> {{-- End card-body --}}
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">{{ __('Simpan') }}</button>
-                <a href="{{ route('feedback.index') }}" class="btn btn-secondary">{{ __('Batal') }}</a>
+                <button type="submit" class="btn btn-primary">{{ __('global.save') }}</button>
+                <a href="{{ route('feedback.index') }}" class="btn btn-secondary">{{ __('global.cancel') }}</a>
             </div>
         </form>
 
@@ -298,7 +317,7 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable ">
                 <div class="modal-content">
                    <div class="modal-header bg-danger">
-                        <h5 class="modal-title" id="programSelectionModalLabel">Daftar Program</h5>
+                        <h5 class="modal-title" id="programSelectionModalLabel">{{ __('cruds.feedback.modals.program_list') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="{{ __('global.close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -307,9 +326,9 @@
                         <table class="table table-hover table-bordered table-striped" id="programListTable" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th>Kode Program</th>
-                                    <th>Nama Program</th>
-                                    <th>Opsi</th>
+                                    <th>{{ __('cruds.feedback.fields.kode_program') }}</th>
+                                    <th>{{ __('cruds.feedback.fields.nama_program') }}</th>
+                                    <th>{{ __('global.action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -318,7 +337,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.close') }}</button>
                     </div>
                 </div>
             </div>

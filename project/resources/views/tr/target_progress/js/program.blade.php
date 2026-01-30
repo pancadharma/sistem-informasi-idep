@@ -61,7 +61,7 @@
 						language: {
 							processing: " Memuat..."
 						},
-						lengthMenu: [5, 10, 25, 50, 100],
+						lengthMenu: [10,25,50,100,200,500],
 						bDestroy: true // Important to re-initialize datatable
 					});
 				}
