@@ -9,6 +9,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log; // Import Log facade
 use Illuminate\Support\Facades\DB; // Import DB facade
+use App\Enums\CategoryComplaint;
 
 class FeedbackController extends Controller
 {
@@ -148,5 +149,23 @@ class FeedbackController extends Controller
             ->make(true);
     }
 
-    // ... method lain ...
+
+    public function getCategoryComplaint(Request $request)
+	{
+		$query = strtolower($request->get('q', ''));
+		$options = collect(CategoryComplaint::asSelectArray())
+			->filter(function ($label, $value) use ($query) {
+				return stripos($label, $query) !== false;
+			})
+			->map(function ($label, $value) {
+				return [
+					'id' => $value,   // Select2 expects 'id' for value
+					'text' => $label, // and 'text' for label
+				];
+			})
+			->values();
+
+		return response()->json($options);
+	}
+
 }
