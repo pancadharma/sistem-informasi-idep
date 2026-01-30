@@ -15,6 +15,7 @@ final class TargetProgressStatus extends Enum
 	const TO_BE_CONDUCTED   = 'to_be_conducted';
 	const COMPLETED         = 'completed';
 	const ONGOING           = 'ongoing';
+	const EXCEED_TARGET     = 'exceed_target';
 	
 	public static function getDescription($value): string
 	{

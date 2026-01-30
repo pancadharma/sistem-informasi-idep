@@ -575,7 +575,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('feedback', App\Http\Controllers\Admin\FeedbackController::class);
 
     Route::group(['prefix' => 'api/feedback', 'as' => 'api.feedback.'], function () {
-        Route::get('datatable', [FeedbackController::class, 'datatable'])->name('datatable');
+        Route::get('/', function () {
+            return redirect()->route('feedback.index');
+        })->name('index');
+        Route::get('datatable', [App\Http\Controllers\API\FeedbackController::class, 'datatable'])->name('datatable');
+
+        Route::get('category-complaint', [App\Http\Controllers\API\FeedbackController::class, 'getCategoryComplaint'])->name('category_complaint');
     });
 
 
