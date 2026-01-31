@@ -318,7 +318,7 @@ return [
         'total_pendanaan' => 'Total Pendanaan',
         'total_pendonor' => 'Total Pendonor',
         'total_program' => 'Program Didanai',
-        'rata_rata_donasi' => 'Rata-rata Donasi',
+        'rata_rata_donasi' => 'Rata-Rata Pendanaan',
 
 
 
@@ -685,7 +685,10 @@ return [
             'tindak_lanjut' => 'Rencana Tindak Lanjut',
             'tantangan' => 'Tantangan',
             'rekomendasi' => 'Recommendations',
-
+            'catatan_penulis' => 'Catatan Penulis',
+            'catatan_penulis_helper' => 'Tolong tuliskan catatan penulis',
+            'indikasi_perubahan' => 'Indikasi Perubahan',
+            'indikasi_perubahan_helper' => 'Tolong tuliskan indikasi perubahan yang terjadi setelah kegiatan ini',
 
             'deskripsilatarbelakang' => 'Latar Belakang Kegiatan',
             'deskripsitujuan' => 'Tujuan',

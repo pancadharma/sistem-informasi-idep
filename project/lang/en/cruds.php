@@ -682,6 +682,10 @@ return [
             'tindak_lanjut' => 'Follow-up Plan',
             'tantangan' => 'Challenges',
             'rekomendasi' => 'Recommendations',
+            'catatan_penulis' => 'Author Notes',
+            'catatan_penulis_helper' => 'Please write the author notes',
+            'indikasi_perubahan' => 'Change Indication',
+            'indikasi_perubahan_helper' => 'Please write the change indication',
 
 
 

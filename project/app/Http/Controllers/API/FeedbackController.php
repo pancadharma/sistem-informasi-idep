@@ -89,6 +89,9 @@ class FeedbackController extends Controller
 
             //     return implode(' ', $buttons);
             // })
+            ->editColumn('tanggal_selesai', function ($row) {
+                return $row->tanggal_selesai ? $row->tanggal_selesai->format('d M Y') : '-';
+            })
             ->addColumn('action', function ($row) {
                 $feedbackId = $row->feedback_id_explicit;
 

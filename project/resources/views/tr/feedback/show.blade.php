@@ -160,7 +160,13 @@
                                     @elseif($feedback->status_complaint == 'Selesai') bg-success
                                     @elseif($feedback->status_complaint == 'Ditolak') bg-danger
                                     @else bg-secondary @endif">
-                                    {{ $feedback->status_complaint ?? 'N/A' }}
+                                    @php
+                                        $statusText = $feedback->status_complaint;
+                                        if($statusText == 'Baru') $statusText = __('Baru');
+                                        elseif($statusText == 'Process') $statusText = __('Process');
+                                        elseif($statusText == 'Resolved') $statusText = __('Resolved');
+                                    @endphp
+                                    {{ $statusText ?? 'N/A' }}
                                 </span>
                             </dd>
                             {{-- FIELD BARU: Status Tampilan (Hide/Unhide) --}}
