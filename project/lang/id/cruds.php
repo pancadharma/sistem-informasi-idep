@@ -685,7 +685,10 @@ return [
             'tindak_lanjut' => 'Rencana Tindak Lanjut',
             'tantangan' => 'Tantangan',
             'rekomendasi' => 'Recommendations',
-
+            'catatan_penulis' => 'Catatan Penulis',
+            'catatan_penulis_helper' => 'Tolong tuliskan catatan penulis',
+            'indikasi_perubahan' => 'Indikasi Perubahan',
+            'indikasi_perubahan_helper' => 'Tolong tuliskan indikasi perubahan yang terjadi setelah kegiatan ini',
 
             'deskripsilatarbelakang' => 'Latar Belakang Kegiatan',
             'deskripsitujuan' => 'Tujuan',
