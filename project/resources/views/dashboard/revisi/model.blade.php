@@ -528,7 +528,39 @@
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } }, // Hide legend for single dataset
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                let label = context.label + ': ' + Number(value).toLocaleString('id-ID');
+                                
+                                // Find matching breakdown from allTableData if possible
+                                // Note: distributionChart labels are types (komponen_tipe)
+                                // We need to sum breakdowns of all models of this type
+                                const modelsOfType = allTableData.filter(m => m.komponen_tipe === context.label);
+                                if (modelsOfType.length > 0) {
+                                    const totalsByUnit = {};
+                                    modelsOfType.forEach(m => {
+                                        (m.unit_breakdown || []).forEach(ub => {
+                                            totalsByUnit[ub.unit] = (totalsByUnit[ub.unit] || 0) + ub.total;
+                                        });
+                                    });
+                                    
+                                    const breakdownStr = Object.entries(totalsByUnit)
+                                        .map(([unit, total]) => `${Number(total).toLocaleString('id-ID')} ${unit}`)
+                                        .join(', ');
+                                    
+                                    if (breakdownStr) {
+                                        label = [label, '(' + breakdownStr + ')'];
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
                 scales: { x: { beginAtZero: true } }
             }
         });
@@ -705,9 +737,15 @@
         const total = Number(data.total_unit) || 0;
         const satuan = data.satuan_unit || '';
         
-        let keyInfo = satuan
-            ? `Total ${total.toLocaleString('id-ID')} ${satuan} diimplementasikan di ${locs.length} lokasi.`
-            : `Diimplementasikan di ${locs.length} lokasi.`;
+        const breakdown = data.unit_breakdown || [];
+        let keyInfo = '';
+        
+        if (breakdown.length > 0) {
+            const totalsStr = breakdown.map(b => `${Number(b.total).toLocaleString('id-ID')} ${b.unit}`).join(', ');
+            keyInfo = `Total ${totalsStr} diimplementasikan di ${locs.length} lokasi.`;
+        } else {
+            keyInfo = `Diimplementasikan di ${locs.length} lokasi.`;
+        }
         
         $('#modal-key-info').html(keyInfo);
         $('#modal-targets').html(
