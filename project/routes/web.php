@@ -63,16 +63,19 @@ Route::get('/login', function () {
 
 Route::get('/home', function () {
     if (session('status')) {
-        return redirect()->route('home')->with('status', session('status'));
+        return redirect()->route('dashboard.index')->with('status', session('status'));
     }
-    return redirect()->route('home');
+    return redirect()->route('dashboard.index');
 });
 
 Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/', function () {
+        return redirect()->route('dashboard.index');
+    });
     
     Route::group(['prefix' => 'report', 'as' => 'report.'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('index');
