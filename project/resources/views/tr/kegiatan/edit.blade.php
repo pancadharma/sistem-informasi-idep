@@ -766,7 +766,8 @@
                             </div>
                             {{-- HASIL --}}
                             <div class="tab-pane fade" id="tab-hasil" role="tabpanel" aria-labelledby="tab-hasil">
-                                <div id="dynamic-form-container"></div>
+                                {{-- <div id="dynamic-form-container"></div> --}}
+                                @include('tr.kegiatan.tabs.hasil')
                             </div>
                             <!-- File Uploads Tabs -->
                             <div class="tab-pane fade" id="tab-file" role="tabpanel" aria-labelledby="tab-file">
@@ -940,9 +941,9 @@
 
 @stack('basic_tab_js')
 
-<script>
-    @include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
-</script>
+
+@include('tr.kegiatan.js.hasil_kegiatan_dynamic_form')
+
 <script>
     let uniqueId = Date.now();
     var provinsiLayer = null;

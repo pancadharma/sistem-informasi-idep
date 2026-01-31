@@ -15,10 +15,11 @@
                  // Sesuaikan 'data' & 'name' dengan response JSON dari API Controller Anda
                  { data: 'DT_RowIndex', name: 'DT_RowIndex', title: '{{ __("No") }}', orderable: false, searchable: false, className: 'text-center', width: '5%' },
                  { data: 'program.nama', name: 'program.nama',  title: '{{ __("Program") }}' },
-                 { data: 'tanggal_registrasi', name: 'tanggal_registrasi', title: '{{ __("Tgl Registrasi") }}' },
-                 { data: 'sort_of_complaint', name: 'sort_of_complaint', title: '{{ __("Jenis Keluhan") }}' },
-                 { data: 'status_badge', name: 'status_complaint', title: '{{ __("Status") }}', orderable: false, searchable: false }, // Kolom berisi HTML badge
-                 { data: 'action', name: 'action', title: '{{ __("Aksi") }}', orderable: false, searchable: false, className: 'text-center' } // Kolom berisi HTML tombol
+                 { data: 'tanggal_registrasi', name: 'tanggal_registrasi', title: '{{ __("cruds.feedback.fields.tanggal_registrasi") }}' },
+                 { data: 'sort_of_complaint', name: 'sort_of_complaint', title: '{{ __("cruds.feedback.fields.sort_of_complaint") }}' },
+                 { data: 'status_badge', name: 'status_complaint', title: '{{ __("cruds.feedback.fields.status_complaint") }}', orderable: false, searchable: false }, // Kolom berisi HTML badge
+                 { data: 'tanggal_selesai', name: 'tanggal_selesai', title: '{{ __("cruds.feedback.fields.tanggal_selesai") }}' },
+                 { data: 'action', name: 'action', title: '{{ __("global.actions") }}', orderable: false, searchable: false, className: 'text-center' } // Kolom berisi HTML tombol
             ],
             // KONFIGURASI LAYOUT & BUTTONS (Hanya Ikon + Tooltip)
             layout: {

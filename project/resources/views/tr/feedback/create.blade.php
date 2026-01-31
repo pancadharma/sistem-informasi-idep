@@ -21,7 +21,7 @@
             <div class="card-body">
                 @if (session('error'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Peringatan!</strong> {{ session('error') }}
+        <strong>{{ __('global.warning') }}!</strong> {{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
@@ -114,11 +114,11 @@
                                 <div class="select2-purple">
                                     <select class="form-select form-control select2 @error('sex') is-invalid @enderror" id="add_sex" name="sex">
                                         <option value="" {{ old('sex') == '' ? 'selected' : '' }}>{{ __('cruds.feedback.placeholders.pilih') }}</option>
-                                        <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.male') }}</option>
-                                        <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.female') }}</option>
+                                        <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.laki') }}</option>
+                                        <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
                                         {{-- <option value="Boy" {{ old('sex') == 'Boy' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.laki') }}</option>
                                         <option value="Girl" {{ old('sex') == 'Girl' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.perempuan') }}</option> --}}
-                                        <option value="Unspecified" {{ old('sex') == 'Unspecified' ? 'selected' : '' }}>Unspecified</option>
+                                        <option value="Unspecified" {{ old('sex') == 'Unspecified' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
                                     </select>
                                 </div>
                                 @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror
