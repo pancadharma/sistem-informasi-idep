@@ -318,7 +318,7 @@ return [
         'total_pendanaan' => 'Total Pendanaan',
         'total_pendonor' => 'Total Pendonor',
         'total_program' => 'Program Didanai',
-        'rata_rata_donasi' => 'Rata-rata Donasi',
+        'rata_rata_donasi' => 'Rata-Rata Pendanaan',
 
 
 

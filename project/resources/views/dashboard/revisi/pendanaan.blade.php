@@ -61,7 +61,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3 id="totalFunding">Rp 0</h3>
-                <p>{{ __('cruds.mpendonor.total_pendanaan') }}</p>
+                <p>{{ __('cruds.mpendonor.total_pendanaan') }} <span id="totalFundingPercent" class="badge badge-light ml-1" style="font-size: 0.8rem; vertical-align: middle; display: none;">0%</span></p>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-holding-usd"></i>
@@ -141,8 +141,25 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="chart-container" style="position: relative; height: 400px;">
+                <div class="chart-container" style="position: relative; height: 350px;">
                     <canvas id="sektorChart"></canvas>
+                </div>
+                <!-- Custom Summary Legend below Pie Chart -->
+                <div id="sektorSummary" class="mt-3 p-3 bg-light rounded border" style="display: none;">
+                    <div class="row text-center">
+                        <div class="col-4 border-right">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_pendanaan') }}</h6>
+                            <span id="summaryFunding" class="text-primary" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                        <div class="col-4 border-right">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_pendonor') }}</h6>
+                            <span id="summaryDonors" class="text-success" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                        <div class="col-4">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_program') }}</h6>
+                            <span id="summaryPrograms" class="text-warning" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -286,7 +303,8 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + formatRupiah(context.raw);
+                            const value = context.raw;
+                            return context.label + ': ' + Number(value).toFixed(1) + '%';
                         }
                     }
                 }
@@ -304,9 +322,11 @@
                 scales: { 
                     x: { 
                         beginAtZero: true,
+                        min: 0,
+                        max: 100,
                         ticks: {
                             callback: function(value) {
-                                return formatRupiah(value);
+                                return value + '%';
                             }
                         }
                     } 
@@ -319,7 +339,27 @@
         sektorChart = new Chart(ctxSektor, {
             type: 'doughnut',
             data: { labels: [], datasets: [] },
-            options: commonOptions
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                let label = context.label + ': ' + Number(value).toFixed(1) + '%';
+                                
+                                // Add programs if available
+                                const programs = context.dataset.programs ? context.dataset.programs[context.dataIndex] : null;
+                                if (programs) {
+                                    label = [label, 'Programs: ' + programs];
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
         });
         
         // Timeline Chart (Line)
@@ -383,15 +423,30 @@
         $('#totalDonors').text(stats.totalDonors);
         $('#totalPrograms').text(stats.totalPrograms);
         $('#avgDonation').text(formatRupiah(stats.avgDonation));
+
+        // Update Percentage info
+        if (stats.grandTotalFunding > 0 && stats.totalFunding > 0) {
+            const percent = ((stats.totalFunding / stats.grandTotalFunding) * 100).toFixed(1);
+            $('#totalFundingPercent').text(percent + '%').show();
+        } else {
+            $('#totalFundingPercent').hide();
+        }
+
+        // Update Pie Chart Summary Legend
+        $('#summaryFunding').text(formatRupiah(stats.totalFunding));
+        $('#summaryDonors').text(stats.totalDonors);
+        $('#summaryPrograms').text(stats.totalPrograms);
+        $('#sektorSummary').fadeIn();
     }
     
     function updateSDGChart(data) {
+        const total = data.reduce((sum, item) => sum + parseFloat(item.total), 0);
         const labels = data.map(item => item.sdg_name);
-        const values = data.map(item => item.total);
+        const values = data.map(item => total > 0 ? (item.total / total * 100) : 0);
         
         sdgChart.data.labels = labels;
         sdgChart.data.datasets = [{
-            label: 'Total Pendanaan',
+            label: 'Persentase Kontribusi',
             data: values,
             backgroundColor: generateColors(values.length),
             borderRadius: 4
@@ -400,13 +455,16 @@
     }
     
     function updateSektorChart(data) {
+        const total = data.reduce((sum, item) => sum + parseFloat(item.total), 0);
         const labels = data.map(item => item.sektor_name);
-        const values = data.map(item => item.total);
+        const values = data.map(item => total > 0 ? (item.total / total * 100) : 0);
+        const programs = data.map(item => item.program_names || '-');
         
         sektorChart.data.labels = labels;
         sektorChart.data.datasets = [{
             data: values,
-            backgroundColor: generateColors(values.length)
+            backgroundColor: generateColors(values.length),
+            programs: programs // Store program names in the dataset
         }];
         sektorChart.update();
     }
