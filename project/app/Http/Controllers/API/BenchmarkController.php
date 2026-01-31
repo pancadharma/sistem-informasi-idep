@@ -191,6 +191,7 @@ class BenchmarkController extends Controller
     public function getJenisKegiatan(Request $request)
     {
         $search = $request->search;
+        $programId = $request->program_id;
 
         $query = Jenis_Kegiatan::query();
 
@@ -200,8 +201,26 @@ class BenchmarkController extends Controller
 
         $results = $query->paginate(10);
 
+        $validJenisIds = [];
+        if ($programId) {
+            $validJenisIds = DB::table('trkegiatan as k')
+                ->join('trprogramoutcomeoutputactivity as pooa', 'k.programoutcomeoutputactivity_id', '=', 'pooa.id')
+                ->join('trprogramoutcomeoutput as poo', 'pooa.programoutcomeoutput_id', '=', 'poo.id')
+                ->join('trprogramoutcome as po', 'poo.programoutcome_id', '=', 'po.id')
+                ->where('po.program_id', $programId)
+                ->distinct()
+                ->pluck('k.jeniskegiatan_id')
+                ->toArray();
+        }
+
         return response()->json([
-            'results' => $results->items(),
+            'results' => collect($results->items())->map(function($item) use ($programId, $validJenisIds) {
+                return [
+                    'id' => $item->id,
+                    'text' => $item->nama,
+                    'disabled' => $programId ? !in_array($item->id, $validJenisIds) : false
+                ];
+            }),
             'pagination' => ['more' => $results->hasMorePages()]
         ]);
     }
