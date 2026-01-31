@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.mpendonor.dashboard'))
-@section('content_header_title', __('cruds.mpendonor.dashboard'))
+@section('subtitle', __('dashboard.dashboard.pendanaan.title'))
+@section('content_header_title', __('dashboard.dashboard.pendanaan.title'))
 @section('content_header_right')
     
 @endsection
@@ -60,7 +60,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
             <div class="inner">
-                <h3 id="totalFunding">Rp 0</h3>
+                <h3 id="totalFunding">{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0</h3>
                 <p>{{ __('cruds.mpendonor.total_pendanaan') }} <span id="totalFundingPercent" class="badge badge-light ml-1" style="font-size: 0.8rem; vertical-align: middle; display: none;">0%</span></p>
             </div>
             <div class="icon">
@@ -93,7 +93,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
-                <h3 id="avgDonation">Rp 0</h3>
+                <h3 id="avgDonation">{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0</h3>
                 <p>{{ __('cruds.mpendonor.rata_rata_donasi') }}</p>
             </div>
             <div class="icon">
@@ -220,7 +220,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="text-right">Total:</th>
+                                <th class="text-right">{{ __('dashboard.dashboard.pendanaan.table.total_label') }}</th>
                                 <th class="text-right" id="footerTotalPrograms"></th>
                                 <th class="text-right" id="footerTotalDonations"></th>
                             </tr>
@@ -352,7 +352,7 @@
                                 // Add programs if available
                                 const programs = context.dataset.programs ? context.dataset.programs[context.dataIndex] : null;
                                 if (programs) {
-                                    label = [label, 'Programs: ' + programs];
+                                    label = [label, "{{ __('dashboard.dashboard.pendanaan.charts.programs') }}: " + programs];
                                 }
                                 return label;
                             }
@@ -375,7 +375,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return 'Pendanaan: ' + formatRupiah(context.raw);
+                                return "{{ __('dashboard.dashboard.pendanaan.charts.funding') }}: " + formatRupiah(context.raw);
                             }
                         }
                     }
@@ -438,6 +438,7 @@
         $('#summaryPrograms').text(stats.totalPrograms);
         $('#sektorSummary').fadeIn();
     }
+    const contributionLabel = "{{ __('dashboard.dashboard.pendanaan.charts.contribution_percentage') }}";
     
     function updateSDGChart(data) {
         const total = data.reduce((sum, item) => sum + parseFloat(item.total), 0);
@@ -446,7 +447,7 @@
         
         sdgChart.data.labels = labels;
         sdgChart.data.datasets = [{
-            label: 'Persentase Kontribusi',
+            label: contributionLabel,
             data: values,
             backgroundColor: generateColors(values.length),
             borderRadius: 4
@@ -475,7 +476,7 @@
         
         timelineChart.data.labels = labels;
         timelineChart.data.datasets = [{
-            label: 'Total Pendanaan',
+            label: "{{ __('dashboard.dashboard.pendanaan.charts.funding') }}",
             data: values,
             borderColor: '#667eea',
             backgroundColor: 'rgba(102, 126, 234, 0.1)',
@@ -502,13 +503,16 @@
             $('#footerTotalDonations').text(formatRupiah(totalDonations));
         } else {
             $('#footerTotalPrograms').text('0');
-            $('#footerTotalDonations').text('Rp 0');
+            $('#footerTotalDonations').text("{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0");
         }
     }
     
+    const currencySymbol = "{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} ";
+    const formattingLocale = "{{ str_replace('_', '-', app()->getLocale()) }}";
+
     function formatRupiah(value) {
-        if (!value || value === 0) return 'Rp 0';
-        return 'Rp ' + Number(value).toLocaleString('id-ID');
+        if (!value || value === 0) return currencySymbol + '0';
+        return currencySymbol + Number(value).toLocaleString(formattingLocale);
     }
     
     function generateColors(count) {

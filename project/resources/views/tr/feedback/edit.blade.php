@@ -131,11 +131,11 @@
                             <div class="select2-purple">
                                 <select class="form-select form-control select2 @error('sex') is-invalid @enderror" id="edit_sex" name="sex">
                                     <option value="" {{ old('sex', $feedback->sex) == '' ? 'selected' : '' }}>{{ __('cruds.feedback.placeholders.pilih') }}</option>
-                                    <option value="Male" {{ old('sex', $feedback->sex) == 'Male' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.male') }}</option>
-                                    <option value="Female" {{ old('sex', $feedback->sex) == 'Female' ? 'selected' : '' }}>{{ __('cruds.kegiatan.peserta.female') }}</option>
+                                    <option value="Male" {{ old('sex', $feedback->sex) == 'Male' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.laki') }}</option>
+                                    <option value="Female" {{ old('sex', $feedback->sex) == 'Female' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.perempuan') }}</option>
                                     {{-- <option value="Boy" {{ old('sex', $feedback->sex) == 'Boy' ? 'selected' : '' }}>Boy</option>
                                     <option value="Girl" {{ old('sex', $feedback->sex) == 'Girl' ? 'selected' : '' }}>Girl</option> --}}
-                                    <option value="Unspecified" {{ old('sex', $feedback->sex) == 'Unspecified' ? 'selected' : '' }}>Unspecified</option>
+                                    <option value="Unspecified" {{ old('sex', $feedback->sex) == 'Unspecified' ? 'selected' : '' }}>{{ __('cruds.beneficiary.penerima.lainnya') }}</option>
                                 </select>
                             </div>
                             @error('sex') <div class="invalid-feedback">{{ $message }}</div> @enderror

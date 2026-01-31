@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-12 mt-2">
-            <h2 class="text-muted" style="font-family: 'Figtree', sans-serif; font-weight: 700;">Dashboard Beneficiaries</h2>
+            <h2 class="text-muted" style="font-family: 'Figtree', sans-serif; font-weight: 700;">{{ __('dashboard.dashboard.beneficiary.title') }}</h2>
             {{-- <p class="text-muted" style="font-family: 'Figtree', sans-serif;">Monitoring penerima manfaat dan sebaran lokasi kegiatan.</p> --}}
         </div>
     </div>
@@ -15,7 +15,7 @@
             <div class="small-box bg-info">
                 <div class="inner">
                     <h3 id="totalPrograms">0</h3>
-                    <p>Total Program</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.total_program') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-project-diagram"></i>
@@ -26,7 +26,7 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3 id="totalLocations">0</h3>
-                    <p>Total Lokasi</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.total_location') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-map-marker-alt"></i>
@@ -38,7 +38,7 @@
                 {{-- Distinct Blue as per user image for Total Beneficiaries --}}
                 <div class="inner">
                     <h3 id="totalBeneficiaries">0</h3>
-                    <p>Total Penerima Manfaat</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.total_beneficiary') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-users"></i>
@@ -49,7 +49,7 @@
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3 id="families">0</h3>
-                    <p>Keluarga</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.family') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-users"></i>
@@ -64,7 +64,7 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3 id="maleBeneficiaries">0</h3>
-                    <p>Laki-Laki</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.male') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-male"></i>
@@ -75,7 +75,7 @@
             <div class="small-box bg-warning">
                 <div class="inner">
                     <h3 id="femaleBeneficiaries">0</h3>
-                    <p>Perempuan</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.female') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-female"></i>
@@ -86,7 +86,7 @@
             <div class="small-box bg-danger">
                 <div class="inner">
                     <h3 id="childrenMale">0</h3>
-                    <p>Anak Laki-Laki</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.child_male') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-child"></i>
@@ -98,7 +98,7 @@
                  {{-- Teal/Blue-ish for Child Female --}}
                 <div class="inner">
                     <h3 id="childrenFemale">0</h3>
-                    <p>Anak Perempuan</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.child_female') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-child-dress"></i>
@@ -113,7 +113,7 @@
             <div class="small-box bg-success">
                 <div class="inner">
                     <h3 id="disability">0</h3>
-                    <p>Disabilitas</p>
+                    <p>{{ __('dashboard.dashboard.beneficiary.statistics.disability') }}</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-wheelchair"></i>
@@ -154,12 +154,12 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="statusFilter">Status:</label>
+                    <label for="statusFilter">{{ __('dashboard.dashboard.beneficiary.filters.status') }}</label>
                     <select id="statusFilter" class="form-control">
-                        <option value="">Semua Status</option>
-                        <option value="running">Sedang Berjalan</option>
-                        <option value="completed">Sudah Selesai</option>
-                        <option value="pending">Belum Dimulai</option>
+                        <option value="">{{ __('dashboard.dashboard.beneficiary.filters.all_status') }}</option>
+                        <option value="running">{{ __('dashboard.dashboard.beneficiary.filters.running') }}</option>
+                        <option value="completed">{{ __('dashboard.dashboard.beneficiary.filters.completed') }}</option>
+                        <option value="pending">{{ __('dashboard.dashboard.beneficiary.filters.pending') }}</option>
                     </select>
                 </div>
             </div>
@@ -171,7 +171,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-map-marked-alt"></i> Peta Sebaran Lokasi Kegiatan
+                        <i class="fas fa-map-marked-alt"></i> {{ __('dashboard.dashboard.beneficiary.map.title') }}
                         <span class="badge bg-primary ms-2" id="markerCount">0 Lokasi</span>
                     </h3>
                 </div>
@@ -186,7 +186,7 @@
             {{-- Gender Distribution --}}
             <div class="card mb-4">
                 <div class="card-header">
-                    <h3 class="card-title">Persebaran Gender</h3>
+                    <h3 class="card-title">{{ __('dashboard.dashboard.beneficiary.charts.gender_distribution') }}</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="genderChart" style="height: 300px;"></canvas>
@@ -197,7 +197,7 @@
             {{-- Kelompok Marjinal --}}
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-users-between-lines"></i> Kelompok Marjinal</h3>
+                    <h3 class="card-title"><i class="fas fa-users-between-lines"></i> {{ __('dashboard.dashboard.beneficiary.charts.marginal_group') }}</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="marjinalChart" style="height: 300px;"></canvas>
@@ -217,14 +217,14 @@
                     <table class="table table-sm table-hover text-nowrap datatable" width="100%">
                         <thead>
                             <tr>
-                                <th>Nama Program</th>
-                                <th>Kode</th>
-                                <th>Tanggal Mulai</th>
-                                <th>Tanggal Selesai</th>
-                                <th>Beneficiary (BTOR/MEALS)</th>
-                                <th>Status</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.program_name') }}</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.code') }}</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.start_date') }}</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.end_date') }}</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.beneficiary') }}</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.status') }}</th>
                                 {{-- <th>PIC</th> --}}
-                                <th>Aksi</th>
+                                <th>{{ __('dashboard.dashboard.beneficiary.table.headers.action') }}</th>
                             </tr>
                         </thead>
                         <tbody id="programStatusTableBody">
@@ -241,40 +241,40 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="programDetailModalLabel">Detail Program</h5>
+                    <h5 class="modal-title" id="programDetailModalLabel">{{ __('dashboard.dashboard.beneficiary.modal.title') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <dl class="row">
-                        <dt class="col-sm-3">Nama Program</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.program_name') }}</dt>
                         <dd class="col-sm-9" id="modalProgramName"></dd>
 
-                        <dt class="col-sm-3">Kode</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.code') }}</dt>
                         <dd class="col-sm-9" id="modalProgramCode"></dd>
 
-                        <dt class="col-sm-3">Status</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.status') }}</dt>
                         <dd class="col-sm-9" id="modalProgramStatus"></dd>
 
-                        <dt class="col-sm-3">Periode</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.period') }}</dt>
                         <dd class="col-sm-9" id="modalProgramPeriod"></dd>
 
                         {{-- <dt class="col-sm-3">PIC</dt>
                         <dd class="col-sm-9" id="modalProgramPic"></dd> --}}
 
-                        <dt class="col-sm-3">Total Nilai</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.value') }}</dt>
                         <dd class="col-sm-9" id="modalProgramValue"></dd>
 
-                        <dt class="col-sm-3">BTOR / Meals Beneficiary</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.beneficiary') }}</dt>
                         <dd class="col-sm-9" id="modalProgramBeneficiaries"></dd>
 
-                        <dt class="col-sm-3">Deskripsi</dt>
+                        <dt class="col-sm-3">{{ __('dashboard.dashboard.beneficiary.modal.description') }}</dt>
                         <dd class="col-sm-9" id="modalProgramDescription"></dd>
                     </dl>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('dashboard.dashboard.beneficiary.modal.close') }}</button>
                 </div>
             </div>
         </div>
@@ -465,8 +465,8 @@
                     console.error('Error loading data:', xhr);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal memuat data',
-                        text: 'Terjadi kesalahan saat memuat data dashboard',
+                        title: "{{ __('dashboard.dashboard.beneficiary.js.load_error_title') }}",
+                        text: "{{ __('dashboard.dashboard.beneficiary.js.load_error_text') }}",
                         timer: 3000
                     });
                 }
@@ -492,7 +492,7 @@
             container.empty();
             
             if (!programs || programs.length === 0) {
-                container.html('<tr><td colspan="7" class="text-center text-muted">Tidak ada data program</td></tr>');
+                container.html('<tr><td colspan="7" class="text-center text-muted">{{ __("dashboard.dashboard.beneficiary.table.empty") }}</td></tr>');
                 return;
             }
             
@@ -508,7 +508,7 @@
                         </td>
                         <td><span class="status-badge badge-${program.statusClass}">${program.status}</span></td>
                         <td>
-                             <button class="btn btn-sm btn-info view-details" title="Lihat Detail"><i class="fas fa-eye"></i></button>
+                             <button class="btn btn-sm btn-info view-details" title="{{ __('dashboard.dashboard.beneficiary.js.detail_tooltip') }}"><i class="fas fa-eye"></i></button>
                         </td>
                     </tr>
                 `;
@@ -533,7 +533,8 @@
             markers = [];
             
             if (!locations || locations.length === 0) {
-                $('#markerCount').text('0 Lokasi');
+                let emptyCountStr = "{{ __('dashboard.dashboard.beneficiary.map.location_count', ['count' => 0]) }}";
+                $('#markerCount').text(emptyCountStr);
                 return;
             }
             
@@ -555,23 +556,23 @@
                             content: `
                                 <div style="font-family: Figtree, sans-serif; min-width: 250px;">
                                     <h6 style="color: #667eea; font-weight: 700;">${location.program_nama}</h6>
-                                    <p><strong>Kode:</strong> ${location.program_kode}<br>
-                                    <strong>Objektif:</strong> ${location.program_objektif}<br>
-                                    <strong>Status:</strong> <span class="badge badge-${location.program_status}">${location.program_status}</span></p>
+                                    <p><strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.code') }}:</strong> ${location.program_kode}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.objective') }}:</strong> ${location.program_objektif}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.status') }}:</strong> <span class="badge badge-${location.program_status}">${location.program_status}</span></p>
                                     <hr>
-                                    <p><strong>Desa:</strong> ${location.desa_nama}<br>
-                                    <strong>Kecamatan:</strong> ${location.kecamatan_nama}<br>
-                                    <strong>Kabupaten:</strong> ${location.kabupaten_nama}<br>
-                                    <strong>Provinsi:</strong> ${location.provinsi_nama}</p>
+                                    <p><strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.village') }}:</strong> ${location.desa_nama}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.subdistrict') }}:</strong> ${location.kecamatan_nama}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.regency') }}:</strong> ${location.kabupaten_nama}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.province') }}:</strong> ${location.provinsi_nama}</p>
                                     <hr>
-                                    <strong>Kode Kegiatan:</strong> ${location.kode_kegiatan}<br>
-                                    <strong>Nama Kegiatan:</strong> ${location.nama_kegiatan}<br>
-                                    <strong>Jenis Kegiatan:</strong> ${location.aktivitas_list}<br>
-                                    <strong>Status Kegiatan:</strong> <span class="badge badge-${location.kegiatan_status}">${location.kegiatan_status}</span><br><br>
-                                    <strong>Beneficiary:</strong>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.activity_code') }}:</strong> ${location.kode_kegiatan}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.activity_name') }}:</strong> ${location.nama_kegiatan}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.activity_type') }}:</strong> ${location.aktivitas_list}<br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.activity_status') }}:</strong> <span class="badge badge-${location.kegiatan_status}">${location.kegiatan_status}</span><br><br>
+                                    <strong>{{ __('dashboard.dashboard.beneficiary.js.marker_popup.beneficiary') }}:</strong>
                                         <ul class="m-0">
-                                            <li><strong><a href="${kegiatanUrl}" title="Lihat Detail Kegiatan">BTOR : <span class="text-danger">${location.penerimamanfaat_btor_total}</span> </a></strong></li>
-                                            <li><strong><a href="${beneficiaryUrl}" title="Lihat Detail Penerima Manfaat">MEALS : <span class="text-success">${location.penerimamanfaat_meals_total}</span></a></strong></li>
+                                            <li><strong><a href="${kegiatanUrl}" title="{{ __('dashboard.dashboard.beneficiary.js.marker_popup.view_activity') }}">BTOR : <span class="text-danger">${location.penerimamanfaat_btor_total}</span> </a></strong></li>
+                                            <li><strong><a href="${beneficiaryUrl}" title="{{ __('dashboard.dashboard.beneficiary.js.marker_popup.view_beneficiary') }}">MEALS : <span class="text-success">${location.penerimamanfaat_meals_total}</span></a></strong></li>
                                         </ul>
                                     <p><small><i class="far fa-calendar"></i> ${location.kegiatan_mulai} - ${location.kegiatan_selesai}</small></p>
                                 </div>
@@ -589,7 +590,8 @@
                 }
             });
             
-            $('#markerCount').text(`${markers.length} Lokasi`);
+            let countStr = "{{ __('dashboard.dashboard.beneficiary.map.location_count', ['count' => ':count']) }}";
+            $('#markerCount').text(countStr.replace(':count', markers.length));
             
             // Fit bounds to markers
             if (markers.length > 0) {
@@ -636,7 +638,7 @@
                 data: {
                     labels: [],
                     datasets: [{
-                        label: 'Jumlah',
+                        label: "{{ __('dashboard.dashboard.beneficiary.charts.quantity') }}",
                         data: [],
                         backgroundColor: 'rgba(16, 185, 129, 0.7)',
                         borderColor: 'rgba(16, 185, 129, 1)',
