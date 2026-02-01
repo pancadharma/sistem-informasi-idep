@@ -271,6 +271,7 @@ class Pendanaan extends Controller
             ->filter(fn($d) => $d['total_donated'] > 0); // Only show donors with contributions
 
         // --- 4. Timeline Data (Funding by Year or Month) ---
+        // --- 4. Timeline Data (Funding by Year or Month) ---
         if ($tahun) {
             // If year filter is active, show monthly breakdown
             $timelineData = DB::table('trprogrampendonor as pp')
@@ -283,11 +284,32 @@ class Pendanaan extends Controller
                 ->groupBy('month')
                 ->orderBy('month', 'asc')
                 ->get()
-                ->map(function ($item) {
+                ->map(function ($item) use ($programId, $donorId, $tahun) {
                     $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    
+                    // Fetch breakdown for this month
+                    $breakdown = DB::table('trprogrampendonor as pp')
+                        ->join('trprogram as p', 'pp.program_id', '=', 'p.id')
+                        ->select('p.nama', DB::raw('SUM(pp.nilaidonasi) as program_total'))
+                        ->when($programId, fn($q) => $q->where('pp.program_id', $programId))
+                        ->when($donorId, fn($q) => $q->where('pp.pendonor_id', $donorId))
+                        ->whereYear('p.tanggalmulai', $tahun)
+                        ->whereMonth('p.tanggalmulai', $item->month)
+                        ->groupBy('p.id', 'p.nama')
+                        ->orderBy('program_total', 'desc')
+                        ->get()
+                        ->map(function($prog) use ($item) {
+                            return [
+                                'nama' => $prog->nama,
+                                'total' => $prog->program_total,
+                                'percentage' => $item->total > 0 ? ($prog->program_total / $item->total) * 100 : 0
+                            ];
+                        });
+
                     return [
                         'label' => $monthNames[$item->month],
-                        'total' => $item->total
+                        'total' => $item->total,
+                        'breakdown' => $breakdown
                     ];
                 });
         } else {
@@ -301,10 +323,29 @@ class Pendanaan extends Controller
                 ->groupBy('year')
                 ->orderBy('year', 'asc')
                 ->get()
-                ->map(function ($item) {
+                ->map(function ($item) use ($programId, $donorId) {
+                    // Fetch breakdown for this year
+                    $breakdown = DB::table('trprogrampendonor as pp')
+                        ->join('trprogram as p', 'pp.program_id', '=', 'p.id')
+                        ->select('p.nama', DB::raw('SUM(pp.nilaidonasi) as program_total'))
+                        ->when($programId, fn($q) => $q->where('pp.program_id', $programId))
+                        ->when($donorId, fn($q) => $q->where('pp.pendonor_id', $donorId))
+                        ->whereYear('p.tanggalmulai', $item->year)
+                        ->groupBy('p.id', 'p.nama')
+                        ->orderBy('program_total', 'desc')
+                        ->get()
+                        ->map(function($prog) use ($item) {
+                            return [
+                                'nama' => $prog->nama,
+                                'total' => $prog->program_total,
+                                'percentage' => $item->total > 0 ? ($prog->program_total / $item->total) * 100 : 0
+                            ];
+                        });
+
                     return [
                         'label' => (string)$item->year,
-                        'total' => $item->total
+                        'total' => $item->total,
+                        'breakdown' => $breakdown
                     ];
                 });
         }

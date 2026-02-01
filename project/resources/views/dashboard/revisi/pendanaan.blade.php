@@ -9,7 +9,6 @@
 @section('content_body')
 <!-- Filter Section -->
 <div class="row mb-3">
-
     <div class="col-lg-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
@@ -375,7 +374,16 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return "{{ __('dashboard.dashboard.pendanaan.charts.funding') }}: " + formatRupiah(context.raw);
+                                let label = ["{{ __('dashboard.dashboard.pendanaan.charts.funding') }}: " + formatRupiah(context.raw)];
+                                
+                                // Add breakdown if available
+                                const breakdown = context.dataset.breakdown ? context.dataset.breakdown[context.dataIndex] : null;
+                                if (breakdown && breakdown.length > 0) {
+                                    breakdown.forEach(function(prog) {
+                                        label.push(prog.nama + ': ' + formatRupiah(prog.total) + ' (' + Number(prog.percentage).toFixed(1) + '%)');
+                                    });
+                                }
+                                return label;
                             }
                         }
                     }
@@ -474,10 +482,14 @@
         const labels = data.map(item => item.label);
         const values = data.map(item => item.total);
         
+        // Debug breakdown data
+        console.log('Timeline Data:', data);
+        
         timelineChart.data.labels = labels;
         timelineChart.data.datasets = [{
             label: "{{ __('dashboard.dashboard.pendanaan.charts.funding') }}",
             data: values,
+            breakdown: data.map(item => item.breakdown), // Pass breakdown data
             borderColor: '#667eea',
             backgroundColor: 'rgba(102, 126, 234, 0.1)',
             tension: 0.3,
@@ -486,6 +498,7 @@
             pointBackgroundColor: '#667eea',
             fill: true
         }];
+        console.log('Dataset Breakdown:', timelineChart.data.datasets[0].breakdown);
         timelineChart.update();
     }
     
