@@ -313,7 +313,7 @@
         // SDG Chart (Horizontal Bar)
         const ctxSdg = document.getElementById('sdgChart').getContext('2d');
         sdgChart = new Chart(ctxSdg, {
-            type: 'bar',
+            type: 'pie',
             data: { labels: [], datasets: [] },
             options: { 
                 ...commonOptions, 
