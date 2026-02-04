@@ -72,7 +72,8 @@
 
     <div class="program-info">
         <strong>Program:</strong> {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}<br>
-        <strong>Jenis Kegiatan:</strong> {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
+        <strong>Jenis Kegiatan:</strong> {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}<br>
+        <strong>Fase Pelaporan:</strong> {{ $kegiatan->fasepelaporan ?? '-' }}
     </div>
 
     <table class="metrics-table">
@@ -91,6 +92,64 @@
             </td>
         </tr>
     </table>
+
+    <div class="section">
+        <div class="section-header">Partisipan Disagregat</div>
+        <table class="table-bordered" style="text-align: center;">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Kategori</th>
+                    <th>Wanita</th>
+                    <th>Pria</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: left;">Dewasa (25-59)</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdewasaperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdewasalakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdewasatotal }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Lansia (60+)</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatlansiaperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatlansialakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatlansiatotal }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Remaja (18-24)</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatremajaperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatremajalakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatremajatotal }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Anak (&lt; 18)</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatanakperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatanaklakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatanaktotal }}</td>
+                </tr>
+                <tr style="font-weight: bold; background-color: #f2f2f2;">
+                    <td style="text-align: left;">TOTAL USIA</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatperempuantotal }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatlakilakitotal }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaattotal }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Disabilitas</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdisabilitasperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdisabilitaslakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatdisabilitastotal }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;">Marjinal Lainnya</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatmarjinalperempuan }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatmarjinallakilaki }}</td>
+                    <td>{{ (int)$kegiatan->penerimamanfaatmarjinaltotal }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="section">
         <div class="section-header">1. {{ __('cruds.kegiatan.description.latar_belakang') }}</div>

@@ -66,12 +66,18 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="p-3 bg-light rounded border-left border-info">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded border-left border-info h-100">
                                 <small class="text-uppercase text-muted font-weight-bold d-block mb-1">Jenis Kegiatan</small>
                                 <span class="badge badge-info px-3 py-2">
                                     {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
                                 </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="p-3 bg-light rounded border-left border-warning h-100 text-center">
+                                <small class="text-uppercase text-muted font-weight-bold d-block mb-1">Fase</small>
+                                <span class="h4 font-weight-bold text-dark">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
                             </div>
                         </div>
                     </div>
@@ -153,6 +159,79 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        {{-- Disaggregated Participant Table --}}
+                        <div class="mb-4 px-2">
+                            <h5 class="font-weight-bold mb-3 text-muted">
+                                <i class="fas fa-users-cog mr-2"></i> {{ __('cruds.kegiatan.peserta.label') }} (Disagregat)
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm text-center">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="text-left">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.dewasa') }} (25-59)</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.lansia') }} (60+)</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.remaja') }} (18-24)</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.anak') }} (< 18)</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</td>
+                                        </tr>
+                                        <tr class="bg-light font-weight-bold">
+                                            <td class="text-left">TOTAL USIA</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</td>
+                                            <td class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</td>
+                                        </tr>
+                                    </tbody>
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="text-left">Kelompok Khusus</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                            <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.disabilitas') }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-left">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
+                                            <td>{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
+                                            <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         {{-- Dynamic Content Following Create Order --}}
@@ -253,11 +332,12 @@
             {{-- Documents Card --}}
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
-                    <i class="fas fa-paperclip mr-2 text-muted"></i> Dokumen & Lampiran
+                    <i class="fas fa-file-alt mr-2 text-primary"></i> Dokumen Pendukung
                 </div>
                 <div class="card-body pt-2 px-0">
                     <div class="list-group list-group-flush">
-                        @forelse($kegiatan->getMedia('dokumen_pendukung') as $media)
+                        @php $docs = $kegiatan->getMedia('dokumen_pendukung'); @endphp
+                        @forelse($docs as $media)
                             <a href="{{ $media->getUrl() }}" target="_blank" class="list-group-item list-group-item-action border-0 py-2">
                                 <div class="d-flex w-100 justify-content-between align-items-center">
                                     <div class="text-truncate mr-2">
@@ -271,22 +351,36 @@
                             <div class="px-3 py-2 text-muted small italic">Tidak ada dokumen.</div>
                         @endforelse
                     </div>
+                </div>
+            </div>
 
-                    @if($kegiatan->getMedia('media_pendukung')->count() > 0)
-                        <div class="px-3 py-2 border-top mt-2">
-                            <h6 class="small font-weight-bold text-muted mb-2">GALERI MEDIA</h6>
-                            <div class="row no-gutters">
-                                @foreach($kegiatan->getMedia('media_pendukung')->take(6) as $media)
-                                    @if(str_starts_with($media->mime_type, 'image/'))
-                                        <div class="col-4 p-1">
-                                            <a href="{{ $media->getUrl() }}" target="_blank">
-                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded shadow-sm" style="height: 60px; width: 100%; object-fit: cover;">
-                                            </a>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
+            {{-- Media Card --}}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
+                    <i class="fas fa-images mr-2 text-success"></i> Media Pendukung
+                </div>
+                <div class="card-body pt-2">
+                    @php $mediaList = $kegiatan->getMedia('media_pendukung'); @endphp
+                    @if($mediaList->count() > 0)
+                        <div class="row no-gutters">
+                            @foreach($mediaList as $media)
+                                @if(str_starts_with($media->mime_type, 'image/'))
+                                    <div class="col-4 p-1">
+                                        <a href="{{ $media->getUrl() }}" target="_blank" title="{{ $media->name }}">
+                                            <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded shadow-sm" style="height: 60px; width: 100%; object-fit: cover;">
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="col-12 mb-1">
+                                        <a href="{{ $media->getUrl() }}" target="_blank" class="small text-truncate d-block">
+                                            <i class="fas fa-play-circle mr-1"></i> {{ $media->name }}
+                                        </a>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
+                    @else
+                        <div class="text-muted small italic">Tidak ada media.</div>
                     @endif
                 </div>
             </div>
