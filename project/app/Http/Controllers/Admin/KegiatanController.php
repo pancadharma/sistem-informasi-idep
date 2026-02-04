@@ -560,6 +560,23 @@ class KegiatanController extends Controller
         ));
     }
 
+    public function show_jules($id)
+    {
+        abort_if(Gate::denies('kegiatan_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $kegiatan = BTOR::getData($id);
+
+        $dokumenPendukung = $kegiatan->getMedia('dokumen_pendukung');
+        $mediaPendukung = $kegiatan->getMedia('media_pendukung');
+        $durationInDays = $kegiatan->getDurationInDays();
+
+        return view('tr.kegiatan.show_jules', compact(
+            'kegiatan',
+            'dokumenPendukung',
+            'mediaPendukung',
+            'durationInDays'
+        ));
+    }
+
     public function show2($id)
     {
         // Reuse the logic from show, but render the new view
