@@ -19,7 +19,7 @@
                 <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-info" target="_blank">
                     <i class="fas fa-print mr-1"></i> {{ __('btor.print_preview') }}
                 </a>
-                <a href="{{ route('btor.export.pdf', $kegiatan->id) }}" class="btn btn-danger ml-2">
+                <a href="{{ route('kegiatan.export_jules_pdf', $kegiatan->id) }}" class="btn btn-danger ml-2">
                     <i class="fas fa-file-pdf mr-1"></i> PDF
                 </a>
                 <a href="{{ route('btor.export.docx', $kegiatan->id) }}" class="btn btn-primary ml-2">

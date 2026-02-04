@@ -270,6 +270,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('kegiatan/show2/{id}', [KegiatanController::class, 'show2'])->name('kegiatan.show2');
     Route::get('kegiatan/show/jules/{id}', [KegiatanController::class, 'show_jules'])->name('kegiatan.show_jules');
+    Route::get('kegiatan/show/jules/export/pdf/{id}', [KegiatanController::class, 'export_jules_pdf'])->name('kegiatan.export_jules_pdf');
     //Master Jenis Bantuan
     Route::resource('jenisbantuan', JenisbantuanController::class);
     Route::get('datajenisbantuan', [JenisbantuanController::class, 'datajenisbantuan'])->name('data.jenisbantuan');
