@@ -58,25 +58,25 @@
                     </div>
 
                     <div class="row mb-4">
-                        <div class="col-md-6">
+                        <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
                             <div class="p-3 bg-light rounded border-left border-success">
-                                <small class="text-uppercase text-muted font-weight-bold d-block mb-1">Program</small>
+                                <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Program</h5>
                                 <span class="font-weight-bold text-dark">
                                     {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="p-3 bg-light rounded border-left border-info h-100">
-                                <small class="text-uppercase text-muted font-weight-bold d-block mb-1">Jenis Kegiatan</small>
-                                <span class="badge badge-info px-3 py-2">
+                        <div class="col-md-12 col-sm-12 order-2 mb-2 col-xl-4">
+                            <div class="p-3 bg-light rounded border-left border-info h-100 text-left">
+                                <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Jenis Kegiatan</h5>
+                                <span class="badge badge-info text-wrap text-left">
                                     {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="p-3 bg-light rounded border-left border-warning h-100 text-center">
-                                <small class="text-uppercase text-muted font-weight-bold d-block mb-1">Fase</small>
+                        <div class="col-md-12 col-sm-12 order-3 mb-2 col-xl-4">
+                            <div class="p-3 bg-light rounded border-left border-warning h-100">
+                                <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Fase</h5>
                                 <span class="h4 font-weight-bold text-dark">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
                             </div>
                         </div>
@@ -277,7 +277,7 @@
         </div>
 
         {{-- Right Column: Side Information --}}
-        <div class="col-lg-4">
+        <div class="col-lg-4 order-1">
             {{-- Metrics Card --}}
             <div class="card shadow-sm border-0 mb-4 bg-primary text-white">
                 <div class="card-body">
