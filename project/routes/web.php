@@ -2,50 +2,55 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BTORController;
 use App\Http\Controllers\HomeController;
+use Monolog\Handler\RotatingFileHandler;
+use App\Http\Controllers\MDivisiController;
+use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\Admin\DesaController;
 use App\Http\Controllers\Admin\DusunController;
 use App\Http\Controllers\Admin\PeranController;
+use App\Http\Controllers\Admin\PrintController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SatuanController;
+use App\Http\Controllers\API\FeedbackController;
+use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\WilayahController;
 use App\Http\Controllers\Admin\CountryCountroller;
 use App\Http\Controllers\Admin\KegiatanController;
-use App\Http\Controllers\Admin\KegiatanControllerBeta;
 use App\Http\Controllers\Admin\MjabatanController;
 use App\Http\Controllers\Admin\PartnersController;
 use App\Http\Controllers\Admin\ProvinsiController;
 use App\Http\Controllers\Admin\AuditLogsController;
-use App\Http\Controllers\Admin\DashboardProvinsiController;
 use App\Http\Controllers\Admin\KabupatenController;
 use App\Http\Controllers\Admin\KaitanSdgController;
 use App\Http\Controllers\Admin\KecamatanController;
 use App\Http\Controllers\Admin\MPendonorController;
 use App\Http\Controllers\Admin\TrProgramController;
+use App\Http\Controllers\API\BeneficiaryController;
+use App\Http\Controllers\TimesheetExportController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\UserProfileController;
+use App\Http\Controllers\TimesheetApprovalController;
 use App\Http\Controllers\Admin\JenisbantuanController;
+use App\Http\Controllers\Admin\KegiatanControllerBeta;
+use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\TargetReinstraController;
+use App\Http\Controllers\Admin\DashboardExportController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Admin\KategoripendonorController;
 use App\Http\Controllers\Admin\KelompokmarjinalController;
-use App\Http\Controllers\Admin\MealsTargetProgressController;
-use App\Http\Controllers\Admin\KomponenModelController;
 use App\Http\Controllers\Admin\MealsPrePostTestController;
-use App\Http\Controllers\Admin\PrintController;
-use App\Http\Controllers\Admin\DashboardExportController;
-use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\API\BeneficiaryController;
+use App\Http\Controllers\Admin\DashboardProvinsiController;
+use Symfony\Component\Translation\Catalogue\TargetOperation;
+use App\Http\Controllers\Admin\MealsTargetProgressController;
+use App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller;
 use App\Http\Controllers\API\KomponenModelController as APIKomponenModelController;
 use \App\Http\Controllers\KomponenModel\DashboardController as KomodelDashboardExport;
-use App\Http\Controllers\KomponenModel\DashboardKomponenModelV4Controller;
-use App\Http\Controllers\API\FeedbackController;
-use Monolog\Handler\RotatingFileHandler;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-use Symfony\Component\Translation\Catalogue\TargetOperation;
-use App\Http\Controllers\BTORController;
 
 // Insert Usable class controller after this line to avoid conflict with others member for developent
 // Need to resolve wether use ProgramController or TrProgramController
@@ -617,4 +622,110 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])
             ->name('pendanaan.data');
     });
+
+    // mdivisi routes
+    Route::resource('mdivisi', MDivisiController::class);
+    Route::get('data/mdivisi', [MDivisiController::class, 'getData'])->name('data.mdivisi');
+
+
+    // Timesheet Routes
+
+    /* ===============================
+    * TIMESHEET EXPORT
+    * =============================== */
+    Route::prefix('timesheet/export')
+        ->name('timesheet.export.')
+        ->group(function () {
+
+            // PREVIEW (GET)
+            Route::get('/', [TimesheetExportController::class, 'index'])
+                ->name('index');
+
+            // EXPORT EXCEL (POST)
+            Route::post('/excel', [TimesheetExportController::class, 'excel'])
+                ->name('excel');
+        });
+
+    Route::prefix('timesheet')
+        ->name('timesheet.')
+        ->group(function () {
+
+        /* ===============================
+         * USER TIMESHEET
+         * =============================== */
+        Route::get('/', [TimesheetController::class, 'index'])
+            ->name('index');
+
+        Route::get('/data', [TimesheetController::class, 'data'])
+            ->name('data');
+
+        Route::get('/create', [TimesheetController::class, 'create'])
+            ->name('create');
+
+        Route::post('/', [TimesheetController::class, 'store'])
+            ->name('store');
+
+        Route::get('/{timesheet}/edit', [TimesheetController::class, 'edit'])
+            ->name('edit');
+
+        Route::put('/{timesheet}', [TimesheetController::class, 'update'])
+            ->name('update');
+
+        Route::get('/{timesheet}', [TimesheetController::class, 'show'])
+            ->name('show');
+
+        /* ===============================
+         * ENTRY HARIAN
+         * =============================== */
+        Route::post('/timesheet/day/store', 
+            [TimesheetController::class, 'storeDay']
+        )->name('day.store');
+
+        /* ===============================
+         * SUBMIT BULANAN
+         * =============================== */
+        Route::post('timesheet/{timesheet}/submit', 
+            [TimesheetController::class, 'submit']
+        )->name('submit');
+
+        /* ===============================
+         * GET DAY ENTRY
+         * =============================== */
+        Route::get('/timesheet/day/{date}', [TimesheetController::class, 'getDay'])
+            ->name('day.get');
+    });
+
+    /* ===============================
+    * APPROVAL MANAGER
+    * =============================== */
+    Route::prefix('approval')
+        ->name('approval.')
+        ->group(function () {
+
+            Route::get('/', [TimesheetApprovalController::class, 'index'])
+                ->name('index');
+
+            Route::get('/{timesheet}', [TimesheetApprovalController::class, 'show'])
+                ->name('show');
+
+            Route::post('/{timesheet}/approve', [TimesheetApprovalController::class, 'approve'])
+                ->name('approve');
+
+            Route::post('/{timesheet}/reject', [TimesheetApprovalController::class, 'reject'])
+                ->name('reject');
+            /* ===============================
+            * APPROVAL HISTORY
+            * =============================== */
+            Route::get('/history/list', 
+                [TimesheetApprovalController::class, 'history']
+            )->name('history');
+    });
+    Route::post('/timesheet/admin/change-status',
+        [TimesheetController::class, 'changeStatus']
+    )->name('timesheet.admin.changeStatus');
+
+    Route::get('/timesheet/program/{program}/donors', 
+        [TimesheetController::class, 'getDonorByProgram']
+    )->name('timesheet.program.donors');
+
 });

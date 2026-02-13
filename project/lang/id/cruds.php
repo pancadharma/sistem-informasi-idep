@@ -1227,5 +1227,17 @@ return [
     'history' => [
         'title' => "History"
     ],
+    'mdivisi' => [
+        'title' => "Divisi",
+        'add' => 'Tambah Divisi',
+        'edit' => 'Edit Divisi',
+        'show' => 'Tampilkan Divisi',
+        'delete' => 'Hapus Divisi',
+        'label' => 'Divisi',
+        'list' => 'Daftar Divisi',
+        'nama' => 'Nama Divisi',
+        'kode' => 'Kode Divisi',
+        'keterangan' => 'Deskripsi',
+    ],
 
 ];
