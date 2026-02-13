@@ -85,8 +85,8 @@
 				// serverSide: true,
 				processing: true,
 				scrollX: true,
-				pageLength: 10,
-				lengthMenu: [10,25,50,100],
+				pageLength: 25,
+				lengthMenu: [10,25,50,100,200,500],
 				ajax: {
 					url: "{{ route('api.target_progress.show_targets', ':id') }}".replace(':id', target_progress_id),
 					type: "GET",

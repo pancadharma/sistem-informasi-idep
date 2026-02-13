@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('subtitle', __('cruds.mpendonor.dashboard'))
-@section('content_header_title', __('cruds.mpendonor.dashboard'))
+@section('subtitle', __('dashboard.dashboard.pendanaan.title'))
+@section('content_header_title', __('dashboard.dashboard.pendanaan.title'))
 @section('content_header_right')
     
 @endsection
@@ -9,7 +9,6 @@
 @section('content_body')
 <!-- Filter Section -->
 <div class="row mb-3">
-
     <div class="col-lg-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
@@ -22,33 +21,33 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                <div class="col-md-4">
-                    <label for="programFilter">{{ __('cruds.program.title') }}</label>
-                    <select id="programFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.program.all') }}</option>
-                        @foreach($programs as $p)
-                            <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="tahunFilter">{{ __('cruds.program.periode') }}</label>
-                    <select id="tahunFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.program.all_years') }}</option>
-                        @foreach($years as $y)
-                            <option value="{{ $y }}">{{ $y }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="donorFilter">{{ __('cruds.mpendonor.pendonor') }}</label>
-                    <select id="donorFilter" class="form-control select2">
-                        <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
-                        @foreach($donors as $d)
-                            <option value="{{ $d->id }}">{{ $d->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>      
+                    <div class="col-md-4">
+                        <label for="programFilter">{{ __('cruds.program.title') }}</label>
+                        <select id="programFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all') }}</option>
+                            @foreach($programs as $p)
+                                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="tahunFilter">{{ __('cruds.program.periode') }}</label>
+                        <select id="tahunFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all_years') }}</option>
+                            @foreach($years as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="donorFilter">{{ __('cruds.mpendonor.pendonor') }}</label>
+                        <select id="donorFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.mpendonor.all_donor') }}</option>
+                            @foreach($donors as $d)
+                                <option value="{{ $d->id }}">{{ $d->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>      
                 </div>
             </div>
         </div>
@@ -60,8 +59,8 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
             <div class="inner">
-                <h3 id="totalFunding">Rp 0</h3>
-                <p>{{ __('cruds.mpendonor.total_pendanaan') }}</p>
+                <h3 id="totalFunding">{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0</h3>
+                <p>{{ __('cruds.mpendonor.total_pendanaan') }} <span id="totalFundingPercent" class="badge badge-light ml-1" style="font-size: 0.8rem; vertical-align: middle; display: none;">0%</span></p>
             </div>
             <div class="icon">
                 <i class="fas fa-hand-holding-usd"></i>
@@ -93,7 +92,7 @@
     <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
-                <h3 id="avgDonation">Rp 0</h3>
+                <h3 id="avgDonation">{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0</h3>
                 <p>{{ __('cruds.mpendonor.rata_rata_donasi') }}</p>
             </div>
             <div class="icon">
@@ -141,8 +140,25 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="chart-container" style="position: relative; height: 400px;">
+                <div class="chart-container" style="position: relative; height: 350px;">
                     <canvas id="sektorChart"></canvas>
+                </div>
+                <!-- Custom Summary Legend below Pie Chart -->
+                <div id="sektorSummary" class="mt-3 p-3 bg-light rounded border" style="display: none;">
+                    <div class="row text-center">
+                        <div class="col-4 border-right">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_pendanaan') }}</h6>
+                            <span id="summaryFunding" class="text-primary" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                        <div class="col-4 border-right">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_pendonor') }}</h6>
+                            <span id="summaryDonors" class="text-success" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                        <div class="col-4">
+                            <h6 class="text-muted mb-1" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">{{ __('cruds.mpendonor.total_program') }}</h6>
+                            <span id="summaryPrograms" class="text-warning" style="font-weight: bold; font-size: 0.9rem;">-</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,7 +219,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="text-right">Total:</th>
+                                <th class="text-right">{{ __('dashboard.dashboard.pendanaan.table.total_label') }}</th>
                                 <th class="text-right" id="footerTotalPrograms"></th>
                                 <th class="text-right" id="footerTotalDonations"></th>
                             </tr>
@@ -228,7 +244,7 @@
 @section('plugins.DatatablesNew', true)
 
 <!-- ChartJS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
 <script>
     // Global variables
@@ -286,7 +302,8 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + formatRupiah(context.raw);
+                            const value = context.raw;
+                            return context.label + ': ' + Number(value).toFixed(1) + '%';
                         }
                     }
                 }
@@ -296,7 +313,7 @@
         // SDG Chart (Horizontal Bar)
         const ctxSdg = document.getElementById('sdgChart').getContext('2d');
         sdgChart = new Chart(ctxSdg, {
-            type: 'bar',
+            type: 'pie',
             data: { labels: [], datasets: [] },
             options: { 
                 ...commonOptions, 
@@ -304,9 +321,11 @@
                 scales: { 
                     x: { 
                         beginAtZero: true,
+                        min: 0,
+                        max: 100,
                         ticks: {
                             callback: function(value) {
-                                return formatRupiah(value);
+                                return value + '%';
                             }
                         }
                     } 
@@ -319,7 +338,27 @@
         sektorChart = new Chart(ctxSektor, {
             type: 'doughnut',
             data: { labels: [], datasets: [] },
-            options: commonOptions
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                let label = context.label + ': ' + Number(value).toFixed(1) + '%';
+                                
+                                // Add programs if available
+                                const programs = context.dataset.programs ? context.dataset.programs[context.dataIndex] : null;
+                                if (programs) {
+                                    label = [label, "{{ __('dashboard.dashboard.pendanaan.charts.programs') }}: " + programs];
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
         });
         
         // Timeline Chart (Line)
@@ -335,7 +374,16 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return 'Pendanaan: ' + formatRupiah(context.raw);
+                                let label = ["{{ __('dashboard.dashboard.pendanaan.charts.funding') }}: " + formatRupiah(context.raw)];
+                                
+                                // Add breakdown if available
+                                const breakdown = context.dataset.breakdown ? context.dataset.breakdown[context.dataIndex] : null;
+                                if (breakdown && breakdown.length > 0) {
+                                    breakdown.forEach(function(prog) {
+                                        label.push(prog.nama + ': ' + formatRupiah(prog.total) + ' (' + Number(prog.percentage).toFixed(1) + '%)');
+                                    });
+                                }
+                                return label;
                             }
                         }
                     }
@@ -362,7 +410,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.pendanaan.data') }}",
+            url: "{{ route('dashboard.pendanaan.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {
@@ -383,15 +431,31 @@
         $('#totalDonors').text(stats.totalDonors);
         $('#totalPrograms').text(stats.totalPrograms);
         $('#avgDonation').text(formatRupiah(stats.avgDonation));
+
+        // Update Percentage info
+        if (stats.grandTotalFunding > 0 && stats.totalFunding > 0) {
+            const percent = ((stats.totalFunding / stats.grandTotalFunding) * 100).toFixed(1);
+            $('#totalFundingPercent').text(percent + '%').show();
+        } else {
+            $('#totalFundingPercent').hide();
+        }
+
+        // Update Pie Chart Summary Legend
+        $('#summaryFunding').text(formatRupiah(stats.totalFunding));
+        $('#summaryDonors').text(stats.totalDonors);
+        $('#summaryPrograms').text(stats.totalPrograms);
+        $('#sektorSummary').fadeIn();
     }
+    const contributionLabel = "{{ __('dashboard.dashboard.pendanaan.charts.contribution_percentage') }}";
     
     function updateSDGChart(data) {
+        const total = data.reduce((sum, item) => sum + parseFloat(item.total), 0);
         const labels = data.map(item => item.sdg_name);
-        const values = data.map(item => item.total);
+        const values = data.map(item => total > 0 ? (item.total / total * 100) : 0);
         
         sdgChart.data.labels = labels;
         sdgChart.data.datasets = [{
-            label: 'Total Pendanaan',
+            label: contributionLabel,
             data: values,
             backgroundColor: generateColors(values.length),
             borderRadius: 4
@@ -400,13 +464,16 @@
     }
     
     function updateSektorChart(data) {
+        const total = data.reduce((sum, item) => sum + parseFloat(item.total), 0);
         const labels = data.map(item => item.sektor_name);
-        const values = data.map(item => item.total);
+        const values = data.map(item => total > 0 ? (item.total / total * 100) : 0);
+        const programs = data.map(item => item.program_names || '-');
         
         sektorChart.data.labels = labels;
         sektorChart.data.datasets = [{
             data: values,
-            backgroundColor: generateColors(values.length)
+            backgroundColor: generateColors(values.length),
+            programs: programs // Store program names in the dataset
         }];
         sektorChart.update();
     }
@@ -415,10 +482,14 @@
         const labels = data.map(item => item.label);
         const values = data.map(item => item.total);
         
+        // Debug breakdown data
+        console.log('Timeline Data:', data);
+        
         timelineChart.data.labels = labels;
         timelineChart.data.datasets = [{
-            label: 'Total Pendanaan',
+            label: "{{ __('dashboard.dashboard.pendanaan.charts.funding') }}",
             data: values,
+            breakdown: data.map(item => item.breakdown), // Pass breakdown data
             borderColor: '#667eea',
             backgroundColor: 'rgba(102, 126, 234, 0.1)',
             tension: 0.3,
@@ -427,6 +498,7 @@
             pointBackgroundColor: '#667eea',
             fill: true
         }];
+        console.log('Dataset Breakdown:', timelineChart.data.datasets[0].breakdown);
         timelineChart.update();
     }
     
@@ -444,13 +516,16 @@
             $('#footerTotalDonations').text(formatRupiah(totalDonations));
         } else {
             $('#footerTotalPrograms').text('0');
-            $('#footerTotalDonations').text('Rp 0');
+            $('#footerTotalDonations').text("{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} 0");
         }
     }
     
+    const currencySymbol = "{{ __('dashboard.dashboard.pendanaan.statistics.currency') }} ";
+    const formattingLocale = "{{ str_replace('_', '-', app()->getLocale()) }}";
+
     function formatRupiah(value) {
-        if (!value || value === 0) return 'Rp 0';
-        return 'Rp ' + Number(value).toLocaleString('id-ID');
+        if (!value || value === 0) return currencySymbol + '0';
+        return currencySymbol + Number(value).toLocaleString(formattingLocale);
     }
     
     function generateColors(count) {

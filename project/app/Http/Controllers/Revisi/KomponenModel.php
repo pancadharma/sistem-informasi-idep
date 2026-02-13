@@ -178,13 +178,22 @@ class KomponenModel extends Controller
                 ->where('mealskomponenmodel_id', $modelId)
                 ->get();
 
+            // Aggregating Totals per Unit for this model
+            $unitBreakdown = $modelLocations->groupBy('satuan.nama')->map(function ($group, $unit) {
+                return [
+                    'unit' => $unit ?: 'unit',
+                    'total' => $group->sum('jumlah')
+                ];
+            })->values()->toArray();
+
             $tableData[] = [
                 'komponen_id' => $modelId,
                 'nama_program' => $model->program->nama ?? '-',
                 'kode_program' => $model->program->kode ?? '-',
                 'komponen_tipe' => $model->komponenmodel->nama ?? 'Lainnya',
                 'total_unit' => $modelLocations->sum('jumlah'),
-                'satuan_unit' => $modelLocations->first()->satuan->nama ?? 'unit',
+                'satuan_unit' => $modelLocations->pluck('satuan.nama')->filter()->unique()->implode(', ') ?: 'unit',
+                'unit_breakdown' => $unitBreakdown, // Added for detailed tooltips and summaries
                 'tahun_program' => $model->program && $model->program->tanggalmulai
                     ? \Carbon\Carbon::parse($model->program->tanggalmulai)->format('Y')
                     : '-',

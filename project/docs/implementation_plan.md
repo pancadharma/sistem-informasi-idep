@@ -32,7 +32,7 @@ graph TD
 
 ## Proposed Changes
 
-### 1. Controller (`app/Http/Controllers/Revisi/Pendanaan.php`)
+### 1. Controller (`app/Http/Controllers/Pendanaan.php`)
 
 **New controller** to handle funding dashboard logic.
 
@@ -55,7 +55,7 @@ graph TD
 
 ---
 
-### 2. View (`resources/views/dashboard/revisi/pendanaan.blade.php`)
+### 2. View (`resources/views/dashboard/pendanaan.blade.php`)
 
 **New Blade view** matching AdminLTE style.
 
@@ -136,7 +136,7 @@ $donorList = MPendonor::withDonationCount()
 
 ### Automated Tests
 
-- Run `php artisan serve` and navigate to `/revisi/dashboard/pendanaan`
+- Run `php artisan serve` and navigate to `/dashboard/pendanaan`
 - Verify filter functionality (Program, Year)
 - Check chart rendering
 - Verify Rupiah formatting (e.g., `Rp 1.000.000`)
@@ -154,7 +154,7 @@ $donorList = MPendonor::withDonationCount()
 Add to `routes/web.php`:
 
 ```php
-Route::prefix('revisi/dashboard')->group(function() {
+Route::prefix('dashboard')->group(function() {
     Route::get('/pendanaan', [App\Http\Controllers\Revisi\Pendanaan::class, 'index'])
         ->name('revisi.dashboard.pendanaan');
     Route::get('/pendanaan/data', [App\Http\Controllers\Revisi\Pendanaan::class, 'getData'])

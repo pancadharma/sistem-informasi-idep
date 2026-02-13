@@ -1,57 +1,79 @@
 @extends('layouts.app')
 
-@section('subtitle', 'Model Dashboard')
-@section('content_header_title', 'Model Dashboard')
+@section('subtitle', __('dashboard.dashboard.model.title'))
+@section('content_header_title', __('dashboard.dashboard.model.title'))
 
 @section('content_body')
 <!-- Filter Section -->
+
 <div class="row mb-3">
-    <div class="col-md-2">
-        <label for="programFilter">{{ __('cruds.program.title') }}:</label>
-        <select id="programFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all') }}</option>
-            @foreach($programs as $p)
-                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
-        <select id="tahunFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.all_years') }}</option>
-            @foreach($years as $y)
-                <option value="{{ $y }}">{{ $y }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
-        <select id="provinsiFilter" class="form-control select2">
-            <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
-            @foreach($provinsis as $pr)
-                <option value="{{ $pr->id }}">{{ $pr->nama }}</option>
-             @endforeach
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="komponenModelFilter">Jenis Model:</label>
-        <select id="komponenModelFilter" class="form-control select2">
-            <option value="">Semua Jenis Model</option>
-            @foreach($komponenModels as $km)
-                <option value="{{ $km->id }}">{{ $km->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="col-md-3">
-        <label for="sektorFilter">Sektor:</label>
-        <select id="sektorFilter" class="form-control select2">
-            <option value="">Semua Sektor</option>
-            @foreach($sektors as $s)
-                <option value="{{ $s->id }}">{{ $s->nama }}</option>
-            @endforeach
-        </select>
+
+    <div class="col-lg-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-filter"></i> {{ __('cruds.mpendonor.filter') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label for="programFilter">{{ __('cruds.program.title') }}:</label>
+                        <select id="programFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all') }}</option>
+                            @foreach($programs as $p)
+                                <option value="{{ $p->id }}">{{ $p->kode }} - {{ $p->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="tahunFilter">{{ __('cruds.program.periode') }}:</label>
+                        <select id="tahunFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.all_years') }}</option>
+                            @foreach($years as $y)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="provinsiFilter">{{ __('cruds.program.lokasi.pro') }}:</label>
+                        <select id="provinsiFilter" class="form-control select2">
+                            <option value="">{{ __('cruds.program.lokasi.all_provinsi') }}</option>
+                            @foreach($provinsis as $pr)
+                                <option value="{{ $pr->id }}">{{ $pr->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="komponenModelFilter">{{ __('dashboard.dashboard.model.filters.model_type') }}:</label>
+                        <select id="komponenModelFilter" class="form-control select2">
+                            <option value="">{{ __('dashboard.dashboard.model.filters.all_model_types') }}</option>
+                            @foreach($komponenModels as $km)
+                                <option value="{{ $km->id }}">{{ $km->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sektorFilter">{{ __('dashboard.dashboard.model.filters.sector') }}:</label>
+                        <select id="sektorFilter" class="form-control select2">
+                            <option value="">{{ __('dashboard.dashboard.model.filters.all_sectors') }}</option>
+                            @foreach($sektors as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
+
 
 <!-- Statistics Grid (Small Boxes) -->
 <div class="row">
@@ -59,7 +81,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3 id="totalModels">0</h3>
-                <p>Total Komponen Model</p>
+                <p>{{ __('dashboard.dashboard.model.statistics.total_components') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-box"></i>
@@ -70,7 +92,7 @@
         <div class="small-box bg-success">
             <div class="inner">
                 <h3 id="totalTypes">0</h3>
-                <p>Jenis Model</p>
+                <p>{{ __('dashboard.dashboard.model.statistics.model_types') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-shapes"></i>
@@ -81,7 +103,7 @@
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3 id="totalLocations">0</h3>
-                <p>Lokasi Sebaran</p>
+                <p>{{ __('dashboard.dashboard.model.statistics.locations') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-map-marker-alt"></i>
@@ -92,7 +114,7 @@
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3 id="totalQuantity">0</h3>
-                <p>Total Unit</p>
+                <p>{{ __('dashboard.dashboard.model.statistics.total_units') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-cubes"></i>
@@ -103,8 +125,8 @@
 
 <!-- Info Callout -->
 <div class="callout callout-info">
-    <h5><i class="fas fa-info"></i> Informasi:</h5>
-    Dashboard ini menampilkan sebaran komponen model yang telah diimplementasikan dalam program-program IDEP.
+    <h5><i class="fas fa-info"></i> {{ __('dashboard.dashboard.model.info.label') }}:</h5>
+    {{ __('dashboard.dashboard.model.info.description') }}
 </div>
 
 <div class="row">
@@ -114,7 +136,7 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-map-marked-alt mr-1"></i>
-                    Sebaran Lokasi Model per Provinsi
+                    {{ __('dashboard.dashboard.model.map.title') }}
                 </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -126,7 +148,7 @@
                 <div id="map" style="height: 500px; width: 100%;"></div>
             </div>
              <div class="card-footer">
-                 <span class="badge badge-info" id="markerCount">0 Lokasi</span>
+                 <span class="badge badge-info" id="markerCount">0 {{ __('dashboard.dashboard.model.js.locations') }}</span>
             </div>
         </div>
     </div>
@@ -137,7 +159,7 @@
     <div class="col-lg-6">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-chart-line mr-1"></i> Trend Jenis Model per Tahun</h3>
+                <h3 class="card-title"><i class="fas fa-chart-line mr-1"></i> {{ __('dashboard.dashboard.model.charts.types_per_year') }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -152,32 +174,11 @@
         </div>
     </div>
     
-    <!-- Sektor Contribution -->
-    <div class="col-lg-6">
-        <div class="card card-success card-outline">
-            <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-layer-group mr-1"></i> Kontribusi Sektor terhadap Komponen</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="chart-container" style="position: relative; height: 350px;">
-                    <canvas id="sektorChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
     <!-- Distribution Chart -->
     <div class="col-lg-6">
         <div class="card card-warning card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-chart-bar mr-1"></i> Distribusi Jenis Model</h3>
+                <h3 class="card-title"><i class="fas fa-chart-bar mr-1"></i> {{ __('dashboard.dashboard.model.charts.distribution') }}</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -191,9 +192,30 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="row">
+    <!-- Sektor Contribution -->
+    <div class="col-lg-6 d-none">
+        <div class="card card-success card-outline">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-layer-group mr-1"></i> {{ __('dashboard.dashboard.model.charts.sector_contribution') }}</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container" style="position: relative; height: 350px;">
+                    <canvas id="sektorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Legend -->
-    <div class="col-lg-6">
+
+    {{-- <div class="col-lg-6 d-none">
         <div class="card card-secondary card-outline">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-info-circle mr-1"></i> Legend Jenis Model</h3>
@@ -204,7 +226,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 {{-- Data Table Section --}}
@@ -212,20 +234,20 @@
     <div class="col-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-table mr-1"></i> Rincian Komponen Program</h3>
+                <h3 class="card-title"><i class="fas fa-table mr-1"></i> {{ __('dashboard.dashboard.model.table.title') }}</h3>
             </div>
             <div class="card-body table-responsive">
                 <table class="table table-hover text-nowrap" id="komponenTable">
                     <thead>
                         <tr>
-                            <th>Program</th>
-                            <th>Tipe Komponen</th>
-                            <th>Total</th>
-                            <th>Satuan</th>
-                            <th>Tahun</th>
-                            <th>Jml. Lokasi</th>
-                            <th>Status</th>
-                            <th class="text-center" title="Lihat Detail">Aksi</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.program') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.type') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.total') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.unit') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.year') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.locations') }}</th>
+                            <th>{{ __('dashboard.dashboard.model.table.headers.status') }}</th>
+                            <th class="text-center" title="{{ __('dashboard.dashboard.model.table.headers.action') }}">{{ __('dashboard.dashboard.model.table.headers.action') }}</th>
                         </tr>
                     </thead>
                     <tbody id="komponen-table-body"></tbody>
@@ -241,7 +263,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div>
-                    <h5 class="modal-title" id="modal-title-heading">Detail Komponen</h5>
+                    <h5 class="modal-title" id="modal-title-heading">{{ __('dashboard.dashboard.model.modal.title') }}</h5>
                     <p id="modal-subtitle" class="text-muted mb-0"></p>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -253,20 +275,20 @@
                     <p id="modal-key-info" class="mb-0"></p>
                 </div>
                 <div class="mb-3">
-                    <h5 class="mb-2">Target Reinstra yang Didukung</h5>
+                    <h5 class="mb-2">{{ __('dashboard.dashboard.model.modal.targets') }}</h5>
                     <ul id="modal-targets" class="list-unstyled"></ul>
                 </div>
                 <div>
-                    <h5>Rincian Lokasi Implementasi</h5>
+                    <h5>{{ __('dashboard.dashboard.model.modal.locations_detail') }}</h5>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Provinsi</th>
-                                    <th>Kabupaten</th>
-                                    <th>Kecamatan</th>
-                                    <th>Desa</th>
-                                    <th>Jumlah</th>
+                                    <th>{{ __('dashboard.dashboard.model.modal.headers.province') }}</th>
+                                    <th>{{ __('dashboard.dashboard.model.modal.headers.regency') }}</th>
+                                    <th>{{ __('dashboard.dashboard.model.modal.headers.subdistrict') }}</th>
+                                    <th>{{ __('dashboard.dashboard.model.modal.headers.village') }}</th>
+                                    <th>{{ __('dashboard.dashboard.model.modal.headers.quantity') }}</th>
                                 </tr>
                             </thead>
                             <tbody id="modal-locations-body"></tbody>
@@ -296,7 +318,7 @@
 @section('plugins.DatatablesNew', true)
 
 <!-- ChartJS -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 
 <!-- Google Maps - loaded without callback, will init manually -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_api_key') }}" async defer></script>
@@ -360,7 +382,7 @@
         };
         
         $.ajax({
-            url: "{{ route('revisi.dashboard.model.data') }}",
+            url: "{{ route('dashboard.model.data') }}",
             type: "GET",
             data: filters,
             success: function(response) {
@@ -388,8 +410,8 @@
             colorMap[m.nama] = m.color;
         });
         // Default fallback
-        colorMap['Unknown'] = '#ccc';
-        colorMap['Lainnya'] = '#6c757d';
+        colorMap["{{ __('dashboard.dashboard.model.js.unknown') }}"] = '#ccc';
+        colorMap["{{ __('dashboard.dashboard.model.js.others') }}"] = '#6c757d';
     }
     
     function updateStatistics(stats) {
@@ -437,7 +459,7 @@
                                 ${location.jenis_model}
                             </span>
                         </div>
-                        <div style="font-size: 13px;"><strong>Jumlah:</strong> ${location.jumlah} ${location.satuan}</div>
+                        <div style="font-size: 13px;"><strong>{{ __('dashboard.dashboard.model.js.quantity') }}:</strong> ${location.jumlah} ${location.satuan}</div>
                         <div style="font-size: 12px; color: #6c757d; margin-top: 5px;">
                             ${location.dusun}, ${location.desa}, ${location.kecamatan}, <br>${location.kabupaten}, ${location.provinsi}
                         </div>
@@ -454,7 +476,7 @@
             }
         });
         
-        $('#markerCount').text(`${markers.length} Lokasi`);
+        $('#markerCount').text(`${markers.length} {{ __('dashboard.dashboard.model.js.locations') }}`);
         
         if (markers.length > 0) {
             // Check if Province Filter is active
@@ -484,7 +506,7 @@
         // Trend
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
         trendChart = new Chart(ctxTrend, {
-            type: 'line',
+            type: 'bar',
             data: { labels: [], datasets: [] },
             options: { ...commonOptions, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
         });
@@ -506,7 +528,39 @@
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } }, // Hide legend for single dataset
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                let label = context.label + ': ' + Number(value).toLocaleString('id-ID');
+                                
+                                // Find matching breakdown from allTableData if possible
+                                // Note: distributionChart labels are types (komponen_tipe)
+                                // We need to sum breakdowns of all models of this type
+                                const modelsOfType = allTableData.filter(m => m.komponen_tipe === context.label);
+                                if (modelsOfType.length > 0) {
+                                    const totalsByUnit = {};
+                                    modelsOfType.forEach(m => {
+                                        (m.unit_breakdown || []).forEach(ub => {
+                                            totalsByUnit[ub.unit] = (totalsByUnit[ub.unit] || 0) + ub.total;
+                                        });
+                                    });
+                                    
+                                    const breakdownStr = Object.entries(totalsByUnit)
+                                        .map(([unit, total]) => `${Number(total).toLocaleString('id-ID')} ${unit}`)
+                                        .join(', ');
+                                    
+                                    if (breakdownStr) {
+                                        label = [label, '(' + breakdownStr + ')'];
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
                 scales: { x: { beginAtZero: true } }
             }
         });
@@ -522,9 +576,19 @@
         allTypes = Array.from(allTypes);
         
         const trendDatasets = allTypes.map(type => {
+            let lastValue = 0;
             const data = years.map(year => {
                 const found = response.trendData[year].find(d => d.jenis_model === type);
-                return found ? found.total : 0;
+                let val = found ? found.total : 0;
+                
+                // Forward Fill Logic: If current value is 0 and we have a previous value, use it.
+                // if (val === 0 && lastValue !== 0) {
+                //     val = lastValue;
+                // } else if (val !== 0) {
+                //     lastValue = val;
+                // }
+                
+                return val;
             });
             const c = colorMap[type] || '#ccc';
             return {
@@ -589,7 +653,7 @@
         
         distributionChart.data.labels = distLabels;
         distributionChart.data.datasets = [{
-            label: 'Total Unit',
+            label: "{{ __('dashboard.dashboard.model.js.total_unit') }}",
             data: distValues,
             backgroundColor: distColors,
             borderRadius: 4
@@ -624,7 +688,7 @@
         tableBody.empty();
         
         if (!tableData || tableData.length === 0) {
-            tableBody.html('<tr><td colspan="8" class="text-center py-4 text-muted">Tidak ada data yang cocok dengan filter.</td></tr>');
+            tableBody.html('<tr><td colspan="8" class="text-center py-4 text-muted">{{ __('dashboard.dashboard.model.table.empty') }}</td></tr>');
             return;
         }
         
@@ -667,21 +731,31 @@
         if (!data) return;
         
         $('#modal-title-heading').text(data.komponen_tipe);
-        $('#modal-subtitle').text(`Bagian dari ${data.nama_program} (Tahun ${data.tahun_program})`);
+        let subtitle = "{{ __('dashboard.dashboard.model.modal.subtitle', ['program' => ':program', 'year' => ':year']) }}";
+        subtitle = subtitle.replace(':program', data.nama_program).replace(':year', data.tahun_program);
+        $('#modal-subtitle').text(subtitle);
         
         const locs = data.locations || [];
         const total = Number(data.total_unit) || 0;
         const satuan = data.satuan_unit || '';
         
-        let keyInfo = satuan
-            ? `Total ${total.toLocaleString('id-ID')} ${satuan} diimplementasikan di ${locs.length} lokasi.`
-            : `Diimplementasikan di ${locs.length} lokasi.`;
+        const breakdown = data.unit_breakdown || [];
+        let keyInfo = '';
+        
+        if (breakdown.length > 0) {
+            const totalsStr = breakdown.map(b => `${Number(b.total).toLocaleString('id-ID')} ${b.unit}`).join(', ');
+            keyInfo = "{{ __('dashboard.dashboard.model.js.total_implemented_at', ['totals' => ':totals', 'count' => ':count']) }}";
+            keyInfo = keyInfo.replace(':totals', totalsStr).replace(':count', locs.length);
+        } else {
+            keyInfo = "{{ __('dashboard.dashboard.model.js.implemented_at', ['count' => ':count']) }}";
+            keyInfo = keyInfo.replace(':count', locs.length);
+        }
         
         $('#modal-key-info').html(keyInfo);
         $('#modal-targets').html(
             data.targets && data.targets.length > 0
                 ? data.targets.map(t => `<li><i class="fas fa-check-circle text-success mr-2"></i>${t}</li>`).join('')
-                : '<li>Tidak ada target yang terhubung.</li>'
+                : '<li>{{ __('dashboard.dashboard.model.modal.no_targets') }}</li>'
         );
         
         $('#modal-locations-body').html(locs.map(loc => `
