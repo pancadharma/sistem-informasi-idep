@@ -87,6 +87,9 @@ class StoreKegiatanRequest extends FormRequest
             'media_pendukung.*'                         => ['file', 'mimes:jpg,jpeg,png', 'max:48960'],
             'keterangan'                                => ['nullable', 'array'],
             'keterangan.*'                              => ['nullable', 'string'],
+
+            'catatan_penulis'                           => ['nullable', 'string'],
+            'indikasi_perubahan'                        => ['nullable', 'string'],
         ];
 
         $jenisKegiatan = (int)$this->input('jeniskegiatan_id');

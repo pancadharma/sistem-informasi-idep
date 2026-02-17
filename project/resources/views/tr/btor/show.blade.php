@@ -40,72 +40,159 @@
     <div class="card shadow-sm">
 
         {{-- Header --}}
-        <div class="card-header text-white" style="background-color: #2f6c01">
+        <div class="card-header text-white" style="background-color: #1a5c28">
             <h3 class="mb-0 text-center">{{ __('btor.btor') }}</h3>
             <p class="text-center mb-0"><small>Report ID: {{ $kegiatan->id }}</small></p>
+            <div class="ribbon-wrapper">
+                <div class="ribbon bg-{{ $kegiatan->status == 'draft' ? 'warning' : ($kegiatan->status == 'approved' ? 'success' : 'danger') }}">
+                    {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
 
             {{-- Basic Information Table --}}
             <div class="mb-4">
-                <table class="table table-sm">
+                <table class="table table table-hover">
                     <tbody>
                         <tr>
                             <td width="15%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>Program</td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.program') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.nama_kegiatan') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.kode_budget') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.penulis_laporan') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>{{ $kegiatan->kegiatan_penulis?->pluck('user.nama')->filter()->implode(', ') ?: '-' }}</td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.penulis_jabatan') }}</strong></td>
+                            <td width="1px">:</td>
                             <td>{{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-light"><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
+                            <td width="1px">:</td>
+                            <td>{{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-light"><strong>{{ __('btor.fase_pelaporan') }}</strong></td>
+                            <td width="1px">:</td>
+                            <td>{{ $kegiatan->fasepelaporan ?: '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-light"><strong>{{ __('btor.status') }}</strong></td>
+                            <td width="1px">:</td>
+                            <td>
+                                <span class="badge bg-{{ $kegiatan->status == 'draft' ? 'warning' : ($kegiatan->status == 'approved' ? 'success' : 'danger') }}">
+                                    {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <hr class="my-4">
+
 
             {{-- 1. Latar Belakang Kegiatan --}}
-            <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-info-circle text-primary"></i> {{ __('btor.latar_belakang_kegiatan') }}
+            <div class="section mb-3">
+                <h4 class="border-bottom pl-2">
+                    {{-- <i class="fas fa-info-circle text-primary"></i>  --}}
+                    {{ __('btor.latar_belakang_kegiatan') }}
                 </h4>
-                <div class="p-3 bg-light rounded" style="min-height: 100px;">
+                <div class="rounded rich-text-content px-2" style="min-height: 100px;">
                     {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted"> ' . __('btor.no_background_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 2. Tujuan Kegiatan --}}
-            <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-bullseye text-success"></i> {{ __('btor.tujuan_kegiatan') }}
+            <div class="section mb-3">
+                <h4 class="border-bottom pl-2">
+                    {{-- <i class="fas fa-bullseye text-success"></i>  --}}
+                    {{ __('btor.tujuan_kegiatan') }}
                 </h4>
-                <div class="p-3 bg-light rounded" style="min-height: 100px;">
+                <div class="rounded rich-text-content px-2" style="min-height: 100px;">
                     {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted"> ' . __('btor.no_tujuan_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 3. Detail Kegiatan --}}
-            <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-calendar-alt text-warning"></i> {{ __('btor.detail_kegiatan') }}
+            <div class="section mb-3">
+                <h4 class="border-bottom pl-2">
+                    {{-- <i class="fas fa-calendar-alt text-warning"></i>  --}}
+                    {{ __('btor.detail_kegiatan') }}
                 </h4>
+
+                <div class="table-responsive mb-4 px-2">
+                    <table class="table table-sm table-borderless">
+                        <tbody>
+                            <tr>
+                                <td width="15%" class="text-muted"><strong>Waktu Pelaksanaan</strong></td>
+                                <td width="1px">:</td>
+                                <td>
+                                    @if($kegiatan->tanggalmulai)
+                                        <i class="far fa-calendar-alt text-success mr-1"></i>
+                                        {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                        @if($kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
+                                            - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                        @endif
+                                        <span class="ml-2 badge badge-secondary font-weight-normal">{{ $kegiatan->getDurationInDays() }} Hari</span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted"><strong>Lokasi</strong></td>
+                                <td>:</td>
+                                <td>
+                                    @forelse($kegiatan->lokasi as $lok)
+                                        <div class="mb-1">
+                                            <i class="fas fa-map-marker-alt text-danger mr-1"></i>
+                                            {{ $lok->lokasi }}, {{ $lok->desa?->nama }}, {{ $lok->desa?->kecamatan?->nama }}
+                                        </div>
+                                    @empty
+                                        -
+                                    @endforelse
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">
+                                    <strong>
+                                        {{ __('btor.pihak_yang_terlibat') }}
+                                    </strong>
+                                </td>
+                                <td>:</td>
+                                <td>
+                                    @forelse($kegiatan->mitra as $mitra)
+                                        <span class="badge badge-light border mr-1">
+                                            <i class="fas fa-handshake text-muted mr-1"></i> {{ $mitra->nama }}
+                                        </span>
+                                    @empty
+                                        -
+                                    @endforelse
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <table class="table table-bordered">
                     <tbody>

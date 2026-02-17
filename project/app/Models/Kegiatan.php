@@ -56,6 +56,8 @@ class Kegiatan extends Model implements HasMedia
         'status',
         'deskripsilatarbelakang',
         'deskripsitujuan',
+        'indikasi_perubahan',
+        'catatan_penulis',
         'deskripsikeluaran',
         'deskripsiyangdikaji',
         'penerimamanfaatdewasaperempuan',

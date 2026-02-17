@@ -26,6 +26,7 @@ return [
     'tanggal_mulai' => 'Start Date',
     'hari'  => 'days',
     'tanggal_selesai' => 'End Date',
+    'sektor' => 'Sector',
 
     'periode' => 'Period',
     'keterangan' => 'Remarks',

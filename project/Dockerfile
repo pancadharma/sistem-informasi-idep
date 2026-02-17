@@ -21,7 +21,8 @@ RUN apk add --no-cache \
     mariadb-client \
     nodejs \
     npm \
-    nano
+    nano \
+    nss-tools
 
 # Install PHP extensions
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \

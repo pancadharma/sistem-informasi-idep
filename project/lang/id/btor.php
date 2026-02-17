@@ -24,6 +24,7 @@ return [
     'tanggal_mulai' => 'Tanggal Mulai',
     'hari'  => 'hari',
     'tanggal_selesai' => 'Tanggal Selesai',
+    'sektor' => 'Sektor',
 
     'periode' => 'Periode',
     'keterangan' => 'Keterangan',
