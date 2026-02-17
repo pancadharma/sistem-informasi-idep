@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  # 1. PHP Application
+  # 1. PHP Application (FrankenPHP)
   app:
     build:
       context: .
@@ -9,9 +9,16 @@ services:
     container_name: idep_app
     restart: unless-stopped
     working_dir: /var/www/html
+    ports:
+      - "8012:80"
+      - "8013:443"
+      - "8013:443/udp"
     volumes:
-      - ./:/var/www/html # <--- THIS IS THE MAGIC
+      - ./:/var/www/html
       - ../.git:/var/www/html/.git # Mount .git for version info
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - idep_net
     depends_on:
@@ -36,23 +43,10 @@ services:
           npm install;
       fi;
 
-      echo '✅ Bootstrap finished, starting PHP-FPM'; php-fpm "
-  # 2. Web Server (Nginx)
-  web:
-    image: nginx:alpine
-    container_name: idep_nginx
-    restart: unless-stopped
-    ports:
-      - "8012:80"
-    volumes:
-      - ./:/var/www/html # Nginx also needs to see your files
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-      - idep_net
-    depends_on:
-      - app
+      echo '✅ Bootstrap finished, starting FrankenPHP'; 
+      exec frankenphp run --config /etc/caddy/Caddyfile "
 
-  # 3. Database (MariaDB 10.5)
+  # 2. Database (MariaDB 10.5)
   db:
     image: mariadb:10.5
     container_name: idep_db
@@ -69,7 +63,7 @@ services:
     networks:
       - idep_net
 
-  # 4. PHPMyAdmin (Optional helper)
+  # 3. PHPMyAdmin (Optional helper)
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: idep_pma
@@ -83,6 +77,8 @@ services:
 
 volumes:
   db_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   idep_net:

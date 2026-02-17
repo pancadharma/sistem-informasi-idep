@@ -1,0 +1,17 @@
+{
+	frankenphp
+	order php_server before file_server
+}
+
+http://localhost:80 {
+	root * public/
+	php_server
+	file_server
+}
+
+https://localhost:443 {
+	root * public/
+	php_server
+	file_server
+	tls internal
+}
