@@ -54,10 +54,10 @@
 
             {{-- Basic Information Table --}}
             <div class="mb-4">
-                <table class="table table table-hover">
+                <table class="table table-sm table-hover">
                     <tbody>
                         <tr>
-                            <td width="15%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
+                            <td width="20%" class="table-light"><strong>{{ __('btor.departemen') }}</strong></td>
                             <td width="1px">:</td>
                             <td>Program</td>
                         </tr>
@@ -67,14 +67,20 @@
                             <td>{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
+                            <td class="table-light"><strong>{{ __('btor.kode_budget') }}</strong></td>
+                            <td width="1px">:</td>
+                            <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
+                        </tr>
+                        <tr>
                             <td class="table-light"><strong>{{ __('btor.nama_kegiatan') }}</strong></td>
                             <td width="1px">:</td>
                             <td>{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</td>
                         </tr>
                         <tr>
-                            <td class="table-light"><strong>{{ __('btor.kode_budget') }}</strong></td>
+                            <td class="table-light"><strong>{{ __('btor.jenis_kegiatan') }}</strong></td>
                             <td width="1px">:</td>
-                            <td>{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</td>
+                            <td>{{ $kegiatan->jenisKegiatan?->nama ?: '-' }}
+                            </td>
                         </tr>
                         <tr>
                             <td class="table-light"><strong>{{ __('btor.penulis_laporan') }}</strong></td>
@@ -113,38 +119,38 @@
 
             {{-- 1. Latar Belakang Kegiatan --}}
             <div class="section mb-3">
-                <h4 class="border-bottom pl-2">
+                <h4 class="border-bottom">
                     {{-- <i class="fas fa-info-circle text-primary"></i>  --}}
                     {{ __('btor.latar_belakang_kegiatan') }}
                 </h4>
-                <div class="rounded rich-text-content px-2" style="min-height: 100px;">
+                <div class="rounded rich-text-content" style="min-height: 100px;">
                     {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted"> ' . __('btor.no_background_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 2. Tujuan Kegiatan --}}
             <div class="section mb-3">
-                <h4 class="border-bottom pl-2">
+                <h4 class="border-bottom">
                     {{-- <i class="fas fa-bullseye text-success"></i>  --}}
                     {{ __('btor.tujuan_kegiatan') }}
                 </h4>
-                <div class="rounded rich-text-content px-2" style="min-height: 100px;">
+                <div class="rounded rich-text-content" style="min-height: 100px;">
                     {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted"> ' . __('btor.no_tujuan_activity') . '</em>' !!}
                 </div>
             </div>
 
             {{-- 3. Detail Kegiatan --}}
             <div class="section mb-3">
-                <h4 class="border-bottom pl-2">
+                <h4 class="border-bottom">
                     {{-- <i class="fas fa-calendar-alt text-warning"></i>  --}}
                     {{ __('btor.detail_kegiatan') }}
                 </h4>
 
-                <div class="table-responsive mb-4 px-2">
+                <div class="table-responsive mb-4">
                     <table class="table table-sm table-borderless">
                         <tbody>
                             <tr>
-                                <td width="15%" class="text-muted"><strong>Waktu Pelaksanaan</strong></td>
+                                <td width="20%" class="text-muted"><strong>Waktu Pelaksanaan</strong></td>
                                 <td width="1px">:</td>
                                 <td>
                                     @if($kegiatan->tanggalmulai)
@@ -194,101 +200,32 @@
                     </table>
                 </div>
 
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <td width="25%" class="table-light"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
-                            <td>
-                                @if($kegiatan->tanggalmulai && $kegiatan->tanggalselesai)
-                                    {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                                    @if($kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
-                                        - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                                    @endif
-                                    <span class="badge badge-info ml-2">{{ $kegiatan->getDurationInDays() }} {{ __('btor.hari') }}</span>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-light"><strong>{{ __('btor.lokasi_kegiatan') }}</strong></td>
-                            <td>
-                                @if($kegiatan->lokasi?->count() > 0)
-                                    @php
-                                        $lokasiList = $kegiatan->lokasi->map(function($lok) {
-                                            $parts = array_filter([
-                                                $lok->lokasi,
-                                                $lok->desa?->nama,
-                                                $lok->desa?->kecamatan?->nama,
-                                                $lok->desa?->kecamatan?->kabupaten?->nama
-                                            ]);
-                                            return implode(', ', $parts);
-                                        });
-                                    @endphp
-                                    {{ $lokasiList->implode('; ') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-light"><strong>{{ __('btor.pihak_yang_terlibat') }}</strong></td>
-                            <td>
-                                @if($kegiatan->mitra?->count() > 0)
-                                    <ul class="mb-0 pl-0" style="list-style-type: none;">
-                                        @foreach($kegiatan->mitra as $mitra)
-                                            <li>{{ $mitra->nama }}</li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-light"><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
-                            <td>
-                                @if($kegiatan->sektor?->count() > 0)
-                                    {{ $kegiatan->sektor->pluck('nama')->implode(', ') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="table-light"><strong>Status</strong></td>
-                            <td>
-                                <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }} badge-lg">
-                                    {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                {{-- Activity Type Specific Content --}}
-                <div class="mt-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-tasks text-info"></i> {{ __('btor.jenis_kegiatan') }}
-                        <span class="badge badge-info">{{ $kegiatan->jenisKegiatan?->nama }}</span>
-                    </h5>
-                    @include($viewPath, ['kegiatan' => $kegiatan])
-                </div>
+                {{-- Jenis Kegiatan 
+                    <div class="mt-4">
+                        <h5 class="mb-3">
+                            <!-- <i class="fas fa-tasks text-info"></i>  -->
+                            {{ __('btor.jenis_kegiatan') }}
+                            <span class="badge badge-info">{{ $kegiatan->jenisKegiatan?->nama }}</span>
+                        </h5>
+                        @include($viewPath, ['kegiatan' => $kegiatan])
+                    </div>
+                --}}
             </div>
 
             {{-- 4. Hasil Kegiatan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-chart-bar text-success"></i> {{ __('btor.hasil_kegiatan') }}
+                    <!-- <i class="fas fa-chart-bar text-success"></i>  -->
+                    {{ __('btor.hasil_kegiatan') }}
                 </h4>
 
                 {{-- 4a. Jumlah Partisipan --}}
-                <h5 class="mb-3">{{ __('btor.jumlah_partisipan') }}</h5>
+                <h5 class="mb-3 pl-2"> a. {{ __('btor.jumlah_partisipan') }}</h5>
 
                 <p class="text-muted mb-2"><em>{{ __('btor.table_partisipan') }}:</em></p>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-sm table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
                                 <th>{{ __('btor.penerima_manfaat') }}</th>
@@ -341,7 +278,7 @@
                 <p class="text-muted mb-2 mt-3"><em>{{ __('btor.table_kelompok_khusus') }}:</em></p>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-sm table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
                                 <th>{{ __('btor.penerima_manfaat') }}</th>
@@ -386,19 +323,27 @@
 
                 <div class="alert alert-info mt-3">
                     <i class="fas fa-users"></i>
-                    <strong>{{ __('btor.total_keseluruhan') }}:</strong> {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} {{ __('btor.orang') }}
+                    <strong>{{ __('btor.total_keseluruhan') }}:</strong> 
+                    {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} {{ __('btor.orang') }}
+
                     ({{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }} {{ __('btor.perempuan') }},
+
                     {{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }} {{ __('btor.laki_laki') }})
                 </div>
 
                 {{-- 4b. Hasil Pertemuan --}}
-                <h5 class="mt-4 mb-3">b. {{ __('btor.hasil_pertemuan') }}</h5>
+                <h5 class="mt-4 mb-3 pl-2">b. {{ __('btor.hasil_pertemuan') }}</h5>
                 <div class="p-3 bg-light rounded" style="min-height: 100px;">
                     {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data hasil pertemuan</em>' !!}
                 </div>
             </div>
 
-            {{-- 5. Tantangan dan Solusi --}}
+            <!-- Hasil Kegiatan Dinamis berdasarkan jenis kegiatan -->
+            <div class="section mb-4">
+                @include('tr.btor.partials.hasil-dinamis')
+            </div>
+
+            <!-- {{-- 5. Tantangan dan Solusi --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
                     <i class="fas fa-exclamation-triangle text-warning"></i> Tantangan dan Solusi
@@ -717,21 +662,37 @@
                         Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.
                     </div>
                 @endif
-            </div>
+            </div> -->
 
             {{-- 9. Catatan Penulis Laporan --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-sticky-note text-secondary"></i> Catatan Penulis Laporan
+                    <!-- <i class="fas fa-sticky-note text-secondary"></i>  -->
+                    Catatan Penulis Laporan
                 </h4>
                 <p class="text-muted mb-3">
                     <em>Silahkan tuliskan catatan spesifik dari penulis laporan jika ada informasi yang belum bisa tersampaikan melalui bagian-bagian laporan di atas.</em>
                 </p>
 
                 <div class="p-3 bg-light rounded" style="min-height: 80px;">
-                    <p class="text-muted">-</p>
+                    {!! $kegiatan->catatan_penulis_laporan ?? '<em class="text-muted">-</em>' !!}
                 </div>
             </div>
+            <!-- indikasi perubahan -->
+             <div class="section mb-4">
+                <h4 class="border-bottom pb-2 mb-3">
+                    <!-- <i class="fas fa-sticky-note text-secondary"></i>  -->
+                    Indikasi Perubahan
+                </h4>
+                <p class="text-muted mb-3">
+                    <em>Indikasi perubahan ini menunjukkan perubahan yang dilakukan pada kegiatan ini.</em>
+                </p>
+
+                <div class="p-3 bg-light rounded" style="min-height: 80px;">
+                    {!! $kegiatan->indikasi_perubahan ?? '<em class="text-muted">-</em>' !!}
+                </div>
+            </div>
+            <!-- end indikasi perubahan -->
 
         </div>
 
