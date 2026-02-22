@@ -237,7 +237,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ __('btor.dewasa') }} <em>( {{ __('btor.umur_25_59') }} )</em></td>
+                                <td width="20%">{{ __('btor.dewasa') }} <em>( {{ __('btor.umur_25_59') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
@@ -290,7 +290,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ __('btor.penyandang_disabilitas') }}</td>
+                                <td width="20%">{{ __('btor.penyandang_disabilitas') }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
@@ -513,7 +513,7 @@
                     @endif
                 </div>
             </div>
-
+            -->
             {{-- 8. Dokumen Pendukung --}}
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2 mb-3">
@@ -662,7 +662,8 @@
                         Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.
                     </div>
                 @endif
-            </div> -->
+            </div> 
+            
 
             {{-- 9. Catatan Penulis Laporan --}}
             <div class="section mb-4">
@@ -675,7 +676,7 @@
                 </p>
 
                 <div class="p-3 bg-light rounded" style="min-height: 80px;">
-                    {!! $kegiatan->catatan_penulis_laporan ?? '<em class="text-muted">-</em>' !!}
+                    {!! $kegiatan->catatan_penulis ?? '<em class="text-muted">-</em>' !!}
                 </div>
             </div>
             <!-- indikasi perubahan -->
