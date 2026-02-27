@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.mac.alpine
+    container_name: idep_app_mac
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html:cached
+      - vendor:/var/www/html/vendor
+      - node_modules:/var/www/html/node_modules
+      - ../.git:/var/www/html/.git # Mount .git for version info
+    depends_on:
+      - db
+    networks:
+      - idep_net
+    command: >
+      sh -c " echo '🔹 Laravel container bootstrap started';
+
+      if [ ! -f .env ]; then
+        echo '🔹 Creating .env & APP_KEY';
+        if [ -f .env.example.docker ]; then cp .env.example.docker .env; else cp .env.example .env; fi &&
+        php artisan key:generate &&
+        php artisan storage:link;
+      fi;
+
+      if [ ! -d vendor ] || [ -z \"$(ls -A vendor 2>/dev/null)\" ]; then
+        echo '🔹 Installing Composer dependencies';
+        composer install --no-interaction;
+      fi;
+
+      if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then
+        echo '🔹 Installing Node dependencies';
+        npm install;
+      fi;
+
+      echo '✅ Bootstrap finished, starting PHP-FPM'; php-fpm "
+
+  web:
+    image: nginx:alpine
+    container_name: idep_nginx_mac
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html:cached
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      - idep_net
+
+  node:
+    image: node:20-alpine
+    container_name: idep_node_mac
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html:cached
+      - node_modules:/var/www/html/node_modules
+    command: sh -c "npm run dev"
+    networks:
+      - idep_net
+
+  db:
+    image: mariadb:10.11
+    container_name: idep_db_mac
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel_db}
+      MYSQL_USER: ${DB_USERNAME:-laravel_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-laravel_password}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - idep_net
+
+  phpmyadmin:
+    image: arm64v8/phpmyadmin
+    container_name: idep_pma_mac
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    networks:
+      - idep_net
+
+volumes:
+  db_data:
+  vendor:
+  node_modules:
+
+networks:
+  idep_net:
+    driver: bridge

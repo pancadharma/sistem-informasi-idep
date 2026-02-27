@@ -7,21 +7,21 @@
 @extends('layouts.app') {{-- Menggunakan layout utama --}}
 
 {{-- Mengadopsi section dari template tim --}}
-@section('subtitle', __('Daftar Feedback & Response')) {{-- Judul Halaman / Subtitle --}}
+@section('subtitle', __('cruds.feedback.list')) {{-- Judul Halaman / Subtitle --}}
 
 @section('content_header_title')
     {{-- Tombol Tambah FRM - Diubah menjadi Link ke Halaman Create --}}
     {{-- Hapus atribut data-bs-toggle & data-bs-target --}}
     @can('frm_create')
-    <a href="{{ route('feedback.create') }}" class="btn btn-success" title="{{ __('Tambah Feedback Baru') }}">
+    <a href="{{ route('feedback.create') }}" class="btn btn-success" title="{{ __('cruds.feedback.add_new') }}">
          {{-- <i class="fas fa-plus me-1"></i> --}}
-        {{ __('Tambah FRM') }}
+        {{ __('cruds.feedback.add_new') }}
     </a>
     @endcan
 @endsection
 
 @section('sub_breadcumb')
-    {{ __('Feedback & Response') }}
+    {{ __('cruds.feedback.title') }}
 @endsection
 
 @section('preloader') {{-- Menambahkan preloader seperti contoh tim --}}
@@ -34,7 +34,7 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="fas fa-table me-1"></i> {{-- Menggunakan ikon seperti template tim --}}
-                {{ __('Daftar Feedback') }}
+                {{ __('cruds.feedback.list') }}
             </h3>
             <div class="card-tools">
                 {{-- Tombol Filter (opsional): Jika ingin tetap ada, fungsinya diubah di JS --}}

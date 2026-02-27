@@ -132,7 +132,7 @@
                     pageLength: 10,
                 }
             },
-            order: [1, 'asc'],
+            // order: [1, 'asc'],
             lengthMenu: [10,25,50,100],
 
         });
@@ -151,10 +151,14 @@
         let url;
         if (format === 'md') {
             url = "{{ route('kegiatan.exportV2', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
-        } else {
-            url = "{{ route('kegiatan.export', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
         }
-        url = url.replace('__id__', selectedKegiatanId).replace('__format__', format);
+        else if (format === 'pdf') {
+            url = "{{ route('kegiatan.export.pdf', ['kegiatan' => '__id__']) }}";
+        }
+        else if (format === 'docx') {
+            url = "{{ route('kegiatan.export.docx', ['kegiatan' => '__id__']) }}";
+        }
+        url = url.replace('__id__', selectedKegiatanId);
         window.location.href = url;
     });
 </script>

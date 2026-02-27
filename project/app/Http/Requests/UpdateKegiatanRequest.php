@@ -90,6 +90,9 @@ class UpdateKegiatanRequest extends FormRequest
             'keterangan_existing.*'                     => ['nullable', 'string'],
             'keterangan_new'                            => ['nullable', 'array'],
             'keterangan_new.*'                          => ['nullable', 'string'],
+
+            'catatan_penulis'                           => ['nullable', 'string'],
+            'indikasi_perubahan'                        => ['nullable', 'string'],
         ];
 
         $jenisKegiatan = (int)$this->input('jeniskegiatan_id');

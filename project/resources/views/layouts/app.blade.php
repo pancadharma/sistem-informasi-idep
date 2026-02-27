@@ -161,6 +161,19 @@ $.fn.dataTable.ext.errMode = 'throw';
 
 @push('css')
     <style type="text/css">
+        /* Apply Figtree font as default */
+        body, html, * {
+            font-family: 'Figtree', sans-serif !important;
+        }
+        
+        /* Preserve Font Awesome and Material Icons */
+        .fa, .fas, .far, .fal, .fab, .fad, .material-symbols-outlined, .material-symbols-sharp,
+        [class^="fa-"], [class*=" fa-"],
+        [class^="icon-"], [class*=" icon-"],
+        .bi, [class^="bi-"], [class*=" bi-"] {
+            font-family: 'Font Awesome 5 Free', 'Font Awesome 5 Brands', 'FontAwesome', 'Material Symbols Outlined', 'Material Symbols Sharp', 'bootstrap-icons' !important;
+        }
+        
         .select2 {
             width:100%!important;
         }

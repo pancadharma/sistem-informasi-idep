@@ -1,0 +1,54 @@
+FROM php:8.3-fpm-alpine
+
+# --------------------------------------------------
+# System & PHP dependencies
+# --------------------------------------------------
+RUN apk add --no-cache \
+    bash \
+    git \
+    curl \
+    unzip \
+    icu-dev \
+    oniguruma-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    mysql-client \
+    nodejs \
+    npm \
+    $PHPIZE_DEPS \
+    && docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    && docker-php-ext-install \
+    pdo_mysql \
+    mbstring \
+    intl \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    zip \
+    && apk del $PHPIZE_DEPS
+
+# --------------------------------------------------
+# PHP limits (Ubuntu-equivalent)
+# --------------------------------------------------
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "upload_max_filesize=100M" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "max_execution_time=300" >> /usr/local/etc/php/conf.d/99-memory.ini \
+    && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/99-opcache.ini \
+    && echo "opcache.validate_timestamps=1" >> /usr/local/etc/php/conf.d/99-opcache.ini \
+    && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/99-opcache.ini
+
+# --------------------------------------------------
+# Composer
+# --------------------------------------------------
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+EXPOSE 9000
+CMD ["php-fpm"]

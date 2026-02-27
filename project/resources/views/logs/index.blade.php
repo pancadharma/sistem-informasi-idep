@@ -6,15 +6,15 @@
         <h3 class="card-title">Activity Logs</h3>
     </div>
     <div class="card-body">
-        <table id="logsTable" class="table table-hover table-striped table-bordered">
+        <table id="logsTable" class="table table-hover table-responsive table-striped table-bordered" width="100%">
             <thead>
                 <tr>
                     <th style="width: 5%">No</th>
                     <th>Description</th>
                     <th>User</th>
                     <th>Model</th>
-                    <th>Old Values</th>
                     <th>New Values</th>
+                    <th>Old Values</th>
                     <th>Time</th>
                     <th style="width: 10%">Actions</th>
                 </tr>
@@ -90,6 +90,11 @@
 @endpush
 
 @push('scripts')
+@section('plugins.Sweetalert2', true)
+@section('plugins.DatatablesNew', true)
+@section('plugins.Select2', true)
+@section('plugins.Toastr', true)
+@section('plugins.Validation', true)
 <!-- Tambahkan JS untuk DataTables -->
 {{-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script> --}}
@@ -97,6 +102,7 @@
     $(document).ready(function() {
         $('#logsTable').DataTable({
             responsive: true,
+            scrollX: true,
             autoWidth: false,
             order: [[0, 'asc']], // Default sorting by "No"
         });

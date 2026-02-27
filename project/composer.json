@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "barryvdh/laravel-dompdf": "^3.1",
+        "barryvdh/laravel-snappy": "^1.0",
         "bensampo/laravel-enum": "^6.12",
         "doctrine/dbal": "^3.9",
         "gedeadisurya/laravel-permission": "dev-gedeadi",
@@ -18,7 +19,8 @@
         "laravel/ui": "^4.5",
         "laraveldaily/laravel-charts": "^0.2.3",
         "maatwebsite/excel": "^3.1",
-        "phpoffice/phpword": "1.1",
+        "novay/laravel-word-template": "^2.0",
+        "phpoffice/phpword": "^1.4",
         "spatie/laravel-activitylog": "^4.9",
         "spatie/laravel-ignition": "^2.8",
         "spatie/laravel-medialibrary": "^11.7",
