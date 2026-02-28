@@ -18,28 +18,31 @@ The current dashboard uses AJAX to load data dynamically:
 function loadDashboardData() {
     $.ajax({
         url: "{{ route('dashboard.data') }}",
-        method: 'GET',
+        method: "GET",
         data: {
-            program_id: $('#programFilter').val(),
-            provinsi_id: $('#provinsiFilter').val(),
-            tahun: $('#tahunFilter').val()
+            program_id: $("#programFilter").val(),
+            provinsi_id: $("#provinsiFilter").val(),
+            tahun: $("#tahunFilter").val(),
         },
-        success: function(data) {
+        success: function (data) {
             // Update statistics cards
-            $('#totalSemua').text(data.semua);
-            $('#totalLaki').text(data.laki);
-            $('#totalPerempuan').text(data.perempuan);
+            $("#totalSemua").text(data.semua);
+            $("#totalLaki").text(data.laki);
+            $("#totalPerempuan").text(data.perempuan);
             // ... more updates
         },
-        error: function() {
+        error: function () {
             // Show error notification
-            Swal.fire({ /* error config */ });
-        }
+            Swal.fire({
+                /* error config */
+            });
+        },
     });
 }
 ```
 
 **Key Points:**
+
 - Uses jQuery AJAX for asynchronous data loading
 - Filters are passed as query parameters
 - Updates DOM elements directly with returned data
@@ -51,10 +54,10 @@ Filters use Select2 for enhanced dropdowns:
 
 ```javascript
 // Initialize Select2
-$('#programFilter, #tahunFilter, #provinsiFilter').select2();
+$("#programFilter, #tahunFilter, #provinsiFilter").select2();
 
 // Event listener for filter changes
-$('#programFilter, #provinsiFilter, #tahunFilter').on('change', function() {
+$("#programFilter, #provinsiFilter, #tahunFilter").on("change", function () {
     loadDashboardData();
     loadChartData();
     loadMapMarkers();
@@ -63,6 +66,7 @@ $('#programFilter, #provinsiFilter, #tahunFilter').on('change', function() {
 ```
 
 **Apply to New Dashboards:**
+
 - Use Select2 for all dropdown filters
 - Trigger data reload on filter change
 - Update all components (stats, charts, maps, tables)
@@ -76,29 +80,34 @@ let barChart, pieChart;
 
 function loadChartData() {
     const filters = {
-        provinsi_id: $('#provinsiFilter').val(),
-        program_id: $('#programFilter').val(),
-        tahun: $('#tahunFilter').val()
+        provinsi_id: $("#provinsiFilter").val(),
+        program_id: $("#programFilter").val(),
+        tahun: $("#tahunFilter").val(),
     };
 
-    fetch('/dashboard/data/get-desa-chart-data?' + new URLSearchParams(filters))
-        .then(res => res.json())
-        .then(data => {
+    fetch("/dashboard/data/get-desa-chart-data?" + new URLSearchParams(filters))
+        .then((res) => res.json())
+        .then((data) => {
             // Destroy existing charts
             if (barChart) barChart.destroy();
             if (pieChart) pieChart.destroy();
 
             // Create new charts
-            barChart = new Chart(document.getElementById('barChart'), {
-                type: 'bar',
-                data: { /* chart data */ },
-                options: { /* chart options */ }
+            barChart = new Chart(document.getElementById("barChart"), {
+                type: "bar",
+                data: {
+                    /* chart data */
+                },
+                options: {
+                    /* chart options */
+                },
             });
         });
 }
 ```
 
 **Key Patterns:**
+
 - Store chart instances globally
 - Destroy old charts before creating new ones
 - Use fetch API for data retrieval
@@ -123,12 +132,15 @@ async function initMap() {
     markerClusterer = new markerClusterer.MarkerClusterer({
         map: map,
         markers: [],
-        renderer: { /* custom renderer */ }
+        renderer: {
+            /* custom renderer */
+        },
     });
 }
 ```
 
 **For New Dashboards:**
+
 - Use the same Google Maps API initialization
 - Implement marker clustering for better performance
 - Add zoom-based marker loading
@@ -139,29 +151,29 @@ async function initMap() {
 Server-side DataTables with AJAX:
 
 ```javascript
-let table = $('#tableDesa').DataTable({
+let table = $("#tableDesa").DataTable({
     processing: true,
     serverSide: false,
     paging: true,
     pageLength: 25,
     ajax: {
         url: "{{ route('dashboard.provinsi.data.desa') }}",
-        data: function(d) {
-            d.program_id = $('#programFilter').val();
-            d.tahun = $('#tahunFilter').val();
-            d.provinsi_id = $('#provinsiFilter').val();
+        data: function (d) {
+            d.program_id = $("#programFilter").val();
+            d.tahun = $("#tahunFilter").val();
+            d.provinsi_id = $("#provinsiFilter").val();
         },
-        dataSrc: function(json) {
+        dataSrc: function (json) {
             // Process data before rendering
             pieChartKabupatenPenerimaManfaat(json.data || []);
             return json.data || [];
-        }
+        },
     },
     columns: [
-        { data: 'nama_dusun', title: 'Dusun' },
-        { data: 'desa', title: 'Desa' },
+        { data: "nama_dusun", title: "Dusun" },
+        { data: "desa", title: "Desa" },
         // ... more columns
-    ]
+    ],
 });
 
 function reloadTableIfValid() {
@@ -174,6 +186,7 @@ function reloadTableIfValid() {
 ```
 
 **Key Features:**
+
 - Dynamic column definitions
 - Filter integration via ajax.data function
 - Custom data processing in dataSrc
@@ -186,7 +199,7 @@ function reloadTableIfValid() {
 ### File Structure
 
 ```
-resources/views/dashboard/revisi/
+resources/views/dashboard/
 ├── beneficiaries.blade.php
 ├── model.blade.php
 └── pendanaan.blade.php
@@ -243,7 +256,7 @@ resources/views/dashboard/revisi/
     @section('plugins.Select2', true)
     @section('plugins.Sweetalert2', true)
     @section('plugins.DatatablesNew', true)
-    
+
     <script>
         $(document).ready(function() {
             // Initialize components
@@ -264,11 +277,11 @@ public function index(Request $request)
     // Get filter parameters
     $programId = $request->get('program_id');
     $sektorId = $request->get('sektor_id');
-    
+
     // Get dropdown data
     $programs = Program::select('id', 'nama', 'kode')->get();
     $sektors = TargetReinstra::select('id', 'deskripsi as nama')->get();
-    
+
     // Return view with initial data
     return view('dashboard.revisi.dashboard_name', compact(
         'programs',
@@ -280,13 +293,13 @@ public function index(Request $request)
 public function getData(Request $request)
 {
     $programId = $request->get('program_id');
-    
+
     $data = [
         'stats' => $this->getStatistics($programId),
         'chartData' => $this->getChartData($programId),
         'locations' => $this->getLocations($programId),
     ];
-    
+
     return response()->json($data);
 }
 ```
@@ -316,7 +329,9 @@ Always provide user feedback:
 Show processing indicators:
 
 ```javascript
-$('#dashboardCards').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>');
+$("#dashboardCards").html(
+    '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</div>',
+);
 ```
 
 ### 3. **Responsive Design**
@@ -335,7 +350,9 @@ Include print-specific CSS:
 
 ```css
 @media print {
-    .main-sidebar, .main-header, .content-header {
+    .main-sidebar,
+    .main-header,
+    .content-header {
         display: none !important;
     }
     .content-wrapper {
@@ -350,7 +367,7 @@ Use consistent color generation:
 
 ```javascript
 function generateColors(count) {
-    const baseColors = ['#4caf50', '#03a9f4', '#00bcd4', '#e91e63'];
+    const baseColors = ["#4caf50", "#03a9f4", "#00bcd4", "#e91e63"];
     // Generate additional colors if needed
     return baseColors.slice(0, count);
 }
@@ -382,13 +399,13 @@ When implementing new dashboards:
 Follow the existing pattern:
 
 ```php
-Route::middleware(['auth'])->prefix('revisi/dashboard')->name('revisi.dashboard.')->group(function () {
+Route::middleware(['auth'])->prefix('/dashboard')->name('dashboard.')->group(function () {
     Route::get('/beneficiary', [Beneficiaries::class, 'index'])->name('beneficiary');
     Route::get('/beneficiary/data', [Beneficiaries::class, 'getData'])->name('beneficiary.data');
-    
+
     Route::get('/model', [KomponenModel::class, 'index'])->name('model');
     Route::get('/model/data', [KomponenModel::class, 'getData'])->name('model.data');
-    
+
     Route::get('/pendanaan', [Pendanaan::class, 'index'])->name('pendanaan');
     Route::get('/pendanaan/data', [Pendanaan::class, 'getData'])->name('pendanaan.data');
 });

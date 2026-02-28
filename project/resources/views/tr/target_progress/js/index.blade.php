@@ -102,9 +102,9 @@
 					$('#ModalHistoryTargetProgress').data("program-id", data.program_id).modal("show");
 				});
 			},
-			pageLength: 10,
+			pageLength: 25,
 			order: [1, 'asc'],
-			lengthMenu: [10,25,50,100],
+			lengthMenu: [10,25,50,100,200,500],
 			
 		});
 	});

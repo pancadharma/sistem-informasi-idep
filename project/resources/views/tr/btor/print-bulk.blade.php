@@ -22,7 +22,7 @@
             <div class="print-container">
                 {{-- METADATA --}}
                 <div class="section">
-                    <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; margin-bottom: 20px;">
+                    <div style="border-top: 0px solid #000; border-bottom: 1px solid #000; padding: 5px 0; margin-bottom: 20px;">
                         <table class="table-print">
                             <tr>
                                 <td width="25%"><strong>{{ __('btor.departemen') }}</strong></td>

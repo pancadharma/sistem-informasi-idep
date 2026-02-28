@@ -1,0 +1,19 @@
+{
+	frankenphp
+	order php_server before file_server
+}
+
+# HTTP server on port 80
+:80 {
+	root * public/
+	php_server
+	file_server
+}
+
+# HTTPS server on port 443
+:443 {
+	root * public/
+	php_server
+	file_server
+	tls internal
+}

@@ -71,7 +71,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 ## 📊 Dashboard yang Akan Dibuat
 
 ### 1. Beneficiaries Dashboard
-**URL:** `/revisi/dashboard/beneficiary`
+**URL:** `/dashboard/beneficiary`
 
 **Fitur:**
 - Status program (running, completed, pending)
@@ -85,7 +85,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - `trmeals_penerima_manfaat` untuk gender & marjinal
 
 ### 2. Model Dashboard
-**URL:** `/revisi/dashboard/model`
+**URL:** `/dashboard/model`
 
 **Fitur:**
 - Map lokasi model per provinsi
@@ -99,7 +99,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - `trmeals_komponen_model` untuk charts
 
 ### 3. Pendanaan Dashboard
-**URL:** `/revisi/dashboard/pendanaan`
+**URL:** `/dashboard/pendanaan`
 
 **Fitur:**
 - Chart: Kontribusi ke SDGs
@@ -150,11 +150,11 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 
 ```
 project/
-├── app/Http/Controllers/Revisi/
+├── app/Http/Controllers/
 │   ├── Beneficiaries.php
 │   ├── KomponenModel.php
 │   └── Pendanaan.php
-├── resources/views/dashboard/revisi/
+├── resources/views/dashboard/
 │   ├── beneficiaries.blade.php
 │   ├── model.blade.php
 │   └── pendanaan.blade.php

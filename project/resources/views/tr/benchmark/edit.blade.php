@@ -61,7 +61,7 @@
                                 <input type="text" class="form-control" id="nama_kegiatan" placeholder="{{ __('cruds.kegiatan.basic.nama') }}" name="nama_kegiatan"
                                 value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->nama ?? '' }}" readonly>
                             </div>
-                            <input type="hidden" id="kegiatan_id" name="kegiatan_id" value="{{ $benchmark->kegiatan->programOutcomeOutputActivity->id ?? '' }}">
+                            <input type="hidden" id="kegiatan_id" name="kegiatan_id" value="{{ $benchmark->kegiatan_id ?? '' }}">
                         </div>
                     </div>
 

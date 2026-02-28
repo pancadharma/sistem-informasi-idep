@@ -66,10 +66,11 @@
         delay: 250,
         data: params => ({
           search: params.term,
+          program_id: $('#program_id').val(),
           page: params.page || 1
         }),
         processResults: resp => ({
-          results: resp.results.map(i => ({ id: i.id, text: i.nama })),
+          results: resp.results,
           pagination: { more: resp.pagination.more }
         }),
         cache: true
@@ -86,6 +87,12 @@
       $('#program_id').val(id);
       $('#kode_program').val(kode);
       $('#nama_program').val(nama);
+      
+      // Reset Jenis Kegiatan when program changes
+      $('#jeniskegiatan_id').val(null).trigger('change');
+      $('#kegiatan_id').val('');
+      $('#kode_kegiatan').val('');
+      $('#nama_kegiatan').val('');
     });
 
     // 4) Pilih Jenis Kegiatan → fetch modal kegiatan

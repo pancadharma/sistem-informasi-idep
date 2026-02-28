@@ -62,6 +62,8 @@
         text-align: center;
         padding: 10px 0 15px 0;
         border-bottom: 2px solid #0D654D;
+        margin-inline-end: 14pt; 
+        margin-inline-start: 14pt;
     }
 
     .print-header-content img {

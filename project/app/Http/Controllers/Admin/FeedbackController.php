@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 // Import facade lain jika diperlukan
 use Illuminate\Support\Facades\Log; // Contoh jika perlu logging
 use Illuminate\Validation\Rule;
+use App\Enums\CategoryComplaint;
+use App\Http\Controllers\API\FeedbackController as APIFeedbackController;
 
 class FeedbackController extends Controller
 {
@@ -37,31 +39,17 @@ class FeedbackController extends Controller
      */
     public function create()
     {
-         // Ambil user beserta relasi jabatannya
-    // Kita butuh ID user untuk value, nama user untuk display, dan nama jabatan untuk auto-fill
-    $handlers = User::with('jabatan') // Pastikan 'jabatan' adalah nama relasi yang benar di model User
+        $handlers = User::with('jabatan') // Pastikan 'jabatan' adalah nama relasi yang benar di model User
                     ->orderBy('nama')   // Asumsi 'nama' adalah kolom nama di tabel users
                     ->get(['id', 'nama', 'jabatan_id']); // Ambil jabatan_id juga untuk debug
 
-
-    // --- MULAI BLOK DEBUGGING ---
-    // Log::info('--- Data Handler untuk Dropdown Feedback Create ---');
-    // foreach ($handlers as $userLoopItem) {
-    //     $posisiOutput = 'N/A atau Relasi Jabatan Gagal'; // Default message
-    //     if ($userLoopItem->jabatan) { // Cek apakah objek jabatan ada (relasi berhasil)
-    //         // Akses kolom 'nama' dari objek jabatan
-    //         $posisiOutput = $userLoopItem->jabatan->nama ?? 'Kolom "nama" di tabel jabatan KOSONG/NULL'; 
-    //     } elseif ($userLoopItem->jabatan_id) {
-    //         $posisiOutput = 'jabatan_id (' . $userLoopItem->jabatan_id . ') ada, tapi objek jabatan null (cek model MJabatan/data di tabel mjabatan).';
-    //     } else {
-    //         $posisiOutput = 'User tidak memiliki jabatan_id.';
-    //     }
-    //     Log::info("User: {$userLoopItem->nama} (ID: {$userLoopItem->id}), Jabatan_ID: {$userLoopItem->jabatan_id}, Nilai untuk data-position akan menjadi: '{$posisiOutput}'");
-    // }
-    // Log::info('-------------------------------------------------');
-    // --- AKHIR BLOK DEBUGGING ---
-
-        return view('tr.feedback.create', compact('handlers'));
+        $categoryComplaints = collect(CategoryComplaint::asSelectArray())
+        ->map(fn ($label, $value) => [
+            'id'   => $value,
+            'text' => $label,
+        ]);
+        // dd($categoryComplaints);
+        return view('tr.feedback.create', compact('handlers', 'categoryComplaints'));
     }
 
     /**
@@ -179,11 +167,24 @@ class FeedbackController extends Controller
     {
         $feedback->load('program', 'handlerUser.jabatan'); // Load relasi program
 
-         // Ambil daftar semua user untuk dropdown handler
-       $handlers = User::with('jabatan') // Pastikan 'jabatan' adalah nama relasi yang benar di model User
+        // Ambil daftar semua user untuk dropdown handler
+        $handlers = User::with('jabatan') // Pastikan 'jabatan' adalah nama relasi yang benar di model User
                     ->orderBy('nama')   // Asumsi 'nama' adalah kolom nama di tabel users
                     ->get(['id', 'nama', 'jabatan_id']); // Ambil jabatan_id juga untuk debug
-        return view('tr.feedback.edit', compact('feedback', 'handlers'));
+        
+        $categoryComplaints = collect(CategoryComplaint::asSelectArray())
+        ->map(fn ($label, $value) => [
+            'id'   => $value,
+            'text' => $label,
+        ]);
+
+        // $channels = collect(Channel::asSelectArray())
+        // ->map(fn ($label, $value) => [
+        //     'id'   => $value,
+        //     'text' => $label,
+        // ]);
+        
+        return view('tr.feedback.edit', compact('feedback', 'handlers', 'categoryComplaints'));
     }
 
     /**
@@ -205,7 +206,6 @@ class FeedbackController extends Controller
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_registrasi',
             'sex' => ['nullable', Rule::in(['', 'Male', 'Female', 'Boy', 'Girl', 'Unspecified'])],
             'kontak_penerima' => 'nullable|string|max:255',
-            // Validasi untuk handler_id (ID User) dan position_handler (string nama posisi)
             'handler_id' => 'nullable|integer|exists:users,id', // ID User sebagai handler
             'position_handler' => 'nullable|string|max:255', // Nama posisi handler (diisi JS)
 
@@ -249,12 +249,13 @@ class FeedbackController extends Controller
 
         try {
             $feedback->update($dataToUpdate);
+            // dd($dataToUpdate);
             return redirect()->route('feedback.index')->with('success', 'Data feedback berhasil diperbarui!');
         } catch (\Exception $e) {
             Log::error('Error updating feedback ID ' . $feedback->id . ': ' . $e->getMessage() . ' Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()
-                            ->withInput()
-                            ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
+            ->withInput()
+            ->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
         }
     }
 

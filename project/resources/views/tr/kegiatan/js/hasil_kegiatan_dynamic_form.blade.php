@@ -1,3 +1,4 @@
+<script>
 
 // Map dropdown values to form field prefixes
 const formFieldMap = {
@@ -773,3 +774,4 @@ function getFormFields(fieldPrefix, data = {}) {
     }
     return formFields;
 }
+</script>

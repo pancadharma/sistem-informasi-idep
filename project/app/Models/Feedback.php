@@ -4,11 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-// (Sangat Penting) Pastikan Anda meng-import model Program Anda di sini
-// Ganti App\Models\Program jika path atau nama model Anda berbeda
 use App\Models\Program;
-// Jika model Anda namanya Trprogram: use App\Models\Trprogram;
+use App\Enums\CategoryComplaint;
 
 class Feedback extends Model
 {
@@ -85,10 +82,18 @@ class Feedback extends Model
     }
     // ===========================================
 
-      public function handlerUser() // Atau Anda bisa menamakannya 'handler' jika tidak ada field 'handler' lagi
+    public function handlerUser() // Atau Anda bisa menamakannya 'handler' jika tidak ada field 'handler' lagi
     {
         // Asumsi 'handler_id' adalah foreign key di tabel 'feedback' yang merujuk ke 'id' di tabel 'users'
         return $this->belongsTo(User::class, 'handler_id');
     }
+
+    public function getKategoriKomplainTextAttribute(): string
+    {
+        return $this->kategori_komplain
+            ? CategoryComplaint::getDescription($this->kategori_komplain)
+            : '-';
+    }
+
 
 }

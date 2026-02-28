@@ -1,0 +1,220 @@
+<!-- Using This As Reference -->
+<!-- 
+RAW QUERY 
+
+```SELECT 
+    p.nama AS nama_program,
+    DATE_FORMAT(tpm.created_at, '%Y-%m') AS bulan_registrasi,
+    COUNT(tpm.id) AS penerima_manfaat_baru,
+    SUM(CASE WHEN tpm.jenis_kelamin = 'Perempuan' THEN 1 ELSE 0 END) AS wanita_baru,
+    SUM(CASE WHEN tpm.jenis_kelamin = 'Laki-laki' THEN 1 ELSE 0 END) AS pria_baru
+FROM 
+    trmeals_penerima_manfaat AS tpm
+INNER JOIN 
+    trprogram AS p ON tpm.program_id = p.id
+WHERE 
+    tpm.deleted_at IS NULL
+    AND p.id = 1
+GROUP BY 
+    p.nama, 
+    DATE_FORMAT(tpm.created_at, '%Y-%m')
+ORDER BY 
+    bulan_registrasi ASC;
+```
+
+Expecting Using Eloquent / ORM Laravel for query
+
+-->
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Grafik Tren Penerima Manfaat</title>
+    <!-- Memuat Library Chart.js dari CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background-color: #f4f6f9;
+        }
+
+        .chart-container {
+            width: 80%;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chart-container">
+        <h2>Tren Pertumbuhan Penerima Manfaat: <span id="programName">Loading...</span></h2>
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        // --- 1. SIMULASI HASIL QUERY SQL ANDA ---
+        // Data ini biasanya dihasilkan oleh: json_encode($results); di PHP
+        const sqlResult = [
+            {
+                "nama_program": "Program Ketahanan Pangan Desa",
+                "bulan_registrasi": "2023-01",
+                "penerima_manfaat_baru": 45,
+                "wanita_baru": 25,
+                "pria_baru": 20
+            },
+            {
+                "nama_program": "Program Ketahanan Pangan Desa",
+                "bulan_registrasi": "2023-02",
+                "penerima_manfaat_baru": 60,
+                "wanita_baru": 35,
+                "pria_baru": 25
+            },
+            {
+                "nama_program": "Program Ketahanan Pangan Desa",
+                "bulan_registrasi": "2023-03",
+                "penerima_manfaat_baru": 30,
+                "wanita_baru": 10,
+                "pria_baru": 20
+            },
+            {
+                "nama_program": "Program Ketahanan Pangan Desa",
+                "bulan_registrasi": "2023-04",
+                "penerima_manfaat_baru": 85,
+                "wanita_baru": 50,
+                "pria_baru": 35
+            },
+            {
+                "nama_program": "Program Ketahanan Pangan Desa",
+                "bulan_registrasi": "2023-05",
+                "penerima_manfaat_baru": 100,
+                "wanita_baru": 60,
+                "pria_baru": 40
+            }
+        ];
+
+        // --- 2. PERSIAPAN DATA UNTUK CHART.JS ---
+
+        // Mengambil nama program dari data pertama untuk judul
+        document.getElementById('programName').innerText = sqlResult?.nama_program || 'Data Kosong';
+
+        // Mapping array untuk sumbu X dan Y
+        const labels = sqlResult.map(item => item.bulan_registrasi);
+        const dataTotal = sqlResult.map(item => item.penerima_manfaat_baru);
+        const dataWanita = sqlResult.map(item => item.wanita_baru);
+        const dataPria = sqlResult.map(item => item.pria_baru);
+        const biggerData = sqlResult.map(item => {
+            let genderTerbesar = null;
+            let nilaiTerbesar = 0;
+
+            if (item.wanita_baru > item.pria_baru) {
+                genderTerbesar = 'wanita';
+                nilaiTerbesar = item.wanita_baru;
+            } else if (item.pria_baru > item.wanita_baru) {
+                genderTerbesar = 'pria';
+                nilaiTerbesar = item.pria_baru;
+            } else {
+                genderTerbesar = 'sama';
+                nilaiTerbesar = item.wanita_baru; // nilainya sama
+            }
+
+            return {
+                bulan: item.bulan_registrasi,
+                gender: genderTerbesar,
+                value: nilaiTerbesar
+            };
+        });
+
+        const biggerLineData = biggerData.map(item => item.value);
+
+        // --- 3. KONFIGURASI CHART ---
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        const myChart = new Chart(ctx, {
+            type: 'bar', // Tipe dasar adalah Bar
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Pendaftar',
+                        data: biggerLineData,
+                        type: 'line', // Override menjadi Garis
+                        borderColor: '#FF5733',
+                        backgroundColor: '#FF5733',
+                        borderWidth: 2,
+                        tension: 0.3, // Membuat garis sedikit melengkung
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Perempuan',
+                        data: dataWanita,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Merah muda/Pink
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        //stack: 'genderStack', // Grouping untuk stacking
+                    },
+                    {
+                        label: 'Laki-laki',
+                        data: dataPria,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Biru
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        //stack: 'genderStack', // Grouping yang sama agar menumpuk
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan Registrasi'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Orang'
+                        },
+                        // stacked: true // Mengaktifkan mode tumpuk (stacked)
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            footer: function (tooltipItems) {
+                                let total = 0;
+                                tooltipItems.forEach(function (tooltipItem) {
+                                    if (tooltipItem.dataset.type !== 'line') {
+                                        total += tooltipItem.parsed.y;
+                                    }
+                                });
+                                return 'Total Stack: ' + total;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

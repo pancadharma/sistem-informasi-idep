@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Revisi;
 
 use App\Http\Controllers\Controller;
-use App\Models\Program;
+use App\Models\Kegiatan;
 use App\Models\Kegiatan_Lokasi;
-use App\Models\Meals_Penerima_Manfaat;
 use App\Models\Kelompok_Marjinal;
+use App\Models\Meals_Penerima_Manfaat;
+use App\Models\Program;
+use App\Models\Program_Outcome_Output_Activity;
 use App\Models\Provinsi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class Beneficiaries extends Controller
 {
@@ -64,11 +66,13 @@ class Beneficiaries extends Controller
         // It's safer to let queries run with whereIn empty array which yields no results usually
 
         $data = [
-            'programs' => $this->getProgramsWithStatus($filteredProgramIds),
+            'programs' => $this->getProgramsWithStatus($filteredProgramIds, $provinsiId, $tahun),
             'locations' => $this->getKegiatanLocations($filteredProgramIds, $provinsiId, $tahun),
             'genderData' => $this->getGenderDistribution($filteredProgramIds, $provinsiId, $tahun),
             'marjinalData' => $this->getKelompokMarjinal($filteredProgramIds, $provinsiId, $tahun),
             'stats' => $this->getStatistics($filteredProgramIds, $provinsiId, $tahun),
+            'beneficiaries' => $this->calculateBeneficiaries($filteredProgramIds, $provinsiId), 
+            'mealsBeneficiary' => $this->mealsBeneficiary($filteredProgramIds, $provinsiId, $tahun),
         ];
 
         return response()->json($data);
@@ -132,18 +136,33 @@ class Beneficiaries extends Controller
      * Get programs with calculated status
      * Status: Sedang Berjalan, Sudah Selesai, Belum Dimulai
      */
-    private function getProgramsWithStatus($programIds)
+    private function getProgramsWithStatus($programIds, $provinsiId = null, $tahun = null)
     {
         if (empty($programIds)) {
             return [];
         }
 
+        $actualCounts = $this->calculateBeneficiaries($programIds);
+        $actualCountsMap = $actualCounts->pluck('totalBeneficiaries', 'program_id');
+
         $query = Program::with(['users'])
             ->whereIn('id', $programIds)
             // Added deskripsiprojek and totalnilai for the modal details
-            ->select('id', 'nama', 'kode', 'tanggalmulai', 'tanggalselesai', 'status', 'user_id', 'deskripsiprojek', 'totalnilai');
+            ->select('id', 'nama', 'kode', 'tanggalmulai', 'tanggalselesai', 'status', 'user_id', 'deskripsiprojek', 'totalnilai', 'ekspektasipenerimamanfaat');
 
-        $programs = $query->get()->map(function ($program) {
+        // if ($provinsiId) {
+        //     $programIds = ProgramLokasi::where('provinsi_id', $provinsiId)->pluck('program_id')->toArray();
+        //     $query->whereIn('id', $programIds);
+        // }
+
+        if ($provinsiId) {
+            $programIds = DB::table('trprogramlokasi')
+                ->where('provinsi_id', $provinsiId)
+                ->whereIn('program_id', $programIds)
+                ->pluck('program_id')->toArray();
+            $query->whereIn('id', $programIds);
+        }
+        $programs = $query->get()->map(function ($program) use ($actualCountsMap) {
             $now = now();
             // Robust parsing
             $start = $program->tanggalmulai ? Carbon::parse($program->tanggalmulai) : null;
@@ -175,9 +194,12 @@ class Beneficiaries extends Controller
                 'pic' => $program->users->name ?? 'N/A',
                 // New fields for modal
                 'deskripsi' => $program->deskripsiprojek ?? 'Tidak ada deskripsi',
-                'total_nilai' => $program->totalnilai ? 'Rp ' . number_format($program->totalnilai, 0, ',', '.') : 'Rp 0'
+                'total_nilai' => $program->totalnilai ? 'Rp ' . number_format($program->totalnilai, 0, ',', '.') : 'Rp 0',
+                'target_beneficiaries' => $program->ekspektasipenerimamanfaat ?? 0,
+                'actual_beneficiaries' => $actualCountsMap[$program->id] ?? 0
             ];
         });
+
 
         return $programs;
     }
@@ -224,7 +246,10 @@ class Beneficiaries extends Controller
             });
         }
 
-        $locations = $query->get()->map(function ($lokasi) {
+        // Fetch all beneficiary counts for the relevant programs once to avoid N+1 queries
+        $mealsBeneficiaries = $this->mealsBeneficiary($programIds, $provinsiId, $tahun);
+
+        $locations = $query->get()->map(function ($lokasi) use ($mealsBeneficiaries) {
             $kegiatan = $lokasi->kegiatan;
 
             // Get program through the relationship chain
@@ -235,13 +260,22 @@ class Beneficiaries extends Controller
 
             if (!$program) return null;
 
-            // Calculate beneficiaries from kegiatan
-            $totalBeneficiaries = $kegiatan->penerimamanfaattotal ?? 0;
+            // Calculate beneficiaries from kegiatan via trmeals_penerima_manfaat
+            // filtered by program AND location (desa)
+            // Calculate beneficiaries from activities via the pre-fetched collection
+            $activityId = optional($kegiatan->programOutcomeOutputActivity)->id;
+            
+            // Find the specific activity count from the collection
+            $activityData = $mealsBeneficiaries->firstWhere('id_act', $activityId);
+            $totalBeneficiariesMEALS = $activityData->meals_beneficiary ?? 0;
+            $totalBeneficiariesBTOR = $activityData->btor_beneficiary ?? 0;
 
             return [
                 'program_id' => $program->id ?? null,
                 'program_nama' => $program->nama ?? 'N/A',
                 'program_kode' => $program->kode ?? 'N/A',
+                'program_status' => $program->status ?? 'N/A',
+                'program_objektif' => $program->objektif->deskripsi ?? 'N/A',
                 'desa_nama' => optional($lokasi->desa)->nama ?? 'N/A',
                 'kecamatan_nama' => optional(optional($lokasi->desa)->kecamatan)->nama ?? 'N/A',
                 'kabupaten_nama' => optional(optional(optional($lokasi->desa)->kecamatan)->kabupaten)->nama ?? 'N/A',
@@ -250,8 +284,13 @@ class Beneficiaries extends Controller
                 'long' => (float) $lokasi->long,
                 'kegiatan_mulai' => $kegiatan->tanggalmulai ? Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') : '-',
                 'kegiatan_selesai' => $kegiatan->tanggalselesai ? Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') : '-',
-                'penerimamanfaattotal' => $totalBeneficiaries,
-                'aktivitas_list' => optional($kegiatan->jenisKegiatan)->nama ?? 'N/A'
+                'penerimamanfaat_btor_total' => $totalBeneficiariesBTOR,
+                'penerimamanfaat_meals_total' => $totalBeneficiariesMEALS,
+                'aktivitas_list' => optional($kegiatan->jenisKegiatan)->nama ?? 'N/A',
+                'kode_kegiatan' => optional($kegiatan->programOutcomeOutputActivity)->kode ?? 'N/A',
+                'nama_kegiatan' => optional($kegiatan->programOutcomeOutputActivity)->nama ?? 'N/A',
+                'kegiatan_status' => $kegiatan->status ?? 'N/A',
+                'kegiatan_id' => $kegiatan->id ?? 'N/A',
             ];
         })->filter()->values();
 
@@ -288,7 +327,7 @@ class Beneficiaries extends Controller
             // Assuming standard 'L'/'P' or checking value.
             // Use strtolower to be safe
             $jk = strtolower($item->jenis_kelamin);
-            $label = ($jk === 'laki' || $jk === 'l' || $jk === 'laki-laki') ? 'Laki-laki' : 'Perempuan';
+            $label = ($jk === 'laki' || $jk === 'laki-laki') ? 'Laki-laki' : ($jk === 'perempuan' || $jk === 'p' ? 'Perempuan' : ($jk === 'lainnya' ? 'Lainnya' : 'Tidak Diketahui'));
 
             return [
                 'jenis_kelamin' => $label,
@@ -348,9 +387,6 @@ class Beneficiaries extends Controller
             ];
         }
 
-        // Programs count
-        $totalPrograms = count($programIds);
-
         // Base Beneficiary Query
         $beneficiaryQuery = Meals_Penerima_Manfaat::whereNull('deleted_at')
             ->whereIn('program_id', $programIds);
@@ -373,12 +409,20 @@ class Beneficiaries extends Controller
             });
         }
 
+        // Programs count
+        $totalPrograms = Program::whereIn('id', $programIds)->count();
+        
+        if ($provinsiId) {
+            $totalPrograms = DB::table('trprogramlokasi')
+                ->where('provinsi_id', $provinsiId)
+                ->whereIn('program_id', $programIds)
+                ->count();
+        }
+
         // Gender Distribution Data
         $genderData = $this->getGenderDistribution($programIds, $provinsiId, $tahun);
         $maleTotal = $genderData->where('jenis_kelamin', 'Laki-laki')->first()['total'] ?? 0;
         $femaleTotal = $genderData->where('jenis_kelamin', 'Perempuan')->first()['total'] ?? 0;
-
-        // Clone query for specific stats to avoid side effects if not careful (though count() is safe usually)
 
         // Children Male (< 18)
         $childrenMale = (clone $beneficiaryQuery)->where('umur', '<', 18)
@@ -415,5 +459,83 @@ class Beneficiaries extends Controller
             'families' => $families,
             'disability' => $disability,
         ];
+    }
+
+    function calculateBeneficiaries($programIds, $provinsiId = null)
+    {
+        if (empty($programIds)) {
+            return collect([]);
+        }
+
+        $query = Meals_Penerima_Manfaat::select('program_id', DB::raw('COUNT(*) as total'))
+            ->whereNull('deleted_at')
+            ->whereIn('program_id', $programIds);
+
+        if ($provinsiId) {
+            $query->whereHas('dusun.desa.kecamatan.kabupaten.provinsi', function ($q) use ($provinsiId) {
+                $q->where('id', $provinsiId);
+            });
+        }
+
+        // Year is implicitly handled by programIds
+
+        $data = $query->groupBy('program_id')->get();
+
+        return $data->map(function ($item) {
+            return [
+                'program_id' => $item->program_id,
+                'totalBeneficiaries' => $item->total,
+            ];
+        });
+    }
+
+
+    public function mealsBeneficiary($programIds, $provinsiId = null, $tahun = null)
+    {
+        if (empty($programIds)) {
+            return collect([]);
+        }
+
+        $programIds = (array)$programIds;
+
+        // Get Program-wide totals (as requested: same value for all activities of the program)
+        $programTotals = $this->calculateBeneficiaries($programIds, $provinsiId);
+        $programTotalsMap = $programTotals->pluck('totalBeneficiaries', 'program_id');
+
+        $activities = Program_Outcome_Output_Activity::query()
+            ->whereHas('program_outcome_output.program_outcome', function ($q) use ($programIds) {
+                $q->whereIn('program_id', $programIds);
+            })
+            ->whereHas('kegiatan')
+            ->with(['program_outcome_output.program_outcome.program'])
+            ->withCount([
+                'kegiatan as btor_beneficiary' => function ($q) use ($provinsiId, $tahun) {
+                    $q->select(DB::raw('SUM(penerimamanfaattotal)'));
+                    if ($provinsiId) {
+                        $q->whereHas('lokasi.desa.kecamatan.kabupaten.provinsi', function($pq) use ($provinsiId) {
+                            $pq->where('id', $provinsiId);
+                        });
+                    }
+                    if ($tahun) {
+                        $q->whereYear('tanggalmulai', '<=', $tahun)
+                          ->whereYear('tanggalselesai', '>=', $tahun);
+                    }
+                }
+            ])
+            ->get();
+
+        return $activities->map(function ($act) use ($programTotalsMap) {
+            $program = optional(optional($act->program_outcome_output)->program_outcome)->program;
+            $programId = $program->id ?? null;
+            return (object) [
+                'id' => $programId,
+                'id_act' => $act->id,
+                'namaProgram' => $program->nama ?? 'N/A',
+                'kode' => $act->kode,
+                'nama' => $act->nama,
+                'btor_beneficiary' => (int) $act->btor_beneficiary,
+                'meals_beneficiary' => (int) ($programTotalsMap[$programId] ?? 0),
+            ];
+        });
     }
 }

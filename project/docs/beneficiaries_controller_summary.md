@@ -4,7 +4,7 @@
 
 **Task:** Create controller with data aggregation methods for Beneficiaries Dashboard
 
-**File Created:** `app/Http/Controllers/Revisi/Beneficiaries.php`
+**File Created:** `app/Http/Controllers/Beneficiaries.php`
 
 ---
 
@@ -17,7 +17,7 @@ Main dashboard view method that returns:
 - Years from programs
 - Google Maps API key
 
-**Route:** `GET /revisi/dashboard/beneficiary`
+**Route:** `GET /dashboard/beneficiary`
 
 ### 2. **getData(Request $request)**
 AJAX endpoint that returns all dashboard data:
@@ -27,7 +27,7 @@ AJAX endpoint that returns all dashboard data:
 - Kelompok marjinal data
 - Statistics summary
 
-**Route:** `GET /revisi/dashboard/beneficiary/data`
+**Route:** `GET /dashboard/beneficiary/data`
 
 **Parameters:**
 - `program_id` (optional)
@@ -84,7 +84,7 @@ Private method that aggregates dashboard statistics:
 
 ```php
 // routes/web.php
-Route::middleware(['auth'])->prefix('revisi/dashboard')->name('revisi.dashboard.')->group(function () {
+Route::middleware(['auth'])->prefix('dashboard')->name('revisi.dashboard.')->group(function () {
     // Beneficiaries Dashboard
     Route::get('/beneficiary', [App\Http\Controllers\Revisi\Beneficiaries::class, 'index'])
         ->name('beneficiary');
@@ -148,7 +148,7 @@ Update charts, maps, and statistics
 
 ## 🚀 Next Steps
 
-1. Create Blade view (`resources/views/dashboard/revisi/beneficiaries.blade.php`)
+1. Create Blade view (`resources/views/dashboard/beneficiaries.blade.php`)
 2. Implement JavaScript for AJAX calls
 3. Add Chart.js visualizations
 4. Implement Google Maps with markers

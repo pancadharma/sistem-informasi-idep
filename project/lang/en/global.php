@@ -19,6 +19,7 @@ return [
     'cancel'                         => 'Cancel',
     'clear'                          => 'Clear',
     'downloadFile'                   => 'Download file',
+    'download'                       => 'Download',
     'edit'                           => 'Edit',
     'emailVerificationSuccess'       => 'User email verified successfully',
     'entries'                        => 'Entries',

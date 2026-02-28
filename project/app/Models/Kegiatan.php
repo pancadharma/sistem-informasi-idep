@@ -56,6 +56,8 @@ class Kegiatan extends Model implements HasMedia
         'status',
         'deskripsilatarbelakang',
         'deskripsitujuan',
+        'indikasi_perubahan',
+        'catatan_penulis',
         'deskripsikeluaran',
         'deskripsiyangdikaji',
         'penerimamanfaatdewasaperempuan',
@@ -385,6 +387,65 @@ class Kegiatan extends Model implements HasMedia
             9 => 'kunjungan',
             10 => 'konsultasi',
             11 => 'lainnya',
+        ];
+    }
+
+    public static function getJenisKegiatanFieldMap(): array
+    {
+        return [
+            1 => [ // Assessment
+                'assessmentyangterlibat', 'assessmenttemuan', 'assessmenttambahan',
+                'assessmenttambahan_ket', 'assessmentkendala', 'assessmentisu', 'assessmentpembelajaran'
+            ],
+            2 => [ // Sosialisasi
+                'sosialisasiyangterlibat', 'sosialisasitemuan', 'sosialisasitambahan',
+                'sosialisasitambahan_ket', 'sosialisasikendala', 'sosialisasiisu', 'sosialisasipembelajaran'
+            ],
+            3 => [ // Pelatihan
+                'pelatihanpelatih', 'pelatihanhasil', 'pelatihandistribusi',
+                'pelatihandistribusi_ket', 'pelatihanrencana', 'pelatihanunggahan',
+                'pelatihanisu', 'pelatihanpembelajaran'
+            ],
+            4 => [ // Pembelanjaan
+                'pembelanjaandetailbarang', 'pembelanjaanmulai', 'pembelanjaanselesai',
+                'pembelanjaandistribusimulai', 'pembelanjaandistribusiselesai', 'pembelanjaanterdistribusi',
+                'pembelanjaanakandistribusi', 'pembelanjaanakandistribusi_ket', 'pembelanjaankendala',
+                'pembelanjaanisu', 'pembelanjaanpembelajaran'
+            ],
+            5 => [ // Pengembangan
+                'pengembanganjeniskomponen', 'pengembanganberapakomponen', 'pengembanganlokasikomponen',
+                'pengembanganyangterlibat', 'pengembanganrencana', 'pengembangankendala',
+                'pengembanganisu', 'pengembanganpembelajaran'
+            ],
+            6 => [ // Kampanye
+                'kampanyeyangdikampanyekan', 'kampanyejenis', 'kampanyebentukkegiatan',
+                'kampanyeyangterlibat', 'kampanyeyangdisasar', 'kampanyejangkauan',
+                'kampanyerencana', 'kampanyekendala', 'kampanyeisu', 'kampanyepembelajaran'
+            ],
+            7 => [ // Pemetaan
+                'pemetaanyangdihasilkan', 'pemetaanluasan', 'pemetaanunit',
+                'pemetaanyangterlibat', 'pemetaanrencana', 'pemetaanisu', 'pemetaanpembelajaran'
+            ],
+            8 => [ // Monitoring
+                'monitoringyangdipantau', 'monitoringdata', 'monitoringyangterlibat',
+                'monitoringmetode', 'monitoringhasil', 'monitoringkegiatanselanjutnya',
+                'monitoringkegiatanselanjutnya_ket', 'monitoringkendala', 'monitoringisu', 'monitoringpembelajaran'
+            ],
+            9 => [ // Kunjungan
+                'kunjunganlembaga', 'kunjunganpeserta', 'kunjunganyangdilakukan',
+                'kunjunganhasil', 'kunjunganpotensipendapatan', 'kunjunganrencana',
+                'kunjungankendala', 'kunjunganisu', 'kunjunganpembelajaran'
+            ],
+            10 => [ // Konsultasi
+                'konsultasilembaga', 'konsultasikomponen', 'konsultasiyangdilakukan',
+                'konsultasihasil', 'konsultasipotensipendapatan', 'konsultasirencana',
+                'konsultasikendala', 'konsultasiisu', 'konsultasipembelajaran'
+            ],
+            11 => [ // Lainnya
+                'lainnyamengapadilakukan', 'lainnyadampak', 'lainnyasumberpendanaan',
+                'lainnyasumberpendanaan_ket', 'lainnyayangterlibat', 'lainnyarencana',
+                'lainnyakendala', 'lainnyaisu', 'lainnyapembelajaran'
+            ],
         ];
     }
 

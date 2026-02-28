@@ -1,69 +1,85 @@
 version: "3.8"
 
 services:
-    # 1. PHP Application
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: idep_app
-        restart: unless-stopped
-        working_dir: /var/www/html
-        volumes:
-            - ./:/var/www/html # <--- THIS IS THE MAGIC
-            - ../.git:/var/www/html/.git # Mount .git for version info
-        networks:
-            - idep_net
-        depends_on:
-            - db
+  # 1. PHP Application (FrankenPHP)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: idep_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8012:80"
+      - "8013:443"
+      - "8013:443/udp"
+    volumes:
+      - ./:/var/www/html
+      - ../.git:/var/www/html/.git # Mount .git for version info
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - idep_net
+    depends_on:
+      - db
+    command: >
+      sh -c " echo '🔹 Laravel container bootstrap started';
 
-    # 2. Web Server (Nginx)
-    web:
-        image: nginx:alpine
-        container_name: idep_nginx
-        restart: unless-stopped
-        ports:
-            - "80:80"
-        volumes:
-            - ./:/var/www/html # Nginx also needs to see your files
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-        networks:
-            - idep_net
-        depends_on:
-            - app
+      if [ ! -f .env ]; then
+          echo '🔹 Creating .env & APP_KEY';
+          if [ -f .env.example.docker ]; then cp .env.example.docker .env; else cp .env.example .env; fi &&
+          php artisan key:generate &&
+          php artisan storage:link;
+      fi;
 
-    # 3. Database (MariaDB 10.5)
-    db:
-        image: mariadb:10.5
-        container_name: idep_db
-        restart: unless-stopped
-        environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-laravel_db}
-            MYSQL_USER: ${DB_USERNAME:-laravel_user}
-            MYSQL_PASSWORD: ${DB_PASSWORD:-laravel_password}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password}
-        volumes:
-            - db_data:/var/lib/mysql
-        ports:
-            - "3306:3306"
-        networks:
-            - idep_net
+      if [ ! -d vendor ] || [ -z \"$(ls -A vendor 2>/dev/null)\" ]; then
+          echo '🔹 Installing Composer dependencies';
+          composer install --no-interaction;
+      fi;
 
-    # 4. PHPMyAdmin (Optional helper)
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        container_name: idep_pma
-        environment:
-            PMA_HOST: db
-            PMA_PORT: 3306
-        ports:
-            - "8080:80"
-        networks:
-            - idep_net
+      if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then
+          echo '🔹 Installing Node dependencies';
+          npm install;
+      fi;
+
+      echo '✅ Bootstrap finished, starting FrankenPHP'; 
+      exec frankenphp run --config /etc/caddy/Caddyfile "
+
+  # 2. Database (MariaDB 10.5)
+  db:
+    image: mariadb:10.5
+    container_name: idep_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel_db}
+      MYSQL_USER: ${DB_USERNAME:-laravel_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-laravel_password}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root_password}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - idep_net
+
+  # 3. PHPMyAdmin (Optional helper)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: idep_pma
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    networks:
+      - idep_net
 
 volumes:
-    db_data:
+  db_data:
+  caddy_data:
+  caddy_config:
 
 networks:
-    idep_net:
-        driver: bridge
+  idep_net:
+    driver: bridge

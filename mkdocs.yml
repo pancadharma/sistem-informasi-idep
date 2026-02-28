@@ -1,0 +1,18 @@
+site_name: Sistem Informasi IDEP
+docs_dir: project/docs
+theme:
+  name: readthedocs
+
+nav:
+  - Home: README.md
+  - Implementation Plan: implementation_plan.md
+  - Dashboard Methodology: dashboard_methodology.md
+  - SQL Queries: sql_queries.md
+  - Walkthrough: walkthrough.md
+  - Task List: task.md
+  - Summaries:
+      - Beneficiaries Controller: beneficiaries_controller_summary.md
+      - Project Mapping: project-mapping.md
+  - Detailed Plans:
+      - Dashboard Enhancement: dashboard/komodel-v3-enhancement-plan.md
+      - Report Header/Footer: report/btor/add-header-footer.md

@@ -560,6 +560,38 @@ class KegiatanController extends Controller
         ));
     }
 
+    public function export_jules_pdf($id)
+    {
+        abort_if(Gate::denies('kegiatan_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $kegiatan = BTOR::getData($id);
+
+        $durationInDays = $kegiatan->getDurationInDays();
+
+        $pdf = Pdf::loadView('tr.kegiatan.export_jules', compact('kegiatan', 'durationInDays'))
+            ->setPaper('a4', 'portrait')
+            ->setOption([
+                'isRemoteEnabled' => true,
+                'dpi' => 96,
+                'defaultFont' => 'Figtree'
+            ]);
+
+        $filename = 'Kegiatan_Jules_' . $kegiatan->id . '_' . date('YmdHis') . '.pdf';
+        return $pdf->download($filename);
+    }
+
+    public function show_jules($id)
+    {
+        abort_if(Gate::denies('kegiatan_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $kegiatan = BTOR::getData($id);
+
+        $durationInDays = $kegiatan->getDurationInDays();
+
+        return view('tr.kegiatan.show_jules', compact(
+            'kegiatan',
+            'durationInDays'
+        ));
+    }
+
     public function show2($id)
     {
         // Reuse the logic from show, but render the new view

@@ -18,7 +18,7 @@ Implemented the **Model Dashboard (Komodel)** to monitor the distribution and de
     - **Sektor**: Pivoted by Sektor and Model Type.
     - **Colors**: Assigns consistent colors per Model Type.
 
-### 2. View (`resources/views/dashboard/revisi/model.blade.php`)
+### 2. View (`resources/views/dashboard/model.blade.php`)
 
 - **UI Design**: Standard **AdminLTE** design with `small-box` for stats and `card-outline` for sections, matching `home.blade.php`.
 - **Layout**: Extends `layouts.app` and uses `Figtree` font.
@@ -33,6 +33,6 @@ Implemented the **Model Dashboard (Komodel)** to monitor the distribution and de
 
 ### 3. Routes (`routes/web.php`)
 
-- Added routes under `revisi/dashboard`:
-  - `GET /revisi/dashboard/model` (Page)
-  - `GET /revisi/dashboard/model/data` (AJAX Data)
+- Added routes under `dashboard`:
+  - `GET /dashboard/model` (Page)
+  - `GET /dashboard/model/data` (AJAX Data)

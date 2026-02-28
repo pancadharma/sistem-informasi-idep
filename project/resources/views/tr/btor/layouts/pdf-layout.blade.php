@@ -17,7 +17,7 @@
         }
 
         body {
-            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+            font-family: 'Figtree, DejaVu Sans', 'Arial', sans-serif;
             font-size: 9pt;
             line-height: 1.4;
             color: #000;

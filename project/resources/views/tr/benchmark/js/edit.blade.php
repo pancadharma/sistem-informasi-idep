@@ -53,10 +53,11 @@
           delay: 250,
           data: params => ({
             search: params.term,
+            program_id: $('#program_id').val(),
             page: params.page || 1
           }),
           processResults: resp => ({
-            results: resp.results.map(i => ({ id: i.id, text: i.nama })),
+            results: resp.results,
             pagination: { more: resp.pagination.more }
           }),
           cache: true
@@ -151,11 +152,11 @@ $('#jeniskegiatan_id').on('select2:select', function () {
       type: 'GET',
       data: { kegiatan_id: kegiatanId },
       success: function (data) {
-  console.log('FULL RESPONSE : ', data);
-  if (!data || data.length === 0) {
-    toastr.warning('Lokasi tidak ditemukan.');
-    return;
-  }
+        console.log('FULL RESPONSE : ', data);
+        if (!data || data.length === 0) {
+          toastr.warning('Lokasi tidak ditemukan.');
+          return;
+        }
 
   // Clear select2 sebelum tambah baru
   $('#provinsi_id').empty();
