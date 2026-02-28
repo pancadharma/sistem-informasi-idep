@@ -199,45 +199,36 @@
                         </tbody>
                     </table>
                 </div>
-
-                {{-- Jenis Kegiatan 
-                    <div class="mt-4">
-                        <h5 class="mb-3">
-                            <!-- <i class="fas fa-tasks text-info"></i>  -->
-                            {{ __('btor.jenis_kegiatan') }}
-                            <span class="badge badge-info">{{ $kegiatan->jenisKegiatan?->nama }}</span>
-                        </h5>
-                        @include($viewPath, ['kegiatan' => $kegiatan])
-                    </div>
-                --}}
             </div>
 
             {{-- 4. Hasil Kegiatan --}}
-            <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <!-- <i class="fas fa-chart-bar text-success"></i>  -->
+            <div class="section">
+                <h4 class="border-bottom">
                     {{ __('btor.hasil_kegiatan') }}
                 </h4>
 
                 {{-- 4a. Jumlah Partisipan --}}
-                <h5 class="mb-3 pl-2"> a. {{ __('btor.jumlah_partisipan') }}</h5>
-
-                <p class="text-muted mb-2"><em>{{ __('btor.table_partisipan') }}:</em></p>
+                <h6 class="text-sm">
+                    {{ __('btor.jumlah_partisipan') }}
+                </h6>
+                <p class="text-muted text-sm mb-1">
+                    <em>{{ __('btor.table_partisipan') }}:</em>
+                </p>
 
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th>{{ __('btor.penerima_manfaat') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.perempuan') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.laki_laki') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.lainnya') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.sub_total') }}</th>
+                                <th width="15%">{{ __('btor.penerima_manfaat') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.perempuan') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.laki_laki') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.lainnya') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.sub_total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="20%">{{ __('btor.dewasa') }} <em>( {{ __('btor.umur_25_59') }} )</em></td>
+                                <td width="15%">{{ __('btor.dewasa') }} <em>( {{ __('btor.umur_25_59') }} )</em></td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
@@ -275,22 +266,24 @@
                     </table>
                 </div>
 
-                <p class="text-muted mb-2 mt-3"><em>{{ __('btor.table_kelompok_khusus') }}:</em></p>
+                <p class="text-muted text-sm mb-1">
+                    <em>{{ __('btor.table_kelompok_khusus') }}:</em>
+                </p>
 
                 <div class="table-responsive">
                     <table class="table table-sm table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th>{{ __('btor.penerima_manfaat') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.perempuan') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.laki_laki') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.lainnya') }}</th>
-                                <th class="text-center" width="15%">{{ __('btor.sub_total') }}</th>
+                                <th width="15%">{{ __('btor.penerima_manfaat') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.perempuan') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.laki_laki') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.lainnya') }}</th>
+                                <th class="text-center align-middle" width="15%">{{ __('btor.sub_total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="20%">{{ __('btor.penyandang_disabilitas') }}</td>
+                                <td width="15%">{{ __('btor.penyandang_disabilitas') }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
                                 <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
                                 <td class="text-center">0</td>
@@ -321,7 +314,7 @@
                     </table>
                 </div>
 
-                <div class="alert alert-info mt-3">
+                <div class="alert alert-info">
                     <i class="fas fa-users"></i>
                     <strong>{{ __('btor.total_keseluruhan') }}:</strong> 
                     {{ number_format($kegiatan->penerimamanfaattotal ?? 0) }} {{ __('btor.orang') }}
@@ -331,15 +324,17 @@
                     {{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }} {{ __('btor.laki_laki') }})
                 </div>
 
-                {{-- 4b. Hasil Pertemuan --}}
-                <h5 class="mt-4 mb-3 pl-2">b. {{ __('btor.hasil_pertemuan') }}</h5>
-                <div class="p-3 bg-light rounded" style="min-height: 100px;">
+                {{--Hasil Pertemuan --}}
+                <h5 class="border-bottom">
+                    {{ __('btor.hasil_pertemuan') }}
+                </h5>
+                <div class="p-3 bg-light rounded text-justify mb-3" style="min-height: 100px;">
                     {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data hasil pertemuan</em>' !!}
                 </div>
             </div>
 
             <!-- Hasil Kegiatan Dinamis berdasarkan jenis kegiatan -->
-            <div class="section mb-4">
+            <div class="section mb-3">
                 @include('tr.btor.partials.hasil-dinamis')
             </div>
 
@@ -516,10 +511,10 @@
             -->
             {{-- 8. Dokumen Pendukung --}}
             <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
+                <h4 class="border-bottom pb-2">
                     <i class="fas fa-folder-open text-info"></i> Dokumen Pendukung
                 </h4>
-                <p class="text-muted mb-3">
+                <p class="text-muted text-sm mb-1">
                     <em>Dokumen dan media yang disertakan dalam BTOR ini.</em>
                 </p>
 
@@ -531,14 +526,14 @@
                 @endphp
 
                 {{-- Checklist --}}
+                <div class="gallery-style">
+                    
+                </div>
                 <div class="mb-3">
                     <ul class="list-unstyled">
                         <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Dokumen Pendukung</li>
                         <li><i class="fas fa-{{ $hasMedia ? 'check-square text-success' : 'square text-muted' }}"></i> Media Pendukung</li>
-                        {{-- <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Notulensi dan Rencana Tindak Lanjut (RTL)</li> --}}
-                        {{-- <li><i class="fas fa-square text-muted"></i> Evaluasi Harian</li>
-                        <li><i class="fas fa-square text-muted"></i> Hasil Skoring Pre-Test dan Post-Test</li>
-                        <li><i class="fas fa-square text-muted"></i> Lainnya</li> --}}
+
                     </ul>
                 </div>
 
