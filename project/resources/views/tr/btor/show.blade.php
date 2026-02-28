@@ -553,10 +553,17 @@
                                     @foreach($dokumen as $index => $doc)
                                         <a href="{{ $doc->getUrl() }}"
                                            target="_blank"
+                                           rel="noopener noreferrer"
                                            class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between align-items-center">
                                                 <div class="flex-grow-1">
                                                     <h6 class="mb-1 pe-auto" 
+                                                        style="cursor:pointer;"
+                                                        data-url="{{ $doc->getUrl() }}"
+                                                        data-mime="{{ $doc->mime_type }}"
+                                                        data-name="{{ $doc->custom_properties['keterangan'] ?? $doc->name }}"
+                                                        onclick="previewFileFromData(this)"
+
                                                         title="{{ __('global.download') . ' '. $doc->custom_properties['keterangan'] ?? $doc->name }}">
                                                         <i class="fas fa-file-{{ $doc->extension === 'pdf' ? 'pdf text-danger' : ($doc->extension === 'docx' || $doc->extension === 'doc' ? 'word text-primary' : ($doc->extension === 'xlsx' || $doc->extension === 'xls' ? 'excel text-success' : 'alt')) }}"></i>
                                                         <strong>
@@ -603,20 +610,14 @@
                                         <div class="list-group-item">
                                             <div class="d-flex w-100 justify-content-between align-items-center">
                                                 <div class="flex-grow-1">
-                                                    <h6 class="mb-1 pe-auto" 
+                                                    <h6 class="mb-1 pe-auto"
                                                         style="cursor:pointer;"
-                                                        onclick="previewFile('{{ $item->getUrl() }}', 
-                                                        '{{ $item->mime_type }}', 
-                                                        '{{ $item->custom_properties['keterangan'] ?? $item->name }}')" 
-                                                        title="{{ __('Preview') .' '. $item->custom_properties['keterangan'] ?? $item->name }}">
-                                                        
-                                                        @if(str_starts_with($item->mime_type, 'image/'))
-                                                            <i class="fas fa-image text-info"></i>
-                                                        @elseif(str_starts_with($item->mime_type, 'video/'))
-                                                            <i class="fas fa-video text-danger"></i>
-                                                        @else
-                                                            <i class="fas fa-file text-secondary"></i>
-                                                        @endif
+                                                        data-url="{{ $item->getUrl() }}"
+                                                        data-mime="{{ $item->mime_type }}"
+                                                        data-name="{{ $item->custom_properties['keterangan'] ?? $item->name }}"
+                                                        onclick="previewFileFromData(this)"
+                                                        title="{{ __('Preview') . ' ' . $item->custom_properties['keterangan'] ?? $item->name }}">
+                                                        <i class="fas fa-image text-info"></i>
                                                         <strong>
                                                             {{ $item->custom_properties['keterangan'] ?? $item->name }}
                                                         </strong>
@@ -639,9 +640,10 @@
                                                         </span>
                                                     @endif
 
-                                                    <a href="{{ $item->getUrl() }}" download class="btn btn-sm btn-success" 
-                                                        title="{{ __('global.download') . ' '. $item->custom_properties['keterangan'] ?? $item->name }}">
-                                                        <i class="fas fa-download"></i> 
+                                                    <a href="{{ $item->getUrl() }}" download class="btn btn-sm btn-success"
+                                                        data-name="{{ $item->custom_properties['keterangan'] ?? $item->name }}"
+                                                        onclick="downloadFromData(this)">
+                                                        <i class="fas fa-download"></i>
                                                         {{ __('global.download') }}
                                                     </a>
                                                 </div>
@@ -676,12 +678,11 @@
 
             {{-- 9. Catatan Penulis Laporan --}}
             <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <!-- <i class="fas fa-sticky-note text-secondary"></i>  -->
-                    Catatan Penulis Laporan
+                <h4 class="border-bottom mb-3">
+                    {{ __('btor.catatan_penulis_laporan') }}
                 </h4>
                 <p class="text-muted mb-3">
-                    <em>Silahkan tuliskan catatan spesifik dari penulis laporan jika ada informasi yang belum bisa tersampaikan melalui bagian-bagian laporan di atas.</em>
+                    <em>{{ __('btor.catatan_penulis_laporan_ket') }}</em>
                 </p>
 
                 <div class="p-3 bg-light rounded" style="min-height: 80px;">
@@ -690,12 +691,11 @@
             </div>
             <!-- indikasi perubahan -->
              <div class="section mb-4">
-                <h4 class="border-bottom pb-2 mb-3">
-                    <!-- <i class="fas fa-sticky-note text-secondary"></i>  -->
-                    Indikasi Perubahan
+                <h4 class="border-bottom mb-3">
+                    {{ __('btor.indikasi_perubahan') }}
                 </h4>
                 <p class="text-muted mb-3">
-                    <em>Indikasi perubahan ini menunjukkan perubahan yang dilakukan pada kegiatan ini.</em>
+                    <em>{{ __('btor.indikasi_perubahan_ket') }}</em>
                 </p>
 
                 <div class="p-3 bg-light rounded" style="min-height: 80px;">
@@ -780,21 +780,28 @@
         });
     });
 
-    function previewFile(url, mimeType, imageName) {
+    function previewFileFromData(element) {
+        const url = element.getAttribute('data-url');
+        const mimeType = element.getAttribute('data-mime');
+        const name = element.getAttribute('data-name') || '{{ __('Image Preview') }}';
+
+        // Sanitize name for HTML rendering to prevent XSS
+        const safeName = $('<div/>').text(name).html();
+
         if (mimeType.startsWith('image/')) {
             Swal.fire({
-                title: imageName ?? '{{ __('Image Preview') }}',
+                title: safeName,
                 html: `<img src="${url}" class="img-fluid" style="max-width: 80%; height: auto;">`,
-                // width: '60%',
                 showCloseButton: true,
                 showConfirmButton: false
             });
         } else if (mimeType === 'application/pdf') {
+            event.preventDefault();
             Swal.fire({
-                title: '{{ __('PDF Preview') }}',
-                html: `<iframe src="${url}" style="width: 80%; height: 500px; border: none;"></iframe>`,
-                // width: '60%',
+                title: safeName ?? '{{ __('PDF Preview') }}',
+                html: `<iframe src="${url}" style="width: 100%; height: 500px; border: none;"></iframe>`,
                 height: '600px',
+                width: '80%',
                 showCloseButton: true,
                 showConfirmButton: false
             });
@@ -802,6 +809,13 @@
             // For other file types, open in new tab
             window.open(url, '_blank');
         }
+    }
+
+    function downloadFromData(element) {
+        const name = element.getAttribute('data-name') || '{{ __('global.download') }}';
+        const safeName = $('<div/>').text(name).html();
+        element.title = '{{ __('global.download') }} ' + safeName;
+        // The href is already set in the HTML, so the download will work
     }
 </script>
 @endpush

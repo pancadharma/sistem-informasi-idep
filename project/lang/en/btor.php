@@ -334,5 +334,10 @@ return [
 
     ],
 
+    'catatan_penulis_laporan'   => 'Writer Notes',
+    'catatan_penulis_laporan_ket'   => 'Specific notes from the report author that could not be conveyed through the above sections of the report',
+    'indikasi_perubahan'    => 'Indication of Change',
+    'indikasi_perubahan_ket'    => 'The changes in the reported activities are related to the implementation of the relevant Program.',
+
 
 ];
