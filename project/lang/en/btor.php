@@ -26,6 +26,7 @@ return [
     'tanggal_mulai' => 'Start Date',
     'hari'  => 'days',
     'tanggal_selesai' => 'End Date',
+    'sektor' => 'Sector',
 
     'periode' => 'Period',
     'keterangan' => 'Remarks',
@@ -332,6 +333,20 @@ return [
             'i_lainnyapembelajaran' => 'Please Fill In And Describe The Lessons Learnt During The Activity Implementation Process. It Can Be Taken From The Results Of The Teams Internal Evaluation And The Frm Form Filled In By The Participants. Please Focus On The Learning Recommendations.',
 
     ],
+
+    'catatan_penulis_laporan'   => 'Writer Notes',
+    'catatan_penulis_laporan_ket'   => 'Specific notes from the report author that could not be conveyed through the above sections of the report',
+    'indikasi_perubahan'    => 'Indication of Change',
+    'indikasi_perubahan_ket'    => 'The changes in the reported activities are related to the implementation of the relevant Program.',
+
+    'report_id_label'   => 'Report ID:',
+    'total_label'    => 'Total:',
+    'files_attached'    => 'files attached',
+    'no_data_hasil_pertemuan'    => 'No meeting results data',
+    'no_data_tantang_solusi'    => 'No challenges and solutions data available',
+    'no_data_pembelajaran'    => 'No learning data available',
+    'no_data_dokumen_media'    => 'No supporting documents or media attached to this activity.',
+    'other_file_types'    => 'For other file types, open in new tab',
 
 
 ];

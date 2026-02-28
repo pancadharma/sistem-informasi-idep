@@ -24,6 +24,7 @@ return [
     'tanggal_mulai' => 'Tanggal Mulai',
     'hari'  => 'hari',
     'tanggal_selesai' => 'Tanggal Selesai',
+    'sektor' => 'Sektor',
 
     'periode' => 'Periode',
     'keterangan' => 'Keterangan',
@@ -332,5 +333,18 @@ return [
             'i_lainnyapembelajaran' => 'Silakan Isi Dan Jabarkan Pembelajaran Apa Yang Bisa Didapatkan Selama Proses Pelaksanaan Kegiatan. Bisa Diambil Dari Hasil Evaluasi Internal Tim Dan Form Frm Yang Diisi Partisipan. Silakan Fokus Pada Rekomendasi Pembelajarannya.',
     ],
 
+    'catatan_penulis_laporan' => 'Catatan Penulis Laporan',
+    'catatan_penulis_laporan_ket' => 'Catatan spesifik dari penulis laporan yang belum bisa tersampaikan melalui bagian-bagian laporan di atas',
+    'indikasi_perubahan' => 'Indikasi Perubahan',
+    'indikasi_perubahan_ket' => 'Yang berubah dari kegiatan yang dilaporkan ini, berhubungan dengan implementasi Program terkait',
+
+    'report_id_label' => 'Report ID:',
+    'total_label' => 'Total:',
+    'files_attached' => 'file terlampir',
+    'no_data_hasil_pertemuan' => 'Tidak ada data hasil pertemuan',
+    'no_data_tantang_solusi' => 'Tidak ada data tantangan dan solusi yang tersedia',
+    'no_data_pembelajaran' => 'Tidak ada data pembelajaran yang tersedia',
+    'no_data_dokumen_media' => 'Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.',
+    'other_file_types' => 'Untuk jenis file lain, buka di tab baru',
 
 ];
