@@ -1,27 +1,33 @@
 @extends('layouts.app')
 
-@section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label'))
+{{-- @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label')) --}}
+{{-- @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label') . $kegiatan->programOutcomeOutputActivity?->nama ?? ' ' . ' - ' . $kegiatan->programOutcomeOutputActivity?->kode ?? '') --}}
+
+@section('subtitle')
+    {{ __('global.details') . ' ' . __('cruds.kegiatan.label') }} {{  $kegiatan->programOutcomeOutputActivity?->nama ?? '' }}
+@endsection
+
 @section('content_header_title')
-    {{-- <button type="button" class="btn btn-secondary btn-sm print-btn"
-        title="{{ __('global.print') . ' ' . __('cruds.kegiatan.label') }}">
-        <i class="fa fa-print"></i>
-    </button> --}}
     <a href="{{ route('btor.print', $kegiatan->id) }}" class="btn btn-info" target="_blank">
         <i class="fas fa-print"></i> {{ __('btor.print_preview') }}
     </a>
 @endsection
-@section('sub_breadcumb', __('cruds.kegiatan.list'))
+@section('sub_breadcumb')
+    <a href="{{ route('kegiatan.index') }}">
+        {{ __('cruds.kegiatan.list') }}
+    </a>
+@endsection
 
 @section('content_body')
 
     <div class="card card-outline card-primary">
         <div class="card-header">
-            <h1 class="card-title">
-                {{ __('BACK TO OFFICE REPORT') }}
-                <span class="text-primary">
+            <h1 class="card-title mt-2">
+                {{ __('Details Report Activity') }}
+                {{-- <span class="text-primary">
                     {{ $kegiatan->programOutcomeOutputActivity->kode ?? ''}}
                 </span>
-                {{ $kegiatan->programOutcomeOutputActivity->nama ?? '' }}
+                {{ $kegiatan->programOutcomeOutputActivity->nama ?? '' }} --}}
             </h1>
             <div class="card-tools">
                 <button type="button" class="btn" onclick="window.location.href=`{{ route('kegiatan.index') }}`"
@@ -30,6 +36,278 @@
                 </button>
             </div>
         </div>
+
+        <!-- Left Section -->
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
+                <!-- card stats -->
+                <div class="card shadow-sm border-0 mb-4">
+                    {{-- <div class="card-header text-white" style="background-color: #1a5c28">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title font-weight-bold mb-0">BACK TO OFFICE REPORT</h3>
+                            <span class="badge badge-light px-3 py-2 text-success font-weight-bold">
+                                {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
+                            </span>
+                        </div>
+                    </div> --}}
+                    <div class="card-body border rounded border-light">
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h2 class="text-dark font-weight-bold mb-1">
+                                    {{ $kegiatan->programOutcomeOutputActivity?->nama ?? 'Activity Name Not Set' }}
+                                </h2>
+                                <p class="text-muted lead mb-0">
+                                    <i class="fas fa-tag mr-2 text-secondary"></i> {{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }} <span class="badge badge-success">
+                                        {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
+                                <div class="p-3 bg-light rounded border-left border-success h-100">
+                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Program</h5>
+                                    <span class="font-weight-bold text-dark">
+                                        {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 order-2 mb-2 col-xl-4">
+                                <div class="p-3 bg-light rounded border-left border-info h-100 text-left">
+                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Jenis Kegiatan</h5>
+                                    <span class="badge badge-info text-wrap text-left">
+                                        {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 order-3 mb-2 col-xl-4">
+                                <div class="p-3 bg-light rounded border-left border-warning h-100">
+                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Fase</h5>
+                                    <span class="h4 font-weight-bold text-dark">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        {{-- 1. Latar Belakang --}}
+                        <div class="section mb-5">
+                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                <i class="fas fa-info-circle mr-2 text-primary"></i> 1. {{ __('cruds.kegiatan.description.latar_belakang') }}
+                            </h4>
+                            <div class="rich-text-content px-2">
+                                {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted">Tidak ada data.</em>' !!}
+                            </div>
+                        </div>
+
+                        {{-- 2. Tujuan --}}
+                        <div class="section mb-5">
+                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                <i class="fas fa-bullseye mr-2 text-danger"></i> 2. {{ __('cruds.kegiatan.description.tujuan') }}
+                            </h4>
+                            <div class="rich-text-content px-2">
+                                {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted">Tidak ada data.</em>' !!}
+                            </div>
+                        </div>
+
+                        {{-- 3. Detail & Dynamic Results --}}
+                        <div class="section mb-5">
+                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                <i class="fas fa-list-alt mr-2 text-warning"></i> 3. {{ __('btor.detail_kegiatan') }} & Hasil
+                            </h4>
+
+                            {{-- Basic Table for detail --}}
+                            <div class="table-responsive mb-4 px-2">
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td width="30%" class="text-muted"><strong>Waktu Pelaksanaan</strong></td>
+                                            <td width="2%">:</td>
+                                            <td>
+                                                @if($kegiatan->tanggalmulai)
+                                                    <i class="far fa-calendar-alt text-success mr-1"></i>
+                                                    {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                                    @if($kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
+                                                        - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                                    @endif
+                                                    <span class="ml-2 badge badge-secondary font-weight-normal">{{ $durationInDays }} Hari</span>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted"><strong>Lokasi</strong></td>
+                                            <td>:</td>
+                                            <td>
+                                                @forelse($kegiatan->lokasi as $lok)
+                                                    <div class="mb-1">
+                                                        <i class="fas fa-map-marker-alt text-danger mr-1"></i>
+                                                        {{ $lok->lokasi }}, {{ $lok->desa?->nama }}, {{ $lok->desa?->kecamatan?->nama }}
+                                                    </div>
+                                                @empty
+                                                    -
+                                                @endforelse
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted"><strong>Mitra/Pihak Terlibat</strong></td>
+                                            <td>:</td>
+                                            <td>
+                                                @forelse($kegiatan->mitra as $mitra)
+                                                    <span class="badge badge-light border mr-1">
+                                                        <i class="fas fa-handshake text-muted mr-1"></i> {{ $mitra->nama }}
+                                                    </span>
+                                                @empty
+                                                    -
+                                                @endforelse
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {{-- Disaggregated Participant Table --}}
+                            <div class="mb-4 px-2">
+                                <h5 class="font-weight-bold mb-3 text-muted">
+                                    <i class="fas fa-users-cog mr-2"></i> {{ __('cruds.kegiatan.peserta.label') }} (Disagregat)
+                                </h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm text-center">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="text-left">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.dewasa') }} (25-59)</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.lansia') }} (60+)</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.remaja') }} (18-24)</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.anak') }} (< 18)</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</td>
+                                            </tr>
+                                            <tr class="bg-light font-weight-bold">
+                                                <td class="text-left">TOTAL USIA</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</td>
+                                                <td class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</td>
+                                            </tr>
+                                        </tbody>
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="text-left">Kelompok Khusus</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.disabilitas') }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
+                                                <td>{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
+                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            {{-- Dynamic Content Following Create Order --}}
+                            @include('tr.kegiatan.partials.dynamic_results_jules')
+                        </div>
+
+                        {{-- 4. Hasil Pertemuan --}}
+                        <div class="section mb-5">
+                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                <i class="fas fa-file-alt mr-2 text-success"></i> 4. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
+                            </h4>
+                            <div class="rich-text-content px-2">
+                                {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data.</em>' !!}
+                            </div>
+                        </div>
+
+                        {{-- Additional fields if they are not already in dynamic results --}}
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <div class="section h-100">
+                                    <h5 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                        <i class="fas fa-user-edit mr-2 text-secondary"></i> {{ __('cruds.kegiatan.hasil.catatan_penulis') }}
+                                    </h5>
+                                    <div class="px-2 small">
+                                        {!! $kegiatan->catatan_penulis ?? '<em class="text-muted">-</em>' !!}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="section h-100">
+                                    <h5 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                                        <i class="fas fa-sync-alt mr-2 text-info"></i> {{ __('cruds.kegiatan.hasil.indikasi_perubahan') }}
+                                    </h5>
+                                    <div class="px-2 small">
+                                        {!! $kegiatan->indikasi_perubahan ?? '<em class="text-muted">-</em>' !!}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
+                        
+                    </div>
+                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
+                        
+                    </div>
+                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
+                        
+                    </div>
+                </div>
+                <!-- details -->
+                <div class="row mb-4">
+
+                </div>
+            </div>
+            
+            
+            <!-- Right Section -->
+            <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
+            
+            </div>
+        </div>
+
+
+
+        
         <!-- Activity Metrics Section -->
         <div class="card-body border-top">
             <div class="col-md-12">
