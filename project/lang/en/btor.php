@@ -339,5 +339,14 @@ return [
     'indikasi_perubahan'    => 'Indication of Change',
     'indikasi_perubahan_ket'    => 'The changes in the reported activities are related to the implementation of the relevant Program.',
 
+    'report_id_label'   => 'Report ID:',
+    'total_label'    => 'Total:',
+    'files_attached'    => 'files attached',
+    'no_data_hasil_pertemuan'    => 'No meeting results data',
+    'no_data_tantang_solusi'    => 'No challenges and solutions data available',
+    'no_data_pembelajaran'    => 'No learning data available',
+    'no_data_dokumen_media'    => 'No supporting documents or media attached to this activity.',
+    'other_file_types'    => 'For other file types, open in new tab',
+
 
 ];

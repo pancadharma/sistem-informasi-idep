@@ -364,6 +364,10 @@ return [
         'processing'                => 'Memproses',
         'please_wait'               => 'Mohon tunggu...',
     ],
-    'print'                         => 'Cetak'
+    'print'                         => 'Cetak',
+
+    'image_preview'                 => 'Pratinjau Gambar',
+    'pdf_preview'                   => 'Pratinjau PDF',
+    'other_file_types'              => 'Untuk jenis file lain, buka di tab baru'
 
 ];

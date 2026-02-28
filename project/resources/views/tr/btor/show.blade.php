@@ -42,7 +42,7 @@
         {{-- Header --}}
         <div class="card-header text-white" style="background-color: #1a5c28">
             <h3 class="mb-0 text-center">{{ __('btor.btor') }}</h3>
-            <p class="text-center mb-0"><small>Report ID: {{ $kegiatan->id }}</small></p>
+            <p class="text-center mb-0"><small>{{ __('btor.report_id_label') }}{{ $kegiatan->id }}</small></p>
             <div class="ribbon-wrapper">
                 <div class="ribbon bg-{{ $kegiatan->status == 'draft' ? 'warning' : ($kegiatan->status == 'approved' ? 'success' : 'danger') }}">
                     {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
@@ -329,7 +329,7 @@
                     {{ __('btor.hasil_pertemuan') }}
                 </h5>
                 <div class="p-3 bg-light rounded text-justify mb-3" style="min-height: 100px;">
-                    {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data hasil pertemuan</em>' !!}
+                    {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">' . __('btor.no_data_hasil_pertemuan') . '</em>' !!}
                 </div>
             </div>
 
@@ -344,7 +344,7 @@
                     <i class="fas fa-exclamation-triangle text-warning"></i> Tantangan dan Solusi
                 </h4>
                 <p class="text-muted mb-3">
-                    <em>Silahkan isi dan jabarkan tantangan yang ditemui selama menjalankan kegiatan, serta solusinya berdasarkan hasil evaluasi kegiatan (jika ada).</em>
+                    <em>{{ __('btor.tantangan_solusi_ket') }}</em>
                 </p>
 
                 @php
@@ -410,7 +410,7 @@
                 @else
                     <div class="alert alert-secondary">
                         <i class="fas fa-info-circle"></i>
-                        Tidak ada data tantangan dan solusi yang tersedia.
+                        {{ __('btor.no_data_tantang_solusi') }}
                     </div>
                 @endif
             </div>
@@ -421,7 +421,7 @@
                     <i class="fas fa-flag text-danger"></i> Isu yang Perlu Diperhatikan & Rekomendasi
                 </h4>
                 <p class="text-muted mb-3">
-                    <em>Silahkan isi dan jabarkan isu-isu yang perlu diperhatikan (bersifat di luar kendali tim) selama menjalankan kegiatan, serta rekomendasi yang perlu diambil berdasarkan hasil evaluasi kegiatan (jika ada).</em>
+                    <em>{{ __('btor.tantangan_solusi_ket') }}</em>
                 </p>
 
                 @php
@@ -504,7 +504,7 @@
                     @if($pembelajaran)
                         {!! $pembelajaran !!}
                     @else
-                        <em class="text-muted">Tidak ada data pembelajaran yang tersedia.</em>
+                        <em class="text-muted">{{ __('btor.no_data_pembelajaran') }}</em>
                     @endif
                 </div>
             </div>
@@ -658,8 +658,8 @@
                     {{-- Summary Stats --}}
                     <div class="alert alert-info">
                         <i class="fas fa-paperclip"></i>
-                        <strong>Total:</strong>
-                        {{ ($dokumen?->count() ?? 0) + ($media?->count() ?? 0) }} file terlampir
+                        <strong>{{ __('btor.total_label') }}</strong>
+                        {{ ($dokumen?->count() ?? 0) + ($media?->count() ?? 0) }} {{ __('btor.files_attached') }}
                         @if($hasDokumen)
                             ({{ $dokumen->count() }} dokumen{{ $hasMedia ? ', ' : '' }}
                         @endif
@@ -670,7 +670,7 @@
                 @else
                     <div class="alert alert-secondary">
                         <i class="fas fa-info-circle"></i>
-                        Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.
+                        {{ __('btor.no_data_dokumen_media') }}
                     </div>
                 @endif
             </div> 
@@ -783,7 +783,7 @@
     function previewFileFromData(element) {
         const url = element.getAttribute('data-url');
         const mimeType = element.getAttribute('data-mime');
-        const name = element.getAttribute('data-name') || '{{ __('Image Preview') }}';
+        const name = element.getAttribute('data-name') || '{{ __('global.image_preview') }}';
 
         // Sanitize name for HTML rendering to prevent XSS
         const safeName = $('<div/>').text(name).html();
@@ -798,7 +798,7 @@
         } else if (mimeType === 'application/pdf') {
             event.preventDefault();
             Swal.fire({
-                title: safeName ?? '{{ __('PDF Preview') }}',
+                title: safeName ?? '{{ __('global.pdf_preview') }}',
                 html: `<iframe src="${url}" style="width: 100%; height: 500px; border: none;"></iframe>`,
                 height: '600px',
                 width: '80%',
