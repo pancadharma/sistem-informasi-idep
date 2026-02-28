@@ -1,18 +1,18 @@
 #!/bin/sh
 set -e
 
+# Load .env variables if they don't exist in current environment
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 echo "🔹 Running Migrations..."
-php artisan key:generate
-# php artisan migrate
+# Clear the database before import
+php artisan db:wipe --force
 
 echo "🔹 Importing seed data..."
 # Check if the file exists
 if [ -f "database/idep/idepdev.sql" ]; then
-    # Load .env variables if they don't exist in current environment
-    if [ -f .env ]; then
-        export $(grep -v '^#' .env | xargs)
-    fi
-
     echo "🔹 Using DB User: ${DB_USERNAME}"
     
     # Use environment variables for credentials
