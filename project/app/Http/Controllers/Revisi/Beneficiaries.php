@@ -142,7 +142,7 @@ class Beneficiaries extends Controller
             return [];
         }
 
-        $actualCounts = $this->calculateBeneficiaries($programIds);
+        $actualCounts = $this->calculateBeneficiaries($programIds, $provinsiId);
         $actualCountsMap = $actualCounts->pluck('totalBeneficiaries', 'program_id');
 
         $query = Program::with(['users'])
