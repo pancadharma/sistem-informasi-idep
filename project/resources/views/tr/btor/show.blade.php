@@ -556,19 +556,28 @@
                                            class="list-group-item list-group-item-action">
                                             <div class="d-flex w-100 justify-content-between align-items-center">
                                                 <div class="flex-grow-1">
-                                                    <h6 class="mb-1">
+                                                    <h6 class="mb-1 pe-auto" 
+                                                        title="{{ __('global.download') . ' '. $doc->custom_properties['keterangan'] ?? $doc->name }}">
                                                         <i class="fas fa-file-{{ $doc->extension === 'pdf' ? 'pdf text-danger' : ($doc->extension === 'docx' || $doc->extension === 'doc' ? 'word text-primary' : ($doc->extension === 'xlsx' || $doc->extension === 'xls' ? 'excel text-success' : 'alt')) }}"></i>
-                                                        <strong>{{ $doc->name }}</strong>
+                                                        <strong>
+                                                            {{ $doc->custom_properties['keterangan'] ?? $doc->name }}
+                                                        </strong>
                                                     </h6>
                                                     <small class="text-muted">
-                                                        {{ $doc->file_name }} •
+                                                        {{-- {{ $doc->file_name }} • --}}
                                                         {{ $doc->human_readable_size }} •
-                                                        <i class="far fa-calendar"></i> {{ $doc->created_at->format('d M Y') }}
+                                                        <i class="far fa-calendar"></i> 
+                                                        {{ $doc->created_at->format('d M Y') }}
                                                     </small>
                                                 </div>
-                                                <div class="ml-3">
-                                                    <span class="badge badge-secondary">{{ strtoupper($doc->extension) }}</span>
-                                                    <i class="fas fa-external-link-alt ml-2 text-primary"></i>
+                                                <div class="ml-3 text-right" title="{{ __('global.download') . ' '. $doc->custom_properties['keterangan'] ?? $doc->name }}">
+                                                    <span class="badge badge-secondary">
+                                                        {{ strtoupper($doc->extension) }}
+                                                    </span>
+                                                    <span class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-download"></i>
+                                                        {{ __('global.download') }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </a>
@@ -580,10 +589,12 @@
                     {{-- Media Files List (Simple - No Thumbnails) --}}
                     @if($hasMedia)
                         <div class="card mb-3">
-                            <div class="card-header bg-success text-white">
+                            <div class="card-header text-white " style="background-color: #1a5c28">
                                 <h5 class="mb-0">
-                                    <i class="fas fa-images"></i> Media Pendukung (Foto & Video)
-                                    <span class="badge badge-light float-right">{{ $media->count() }}</span>
+                                    <i class="fas fa-images"></i> Media Pendukung 
+                                        <span class="badge badge-light float-right">
+                                            {{ $media->count() }}
+                                        </span>
                                 </h5>
                             </div>
                             <div class="card-body p-0">
@@ -592,7 +603,13 @@
                                         <div class="list-group-item">
                                             <div class="d-flex w-100 justify-content-between align-items-center">
                                                 <div class="flex-grow-1">
-                                                    <h6 class="mb-1">
+                                                    <h6 class="mb-1 pe-auto" 
+                                                        style="cursor:pointer;"
+                                                        onclick="previewFile('{{ $item->getUrl() }}', 
+                                                        '{{ $item->mime_type }}', 
+                                                        '{{ $item->custom_properties['keterangan'] ?? $item->name }}')" 
+                                                        title="{{ __('Preview') .' '. $item->custom_properties['keterangan'] ?? $item->name }}">
+                                                        
                                                         @if(str_starts_with($item->mime_type, 'image/'))
                                                             <i class="fas fa-image text-info"></i>
                                                         @elseif(str_starts_with($item->mime_type, 'video/'))
@@ -600,35 +617,32 @@
                                                         @else
                                                             <i class="fas fa-file text-secondary"></i>
                                                         @endif
-                                                        <strong>{{ $item->name }}</strong>
+                                                        <strong>
+                                                            {{ $item->custom_properties['keterangan'] ?? $item->name }}
+                                                        </strong>
                                                     </h6>
                                                     <small class="text-muted">
-                                                        {{ $item->file_name }} •
                                                         {{ $item->human_readable_size }} •
-                                                        @if(str_starts_with($item->mime_type, 'image/'))
-                                                            <span class="badge badge-info badge-sm">IMAGE</span>
-                                                        @elseif(str_starts_with($item->mime_type, 'video/'))
-                                                            <span class="badge badge-danger badge-sm">VIDEO</span>
-                                                        @else
-                                                            <span class="badge badge-secondary badge-sm">{{ strtoupper($item->extension) }}</span>
-                                                        @endif
-                                                        •
-                                                        <i class="far fa-calendar"></i> {{ $item->created_at->format('d M Y H:i') }}
+                                                        <i class="far fa-calendar"></i> {{ $item->created_at->format('d M Y') }}
                                                     </small>
                                                 </div>
 
-                                                <div class="ml-3">
-                                                    <a href="{{ $item->getUrl() }}"
-                                                    target="_blank"
-                                                    class="btn btn-sm btn-primary mr-1"
-                                                    title="Lihat">
-                                                        <i class="fas fa-eye"></i> Lihat
-                                                    </a>
-                                                    <a href="{{ $item->getUrl() }}"
-                                                    download
-                                                    class="btn btn-sm btn-success"
-                                                    title="Unduh">
-                                                        <i class="fas fa-download"></i> Unduh
+                                                <div class="ml-3 text-right">
+
+                                                    @if(str_starts_with($item->mime_type, 'image/'))
+                                                        <span class="badge badge-info badge-sm">IMAGE</span>
+                                                    @elseif(str_starts_with($item->mime_type, 'video/'))
+                                                        <span class="badge badge-danger badge-sm">VIDEO</span>
+                                                    @else
+                                                        <span class="badge badge-secondary badge-sm">
+                                                            {{ strtoupper($item->extension) }}
+                                                        </span>
+                                                    @endif
+
+                                                    <a href="{{ $item->getUrl() }}" download class="btn btn-sm btn-success" 
+                                                        title="{{ __('global.download') . ' '. $item->custom_properties['keterangan'] ?? $item->name }}">
+                                                        <i class="fas fa-download"></i> 
+                                                        {{ __('global.download') }}
                                                     </a>
                                                 </div>
                                             </div>
@@ -765,6 +779,30 @@
             }
         });
     });
+
+    function previewFile(url, mimeType, imageName) {
+        if (mimeType.startsWith('image/')) {
+            Swal.fire({
+                title: imageName ?? '{{ __('Image Preview') }}',
+                html: `<img src="${url}" class="img-fluid" style="max-width: 80%; height: auto;">`,
+                // width: '60%',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else if (mimeType === 'application/pdf') {
+            Swal.fire({
+                title: '{{ __('PDF Preview') }}',
+                html: `<iframe src="${url}" style="width: 80%; height: 500px; border: none;"></iframe>`,
+                // width: '60%',
+                height: '600px',
+                showCloseButton: true,
+                showConfirmButton: false
+            });
+        } else {
+            // For other file types, open in new tab
+            window.open(url, '_blank');
+        }
+    }
 </script>
 @endpush
 

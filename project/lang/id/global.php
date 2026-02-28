@@ -18,6 +18,7 @@ return [
     'cancel'                         => 'Batal',
     'clear'                          => 'Clear',
     'downloadFile'                   => 'Unduh berkas',
+    'download'                       => 'Unduh',
     'edit'                           => 'Ubah',
     'emailVerificationSuccess'       => 'Email pengguna berhasil diverifikasi',
     'entries'                        => 'Entri',
