@@ -15,28 +15,17 @@
                 <table class="table-bordered" style="width: 100%; font-size: 9pt;">
                     <thead>
                         <tr>
-                            <th width="30%">Nama File</th>
-                            <th width="40%">Keterangan</th>
-                            <th width="10%" class="text-center">Tipe</th>
-                            <th width="10%" class="text-center">Ukuran</th>
-                            <th width="10%" class="text-center no-print">Aksi</th>
+                            <th width="85%">Keterangan</th>
+                            <th width="15%" class="text-center">LINK</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($dokumen as $doc)
                             <tr>
-                                <td>
-                                    <span class="no-print">
-                                        <i class="fas fa-file-alt"></i>
-                                    </span>
-                                    {{ $doc->name }}
-                                </td>
-                                <td>{{ $doc->getCustomProperty('keterangan') ?? '-' }}</td>
-                                <td class="text-center">{{ strtoupper($doc->extension) }}</td>
-                                <td class="text-center">{{ $doc->human_readable_size }}</td>
-                                <td class="no-print text-center">
-                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="btn btn-sm btn-link">
-                                        <i class="fas fa-download"></i> Unduh
+                                <td>{{ $doc->getCustomProperty('keterangan') ?? $doc->name }}</td>
+                                <td class="text-center">
+                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                        LINK <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -53,29 +42,26 @@
                 <table class="table-bordered" style="width: 100%; font-size: 9pt;">
                     <thead>
                         <tr>
-                            <th width="30%">Nama File</th>
-                            <th width="40%">Keterangan</th>
-                            <th width="10%" class="text-center">Tipe</th>
-                            <th width="10%" class="text-center">Ukuran</th>
-                            <th width="10%" class="text-center no-print">Aksi</th>
+                            <th width="85%">Keterangan</th>
+                            <th width="15%" class="text-center">LINK</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($media as $item)
                             <tr>
-                                <td class="media-item">
-                                    <span class="print">
-                                        <a href="{{ $item->getUrl() }}" target="_blank">
-                                            <img src="{{ $item->getUrl() }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
-                                        </a>
-                                    </span>
+                                <td>
+                                    @if(str_starts_with($item->mime_type, 'image/'))
+                                        <div class="mb-2 d-none no-print" style="display: none !important;">
+                                            <a href="{{ $item->getUrl() }}" target="_blank">
+                                                <img src="{{ $item->getUrl() }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
+                                            </a>
+                                        </div>
+                                    @endif
+                                    <div>{{ $item->getCustomProperty('keterangan') ?? $item->name }}</div>
                                 </td>
-                                <td>{{ $item->getCustomProperty('keterangan') ?? '-' }}</td>
-                                <td class="text-center">{{ strtoupper($item->extension) }}</td>
-                                <td class="text-center">{{ $item->human_readable_size }}</td>
-                                <td class="no-print text-center">
-                                    <a href="{{ $item->getUrl() }}" target="_blank" class="btn btn-sm btn-link">
-                                        <i class="fas fa-download"></i> Unduh
+                                <td class="text-center align-middle">
+                                    <a href="{{ $item->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                        LINK <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
                             </tr>

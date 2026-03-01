@@ -663,6 +663,7 @@
             });
         }
         
+
         function updateCharts(genderData, marjinalData) {
             // Update Gender Chart
             if (genderData && genderData.length > 0) {
@@ -675,15 +676,21 @@
                 });
                 
                 genderChart.data.datasets[0].data = genderData.map(item => item.total);
-                genderChart.update();
+            } else {
+                genderChart.data.labels = [];
+                genderChart.data.datasets[0].data = [];
             }
+            genderChart.update();
             
             // Update Marjinal Chart
             if (marjinalData && marjinalData.length > 0) {
                 marjinalChart.data.labels = marjinalData.map(item => item.kelompok);
                 marjinalChart.data.datasets[0].data = marjinalData.map(item => item.jumlah);
-                marjinalChart.update();
+            } else {
+                marjinalChart.data.labels = [];
+                marjinalChart.data.datasets[0].data = [];
             }
+            marjinalChart.update();
         }
     </script>
 @endpush
