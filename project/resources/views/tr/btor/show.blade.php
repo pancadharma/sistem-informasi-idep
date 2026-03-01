@@ -509,13 +509,13 @@
                 </div>
             </div>
             -->
-            {{-- 8. Dokumen Pendukung --}}
+            <!-- Dokumen Pendukung -->
             <div class="section mb-4">
                 <h4 class="border-bottom pb-2">
-                    <i class="fas fa-folder-open text-info"></i> Dokumen Pendukung
+                    <i class="fas fa-folder-open text-info"></i> {{ __('btor.dokumen_pendukung') }}
                 </h4>
                 <p class="text-muted text-sm mb-1">
-                    <em>Dokumen dan media yang disertakan dalam BTOR ini.</em>
+                    <em>{{ __('btor.dokumen_media_desc') }}</em>
                 </p>
 
                 @php
@@ -531,8 +531,8 @@
                 </div>
                 <div class="mb-3">
                     <ul class="list-unstyled">
-                        <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> Dokumen Pendukung</li>
-                        <li><i class="fas fa-{{ $hasMedia ? 'check-square text-success' : 'square text-muted' }}"></i> Media Pendukung</li>
+                        <li><i class="fas fa-{{ $hasDokumen ? 'check-square text-success' : 'square text-muted' }}"></i> {{ __('btor.dokumen_pendukung') }}</li>
+                        <li><i class="fas fa-{{ $hasMedia ? 'check-square text-success' : 'square text-muted' }}"></i> {{ __('btor.media_pendukung') }}</li>
 
                     </ul>
                 </div>
@@ -544,7 +544,7 @@
                         <div class="card mb-3">
                             <div class="card-header bg-primary text-white">
                                 <h5 class="mb-0">
-                                    <i class="fas fa-file-alt"></i> Dokumen
+                                    <i class="fas fa-file-alt"></i> {{ __('btor.dokumen') }}
                                     <span class="badge badge-light float-right">{{ $dokumen->count() }}</span>
                                 </h5>
                             </div>
@@ -598,7 +598,7 @@
                         <div class="card mb-3">
                             <div class="card-header text-white " style="background-color: #1a5c28">
                                 <h5 class="mb-0">
-                                    <i class="fas fa-images"></i> Media Pendukung 
+                                    <i class="fas fa-images"></i> {{ __('btor.media_pendukung') }} 
                                         <span class="badge badge-light float-right">
                                             {{ $media->count() }}
                                         </span>

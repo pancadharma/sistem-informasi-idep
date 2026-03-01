@@ -348,5 +348,9 @@ return [
     'no_data_dokumen_media'    => 'No supporting documents or media attached to this activity.',
     'other_file_types'    => 'For other file types, open in new tab',
 
+    'dokumen_pendukung' => 'Supporting Documents',
+    'media_pendukung' => 'Supporting Media',
+    'dokumen_media_desc' => 'Documents and media included in this BTOR.',
+    'dokumen' => 'Document',
 
 ];

@@ -347,4 +347,9 @@ return [
     'no_data_dokumen_media' => 'Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.',
     'other_file_types' => 'Untuk jenis file lain, buka di tab baru',
 
+    'dokumen_pendukung' => 'Dokumen Pendukung',
+    'media_pendukung' => 'Media Pendukung',
+    'dokumen_media_desc' => 'Dokumen dan media yang disertakan dalam BTOR ini.',
+    'dokumen' => 'Dokumen',
+
 ];
