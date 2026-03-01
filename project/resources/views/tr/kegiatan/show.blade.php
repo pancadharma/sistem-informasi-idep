@@ -40,6 +40,30 @@
     <div class="row">
         <!-- Right Section -->
         <div class="col-12 col-lg-4 order-sm-1 order-lg-2">
+
+            {{-- Program Goals Card --}}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
+                    <i class="fas fa-bullseye mr-2 text-muted"></i> Program Goals
+                </div>
+                <div class="card-body pt-2 small">
+                    @php
+                        $goal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
+                    @endphp
+                    @if($goal)
+                        <div class="mb-2">
+                            <span class="text-muted font-weight-bold uppercase d-block mb-1">Target</span>
+                            <div class="p-2 bg-light rounded">{{ $goal->target }}</div>
+                        </div>
+                        <div>
+                            <span class="text-muted font-weight-bold uppercase d-block mb-1">Indikator</span>
+                            <div class="p-2 bg-light rounded">{{ $goal->indikator }}</div>
+                        </div>
+                    @else
+                        <p class="text-muted italic">Tidak ada goal yang didefinisikan.</p>
+                    @endif
+                </div>
+            </div>
             {{-- Metrics Card --}}
             <div class="card shadow-sm border-0 mb-4 bg-primary text-white">
                 <div class="card-body">
@@ -147,29 +171,6 @@
                 </div>
             </div>
 
-            {{-- Program Goals Card --}}
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3">
-                    <i class="fas fa-bullseye mr-2 text-muted"></i> Program Goals
-                </div>
-                <div class="card-body pt-2 small">
-                    @php
-                        $goal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
-                    @endphp
-                    @if($goal)
-                        <div class="mb-2">
-                            <span class="text-muted font-weight-bold uppercase d-block mb-1">Target</span>
-                            <div class="p-2 bg-light rounded">{{ $goal->target }}</div>
-                        </div>
-                        <div>
-                            <span class="text-muted font-weight-bold uppercase d-block mb-1">Indikator</span>
-                            <div class="p-2 bg-light rounded">{{ $goal->indikator }}</div>
-                        </div>
-                    @else
-                        <p class="text-muted italic">Tidak ada goal yang didefinisikan.</p>
-                    @endif
-                </div>
-            </div>
         </div>
         <!-- Left Section -->
         <div class="col-12 col-lg-8 order-sm-2 order-lg-1">
