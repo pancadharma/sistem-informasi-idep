@@ -78,6 +78,8 @@ return [
     'no_data_docs' => 'Belum ada dokumen pendukung.',
     'no_data_media' => 'Belum ada foto/media.',
     'program_goals' => 'Program Goals',
+    'program_target' => 'Program Target',
+    'program_indicator' => 'Program Indikator',
     'no_goals' => 'Tidak ada goal yang didefinisikan.',
     'age_based_participants' => 'Peserta Berdasarkan Usia',
     'adult_range' => 'Dewasa (18-59 thn)',
@@ -120,6 +122,7 @@ return [
     'hasil_pertemuan' => 'Hasil Pertemuan',
 
     'informasi_lokasi' => 'Informasi Lokasi',
+    'tabel_lokasi' => 'Tabel Lokasi',
 
     'prepared_by' => 'Disiapkan Oleh',
     'penulis_jabatan' => 'Jabatan',
@@ -365,6 +368,7 @@ return [
     'no_data_hasil_pertemuan' => 'Tidak ada data hasil pertemuan',
     'no_data_tantang_solusi' => 'Tidak ada data tantangan dan solusi yang tersedia',
     'no_data_pembelajaran' => 'Tidak ada data pembelajaran yang tersedia',
+    'no_data_participants' => 'Tidak ada data penerima manfaat.',
     'no_data_dokumen_media' => 'Tidak ada dokumen atau media pendukung yang dilampirkan untuk kegiatan ini.',
     'other_file_types' => 'Untuk jenis file lain, buka di tab baru',
 
