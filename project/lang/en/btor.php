@@ -370,12 +370,15 @@ return [
     'no_data_tantang_solusi'    => 'No challenges and solutions data available',
     'no_data_pembelajaran'    => 'No learning data available',
     'no_data_participants'    => 'No beneficiary data available.',
+    'dokumen_pendukung' => 'Supporting Documents',
+    'media_pendukung' => 'Media Support',
+    'keterangan' => 'Description',
+    'no_documents_available' => 'No supporting documents or media available.',
+    'link' => 'Link',
     'no_data_dokumen_media'    => 'No supporting documents or media attached to this activity.',
     'other_file_types'    => 'For other file types, open in new tab',
 
-    'dokumen_pendukung' => 'Supporting Documents',
-    'media_pendukung' => 'Supporting Media',
     'dokumen_media_desc' => 'Documents and media included in this BTOR.',
     'dokumen' => 'Document',
-
+    'generated_at' => 'Generated at',
 ];

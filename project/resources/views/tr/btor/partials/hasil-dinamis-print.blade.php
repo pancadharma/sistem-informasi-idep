@@ -22,16 +22,16 @@
 
 @if($relationData)
     <div class="section-title" style="margin-top: 20px;">
-        {{ strtoupper(__('btor.hasil_kegiatan')) }}: {{ strtoupper($kegiatan->jenisKegiatan?->nama) }}
+        {{ strtoupper(__('btor.hasil.label')) }}: {{ strtoupper($kegiatan->jenisKegiatan?->nama) }}
     </div>
     
     <table class="table-bordered" style="width: 100%; margin-top: 5px;">
         @foreach($fields as $field)
             <tr>
-                <td width="25%" style="background-color: #f2f2f2; font-weight: bold;">
-                    {{ __('cruds.kegiatan.hasil.' . $field) }}
+                <td width="35%" style="background-color: #f2f2f2; font-weight: bold;">
+                    {{ __('btor.hasil.' . $field) }}
                 </td>
-                <td width="75%">
+                <td width="65%">
                     @if(in_array($field, $radioFields))
                         @if($relationData->$field == 1)
                             {{ __('global.yes') }}

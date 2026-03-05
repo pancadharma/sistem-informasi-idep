@@ -258,35 +258,35 @@
                         <td>{{ __('btor.umur_25_59') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasaperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasalakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasalainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdewasatotal }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('btor.umur_60_ke_atas') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansiaperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansialakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansialainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlansiatotal }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('btor.umur_18_24') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajaperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajalakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajalainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatremajatotal }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('btor.umur_18_kebawah') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanakperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanaklakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanaklainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatanaktotal }}</td>
                     </tr>
                     <tr style="font-weight: bold; background-color: #f2f2f2;">
                         <td>{{ strtoupper(__('btor.grand_total')) }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatperempuantotal }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlakilakitotal }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatlainnyatotal ?? 0}}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaattotal }}</td>
                     </tr>
                 </tbody>
@@ -308,22 +308,29 @@
                         <td>{{ __('btor.penyandang_disabilitas') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdisabilitasperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdisabilitaslakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdisabilitaslainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatdisabilitastotal }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('btor.non_disabilitas') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatnondisabilitasperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatnondisabilitaslakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatnondisabilitaslainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatnondisabilitastotal }}</td>
                     </tr>
                     <tr>
                         <td>{{ __('btor.kelompok_marjinal_lainnya') }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatmarjinalperempuan }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatmarjinallakilaki }}</td>
-                        <td class="text-center">0</td>
+                        <td class="text-center">{{ (int)$kegiatan->penerimamanfaatmarjinallainnya ?? 0 }}</td>
                         <td class="text-center">{{ (int)$kegiatan->penerimamanfaatmarjinaltotal }}</td>
+                    </tr>
+                    <tr style="font-weight: bold; background-color: #f2f2f2;">
+                        <td>{{ strtoupper(__('btor.grand_total')) }}</td>
+                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</td>
+                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</td>
+                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlainnyatotal ?? 0) }}</td>
+                        <td class="text-center">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</td>
                     </tr>
                 </tbody>
             </table>
