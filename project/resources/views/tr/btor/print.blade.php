@@ -191,9 +191,9 @@
                 <td width="2%">:</td>
                 <td>
                     @if($kegiatan->tanggalmulai)
-                        {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                        {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') }}
                         @if($kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
-                            - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                            - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') }}
                         @endif
                         ({{ $kegiatan->getDurationInDays() }} {{ __('btor.hari') }})
                     @else

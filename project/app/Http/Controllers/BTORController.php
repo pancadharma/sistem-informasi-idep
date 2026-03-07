@@ -764,8 +764,9 @@ class BTORController extends Controller
                     $table->addRow();
                     $keterangan = $doc->getCustomProperty('keterangan') ?: $doc->name;
                     $table->addCell(4250, $cellStyle)->addText($this->safeValue($keterangan), $textStyle);
+                    $absoluteUrl = url($doc->getUrl());
                     $table->addCell(750, ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER])
-                        ->addLink($doc->getUrl(), __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+                        ->addLink($absoluteUrl, __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
                 }
                 $section->addTextBreak(1);
             }
@@ -783,8 +784,9 @@ class BTORController extends Controller
                     $table->addRow();
                     $keterangan = $item->getCustomProperty('keterangan') ?: $item->name;
                     $table->addCell(4250, $cellStyle)->addText($this->safeValue($keterangan), $textStyle);
+                    $absoluteUrl = url($item->getUrl());
                     $table->addCell(750, ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER])
-                        ->addLink($item->getUrl(), __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+                        ->addLink($absoluteUrl, __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
                 }
                 $section->addTextBreak(1);
             }

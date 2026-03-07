@@ -24,7 +24,7 @@
                             <tr>
                                 <td>{{ $doc->getCustomProperty('keterangan') ?? $doc->name }}</td>
                                 <td class="text-center">
-                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                    <a href="{{ url($doc->getUrl()) }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
                                         {{ __('btor.link') }} <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
@@ -52,15 +52,15 @@
                                 <td>
                                     @if(str_starts_with($item->mime_type, 'image/'))
                                         <div class="mb-2 d-none no-print" style="display: none !important;">
-                                            <a href="{{ $item->getUrl() }}" target="_blank">
-                                                <img src="{{ $item->getUrl() }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
+                                            <a href="{{ url($item->getUrl()) }}" target="_blank">
+                                                <img src="{{ url($item->getUrl()) }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
                                             </a>
                                         </div>
                                     @endif
                                     <div>{{ $item->getCustomProperty('keterangan') ?? $item->name }}</div>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <a href="{{ $item->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                    <a href="{{ url($item->getUrl()) }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
                                         {{ __('btor.link') }} <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
