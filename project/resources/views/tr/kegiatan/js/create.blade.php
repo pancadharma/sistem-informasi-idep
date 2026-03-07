@@ -119,21 +119,21 @@
 
 <!-- Script for Kegiatan Peserta -->
 <script>
-    function saveFormDataToStorage() {
-        var formData = $('#createKegiatan').serializeArray();
+    // function saveFormDataToStorage() {
+    //     var formData = $('#createKegiatan').serializeArray();
 
-        $('.summernote').each(function() {
-            const id = $(this).attr('id');
-            formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
-        });
+    //     $('.summernote').each(function() {
+    //         const id = $(this).attr('id');
+    //         formData[id] = $(this).summernote('isEmpty') ? '' : $(this).summernote('code');
+    //     });
 
-        $('.select2').each(function() {
-            const id = $(this).attr('id');
-            formData[id] = $(this).val();
-        });
+    //     $('.select2').each(function() {
+    //         const id = $(this).attr('id');
+    //         formData[id] = $(this).val();
+    //     });
 
-        localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
-    }
+    //     localStorage.setItem('kegiatanFormData', JSON.stringify(formData));
+    // }
 
     function initializeSelect2WithDynamicUrl(fieldId) {
         var select2Field = $('#' + fieldId);
@@ -188,13 +188,15 @@
             $('tr').each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-                let total = pria + wanita;
+                let lainnya = parseInt($(this).find('input[id$="lainnya"]').val()) || 0;
+                let total = pria + wanita + lainnya;
                 $(this).find('input[id$="total"]').val(total);
             });
 
             // Calculate overall totals for the first table
             let totalPerempuan = 0;
             let totalLakilaki = 0;
+            let totalLainnya = 0;
             let totalAll = 0;
 
             totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
@@ -207,6 +209,11 @@
             totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
             totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
 
+            totalLainnya += parseInt($('#penerimamanfaatdewasalainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatlansialainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatremajalainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatanaklainnya').val()) || 0;
+
             totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
             totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
             totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
@@ -215,13 +222,15 @@
             // Update overall total fields for the first table
             $('#penerimamanfaatperempuantotal').val(totalPerempuan);
             $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaatlainnyatotal').val(totalLainnya);
             $('#penerimamanfaattotal').val(totalAll);
 
             // Calculate totals for each row in the second table (difabel table)
             $('tr', $('#penerima_manfaat_difabel')).each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-                let total = pria + wanita;
+                let lainnya = parseInt($(this).find('input[id$="lainnya"]').val()) || 0;
+                let total = pria + wanita + lainnya;
                 $(this).find('input[id$="total"]').val(total);
             });
 
@@ -238,10 +247,18 @@
             totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
             $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
 
+            let totalBeneficiariesLainnya = 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatdisabilitaslainnya').val()) || 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatnondisabilitaslainnya').val()) || 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatmarjinallainnya').val()) || 0;
+            $('#total_beneficiaries_lainnya').val(totalBeneficiariesLainnya);
+
             let totalBeneficiariesTotal = 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatmarjinaltotal').val()) || 0;
+            
+
             $('#beneficiaries_difable_total').val(totalBeneficiariesTotal);
         }
 
@@ -249,6 +266,7 @@
         $('.hitung-difabel').on('input', function() {
             let maxPerempuan = parseInt($('#penerimamanfaatperempuantotal').val()) || 0;
             let maxLakilaki = parseInt($('#penerimamanfaatlakilakitotal').val()) || 0;
+            let maxLainnya = parseInt($('#penerimamanfaatlainnyatotal').val()) || 0;
             let maxTotal = parseInt($('#penerimamanfaattotal').val()) || 0;
 
             let totalPerempuanSoFar = 0;
@@ -260,6 +278,11 @@
             totalLakilakiSoFar += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
             totalLakilakiSoFar += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
             totalLakilakiSoFar += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            let totalLainnyaSoFar = 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatdisabilitaslainnya').val()) || 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatnondisabilitaslainnya').val()) || 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatmarjinallainnya').val()) || 0;
 
             let totalAllSoFar = 0;
             totalAllSoFar += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
@@ -277,15 +300,16 @@
                 if (totalLakilakiSoFar > maxLakilaki) {
                     $(this).val(value - (totalLakilakiSoFar - maxLakilaki));
                 }
+            } else if (id.includes('lainnya')) {
+                if (totalLainnyaSoFar > maxLainnya) {
+                    $(this).val(value - (totalLainnyaSoFar - maxLainnya));
+                }
             } else if (id.includes('total')) {
                 if (totalAllSoFar > maxTotal) {
                     $(this).val(value - (totalAllSoFar - maxTotal));
                 }
             }
-
-
             calculateTotals(); // Recalculate totals after validation
-
         });
 
         // Trigger calculateTotals on input change for first table
@@ -342,26 +366,33 @@
                 dewasa: {
                     perempuan: params.get('penerimamanfaatdewasaperempuan'),
                     laki: params.get('penerimamanfaatdewasalakilaki'),
+                    lainnya: params.get('penerimamanfaatdewasalainnya'),
                     total: params.get('penerimamanfaatdewasatotal')
                 },
                 lansia: {
                     perempuan: params.get('penerimamanfaatlansiaperempuan'),
                     laki: params.get('penerimamanfaatlansialakilaki'),
+                    lainnya: params.get('penerimamanfaatlansialainnya'),
                     total: params.get('penerimamanfaatlansiatotal')
                 },
                 remaja: {
                     perempuan: params.get('penerimamanfaatremajaperempuan'),
                     laki: params.get('penerimamanfaatremajalakilaki'),
+                    lainnya: params.get('penerimamanfaatremajalainnya'),
                     total: params.get('penerimamanfaatremajatotal')
                 },
                 anak: {
                     perempuan: params.get('penerimamanfaatanakperempuan'),
                     laki: params.get('penerimamanfaatanaklakilaki'),
+                    lainnya: params.get('penerimamanfaatanaklainnya'),
                     total: params.get('penerimamanfaatanaktotal')
                 },
+
+
                 total: {
                     perempuan: params.get('penerimamanfaatperempuantotal'),
                     laki: params.get('penerimamanfaatlakilakitotal'),
+                    lainnya: params.get('penerimamanfaatlainnyatotal'),
                     total: params.get('penerimamanfaattotal')
                 }
             };
@@ -373,36 +404,42 @@
                 <th>{{ __('cruds.kegiatan.peserta.kategori') }}</th>
                 <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
                 <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                <th>{{ __('cruds.kegiatan.peserta.lainnya') }}</th>
                 <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
                 </tr>
                 <tr>
                 <td>{{ __('cruds.kegiatan.peserta.adult') }}</td>
                 <td>${parsedData.dewasa.perempuan}</td>
                 <td>${parsedData.dewasa.laki}</td>
+                <td>${parsedData.dewasa.lainnya}</td>
                 <td>${parsedData.dewasa.total}</td>
                 </tr>
                 <tr>
                 <td>{{ __('cruds.kegiatan.peserta.elderly') }}</td>
                 <td>${parsedData.lansia.perempuan}</td>
                 <td>${parsedData.lansia.laki}</td>
+                <td>${parsedData.lansia.lainnya}</td>
                 <td>${parsedData.lansia.total}</td>
                 </tr>
                 <tr>
                 <td>{{ __('cruds.kegiatan.peserta.teen') }}</td>
                 <td>${parsedData.remaja.perempuan}</td>
                 <td>${parsedData.remaja.laki}</td>
+                <td>${parsedData.remaja.lainnya}</td>
                 <td>${parsedData.remaja.total}</td>
                 </tr>
                 <tr>
                 <td>{{ __('cruds.kegiatan.peserta.kids') }}</td>
                 <td>${parsedData.anak.perempuan}</td>
                 <td>${parsedData.anak.laki}</td>
+                <td>${parsedData.anak.lainnya}</td>
                 <td>${parsedData.anak.total}</td>
                 </tr>
                 <tr>
                 <td>{{ __('cruds.kegiatan.peserta.grand_total') }}</td>
                 <th>${parsedData.total.perempuan}</th>
                 <th>${parsedData.total.laki}</th>
+                <th>${parsedData.total.lainnya}</th>
                 <th>${parsedData.total.total}</th>
                 </tr>
             </table>
@@ -1254,5 +1291,36 @@
         //Initial Load
         const initialProgramOutcomeOutputActivityId = $('#programoutcomeoutputactivity_id').val();
         fetchFasePelaporan(initialProgramOutcomeOutputActivityId);
+    });
+
+    // --- PRE-CONFIRMATION FOR COMPLETED STATUS ---
+    $('#status').on('select2:selecting', function(e) {
+        const newValue = e.params.args.data.id;
+        const $el = $(this);
+        const previousValue = $el.val();
+
+        // Only trigger if changing TO completed
+        if (newValue === 'completed') {
+            e.preventDefault(); // Pause the selection
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Mengubah status menjadi 'Completed' akan mengunci beberapa field dan membutuhkan validasi data yang lengkap.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Selesaikan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed: Manually set the value and trigger change
+                    $el.val('completed').trigger('change.select2');
+                } else {
+                    // User cancelled: Keep the old value
+                    $el.val(previousValue).trigger('change.select2');
+                }
+            });
+        }
     });
 </script>

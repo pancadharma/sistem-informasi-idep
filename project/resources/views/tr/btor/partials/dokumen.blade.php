@@ -11,12 +11,12 @@
         {{-- Dokumen Pendukung --}}
         @if($dokumen && $dokumen->count() > 0)
             <div class="mb-4">
-                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">Dokumen Pendukung ({{ $dokumen->count() }})</h5>
+                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">{{ __('btor.dokumen_pendukung') }} ({{ $dokumen->count() }})</h5>
                 <table class="table-bordered" style="width: 100%; font-size: 9pt;">
                     <thead>
                         <tr>
-                            <th width="85%">Keterangan</th>
-                            <th width="15%" class="text-center">LINK</th>
+                            <th width="85%">{{ __('btor.keterangan') }}</th>
+                            <th width="15%" class="text-center">{{ __('btor.link') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,8 +24,8 @@
                             <tr>
                                 <td>{{ $doc->getCustomProperty('keterangan') ?? $doc->name }}</td>
                                 <td class="text-center">
-                                    <a href="{{ $doc->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
-                                        LINK <i class="fas fa-external-link-alt ml-1"></i>
+                                    <a href="{{ url($doc->getUrl()) }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                        {{ __('btor.link') }} <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -38,12 +38,12 @@
         {{-- Media Pendukung --}}
         @if($media && $media->count() > 0)
             <div class="mb-4">
-                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">Media Pendukung ({{ $media->count() }})</h5>
+                <h5 class="section-title" style="margin-top: 10px; font-size: 10pt;">{{ __('btor.media_pendukung') }} ({{ $media->count() }})</h5>
                 <table class="table-bordered" style="width: 100%; font-size: 9pt;">
                     <thead>
                         <tr>
-                            <th width="85%">Keterangan</th>
-                            <th width="15%" class="text-center">LINK</th>
+                            <th width="85%">{{ __('btor.keterangan') }}</th>
+                            <th width="15%" class="text-center">{{ __('btor.link') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,16 +52,16 @@
                                 <td>
                                     @if(str_starts_with($item->mime_type, 'image/'))
                                         <div class="mb-2 d-none no-print" style="display: none !important;">
-                                            <a href="{{ $item->getUrl() }}" target="_blank">
-                                                <img src="{{ $item->getUrl() }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
+                                            <a href="{{ url($item->getUrl()) }}" target="_blank">
+                                                <img src="{{ url($item->getUrl()) }}" alt="{{ $item->name }}" style="max-width: 250px; max-height: 250px;" class="media-item">
                                             </a>
                                         </div>
                                     @endif
                                     <div>{{ $item->getCustomProperty('keterangan') ?? $item->name }}</div>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <a href="{{ $item->getUrl() }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
-                                        LINK <i class="fas fa-external-link-alt ml-1"></i>
+                                    <a href="{{ url($item->getUrl()) }}" target="_blank" class="btn btn-sm btn-link font-weight-bold p-0">
+                                        {{ __('btor.link') }} <i class="fas fa-external-link-alt ml-1"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -72,6 +72,6 @@
         @endif
 
     @else
-        <p><em>Tidak ada dokumen atau media pendukung.</em></p>
+        <p><em>{{ __('btor.no_documents_available') }}</em></p>
     @endif
 </div>
