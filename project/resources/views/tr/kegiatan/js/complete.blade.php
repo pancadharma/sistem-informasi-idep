@@ -21,7 +21,16 @@ $(document).ready(function() {
         'penerimamanfaatremajaperempuan': 'Penerima Manfaat Remaja Perempuan',
         'penerimamanfaatremajalakilaki': 'Penerima Manfaat Remaja Laki-laki',
         'penerimamanfaatanakperempuan': 'Penerima Manfaat Anak Perempuan',
-        'penerimamanfaatanaklakilaki': 'Penerima Manfaat Anak Laki-laki'
+        'penerimamanfaatanaklakilaki': 'Penerima Manfaat Anak Laki-laki',
+        'penerimamanfaatdisabilitasperempuan': 'Penerima Manfaat Disabilitas Perempuan',
+        'penerimamanfaatdisabilitaslakilaki': 'Penerima Manfaat Disabilitas Laki-laki',
+        'penerimamanfaatdisabilitaslainnya': 'Penerima Manfaat Disabilitas Lainnya',
+        'penerimamanfaatnondisabilitasperempuan': 'Penerima Manfaat Non Disabilitas Perempuan',
+        'penerimamanfaatnondisabilitaslakilaki': 'Penerima Manfaat Non Disabilitas Laki-laki',
+        'penerimamanfaatnondisabilitaslainnya': 'Penerima Manfaat Non Disabilitas Lainnya',
+        'penerimamanfaatmarjinalperempuan': 'Penerima Manfaat Marjinal Perempuan',
+        'penerimamanfaatmarjinallakilaki': 'Penerima Manfaat Marjinal Laki-laki',
+        'penerimamanfaatmarjinallainnya': 'Penerima Manfaat Marjinal Lainnya'
     };
 
     $('#update_kegiatan').on('click', function(e) {
@@ -130,12 +139,16 @@ $(document).ready(function() {
             const beneficiaryFields = [
                 '#penerimamanfaatdewasaperempuan',
                 '#penerimamanfaatdewasalakilaki',
+                '#penerimamanfaatdewasalainnya',
                 '#penerimamanfaatlansiaperempuan',
                 '#penerimamanfaatlansialakilaki',
+                '#penerimamanfaatlansialainnya',
                 '#penerimamanfaatremajaperempuan',
                 '#penerimamanfaatremajalakilaki',
+                '#penerimamanfaatremajalainnya',
                 '#penerimamanfaatanakperempuan',
-                '#penerimamanfaatanaklakilaki'
+                '#penerimamanfaatanaklakilaki',
+                '#penerimamanfaatanaklainnya'
             ];
 
             let hasBeneficiaryData = false;
