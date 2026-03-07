@@ -19,6 +19,7 @@ return [
     'cancel'                         => 'Cancel',
     'clear'                          => 'Clear',
     'downloadFile'                   => 'Download file',
+    'download'                       => 'Download',
     'edit'                           => 'Edit',
     'emailVerificationSuccess'       => 'User email verified successfully',
     'entries'                        => 'Entries',
@@ -364,6 +365,9 @@ return [
         'processing'                 => 'Processing',
         'please_wait'                => 'Please wait...',
     ],
-    'print'                         => 'Print'
-
+    'print'                         => 'Print',
+    'image_preview'                 => 'Image Preview',
+    'pdf_preview'                   => 'PDF Preview',
+    'other_file_types'              => 'For other file types, open in new tab',
 ];
+

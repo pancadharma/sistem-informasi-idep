@@ -259,7 +259,7 @@
                                         <label for="provinsi_id"
                                             class="input-group col-form-label">{{ __('cruds.provinsi.title') }}</label>
                                         <input type="hidden" name="provinsiID"
-                                        {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'value=' . $preselectedProvinsiId . '' : '' }}>
+                                        {{ !is_null($preselectedProvinsiId) || empty($provinsiList) || count($provinsiList) == 0 ? 'value="' . $preselectedProvinsiId . '"' : '' }}>
                                         <select name="provinsi_id" id="provinsi_id" class="form-control select2"
                                             data-api-url="{{ route('api.kegiatan.provinsi') }}"
                                             data-placeholder="{{ __('global.pleaseSelect') . ' ' . __('cruds.provinsi.title') }}"
@@ -493,6 +493,9 @@
                                                             {{ __('cruds.kegiatan.peserta.pria') }}</th>
                                                         <th
                                                             class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
+                                                            {{ __('btor.lainnya') }}</th>
+                                                        <th
+                                                            class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
                                                             {{ __('cruds.kegiatan.peserta.total') }}</th>
                                                     </tr>
                                                 </thead>
@@ -514,6 +517,11 @@
                                                                 name="penerimamanfaatdewasalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
                                                                 placeholder="0" value="{{ old('penerimamanfaatdewasalakilaki', $kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}">
+                                                        </td>
+                                                        <td class="pl-1 pr-1">
+                                                            <input type="number" id="penerimamanfaatdewasalainnya"
+                                                                name="penerimamanfaatdewasalainnya"
+                                                                class="calculate form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatdewasalainnya', $kegiatan->penerimamanfaatdewasalainnya ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatdewasatotal"
@@ -540,6 +548,12 @@
                                                                 placeholder="0" value="{{ old('penerimamanfaatlansialakilaki', $kegiatan->penerimamanfaatlansialakilaki ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
+                                                            <input type="number" id="penerimamanfaatlansialainnya"
+                                                                name="penerimamanfaatlansialainnya"
+                                                                class="calculate form-control-border border-width-2 form-control form-control-sm"
+                                                                placeholder="0" value="{{ old('penerimamanfaatlansialainnya', $kegiatan->penerimamanfaatlansialainnya ?? 0) }}">
+                                                        </td>
+                                                        <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatlansiatotal"
                                                                 name="penerimamanfaatlansiatotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlansiatotal', $kegiatan->penerimamanfaatlansiatotal ?? 0) }}">
@@ -562,6 +576,12 @@
                                                                 name="penerimamanfaatremajalakilaki"
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
                                                                 placeholder="0" value="{{ old('penerimamanfaatremajalakilaki', $kegiatan->penerimamanfaatremajalakilaki ?? 0) }}">
+                                                        </td>
+                                                        <td class="pl-1">
+                                                            <input type="number" id="penerimamanfaatremajalainnya"
+                                                                name="penerimamanfaatremajalainnya"
+                                                                class="calculate form-control-border border-width-2 form-control form-control-sm"
+                                                                placeholder="0" value="{{ old('penerimamanfaatremajalainnya', $kegiatan->penerimamanfaatremajalainnya ?? 0) }}">
                                                         </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatremajatotal"
@@ -587,6 +607,12 @@
                                                                 class="calculate form-control-border border-width-2 form-control form-control-sm"
                                                                 placeholder="0" value="{{ old('penerimamanfaatanaklakilaki', $kegiatan->penerimamanfaatanaklakilaki ?? 0) }}">
                                                         </td>
+                                                        <td class="pl-1">
+                                                            <input type="number" id="penerimamanfaatanaklainnya"
+                                                                name="penerimamanfaatanaklainnya"
+                                                                class="calculate form-control-border border-width-2 form-control form-control-sm"
+                                                                placeholder="0" value="{{ old('penerimamanfaatanaklainnya', $kegiatan->penerimamanfaatanaklainnya ?? 0) }}">
+                                                        </td>
                                                         <td class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaatanaktotal"
                                                                 name="penerimamanfaatanaktotal"
@@ -607,6 +633,12 @@
                                                                 id="penerimamanfaatlakilakitotal"
                                                                 name="penerimamanfaatlakilakitotal"
                                                                 class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlakilakitotal', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
+                                                        </th>
+                                                        <th class="pl-1">
+                                                            <input type="number" readonly
+                                                                id="penerimamanfaatlainnyatotal"
+                                                                name="penerimamanfaatlainnyatotal"
+                                                                class="form-control-border border-width-2 form-control form-control-sm" value="{{ old('penerimamanfaatlainnyatotal', $kegiatan->penerimamanfaatlainnyatotal ?? 0) }}">
                                                         </th>
                                                         <th class="pl-1 pr-1">
                                                             <input type="number" readonly id="penerimamanfaattotal"
@@ -651,6 +683,9 @@
                                                             {{ __('cruds.kegiatan.peserta.pria') }}</th>
                                                         <th
                                                             class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
+                                                            {{ __('btor.lainnya') }}</th>
+                                                        <th
+                                                            class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
                                                             {{ __('cruds.kegiatan.peserta.total') }}</th>
                                                     </tr>
                                                 </thead>
@@ -672,6 +707,12 @@
                                                                 name="penerimamanfaatdisabilitaslakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
                                                                 placeholder="0" value="{{ old('penerimamanfaatdisabilitaslakilaki', $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}">
+                                                        </td>
+                                                        <td colspan="1" width="10%" class="pl-1">
+                                                            <input type="number" id="penerimamanfaatdisabilitaslainnya"
+                                                                name="penerimamanfaatdisabilitaslainnya"
+                                                                class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
+                                                                placeholder="0" value="{{ old('penerimamanfaatdisabilitaslainnya', $kegiatan->penerimamanfaatdisabilitaslainnya ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatdisabilitastotal"
@@ -700,6 +741,13 @@
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
                                                                 placeholder="0" value="{{ old('penerimamanfaatnondisabilitaslakilaki', $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}">
                                                         </td>
+                                                        <td colspan="1" width="10%" class="pl-1">
+                                                            <input type="number"
+                                                                id="penerimamanfaatnondisabilitaslainnya"
+                                                                name="penerimamanfaatnondisabilitaslainnya"
+                                                                class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
+                                                                placeholder="0" value="{{ old('penerimamanfaatnondisabilitaslainnya', $kegiatan->penerimamanfaatnondisabilitaslainnya ?? 0) }}">
+                                                        </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatnondisabilitastotal"
                                                                 name="penerimamanfaatnondisabilitastotal"
@@ -725,6 +773,12 @@
                                                                 class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
                                                                 placeholder="0" value="{{ old('penerimamanfaatmarjinallakilaki', $kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}">
                                                         </td>
+                                                        <td colspan="1" width="10%" class="pl-1">
+                                                            <input type="number" id="penerimamanfaatmarjinallainnya"
+                                                                name="penerimamanfaatmarjinallainnya"
+                                                                class="form-control-border border-width-2 form-control form-control-sm hitung-difabel"
+                                                                placeholder="0" value="{{ old('penerimamanfaatmarjinallainnya', $kegiatan->penerimamanfaatmarjinallainnya ?? 0) }}">
+                                                        </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="penerimamanfaatmarjinaltotal"
                                                                 name="penerimamanfaatmarjinaltotal"
@@ -749,6 +803,12 @@
                                                                 name="total_beneficiaries_lakilaki"
                                                                 class="form-control-border border-width-2 form-control form-control-sm"
                                                                 readonly placeholder="0" value="{{ old('total_beneficiaries_lakilaki', $kegiatan->penerimamanfaatlakilakitotal ?? 0) }}">
+                                                        </td>
+                                                        <td colspan="1" width="10%" class="pl-1">
+                                                            <input type="number" id="total_beneficiaries_lainnya"
+                                                                name="total_beneficiaries_lainnya"
+                                                                class="form-control-border border-width-2 form-control form-control-sm"
+                                                                readonly placeholder="0" value="{{ old('total_beneficiaries_lainnya', $kegiatan->penerimamanfaatlainnyatotal ?? 0) }}">
                                                         </td>
                                                         <td colspan="1" width="10%" class="pl-1 pr-1">
                                                             <input type="number" id="beneficiaries_difable_total"
@@ -1028,7 +1088,7 @@
         select2Field.select2({
             width: 'resolve',
             placeholder: select2Field.attr('placeholder'),
-            aallowClear: true,
+            allowClear: true,
             ajax: {
                 url: apiUrl,
                 dataType: 'json',
@@ -1488,14 +1548,45 @@
         formData.kabupaten_id = $('#kabupaten_id').val();
 
         // Collect description fields
-        formData.deskripsilatarbelakang = $('#deskripsilatarbelakang').val();
+        formData.deskripsilatarbelakang = $('#deskripsilatarbelakang').summernote('code') ?? $('#deskripsilatarbelakang').val();
         formData.deskripsitujuan = $('#deskripsitujuan').val();
         formData.deskripsikeluaran = $('#deskripsikeluaran').val();
 
         // Collect beneficiary data
+
         formData.penerimamanfaatdewasaperempuan = $('#penerimamanfaatdewasaperempuan').val();
         formData.penerimamanfaatdewasalakilaki = $('#penerimamanfaatdewasalakilaki').val();
+        formData.penerimamanfaatdewasalainnya = $('#penerimamanfaatdewasalainnya').val();
         formData.penerimamanfaatdewasatotal = $('#penerimamanfaatdewasatotal').val();
+        formData.penerimamanfaatlansiaperempuan = $('#penerimamanfaatlansiaperempuan').val();
+        formData.penerimamanfaatlansialakilaki = $('#penerimamanfaatlansialakilaki').val();
+        formData.penerimamanfaatlansialainnya = $('#penerimamanfaatlansialainnya').val();
+        formData.penerimamanfaatlansiatotal = $('#penerimamanfaatlansiatotal').val();
+        formData.penerimamanfaatremajaperempuan = $('#penerimamanfaatremajaperempuan').val();
+        formData.penerimamanfaatremajalakilaki = $('#penerimamanfaatremajalakilaki').val();
+        formData.penerimamanfaatremajalainnya = $('#penerimamanfaatremajalainnya').val();
+        formData.penerimamanfaatremajatotal = $('#penerimamanfaatremajatotal').val();
+        formData.penerimamanfaatanakperempuan = $('#penerimamanfaatanakperempuan').val();
+        formData.penerimamanfaatanaklakilaki = $('#penerimamanfaatanaklakilaki').val();
+        formData.penerimamanfaatanaklainnya = $('#penerimamanfaatanaklainnya').val();
+        formData.penerimamanfaatanaktotal = $('#penerimamanfaatanaktotal').val();
+        formData.penerimamanfaatdisabilitasperempuan = $('#penerimamanfaatdisabilitasperempuan').val();
+        formData.penerimamanfaatdisabilitaslakilaki = $('#penerimamanfaatdisabilitaslakilaki').val();
+        formData.penerimamanfaatdisabilitaslainnya = $('#penerimamanfaatdisabilitaslainnya').val();
+        formData.penerimamanfaatdisabilitastotal = $('#penerimamanfaatdisabilitastotal').val();
+        formData.penerimamanfaatnondisabilitasperempuan = $('#penerimamanfaatnondisabilitasperempuan').val();
+        formData.penerimamanfaatnondisabilitaslakilaki = $('#penerimamanfaatnondisabilitaslakilaki').val();
+        formData.penerimamanfaatnondisabilitaslainnya = $('#penerimamanfaatnondisabilitaslainnya').val();
+        formData.penerimamanfaatnondisabilitastotal = $('#penerimamanfaatnondisabilitastotal').val();
+        formData.penerimamanfaatmarjinalperempuan = $('#penerimamanfaatmarjinalperempuan').val();
+        formData.penerimamanfaatmarjinallakilaki = $('#penerimamanfaatmarjinallakilaki').val();
+        formData.penerimamanfaatmarjinallainnya = $('#penerimamanfaatmarjinallainnya').val();
+        formData.penerimamanfaatmarjinaltotal = $('#penerimamanfaatmarjinaltotal').val();
+        formData.penerimamanfaatperempuantotal = $('#penerimamanfaatperempuantotal').val();
+        formData.penerimamanfaatlakilakitotal = $('#penerimamanfaatlakilakitotal').val();
+        formData.penerimamanfaatlainnyatotal = $('#penerimamanfaatlainnyatotal').val();
+        formData.penerimamanfaattotal = $('#penerimamanfaattotal').val();
+
         // ... (collect all other beneficiary fields)
 
         // Collect location data
@@ -1672,13 +1763,15 @@
             $('tr').each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-                let total = pria + wanita;
+                let lainnya = parseInt($(this).find('input[id$="lainnya"]').val()) || 0;
+                let total = pria + wanita + lainnya;
                 $(this).find('input[id$="total"]').val(total);
             });
 
             // Calculate overall totals for the first table
             let totalPerempuan = 0;
             let totalLakilaki = 0;
+            let totalLainnya = 0;
             let totalAll = 0;
 
             totalPerempuan += parseInt($('#penerimamanfaatdewasaperempuan').val()) || 0;
@@ -1691,21 +1784,29 @@
             totalLakilaki += parseInt($('#penerimamanfaatremajalakilaki').val()) || 0;
             totalLakilaki += parseInt($('#penerimamanfaatanaklakilaki').val()) || 0;
 
+            totalLainnya += parseInt($('#penerimamanfaatdewasalainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatlansialainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatremajalainnya').val()) || 0;
+            totalLainnya += parseInt($('#penerimamanfaatanaklainnya').val()) || 0;
+
             totalAll += parseInt($('#penerimamanfaatdewasatotal').val()) || 0;
             totalAll += parseInt($('#penerimamanfaatlansiatotal').val()) || 0;
             totalAll += parseInt($('#penerimamanfaatremajatotal').val()) || 0;
+            
             totalAll += parseInt($('#penerimamanfaatanaktotal').val()) || 0;
 
             // Update overall total fields for the first table
             $('#penerimamanfaatperempuantotal').val(totalPerempuan);
             $('#penerimamanfaatlakilakitotal').val(totalLakilaki);
+            $('#penerimamanfaatlainnyatotal').val(totalLainnya);
             $('#penerimamanfaattotal').val(totalAll);
 
             // Calculate totals for each row in the second table (difabel table)
             $('tr', $('#penerima_manfaat_difabel')).each(function() {
                 let pria = parseInt($(this).find('input[id$="lakilaki"]').val()) || 0;
                 let wanita = parseInt($(this).find('input[id$="perempuan"]').val()) || 0;
-                let total = pria + wanita;
+                let lainnya = parseInt($(this).find('input[id$="lainnya"]').val()) || 0;
+                let total = pria + wanita + lainnya;
                 $(this).find('input[id$="total"]').val(total);
             });
 
@@ -1722,6 +1823,12 @@
             totalBeneficiariesLakilaki += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
             $('#total_beneficiaries_lakilaki').val(totalBeneficiariesLakilaki);
 
+            let totalBeneficiariesLainnya = 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatdisabilitaslainnya').val()) || 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatnondisabilitaslainnya').val()) || 0;
+            totalBeneficiariesLainnya += parseInt($('#penerimamanfaatmarjinallainnya').val()) || 0;
+            $('#total_beneficiaries_lainnya').val(totalBeneficiariesLainnya);
+
             let totalBeneficiariesTotal = 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
             totalBeneficiariesTotal += parseInt($('#penerimamanfaatnondisabilitastotal').val()) || 0;
@@ -1733,6 +1840,7 @@
         $('.hitung-difabel').on('input', function() {
             let maxPerempuan = parseInt($('#penerimamanfaatperempuantotal').val()) || 0;
             let maxLakilaki = parseInt($('#penerimamanfaatlakilakitotal').val()) || 0;
+            let maxLainnya = parseInt($('#penerimamanfaatlainnyatotal').val()) || 0;
             let maxTotal = parseInt($('#penerimamanfaattotal').val()) || 0;
 
             let totalPerempuanSoFar = 0;
@@ -1744,6 +1852,11 @@
             totalLakilakiSoFar += parseInt($('#penerimamanfaatdisabilitaslakilaki').val()) || 0;
             totalLakilakiSoFar += parseInt($('#penerimamanfaatnondisabilitaslakilaki').val()) || 0;
             totalLakilakiSoFar += parseInt($('#penerimamanfaatmarjinallakilaki').val()) || 0;
+
+            let totalLainnyaSoFar = 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatdisabilitaslainnya').val()) || 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatnondisabilitaslainnya').val()) || 0;
+            totalLainnyaSoFar += parseInt($('#penerimamanfaatmarjinallainnya').val()) || 0;
 
             let totalAllSoFar = 0;
             totalAllSoFar += parseInt($('#penerimamanfaatdisabilitastotal').val()) || 0;
@@ -1760,6 +1873,10 @@
             } else if (id.includes('lakilaki')) {
                 if (totalLakilakiSoFar > maxLakilaki) {
                     $(this).val(value - (totalLakilakiSoFar - maxLakilaki));
+                }
+            } else if (id.includes('lainnya')) {
+                if (totalLainnyaSoFar > maxLainnya) {
+                    $(this).val(value - (totalLainnyaSoFar - maxLainnya));
                 }
             } else if (id.includes('total')) {
                 if (totalAllSoFar > maxTotal) {

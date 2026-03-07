@@ -737,9 +737,10 @@ class KegiatanController extends Controller
     {
         try {
             $data = $request->validated();
+            
             DB::beginTransaction();
-
             // Update main Kegiatan record
+
             $kegiatan->update($data);
 
             // Sync relationships
@@ -895,35 +896,6 @@ class KegiatanController extends Controller
             ProcessKegiatanFiles::dispatch($kegiatan, $tempPaths, $captions, $collections);
         }
     }
-
-
-    // public function updateApi2(UpdateKegiatanRequest $request, Kegiatan $kegiatan)
-    // {
-    //     try {
-    //         $data = $request->validated();
-
-    //         DB::beginTransaction();
-    //         $kegiatan->update($data);
-    //         $kegiatan->mitra()->sync($request->input('mitra_id', []));
-    //         $kegiatan->sektor()->sync($request->input('sektor_id', []));
-
-    //         // Update hasil kegiatan jika diperlukan
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Kegiatan berhasil diperbarui',
-    //             'data' => $kegiatan,
-    //         ], 200);
-    //     } catch (\Throwable $th) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Gagal memperbarui kegiatan',
-    //             'error' => $th->getMessage(),
-    //         ], 500);
-    //     }
-    // }
 
     public function getKegiatan(Request $request)
     {

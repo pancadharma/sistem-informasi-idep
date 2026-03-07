@@ -63,24 +63,24 @@
     @include('tr.kegiatan.js.tabs.basic')
     <script>
         $(document).ready(function() {
-            function validasiProgramIDActivityID() {
-                let program_id = $('#program_id').val();
-                let kode_program = $('#kode_program').val();
-                let activity_id = $('#programoutcomeoutputactivity_id').val();
+            // function validasiProgramIDActivityID() {
+            //     let program_id = $('#program_id').val();
+            //     let kode_program = $('#kode_program').val();
+            //     let activity_id = $('#programoutcomeoutputactivity_id').val();
 
-                // Check if either program_id and activity_id is empty or invalid
-                if (!program_id && !activity_id) {
-                    return false;
-                }
-                if (isNaN(program_id) || isNaN(activity_id)) {
-                    return false;
-                }
-                if (program_id !== '' && activity_id !== '') {
-                    return false;
-                }
+            //     // Check if either program_id and activity_id is empty or invalid
+            //     if (!program_id && !activity_id) {
+            //         return false;
+            //     }
+            //     if (isNaN(program_id) || isNaN(activity_id)) {
+            //         return false;
+            //     }
+            //     if (program_id !== '' && activity_id !== '') {
+            //         return false;
+            //     }
 
-                return true;
-            }
+            //     return true;
+            // }
 
             let errorMessage = '';
 
@@ -114,6 +114,30 @@
                     errorMessage += mitraValidation.message + '<br>';
                 }
 
+                // --- Date validation ---
+                const tanggalMulai = $('#tanggalmulai').val();
+                const tanggalSelesai = $('#tanggalselesai').val();
+
+                if (!tanggalMulai) {
+                    isValid = false;
+                    errorMessage += '{{ __('cruds.kegiatan.basic.tanggalmulai') }} {{ __('validation.required') }}<br>';
+                    $('#tanggalmulai').addClass('is-invalid').removeClass('is-valid');
+                } else {
+                    $('#tanggalmulai').removeClass('is-invalid').addClass('is-valid');
+                }
+
+                if (!tanggalSelesai) {
+                    isValid = false;
+                    errorMessage += '{{ __('cruds.kegiatan.basic.tanggalselesai') }} {{ __('validation.required') }}<br>';
+                    $('#tanggalselesai').addClass('is-invalid').removeClass('is-valid');
+                } else if (tanggalMulai && tanggalSelesai < tanggalMulai) {
+                    isValid = false;
+                    errorMessage += '{{ __('cruds.kegiatan.basic.tanggalselesai') }} cannot be earlier than {{ __('cruds.kegiatan.basic.tanggalmulai') }}<br>';
+                    $('#tanggalselesai').addClass('is-invalid').removeClass('is-valid');
+                } else {
+                    $('#tanggalselesai').removeClass('is-invalid').addClass('is-valid');
+                }
+
                 const longLatValidation = validasiLongLat();
                 if (!longLatValidation.isValid) {
                     isValid = false;
@@ -128,7 +152,7 @@
 
                 if (!isValid) {
                     Swal.fire({
-                        title: '',
+                        title: 'Opss...',
                         html: errorMessage,
                         icon: 'warning'
                     });
@@ -349,7 +373,7 @@
 
                 // Convert serialized data to a readable format for display
                 let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
-                console.log(`pre ${displayData}`);
+                // console.log(`pre ${displayData}`);
 
                 Swal.fire({
                     title: '{{ __('global.areYouSure') }}',
@@ -361,9 +385,8 @@
                     confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + ' ! '
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Show loading state
                         Swal.fire({
-                            title: 'Processing...',
+                            title: 'Saving...',
                             html: 'Please wait while we save your data. This may take a few minutes for large files.',
                             allowOutsideClick: false,
                             didOpen: () => {
@@ -381,7 +404,6 @@
                             timeout: 300000, // 5 minutes timeout
                             xhr: function() {
                                 var xhr = new window.XMLHttpRequest();
-                                // Upload progress
                                 xhr.upload.addEventListener("progress", function(evt) {
                                     if (evt.lengthComputable) {
                                         var percentComplete = (evt.loaded / evt.total) * 100;
@@ -392,18 +414,54 @@
                                 }, false);
                                 return xhr;
                             },
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Saving...',
+                                    html: 'Please wait while we save your data. This may take a few minutes for large files.',
+                                    allowOutsideClick: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
                             success: function(data) {
+                                Swal.hideLoading();
                                 Swal.fire({
                                     title: '{{ __('global.response.success') }}',
                                     text: '{{ __('global.response.save_success') }}',
-                                    icon: 'success'
+                                    icon: 'success',
+                                    showDenyButton: true,
+                                    showCancelButton: false,
+                                    confirmButtonText: "Create another {{ __('cruds.kegiatan.label') }}",
+                                    denyButtonText: "Back to List",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
+                                        // window.location.href = "{{ route('kegiatan.index') }}";
+                                        $('#createKegiatan')[0].reset();
+                                        $('#createKegiatan').find('.is-invalid').removeClass('is-invalid');
+                                        $('#createKegiatan').find('.is-valid').removeClass('is-valid');
+                                        // Reset Select2 values AND clear validation styling on the actual Select2 UI elements
+                                        $('#createKegiatan').find('.select2').val(null).trigger('change');
+                                        $('#createKegiatan').find('.select2-selection').removeClass('is-valid-select2 is-invalid-select2');
+                                        $('#createKegiatan').find('.select2-container .select2-selection').removeClass('is-valid-select2 is-invalid-select2');
+                                        $('#createKegiatan').find('input[type="file"]').val('');
+                                        $('#createKegiatan').find('input[type="checkbox"]').prop('checked', false);
+                                        // Remove dynamically appended hidden inputs (e.g. from Dropzone file uploads)
+                                        // form.reset() cannot remove DOM elements that were injected after page load
+                                        $('#createKegiatan').find('input[type="hidden"][name="dokumen_pendukung[]"]').remove();
+                                        $('#createKegiatan').find('input[type="hidden"][name="media_pendukung[]"]').remove();
+                                        // Clear modal-driven visible + hidden companion fields (program & activity)
+                                        $('#program_id, #programoutcomeoutputactivity_id').val('');
+                                        $('#kode_program, #nama_program, #kode_kegiatan, #nama_kegiatan').val('').removeClass('is-valid is-invalid');
+                                        // Reset date fields validation styling
+                                        $('#tanggalmulai, #tanggalselesai').removeClass('is-valid is-invalid');
+                                    } else if (result.isDenied) {
                                         window.location.href = "{{ route('kegiatan.index') }}";
                                     }
                                 });
                             },
                             error: function(xhr, status, error) {
+                                Swal.hideLoading();
                                 let errorMessage = '{{ __('global.response.save_failed') }}';
 
                                 if (status === 'timeout') {
