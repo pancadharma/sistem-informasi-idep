@@ -59,8 +59,8 @@ class Beneficiaries extends Controller
         $tahun = $request->get('tahun');
         $status = $request->get('status');
 
-        // First, get the list of valid program IDs based on filters (including status)
-        $filteredProgramIds = $this->getFilteredProgramIds($programId, $tahun, $status);
+        // First, get the list of valid program IDs based on filters (including status and province)
+        $filteredProgramIds = $this->getFilteredProgramIds($programId, $tahun, $status, $provinsiId);
 
         // If no programs match, we can return empty data immediately or let the queries run with empty ID list
         // It's safer to let queries run with whereIn empty array which yields no results usually
@@ -81,7 +81,7 @@ class Beneficiaries extends Controller
     /**
      * Helper to get program IDs filtered by ID, Year, and Status
      */
-    private function getFilteredProgramIds($programId = null, $tahun = null, $status = null)
+    private function getFilteredProgramIds($programId = null, $tahun = null, $status = null, $provinsiId = null)
     {
         $query = Program::select('id', 'tanggalmulai', 'tanggalselesai', 'status');
 
@@ -92,6 +92,12 @@ class Beneficiaries extends Controller
         if ($tahun) {
             $query->whereYear('tanggalmulai', '<=', $tahun)
                 ->whereYear('tanggalselesai', '>=', $tahun);
+        }
+
+        if ($provinsiId) {
+            $query->whereHas('lokasi', function($q) use ($provinsiId) {
+                $q->where('provinsi.id', $provinsiId);
+            });
         }
 
         $programs = $query->get();
@@ -142,7 +148,7 @@ class Beneficiaries extends Controller
             return [];
         }
 
-        $actualCounts = $this->calculateBeneficiaries($programIds);
+        $actualCounts = $this->calculateBeneficiaries($programIds, $provinsiId);
         $actualCountsMap = $actualCounts->pluck('totalBeneficiaries', 'program_id');
 
         $query = Program::with(['users'])
@@ -423,6 +429,7 @@ class Beneficiaries extends Controller
         $genderData = $this->getGenderDistribution($programIds, $provinsiId, $tahun);
         $maleTotal = $genderData->where('jenis_kelamin', 'Laki-laki')->first()['total'] ?? 0;
         $femaleTotal = $genderData->where('jenis_kelamin', 'Perempuan')->first()['total'] ?? 0;
+        $lainnyaTotal = $genderData->where('jenis_kelamin', 'Lainnya')->first()['total'] ?? 0;
 
         // Children Male (< 18)
         $childrenMale = (clone $beneficiaryQuery)->where('umur', '<', 18)
@@ -436,6 +443,11 @@ class Beneficiaries extends Controller
             ->where(function ($q) {
                 $q->where('jenis_kelamin', 'P')
                     ->orWhere('jenis_kelamin', 'LIKE', 'perempuan');
+            })->count();
+
+        $childrenLainnya = (clone $beneficiaryQuery)->where('umur', '<', 18)
+            ->where(function ($q) {
+                $q->where('jenis_kelamin', 'Lainnya');
             })->count();
 
         // Families (Heads of Family)
@@ -453,9 +465,11 @@ class Beneficiaries extends Controller
             'totalBeneficiaries' => $beneficiaryQuery->count(),
             'femaleBeneficiaries' => $femaleTotal, // Keep existing keys
             'maleBeneficiaries' => $maleTotal,
+            'lainnyaBeneficiaries' => $lainnyaTotal,
             // Add new keys
             'childrenMale' => $childrenMale,
             'childrenFemale' => $childrenFemale,
+            'childrenLainnya' => $childrenLainnya,
             'families' => $families,
             'disability' => $disability,
         ];

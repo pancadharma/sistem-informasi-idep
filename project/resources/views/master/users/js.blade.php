@@ -201,7 +201,7 @@
                         $('#view_nama').text(data.nama);
                         $('#view_username').text(data.username);
                         $('#view_email').text(data.email);
-                        $('#view_jabatan').text(data.jabatans.nama); //use to display jabatan if jabatan modul finish
+                        $('#view_jabatan').text(data.jabatans.nama ?? "-"); //use to display jabatan if jabatan modul finish
                         $('#view_roles').empty();
                         data.roles.forEach(role => {
                             $('#view_roles').append(`<span class="btn-xs bg-warning">${role.nama}</span> `);

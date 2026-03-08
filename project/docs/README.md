@@ -4,10 +4,18 @@ Dokumentasi lengkap untuk implementasi tiga dashboard revisi: Beneficiaries, Mod
 
 ## 📁 Daftar Dokumen
 
-### 1. [implementation_plan.md](./implementation_plan.md)
+### 1. [master_module.md](./master_module.md)
+
+**Dokumentasi Modul Master**
+
+Berisi panduan fungsional dan tata cara penggunaan untuk setiap menu di bagian Master (contoh: Manajemen Pengguna).
+
+### 2. [implementation_plan.md](./implementation_plan.md)
+
 **Rencana Implementasi Lengkap**
 
 Berisi:
+
 - Analisis struktur database dan relasi
 - Controller code lengkap untuk 3 dashboard
 - Query SQL dengan penjelasan
@@ -16,9 +24,11 @@ Berisi:
 - Verification plan
 
 ### 2. [sql_queries.md](./sql_queries.md)
+
 **Referensi Query SQL**
 
 Berisi:
+
 - Query SQL siap pakai untuk semua dashboard
 - Laravel Eloquent equivalents
 - Helper functions
@@ -26,9 +36,11 @@ Berisi:
 - Testing queries
 
 ### 3. [dashboard_methodology.md](./dashboard_methodology.md)
+
 **Panduan Metodologi Dashboard**
 
 Berisi:
+
 - Analisis implementasi dashboard saat ini
 - Pattern AJAX data loading
 - Chart.js implementation
@@ -37,6 +49,7 @@ Berisi:
 - Best practices dan coding standards
 
 ### 4. [task.md](./task.md)
+
 **Task Checklist**
 
 Daftar tugas terstruktur untuk tracking progress implementasi.
@@ -48,21 +61,21 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 ### Untuk Developer
 
 1. **Baca dulu:** [dashboard_methodology.md](./dashboard_methodology.md)
-   - Pahami pattern yang sudah digunakan di dashboard existing
-   - Lihat contoh code untuk AJAX, Charts, Maps, dll
+    - Pahami pattern yang sudah digunakan di dashboard existing
+    - Lihat contoh code untuk AJAX, Charts, Maps, dll
 
 2. **Pahami struktur data:** [implementation_plan.md](./implementation_plan.md)
-   - Lihat database relationships
-   - Pahami data flow untuk setiap dashboard
+    - Lihat database relationships
+    - Pahami data flow untuk setiap dashboard
 
 3. **Copy query yang dibutuhkan:** [sql_queries.md](./sql_queries.md)
-   - Semua query sudah siap pakai
-   - Tinggal sesuaikan dengan kebutuhan filter
+    - Semua query sudah siap pakai
+    - Tinggal sesuaikan dengan kebutuhan filter
 
 4. **Implementasi:**
-   - Buat controller sesuai contoh di implementation_plan.md
-   - Buat Blade view mengikuti pattern di dashboard_methodology.md
-   - Test setiap komponen secara terpisah
+    - Buat controller sesuai contoh di implementation_plan.md
+    - Buat Blade view mengikuti pattern di dashboard_methodology.md
+    - Test setiap komponen secara terpisah
 
 5. **Track progress:** Update [task.md](./task.md)
 
@@ -71,9 +84,11 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 ## 📊 Dashboard yang Akan Dibuat
 
 ### 1. Beneficiaries Dashboard
+
 **URL:** `/dashboard/beneficiary`
 
 **Fitur:**
+
 - Status program (running, completed, pending)
 - Map lokasi kegiatan per desa
 - Pie chart: Gender distribution
@@ -81,13 +96,16 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - Filter: Program
 
 **Data Source:**
+
 - `trkegiatan_lokasi` untuk map markers
 - `trmeals_penerima_manfaat` untuk gender & marjinal
 
 ### 2. Model Dashboard
+
 **URL:** `/dashboard/model`
 
 **Fitur:**
+
 - Map lokasi model per provinsi
 - Line chart: Trend per tahun
 - Bar chart: Distribusi jenis model
@@ -95,13 +113,16 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - Filter: Program, Sektor
 
 **Data Source:**
+
 - `trmeals_komponen_model_lokasi` untuk map
 - `trmeals_komponen_model` untuk charts
 
 ### 3. Pendanaan Dashboard
+
 **URL:** `/dashboard/pendanaan`
 
 **Fitur:**
+
 - Chart: Kontribusi ke SDGs
 - Chart: Kontribusi ke sektor (dari transaksi)
 - Table: Daftar pendonor dengan total donasi
@@ -109,6 +130,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - Filter: Pendonor
 
 **Data Source:**
+
 - `trprogrampendonor` untuk donations
 - `trprogramkaitansdg` untuk SDG contribution
 - `trkegiatan_sektor` untuk sektor contribution
@@ -118,7 +140,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 ## 🔑 Poin Penting
 
 > **CRITICAL POINTS**
-> 
+>
 > 1. **Data Source Beneficiaries:** Gunakan `trkegiatan_lokasi` (per desa), BUKAN per provinsi
 > 2. **Status Program:** Hitung dinamis berdasarkan tanggal dan field status
 > 3. **Sektor Data:** Dari table `trkegiatan_sektor` (many-to-many dengan kegiatan)
@@ -131,6 +153,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 ## 🛠️ Tech Stack
 
 **Frontend:**
+
 - jQuery - AJAX & DOM manipulation
 - Select2 - Enhanced dropdowns
 - Chart.js 4.4.1 - Visualizations
@@ -140,6 +163,7 @@ Daftar tugas terstruktur untuk tracking progress implementasi.
 - Bootstrap 5 - UI framework
 
 **Backend:**
+
 - Laravel - Framework
 - MySQL - Database
 - Eloquent ORM - Database queries
@@ -164,6 +188,7 @@ project/
     ├── implementation_plan.md
     ├── sql_queries.md
     ├── dashboard_methodology.md
+    ├── master_module.md
     ├── task.md
     └── README.md (file ini)
 ```

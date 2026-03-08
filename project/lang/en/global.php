@@ -365,6 +365,9 @@ return [
         'processing'                 => 'Processing',
         'please_wait'                => 'Please wait...',
     ],
-    'print'                         => 'Print'
-
+    'print'                         => 'Print',
+    'image_preview'                 => 'Image Preview',
+    'pdf_preview'                   => 'PDF Preview',
+    'other_file_types'              => 'For other file types, open in new tab',
 ];
+

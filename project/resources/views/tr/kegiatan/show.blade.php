@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-{{-- @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label')) --}}
-{{-- @section('subtitle', __('global.details') . ' ' . __('cruds.kegiatan.label') . $kegiatan->programOutcomeOutputActivity?->nama ?? ' ' . ' - ' . $kegiatan->programOutcomeOutputActivity?->kode ?? '') --}}
-
 @section('subtitle')
-    {{ __('global.details') . ' ' . __('cruds.kegiatan.label') }} {{  $kegiatan->programOutcomeOutputActivity?->nama ?? '' }}
+    {{ __('global.details') . ' ' . __('cruds.kegiatan.label') }} 
+    {{  $kegiatan->programOutcomeOutputActivity?->nama ?? '' }}
 @endsection
 
 @section('content_header_title')
@@ -20,1149 +18,582 @@
 
 @section('content_body')
 
-    <div class="card card-outline card-primary">
-        <div class="card-header">
-            <h1 class="card-title mt-2">
-                {{ __('Details Report Activity') }}
-                {{-- <span class="text-primary">
-                    {{ $kegiatan->programOutcomeOutputActivity->kode ?? ''}}
-                </span>
-                {{ $kegiatan->programOutcomeOutputActivity->nama ?? '' }} --}}
-            </h1>
-            <div class="card-tools">
-                <button type="button" class="btn" onclick="window.location.href=`{{ route('kegiatan.index') }}`"
-                    title="{{ __('global.back') }}">
-                    <i class="fa fa-arrow-left"></i>
-                </button>
-            </div>
+<div class="card card-outline card-primary mb-3">
+    <div class="card-header d-flex align-items-center">
+        <h1 class="card-title mb-0">
+            {{ __('btor.report_detail') }}
+        </h1>
+        <div class="card-tools ml-auto">
+            <button type="button" class="btn btn-sm btn-default" 
+                onclick="window.location.href=`{{ route('kegiatan.index') }}`"
+                title="{{ __('global.back') }}">
+                <i class="fa fa-arrow-left"></i> {{ __('global.back') }}
+            </button>
         </div>
+    </div>
+</div>
 
-        <!-- Left Section -->
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
-                <!-- card stats -->
-                <div class="card shadow-sm border-0 mb-4">
-                    {{-- <div class="card-header text-white" style="background-color: #1a5c28">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h3 class="card-title font-weight-bold mb-0">BACK TO OFFICE REPORT</h3>
-                            <span class="badge badge-light px-3 py-2 text-success font-weight-bold">
+<div class="row">
+    <!-- Right Section (Sidebar Sticky) -->
+    <div class="col-12 col-lg-4 order-sm-1 order-lg-2">
+        <div class="sticky-top" style="top: 80px; z-index: 1000;">
+            {{-- Metrics Card --}}
+            <div class="card shadow-sm border-0 mb-2 bg-info text-white" 
+                style="background: linear-gradient(135deg, #00b7ff8a 0%, #0582a8d3 100%);">
+                <div class="card-body p-2">
+                    <h5 class="font-weight-bold mb-2 border-bottom border-white-50 pb-2 text-center">
+                        <i class="fas fa-users mr-2"></i> {{ __('btor.participant_summary') }}
+                    </h5>
+                    <div class="row text-center mb-0">
+                        <div class="col-6 mb-3">
+                            <div class="bg-white-10 rounded p-2 border border-white-20 h-100 d-flex flex-column justify-content-center">
+                                <h2 class="font-weight-bold mb-0 text-white">{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</h2>
+                                <small class="text-uppercase small text-white-50">{{ __('btor.perempuan') }}</small>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="bg-white-10 rounded p-2 border border-white-20 h-100 d-flex flex-column justify-content-center">
+                                <h2 class="font-weight-bold mb-0 text-white">{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</h2>
+                                <small class="text-uppercase small text-white-50">{{ __('btor.laki_laki') }}</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="bg-white-20 rounded p-3 mt-1 shadow-sm border border-white-50">
+                                <h1 class="font-weight-bold mb-0 text-white display-4">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</h1>
+                                <small class="text-uppercase font-weight-bold text-white">{{ __('btor.total_participants') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Penulis Card --}}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3 pb-2">
+                    <i class="material-symbols-sharp text-info text-sm">
+                        article_person
+                    </i> 
+                    {{ __('btor.penulis_laporan') }}
+                </div>
+                <div class="card-body pt-0 pb-3">
+                    <div class="list-group list-group-flush">
+                        @forelse($kegiatan->kegiatan_penulis as $penulis)
+                            <div class="list-group-item px-0 py-2 border-0">
+                                <div class="media align-items-center">
+                                    <div class="bg-light rounded-circle p-2 mr-3 d-flex align-items-center justify-content-center border" style="width:40px;height:40px;">
+                                        <i class="fas fa-user text-secondary"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h6 class="mb-0 font-weight-bold text-dark text-truncate" style="max-width: 180px;">{{ $penulis->user?->nama ?? '-' }}</h6>
+                                        <span class="badge badge-light border text-muted mt-1">{{ $penulis->peran?->nama ?? '-' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="py-2 text-muted small italic text-center bg-light rounded">{{ __('btor.no_data_writer') }}</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            {{-- Sektor Card --}}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3 pb-2">
+                    <i class="material-symbols-sharp text-info text-sm">
+                        handshake
+                    </i> 
+                    {{ __('btor.sektor_kegiatan') }}
+                </div>
+                <div class="card-body pt-0 pb-3">
+                    <div class="">
+                        @php
+                        // random color for each sector
+                        $colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'];
+                        $color = $colors[array_rand($colors)];
+                        @endphp
+
+                        @forelse($kegiatan->sektor as $sektor)
+
+                            <span class="badge bg-{{ $color }}">
+                                {{ $sektor->nama ?? '-' }}
+                            </span>
+                        @empty
+                            <span class="text-muted">-</span>
+                        @endforelse                        
+                    </div>
+                </div>
+            </div>
+
+            {{-- Documents Card --}}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3 pb-2 d-flex align-items-center">
+                    <div><i class="fas fa-file-alt mr-2 text-primary"></i> {{ __('btor.dokumen_pendukung') }}</div>
+                    @php $docs = $kegiatan->getMedia('dokumen_pendukung'); @endphp
+                    <span class="badge badge-primary badge-pill ml-auto">{{ $docs->count() }}</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @forelse($docs as $doc)
+                            <div class="list-group-item px-3 py-2 border-top border-bottom-0">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div class="flex-grow-1 text-truncate pe-auto" 
+                                         style="cursor:pointer;"
+                                         data-url="{{ $doc->getUrl() }}"
+                                         data-mime="{{ $doc->mime_type }}"
+                                         data-name="{{ $doc->custom_properties['keterangan'] ?? $doc->name }}"
+                                         onclick="previewFileFromData(this)"
+                                         title="{{ __('Preview/Download') . ' ' . ($doc->custom_properties['keterangan'] ?? $doc->name) }}">
+                                        
+                                        <i class="fas fa-file-{{ $doc->extension === 'pdf' ? 'pdf text-danger' : ($doc->extension === 'docx' || $doc->extension === 'doc' ? 'word text-primary' : ($doc->extension === 'xlsx' || $doc->extension === 'xls' ? 'excel text-success' : 'alt')) }} mr-2"></i>
+                                        <span class="small font-weight-medium text-dark">{{ $doc->custom_properties['keterangan'] ?? $doc->name }}</span>
+                                    </div>
+                                    <div class="ml-2 text-right">
+                                        <span class="badge badge-light border d-none d-md-inline-block mr-1">{{ strtoupper($doc->extension) }}</span>
+                                        <a href="{{ $doc->getUrl() }}" download class="btn btn-xs btn-outline-secondary" title="Download">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="px-3 py-3 text-muted small italic text-center bg-light mx-3 rounded mb-2 mt-2">{{ __('btor.no_data_docs') }}</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            {{-- Media Card --}}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white font-weight-bold border-bottom-0 pt-3 pb-2 d-flex align-items-center">
+                    <div><i class="fas fa-images mr-2 text-success"></i> {{ __('btor.media_pendukung') }}</div>
+                    @php $mediaList = $kegiatan->getMedia('media_pendukung'); @endphp
+                    <span class="badge badge-success badge-pill ml-auto">{{ $mediaList->count() }}</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        @forelse($mediaList as $item)
+                            <div class="list-group-item px-3 py-2 border-top border-bottom-0">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div class="flex-grow-1 text-truncate pe-auto"
+                                         style="cursor:pointer;"
+                                         data-url="{{ $item->getUrl() }}"
+                                         data-mime="{{ $item->mime_type }}"
+                                         data-name="{{ $item->custom_properties['keterangan'] ?? $item->name }}"
+                                         onclick="previewFileFromData(this)"
+                                         title="{{ __('Preview') . ' ' . ($item->custom_properties['keterangan'] ?? $item->name) }}">
+                                        
+                                        @if(str_starts_with($item->mime_type, 'image/'))
+                                            <i class="fas fa-image text-info mr-2"></i>
+                                        @elseif(str_starts_with($item->mime_type, 'video/'))
+                                            <i class="fas fa-video text-danger mr-2"></i>
+                                        @else
+                                            <i class="fas fa-play-circle text-success mr-2"></i>
+                                        @endif
+                                        
+                                        <span class="small font-weight-medium text-dark">{{ $item->custom_properties['keterangan'] ?? $item->name }}</span>
+                                    </div>
+                                    <div class="ml-2 text-right">
+                                        <a href="{{ $item->getUrl() }}" download class="btn btn-xs btn-outline-secondary" title="Download">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="px-3 py-3 text-muted small italic text-center bg-light mx-3 rounded mb-2 mt-2">{{ __('btor.no_data_media') }}</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Left Section (Main Content) -->
+    <div class="col-12 col-lg-8 order-sm-2 order-lg-1">
+        
+        <!-- Header & Meta Information -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h2 class="text-dark font-weight-bold mb-1" data-toggle="tooltip" data-placement="left"
+                            title="{{ __('btor.nama_kegiatan') }} : {{ $kegiatan->programOutcomeOutputActivity?->nama ?? 'Activity Name Not Set' }}">
+                            {{ $kegiatan->programOutcomeOutputActivity?->nama ?? 'Activity Name Not Set' }}
+                        </h2>
+                        <p class="text-muted lead mb-0"> 
+                            <span data-toggle="tooltip" data-placement="bottom"
+                            title="{{ __('btor.kode_kegiatan') }} : {{ $kegiatan->programOutcomeOutputActivity?->kode ?? 'Kode Not Set' }}">
+                                {{ $kegiatan->programOutcomeOutputActivity?->kode ?? 'Kode Not Set' }} 
+                            </span>
+                            <span data-toggle="tooltip" data-placement="bottom"
+                            title="{{ __('btor.status') }} : {{ strtoupper($kegiatan->status ?? 'DRAFT') }}" 
+                            class="badge {{ $kegiatan->status == 'approved' ? 'badge-success' : 'badge-warning' }} ml-2">
                                 {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
                             </span>
-                        </div>
-                    </div> --}}
-                    <div class="card-body border rounded border-light">
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <h2 class="text-dark font-weight-bold mb-1">
-                                    {{ $kegiatan->programOutcomeOutputActivity?->nama ?? 'Activity Name Not Set' }}
-                                </h2>
-                                <p class="text-muted lead mb-0">
-                                    <i class="fas fa-tag mr-2 text-secondary"></i> {{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }} <span class="badge badge-success">
-                                        {{ strtoupper($kegiatan->status ?? 'DRAFT') }}
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
-                                <div class="p-3 bg-light rounded border-left border-success h-100">
-                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Program</h5>
-                                    <span class="font-weight-bold text-dark">
-                                        {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 order-2 mb-2 col-xl-4">
-                                <div class="p-3 bg-light rounded border-left border-info h-100 text-left">
-                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Jenis Kegiatan</h5>
-                                    <span class="badge badge-info text-wrap text-left">
-                                        {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 order-3 mb-2 col-xl-4">
-                                <div class="p-3 bg-light rounded border-left border-warning h-100">
-                                    <h5 class="text-uppercase text-muted font-weight-bold d-block mb-1">Fase</h5>
-                                    <span class="h4 font-weight-bold text-dark">{{ $kegiatan->fasepelaporan ?? '-' }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        {{-- 1. Latar Belakang --}}
-                        <div class="section mb-5">
-                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                <i class="fas fa-info-circle mr-2 text-primary"></i> 1. {{ __('cruds.kegiatan.description.latar_belakang') }}
-                            </h4>
-                            <div class="rich-text-content px-2">
-                                {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted">Tidak ada data.</em>' !!}
-                            </div>
-                        </div>
-
-                        {{-- 2. Tujuan --}}
-                        <div class="section mb-5">
-                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                <i class="fas fa-bullseye mr-2 text-danger"></i> 2. {{ __('cruds.kegiatan.description.tujuan') }}
-                            </h4>
-                            <div class="rich-text-content px-2">
-                                {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted">Tidak ada data.</em>' !!}
-                            </div>
-                        </div>
-
-                        {{-- 3. Detail & Dynamic Results --}}
-                        <div class="section mb-5">
-                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                <i class="fas fa-list-alt mr-2 text-warning"></i> 3. {{ __('btor.detail_kegiatan') }} & Hasil
-                            </h4>
-
-                            {{-- Basic Table for detail --}}
-                            <div class="table-responsive mb-4 px-2">
-                                <table class="table table-sm table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <td width="30%" class="text-muted"><strong>Waktu Pelaksanaan</strong></td>
-                                            <td width="2%">:</td>
-                                            <td>
-                                                @if($kegiatan->tanggalmulai)
-                                                    <i class="far fa-calendar-alt text-success mr-1"></i>
-                                                    {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                                                    @if($kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
-                                                        - {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale('id')->isoFormat('dddd, D MMMM Y') }}
-                                                    @endif
-                                                    <span class="ml-2 badge badge-secondary font-weight-normal">{{ $durationInDays }} Hari</span>
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted"><strong>Lokasi</strong></td>
-                                            <td>:</td>
-                                            <td>
-                                                @forelse($kegiatan->lokasi as $lok)
-                                                    <div class="mb-1">
-                                                        <i class="fas fa-map-marker-alt text-danger mr-1"></i>
-                                                        {{ $lok->lokasi }}, {{ $lok->desa?->nama }}, {{ $lok->desa?->kecamatan?->nama }}
-                                                    </div>
-                                                @empty
-                                                    -
-                                                @endforelse
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted"><strong>Mitra/Pihak Terlibat</strong></td>
-                                            <td>:</td>
-                                            <td>
-                                                @forelse($kegiatan->mitra as $mitra)
-                                                    <span class="badge badge-light border mr-1">
-                                                        <i class="fas fa-handshake text-muted mr-1"></i> {{ $mitra->nama }}
-                                                    </span>
-                                                @empty
-                                                    -
-                                                @endforelse
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {{-- Disaggregated Participant Table --}}
-                            <div class="mb-4 px-2">
-                                <h5 class="font-weight-bold mb-3 text-muted">
-                                    <i class="fas fa-users-cog mr-2"></i> {{ __('cruds.kegiatan.peserta.label') }} (Disagregat)
-                                </h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-sm text-center">
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <th class="text-left">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.dewasa') }} (25-59)</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.lansia') }} (60+)</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.remaja') }} (18-24)</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.anak') }} (< 18)</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</td>
-                                            </tr>
-                                            <tr class="bg-light font-weight-bold">
-                                                <td class="text-left">TOTAL USIA</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</td>
-                                                <td class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</td>
-                                            </tr>
-                                        </tbody>
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <th class="text-left">Kelompok Khusus</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.wanita') }}</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.pria') }}</th>
-                                                <th>{{ __('cruds.kegiatan.peserta.total') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.disabilitas') }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-left">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
-                                                <td>{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
-                                                <td class="font-weight-bold">{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            {{-- Dynamic Content Following Create Order --}}
-                            @include('tr.kegiatan.partials.dynamic_results_jules')
-                        </div>
-
-                        {{-- 4. Hasil Pertemuan --}}
-                        <div class="section mb-5">
-                            <h4 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                <i class="fas fa-file-alt mr-2 text-success"></i> 4. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
-                            </h4>
-                            <div class="rich-text-content px-2">
-                                {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">Tidak ada data.</em>' !!}
-                            </div>
-                        </div>
-
-                        {{-- Additional fields if they are not already in dynamic results --}}
-                        <div class="row mb-5">
-                            <div class="col-md-6">
-                                <div class="section h-100">
-                                    <h5 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                        <i class="fas fa-user-edit mr-2 text-secondary"></i> {{ __('cruds.kegiatan.hasil.catatan_penulis') }}
-                                    </h5>
-                                    <div class="px-2 small">
-                                        {!! $kegiatan->catatan_penulis ?? '<em class="text-muted">-</em>' !!}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="section h-100">
-                                    <h5 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
-                                        <i class="fas fa-sync-alt mr-2 text-info"></i> {{ __('cruds.kegiatan.hasil.indikasi_perubahan') }}
-                                    </h5>
-                                    <div class="px-2 small">
-                                        {!! $kegiatan->indikasi_perubahan ?? '<em class="text-muted">-</em>' !!}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        </p>
                     </div>
                 </div>
-                <div class="row mb-4">
-                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
-                        
-                    </div>
-                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
-                        
-                    </div>
-                    <div class="col-md-12 col-sm-12 order-1 mb-2 col-xl-4">
-                        
-                    </div>
-                </div>
-                <!-- details -->
-                <div class="row mb-4">
 
-                </div>
-            </div>
-            
-            
-            <!-- Right Section -->
-            <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
-            
-            </div>
-        </div>
-
-
-
-        
-        <!-- Activity Metrics Section -->
-        <div class="card-body border-top">
-            <div class="col-md-12">
-                <div class="row text-center">
-                    <div class="col-4">
-                        <div class="border rounded p-2">
-                            <h3 class="mb-0 text-primary">{{ $kegiatan->lokasi?->count() ?? 0 }}</h3>
-                            <small>{{ __('Locations') }}</small>
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 bg-light rounded border-left border-success h-100">
+                            <h6 class="text-uppercase text-muted font-weight-bold mb-1">
+                                <i class="fas fa-project-diagram mr-1"></i> {{ __('btor.program') }}</h6>
+                            <span class="font-weight-bold text-dark small">
+                                {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="border rounded p-2">
-                            <h3 class="mb-0 text-success">{{ $kegiatan->mitra?->count() ?? 0 }}</h3>
-                            <small>{{ __('Partners') }}</small>
+                    <div class="col-12 col-md-4 mb-3 mb-md-0">
+                        <div class="p-3 bg-light rounded border-left border-info h-100">
+                            <h6 class="text-uppercase text-muted font-weight-bold mb-1">
+                                <i class="fas fa-layer-group mr-1"></i> {{ __('btor.jenis_kegiatan') }}</h6>
+                            <span class="font-weight-bold text-dark small">
+                                {{ $kegiatan->jenisKegiatan?->nama ?? '-' }}
+                            </span>
                         </div>
                     </div>
-                    <div class="col-4">
-                        <div class="border rounded p-2">
-                            <h3 class="mb-0 text-warning">{{ $kegiatan->penerimamanfaattotal ?? 0 }}</h3>
-                            <small>{{ __('Beneficiaries') }}</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--End Activity Metrics Section -->
-        <div class="card-body bg-light m-0 p-3">
-            <div class="details container-fluid">
-                <!-- Basic Information Card -->
-                <div class="card shadow-sm mb-4 border-top">
-                    <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
-                        <h5 class="text-primary mb-0"><i class="fas fa-info-circle me-2"></i>{{ __('Basic Information') }}</h5>
-                    </div>
-                    <div class="card-body pt-0">
-                        <div class="row">
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.program_kode') }}</label>
-                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->kode ?? '-' }}</div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.program_nama') }}</label>
-                                <div>
-                                    <a href="{{ route('program.show', $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->id) }}" target="_blank" class="text-decoration-none fw-medium">
-                                        {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->nama ?? '-' }} <i class="fas fa-external-link-alt small ms-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.kode') }}</label>
-                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->kode ?? '-' }}</div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.nama') }}</label>
-                                <div class="fw-medium text-dark">{{ $kegiatan->programOutcomeOutputActivity?->nama ?? '-' }}</div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.jenis_kegiatan') }}</label>
-                                <div><span class="badge bg-info text-dark bg-opacity-10 border border-info px-3 py-2">{{ $kegiatan->jenisKegiatan?->nama ?? '-' }}</span></div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.sektor_kegiatan') }}</label>
-                                <div>
-                                    @if($kegiatan->sektor && $kegiatan->sektor->count() > 0)
-                                        @foreach ($kegiatan->sektor as $value)
-                                            <span class="badge bg-warning text-dark me-1">{{ $value->nama }}</span>
-                                        @endforeach
-                                    @else
-                                        -
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.fase_pelaporan') }}</label>
-                                <div class="fw-medium">{{ $kegiatan->fasepelaporan ?? '-' }}</div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.status') }}</label>
-                                <div>
-                                    <span class="badge badge-{{ $kegiatan->status === 'completed' ? 'success' : ($kegiatan->status === 'ongoing' ? 'warning' : 'secondary') }} px-3 py-2">
-                                        {{ ucfirst($kegiatan->status ?? 'draft') }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.durasi') }}</label>
-                                <div class="fw-medium">{{ $durationInDays ?? 0 }} {{ __('cruds.kegiatan.days') }}</div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.tanggalmulai') }}</label>
-                                <div class="fw-medium">
-                                    @if($kegiatan->tanggalmulai)
-                                        <i class="far fa-calendar-alt me-1 text-muted"></i> {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d M Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.tanggalselesai') }}</label>
-                                <div class="fw-medium">
-                                    @if($kegiatan->tanggalselesai)
-                                        <i class="far fa-calendar-check me-1 text-muted"></i> {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d M Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <label class="text-secondary small text-uppercase fw-bold">{{ __('cruds.kegiatan.basic.nama_mitra') }}</label>
-                                <div>
-                                    @if($kegiatan->mitra && $kegiatan->mitra->count() > 0)
-                                        @foreach($kegiatan->mitra as $mitra)
-                                            <span class="badge bg-secondary me-1"><i class="fas fa-handshake me-1"></i> {{ $mitra->nama }}</span>
-                                        @endforeach
-                                    @else
-                                        -
-                                    @endif
-                                </div>
-                            </div>
+                    <div class="col-12 col-md-4">
+                        <div class="p-3 bg-light rounded border-left border-warning h-100">
+                            <h6 class="text-uppercase text-muted font-weight-bold mb-1">
+                                <i class="fas fa-flag-checkered mr-1"></i> {{ __('btor.fase_pelaporan') }}</h6>
+                            <span class="h5 font-weight-bold text-dark mb-0">
+                                {{ $kegiatan->fasepelaporan ?? '-' }}
+                            </span>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <!-- Location Information -->
-                    <div class="col-md-6">
-                        <div class="card shadow-sm mb-4 h-100">
-                            <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
-                                <h5 class="text-success mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ __('Location Information') }}</h5>
-                            </div>
-                            <div class="card-body pt-1">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-sm border-0 mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>{{ __('Kecamatan/Desa') }}</th>
-                                                <th>{{ __('Lokasi') }}</th>
-                                                <th class="text-end">{{ __('Coordinate') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($kegiatan->lokasi as $lokasi)
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold">{{ $lokasi->desa?->kecamatan?->nama ?? '-' }}</div>
-                                                        <small class="text-muted">{{ $lokasi->desa?->nama ?? '-' }}</small>
-                                                    </td>
-                                                    <td>
-                                                        @if ($lokasi->lat && $lokasi->long)
-                                                            <a href="https://www.google.com/maps?q={{ $lokasi->lat }},{{ $lokasi->long }}" target="_blank" class="text-decoration-none">
-                                                                <i class="fas fa-map-pin text-danger"></i> {{ ucwords(strtolower($lokasi->lokasi ?? 'Lihat Peta')) }}
-                                                            </a>
-                                                        @else
-                                                            {{ $lokasi->lokasi ?? '—' }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-end small">
-                                                        <div>{{ $lokasi->lat ?? '-' }}</div>
-                                                        <div>{{ $lokasi->long ?? '-' }}</div>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="3" class="text-center text-muted small fst-italic">{{ __('Tidak ada data lokasi tersedia.') }}</td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Penulis Information -->
-                    <div class="col-md-6">
-                        <div class="card shadow-sm mb-4 h-100">
-                            <div class="card-header {{-- bg-white border-bottom-0 pt-3 pb-2 --}}">
-                                <h5 class="text-info mb-0"><i class="fas fa-users me-2"></i>{{ __('Penulis Laporan') }}</h5>
-                            </div>
-                            <div class="card-body pt-1">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-sm border-0 mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>{{ __('Penulis') }}</th>
-                                                <th>{{ __('Jabatan') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse($kegiatan->datapenulis ?? [] as $penulis)
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="bg-light rounded-circle p-2 me-2 text-center" style="width:32px;height:32px;line-height:1;">
-                                                                <i class="fas fa-user-circle text-secondary"></i>
-                                                            </div>
-                                                            <div>{{ $penulis->nama ?? '-' }}</div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="align-middle"><span class="badge bg-light text-dark border">{{ $penulis->kegiatanPeran?->nama ?? '-' }}</span></td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="2" class="text-center text-muted small fst-italic">{{ __('Tidak ada data penulis tersedia.') }}</td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="col">
+                        <div class="text-uppercase text-muted font-weight-bold mt-2">
+                            <i class="material-symbols-outlined text-danger text-sm">radar</i>
+                            {{ __('btor.program_goals') }}
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    {{-- Program Goals Card --}}
+                    @php
+                        $goal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
+                    @endphp
+                    @if($goal)
 
-                <!-- Program Hierarchy & Progress -->
-                <div class="card shadow-sm mb-4 mt-4">
-                    <div class="card-header bg-white border-bottom-0 pt-3 pb-2">
-                        <h5 class="text-warning text-dark mb-0"><i class="fas fa-sitemap me-2"></i>{{ __('Program Hierarchy & Progress') }}</h5>
-                    </div>
-                    <div class="card-body pt-0">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">{{ __('Program Outcome Target') }}</h6>
-                                    <p class="mb-0 text-primary">
-                                        {{-- {{ $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-' }} --}}
-                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->target ?? '-')) !!}
-                                    </p>
+
+                    {{-- <div class="col-sm-12 col-md-6 col-lg-6 mb-3 mb-md-0">
+                        <div class="p-3 bg-light rounded border-left border-success h-100">
+                            <h6 class="text-uppercase text-muted font-weight-bold mb-1">
+                                <i class="material-symbols-outlined mr-2 text-warning">arrow_right</i> 
+                                Target</h6>
+                            <span class="font-weight-bold text-dark small">
+                                {{ $goal->target ?? '-' }}
+                            </span>
+                        </div>
+                    </div> --}}
+
+                    <div class="col-sm-12 col-md-12 col-lg-12 mb-3">
+                        <div class="p-3 bg-light rounded border-left border-success h-100">
+                            {{-- <div class=""> --}}
+                                <span class="text-muted font-weight-bold text-uppercase d-block mb-1" 
+                                style="font-size: 0.75rem;">{{ __('cruds.program.outcome.target') }}</span>
+                                <div class="p-2 bg-light rounded text-dark border-left border-danger">
+                                    {{ $goal->target ?? '-' }}
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">
-                                        {{ __('Outcome Output Target') }}
-                                    </h6>
-                                    <p class="mb-0 text-info">
-                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->program_outcome_output?->target ?? '-')) !!}
-                                    </p>
+                            {{-- </div> --}}
+                            {{-- <div class="col-sm-6 col-md-6 col-lg-6 mb-3"> --}}
+                                <span class="text-muted font-weight-bold text-uppercase d-block mb-1" 
+                                style="font-size: 0.75rem;">{{ __('cruds.program.outcome.indicator') }}</span>
+                                <div class="p-2 bg-light rounded text-dark border-left border-warning">
+                                    {{ $goal->indikator ?? '-' }}
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded text-center h-100 border">
-                                    <h6 class="text-uppercase text-muted fw-bold d-block mb-1">
-                                        {{ __('Output Activit Target') }}
-                                    </h6>
-                                    <p class="mb-0 text-success">
-                                        {!! nl2br(e($kegiatan->programOutcomeOutputActivity?->target ?? '-')) !!}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mt-2">
-                                    <strong class="text-secondary small text-uppercase"><i class="fas fa-bullseye me-1"></i> {{ __('Program Goals') }}:</strong> 
-                                    @php
-                                        $program = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program;
-                                        $goal = $program?->goal ?? null;
-                                    @endphp
-                                    @if($goal)
-                                        <div class="mt-2 d-flex flex-wrap gap-2">
-                                            @if($goal->deskripsi)<div class="input-group mt-2">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">{{ $goal->deskripsi }}</span></div>
-                                            @endif
-                                            @if($goal->indikator)<div class="input-group mt-2">
-                                            <span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $goal->indikator }}</span></div>
-                                            @endif
-                                            @if($goal->target)
-                                            <div class="input-group mt-2"><span class="badge bg-warning bg-opacity-10 text-dark border border-warning">{{ $goal->target }}</span></div>@endif
-                                        </div>
-                                    @else
-                                        <span class="text-muted fst-italic ms-2">{{ __('No goals defined') }}</span>
-                                    @endif
-                                </div>
-                            </div>
+                            {{-- </div> --}}
                         </div>
                     </div>
+                    @else
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded border-left border-success h-100">
+                            <p class="text-muted italic mb-0">
+                                {{ __('btor.no_goals') }}
+                            </p>
+                        </div>
+                    </div>
+                    @endif
                 </div>
+
 
             </div>
         </div>
 
-        <div class="card-body border-top">
-            <!-- latar belakang kegiatan -->
-            <div class="form-group row">
-                <div class="col-sm col-md col-lg self-center">
-                    <label for="deskripsilatarbelakang" class="input-group">
-                       <h5>
-                           {{ __('cruds.kegiatan.description.latar_belakang') }}
-                        </h5>
-                        <i class="fas fa-info-circle text-success" data-toggle="tooltip"
-                            title="{{ __('cruds.kegiatan.description.latar_belakang_helper') }}"></i>
-                    </label>
-                    {!! $kegiatan->deskripsilatarbelakang ?? '' !!}
+        <!-- Konteks Kegiatan -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h4 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-info-circle mr-2 text-primary"></i> 1. {{ __('cruds.kegiatan.description.latar_belakang') }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="rich-text-content">
+                    {!! $kegiatan->deskripsilatarbelakang ?? '<em class="text-muted">' . __('global.no_results') . '</em>' !!}
                 </div>
             </div>
-            <!-- tujuan kegiatan -->
-            <div class="form-group row">
-                <div class="col-sm col-md col-lg self-center">
-                    <label for="deskripsitujuan" class="mb-0 input-group">
-                        <h5>
-                            {{ __('cruds.kegiatan.description.tujuan') }}
-                        </h5>
-                        <i class="fas fa-info-circle text-success" data-toggle="tooltip"
-                            title="{{ __('cruds.kegiatan.description.tujuan_helper') }}"></i>
-                    </label>
-                    {!! $kegiatan->deskripsitujuan ?? '' !!}
-                </div>
-            </div>
-            <!-- deskripsi keluaran / Hasil Pertemuan kegiatan -->
-            <div class="form-group row">
-                <div class="col-sm col-md col-lg self-center">
-                    <label for="deskripsikeluaran" class="mb-0 input-group">
-                        <h5>
-                            {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
-
-                        </h5>
-                            
-                        <i class="fas fa-info-circle text-success" data-toggle="tooltip"
-                            title="{{ __('cruds.kegiatan.description.keluaran_helper') }}"></i>
-                    </label>
-                    {!! $kegiatan->deskripsikeluaran ?? '' !!}
-                </div>
-            </div>
-
-            <!-- Details Kegiatan Section -->
-            <div class="card-body border-top">
-
-                @php
-                    $jenisId = $kegiatan->jeniskegiatan_id;
-                    $viewPath = App\Models\Export\BTOR::getViewPath($kegiatan->jeniskegiatan_id);
-                @endphp
-                <h5 class="text-primary mb-4"><i class="fas fa-clipboard-list me-2"></i>
-                    {{ __('Hasil Kegiatan') }}
-                </h5>  
-                @if(isset($viewPath))
-                    <div class="print-jenis-kegiatan">
-                        <h5>
-                            {{ $kegiatan->jenisKegiatan?->nama ?? 'Jenis Kegiatan' }}
-                        </h5>
-                        @include($viewPath, ['kegiatan' => $kegiatan])
-                    </div>
-                @endif
-            </div>
-
-
-            <!-- Peserta yang terlibat -->
-            <div class="form-group row mb-0">
-                <div class="col-sm col-md col-lg self-center">
-                    <label class="self-center input-group">
-                        {{ __('cruds.kegiatan.peserta.label') }}
-                        <i class="fas fa-info-circle text-success" data-toggle="tooltip"
-                            title="{{ __('cruds.kegiatan.peserta.helper') }}"></i>
-                    </label>
-                </div>
-            </div>
-
-            
-            {{-- Tabel Jumlah Peserta Kegiatan --}}
-            <div class="form-group row">
-                <div class="col-sm col-md col-lg self-center">
-                    <div class="card-body table-responsive p-0">
-                        <table id="peserta_kegiatan_summary" class="table table-sm table-borderless mb-0 table-custom"
-                            width="100%">
-                            <!-- jumlah peserta kegiatan -->
-                            <thead style="background-color: #11bd7e !important">
-                                <tr class="align-middle text-center text-nowrap">
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.peserta') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.wanita') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.pria') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.total') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!--dewasa row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.dewasa') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatdewasaperempuan"
-                                            name="penerimamanfaatdewasaperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdewasaperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatdewasalakilaki"
-                                            name="penerimamanfaatdewasalakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdewasalakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatdewasatotal"
-                                            name="penerimamanfaatdewasatotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdewasatotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--lansia row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.lansia') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatlansiaperempuan"
-                                            name="penerimamanfaatlansiaperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatlansiaperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatlansialakilaki"
-                                            name="penerimamanfaatlansialakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatlansialakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatlansiatotal"
-                                            name="penerimamanfaatlansiatotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatlansiatotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--remaja row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.remaja') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatremajaperempuan"
-                                            name="penerimamanfaatremajaperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatremajaperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatremajalakilaki"
-                                            name="penerimamanfaatremajalakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatremajalakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatperempuantotal"
-                                            name="penerimamanfaatperempuantotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatremajatotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--anak-anak row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.anak') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatanakperempuan"
-                                            name="penerimamanfaatanakperempuan"
-                                            class="calculate form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatanakperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatanaklakilaki"
-                                            name="penerimamanfaatanaklakilaki"
-                                            class="calculate form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatanaklakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatanaktotal"
-                                            name="penerimamanfaatanaktotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatanaktotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <tr class="align-middle text-center text-nowrap">
-                                    <th class="pl-1 text-left text-sm">{{ __('cruds.kegiatan.peserta.total') }}</th>
-                                    <th class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatperempuantotal"
-                                            name="penerimamanfaatperempuantotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatperempuantotal ?? 0 }}">
-                                    </th>
-                                    <th class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatlakilakitotal"
-                                            name="penerimamanfaatlakilakitotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatlakilakitotal ?? 0 }}">
-                                    </th>
-                                    <th class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaattotal"
-                                            name="penerimamanfaattotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaattotal ?? 0 }}">
-                                    </th>
-                                </tr>
-                            </tbody>
-                            <!--jumlah peserta disabilitas -->
-                            <tfoot>
-                                <!--<th style="background-color: #6111bd !important table-dark">-->
-                                <tr class="align-middle text-center text-nowrap"
-                                    style="background-color: #6111bd !important">
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.peserta') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.wanita') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.pria') }}</th>
-                                    <th
-                                        class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">
-                                        {{ __('cruds.kegiatan.peserta.total') }}</th>
-                                </tr>
-                                <!--</th>-->
-                                <!--disabilitas row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.disabilitas') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatdisabilitasperempuan"
-                                            name="penerimamanfaatdisabilitasperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdisabilitasperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatdisabilitaslakilaki"
-                                            name="penerimamanfaatdisabilitaslakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatdisabilitastotal"
-                                            name="penerimamanfaatdisabilitastotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatdisabilitastotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--non disabilitias  row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.non_disabilitas') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatnondisabilitasperempuan"
-                                            name="penerimamanfaatnondisabilitasperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatnondisabilitaslakilaki"
-                                            name="penerimamanfaatnondisabilitaslakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatnondisabilitastotal"
-                                            name="penerimamanfaatnondisabilitastotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatnondisabilitastotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--marjinal row-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatmarjinalperempuan"
-                                            name="penerimamanfaatmarjinalperempuan"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatmarjinalperempuan ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="penerimamanfaatmarjinallakilaki"
-                                            name="penerimamanfaatmarjinallakilaki"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatmarjinallakilaki ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="penerimamanfaatmarjinaltotal"
-                                            name="penerimamanfaatmarjinaltotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatmarjinaltotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                                <!--total beneficiaries difabel-->
-                                <tr>
-                                    <td class="pl-1">
-                                        <label class="text-sm">{{ __('cruds.kegiatan.peserta.total') }}</label>
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="total_beneficiaries_perempuan"
-                                            name="penerimamanfaatperempuantotal"
-                                            class="calculate form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatperempuantotal ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1">
-                                        <input type="number" readonly id="total_beneficiaries_lakilaki"
-                                            name="penerimamanfaatlakilakitotal"
-                                            class="calculate form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaatlakilakitotal ?? 0 }}">
-                                    </td>
-                                    <td class="pl-1 pr-1">
-                                        <input type="number" readonly id="beneficiaries_difable_total"
-                                            name="penerimamanfaattotal"
-                                            class="form-control-border border-width-2 form-control form-control-sm text-center"
-                                            value="{{ $kegiatan->penerimamanfaattotal ?? 0 }}">
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-
         </div>
 
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h4 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-bullseye mr-2 text-danger"></i> 2. {{ __('cruds.kegiatan.description.tujuan') }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="rich-text-content">
+                    {!! $kegiatan->deskripsitujuan ?? '<em class="text-muted">' . __('global.no_results') . '</em>' !!}
+                </div>
+            </div>
+        </div>
 
-        <!-- Tantangan & Solusi Section -->
-        <div class="card-body border-top">
-            <h5 class="text-warning mb-4"><i class="fas fa-exclamation-triangle me-2"></i>{{ __('Tantangan & Solusi') }}</h5>
-            
-            @php
-                $kendala = $kegiatan->assessment?->assessmentkendala 
-                        ?? $kegiatan->sosialisasi?->sosialisasikendala
-                        ?? $kegiatan->pelatihan?->pelatihankendala
-                        ?? $kegiatan->pembelanjaan?->pembelanjaankendala
-                        ?? $kegiatan->pengembangan?->pengembangankendala
-                        ?? $kegiatan->kampanye?->kampanyekendala
-                        ?? $kegiatan->pemetaan?->pemetaankendala
-                        ?? $kegiatan->monitoring?->monitoringkendala
-                        ?? $kegiatan->kunjungan?->kunjungankendala
-                        ?? $kegiatan->konsultasi?->konsultasikendala
-                        ?? $kegiatan->lainnya?->lainnyakendala
-                        ?? null;
-                $solusi = $kegiatan->assessment?->assessmentpembelajaran 
-                       ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
-                       ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                       ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
-                       ?? $kegiatan->pengembangan?->pengembanganpembelajaran
-                       ?? $kegiatan->kampanye?->kampanyepembelajaran
-                       ?? $kegiatan->pemetaan?->pemetaanpembelajaran
-                       ?? $kegiatan->monitoring?->monitoringpembelajaran
-                       ?? $kegiatan->kunjungan?->kunjunganpembelajaran
-                       ?? $kegiatan->konsultasi?->konsultasipembelajaran
-                       ?? $kegiatan->lainnya?->lainnyapembelajaran
-                       ?? null;
-            @endphp
-
-            @if($kendala || $solusi)
-                <div class="table-responsive">
-                    <table class="table table-bordered table-sm">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 50%;">{{ __('Tantangan') }}</th>
-                                <th style="width: 50%;">{{ __('Solusi yang Diambil') }}</th>
-                            </tr>
-                        </thead>
+        <!-- Pelaksanaan & Capaian -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h4 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-list-alt mr-2 text-warning"></i> 3. {{ __('btor.activity_details_results') }}
+                </h4>
+            </div>
+            <div class="card-body">
+                {{-- Basic Table for detail --}}
+                <div class="table-responsive mb-4">
+                    <table class="table table-sm table-borderless">
                         <tbody>
                             <tr>
-                                <td>{!! $kendala ?? '<em class="text-muted">-</em>' !!}</td>
-                                <td>{!! $solusi ?? '<em class="text-muted">-</em>' !!}</td>
+                                <td width="30%" class="text-muted"><strong><i class="far fa-clock mr-1"></i> {{ __('btor.execution_time') }}</strong></td>
+                                <td width="2%">:</td>
+                                <td>
+                                    @if($kegiatan->tanggalmulai)
+                                        <span class="font-weight-medium text-dark">
+                                            {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') }}
+                                        </span>
+                                        @if($kegiatan->tanggalselesai && $kegiatan->tanggalmulai != $kegiatan->tanggalselesai)
+                                            <span class="mx-1 text-muted">-</span>
+                                            <span class="font-weight-medium text-dark">
+                                                {{ \Carbon\Carbon::parse($kegiatan->tanggalselesai)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') }}
+                                            </span>
+                                        @endif
+                                        <span class="ml-2 badge badge-light border text-muted font-weight-normal">{{ $durationInDays ?? 0 }} Hari</span>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted"><strong><i class="fas fa-map-marker-alt mr-1"></i> {{ __('btor.lokasi_kegiatan') }}</strong></td>
+                                <td>:</td>
+                                <td>
+                                    @forelse($kegiatan->lokasi as $lok)
+                                        <div class="mb-1 text-dark">
+                                            {{ $lok->lokasi }}, {{ $lok->desa?->nama }}, {{ $lok->desa?->kecamatan?->nama }}
+                                        </div>
+                                    @empty
+                                        <span class="text-muted">-</span>
+                                    @endforelse
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted"><strong>
+                                    <i class="material-symbols-outlined mr-1 text-sm">partner_exchange</i> {{ __('btor.mitra_kegiatan') }}</strong></td>
+                                <td>:</td>
+                                <td>
+                                    @forelse($kegiatan->mitra as $mitra)
+                                        <span class="badge badge-light border mr-1 text-dark">
+                                            {{ $mitra->nama }}
+                                        </span>
+                                    @empty
+                                        <span class="text-muted">-</span>
+                                    @endforelse
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            @else
-                <div class="text-center py-3 text-muted bg-light rounded">
-                    <i class="fas fa-check-circle me-1"></i> {{ __('Tidak ada tantangan yang dicatat') }}
-                </div>
-            @endif
-        </div>
 
-        <!-- Isu yang Perlu Diperhatikan Section -->
-        <div class="card-body border-top">
-            <h5 class="text-danger mb-4"><i class="fas fa-flag me-2"></i>{{ __('Isu yang Perlu Diperhatikan') }}</h5>
-            
-            @php
-                $isu = $kegiatan->assessment?->assessmentisu 
-                    ?? $kegiatan->sosialisasi?->sosialisasiisu
-                    ?? $kegiatan->pelatihan?->pelatihanisu
-                    ?? $kegiatan->pembelanjaan?->pembelanjaanisu
-                    ?? $kegiatan->pengembangan?->pengembanganisu
-                    ?? $kegiatan->kampanye?->kampanyeisu
-                    ?? $kegiatan->pemetaan?->pemetaanisu
-                    ?? $kegiatan->monitoring?->monitoringisu
-                    ?? $kegiatan->kunjungan?->kunjunganisu
-                    ?? $kegiatan->konsultasi?->konsultasiisu
-                    ?? $kegiatan->lainnya?->lainnyaisu
-                    ?? null;
-            @endphp
-
-            @if($isu)
-                <div class="bg-light p-3 rounded">
-                    {!! $isu !!}
-                </div>
-            @else
-                <div class="text-center py-3 text-muted bg-light rounded">
-                    <i class="fas fa-check-circle me-1"></i> {{ __('Tidak ada isu yang perlu diperhatikan') }}
-                </div>
-            @endif
-        </div>
-
-        <!-- Pembelajaran Section -->
-        <div class="card-body border-top">
-            <h5 class="text-success mb-4"><i class="fas fa-lightbulb me-2"></i>{{ __('Pembelajaran') }}</h5>
-            
-            @php
-                $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
-                             ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                             ?? $kegiatan->monitoring?->monitoringpembelajaran
-                             ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
-                             ?? $kegiatan->kampanye?->kampanyepembelajaran
-                             ?? $kegiatan->konsultasi?->konsultasipembelajaran
-                             ?? $kegiatan->kunjungan?->kunjunganpembelajaran
-                             ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
-                             ?? $kegiatan->pengembangan?->pengembanganpembelajaran
-                             ?? $kegiatan->pemetaan?->pemetaanpembelajaran
-                             ?? $kegiatan->lainnya?->lainnyapembelajaran
-                             ?? null;
-            @endphp
-
-            @if($pembelajaran)
-                <div class="bg-light p-3 rounded">
-                    {!! $pembelajaran !!}
-                </div>
-            @else
-                <div class="text-center py-3 text-muted bg-light rounded">
-                    <i class="fas fa-info-circle me-1"></i> {{ __('Tidak ada pembelajaran yang tersedia') }}
-                </div>
-            @endif
-        </div>
-
-        <!-- Related Documents & Files Section -->
-        <div class="card-body border-top">
-            <h5 class="text-info mb-4"><i class="fas fa-folder-open me-2"></i>{{ __('Related Documents & Files') }}</h5>
-
-            <!-- Documents Section -->
-            <div class="mb-4">
-                <h6 class="text-primary mb-3"><i class="fas fa-file-alt me-2"></i>{{ __('Documents') }}</h6>
-                @if($kegiatan->getMedia('dokumen_pendukung') && $kegiatan->getMedia('dokumen_pendukung')->count() > 0)
-                    <div class="row g-3">
-                        @foreach($kegiatan->getMedia('dokumen_pendukung') as $media)
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="card file-card h-100 shadow-sm">
-                                    <div class="card-body p-3">
-                                        <div class="file-icon text-center mb-3">
-                                            @if(strstr($media->mime_type, "image/"))
-                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 100px; object-fit: cover;">
-                                            @elseif(strstr($media->mime_type, "pdf"))
-                                                <i class="fas fa-file-pdf fa-3x text-danger"></i>
-                                            @elseif(strstr($media->mime_type, "word"))
-                                                <i class="fas fa-file-word fa-3x text-primary"></i>
-                                            @elseif(strstr($media->mime_type, "excel") || strstr($media->mime_type, "spreadsheet"))
-                                                <i class="fas fa-file-excel fa-3x text-success"></i>
-                                            @elseif(strstr($media->mime_type, "powerpoint"))
-                                                <i class="fas fa-file-powerpoint fa-3x text-warning"></i>
-                                            @else
-                                                <i class="fas fa-file fa-3x text-secondary"></i>
-                                            @endif
-                                        </div>
-                                        <h6 class="card-title text-truncate small" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
-                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 30) }}
-                                        </h6>
-                                        <div class="file-meta">
-                                            <small class="text-muted d-block"><i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}</small>
-                                            <small class="text-muted d-block"><i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 p-2">
-                                        <div class="btn-group w-100" role="group">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="previewFile('{{ $media->getUrl() }}', '{{ $media->mime_type }}')" title="{{ __('Preview') }}">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" title="{{ __('Download') }}">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
+                {{-- Disaggregated Participant Table (BTOR Style) --}}
+                <div class="mb-4">
+                    <h5 class="font-weight-bold mb-3 text-dark border-bottom pb-2">
+                        <i class="fas fa-users-cog mr-2 text-secondary"></i> 
+                        {{ __('cruds.kegiatan.peserta.label') }} (Disaggregated)
+                    </h5>
+                    
+                    <h6 class="text-sm font-weight-bold mt-2">{{ __('btor.age_based_participants') }}</h6>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-sm table-bordered table-hover bg-white mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th width="25%" class="align-middle">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
+                                    <th class="text-center align-middle" width="18%">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                    <th class="text-center align-middle" width="18%">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                    <th class="text-center align-middle" width="18%">Lainnya</th>
+                                    <th class="text-center align-middle" width="21%">Sub Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ __('btor.adult_range') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasaperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdewasalakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdewasatotal ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('btor.elderly_range') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansiaperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatlansialakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatlansiatotal ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('btor.youth_range') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajaperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatremajalakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatremajatotal ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('btor.child_range') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanakperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatanaklakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatanaktotal ?? 0) }}</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <td><strong>{{ __('btor.total_age') }}</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td class="text-center"><strong class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                @else
-                    <div class="text-center py-4 bg-light rounded">
-                        <i class="fas fa-file-alt fa-2x text-muted mb-2"></i>
-                        <p class="text-muted small mb-0">{{ __('No supporting documents available') }}</p>
-                    </div>
-                @endif
-            </div>
 
-            <hr class="my-4">
+                    <h6 class="text-sm font-weight-bold mt-2">{{ __('btor.special_groups') }}</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered table-hover bg-white mb-0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th width="25%" class="align-middle">{{ __('btor.penerima_manfaat') }}</th>
+                                    <th class="text-center align-middle" width="18%">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
+                                    <th class="text-center align-middle" width="18%">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                                    <th class="text-center align-middle" width="18%">{{ __('btor.lainnya') }}</th>
+                                    <th class="text-center align-middle" width="21%">{{ __('btor.sub_total') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ __('cruds.kegiatan.peserta.disabilitas') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatdisabilitastotal ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('btor.non_disabilitas') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatnondisabilitastotal ?? 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ __('cruds.kegiatan.peserta.marjinal_lain') }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinalperempuan ?? 0) }}</td>
+                                    <td class="text-center">{{ number_format($kegiatan->penerimamanfaatmarjinallakilaki ?? 0) }}</td>
+                                    <td class="text-center">0</td>
+                                    <td class="text-center font-weight-bold">{{ number_format($kegiatan->penerimamanfaatmarjinaltotal ?? 0) }}</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <td><strong>{{ __('btor.grand_total') }}</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatperempuantotal ?? 0) }}</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($kegiatan->penerimamanfaatlakilakitotal ?? 0) }}</strong></td>
+                                    <td class="text-center"><strong>0</strong></td>
+                                    <td class="text-center"><strong class="text-primary">{{ number_format($kegiatan->penerimamanfaattotal ?? 0) }}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-            <!-- Media Section -->
-            <div>
-                <h6 class="text-success mb-3"><i class="fas fa-images me-2"></i>{{ __('Media') }}</h6>
-                @if($kegiatan->getMedia('media_pendukung') && $kegiatan->getMedia('media_pendukung')->count() > 0)
-                    <div class="row g-3">
-                        @foreach($kegiatan->getMedia('media_pendukung') as $media)
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <div class="card file-card h-100 shadow-sm">
-                                    <div class="card-body p-3">
-                                        <div class="file-icon text-center mb-3">
-                                            @if(strstr($media->mime_type, "image/"))
-                                                <img src="{{ $media->getUrl('thumb') }}" class="img-fluid rounded" alt="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" style="max-height: 100px; object-fit: cover;">
-                                            @elseif(strstr($media->mime_type, "video/"))
-                                                <i class="fas fa-file-video fa-3x text-warning"></i>
-                                            @elseif(strstr($media->mime_type, "audio/"))
-                                                <i class="fas fa-file-audio fa-3x text-info"></i>
-                                            @else
-                                                <i class="fas fa-file fa-3x text-secondary"></i>
-                                            @endif
-                                        </div>
-                                        <h6 class="card-title text-truncate small" title="{{ $media->getCustomProperty('keterangan') ?? $media->name }}">
-                                            {{ Str::limit($media->getCustomProperty('keterangan') ?? $media->name, 30) }}
-                                        </h6>
-                                        <div class="file-meta">
-                                            <small class="text-muted d-block"><i class="fas fa-calendar me-1"></i>{{ $media->created_at->format('d M Y') }}</small>
-                                            <small class="text-muted d-block"><i class="fas fa-weight me-1"></i>{{ $media->human_readable_size }}</small>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 p-2">
-                                        <div class="btn-group w-100" role="group">
-                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="previewFile('{{ $media->getUrl() }}', '{{ $media->mime_type }}')" title="{{ __('Preview') }}">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <a href="{{ $media->getUrl() }}" class="btn btn-outline-success btn-sm" download="{{ $media->getCustomProperty('keterangan') ?? $media->name }}" title="{{ __('Download') }}">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-4 bg-light rounded">
-                        <i class="fas fa-images fa-2x text-muted mb-2"></i>
-                        <p class="text-muted small mb-0">{{ __('No supporting media available') }}</p>
-                    </div>
-                @endif
+                {{-- Dynamic Content (Adopted from BTOR) --}}
+                <div class="mt-4">
+                    @include('tr.btor.partials.hasil-dinamis')
+                </div>
             </div>
         </div>
+
+        <!-- Hasil & Evaluasi -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom">
+                <h4 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-file-signature mr-2 text-success"></i> 4. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="rich-text-content">
+                    {!! $kegiatan->deskripsikeluaran ?? '<em class="text-muted">' . __('global.no_results') . '</em>' !!}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="card-title font-weight-bold text-dark m-0">
+                            <i class="fas fa-user-edit mr-2 text-secondary"></i> 5. {{ __('cruds.kegiatan.hasil.catatan_penulis') }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="small text-dark">
+                            {!! $kegiatan->catatan_penulis ?? '<em class="text-muted">-</em>' !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="card-title font-weight-bold text-dark m-0">
+                            <i class="fas fa-sync-alt mr-2 text-info"></i> 6. {{ __('cruds.kegiatan.hasil.indikasi_perubahan') }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="small text-dark">
+                            {!! $kegiatan->indikasi_perubahan ?? '<em class="text-muted">-</em>' !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
+</div>
 
 @stop
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     @include('tr.kegiatan.custom.css')
+    <style>
+        .bg-white-10 { background-color: rgba(255, 255, 255, 0.1); }
+        .bg-white-20 { background-color: rgba(255, 255, 255, 0.2); }
+        .border-white-20 { border-color: rgba(255, 255, 255, 0.2) !important; }
+        .border-white-50 { border-color: rgba(255, 255, 255, 0.5) !important; }
+        .text-pink { color: #e83e8c; }
+        .border-top-thick { border-top: 2px solid #dee2e6 !important; }
+        .rich-text-content img { max-width: 100%; height: auto; border-radius: 0.25rem; }
+        .rich-text-content table { width: 100% !important; margin-bottom: 1rem; color: #212529; border: 1px solid #dee2e6; }
+        .rich-text-content table th, .rich-text-content table td { padding: 0.75rem; vertical-align: top; border-top: 1px solid #dee2e6; }
+        .rich-text-content table thead th { vertical-align: bottom; border-bottom: 2px solid #dee2e6; }
+        .sticky-top { transition: top 0.3s ease; }
+    </style>
 @endpush
 
 @push('js')
@@ -1175,9 +606,9 @@
     <script>
         function uploadDocument(collection) {
             const isDocument = collection === 'dokumen_pendukung';
-            const title = isDocument ? '{{ __('Upload Document') }}' : '{{ __('Upload Media') }}';
+            const title = isDocument ? '{{ __('btor.dokumen_pendukung') }}' : '{{ __('btor.media_pendukung') }}';
             const accept = isDocument ? '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt' : '.jpg,.jpeg,.png,.gif,.mp4,.mov,.avi,.mp3,.wav';
-            const placeholder = isDocument ? '{{ __('Document Name') }}' : '{{ __('Media Name') }}';
+            const placeholder = isDocument ? '{{ __('btor.dokumen') }} Name' : 'Media Name';
 
             Swal.fire({
                 title: title,
@@ -1186,19 +617,19 @@
                     <input type="text" id="documentName" class="form-control" placeholder="${placeholder}">
                 `,
                 showCancelButton: true,
-                confirmButtonText: '{{ __('Upload') }}',
-                cancelButtonText: '{{ __('Cancel') }}',
+                confirmButtonText: '{{ __('global.submit') }}',
+                cancelButtonText: '{{ __('global.cancel') }}',
                 preConfirm: () => {
                     const file = document.getElementById('documentFile').files[0];
                     const name = document.getElementById('documentName').value;
 
                     if (!file) {
-                        Swal.showValidationMessage('{{ __('Please select a file') }}');
+                        Swal.showValidationMessage('{{ __('validation.required', ['attribute' => 'file']) }}');
                         return false;
                     }
 
                     if (!name) {
-                        Swal.showValidationMessage(isDocument ? '{{ __('Please enter document name') }}' : '{{ __('Please enter media name') }}');
+                        Swal.showValidationMessage(isDocument ? '{{ __('validation.required', ['attribute' => 'document name']) }}' : '{{ __('validation.required', ['attribute' => 'media name']) }}');
                         return false;
                     }
 
@@ -1222,17 +653,17 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            const successMessage = isDocument ? '{{ __('Document uploaded successfully') }}' : '{{ __('Media uploaded successfully') }}';
-                            Swal.fire('{{ __('Success') }}', successMessage, 'success')
+                            const successMessage = isDocument ? '{{ __('global.create_success') }}' : '{{ __('global.create_success') }}';
+                            Swal.fire('{{ __('global.success') }}', successMessage, 'success')
                                 .then(() => {
                                     location.reload();
                                 });
                         } else {
-                            Swal.fire('{{ __('Error') }}', data.message || '{{ __('Upload failed') }}', 'error');
+                            Swal.fire('{{ __('global.error') }}', data.message || '{{ __('global.error') }}', 'error');
                         }
                     })
                     .catch(error => {
-                        Swal.fire('{{ __('Error') }}', '{{ __('Upload failed') }}', 'error');
+                        Swal.fire('{{ __('global.error') }}', '{{ __('global.error') }}', 'error');
                     });
                 }
             });
@@ -1281,14 +712,14 @@
         // File delete functionality
         function deleteFile(mediaId) {
             Swal.fire({
-                title: '{{ __('Are you sure?') }}',
-                text: "{{ __('You won\'t be able to revert this!') }}",
+                title: '{{ __('global.areYouSure') }}',
+                text: "{{ __('global.areYouSure') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: '{{ __('Yes, delete it!') }}',
-                cancelButtonText: '{{ __('Cancel') }}'
+                confirmButtonText: '{{ __('global.yes') }}, {{ __('global.delete') }} it!',
+                cancelButtonText: '{{ __('global.cancel') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Make AJAX request to delete file
@@ -1302,16 +733,16 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            Swal.fire('{{ __('Deleted!') }}', '{{ __('File has been deleted.') }}', 'success');
+                            Swal.fire('{{ __('global.response.deleted') }}!', '{{ __('global.delete_success') }}', 'success');
                             // Reload the page to refresh the file list
                             location.reload();
                         } else {
-                            Swal.fire('{{ __('Error!') }}', data.message || '{{ __('Failed to delete file.') }}', 'error');
+                            Swal.fire('{{ __('global.error') }}!', data.message || '{{ __('global.delete_failed') }}', 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        Swal.fire('{{ __('Error!') }}', '{{ __('Failed to delete file.') }}', 'error');
+                        Swal.fire('{{ __('global.error') }}!', '{{ __('global.delete_failed') }}', 'error');
                     });
                 }
             });
@@ -1339,6 +770,87 @@
                     window.print();
                 });
             }
+            
+            // Adjust sticky top if there's an admin-lte navbar
+            const navbar = document.querySelector('.main-header');
+            if (navbar) {
+                const navbarHeight = navbar.offsetHeight;
+                const stickyEl = document.querySelector('.sticky-top');
+                if(stickyEl) {
+                    stickyEl.style.top = (navbarHeight + 15) + 'px';
+                }
+            }
         });
+
+        // Function for Document and Media Preview (Adopted from BTOR)
+        function previewFileFromData(element) {
+            const url = element.getAttribute('data-url');
+            const mimeType = element.getAttribute('data-mime');
+            const name = element.getAttribute('data-name') || '{{ __('global.view') }}';
+
+            // Sanitize name for HTML rendering to prevent XSS
+            const safeName = $('<div/>').text(name).html();
+
+            // Custom Download Button for Swal Footer
+            const downloadBtnHtml = `<a href="${url}" download class="btn btn-success mt-3"><i class="fas fa-download mr-1"></i> {{ __('btor.download_file') }}</a>`;
+
+            if (mimeType.startsWith('image/')) {
+                Swal.fire({
+                    title: safeName,
+                    html: `<img src="${url}" class="img-fluid rounded" style="max-width: 100%; height: auto;">` + downloadBtnHtml,
+                    width: '80%',
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            } else if (mimeType === 'application/pdf') {
+                event.preventDefault();
+                Swal.fire({
+                    title: safeName,
+                    html: `<iframe src="${url}" style="width: 100%; height: 65vh; border: none; border-radius: 4px;"></iframe>` + downloadBtnHtml,
+                    width: '80%',
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            } else if (mimeType.includes('word') || mimeType.includes('powerpoint') || mimeType.includes('excel') || mimeType.includes('officedocument') || mimeType.includes('spreadsheet') || mimeType.includes('presentation')) {
+                event.preventDefault();
+                // Menggunakan Microsoft Office Web Viewer (Syarat: URL file harus bisa diakses publik/online)
+                const officeUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+                
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                let contentHtml = '';
+
+                if (isLocalhost) {
+                    contentHtml = `
+                        <div class="alert alert-warning text-left">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> 
+                            <strong>{{ __('btor.preview_not_available_localhost') }}</strong><br>
+                            {{ __('btor.preview_online_requirement') }}
+                        </div>
+                        <div class="text-center py-5 bg-light rounded border">
+                            <i class="fas fa-file-alt fa-4x text-muted mb-3"></i><br>
+                            <h5 class="text-muted">{{ __('btor.file_label') }}: ${safeName}</h5>
+                        </div>
+                    `;
+                } else {
+                    contentHtml = `
+                        <div class="alert alert-info text-left small mb-2 py-2">
+                            <i class="fas fa-info-circle"></i> {{ __('btor.preview_failed_notice') }}
+                        </div>
+                        <iframe src="${officeUrl}" style="width: 100%; height: 60vh; border: 1px solid #dee2e6; border-radius: 4px;"></iframe>
+                    `;
+                }
+
+                Swal.fire({
+                    title: safeName,
+                    html: contentHtml + downloadBtnHtml,
+                    width: '80%',
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            } else {
+                // For other file types (zip, rar, dll), open in new tab (triggers download automatically)
+                window.open(url, '_blank');
+            }
+        }
     </script>
 @endpush

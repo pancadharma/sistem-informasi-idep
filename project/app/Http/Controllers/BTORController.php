@@ -135,8 +135,8 @@ class BTORController extends Controller
                 // Continue anyway, but with defaults for missing data
             }
 
-            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
-            $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 12, 'color' => '000000'];
+            $h2Style = ['name' => 'Figtree', 'size' => 12, 'color' => '000000'];
             $normalStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
             $h1ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 240];
@@ -185,8 +185,8 @@ class BTORController extends Controller
             // ✅ ADD FOOTER (repeats on every page)
             $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
 
-            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '0D654D'];
-            $footerBodyStyle = ['name' => 'Figtree', 'size' => 8, 'color' => '0F7001'];
+            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
+            $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
             $pStyle = [
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                 'spaceBefore' => 0.25,
@@ -367,12 +367,12 @@ class BTORController extends Controller
             $phpWord->setDefaultFontSize(10);
 
             // Define Heading Styles globally
-            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 12, 'color' => '000000'];
             $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
             // Register Title Styles so addTitle() works correctly in the content
-            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
-            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 120]);
+            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 120]);
 
             // --- 2. LOOP THROUGH DATA ---
             foreach ($ids as $id) {
@@ -410,8 +410,8 @@ class BTORController extends Controller
                 $footer = $section->addFooter();
 
                 // Footer Styles
-                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '0D654D'];
-                $footerBodyStyle = ['name' => 'Figtree', 'size' => 8, 'color' => '0F7001'];
+                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
+                $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
                 $footerPStyle = [
                     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                     'spaceBefore' => 0.25,
@@ -480,7 +480,8 @@ class BTORController extends Controller
         // --- DEFINISI STYLE ---
         $reportTitleStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
         $hBodyStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
-        $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
+        $normalBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
+        $labelStyle = array_merge($normalBodyStyle, ['bold' => true]);
 
         $hStyle = [
             'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
@@ -537,12 +538,17 @@ class BTORController extends Controller
         };
 
         // Eksekusi pengisian tabel
-        $addRow($table, 'Departemen', 'Program');
-        $addRow($table, 'Program', $this->safeValue($programNama));
-        $addRow($table, 'Nama Kegiatan', $this->safeValue($kegiatanNama));
-        $addRow($table, 'Kode Budget', $this->safeValue($kodeBudget));
-        $addRow($table, 'Penulis Laporan', $penulis);
-        $addRow($table, 'Jabatan', $jabatan);
+        $addRow($table, __('btor.departemen'), 'Program');
+        $addRow($table, __('btor.program'), $this->safeValue($programNama));
+        $addRow($table, __('btor.nama_kegiatan'), $this->safeValue($kegiatanNama));
+        $addRow($table, __('btor.kode_budget'), $this->safeValue($kodeBudget));
+        $addRow($table, __('btor.penulis_laporan'), $penulis);
+        $addRow($table, __('btor.penulis_jabatan'), $jabatan);
+
+        if ($kegiatan->penanggung_jawab_id) {
+            $addRow($table, __('btor.penanggung_jawab'), $this->safeValue($kegiatan->penanggungJawab?->nama));
+            $addRow($table, __('btor.penanggung_jawab_jabatan'), $this->safeValue($kegiatan->penanggungJawab?->jabatan?->nama));
+        }
 
         $section->addText('', [], $borderStyle);
         
@@ -579,13 +585,14 @@ class BTORController extends Controller
     private function addDocxContent($section, $kegiatan)
     {
         // --- DEFINISI STYLE ---
-        $h1Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000', 'bold' => true];
+        $h1Style = ['name' => 'Figtree', 'size' => 12, 'color' => '000000', 'bold' => true];
         $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
-        $normalStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+        $normalStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
 
 
         $labelStyle = array_merge($h2Style, ['bold' => true]);
-
+        $noLabelStyle = array_merge($h2Style, ['bold' => false, 'spaceBefore' => 60, 'spaceAfter'  => 60, 'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::BOTH]);
+        
         $pNormalStyle = [
             'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
             'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
@@ -605,24 +612,30 @@ class BTORController extends Controller
             'lineHeight' => 1.0,
         ];
 
+        $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF'];
+        $sectionParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::JUSTIFY, 'spaceBefore' => 60, 'spaceAfter' => 60];
+        $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
+        $cellStyle = ['valign' => 'center'];
+        $textStyle = ['size' => 9];
+        $linkStyle = ['size' => 9, 'color' => '0000FF', 'underline' => 'single'];
 
         // A. Latar Belakang
-        $section->addTitle('A. Latar Belakang Kegiatan', 1);
+        $section->addTitle('A. ' . __('btor.latar_belakang_kegiatan'), 1);
         $this->addHtmlToSection($section, $kegiatan->deskripsilatarbelakang);
 
         // B. Tujuan
-        $section->addTitle('B. Tujuan Kegiatan', 1);
+        $section->addTitle('B. ' . __('btor.tujuan_kegiatan'), 1);
         $this->addHtmlToSection($section, $kegiatan->deskripsitujuan);
 
         // C. Detail Kegiatan
-        $section->addTitle('C. Detail Kegiatan', 1);
+        $section->addTitle('C. ' . __('btor.detail_kegiatan'), 1);
 
         // 2. Date Logic - Minimizing potential null errors
         $m = $kegiatan->tanggalmulai ?? null;
         $s = $kegiatan->tanggalselesai ?? null;
 
-        $tanggalMulaiText = $m ? Carbon::parse($m)->locale('id')->isoFormat('dddd, D MMMM Y') : 'Tidak ditentukan';
-        $tanggalSelesaiText = $s ? Carbon::parse($s)->locale('id')->isoFormat('dddd, D MMMM Y') : null;
+        $tanggalMulaiText = $m ? Carbon::parse($m)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') : '-';
+        $tanggalSelesaiText = $s ? Carbon::parse($s)->locale(app()->getLocale())->isoFormat('dddd, D MMMM Y') : null;
 
         $dateText = $this->safeValue($tanggalMulaiText);
 
@@ -632,7 +645,7 @@ class BTORController extends Controller
             
             // Check if method exists before calling to prevent fatal error
             if (method_exists($kegiatan, 'getDurationInDays') && $kegiatan->getDurationInDays()) {
-                $dateText .= ' (' . $kegiatan->getDurationInDays() . ' hari)';
+                $dateText .= ' (' . $kegiatan->getDurationInDays() . ' ' . __('btor.hari') . ')';
             }
         }
 
@@ -665,87 +678,204 @@ class BTORController extends Controller
         };
 
         // Populate Table
-        $addRow($table, 'Hari, Tanggal', $dateText);
-        $addRow($table, 'Tempat', $lokasiString);
-        $addRow($table, 'Pihak yang terlibat', $mitraString);
+        $addRow($table, __('btor.tanggal_mulai'), $dateText);
+        $addRow($table, __('btor.tempat'), $lokasiString);
+        $addRow($table, __('btor.mitra_kegiatan') . ' / Partner', $mitraString);
+        
         $section->addTextBreak(1);
-
         // Location Table
         if ($kegiatan->lokasi && $kegiatan->lokasi->count() > 0) {
-            $section->addText('Tabel Lokasi', $labelStyle);
+            $section->addText(__('btor.tabel_lokasi'), $noLabelStyle);
             $this->addLocationTable($section, $kegiatan);
         }
+        $section->addTextBreak(1);
 
         // D. Hasil Kegiatan - Beneficiaries
-        $section->addTitle('D. Hasil Kegiatan', 1);
-        $section->addText('a. Jumlah partisipan yang terlibat dan disagregat', $labelStyle);
+        $section->addTitle('D. ' . __('btor.hasil.label'), 1);
+        $section->addText('' . __('btor.partisipan_disagregat'), $labelStyle);
         $section->addText('Silakan mengisi tabel berikut:', $normalStyle, $pNormalStyle);
         
         if ($kegiatan->penerimamanfaattotal > 0) {
             $this->addBeneficiariesTable($section, $kegiatan);
+            $section->addTextBreak(1);
+            $section->addText(__('btor.table_kelompok_khusus'), $labelStyle);
+            $this->addSpecialGroupTable($section, $kegiatan);
         } else {
-            $section->addText('Tidak ada data penerima manfaat', $normalStyle, $pNormalStyle);
+            $section->addText(__('btor.no_data_participants'), $normalStyle, $pNormalStyle);
         }
         $section->addTextBreak(1);
-        $section->addText('b. Hasil pertemuan', $labelStyle);
-        $this->addHtmlToSection($section, $kegiatan->deskripsikeluaran);
+
+        $section->addText('' . __('cruds.kegiatan.description.deskripsikeluaran'), $labelStyle);
+        $this->addHtmlToSection($section, $kegiatan->deskripsikeluaran, $pNormalStyle);
         $section->addTextBreak(1);
+
+        // c. Dynamic Results based on Jenis Kegiatan
+        $this->addDynamicResultsToDocx($section, $kegiatan);
 
         // Get specific data based on jenis kegiatan
         $specificData = $this->getSpecificKegiatanData($kegiatan);
 
         // E. Tantangan dan Solusi
-        $section->addTitle('E. Tantangan dan Solusi', 1);
-        $this->addHtmlToSection($section, $specificData['kendala'] ?? 'Tidak ada data tantangan.');
+        $section->addTitle('E. ' . __('btor.tantangan_solusi'), 1);
+        $this->addHtmlToSection($section, $specificData['kendala'] ?? __('btor.no_data_tantang_solusi'));
         $section->addTextBreak(1);
 
         // F. Isu yang Perlu Diperhatikan
-        $section->addTitle('F. Isu yang Perlu Diperhatikan / Rekomendasi', 1);
-        $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
+        $section->addTitle('F. ' . __('btor.hasil.assessmentisu'), 1);
+        $this->addHtmlToSection($section, $specificData['isu'] ?? __('global.no_results'));
         $section->addTextBreak(1);
         
-        // F. Isu yang Perlu Diperhatikan
-        // Usage
-        // $richTextHTML =  $specificData['isu'] ?? '';
-        // $this->addHtmlToSection($section, $richTextHTML);
-        // $cleanHtml = $this->cleanHtmlForPhpWord($richTextHTML);
-        // Log::INFO($cleanHtml);
-        // $fullHtml = '<html><head><meta charset="UTF-8"></head><body>' . $cleanHtml . '</body></html>';
-        // $section->addHtml($fullHtml);
-        // $section->addTextBreak(1);
-        // Log::INFO($fullHtml);
-        // $section->addHtml($cleanHtml);
-        
-        // $this->addHtmlToSection($section, $specificData['isu'] ?? 'Tidak ada data isu.');
-        // $section->addTextBreak(1);
-
         // G. Pembelajaran
-        $section->addTitle('G. Pembelajaran', 1);
-        $this->addHtmlToSection($section, $specificData['pembelajaran'] ?? 'Tidak ada data pembelajaran.');
+        $section->addTitle('G. ' . __('btor.hasil.assessmentpembelajaran'), 1);
+        $this->addHtmlToSection($section, $specificData['pembelajaran'] ?? __('btor.no_data_pembelajaran'));
         $section->addTextBreak(1);
 
         // H. Dokumen Pendukung
-        $section->addTitle('H. Dokumen Pendukung', 1);
+        $section->addTitle('H. ' . __('btor.dokumen_pendukung'), 1);
         $dokumen = $kegiatan->getDokumenPendukung();
         $media = $kegiatan->getMediaPendukung();
         
         if (($dokumen && $dokumen->count() > 0) || ($media && $media->count() > 0)) {
+            $tableStyle = [
+                'borderSize' => 6,
+                'borderColor' => '000000',
+                'width' => 5000,
+                'unit' => 'pct',
+                'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER,
+            ];
+
+            $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF'];
+            $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 60, 'spaceAfter' => 60];
+            $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
+            $cellStyle = ['valign' => 'center'];
+            $textStyle = ['size' => 9];
+            $linkStyle = ['size' => 9, 'color' => '0000FF', 'underline' => 'single'];
+
             if ($dokumen && $dokumen->count() > 0) {
-                $section->addText('Dokumen (' . $dokumen->count() . ')', $normalStyle, $pNormalStyle);
+                $section->addText(__('btor.dokumen_pendukung') . ' (' . $dokumen->count() . ')', $normalStyle);
+                $table = $section->addTable($tableStyle);
+                
+                // Header
+                $table->addRow();
+                $table->addCell(4250, $headerCellStyles)->addText(__('btor.keterangan'), $headerFontStyle, $headerParagraphStyle);
+                $table->addCell(750, $headerCellStyles)->addText(__('btor.link'), $headerFontStyle, $headerParagraphStyle);
+
                 foreach ($dokumen as $doc) {
-                    $section->addText('- ' . $this->safeValue($doc->name), $normalStyle, $pNormalStyle);
+                    $table->addRow();
+                    $keterangan = $doc->getCustomProperty('keterangan') ?: $doc->name;
+                    $table->addCell(4250, $cellStyle)->addText($this->safeValue($keterangan), $textStyle);
+                    $absoluteUrl = url($doc->getUrl());
+                    $table->addCell(750, ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER])
+                        ->addLink($absoluteUrl, __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
                 }
+                $section->addTextBreak(1);
             }
+
             if ($media && $media->count() > 0) {
-                $section->addText('Media Pendukung (' . $media->count() . ')', $normalStyle, $pNormalStyle);
+                $section->addText(__('btor.media_pendukung') . ' (' . $media->count() . ')', $normalStyle);
+                $table = $section->addTable($tableStyle);
+
+                // Header
+                $table->addRow();
+                $table->addCell(4250, $headerCellStyles)->addText(__('btor.keterangan'), $headerFontStyle, $headerParagraphStyle);
+                $table->addCell(750, $headerCellStyles)->addText(__('btor.link'), $headerFontStyle, $headerParagraphStyle);
+
                 foreach ($media as $item) {
-                    $section->addText('- ' . $this->safeValue($item->name), $normalStyle, $pNormalStyle);
+                    $table->addRow();
+                    $keterangan = $item->getCustomProperty('keterangan') ?: $item->name;
+                    $table->addCell(4250, $cellStyle)->addText($this->safeValue($keterangan), $textStyle);
+                    $absoluteUrl = url($item->getUrl());
+                    $table->addCell(750, ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER])
+                        ->addLink($absoluteUrl, __('btor.link'), $linkStyle, ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
                 }
+                $section->addTextBreak(1);
             }
         } else {
-            $section->addText('Tidak ada dokumen pendukung.', $normalStyle, $pNormalStyle);
+            $section->addText(__('btor.no_documents_available'), $normalStyle, $pNormalStyle);
         }
+        $section->addTextBreak(1);
+
+        // I. Catatan Penulis
+        $section->addTitle('I. ' . __('btor.catatan_penulis_laporan'), 1);
+        $this->addHtmlToSection($section, $kegiatan->catatan_penulis ?? '-');
+        $section->addTextBreak(1);
+
+        // J. Indikasi Perubahan
+        $section->addTitle('J. ' . __('btor.indikasi_perubahan'), 1);
+        $this->addHtmlToSection($section, $kegiatan->indikasi_perubahan ?? '-');
+
         $section->addTextBreak(2);
+    }
+
+    /**
+     * Add dynamic results table to DOCX
+     */
+    private function addDynamicResultsToDocx($section, $kegiatan)
+    {
+        $jenisId = $kegiatan->jeniskegiatan_id;
+        $fieldMap = \App\Models\Kegiatan::getJenisKegiatanFieldMap();
+        $fields = $fieldMap[$jenisId] ?? [];
+        
+        // Filter out redundant fields that are already in standard sections
+        $fields = array_filter($fields, function($field) {
+            return !str_ends_with($field, 'kendala') && 
+                   !str_ends_with($field, 'isu') && 
+                   !str_ends_with($field, 'pembelajaran');
+        });
+
+        if (empty($fields)) {
+            return;
+        }
+
+        $relationMap = \App\Models\Kegiatan::getJenisKegiatanRelationMap();
+        $relationName = $relationMap[$jenisId] ?? null;
+        $relationData = $relationName ? $kegiatan->$relationName : null;
+
+        if (!$relationData) {
+            return;
+        }
+
+        $labelStyle = ['name' => 'Figtree', 'size' => 10, 'bold' => true];
+        $normalStyle = ['name' => 'Figtree', 'size' => 10];
+        $headerCellStyles = ['bgColor' => 'f2f2f2', 'valign' => 'center'];
+        
+        $section->addText('- ' . strtoupper(__('btor.hasil.label')) . ': ' . strtoupper($kegiatan->jenisKegiatan?->nama), $labelStyle);
+
+        $tableStyle = [
+            'borderSize' => 6,
+            'borderColor' => '000000',
+            'width' => 5000,
+            'unit' => 'pct',
+        ];
+        $table = $section->addTable($tableStyle);
+
+        $radioFields = [
+            'assessmenttambahan', 'sosialisasitambahan', 'pelatihandistribusi',
+            'pelatihanunggahan', 'pembelanjaanterdistribusi', 'pembelanjaanakandistribusi',
+            'monitoringkegiatanselanjutnya'
+        ];
+
+        foreach ($fields as $field) {
+            $table->addRow();
+            
+            // Label Column
+            $table->addCell(3500, $headerCellStyles)->addText(__('btor.hasil.' . $field), $labelStyle);
+            
+            // Value Column
+            $cell = $table->addCell(6500);
+            $value = $relationData->$field;
+
+            if (in_array($field, $radioFields)) {
+                $cell->addText($value == 1 ? __('global.yes') : __('global.no'), $normalStyle);
+            } elseif (str_contains($field, 'mulai') || str_contains($field, 'selesai')) {
+                $dateText = $value ? \Carbon\Carbon::parse($value)->format('d M Y H:i') : '-';
+                $cell->addText($dateText, $normalStyle);
+            } else {
+                // For rich text or standard text
+                $this->addHtmlToSection($cell, $value ?: '-', $normalStyle);
+            }
+        }
+        $section->addTextBreak(1);
     }
 
     /**
@@ -878,8 +1008,15 @@ class BTORController extends Controller
 
     private function addHtmlToSection($section, $html, $fontStyle = [], $paragraphStyle = [])
     {
+        $normalStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
+        $pNormalStyle = [
+            'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(2),
+            'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::BOTH,
+        ];
+
         if (empty($html) || trim(strip_tags($html)) == '') {
-            $section->addText('-', $fontStyle);
+            $section->addText('-', $normalStyle, $pNormalStyle);
             return;
         }
         
@@ -902,65 +1039,6 @@ class BTORController extends Controller
             $section->addText($text, $fontStyle, $paragraphStyle);
         }
     }
-
-    /**
-     * Sanitize HTML to make it compatible with PHPWord's XML parser
-     * Fixes common issues from Google Docs and Summernote editors
-     * Preserves as much formatting as possible while ensuring XML compliance
-     */
-    // private function sanitizeHtmlForPhpWord($html)
-    // {
-    //     if (empty($html)) {
-    //         return '';
-    //     }
-
-    //     // 1. CRITICAL: Fix &nbsp; to prevent Entity errors
-    //     $html = str_replace('&nbsp;', ' ', $html);
-        
-    //     // 2. CRITICAL: Remove <colgroup> and <col> tags
-    //     // These are valid HTML but invalid XML if not self-closed, causing the crash.
-    //     $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
-    //     $html = preg_replace('/<col\s+[^>]*>/i', '', $html);
-
-    //     // 3. Fix other void tags that might be missing closing slashes (br, hr, img)
-    //     // Converts <br> to <br /> 
-    //     $html = preg_replace('/<(br|hr|img|meta|link|input)([^>]*)(?<!\/)>/i', '<$1$2 />', $html);
-
-    //     // 4. Clean up Google Docs/Summernote metadata
-    //     $html = preg_replace('/<span[^>]*id="docs-internal-guid[^"]*"[^>]*><\/span>/i', '', $html);
-
-    //     // 5. Convert <font> to <span> (Deprecated tag fix)
-    //     $html = preg_replace_callback(
-    //         '/<font([^>]*)>(.*?)<\/font>/is',
-    //         function ($matches) {
-    //             $attrs = $matches[1];
-    //             $content = $matches[2];
-    //             // Extract color if present
-    //             if (preg_match('/color=["\']?([^"\']*)["\']?/i', $attrs, $c)) {
-    //                 return '<span style="color:' . $c[1] . '">' . $content . '</span>';
-    //             }
-    //             return '<span>' . $content . '</span>';
-    //         },
-    //         $html
-    //     );
-
-    //     // 6. Fix "RGB" colors to Hex (PHPWord struggles with rgb() css)
-    //     $html = preg_replace_callback(
-    //         '/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i',
-    //         function ($m) {
-    //             return sprintf("#%02x%02x%02x", $m[1], $m[2], $m[3]);
-    //         },
-    //         $html
-    //     );
-
-    //     // 7. Remove problematic attributes
-    //     $html = preg_replace('/\s(class|dir|align|valign)=["\'][^"\']*["\']/i', '', $html);
-
-    //     // 8. Final cleanup of empty tags
-    //     $html = preg_replace('/<span[^>]*>\s*<\/span>/i', '', $html);
-
-    //     return $html;
-    // }
 
     private function sanitizeHtmlForPhpWord($html)
     {
@@ -1085,7 +1163,8 @@ class BTORController extends Controller
             'monitoring',
             'kunjungan',
             'konsultasi',
-            'lainnya'
+            'lainnya',
+            'penanggungJawab.jabatan'
         ];
 
         foreach ($relationships as $relation) {
@@ -1154,12 +1233,12 @@ class BTORController extends Controller
         $table = $section->addTable($tableStyle);
 
         // Header Style
-        $headerFontStyle = ['bold' => true, 'size' => 9, 'color' => 'FFFFFF']; // White Text
-        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 120];
+        $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF']; // White Text
+        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 60, 'spaceAfter' => 60];
         $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
 
         // Header row
-        $headerCells = ['No', 'Lokasi', 'Desa', 'Kecamatan', 'Kabupaten', 'Provinsi', 'Koordinat'];
+        $headerCells = ['No', __('btor.lokasi'), __('btor.desa'), __('btor.kecamatan'), __('btor.kabupaten'), __('btor.provinsi'), __('btor.koordinat')];
         $row = $table->addRow();
         foreach ($headerCells as $cell) {
             // We define specific widths for columns so they don't look uneven
@@ -1217,16 +1296,16 @@ class BTORController extends Controller
 
         // Header Style
         $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF']; // White Text
-        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => 'center', 'spaceBefore' => 120];
+        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => 'center', 'spaceBefore' => 60];
         $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
-        $cellStyles = ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 120];
+        $cellStyles = ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 60];
 
         // Header
-        $headers = ['Kategori', 'Perempuan', 'Laki-laki', 'Sub Total'];
+        $headers = [__('btor.penerima_manfaat'), __('btor.perempuan'), __('btor.laki_laki'), __('btor.lainnya'),__('btor.sub_total')];
         $row = $table->addRow();
         foreach ($headers as $header) {
             // 'Kategori' gets more space, others are equal
-            $width = ($header === 'Kategori') ? 2000 : 1000;
+            $width = ($header === __('btor.penerima_manfaat')) ? 2000 : 1000;
             $row->addCell($width, $headerCellStyles)->addText(
                 $header,
                 $headerFontStyle,
@@ -1237,33 +1316,37 @@ class BTORController extends Controller
         // Data rows - using (int) to handle nulls safely
         $this->addTableRow(
             $table,
-            'Dewasa (25-59 tahun)',
+            __('btor.umur_25_59'),
             (int)$kegiatan->penerimamanfaatdewasaperempuan,
             (int)$kegiatan->penerimamanfaatdewasalakilaki,
+            (int)$kegiatan->penerimamanfaatdewasalainnya,
             (int)$kegiatan->penerimamanfaatdewasatotal,
         );
 
         $this->addTableRow(
             $table,
-            'Lansia (60+ tahun)',
+            __('btor.umur_60_ke_atas'),
             (int)$kegiatan->penerimamanfaatlansiaperempuan,
             (int)$kegiatan->penerimamanfaatlansialakilaki,
+            (int)$kegiatan->penerimamanfaatlansialainnya,
             (int)$kegiatan->penerimamanfaatlansiatotal,
         );
 
         $this->addTableRow(
             $table,
-            'Remaja (18-24 tahun)',
+            __('btor.umur_18_24'),
             (int)$kegiatan->penerimamanfaatremajaperempuan,
             (int)$kegiatan->penerimamanfaatremajalakilaki,
+            (int)$kegiatan->penerimamanfaatremajalainnya,
             (int)$kegiatan->penerimamanfaatremajatotal,
         );
 
         $this->addTableRow(
             $table,
-            'Anak (< 18 tahun)',
+            __('btor.umur_18_kebawah'),
             (int)$kegiatan->penerimamanfaatanakperempuan,
             (int)$kegiatan->penerimamanfaatanaklakilaki,
+            (int)$kegiatan->penerimamanfaatanaklainnya,
             (int)$kegiatan->penerimamanfaatanaktotal,
         );
 
@@ -1271,34 +1354,132 @@ class BTORController extends Controller
         $row = $table->addRow();
 
         // Cell 1: Label
-        $row->addCell(2000)->addText('GRAND TOTAL', $labelStyle, $headerParagraphStyle);
+        $row->addCell(2000)->addText(strtoupper(__('btor.grand_total')), $labelStyle, $headerParagraphStyle);
 
         // Cell 2: Total Perempuan
         $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaatperempuantotal ?? 0),
-            $labelStyle,
+            $labelStyle,$headerParagraphStyle,
             ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
 
         // Cell 3: Total Laki-laki
         $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0),
-            $labelStyle,
+            $labelStyle,$headerParagraphStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+        // Cell 4: Total Lainnya
+        $row->addCell(1000)->addText(
+            (string)($kegiatan->penerimamanfaatlainnyatotal ?? 0),
+            $labelStyle,$headerParagraphStyle,
             ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
 
-        // Cell 4: Overall Total
+        // Cell 5: Overall Total
         $row->addCell(1000)->addText(
             (string)($kegiatan->penerimamanfaattotal ?? 0),
-            $labelStyle,
+            $labelStyle,$headerParagraphStyle,
             ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );
     }
 
+    // Tabel Disagregasi Berdasarkan Kelompok Khusus
+    private function addSpecialGroupTable($section, $kegiatan)
+    {
+        $hBodyStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+        $labelStyle = array_merge($hBodyStyle, ['bold' => true]);
+
+        $tableStyle = [
+            'borderSize' => 6,
+            'borderColor' => '000000',
+            'width' => 5000,
+            'unit' => 'pct',
+            'alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER,
+        ];
+
+        $table = $section->addTable($tableStyle);
+
+        // Header Style
+        $headerFontStyle = ['bold' => true, 'size' => 10, 'color' => 'FFFFFF']; // White Text
+        $headerParagraphStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'valign' => 'center', 'spaceBefore' => 60];
+        $headerCellStyles = ['bgColor' => '385623', 'valign' => 'center'];
+        $cellStyles = ['valign' => 'center', 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceBefore' => 60];
+
+
+        $headers = [__('btor.penerima_manfaat'), __('btor.perempuan'), __('btor.laki_laki'), __('btor.lainnya'),__('btor.sub_total')];
+        
+        $row = $table->addRow();
+        foreach ($headers as $header) {
+            // 'Kategori' gets more space, others are equal
+            $width = ($header === __('btor.penerima_manfaat')) ? 2000 : 1000;
+            $row->addCell($width, $headerCellStyles)->addText(
+                $header,
+                $headerFontStyle,
+                $headerParagraphStyle
+            );
+        }
+
+        $this->addTableRow(
+            $table,
+            __('btor.penyandang_disabilitas'),
+            (int)$kegiatan->penerimamanfaatdisabilitasperempuan,
+            (int)$kegiatan->penerimamanfaatdisabilitaslakilaki,
+            (int)$kegiatan->penerimamanfaatdisabilitaslainnya,
+            (int)$kegiatan->penerimamanfaatdisabilitastotal,
+        );
+
+        $this->addTableRow(
+            $table,
+            __('btor.non_disabilitas'),
+            (int)$kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0,
+            (int)$kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0,
+            (int)$kegiatan->penerimamanfaatnondisabilitaslainnya ?? 0,
+            (int)$kegiatan->penerimamanfaatnondisabilitastotal ?? 0,
+        );
+
+        $this->addTableRow(
+            $table,
+            __('btor.kelompok_marjinal_lainnya'),
+            (int)$kegiatan->penerimamanfaatmarjinalperempuan ?? 0,
+            (int)$kegiatan->penerimamanfaatmarjinallakilaki ?? 0,
+            (int)$kegiatan->penerimamanfaatmarjinallainnya ?? 0,
+            (int)$kegiatan->penerimamanfaatmarjinaltotal ?? 0,
+        );
+
+        // Grand Total Row
+        $row = $table->addRow();
+        $row->addCell(2000)->addText(strtoupper(__('btor.grand_total')), $labelStyle, $headerParagraphStyle);
+
+        $row->addCell(1000)->addText(
+            (string)($kegiatan->penerimamanfaatperempuantotal ?? 0),
+            $labelStyle,$headerParagraphStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+        $row->addCell(1000)->addText(
+            (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0),
+            $labelStyle,$headerParagraphStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+        $row->addCell(1000)->addText(
+            (string)($kegiatan->penerimamanfaatlainnyatotal ?? 0),
+            $labelStyle,$headerParagraphStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+
+        // Cell 5: Overall Total
+        $row->addCell(1000)->addText(
+            (string)($kegiatan->penerimamanfaattotal ?? 0),
+            $labelStyle,$headerParagraphStyle,
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+    }
+    
+
     /**
      * Add table row with proper formatting
      */
-    private function addTableRow($table, $label, $female, $male, $total)
+    private function addTableRow($table, $label, $female, $male, $lainnya, $total)
     {
         $row = $table->addRow();
 
@@ -1312,6 +1493,12 @@ class BTORController extends Controller
 
         $row->addCell(2500)->addText(
             (string)($male ?? 0),
+            ['size' => 10],
+            ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
+        );
+
+        $row->addCell(2500)->addText(
+            (string)($lainnya ?? 0),
             ['size' => 10],
             ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]
         );

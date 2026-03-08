@@ -49,6 +49,7 @@
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                        <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('btor.lainnya') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.total') }}</th>
                     </tr>
                 </thead>
@@ -63,6 +64,9 @@
                         </td>
                         <td class="pl-1">
                             <input type="number" id="penerimamanfaatdewasalakilaki" name="penerimamanfaatdewasalakilaki" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
+                        </td>
+                        <td class="pl-1">
+                            <input type="number" id="penerimamanfaatdewasalainnya" name="penerimamanfaatdewasalainnya" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
                         </td>
                         <td class="pl-1 pr-1">
                             <input type="number" readonly id="penerimamanfaatdewasatotal" name="penerimamanfaatdewasatotal" class="form-control-border border-width-2 form-control form-control-sm">
@@ -79,6 +83,9 @@
                         <td class="pl-1">
                             <input type="number" id="penerimamanfaatlansialakilaki" name="penerimamanfaatlansialakilaki" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
                         </td>
+                        <td class="pl-1">
+                            <input type="number" id="penerimamanfaatlansialainnya" name="penerimamanfaatlansialainnya" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
+                        </td>
                         <td class="pl-1 pr-1">
                             <input type="number" readonly id="penerimamanfaatlansiatotal" name="penerimamanfaatlansiatotal" class="form-control-border border-width-2 form-control form-control-sm">
                         </td>
@@ -93,6 +100,9 @@
                         </td>
                         <td class="pl-1">
                             <input type="number" id="penerimamanfaatremajalakilaki" name="penerimamanfaatremajalakilaki" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
+                        </td>
+                        <td class="pl-1">
+                            <input type="number" id="penerimamanfaatremajalainnya" name="penerimamanfaatremajalainnya" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
                         </td>
                         <td class="pl-1 pr-1">
                             <input type="number" readonly id="penerimamanfaatremajatotal" name="penerimamanfaatremajatotal" class="form-control-border border-width-2 form-control form-control-sm">
@@ -109,6 +119,9 @@
                         <td class="pl-1">
                             <input type="number" id="penerimamanfaatanaklakilaki" name="penerimamanfaatanaklakilaki" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
                         </td>
+                        <td class="pl-1">
+                            <input type="number" id="penerimamanfaatanaklainnya" name="penerimamanfaatanaklainnya" class="calculate form-control-border border-width-2 form-control form-control-sm" placeholder="0">
+                        </td>
                         <td class="pl-1 pr-1">
                             <input type="number" readonly id="penerimamanfaatanaktotal" name="penerimamanfaatanaktotal" class="form-control-border border-width-2 form-control form-control-sm">
                         </td>
@@ -120,6 +133,9 @@
                         </th>
                         <th class="pl-1">
                             <input type="number" readonly id="penerimamanfaatlakilakitotal" name="penerimamanfaatlakilakitotal" class="form-control-border border-width-2 form-control form-control-sm">
+                        </th>
+                        <th class="pl-1">
+                            <input type="number" readonly id="penerimamanfaatlainnyatotal" name="penerimamanfaatlakilakitotal" class="form-control-border border-width-2 form-control form-control-sm">
                         </th>
                         <th class="pl-1 pr-1">
                             <input type="number" readonly id="penerimamanfaattotal" name="penerimamanfaattotal" class="form-control-border border-width-2 form-control form-control-sm">
@@ -150,6 +166,7 @@
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.peserta') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.wanita') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.pria') }}</th>
+                        <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('btor.lainnya') }}</th>
                         <th class="align-middle text-white fw-normal text-sm px-2 py-1 py-2 border-start border-secondary">{{ __('cruds.kegiatan.peserta.total') }}</th>
                     </tr>
                 </thead>
@@ -164,6 +181,9 @@
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
                             <input type="number" id="penerimamanfaatdisabilitaslakilaki" name="penerimamanfaatdisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
+                        </td>
+                        <td colspan="1" width="10%" class="pl-1">
+                            <input type="number" id="penerimamanfaatdisabilitaslainnya" name="penerimamanfaatdisabilitaslainnya" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
                             <input type="number" id="penerimamanfaatdisabilitastotal" name="penerimamanfaatdisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
@@ -180,6 +200,9 @@
                         <td colspan="1" width="10%" class="pl-1">
                             <input type="number" id="penerimamanfaatnondisabilitaslakilaki" name="penerimamanfaatnondisabilitaslakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
+                        <td colspan="1" width="10%" class="pl-1">
+                            <input type="number" id="penerimamanfaatnondisabilitaslainnya" name="penerimamanfaatnondisabilitaslainnya" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
+                        </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
                             <input type="number" id="penerimamanfaatnondisabilitastotal" name="penerimamanfaatnondisabilitastotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
@@ -195,6 +218,9 @@
                         <td colspan="1" width="10%" class="pl-1">
                             <input type="number" id="penerimamanfaatmarjinallakilaki" name="penerimamanfaatmarjinallakilaki" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
                         </td>
+                        <td colspan="1" width="10%" class="pl-1">
+                            <input type="number" id="penerimamanfaatmarjinallainnya" name="penerimamanfaatmarjinallainnya" class="form-control-border border-width-2 form-control form-control-sm hitung-difabel" placeholder="0">
+                        </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
                             <input type="number" id="penerimamanfaatmarjinaltotal" name="penerimamanfaatmarjinaltotal" class="form-control-border border-width-2 form-control form-control-sm" readonly>
                         </td>
@@ -209,6 +235,9 @@
                         </td>
                         <td colspan="1" width="10%" class="pl-1">
                             <input type="number" id="total_beneficiaries_lakilaki" name="total_beneficiaries_lakilaki" class="form-control-border border-width-2 form-control form-control-sm" readonly placeholder="0">
+                        </td>
+                        <td colspan="1" width="10%" class="pl-1">
+                            <input type="number" id="total_beneficiaries_lainnya" name="total_beneficiaries_lainnya" class="form-control-border border-width-2 form-control form-control-sm" readonly placeholder="0">
                         </td>
                         <td colspan="1" width="10%" class="pl-1 pr-1">
                             <input type="number" id="beneficiaries_difable_total" name="beneficiaries_difable_total" class="form-control-border border-width-2 form-control form-control-sm" readonly>
