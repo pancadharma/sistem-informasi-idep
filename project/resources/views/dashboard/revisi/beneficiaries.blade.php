@@ -52,7 +52,7 @@
                     <p>{{ __('dashboard.dashboard.beneficiary.statistics.family') }}</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-users"></i>
+                    <i class="material-symbols-outlined">family_restroom</i>
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
                     <p>{{ __('dashboard.dashboard.beneficiary.statistics.child_female') }}</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-child-dress"></i>
+                    <i class="material-symbols-outlined">girl</i>
                 </div>
             </div>
         </div>
@@ -117,6 +117,17 @@
                 </div>
                 <div class="icon">
                     <i class="fas fa-wheelchair"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3 id="lainnya">0</h3>
+                    <p>{{ __('btor.lainnya') }}</p>
+                </div>
+                <div class="icon">
+                    <i class="material-symbols-outlined">transgender</i>
                 </div>
             </div>
         </div>
@@ -484,6 +495,7 @@
             $('#childrenMale').text((stats.childrenMale || 0).toLocaleString('id-ID'));
             $('#childrenFemale').text((stats.childrenFemale || 0).toLocaleString('id-ID'));
             $('#disability').text((stats.disability || 0).toLocaleString('id-ID'));
+            $('#lainnya').text((stats.lainnyaBeneficiaries || 0).toLocaleString('id-ID'));
             $('#families').text((stats.families || 0).toLocaleString('id-ID'));
         }
         
