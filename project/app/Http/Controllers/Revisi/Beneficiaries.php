@@ -429,6 +429,7 @@ class Beneficiaries extends Controller
         $genderData = $this->getGenderDistribution($programIds, $provinsiId, $tahun);
         $maleTotal = $genderData->where('jenis_kelamin', 'Laki-laki')->first()['total'] ?? 0;
         $femaleTotal = $genderData->where('jenis_kelamin', 'Perempuan')->first()['total'] ?? 0;
+        $lainnyaTotal = $genderData->where('jenis_kelamin', 'Lainnya')->first()['total'] ?? 0;
 
         // Children Male (< 18)
         $childrenMale = (clone $beneficiaryQuery)->where('umur', '<', 18)
@@ -442,6 +443,11 @@ class Beneficiaries extends Controller
             ->where(function ($q) {
                 $q->where('jenis_kelamin', 'P')
                     ->orWhere('jenis_kelamin', 'LIKE', 'perempuan');
+            })->count();
+
+        $childrenLainnya = (clone $beneficiaryQuery)->where('umur', '<', 18)
+            ->where(function ($q) {
+                $q->where('jenis_kelamin', 'Lainnya');
             })->count();
 
         // Families (Heads of Family)
@@ -459,9 +465,11 @@ class Beneficiaries extends Controller
             'totalBeneficiaries' => $beneficiaryQuery->count(),
             'femaleBeneficiaries' => $femaleTotal, // Keep existing keys
             'maleBeneficiaries' => $maleTotal,
+            'lainnyaBeneficiaries' => $lainnyaTotal,
             // Add new keys
             'childrenMale' => $childrenMale,
             'childrenFemale' => $childrenFemale,
+            'childrenLainnya' => $childrenLainnya,
             'families' => $families,
             'disability' => $disability,
         ];
