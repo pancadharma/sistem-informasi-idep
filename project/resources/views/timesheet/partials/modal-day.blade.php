@@ -66,16 +66,16 @@
                     {{-- TABLE AKTIVITAS --}}
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle"
-                               id="activityTable">
+                               id="activityTable" style="width: 100%; table-layout: fixed;">
                             <thead class="thead-light text-center">
                                 <tr>
-                                    <th>Area</th>
-                                    <th>Lokasi Kerja</th>
-                                    <th width="100">Jam</th>
-                                    <th>Program</th>
-                                    <th>Donor</th>
-                                    <th>Kegiatan</th>
-                                    <th width="60">Aksi</th>
+                                    <th style="width: 15%">Area</th>
+                                    <th style="width: 15%">Lokasi Kerja</th>
+                                    <th style="width: 8%">Jam</th>
+                                    <th style="width: 20%">Program</th>
+                                    <th style="width: 15%">Donor</th>
+                                    <th style="width: 20%">Kegiatan</th>
+                                    <th style="width: 7%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
