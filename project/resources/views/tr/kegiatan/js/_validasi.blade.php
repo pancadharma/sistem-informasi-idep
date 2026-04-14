@@ -1,5 +1,38 @@
 <script>
     $(document).ready(function() {
+
+
+        // --- PRE-CONFIRMATION FOR COMPLETED STATUS ---
+        $('#status').on('select2:selecting', function(e) {
+            const newValue = e.params.args.data.id;
+            const $el = $(this);
+            const previousValue = $el.val();
+
+            // Only trigger if changing TO completed
+            if (newValue === 'completed') {
+                e.preventDefault(); // Pause the selection
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Mengubah status menjadi 'Completed' akan mengunci beberapa field dan membutuhkan validasi data yang lengkap.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Selesaikan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User confirmed: Manually set the value and trigger change
+                        $el.val('completed').trigger('change.select2');
+                    } else {
+                        // User cancelled: Keep the old value
+                        $el.val(previousValue).trigger('change.select2');
+                    }
+                });
+            }
+        });
+
         // Permission and initial-status logic
         const CAN_EDIT_STATUS_KEGIATAN = {{ (auth()->user()->id == 1 || (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('Administrator')) || auth()->user()->can('kegiatan_status_edit')) ? 'true' : 'false' }};
         const INITIALLY_COMPLETED_KEGIATAN = '{{ $kegiatan->status ?? '' }}' === 'completed';
@@ -35,30 +68,18 @@
         if (INITIALLY_COMPLETED_KEGIATAN && !CAN_EDIT_STATUS_KEGIATAN) {
             $('#update_kegiatan').prop('disabled', true);
             if (typeof toastr !== 'undefined') {
-                toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+                // toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+                    Swal.fire({
+                        icon: "error",
+                        title: "Update this {{ __('cruds.kegiatan.label') }}",
+                        html: `<div style="text-align: left;">
+                            <p>Kegiatan is already completed. Not allowed to update unless Administrator only</p>
+                            </div>`,
+                    });
             } else if (typeof Swal !== 'undefined') {
                 Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Kegiatan is already completed. Not allowed to update unless Administrator only.', showConfirmButton: false, timer: 3000 });
             }
         }
-        function validasiProgramIDActivityID() {
-            let program_id = $('#program_id').val();
-            let kode_program = $('#kode_program').val();
-            let activity_id = $('#programoutcomeoutputactivity_id').val();
-
-            // Check if either program_id and activity_id is empty or invalid
-            if (!program_id && !activity_id) {
-                return false;
-            }
-            if (isNaN(program_id) || isNaN(activity_id)) {
-                return false;
-            }
-            if (program_id !== '' && activity_id !== '') {
-                return false;
-            }
-
-            return true;
-        }
-
         let errorMessage = '';
 
         function validateForm() {
@@ -279,48 +300,114 @@
             $(selector).next('.select2-container').find('.select2-selection').addClass('is-valid-select2');
         }
 
+        // function validasiProgramIDActivityID() {
+        //     let program_id = $('#program_id').val();
+        //     let kode_program = $('#kode_program').val();
+        //     let activity_id = $('#programoutcomeoutputactivity_id').val();
+
+        //     // Check if either program_id and activity_id is empty or invalid
+        //     if (!program_id && !activity_id) {
+        //         return false;
+        //     }
+        //     if (isNaN(program_id) || isNaN(activity_id)) {
+        //         return false;
+        //     }
+        //     if (program_id !== '' && activity_id !== '') {
+        //         return false;
+        //     }
+
+        //     return true;
+        // }
+
+        // function validasiProgramIDActivityID() {
+        //     let isValid = true;
+        //     let message = '';
+
+        //     let program_id = $('#program_id').val();
+        //     let activity_id = $('#programoutcomeoutputactivity_id').val();
+
+        //     let programError = false;
+        //     let activityError = false;
+
+        //     if (!program_id) {
+        //         isValid = false;
+        //         programError = true;
+        //         $('#kode_program, #nama_program').addClass('is-invalid');
+        //     } else {
+        //         $('#kode_program, #nama_program').removeClass('is-invalid');
+        //         $('#kode_program, #nama_program').addClass('is-valid');
+        //     }
+
+        //     if (!activity_id) {
+        //         isValid = false;
+        //         activityError = true;
+        //         $('#kode_kegiatan, #nama_kegiatan').addClass('is-invalid');
+        //     } else {
+        //         $('#kode_kegiatan, #nama_kegiatan').removeClass('is-invalid');
+        //         $('#kode_kegiatan, #nama_kegiatan').addClass('is-valid');
+        //     }
+
+        //     if (programError && activityError) {
+        //         message = '{{ __('cruds.kegiatan.validate.program_activity') }}';
+        //     } else if (programError) {
+        //         message = '{{ __('cruds.kegiatan.validate.program') }}';
+        //     } else if (activityError) {
+        //         message = '{{ __('cruds.kegiatan.validate.activity') }}';
+        //     }
+
+        //     return {
+        //         isValid: isValid,
+        //         message: message
+        //     };
+        // }
+
         function validasiProgramIDActivityID() {
-            let isValid = true;
+            const programId = $('#program_id').val();
+            const activityId = $('#programoutcomeoutputactivity_id').val();
+
+            // 2. Define the validation targets
+            const fields = [
+                {
+                    id: programId,
+                    elements: $('#kode_program, #nama_program'),
+                    errorKey: 'program'
+                },
+                {
+                    id: activityId,
+                    elements: $('#kode_kegiatan, #nama_kegiatan'),
+                    errorKey: 'activity'
+                }
+            ];
+
+            let errors = [];
+
+            // 3. Process validation and UI updates
+            fields.forEach(field => {
+                const isInvalid = !field.id || isNaN(field.id);
+
+                if (isInvalid) {
+                    field.elements.addClass('is-invalid').removeClass('is-valid');
+                    errors.push(field.errorKey);
+                } else {
+                    field.elements.addClass('is-invalid').removeClass('is-valid');
+                }
+            });
+
+            // 4. Determine localized message based on which fields failed
             let message = '';
-
-            let program_id = $('#program_id').val();
-            let activity_id = $('#programoutcomeoutputactivity_id').val();
-
-            let programError = false;
-            let activityError = false;
-
-            if (!program_id) {
-                isValid = false;
-                programError = true;
-                $('#kode_program, #nama_program').addClass('is-invalid');
-            } else {
-                $('#kode_program, #nama_program').removeClass('is-invalid');
-                $('#kode_program, #nama_program').addClass('is-valid');
-            }
-
-            if (!activity_id) {
-                isValid = false;
-                activityError = true;
-                $('#kode_kegiatan, #nama_kegiatan').addClass('is-invalid');
-            } else {
-                $('#kode_kegiatan, #nama_kegiatan').removeClass('is-invalid');
-                $('#kode_kegiatan, #nama_kegiatan').addClass('is-valid');
-            }
-
-            if (programError && activityError) {
-                message = '{{ __('cruds.kegiatan.validate.program_activity') }}';
-            } else if (programError) {
-                message = '{{ __('cruds.kegiatan.validate.program') }}';
-            } else if (activityError) {
-                message = '{{ __('cruds.kegiatan.validate.activity') }}';
+            if (errors.includes('program') && errors.includes('activity')) {
+                message = "{{ __('cruds.kegiatan.validate.program_activity') }}";
+            } else if (errors.includes('program')) {
+                message = "{{ __('cruds.kegiatan.validate.program') }}";
+            } else if (errors.includes('activity')) {
+                message = "{{ __('cruds.kegiatan.validate.activity') }}";
             }
 
             return {
-                isValid: isValid,
+                isValid: errors.length === 0,
                 message: message
             };
         }
-
 
         function validateStatusComplete(){
             const fieldNameMapping = {
@@ -338,12 +425,19 @@
                 // 'deskripsikeluaran': 'Deskripsi Keluaran',
                 'penerimamanfaatdewasaperempuan': 'Penerima Manfaat Dewasa Perempuan',
                 'penerimamanfaatdewasalakilaki': 'Penerima Manfaat Dewasa Laki-laki',
+                'penerimamanfaatdewasalainnya': 'Penerima Manfaat Dewasa Lainnya',
+                
                 'penerimamanfaatlansiaperempuan': 'Penerima Manfaat Lansia Perempuan',
                 'penerimamanfaatlansialakilaki': 'Penerima Manfaat Lansia Laki-laki',
+                'penerimamanfaatlansialainnya': 'Penerima Manfaat Lansia Lainnya',
+                
                 'penerimamanfaatremajaperempuan': 'Penerima Manfaat Remaja Perempuan',
                 'penerimamanfaatremajalakilaki': 'Penerima Manfaat Remaja Laki-laki',
+                'penerimamanfaatremajalainnya': 'Penerima Manfaat Remaja Lainnya',
+
                 'penerimamanfaatanakperempuan': 'Penerima Manfaat Anak Perempuan',
-                'penerimamanfaatanaklakilaki': 'Penerima Manfaat Anak Laki-laki'
+                'penerimamanfaatanaklakilaki': 'Penerima Manfaat Anak Laki-laki',
+                'penerimamanfaatanaklainnya': 'Penerima Manfaat Anak Lainnya'
             };
 
             if ($('#status').val() === 'completed') {
@@ -463,7 +557,7 @@
                                 .replace(/_/g, ' ') // snake_case to space
                                 .replace(/\b\w/g, l => l.toUpperCase()) // capitalize first letters
                                 .trim();
-                                console.log("Test 1");
+                                // console.log("Test 1");
                             } else if ($dynamicElement.attr('placeholder')) {
                                 dynamicFieldName = $dynamicElement.attr('placeholder');
                                 // console.log("Test 2");
@@ -532,7 +626,7 @@
                                 .replace(/_/g, ' ') // snake_case to space
                                 .replace(/\b\w/g, l => l.toUpperCase()) // capitalize first letters
                                 .trim();
-                                console.log("Test 1");
+                                // console.log("Test 1");
                             } else if ($dynamicElement.attr('placeholder')) {
                                 dynamicFieldName = $dynamicElement.attr('placeholder');
                                 // console.log("Test 2");
@@ -591,12 +685,20 @@
                 const beneficiaryFields = [
                     '#penerimamanfaatdewasaperempuan',
                     '#penerimamanfaatdewasalakilaki',
+                    '#penerimamanfaatdewasalainnya',
+
                     '#penerimamanfaatlansiaperempuan',
                     '#penerimamanfaatlansialakilaki',
+                    '#penerimamanfaatlansialainnya',
+
                     '#penerimamanfaatremajaperempuan',
                     '#penerimamanfaatremajalakilaki',
+                    '#penerimamanfaatremajalainnya',
+
                     '#penerimamanfaatanakperempuan',
-                    '#penerimamanfaatanaklakilaki'
+                    '#penerimamanfaatanaklakilaki',
+                    '#penerimamanfaatanaklainnya'
+                    
                 ];
 
                 let hasBeneficiaryData = false;
@@ -667,18 +769,95 @@
                         }, 500);
                     }
                 } else {
-                    // Show loading state
+                    // $('#updateKegiatan').submit();
+                    let formData = new FormData($('#updateKegiatan')[0]);
                     Swal.fire({
-                        title: 'Memproses...',
-                        text: 'Sedang menyimpan data',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
+                        title: '{{ __('global.areYouSure') }}',
+                        html: `<div style="text-align: left;">
+                            <p>
+                                {{ __('cruds.kegiatan.validate.update_kegiatan') }}
+                                 <br />
+                                 Change {{ __('cruds.kegiatan.label') }} as <span class="badge bg-danger">completed</span>.
+                            </p>
+                            <ul style="padding-left: 20px;">${errorMessages.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+                        icon: 'warning',
+                        showCancelButton: false,
+                        showDenyButton: true,
+                        showConfirmButton: true,
+                        denyButtonText: '{{ __('global.no') }}',
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + '!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Show loading state
+                            $.ajax({
+                                url: url_update,
+                                type: 'POST', // Use POST with _method=PUT for Laravel
+                                data: formData,
+                                method: 'POST',
+                                processData: false,
+                                contentType: false,
+                                cache: false,
+                                beforeSend: function(){
+                                    Swal.fire({
+                                        title: 'Updating...',
+                                        text: 'Please wait while we save your data.',
+                                        allowOutsideClick: false,
+                                        timer: 4000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        },
+                                        icon: 'info',
+                                    });
+
+                                    console.log("Sending Update", FormData)
+                                },
+                                success: function(response) {
+                                    console.log("Update Completed Status ?", response);
+                                    Swal.hideLoading()
+                                    Swal.fire({
+                                        title: '{{ __('global.response.success') }}',
+                                        text: '{{ __('global.response.save_success') }}',
+                                        icon: 'success',
+                                        showDenyButton: true,
+                                        showCancelButton: false,
+                                        confirmButtonText: "Keep Editing {{ __('cruds.kegiatan.label') }}",
+                                        denyButtonText: "Back to List {{ __('cruds.kegiatan.label') }}",
+                                        
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            
+                                        } else if (result.isDenied) {
+                                            window.location.href = "{{ route('kegiatan.index') }}";
+                                        }
+                                    });
+                                },
+                                error: function(xhr) {
+                                    let errorMessage = xhr.responseJSON?.message || '{{ __('global.response.save_failed') }}';
+                                    Swal.fire({
+                                        title: '{{ __('global.error') }}',
+                                        text: errorMessage,
+                                        icon: 'error'
+                                    });
+                                }
+                            });
+                            
+                            // Swal.fire({
+                            //     icon: "info",
+                            //     title: "Updating",
+                            //     text: "data being submited...",
+                            //     timer: 2000,
+                            //     timerProgressBar: true,
+                            // });
+                            // setTimeout(() => {
+                            //     $('#updateKegiatan').submit();
+                            // }, 2000);
+                        } else if (result.isDenied){
+                            Swal.fire("Changes are not saved", "", "info");
                         }
                     });
-
-                    $('#updateKegiatan').submit();
                 }
             }
 
@@ -705,14 +884,32 @@
             }
         }
 
+        let url_update = "{{ route('kegiatan.update', $kegiatan->id) }}"
+
         $('#update_kegiatan').on('click', function(e) {
             e.preventDefault();
 
             if (INITIALLY_COMPLETED_KEGIATAN && !CAN_EDIT_STATUS_KEGIATAN) {
                 if (typeof toastr !== 'undefined') {
-                    toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+                    // toastr.error('Kegiatan is already completed. Not allowed to update unless Administrator only.');
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Update this {{ __('cruds.kegiatan.label') }}",
+                        html: `<div style="text-align: left;">
+                            <p>Kegiatan is already completed. 
+                                <br>
+                                Not allowed to update unless Administrator only</p>
+                            </div>`,
+                    });
+
+
                 } else if (typeof Swal !== 'undefined') {
-                    Swal.fire({ icon: 'error', title: 'Action not allowed', text: 'Kegiatan is already completed. Not allowed to update unless Administrator only.'});
+                    Swal.fire({ 
+                        icon: 'error', 
+                        title: 'Action not allowed', 
+                        text: 'Kegiatan is already completed. Not allowed to update unless Administrator only.'
+                    });
                 }
                 return false;
             }
@@ -739,33 +936,25 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('_method', 'PUT'); // Laravel requires _method for PUT in forms
 
-            let url_update = "{{ route('kegiatan.update', $kegiatan->id) }}";
-
             // Optional: Log form data for debugging
             let serializedData = $("#updateKegiatan").serializeArray();
             let displayData = serializedData.map(item => `${item.name}: ${item.value}`).join('\n');
-            console.log(`Form Data:\n${displayData}`);
+            // console.log(`Form Data:\n${displayData}`);
 
             Swal.fire({
                 title: '{{ __('global.areYouSure') }}',
                 text: '{{ __('cruds.kegiatan.validate.update_kegiatan') }}',
                 icon: 'warning',
-                showCancelButton: true,
+                showCancelButton: false,
+                showDenyButton: true,
+                showConfirmButton: true,
+                denyButtonText: '{{ __('global.no') }}',
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: '{{ __('global.yes') }}' + ', ' + '{{ __('global.save') }}' + '!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Show loading state
-                    Swal.fire({
-                        title: 'Processing...',
-                        text: 'Please wait while we save your data.',
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-
                     $.ajax({
                         url: url_update,
                         type: 'POST', // Use POST with _method=PUT for Laravel
@@ -774,15 +963,34 @@
                         processData: false,
                         contentType: false,
                         cache: false,
+                        beforeSend: function(jqXHR){
+                            Swal.fire({
+                                title: 'Updating...',
+                                text: 'Please wait while we save your data.',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                            console.log("Request is about to be sent", formData);
+                        },
                         success: function(response) {
-                            // Admin\KegiatanController@update redirects, so we may not get JSON
-                            // Handle redirect manually or adjust backend to return JSON
+                            console.log("Response", response);
+                            Swal.hideLoading();
                             Swal.fire({
                                 title: '{{ __('global.response.success') }}',
                                 text: '{{ __('global.response.save_success') }}',
-                                icon: 'success'
-                            }).then(() => {
-                                window.location.href = "{{ route('kegiatan.index') }}";
+                                icon: 'success',
+                                showDenyButton: true,
+                                showCancelButton: false,
+                                confirmButtonText: "Stay Editing",
+                                denyButtonText: "Back to List {{ __('cruds.kegiatan.label') }}",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    
+                                } else if (result.isDenied) {
+                                    window.location.href = "{{ route('kegiatan.index') }}";
+                                }
                             });
                         },
                         error: function(xhr) {
@@ -826,71 +1034,71 @@
 
     });
 
-        $(document).on('paste', '.lat-input, .lang-input', function(e) {
-            e.preventDefault();
-            const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
-            const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
+    $(document).on('paste', '.lat-input, .lang-input', function(e) {
+        e.preventDefault();
+        const pasteData = (e.originalEvent.clipboardData || window.clipboardData).getData('text');
+        const coords = pasteData.split(/[,;\s]+/).map(coord => coord.trim()).filter(coord => coord !== '');
 
-            const isLatField = $(this).hasClass('lat-input');
-            const isLngField = $(this).hasClass('lang-input');
-            const row = $(this).closest('.lokasi-kegiatan');
-            const latInput = row.find('.lat-input');
-            const lngInput = row.find('.lang-input');
+        const isLatField = $(this).hasClass('lat-input');
+        const isLngField = $(this).hasClass('lang-input');
+        const row = $(this).closest('.lokasi-kegiatan');
+        const latInput = row.find('.lat-input');
+        const lngInput = row.find('.lang-input');
 
-            // Case 1: Pair "lat, lng"
-            if (coords.length === 2) {
-                const lat = parseFloat(coords[0]);
-                const lng = parseFloat(coords[1]);
-                if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
-                    latInput.val(lat.toFixed(6));
-                    lngInput.val(lng.toFixed(6));
-                    latInput.trigger('change');
-                    lngInput.trigger('change');
-                    Toast.fire({ icon: 'success', title: 'Coordinates filled successfully', timer: 1500, position: 'top-end' });
-                } else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Invalid coordinates format',
-                        text: 'Use: latitude, longitude (e.g., -8.497791, 115.275794)',
-                        timer: 3000,
-                        position: 'top-end'
-                    });
-                }
-                return;
-            }
-
-            // Case 2: Single value pasted (fill only the active field if valid)
-            if (coords.length === 1) {
-                const value = parseFloat(coords[0]);
-                if (isLatField && !isNaN(value) && value >= -90 && value <= 90) {
-                    latInput.val(value.toFixed(6));
-                    latInput.trigger('change');
-                    Toast.fire({ icon: 'success', title: 'Latitude set', timer: 1200, position: 'top-end' });
-                    return;
-                }
-                if (isLngField && !isNaN(value) && value >= -180 && value <= 180) {
-                    lngInput.val(value.toFixed(6));
-                    lngInput.trigger('change');
-                    Toast.fire({ icon: 'success', title: 'Longitude set', timer: 1200, position: 'top-end' });
-                    return;
-                }
+        // Case 1: Pair "lat, lng"
+        if (coords.length === 2) {
+            const lat = parseFloat(coords[0]);
+            const lng = parseFloat(coords[1]);
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                latInput.val(lat.toFixed(6));
+                lngInput.val(lng.toFixed(6));
+                latInput.trigger('change');
+                lngInput.trigger('change');
+                Toast.fire({ icon: 'success', title: 'Coordinates filled successfully', timer: 1500, position: 'top-end' });
+            } else {
                 Toast.fire({
                     icon: 'error',
-                    title: 'Invalid coordinate',
-                    text: isLatField ? 'Latitude must be between -90 and 90' : 'Longitude must be between -180 and 180',
-                    timer: 2500,
+                    title: 'Invalid coordinates format',
+                    text: 'Use: latitude, longitude (e.g., -8.497791, 115.275794)',
+                    timer: 3000,
                     position: 'top-end'
                 });
+            }
+            return;
+        }
+
+        // Case 2: Single value pasted (fill only the active field if valid)
+        if (coords.length === 1) {
+            const value = parseFloat(coords[0]);
+            if (isLatField && !isNaN(value) && value >= -90 && value <= 90) {
+                latInput.val(value.toFixed(6));
+                latInput.trigger('change');
+                Toast.fire({ icon: 'success', title: 'Latitude set', timer: 1200, position: 'top-end' });
                 return;
             }
-
-            // Case 3: Unsupported format
+            if (isLngField && !isNaN(value) && value >= -180 && value <= 180) {
+                lngInput.val(value.toFixed(6));
+                lngInput.trigger('change');
+                Toast.fire({ icon: 'success', title: 'Longitude set', timer: 1200, position: 'top-end' });
+                return;
+            }
             Toast.fire({
                 icon: 'error',
-                title: 'Invalid coordinates format',
-                text: 'Paste a single value or "lat, lng"',
-                timer: 3000,
+                title: 'Invalid coordinate',
+                text: isLatField ? 'Latitude must be between -90 and 90' : 'Longitude must be between -180 and 180',
+                timer: 2500,
                 position: 'top-end'
             });
+            return;
+        }
+
+        // Case 3: Unsupported format
+        Toast.fire({
+            icon: 'error',
+            title: 'Invalid coordinates format',
+            text: 'Paste a single value or "lat, lng"',
+            timer: 3000,
+            position: 'top-end'
         });
+    });
 </script>

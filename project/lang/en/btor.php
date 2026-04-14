@@ -26,6 +26,7 @@ return [
     'tanggal_mulai' => 'Start Date',
     'hari'  => 'days',
     'tanggal_selesai' => 'End Date',
+    'sektor' => 'Sector',
 
     'periode' => 'Period',
     'keterangan' => 'Remarks',
@@ -60,6 +61,8 @@ return [
     'deskripsitujuan' => 'Objectives Description',
     'deskripsikeluaran' => 'Outputs Description',
     'deskripsiyangdikaji' => 'Assessment',
+    'activity_details_results' => 'Activity Details & Results',
+    'execution_time' => 'Execution Time',
 
     'detail_kegiatan_spesifik' => 'Specific Activity Details',
     'hasil_kegiatan' => 'Activity Results',
@@ -69,7 +72,28 @@ return [
     'table_kelompok_khusus' => 'Disaggregation Table by Special Groups',
     'penyandang_disabilitas' => 'Persons with Disabilities',
     'non_disabilitas' => 'Non-disabilities',
-    'non_disabilitas' => 'Other Marginalized Groups',
+    'kelompok_marjinal_lainnya' => 'Other Marginalized Groups',
+    'participant_summary' => 'Participant Summary',
+    'total_participants' => 'Total Participants',
+    'no_data_writer' => 'No report writer data available.',
+    'no_data_docs' => 'No supporting documents available.',
+    'no_data_media' => 'No supporting media/photos available.',
+    'program_goals' => 'Program Goals',
+    'program_target' => 'Program Target',
+    'program_indicator' => 'Program Indicator',
+    'no_goals' => 'No goals defined.',
+    'age_based_participants' => 'Participants by Age',
+    'adult_range' => 'Adult (18-59 yrs)',
+    'elderly_range' => 'Elderly (>60 yrs)',
+    'youth_range' => 'Youth (12-17 yrs)',
+    'child_range' => 'Children (<12 yrs)',
+    'total_age' => 'TOTAL AGE',
+    'special_groups' => 'Special Groups',
+    'preview_not_available_localhost' => 'Preview Not Available on Localhost',
+    'preview_online_requirement' => 'Word/Excel/PPT document preview requires the application to be online (publicly accessible). Please click the download button below to view the file.',
+    'file_label' => 'File',
+    'preview_failed_notice' => 'If the preview is blank or fails to load, the file might not be publicly indexed yet. Use the download button.',
+    'download_file' => 'Download File',
     
     
     'penerima_manfaat' => 'Beneficiaries',
@@ -99,6 +123,7 @@ return [
     'hasil_pertemuan' => 'Meeting Results',
 
     'informasi_lokasi' => 'Location Information',
+    'tabel_lokasi' => 'Location Table',
 
     'prepared_by' => 'Prepared By',
     'penulis_jabatan' => 'Position',
@@ -333,5 +358,27 @@ return [
 
     ],
 
+    'catatan_penulis_laporan'   => 'Writer Notes',
+    'catatan_penulis_laporan_ket'   => 'Specific notes from the report author that could not be conveyed through the above sections of the report',
+    'indikasi_perubahan'    => 'Indication of Change',
+    'indikasi_perubahan_ket'    => 'The changes in the reported activities are related to the implementation of the relevant Program.',
 
+    'report_id_label'   => 'Report ID:',
+    'total_label'    => 'Total:',
+    'files_attached'    => 'files attached',
+    'no_data_hasil_pertemuan'    => 'No meeting results data',
+    'no_data_tantang_solusi'    => 'No challenges and solutions data available',
+    'no_data_pembelajaran'    => 'No learning data available',
+    'no_data_participants'    => 'No beneficiary data available.',
+    'dokumen_pendukung' => 'Supporting Documents',
+    'media_pendukung' => 'Media Support',
+    'keterangan' => 'Description',
+    'no_documents_available' => 'No supporting documents or media available.',
+    'link' => 'Link',
+    'no_data_dokumen_media'    => 'No supporting documents or media attached to this activity.',
+    'other_file_types'    => 'For other file types, open in new tab',
+
+    'dokumen_media_desc' => 'Documents and media included in this BTOR.',
+    'dokumen' => 'Document',
+    'generated_at' => 'Generated at',
 ];

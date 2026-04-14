@@ -90,6 +90,18 @@ class UpdateKegiatanRequest extends FormRequest
             'keterangan_existing.*'                     => ['nullable', 'string'],
             'keterangan_new'                            => ['nullable', 'array'],
             'keterangan_new.*'                          => ['nullable', 'string'],
+
+            'catatan_penulis'                           => ['nullable', 'string'],
+            'indikasi_perubahan'                        => ['nullable', 'string'],
+
+            'penerimamanfaatdewasalainnya'              => ['nullable', 'integer'],
+            'penerimamanfaatlansialainnya'              => ['nullable', 'integer'],
+            'penerimamanfaatremajalainnya'              => ['nullable', 'integer'],
+            'penerimamanfaatanaklainnya'                => ['nullable', 'integer'],
+            'penerimamanfaatdisabilitaslainnya'         => ['nullable', 'integer'],
+            'penerimamanfaatnondisabilitaslainnya'      => ['nullable', 'integer'],
+            'penerimamanfaatmarjinallainnya'            => ['nullable', 'integer'],
+            'penerimamanfaatlainnyatotal'               => ['nullable', 'integer'],
         ];
 
         $jenisKegiatan = (int)$this->input('jeniskegiatan_id');
