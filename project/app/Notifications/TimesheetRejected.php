@@ -28,14 +28,29 @@ class TimesheetRejected extends Notification
             $this->timesheet->year,
             $this->timesheet->month
         )->translatedFormat('F Y');
+        $namaPetugas = optional($this->timesheet->approver)->nama ?? 'Atasan/Admin';
+        
+
+        // 🔥 Cek apakah ini penolakan mutlak atau sekadar revisi (draft)
+        $isDraft = $this->timesheet->status === 'draft';
+
+        // Sesuaikan Subjek Email
+        $subject = $isDraft 
+            ? "Revisi Timesheet - {$bulan}" 
+            : "Timesheet Ditolak - {$bulan}";
+
+        // Sesuaikan Pesan Utama
+        $pesanUtama = $isDraft 
+            ? "Timesheet Anda telah dikembalikan oleh {$namaPetugas} menjadi Draft karena memerlukan perbaikan." 
+            : "Timesheet Anda untuk periode ini telah ditolak oleh {$namaPetugas}.";
 
         return (new MailMessage)
-            ->subject("Timesheet Rejected - {$bulan}")
-            ->greeting("Halo {$notifiable->nama}")
-            ->line("Timesheet Anda ditolak.")
+            ->subject($subject)
+            ->greeting("Halo {$notifiable->nama},")
+            ->line($pesanUtama)
             ->line("Periode: {$bulan}")
-            ->line("Catatan:")
-            ->line($this->timesheet->approval_note ?? '-')
-            ->action('Perbaiki Timesheet', route('timesheet.index'));
+            ->line("Catatan / Instruksi:")
+            ->line($this->timesheet->approval_note ?? 'Tidak ada catatan tambahan.') // Catatan ini sangat penting
+            ->action('Buka & Perbaiki Timesheet', route('timesheet.index'));
     }
 }

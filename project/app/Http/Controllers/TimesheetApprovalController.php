@@ -48,7 +48,7 @@ class TimesheetApprovalController extends Controller
         // =============================
         // ADMIN → BEBAS
         // =============================
-        if ($user->can('can_access')) {
+        if ($user->can('admin_timesheet')) {
             return;
         }
 
@@ -203,7 +203,7 @@ class TimesheetApprovalController extends Controller
         // ===========================
         // 1. ADMIN SISTEM → LIHAT SEMUA
         // ===========================
-        if ($user->can('can_access')) {
+        if ($user->can('admin_timesheet')) {
 
             // tanpa filter divisi
 

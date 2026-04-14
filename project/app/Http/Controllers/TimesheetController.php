@@ -503,10 +503,10 @@ class TimesheetController extends Controller
     
     public function changeStatus(Request $request)
     {
-        // abort_unless(
-        //     auth()->user()->can('can_access'),
-        //     403
-        // );
+        abort_unless(
+            auth()->user()->can('timesheet_ubah_status'),
+            403
+        );
 
         $request->validate([
             'timesheet_id' => 'required',
@@ -521,12 +521,23 @@ class TimesheetController extends Controller
             'status' => $request->status,
 
             'approval_note' =>
-                "Diubah oleh Admin: " .
+                "* " .
                 $request->note,
 
             'approved_by' => auth()->id(),
             'approved_at' => now(),
         ]);
+
+        $timesheet->load(['user', 'approver']); 
+
+        try {
+            // Kirim notifikasi menggunakan class yang sudah Anda buat
+            $timesheet->user->notify(new \App\Notifications\TimesheetRejected($timesheet));
+            
+        } catch (\Throwable $e) {
+            // Jika email gagal, catat di log agar sistem tidak berhenti
+            \Log::error('Gagal kirim email ubah status Admin: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,

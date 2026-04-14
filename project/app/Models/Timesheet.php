@@ -107,11 +107,11 @@ public function approvalLabel(): string
     if ($this->status === 'approved') {
         return $this->isAutoApproved()
             ? 'Auto Approved (Manager)'
-            : 'Approved by Manager';
+            : 'Approved';
     }
 
     if ($this->status === 'rejected') {
-        return 'Rejected by Manager';
+        return 'Rejected';
     }
 
     return ucfirst($this->status);

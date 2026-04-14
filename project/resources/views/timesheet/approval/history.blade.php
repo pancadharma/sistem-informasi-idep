@@ -114,13 +114,13 @@
                                     🔍 Detail
                                 </a>
 
-                                {{-- @can('can_access') --}}
+                                @can('timesheet_ubah_status')
                                     <button class="btn btn-sm btn-warning btn-edit-status"
                                             data-id="{{ $t->id }}"
                                             data-status="{{ $t->status }}">
                                         ✏️ Ubah Status
                                     </button>
-                                {{-- @endcan --}}
+                                @endcan
 
                             </td>
 
@@ -144,7 +144,7 @@
 {{-- =======================
     MODAL EDIT STATUS
 ======================= --}}
-{{-- @can('can_access') --}}
+@can('timesheet_ubah_status')
 <div class="modal fade" id="modalEditStatus">
   <div class="modal-dialog">
     <form id="formEditStatus">
@@ -185,7 +185,7 @@
     </form>
   </div>
 </div>
-{{-- @endcan --}}
+@endcan
 
 
 {{-- =======================

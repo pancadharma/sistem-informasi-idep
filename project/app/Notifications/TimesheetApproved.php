@@ -29,10 +29,12 @@ class TimesheetApproved extends Notification
             $this->timesheet->month
         )->translatedFormat('F Y');
 
+        $namaPetugas = optional($this->timesheet->approver)->nama ?? 'Atasan/Admin';
+
         return (new MailMessage)
             ->subject("Timesheet Approved - {$bulan}")
             ->greeting("Halo {$notifiable->nama}")
-            ->line("Timesheet Anda telah disetujui.")
+            ->line("Timesheet Anda telah disetujui oleh {$namaPetugas}.")
             ->line("Periode: {$bulan}")
             ->line("Total Jam: " . round($this->timesheet->total_minutes / 60, 2))
             ->action('Lihat Timesheet', route('timesheet.index'));

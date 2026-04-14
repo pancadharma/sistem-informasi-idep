@@ -1222,6 +1222,19 @@ return [
     'history' => [
         'title' => 'History'
     ],
+    
+    'mdivisi' => [
+        'title' => 'Divisions',
+        'add' => 'Add Division',
+        'edit' => 'Edit Division',
+        'show' => 'Show Division',
+        'delete' => 'Delete Division',
+        'label' => 'Division',
+        'list' => 'Division List',
+        'nama' => 'Division Name',
+        'kode' => 'Division Code',
+        'keterangan' => 'Description',
+    ],
 
     'feedback' => [
         'title'          => 'Feedback & Response',
@@ -1296,17 +1309,7 @@ return [
         'messages' => [
             'delete_confirm' => 'Are you sure you want to delete this data?',
         ],
-    'mdivisi' => [
-        'title' => 'Divisions',
-        'add' => 'Add Division',
-        'edit' => 'Edit Division',
-        'show' => 'Show Division',
-        'delete' => 'Delete Division',
-        'label' => 'Division',
-        'list' => 'Division List',
-        'nama' => 'Division Name',
-        'kode' => 'Division Code',
-        'keterangan' => 'Description',
-	],
+
     ],
+
 ];
