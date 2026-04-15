@@ -189,6 +189,8 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 170, 'nama' => 'export-timesheet'],
                 ['id' => 171, 'nama' => 'timesheet_ubah_status'],
                 ['id' => 172, 'nama' => 'admin_timesheet'],
+                ['id' => 172, 'nama' => 'kegiatan_view'],
+                
                 
             ];
 
