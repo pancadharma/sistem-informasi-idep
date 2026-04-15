@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -36,5 +37,15 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+    protected function credentials(Request $request)
+    {
+        // Ambil inputan standar (email/username dan password)
+        $credentials = $request->only($this->username(), 'password');
+
+        // Tambahkan syarat kolom 'aktif' harus bernilai 1 (true)
+        $credentials['aktif'] = 1;
+
+        return $credentials;
     }
 }

@@ -458,18 +458,42 @@ class TimesheetController extends Controller
         // ===========================
         // 🔔 KIRIM NOTIF KE MANAGER
         // ===========================
-        $manager = User::whereHas('jabatan', function($q) use ($timesheet) {
-            $q->where('is_manager', 1)
-            ->where('divisi_id', $timesheet->user->jabatan->divisi_id);
-        })->first();
+        // $manager = User::whereHas('jabatan', function($q) use ($timesheet) {
+        //     $q->where('is_manager', 1)
+        //     ->where('divisi_id', $timesheet->user->jabatan->divisi_id);
+        // })->first();
 
-        if ($manager) {
-            $manager->notify(new TimesheetSubmitted($timesheet));
+        // if ($manager) {
+        //     $manager->notify(new TimesheetSubmitted($timesheet));
+        // }
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Timesheet berhasil disubmit'
+        // ]);
+    // 🔥 ALUR EMAIL DENGAN PENGECEKAN STATUS
+        $emailStatus = true;
+        
+        try {
+            $managers = User::whereHas('jabatan', function($q) use ($timesheet) {
+                $q->where('is_manager', 1)
+                ->where('divisi_id', $timesheet->user->jabatan->divisi_id);
+            })->get();
+
+            foreach ($managers as $mgr) {
+                $mgr->notify(new \App\Notifications\TimesheetSubmitted($timesheet));
+            }
+        } catch (\Throwable $e) {
+            $emailStatus = false;
+            \Log::error('EMAIL MANAGER GAGAL SAAT SUBMIT: ' . $e->getMessage());
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Timesheet berhasil disubmit'
+            'success'    => true,
+            'email_sent' => $emailStatus, // Kirim status ke Frontend
+            'message'    => $emailStatus 
+                            ? 'Timesheet berhasil disubmit dan atasan telah dinotifikasi.' 
+                            : 'Timesheet berhasil disubmit, tapi GAGAL mengirim email ke atasan.'
         ]);
     }
 
@@ -527,21 +551,28 @@ class TimesheetController extends Controller
             'approved_by' => auth()->id(),
             'approved_at' => now(),
         ]);
+        $emailStatus = true;
+        $errorMessage = '';
 
-        $timesheet->load(['user', 'approver']); 
 
         try {
+            $timesheet->load(['user', 'approver']); 
             // Kirim notifikasi menggunakan class yang sudah Anda buat
             $timesheet->user->notify(new \App\Notifications\TimesheetRejected($timesheet));
             
         } catch (\Throwable $e) {
+            $emailStatus = false;
+            $errorMessage = $e->getMessage();
             // Jika email gagal, catat di log agar sistem tidak berhenti
-            \Log::error('Gagal kirim email ubah status Admin: ' . $e->getMessage());
+            \Log::error('Gagal kirim email ubah status : ' . $e->getMessage());
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Status berhasil diubah'
+            'success'    => true,
+            'email_sent' => $emailStatus, // Penanda email terkirim atau tidak
+            'message'    => $emailStatus 
+                            ? 'Status berhasil diubah & Email notifikasi terkirim.' 
+                            : 'Status diubah di database, tapi GAGAL mengirim email.',
         ]);
     }
 

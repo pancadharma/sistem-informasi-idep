@@ -401,7 +401,8 @@ $('.btn-input-day').on('click', function () {
                         showConfirmButton: false
                     }).then(() => {
                         $('#modalDay').modal('hide');
-                        window.location.href = "{{ route('timesheet.index') }}";
+                        // window.location.href = "{{ route('timesheet.index') }}";
+                        window.location.reload();
                     });
                 },
 
@@ -446,6 +447,36 @@ $('.btn-input-day').on('click', function () {
 
             const form = $('#formSubmitTimesheet');
 
+            // $.ajax({
+            //     url: form.attr('action'),
+            //     method: 'POST',
+            //     data: form.serialize(),
+
+            //     success: function (res) {
+
+            //         Swal.fire({
+            //             icon: 'success',
+            //             title: 'Berhasil',
+            //             text: res.message || 'Timesheet berhasil disubmit',
+            //             timer: 1200,
+            //             showConfirmButton: false
+            //         }).then(() => {
+            //             window.location.reload();
+            //         });
+
+            //     },
+
+            //     error: function (xhr) {
+
+            //         Swal.fire({
+            //             icon: 'error',
+            //             title: 'Gagal',
+            //             text: xhr.responseJSON?.message 
+            //                 ?? 'Terjadi kesalahan saat submit'
+            //         });
+
+            //     }
+            // });
             $.ajax({
                 url: form.attr('action'),
                 method: 'POST',
@@ -453,27 +484,38 @@ $('.btn-input-day').on('click', function () {
 
                 success: function (res) {
 
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: res.message || 'Timesheet berhasil disubmit',
-                        timer: 1200,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.reload();
-                    });
+                    // 🔥 TANGKAP STATUS EMAIL DARI CONTROLLER
+                    if (res.email_sent) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: res.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        // Jika masuk ke database tapi email gagal
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tersubmit (Email Gagal)',
+                            text: res.message,
+                            footer: '<small class="text-danger">Silakan beri tahu atasan Anda secara manual.</small>'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    }
 
                 },
 
                 error: function (xhr) {
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
                         text: xhr.responseJSON?.message 
                             ?? 'Terjadi kesalahan saat submit'
                     });
-
                 }
             });
 
