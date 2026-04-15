@@ -54,14 +54,22 @@ $(function () {
     });
 
     /* EDIT OPEN */
+
     $('#mdivisi_list').on('click', '.edit-mdivisi-btn', function () {
         const id = $(this).data('mdivisi-id');
 
         $.get("{{ route('mdivisi.edit', ':id') }}".replace(':id', id), res => {
             $('#edit_id').val(res.id);
             $('#edit_nama').val(res.nama);
-            $('#editaktif').prop('checked', res.aktif == 1);
-            $('#edit-aktif').val(res.aktif);
+            
+            // Cek apakah aktif bernilai 1 atau true
+            const isAktif = (res.aktif == 1 || res.aktif === true); 
+            
+            $('#editaktif').prop('checked', isAktif);
+            
+            // 🔥 FIX: Paksa nilai hidden input selalu 1 atau 0
+            $('#edit-aktif').val(isAktif ? 1 : 0); 
+            
             $('#editMdivisiModal').modal('show');
         });
     });
@@ -83,6 +91,25 @@ $(function () {
                 Swal.fire('Updated', 'Divisi diperbarui', 'success');
                 $('#editMdivisiModal').modal('hide');
                 table.ajax.reload();
+            },
+            // 🔥 TANGKAP ERROR 422 DI SINI
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorMessage = '';
+                    
+                    $.each(errors, function(key, value) {
+                        errorMessage += value[0] + '<br>';
+                    });
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validasi Gagal!',
+                        html: errorMessage
+                    });
+                } else {
+                    Swal.fire('Error', 'Terjadi kesalahan sistem!', 'error');
+                }
             }
         });
     });

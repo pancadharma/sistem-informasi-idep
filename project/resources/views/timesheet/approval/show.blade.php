@@ -225,7 +225,7 @@
     </div>
 
     {{-- ================= ACTION ================= --}}
-    <div class="card mt-3">
+    {{-- <div class="card mt-3">
         <div class="card-body">
 
             @if($timesheet->status === 'submitted')
@@ -257,9 +257,10 @@
         </div>
     </div>
 
-</div>
+</div> --}}
 
 {{-- ================= MODAL REJECT ================= --}}
+{{-- 
 <div class="modal fade" id="rejectModal" tabindex="-1">
     <div class="modal-dialog">
         <form method="POST"
@@ -311,6 +312,73 @@
             </div>
         </form>
     </div>
+</div> --}}
+
+{{-- ================= ACTION ================= --}}
+    <div class="card mt-3">
+        <div class="card-body">
+
+            @if($timesheet->status === 'submitted')
+
+                {{-- FORM APPROVE --}}
+                <form id="formApprove" class="d-inline"
+                      action="{{ route('approval.approve', $timesheet) }}">
+                    @csrf
+                    <button type="submit" id="btnApprove" class="btn btn-success">
+                        ✅ Approve
+                    </button>
+                </form>
+
+                {{-- TOMBOL MUNCULKAN MODAL REJECT --}}
+                <button class="btn btn-danger"
+                        data-toggle="modal"
+                        data-target="#rejectModal">
+                    ❌ Reject
+                </button>
+
+            @else
+                <span class="badge badge-secondary">
+                    Read Only (History)
+                </span>
+            @endif
+
+        </div>
+    </div>
+
+</div>
+
+{{-- ================= MODAL REJECT ================= --}}
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        {{-- FORM REJECT --}}
+        <form id="formReject" action="{{ route('approval.reject', $timesheet) }}">
+            @csrf
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tolak Timesheet</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Alasan Penolakan</label>
+                        <textarea name="note" class="form-control" rows="4" required
+                                  placeholder="Tuliskan alasan penolakan minimal 5 karakter"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    
+                    {{-- TOMBOL SUBMIT REJECT --}}
+                    <button type="submit" id="btnReject" class="btn btn-danger">
+                        ❌ Tolak Timesheet
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 @endsection
@@ -321,125 +389,229 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
 <script>
-const ctx = document.getElementById('pieLokasi');
+// ==========================================
+// HANDLE APPROVE & REJECT VIA AJAX + SWAL LOADING
+// ==========================================
+$(function() {
 
-const total = {{ $totalJam }};
+    // 1. PROSES APPROVE
+    $('#formApprove').on('submit', function(e) {
+        e.preventDefault();
+        
+        Swal.fire({
+            title: 'Approve Timesheet?',
+            text: 'Timesheet akan disetujui dan karyawan akan menerima email.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Approve',
+            cancelButtonText: 'Batal',
+            reverseButtons: true // Opsional: Bikin tombol 'Ya' di kanan
+        }).then((result) => {
+            if (result.isConfirmed) {
+                
+                // 🔥 MUNCULKAN SWAL LOADING
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Mohon tunggu, sedang memproses data dan mengirim email.',
+                    allowOutsideClick: false, // Kunci layar agar tidak bisa diklik di luar
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(res) {
+                        showEmailStatusSwal(res);
+                    },
+                    error: function(xhr) {
+                        Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan sistem', 'error');
+                    }
+                });
+            }
+        });
+    });
 
-const dataJam = [
-    {{ $summary['kantor'] }},
-    {{ $summary['lapangan'] }},
-    {{ $summary['rumah'] }},
-    {{ $summary['other'] }}
-];
+    // 2. PROSES REJECT (Dari Modal)
+    $('#formReject').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Tutup modal form reject-nya dulu agar tidak menumpuk dengan Swal
+        $('#rejectModal').modal('hide');
+        
+        // 🔥 MUNCULKAN SWAL LOADING
+        Swal.fire({
+            title: 'Menolak Timesheet...',
+            text: 'Mohon tunggu, sedang memproses dan mengirim email penolakan.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(res) {
+                showEmailStatusSwal(res);
+            },
+            error: function(xhr) {
+                Swal.fire('Error', xhr.responseJSON?.message || 'Terjadi kesalahan sistem', 'error');
+            }
+        });
+    });
 
-const labels = ['Kantor','Lapangan','Rumah','Other'];
+    // 3. FUNGSI HELPER UNTUK RESULT SWAL
+    function showEmailStatusSwal(res) {
+        // Swal.fire baru ini akan otomatis menimpa/menutup Swal Loading sebelumnya!
+        if (res.email_sent) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: res.message,
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "{{ route('approval.index') }}";
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tersimpan (Email Gagal)',
+                text: res.message,
+                footer: '<small class="text-danger">Log error email telah dicatat sistem.</small>'
+            }).then(() => {
+                window.location.href = "{{ route('approval.index') }}";
+            });
+        }
+    }
 
-// KONVERSI KE PERSEN
-const dataPersen = dataJam.map(v => {
-    return total > 0 ? ((v / total) * 100).toFixed(2) : 0;
 });
 
-new Chart(ctx, {
-    type: 'pie',
+    const ctx = document.getElementById('pieLokasi');
 
-    data: {
-        labels: labels,
+    const total = {{ $totalJam }};
 
-        datasets: [{
-            data: dataPersen,
+    const dataJam = [
+        {{ $summary['kantor'] }},
+        {{ $summary['lapangan'] }},
+        {{ $summary['rumah'] }},
+        {{ $summary['other'] }}
+    ];
 
-            backgroundColor: [
-                '#007bff',
-                '#28a745',
-                '#ffc107',
-                '#6c757d'
-            ],
+    const labels = ['Kantor','Lapangan','Rumah','Other'];
 
-            borderWidth: 2,
-            borderColor: '#fff'
-        }]
-    },
+    // KONVERSI KE PERSEN
+    const dataPersen = dataJam.map(v => {
+        return total > 0 ? ((v / total) * 100).toFixed(2) : 0;
+    });
 
-    options: {
-        responsive: true,
-        aspectRatio: 1.4,
-        maintainAspectRatio: true,
+    new Chart(ctx, {
+        type: 'pie',
 
-        layout: {
-            padding: 20
+        data: {
+            labels: labels,
+
+            datasets: [{
+                data: dataPersen,
+
+                backgroundColor: [
+                    '#007bff',
+                    '#28a745',
+                    '#ffc107',
+                    '#6c757d'
+                ],
+
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
         },
 
-        plugins: {
+        options: {
+            responsive: true,
+            aspectRatio: 1.4,
+            maintainAspectRatio: true,
 
-            legend: {
-                position: 'bottom',
-                labels: {
-                    padding: 15,
-                    boxWidth: 12
-                }
+            layout: {
+                padding: 20
             },
 
-            tooltip: {
-                callbacks: {
-                    label: function(ctx) {
+            plugins: {
+
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        boxWidth: 12
+                    }
+                },
+
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+
+                            const idx = ctx.dataIndex;
+
+                            const jam = dataJam[idx];
+                            const persen = dataPersen[idx];
+
+                            return `${labels[idx]}: ${persen}% (${jam.toFixed(2)} Jam)`;
+                        }
+                    }
+                },
+
+                // =============================
+                // 🔥 LEADER LINE LABEL
+                // =============================
+                datalabels: {
+
+                    // warna teks di luar
+                    color: '#333',
+
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    },
+
+                    // 👉 INI INTINYA BRO
+                    anchor: 'end',
+                    align: 'end',
+                    offset: 8,
+
+                    // garis penunjuk
+                    borderRadius: 4,
+                    backgroundColor: 'rgba(255,255,255,0.85)',
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+
+                    formatter: (value, ctx) => {
+
+                        // ❌ sembunyikan 0%
+                        if (parseFloat(value) <= 0) {
+                            return null;
+                        }
 
                         const idx = ctx.dataIndex;
+                        const jam = dataJam[idx].toFixed(2);
 
-                        const jam = dataJam[idx];
-                        const persen = dataPersen[idx];
+                        return `${labels[idx]}\n${value}% (${jam} Jam)`;
+                    },
 
-                        return `${labels[idx]}: ${persen}% (${jam.toFixed(2)} Jam)`;
+                    // 🔥 garis connector
+                    display: function(ctx) {
+                        return parseFloat(ctx.dataset.data[ctx.dataIndex]) > 0;
                     }
-                }
-            },
-
-            // =============================
-            // 🔥 LEADER LINE LABEL
-            // =============================
-            datalabels: {
-
-                // warna teks di luar
-                color: '#333',
-
-                font: {
-                    weight: 'bold',
-                    size: 12
-                },
-
-                // 👉 INI INTINYA BRO
-                anchor: 'end',
-                align: 'end',
-                offset: 8,
-
-                // garis penunjuk
-                borderRadius: 4,
-                backgroundColor: 'rgba(255,255,255,0.85)',
-                borderWidth: 1,
-                borderColor: '#ccc',
-
-                formatter: (value, ctx) => {
-
-                    // ❌ sembunyikan 0%
-                    if (parseFloat(value) <= 0) {
-                        return null;
-                    }
-
-                    const idx = ctx.dataIndex;
-                    const jam = dataJam[idx].toFixed(2);
-
-                    return `${labels[idx]}\n${value}% (${jam} Jam)`;
-                },
-
-                // 🔥 garis connector
-                display: function(ctx) {
-                    return parseFloat(ctx.dataset.data[ctx.dataIndex]) > 0;
                 }
             }
-        }
-    },
+        },
 
-    plugins: [ChartDataLabels]
-});
+        plugins: [ChartDataLabels]
+    });
 
 </script>
 

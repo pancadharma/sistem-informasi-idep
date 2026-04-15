@@ -178,7 +178,9 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary">Simpan</button>
+                <button type="submit" id="btnSimpanStatus" class="btn btn-primary">
+                    Simpan
+                </button>
             </div>
 
         </div>
@@ -204,31 +206,109 @@ $(function(){
     });
 
     // SUBMIT EDIT STATUS
+// SUBMIT EDIT STATUS
+    // $('#formEditStatus').on('submit', function(e){
+    //     e.preventDefault();
+
+    //     // 1. Tangkap tombol dan simpan teks aslinya
+    //     let btn = $('#btnSimpanStatus');
+    //     let originalText = btn.html();
+
+    //     // 2. Pasang Efek LOADING (Tombol mati & muncul spinner)
+    //     btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Memproses...');
+
+    //     // 3. Eksekusi AJAX
+    //     $.post("{{ route('timesheet.admin.changeStatus') }}", $(this).serialize())
+    //     .done(function(res){
+            
+    //         // Tutup modal agar rapi
+    //         $('#modalEditStatus').modal('hide');
+
+    //         // 4. Cek apakah email sukses terkirim?
+    //         if (res.email_sent) {
+    //             // Sukses 100% (DB aman, Email terkirim)
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: 'Sukses',
+    //                 text: res.message
+    //             }).then(() => location.reload());
+    //         } else {
+    //             // Sukses parsial (DB aman, tapi jaringan/email error)
+    //             Swal.fire({
+    //                 icon: 'warning',
+    //                 title: 'Status Diubah',
+    //                 text: res.message, // "Status diubah, tapi GAGAL mengirim email"
+    //                 footer: '<small class="text-danger">Karyawan mungkin tidak menerima email.</small>'
+    //             }).then(() => location.reload());
+    //         }
+
+    //     })
+    //     .fail(function(xhr){
+            
+    //         // Tangkap error validasi atau server
+    //         Swal.fire(
+    //             'Gagal',
+    //             xhr.responseJSON?.message || 'Terjadi kesalahan validasi atau sistem.',
+    //             'error'
+    //         );
+
+    //     })
+    //     .always(function(){
+            
+    //         // 5. Lepas Efek LOADING (Apapun yang terjadi, tombol kembali normal)
+    //         btn.prop('disabled', false).html(originalText);
+            
+    //     });
+    // });
+// SUBMIT EDIT STATUS (Di Halaman Riwayat/History)
     $('#formEditStatus').on('submit', function(e){
         e.preventDefault();
 
-        $.post("{{ route('timesheet.admin.changeStatus') }}",
-            $(this).serialize()
-        )
-        .done(function(res){
+        // 1. Tutup modal input dulu agar tidak tumpang tindih
+        $('#modalEditStatus').modal('hide');
 
-            Swal.fire(
-                'Sukses',
-                res.message,
-                'success'
-            ).then(() => location.reload());
+        // 2. 🔥 MUNCULKAN SWAL LOADING PENUH
+        Swal.fire({
+            title: 'Memproses Perubahan...',
+            text: 'Mohon tunggu, sedang memperbarui status dan mengirim email.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // 3. Eksekusi AJAX
+        $.post("{{ route('timesheet.admin.changeStatus') }}", $(this).serialize())
+        .done(function(res){
+            
+            // 4. Cek status email dari response controller
+            if (res.email_sent) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: res.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => location.reload());
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Status Diperbarui',
+                    text: res.message,
+                    footer: '<small class="text-danger">Karyawan mungkin tidak menerima email notifikasi.</small>'
+                }).then(() => location.reload());
+            }
 
         })
         .fail(function(xhr){
-
+            // Tangkap error validasi atau server
             Swal.fire(
                 'Gagal',
-                xhr.responseJSON?.message || 'Error',
+                xhr.responseJSON?.message || 'Terjadi kesalahan sistem.',
                 'error'
             );
-
         });
-
     });
 
 });
