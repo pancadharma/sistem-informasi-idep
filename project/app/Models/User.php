@@ -196,4 +196,14 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(Meals_Komponen_Model::class, 'user_id');
     }
+
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class, 'user_id');
+    }
+
+    public function divisi()
+    {
+        return $this->jabatan?->divisi();
+    }
 }

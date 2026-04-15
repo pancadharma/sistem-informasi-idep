@@ -242,6 +242,12 @@ return [
                     'active' => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
                 ],
                 [
+                    'text' => 'Divisi',
+                    'route' => 'mdivisi.index',
+                    'icon' => 'fas fa-sitemap',
+                    'active' => ['mdivisi','mdivisi/*','data/mdivisi', 'regex:@^mdivisi/[0-9]+$@'],
+                ],
+                [
                     'text' => 'roles',
                     'route' => 'mjabatan.index',
                     'icon' => 'fas fa-user-tie',
@@ -424,6 +430,42 @@ return [
             'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
             'can' => ['laporan_access'],
         ],
+        [
+            'text' => 'Timesheet',
+            'icon' => 'fas fa-file',
+            'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+            'can' => ['timesheet_access'],
+            'submenu' => [
+                [
+                    'text' => 'Isi Timesheet',
+                    'route' => 'timesheet.index',
+                    'icon' => 'fas fa-edit',
+                    'active' => ['timesheet'],
+                    'can'  => 'fill-timesheet',
+                ],
+                [
+                    'text' => 'Approval Timesheet',
+                    'route' => 'approval.index',
+                    'icon' => 'fas fa-table',
+                    'active' => ['timesheet/approval', 'timesheet/approval*', 'regex:@^timesheet/approval/[0-9]+$@'],
+                    'can'  => 'approve-timesheet',
+                ],
+                [
+                    'text' => 'Approval History',
+                    'route' => 'approval.history',
+                    'icon' => 'fas fa-history',
+                    'active' => ['timesheet/approval/history', 'timesheet/approval/history*', 'regex:@^timesheet/approval/history/[0-9]+$@'],
+                    'can'  => 'history-timesheet',
+                ],
+                [
+                    'text' => 'Export Rekap',
+                    'route' => 'timesheet.export.index',
+                    'icon' => 'fas fa-file-export',
+                    'active' => ['timesheet/export', 'timesheet/export*'],
+                    'can'  => 'export-timesheet',
+                ],
+            ],
+        ],
         // [
         //     'text'          => 'Report IDEP',
         //     'route'         => 'report.index',
@@ -498,12 +540,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '/vendor/datatables-new/pdfmake.min.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => '/vendor/datatables-new/vfs_fonts.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
                 ],
                 [
                     'type' => 'js',
@@ -668,12 +710,12 @@ return [
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
                 ],
                 [
                     'type' => 'js',
                     'asset' => true,
-                    'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
+                    'location' => 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
                 ],
             ],
         ],
