@@ -27,7 +27,7 @@
                                 @endif
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td class="table-secondary"><strong>Distribution Period</strong></td>
                             <td>
                                 @if($kegiatan->pembelanjaan->pembelanjaandistribusimulai && $kegiatan->pembelanjaan->pembelanjaandistribusiselesai)
@@ -42,7 +42,7 @@
                                     <em class="text-muted">No data</em>
                                 @endif
                             </td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td class="table-secondary"><strong>Distribution Status</strong></td>
                             <td>

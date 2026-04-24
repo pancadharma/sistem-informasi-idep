@@ -84,9 +84,6 @@ class BTORController extends Controller
             return back()->with('error', 'Data tidak ditemukan.');
         }
 
-        // 2. Ensure Relations & Specific Data are loaded (Same logic as Bulk)
-        $this->ensureRelationshipsLoaded($kegiatan);
-
         // Pre-calculate specific data (Challenges, Issues, etc.)
         $specificData = $this->getSpecificKegiatanData($kegiatan);
 
@@ -103,9 +100,10 @@ class BTORController extends Controller
         $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'isRemoteEnabled' => true,
-                'dpi' => 96,
-                'defaultFont' => 'Figtree'
+                'isRemoteEnabled' => false,
+                'dpi'             => 96,
+                'defaultFont'     => 'Figtree',
+                'enable_php'      => false,
             ]);
 
         // 5. Generate Filename using your helper
@@ -121,9 +119,6 @@ class BTORController extends Controller
         try {
             // Load kegiatan
             $kegiatan = BTOR::getData($id);
-            
-            // CRITICAL FIX #1: Ensure relationships are loaded
-            $this->ensureRelationshipsLoaded($kegiatan);
             
             // Validate export is possible
             $validationErrors = $this->validateKegiatanForExport($kegiatan);
@@ -312,9 +307,6 @@ class BTORController extends Controller
                 continue;
             }
 
-            // Ensure relations are loaded (using your existing helper)
-            $this->ensureRelationshipsLoaded($kegiatan);
-
             // Pre-calculate the "Specific Data" (Challenges, Issues, Lessons)
             // We reuse the private helper logic you already wrote for DOCX
             $specificData = $this->getSpecificKegiatanData($kegiatan);
@@ -334,9 +326,10 @@ class BTORController extends Controller
         $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'isRemoteEnabled' => true,
-                'dpi' => 96,
-                'defaultFont' => 'Figtree'
+                'isRemoteEnabled' => false,
+                'dpi'             => 96,
+                'defaultFont'     => 'Figtree',
+                'enable_php'      => false,
             ]);
 
         $filename = 'BTOR_Bulk_' . count($dataList) . '_Reports_' . date('Ymd_His') . '.pdf';
@@ -377,8 +370,6 @@ class BTORController extends Controller
             // --- 2. LOOP THROUGH DATA ---
             foreach ($ids as $id) {
                 $kegiatan = BTOR::getData($id);
-                // Ensure all relations are loaded prevents lazy loading errors
-                $this->ensureRelationshipsLoaded($kegiatan);
 
                 // --- 3. CREATE SECTION (New Page per ID) ---
                 // Using exact margins from your single export
@@ -1137,43 +1128,6 @@ class BTORController extends Controller
         return $html;
     }
 
-    /**
-     * Ensure critical relationships are loaded
-     */
-    private function ensureRelationshipsLoaded($kegiatan)
-    {
-        $relationships = [
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
-            'lokasi.desa.kecamatan.kabupaten.provinsi',
-            'mitra',
-            'kegiatan_penulis.user',
-            'kegiatan_penulis.peran',
-            'assessment',
-            'sosialisasi',
-            'pelatihan',
-            'pembelanjaan',
-            'pengembangan',
-            'kampanye',
-            'pemetaan',
-            'monitoring',
-            'kunjungan',
-            'konsultasi',
-            'lainnya',
-        ];
-
-        foreach ($relationships as $relation) {
-            if (!$kegiatan->relationLoaded($relation)) {
-                try {
-                    $kegiatan->load($relation);
-                } catch (\Exception $e) {
-                    Log::warning("Failed to load relationship: $relation", [
-                        'kegiatan_id' => $kegiatan->id,
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
-        }
-    }
 
     /**
      * Validate kegiatan has required relationships

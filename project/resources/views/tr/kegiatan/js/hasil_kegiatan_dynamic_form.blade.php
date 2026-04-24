@@ -203,20 +203,20 @@ function getFormFields(fieldPrefix, data = {}) {
                 type: 'datetime-local',
                 value: data.pembelanjaanselesai ?? ''
             },
-            {
-                i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
-                label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
-                name: 'pembelanjaandistribusimulai',
-                type: 'datetime-local',
-                value: data.pembelanjaandistribusimulai ?? ''
-            },
-            {
-                i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
-                label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
-                name: 'pembelanjaandistribusiselesai',
-                type: 'datetime-local',
-                value: data.pembelanjaandistribusiselesai ?? ''
-            },
+            // {
+            //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusimulai') }}',
+            //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusimulai') }}',
+            //     name: 'pembelanjaandistribusimulai',
+            //     type: 'datetime-local',
+            //     value: data.pembelanjaandistribusimulai ?? ''
+            // },
+            // {
+            //     i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaandistribusiselesai') }}',
+            //     label: '{{ __('cruds.kegiatan.hasil.pembelanjaandistribusiselesai') }}',
+            //     name: 'pembelanjaandistribusiselesai',
+            //     type: 'datetime-local',
+            //     value: data.pembelanjaandistribusiselesai ?? ''
+            // },
             {
                 i: '{{ __('cruds.kegiatan.hasil.i_pembelanjaanterdistribusi') }}',
                 label: '{{ __('cruds.kegiatan.hasil.pembelanjaanterdistribusi') }}',

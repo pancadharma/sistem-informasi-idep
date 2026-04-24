@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>BTOR {{ $kegiatan->programOutcomeOutputActivity?->nama ?? '' }} Export</title>
+    <title>BTOR Export</title>
     <style>
         /* Apply Figtree font as default */
         body, html, * {
@@ -362,56 +362,15 @@
 
                 {{-- E. Tantangan --}}
                 <div class="section-title">E. {{ __('btor.tantangan_solusi') }}</div>
-                 @php
-                    $kendala = $kegiatan->assessment?->assessmentkendala
-                            ?? $kegiatan->sosialisasi?->sosialisasikendala
-                            ?? $kegiatan->pelatihan?->pelatihankendala
-                            ?? $kegiatan->pembelanjaan?->pembelanjaankendala
-                            ?? $kegiatan->pengembangan?->pengembangankendala
-                            ?? $kegiatan->kampanye?->kampanyekendala
-                            ?? $kegiatan->monitoring?->monitoringkendala
-                            ?? $kegiatan->kunjungan?->kunjungankendala
-                            ?? $kegiatan->konsultasi?->konsultasikendala
-                            ?? $kegiatan->pemetaan?->pemetaankendala
-                            ?? $kegiatan->lainnya?->lainnyakendala
-                            ?? null;
-                @endphp
-                <div class="html-content">{!! $kendala ?? __('btor.no_data_tantang_solusi') !!}</div>
+                <div class="html-content">{!! $specific['kendala'] ?? __('btor.no_data_tantang_solusi') !!}</div>
 
                 {{-- F. Isu --}}
                 <div class="section-title">F. {{ __('btor.hasil.assessmentisu') }}</div>
-                @php
-                    $isu = $kegiatan->assessment?->assessmentisu
-                        ?? $kegiatan->sosialisasi?->sosialisasiisu
-                        ?? $kegiatan->pelatihan?->pelatihanisu
-                        ?? $kegiatan->pembelanjaan?->pembelanjaanisu
-                        ?? $kegiatan->pengembangan?->pengembanganisu
-                        ?? $kegiatan->kampanye?->kampanyeisu
-                        ?? $kegiatan->pemetaan?->pemetaanisu
-                        ?? $kegiatan->monitoring?->monitoringisu
-                        ?? $kegiatan->kunjungan?->kunjunganisu
-                        ?? $kegiatan->konsultasi?->konsultasiisu
-                        ?? $kegiatan->lainnya?->lainnyaisu
-                        ?? null;
-                @endphp
-                <div class="html-content">{!! $isu ?? __('global.no_results') !!}</div>
+                <div class="html-content">{!! $specific['isu'] ?? __('global.no_results') !!}</div>
 
                 {{-- G. Pembelajaran --}}
                 <div class="section-title">G. {{ __('btor.hasil.assessmentpembelajaran') }}</div>
-                @php
-                    $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
-                                 ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                                 ?? $kegiatan->monitoring?->monitoringpembelajaran
-                                 ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
-                                 ?? $kegiatan->kampanye?->kampanyepembelajaran
-                                 ?? $kegiatan->konsultasi?->konsultasipembelajaran
-                                 ?? $kegiatan->kunjungan?->kunjunganpembelajaran
-                                 ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
-                                 ?? $kegiatan->pengembangan?->pengembanganpembelajaran
-                                 ?? $kegiatan->pemetaan?->pemetaanpembelajaran
-                                 ?? $kegiatan->lainnya?->lainnyapembelajaran;
-                @endphp
-                <div class="html-content">{!! $pembelajaran ?? __('btor.no_data_pembelajaran') !!}</div>
+                <div class="html-content">{!! $specific['pembelajaran'] ?? __('btor.no_data_pembelajaran') !!}</div>
 
                 {{-- H. Dokumen --}}
                 <div class="section-title">H. {{ __('btor.dokumen_pendukung') }}</div>
