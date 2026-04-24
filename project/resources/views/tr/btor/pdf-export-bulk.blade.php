@@ -57,7 +57,7 @@
 
         .footer-bold {
             font-weight: bold;
-            color: #0D654D;
+            color: #526d4e;
         }
 
         /** HEADINGS **/

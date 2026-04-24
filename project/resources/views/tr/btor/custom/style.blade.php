@@ -56,12 +56,13 @@
         padding: 0;
         border: none;
         background: white;
+        text-align: left;
     }
 
     .print-header-content {
-        text-align: center;
-        padding: 10px 0 15px 0;
-        border-bottom: 2px solid #0D654D;
+        text-align: left;
+        padding: 10px 0 2px 0;
+        border-bottom: 2px solid #526d4e;
         margin-inline-end: 14pt; 
         margin-inline-start: 14pt;
     }
@@ -95,7 +96,7 @@
     }
 
     .print-footer-content strong {
-        color: #0D654D;
+        color: #526d4e;
     }
 
     .print-footer-content p {

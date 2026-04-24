@@ -15,7 +15,7 @@
 
         /* HEADINGS */
         h1, h2, h3, h4, h5 {
-            font-family: 'Tahoma', sans-serif;
+            font-family: 'Figtree, DejaVu Sans', 'Arial', sans-serif;
             color: #000;
         }
 
@@ -70,7 +70,7 @@
             page-break-inside: avoid;
         }
         .report-footer strong {
-            color: #0D654D;
+            color: #526d4e;
             font-weight: bold;
         }
         .report-footer p {
@@ -92,6 +92,9 @@
 <div class="print-container">
     {{-- Basic Information Table --}}
     <div class="section">
+        BTOR <br>
+        | REPORT |  <br>
+        2026 <br>
         {{-- Metadata Table (No Borders) --}}
         <div style="border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; margin-bottom: 20px;">
             <table class="table-print">

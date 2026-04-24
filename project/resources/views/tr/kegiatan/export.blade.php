@@ -11,7 +11,7 @@
             margin: 0.5cm 1cm;
         }
         .header-img {
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
         }
         .header-img img {

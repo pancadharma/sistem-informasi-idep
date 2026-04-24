@@ -185,7 +185,7 @@ class BTORController extends Controller
             // ✅ ADD FOOTER (repeats on every page)
             $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
 
-            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
+            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
             $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
             $pStyle = [
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
@@ -410,7 +410,7 @@ class BTORController extends Controller
                 $footer = $section->addFooter();
 
                 // Footer Styles
-                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
+                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
                 $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
                 $footerPStyle = [
                     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
