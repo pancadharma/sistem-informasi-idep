@@ -138,26 +138,15 @@
         });
     });
 
-    let selectedKegiatanId = null;
-    $(document).on('click', '.export-kegiatan-btn', function (e) {
-        e.preventDefault();
-        selectedKegiatanId = $(this).data('id');
-        $('#exportKegiatanModal').modal('show');
-    });
-
-    $('.confirm-export').on('click', function () {
-        console.log(selectedKegiatanId);
-        if (!selectedKegiatanId) return;
-        const format = $('input[name="export_format"]:checked').val();
-        let url;
-        if (format === 'pdf') {
-            url = "{{ route('kegiatan.export.pdf', ['kegiatan' => '__id__']) }}";
-        }
-        else if (format === 'docx') {
-            url = "{{ route('kegiatan.export.docx', ['kegiatan' => '__id__']) }}";
-        }
-        url = url.replace('__id__', selectedKegiatanId);
-        window.location.href = url;
+    $('#exportKegiatanModal').on('show.bs.modal', function (e) {
+        const id = $(e.relatedTarget).data('kegiatan-id');
+        
+        $('#btn-export-pdf').attr('href', 
+            "{{ route('kegiatan.export.pdf', ['kegiatan' => '__id__']) }}".replace('__id__', id)
+        );
+        $('#btn-export-docx').attr('href', 
+            "{{ route('kegiatan.export.docx', ['kegiatan' => '__id__']) }}".replace('__id__', id)
+        );
     });
 </script>
 
