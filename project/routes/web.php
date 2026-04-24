@@ -370,8 +370,8 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Route Untuk Kegiatan
-    Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
-    Route::get('kegiatan/{kegiatan}/export-v2/{format}', [KegiatanController::class, 'exportV2'])->name('kegiatan.exportV2');
+    // Route::get('kegiatan/{kegiatan}/export/{format}', [KegiatanController::class, 'export'])->name('kegiatan.export');
+    // Route::get('kegiatan/{kegiatan}/export-v2/{format}', [KegiatanController::class, 'exportV2'])->name('kegiatan.exportV2');
 
 
     Route::get('kegiatan/export/pdf/{kegiatan}', [BTORController::class, 'exportPdf'])->name('kegiatan.export.pdf');

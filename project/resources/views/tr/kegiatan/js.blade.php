@@ -146,6 +146,7 @@
     });
 
     $('.confirm-export').on('click', function () {
+        console.log(selectedKegiatanId);
         if (!selectedKegiatanId) return;
         const format = $('input[name="export_format"]:checked').val();
         let url;

@@ -195,248 +195,248 @@ class KegiatanController extends Controller
         return "<a href='" . $url . "' class='btn btn-" . $color . " btn-sm'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></a>";
     }
 
-     public function export(Kegiatan $kegiatan, $format)
-    {
-        // Use BTOR::getData to load all necessary relationships including dynamic ones
-        $kegiatan = BTOR::getData($kegiatan->id);
+    //  public function export(Kegiatan $kegiatan, $format)
+    // {
+    //     // Use BTOR::getData to load all necessary relationships including dynamic ones
+    //     $kegiatan = BTOR::getData($kegiatan->id);
         
-        $format = strtolower($format);
-        $durationInDays = $kegiatan->getDurationInDays();
-        $data = compact('kegiatan', 'durationInDays');
+    //     $format = strtolower($format);
+    //     $durationInDays = $kegiatan->getDurationInDays();
+    //     $data = compact('kegiatan', 'durationInDays');
 
-        if ($format === 'pdf') {
-            $pdf = Pdf::loadView('tr.kegiatan.export', $data);
-            return $pdf->download('kegiatan-' . $kegiatan->id . '.pdf');
-        }
+    //     if ($format === 'pdf') {
+    //         $pdf = Pdf::loadView('tr.kegiatan.export', $data);
+    //         return $pdf->download('kegiatan-' . $kegiatan->id . '.pdf');
+    //     }
 
-        if ($format === 'docx') {
-            try {
-                $builder = \Novay\Word\Facades\Word::builder();
+    //     if ($format === 'docx') {
+    //         try {
+    //             $builder = \Novay\Word\Facades\Word::builder();
 
-                // Helper function to sanitize text
-                $sanitize = function($text) {
-                    if (empty($text)) return '-';
-                    $text = strip_tags($text);
-                    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    return trim($text) ?: '-';
-                };
+    //             // Helper function to sanitize text
+    //             $sanitize = function($text) {
+    //                 if (empty($text)) return '-';
+    //                 $text = strip_tags($text);
+    //                 $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    //                 return trim($text) ?: '-';
+    //             };
 
-                // Header - Centered and styled
-                $builder->addText(''); // spacing
-                $builder->addText('BACK TO OFFICE REPORT', [
-                    'size' => 16,
-                    'bold' => true,
-                    'alignment' => 'center',
-                    'color' => '1F4788'
-                ]);
-                $builder->addText('Laporan Kegiatan', [
-                    'size' => 11,
-                    'italic' => true,
-                    'alignment' => 'center',
-                    'color' => '666666'
-                ]);
-                $builder->addText(''); 
-                $builder->addText(''); 
+    //             // Header - Centered and styled
+    //             $builder->addText(''); // spacing
+    //             $builder->addText('BACK TO OFFICE REPORT', [
+    //                 'size' => 16,
+    //                 'bold' => true,
+    //                 'alignment' => 'center',
+    //                 'color' => '1F4788'
+    //             ]);
+    //             $builder->addText('Laporan Kegiatan', [
+    //                 'size' => 11,
+    //                 'italic' => true,
+    //                 'alignment' => 'center',
+    //                 'color' => '666666'
+    //             ]);
+    //             $builder->addText(''); 
+    //             $builder->addText(''); 
 
-                // Informasi Dasar
-                $builder->addText('INFORMASI DASAR', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                $builder->addTable([
-                    ['Kode Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->kode)],
-                    ['Nama Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->nama)],
-                    ['Kode Kegiatan', $sanitize($kegiatan->activity?->kode)],
-                    ['Nama Kegiatan', $sanitize($kegiatan->activity?->nama)],
-                    ['Penulis', $kegiatan->datapenulis->pluck('nama')->implode(', ') ?: '-'],
-                    ['Jenis Kegiatan', $sanitize($kegiatan->jenisKegiatan?->nama)],
-                    ['Fase Pelaporan', $sanitize($kegiatan->fasepelaporan)],
-                    ['Tanggal Mulai', $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') : '-'],
-                    ['Tanggal Selesai', $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') : '-'],
-                    ['Durasi', ($durationInDays ?? '-') . ' hari'],
-                    ['Lokasi', $kegiatan->lokasi->isNotEmpty() ? $kegiatan->lokasi->unique('kabupaten_id')->pluck('desa.kecamatan.kabupaten.nama')->filter()->implode(', ') : '-'],
-                    ['Mitra', $kegiatan->mitra->pluck('nama')->implode(', ') ?: '-'],
-                    ['Status', $sanitize($kegiatan->status)],
-                ]);
-                $builder->addText(''); 
+    //             // Informasi Dasar
+    //             $builder->addText('INFORMASI DASAR', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //             $builder->addTable([
+    //                 ['Kode Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->kode)],
+    //                 ['Nama Program', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->program?->nama)],
+    //                 ['Kode Kegiatan', $sanitize($kegiatan->activity?->kode)],
+    //                 ['Nama Kegiatan', $sanitize($kegiatan->activity?->nama)],
+    //                 ['Penulis', $kegiatan->datapenulis->pluck('nama')->implode(', ') ?: '-'],
+    //                 ['Jenis Kegiatan', $sanitize($kegiatan->jenisKegiatan?->nama)],
+    //                 ['Fase Pelaporan', $sanitize($kegiatan->fasepelaporan)],
+    //                 ['Tanggal Mulai', $kegiatan->tanggalmulai ? \Carbon\Carbon::parse($kegiatan->tanggalmulai)->format('d-m-Y') : '-'],
+    //                 ['Tanggal Selesai', $kegiatan->tanggalselesai ? \Carbon\Carbon::parse($kegiatan->tanggalselesai)->format('d-m-Y') : '-'],
+    //                 ['Durasi', ($durationInDays ?? '-') . ' hari'],
+    //                 ['Lokasi', $kegiatan->lokasi->isNotEmpty() ? $kegiatan->lokasi->unique('kabupaten_id')->pluck('desa.kecamatan.kabupaten.nama')->filter()->implode(', ') : '-'],
+    //                 ['Mitra', $kegiatan->mitra->pluck('nama')->implode(', ') ?: '-'],
+    //                 ['Status', $sanitize($kegiatan->status)],
+    //             ]);
+    //             $builder->addText(''); 
 
-                // Hierarki Program
-                $builder->addText('HIERARKI PROGRAM', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                $builder->addTable([
-                    ['Program Outcome', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->nama)],
-                    ['Program Output', $sanitize($kegiatan->activity?->program_outcome_output?->nama)],
-                    ['Target Kegiatan', ($kegiatan->activity?->target_reinstra ? ($kegiatan->activity?->target_reinstra?->target_value ?? 0) . ' ' . ($kegiatan->activity?->target_reinstra?->satuan?->nama ?? '') : 'Tidak ada target')],
-                ]);
-                $builder->addText('');
+    //             // Hierarki Program
+    //             $builder->addText('HIERARKI PROGRAM', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //             $builder->addTable([
+    //                 ['Program Outcome', $sanitize($kegiatan->activity?->program_outcome_output?->program_outcome?->nama)],
+    //                 ['Program Output', $sanitize($kegiatan->activity?->program_outcome_output?->nama)],
+    //                 ['Target Kegiatan', ($kegiatan->activity?->target_reinstra ? ($kegiatan->activity?->target_reinstra?->target_value ?? 0) . ' ' . ($kegiatan->activity?->target_reinstra?->satuan?->nama ?? '') : 'Tidak ada target')],
+    //             ]);
+    //             $builder->addText('');
 
-                // Detail Lokasi
-                if ($kegiatan->lokasi->isNotEmpty()) {
-                    $builder->addText('DETAIL LOKASI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $lokasiData = [['Nama Tempat', 'Longitude', 'Latitude']];
-                    foreach ($kegiatan->lokasi as $lokasi) {
-                        $lokasiData[] = [
-                            $sanitize($lokasi->lokasi),
-                            $sanitize($lokasi->long),
-                            $sanitize($lokasi->lat)
-                        ];
-                    }
-                    $builder->addTable($lokasiData);
-                    $builder->addText('');
-                }
+    //             // Detail Lokasi
+    //             if ($kegiatan->lokasi->isNotEmpty()) {
+    //                 $builder->addText('DETAIL LOKASI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $lokasiData = [['Nama Tempat', 'Longitude', 'Latitude']];
+    //                 foreach ($kegiatan->lokasi as $lokasi) {
+    //                     $lokasiData[] = [
+    //                         $sanitize($lokasi->lokasi),
+    //                         $sanitize($lokasi->long),
+    //                         $sanitize($lokasi->lat)
+    //                     ];
+    //                 }
+    //                 $builder->addTable($lokasiData);
+    //                 $builder->addText('');
+    //             }
 
-                // Deskripsi
-                $builder->addText('DESKRIPSI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //             // Deskripsi
+    //             $builder->addText('DESKRIPSI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
                 
-                $builder->addText('Latar Belakang', ['bold' => true, 'size' => 11]);
-                $builder->addText($sanitize($kegiatan->deskripsilatarbelakang));
-                $builder->addText('');
+    //             $builder->addText('Latar Belakang', ['bold' => true, 'size' => 11]);
+    //             $builder->addText($sanitize($kegiatan->deskripsilatarbelakang));
+    //             $builder->addText('');
                 
-                $builder->addText('Tujuan', ['bold' => true, 'size' => 11]);
-                $builder->addText($sanitize($kegiatan->deskripsitujuan));
-                $builder->addText('');
+    //             $builder->addText('Tujuan', ['bold' => true, 'size' => 11]);
+    //             $builder->addText($sanitize($kegiatan->deskripsitujuan));
+    //             $builder->addText('');
                 
-                $builder->addText('Keluaran', ['bold' => true, 'size' => 11]);
-                $builder->addText($sanitize($kegiatan->deskripsikeluaran));
-                $builder->addText('');
+    //             $builder->addText('Keluaran', ['bold' => true, 'size' => 11]);
+    //             $builder->addText($sanitize($kegiatan->deskripsikeluaran));
+    //             $builder->addText('');
 
-                // Conditional Activity-Specific Content based on jeniskegiatan_id
-                if ($kegiatan->jeniskegiatan_id == 1 && $kegiatan->assessment) {
-                    $builder->addText('DETAIL ASSESSMENT', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $builder->addText($sanitize($kegiatan->assessment->assessmentdeskripsi ?? 'Tidak ada detail assessment.'));
-                    $builder->addText('');
-                } elseif ($kegiatan->jeniskegiatan_id == 3 && $kegiatan->pelatihan) {
-                    $builder->addText('DETAIL PELATIHAN', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    if ($kegiatan->pelatihan->pelatihanmetode) {
-                        $builder->addText('Metode: ' . $sanitize($kegiatan->pelatihan->pelatihanmetode));
-                    }
-                    if ($kegiatan->pelatihan->pelatihantopik) {
-                        $builder->addText('Topik: ' . $sanitize($kegiatan->pelatihan->pelatihantopik));
-                    }
-                    $builder->addText('');
-                } elseif ($kegiatan->jeniskegiatan_id == 8 && $kegiatan->monitoring) {
-                    $builder->addText('DETAIL MONITORING', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $builder->addText($sanitize($kegiatan->monitoring->monitoringdeskripsi ?? 'Tidak ada detail monitoring.'));
-                    $builder->addText('');
-                }
+    //             // Conditional Activity-Specific Content based on jeniskegiatan_id
+    //             if ($kegiatan->jeniskegiatan_id == 1 && $kegiatan->assessment) {
+    //                 $builder->addText('DETAIL ASSESSMENT', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $builder->addText($sanitize($kegiatan->assessment->assessmentdeskripsi ?? 'Tidak ada detail assessment.'));
+    //                 $builder->addText('');
+    //             } elseif ($kegiatan->jeniskegiatan_id == 3 && $kegiatan->pelatihan) {
+    //                 $builder->addText('DETAIL PELATIHAN', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 if ($kegiatan->pelatihan->pelatihanmetode) {
+    //                     $builder->addText('Metode: ' . $sanitize($kegiatan->pelatihan->pelatihanmetode));
+    //                 }
+    //                 if ($kegiatan->pelatihan->pelatihantopik) {
+    //                     $builder->addText('Topik: ' . $sanitize($kegiatan->pelatihan->pelatihantopik));
+    //                 }
+    //                 $builder->addText('');
+    //             } elseif ($kegiatan->jeniskegiatan_id == 8 && $kegiatan->monitoring) {
+    //                 $builder->addText('DETAIL MONITORING', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $builder->addText($sanitize($kegiatan->monitoring->monitoringdeskripsi ?? 'Tidak ada detail monitoring.'));
+    //                 $builder->addText('');
+    //             }
 
-                // Ringkasan Peserta
-                $builder->addText('RINGKASAN PESERTA', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                $builder->addTable([
-                    ['Kategori', 'Wanita', 'Pria', 'Total'],
-                    ['Dewasa', (string)($kegiatan->penerimamanfaatdewasaperempuan ?? 0), (string)($kegiatan->penerimamanfaatdewasalakilaki ?? 0), (string)($kegiatan->penerimamanfaatdewasatotal ?? 0)],
-                    ['Lansia', (string)($kegiatan->penerimamanfaatlansiaperempuan ?? 0), (string)($kegiatan->penerimamanfaatlansialakilaki ?? 0), (string)($kegiatan->penerimamanfaatlansiatotal ?? 0)],
-                    ['Remaja', (string)($kegiatan->penerimamanfaatremajaperempuan ?? 0), (string)($kegiatan->penerimamanfaatremajalakilaki ?? 0), (string)($kegiatan->penerimamanfaatremajatotal ?? 0)],
-                    ['Anak', (string)($kegiatan->penerimamanfaatanakperempuan ?? 0), (string)($kegiatan->penerimamanfaatanaklakilaki ?? 0), (string)($kegiatan->penerimamanfaatanaktotal ?? 0)],
-                    ['TOTAL', (string)($kegiatan->penerimamanfaatperempuantotal ?? 0), (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0), (string)($kegiatan->penerimamanfaattotal ?? 0)],
-                ]);
-                $builder->addText('');
+    //             // Ringkasan Peserta
+    //             $builder->addText('RINGKASAN PESERTA', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //             $builder->addTable([
+    //                 ['Kategori', 'Wanita', 'Pria', 'Total'],
+    //                 ['Dewasa', (string)($kegiatan->penerimamanfaatdewasaperempuan ?? 0), (string)($kegiatan->penerimamanfaatdewasalakilaki ?? 0), (string)($kegiatan->penerimamanfaatdewasatotal ?? 0)],
+    //                 ['Lansia', (string)($kegiatan->penerimamanfaatlansiaperempuan ?? 0), (string)($kegiatan->penerimamanfaatlansialakilaki ?? 0), (string)($kegiatan->penerimamanfaatlansiatotal ?? 0)],
+    //                 ['Remaja', (string)($kegiatan->penerimamanfaatremajaperempuan ?? 0), (string)($kegiatan->penerimamanfaatremajalakilaki ?? 0), (string)($kegiatan->penerimamanfaatremajatotal ?? 0)],
+    //                 ['Anak', (string)($kegiatan->penerimamanfaatanakperempuan ?? 0), (string)($kegiatan->penerimamanfaatanaklakilaki ?? 0), (string)($kegiatan->penerimamanfaatanaktotal ?? 0)],
+    //                 ['TOTAL', (string)($kegiatan->penerimamanfaatperempuantotal ?? 0), (string)($kegiatan->penerimamanfaatlakilakitotal ?? 0), (string)($kegiatan->penerimamanfaattotal ?? 0)],
+    //             ]);
+    //             $builder->addText('');
 
-                // Ringkasan Disabilitas
-                $builder->addText('RINGKASAN DISABILITAS', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                $builder->addTable([
-                    ['Kategori', 'Wanita', 'Pria', 'Total'],
-                    ['Disabilitas', (string)($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0), (string)($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0), (string)($kegiatan->penerimamanfaatdisabilitastotal ?? 0)],
-                    ['Non-Disabilitas', (string)($kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0), (string)($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0), (string)($kegiatan->penerimamanfaatnondisabilitastotal ?? 0)],
-                ]);
-                $builder->addText('');
+    //             // Ringkasan Disabilitas
+    //             $builder->addText('RINGKASAN DISABILITAS', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //             $builder->addTable([
+    //                 ['Kategori', 'Wanita', 'Pria', 'Total'],
+    //                 ['Disabilitas', (string)($kegiatan->penerimamanfaatdisabilitasperempuan ?? 0), (string)($kegiatan->penerimamanfaatdisabilitaslakilaki ?? 0), (string)($kegiatan->penerimamanfaatdisabilitastotal ?? 0)],
+    //                 ['Non-Disabilitas', (string)($kegiatan->penerimamanfaatnondisabilitasperempuan ?? 0), (string)($kegiatan->penerimamanfaatnondisabilitaslakilaki ?? 0), (string)($kegiatan->penerimamanfaatnondisabilitastotal ?? 0)],
+    //             ]);
+    //             $builder->addText('');
 
-                // Tantangan dan Solusi
-                $kendala = $kegiatan->assessment?->assessmentkendala ?? $kegiatan->pelatihan?->pelatihanisu ?? $kegiatan->monitoring?->monitoringkendala ?? null;
-                $solusi = $kegiatan->assessment?->assessmentsolusi ?? $kegiatan->pelatihan?->pelatihansolusi ?? $kegiatan->monitoring?->monitoringsolusi ?? null;
+    //             // Tantangan dan Solusi
+    //             $kendala = $kegiatan->assessment?->assessmentkendala ?? $kegiatan->pelatihan?->pelatihanisu ?? $kegiatan->monitoring?->monitoringkendala ?? null;
+    //             $solusi = $kegiatan->assessment?->assessmentsolusi ?? $kegiatan->pelatihan?->pelatihansolusi ?? $kegiatan->monitoring?->monitoringsolusi ?? null;
                 
-                if ($kendala || $solusi) {
-                    $builder->addText('TANTANGAN DAN SOLUSI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $builder->addTable([
-                        ['Tantangan', 'Solusi yang Diambil'],
-                        [$sanitize($kendala ?: 'Tidak ada data'), $sanitize($solusi ?: 'Tidak ada data')],
-                    ]);
-                    $builder->addText('');
-                }
+    //             if ($kendala || $solusi) {
+    //                 $builder->addText('TANTANGAN DAN SOLUSI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $builder->addTable([
+    //                     ['Tantangan', 'Solusi yang Diambil'],
+    //                     [$sanitize($kendala ?: 'Tidak ada data'), $sanitize($solusi ?: 'Tidak ada data')],
+    //                 ]);
+    //                 $builder->addText('');
+    //             }
 
-                // Isu & Rekomendasi
-                $isu = $kegiatan->assessment?->assessmentisu ?? $kegiatan->pelatihan?->pelatihanisu ?? $kegiatan->monitoring?->monitoringisu ?? null;
-                $rekomendasi = $kegiatan->assessment?->assessmentrekomendasi ?? $kegiatan->pelatihan?->pelatihanrekomendasi ?? $kegiatan->monitoring?->monitoringrekomendasi ?? null;
+    //             // Isu & Rekomendasi
+    //             $isu = $kegiatan->assessment?->assessmentisu ?? $kegiatan->pelatihan?->pelatihanisu ?? $kegiatan->monitoring?->monitoringisu ?? null;
+    //             $rekomendasi = $kegiatan->assessment?->assessmentrekomendasi ?? $kegiatan->pelatihan?->pelatihanrekomendasi ?? $kegiatan->monitoring?->monitoringrekomendasi ?? null;
                 
-                if ($isu || $rekomendasi) {
-                    $builder->addText('ISU & REKOMENDASI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $builder->addTable([
-                        ['Isu yang Perlu Diperhatikan', 'Rekomendasi'],
-                        [$sanitize($isu ?: 'Tidak ada isu'), $sanitize($rekomendasi ?: 'Tidak ada rekomendasi')],
-                    ]);
-                    $builder->addText('');
-                }
+    //             if ($isu || $rekomendasi) {
+    //                 $builder->addText('ISU & REKOMENDASI', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $builder->addTable([
+    //                     ['Isu yang Perlu Diperhatikan', 'Rekomendasi'],
+    //                     [$sanitize($isu ?: 'Tidak ada isu'), $sanitize($rekomendasi ?: 'Tidak ada rekomendasi')],
+    //                 ]);
+    //                 $builder->addText('');
+    //             }
 
-                // Pembelajaran
-                $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
-                    ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                    ?? $kegiatan->monitoring?->monitoringpembelajaran
-                    ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
-                    ?? $kegiatan->kampanye?->kampanyepembelajaran
-                    ?? $kegiatan->konsultasi?->konsultasipembelajaran
-                    ?? $kegiatan->kunjungan?->kunjunganpembelajaran
-                    ?? null;
+    //             // Pembelajaran
+    //             $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
+    //                 ?? $kegiatan->pelatihan?->pelatihanpembelajaran
+    //                 ?? $kegiatan->monitoring?->monitoringpembelajaran
+    //                 ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
+    //                 ?? $kegiatan->kampanye?->kampanyepembelajaran
+    //                 ?? $kegiatan->konsultasi?->konsultasipembelajaran
+    //                 ?? $kegiatan->kunjungan?->kunjunganpembelajaran
+    //                 ?? null;
                     
-                if ($pembelajaran) {
-                    $builder->addText('PEMBELAJARAN', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    $builder->addText($sanitize($pembelajaran));
-                    $builder->addText('');
-                }
+    //             if ($pembelajaran) {
+    //                 $builder->addText('PEMBELAJARAN', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 $builder->addText($sanitize($pembelajaran));
+    //                 $builder->addText('');
+    //             }
 
-                // Dokumen Pendukung
-                if ($kegiatan->getMedia('dokumen_pendukung')->count() > 0) {
-                    $builder->addText('DOKUMEN PENDUKUNG', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    foreach ($kegiatan->getMedia('dokumen_pendukung') as $media) {
-                        $builder->addText('• ' . $media->name . ' (' . $media->human_readable_size . ')');
-                    }
-                    $builder->addText('');
-                }
+    //             // Dokumen Pendukung
+    //             if ($kegiatan->getMedia('dokumen_pendukung')->count() > 0) {
+    //                 $builder->addText('DOKUMEN PENDUKUNG', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 foreach ($kegiatan->getMedia('dokumen_pendukung') as $media) {
+    //                     $builder->addText('• ' . $media->name . ' (' . $media->human_readable_size . ')');
+    //                 }
+    //                 $builder->addText('');
+    //             }
 
-                // Media Pendukung
-                if ($kegiatan->getMedia('media_pendukung')->count() > 0) {
-                    $builder->addText('MEDIA PENDUKUNG', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
-                    foreach ($kegiatan->getMedia('media_pendukung') as $media) {
-                        $builder->addText('• ' . $media->name . ' (' . $media->human_readable_size . ')');
-                    }
-                    $builder->addText('');
-                }
+    //             // Media Pendukung
+    //             if ($kegiatan->getMedia('media_pendukung')->count() > 0) {
+    //                 $builder->addText('MEDIA PENDUKUNG', ['size' => 12, 'bold' => true, 'color' => '1F4788']);
+    //                 foreach ($kegiatan->getMedia('media_pendukung') as $media) {
+    //                     $builder->addText('• ' . $media->name . ' (' . $media->human_readable_size . ')');
+    //                 }
+    //                 $builder->addText('');
+    //             }
 
-                // Clear output buffer
-                if (ob_get_length()) {
-                    ob_end_clean();
-                }
+    //             // Clear output buffer
+    //             if (ob_get_length()) {
+    //                 ob_end_clean();
+    //             }
 
-                return $builder->download('kegiatan-' . $kegiatan->id . '.docx');
+    //             return $builder->download('kegiatan-' . $kegiatan->id . '.docx');
 
-            } catch (\Exception $e) {
-                \Log::error('DOCX export failed: ' . $e->getMessage());
-                \Log::error($e->getTraceAsString());
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to generate DOCX: ' . $e->getMessage()
-                ], 500);
-            }
-        }
+    //         } catch (\Exception $e) {
+    //             \Log::error('DOCX export failed: ' . $e->getMessage());
+    //             \Log::error($e->getTraceAsString());
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Failed to generate DOCX: ' . $e->getMessage()
+    //             ], 500);
+    //         }
+    //     }
 
-        abort(404);
-    }
+    //     abort(404);
+    // }
 
-    public function exportV2(Kegiatan $kegiatan, $format)
-    {
-        // Use BTOR::getData to load all necessary relationships including dynamic ones
-        $kegiatan = BTOR::getData($kegiatan->id);
+    // public function exportV2(Kegiatan $kegiatan, $format)
+    // {
+    //     // Use BTOR::getData to load all necessary relationships including dynamic ones
+    //     $kegiatan = BTOR::getData($kegiatan->id);
 
-        $format = strtolower($format);
-        $durationInDays = $kegiatan->getDurationInDays();
-        $data = compact('kegiatan', 'durationInDays');
+    //     $format = strtolower($format);
+    //     $durationInDays = $kegiatan->getDurationInDays();
+    //     $data = compact('kegiatan', 'durationInDays');
 
-        if ($format === 'md') {
-            return response()->streamDownload(function () use ($kegiatan, $durationInDays) {
-                echo view('tr.kegiatan.export_v2', compact('kegiatan', 'durationInDays'))->render();
-            }, 'kegiatan-' . $kegiatan->id . '.md', [
-                'Content-Type' => 'text/markdown',
-            ]);
-        }
+    //     if ($format === 'md') {
+    //         return response()->streamDownload(function () use ($kegiatan, $durationInDays) {
+    //             echo view('tr.kegiatan.export_v2', compact('kegiatan', 'durationInDays'))->render();
+    //         }, 'kegiatan-' . $kegiatan->id . '.md', [
+    //             'Content-Type' => 'text/markdown',
+    //         ]);
+    //     }
 
-        // Fallback to original export if format not handled by V2
-        return $this->export($kegiatan, $format);
-    }
+    //     // Fallback to original export if format not handled by V2
+    //     return $this->export($kegiatan, $format);
+    // }
 
 
     public function create()
