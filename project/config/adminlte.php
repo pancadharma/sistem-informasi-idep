@@ -140,6 +140,7 @@ return [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-tachometer-alt',
+            'can' => 'dashboard_access',
             'submenu' => [
                 [
                     'text' => 'Beneficiaries',
@@ -223,6 +224,7 @@ return [
             'text' => 'user_management',
             'classes' => 'text-bold',
             'icon' => 'far fa-image',
+            'can' => 'user_management_access',
             'submenu' => [
                 [
                     'text' => 'role',
