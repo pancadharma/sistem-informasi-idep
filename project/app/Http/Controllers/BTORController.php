@@ -545,11 +545,6 @@ class BTORController extends Controller
         $addRow($table, __('btor.penulis_laporan'), $penulis);
         $addRow($table, __('btor.penulis_jabatan'), $jabatan);
 
-        if ($kegiatan->penanggung_jawab_id) {
-            $addRow($table, __('btor.penanggung_jawab'), $this->safeValue($kegiatan->penanggungJawab?->nama));
-            $addRow($table, __('btor.penanggung_jawab_jabatan'), $this->safeValue($kegiatan->penanggungJawab?->jabatan?->nama));
-        }
-
         $section->addText('', [], $borderStyle);
         
     }
@@ -1164,7 +1159,6 @@ class BTORController extends Controller
             'kunjungan',
             'konsultasi',
             'lainnya',
-            'penanggungJawab.jabatan'
         ];
 
         foreach ($relationships as $relation) {
