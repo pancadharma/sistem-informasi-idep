@@ -74,15 +74,17 @@
         }
 
         .section-title {
-            font-size: 12pt;
+            display: block;
+            width: 100%;
+            font-size: 10pt;
             font-weight: bold;
-            margin-top: 15pt;
-            margin-bottom: 5pt;
-            text-transform: none;
-            border: none;
             text-transform: uppercase;
-            background-color: #526d4e;
-            color: white;
+            background-color: #385623;
+            color: #ffffff;
+            padding: 4px 8px;
+            margin-top: 12pt;
+            margin-bottom: 4pt;
+            border: none;
         }
 
         /** TABLES **/
