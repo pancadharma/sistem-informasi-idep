@@ -18,7 +18,7 @@
         }
 
         @page {
-            margin: 2.5cm 2.5cm 2.5cm 2.5cm;
+            margin: 2.5cm 1.5cm 1.5cm 1.5cm;
         }   
 
         body {
@@ -35,7 +35,7 @@
             left: 0;
             right: 0;
             height: 40px;
-            text-align: center;
+            text-align: left;
         }
 
         footer {
@@ -57,6 +57,12 @@
 
         .footer-bold {
             font-weight: bold;
+            color: #526d4e;
+        }
+
+        .page-number:after {
+            content: counter(page);
+            font-size: 8pt;
             color: #526d4e;
         }
 
@@ -131,6 +137,19 @@
             margin-bottom: 5px;
             padding-left: 20px;
         }
+
+        .print-h2, .print-h3 {
+            color: #526d4e;
+            font-family: 'Figtree', sans-serif;
+        }
+        .print-h2 {
+            font-size : 24px;
+            font-weight: 700;
+        }
+        .print-h3 {
+            font-size : 18px;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -144,14 +163,10 @@
 
     <footer>
         <div class="footer-line"></div>
+        <div class="page-number" style="text-align: center; margin-bottom: 3px;"></div>
         <div class="footer">
             <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
         </div>
-        {{-- 
-        <div class="footer-bold">Yayasan IDEP Selaras Alam</div>
-        <div>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia</div>
-        <div>Telp/Fax : +62-361-908-2983 / +62-812 4658 5137</div> --}}
-        {{-- <div>{{ __('btor.generated_at') }}: {{ date('d-m-Y H:i:s') }}</div> --}}
     </footer>
 
     <main>
@@ -161,6 +176,19 @@
                 $specific = $item->specific;
             @endphp
 
+            <div class="print-header" style="padding: 2px 4px;">
+                <div class="print-h2">
+                    BACK TO OFFICE
+                </div>
+                <div class="print-h3">
+                    | REPORT |
+                </div>
+                @isset($kegiatan->tanggalmulai)
+                    <div class="print-h3">
+                        {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('Y') }}
+                    </div>
+                @endisset
+            </div>
             <div class="{{ !$loop->last ? 'page-break' : '' }}">
                 
                 {{-- Metadata Table --}}
