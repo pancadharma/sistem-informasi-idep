@@ -149,10 +149,7 @@
         if (!selectedKegiatanId) return;
         const format = $('input[name="export_format"]:checked').val();
         let url;
-        if (format === 'md') {
-            url = "{{ route('kegiatan.exportV2', ['kegiatan' => '__id__', 'format' => '__format__']) }}";
-        }
-        else if (format === 'pdf') {
+        if (format === 'pdf') {
             url = "{{ route('kegiatan.export.pdf', ['kegiatan' => '__id__']) }}";
         }
         else if (format === 'docx') {

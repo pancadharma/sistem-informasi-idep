@@ -72,10 +72,6 @@
                             <input type="radio" id="exportDocx" name="export_format" value="docx">
                             <label for="exportDocx">DOCX</label>
                         </div>
-                        <div class="icheck-primary">
-                            <input type="radio" id="exportMd" name="export_format" value="md">
-                            <label for="exportMd">Markdown (v2)</label>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
