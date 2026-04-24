@@ -12,12 +12,24 @@
             $kegiatan = $item['kegiatan'];
             $viewPath = $item['viewPath'];
         @endphp
-
+        <div class="print-header" style="padding: 2px 4px;">
+            <div class="print-h2">
+                BACK TO OFFICE
+            </div>
+            <div class="print-h3">
+                | REPORT |
+            </div>
+            @isset($kegiatan->tanggalmulai)
+                <div class="print-h3">
+                    {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('Y') }}
+                </div>
+            @endisset
+        </div>
         <div class="report-wrapper">
             {{-- Badge (Screen Only) --}}
-            <div class="no-print report-badge">
+            {{-- <div class="no-print report-badge">
                 Report {{ $index + 1 }} of {{ count($kegiatanList) }}
-            </div>
+            </div> --}}
 
             <div class="print-container">
                 {{-- METADATA --}}
@@ -54,7 +66,7 @@
                                 <td>:</td>
                                 <td>{{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}</td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
                                 <td>:</td>
                                 <td>{{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}</td>
@@ -63,7 +75,7 @@
                                 <td><strong>{{ __('btor.fase_pelaporan') }}</strong></td>
                                 <td>:</td>
                                 <td>{{ $kegiatan->fasepelaporan ?: '-' }}</td>
-                            </tr>
+                            </tr> --}}
                         </table>
                     </div>
                 </div>

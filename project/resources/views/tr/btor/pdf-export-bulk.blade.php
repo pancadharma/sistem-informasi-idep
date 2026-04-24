@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>BTOR Export</title>
+    <title>BTOR REPORT EXPORTS</title>
     <style>
         /* Apply Figtree font as default */
         body, html, * {
@@ -138,16 +138,20 @@
         @if(file_exists(public_path('images/uploads/header.png')))
             <img src="{{ public_path('images/uploads/header.png') }}" style="height: 38px; width: auto;">
         @else
-            <div style="font-size: 14pt; font-weight: bold;">YAYASAN IDEP</div>
+            <div style="font-size: 14pt; font-weight: bold;">IDEP SELARAS ALAM</div>
         @endif
     </header>
 
     <footer>
         <div class="footer-line"></div>
+        <div class="footer">
+            <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
+        </div>
+        {{-- 
         <div class="footer-bold">Yayasan IDEP Selaras Alam</div>
         <div>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia</div>
-        <div>Telp/Fax : +62-361-908-2983 / +62-812 4658 5137</div>
-        <div>{{ __('btor.generated_at') }}: {{ date('d-m-Y H:i:s') }}</div>
+        <div>Telp/Fax : +62-361-908-2983 / +62-812 4658 5137</div> --}}
+        {{-- <div>{{ __('btor.generated_at') }}: {{ date('d-m-Y H:i:s') }}</div> --}}
     </footer>
 
     <main>

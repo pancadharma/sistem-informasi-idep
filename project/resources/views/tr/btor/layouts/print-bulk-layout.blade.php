@@ -22,6 +22,10 @@
                 border-bottom: none;
             }
         }
+
+        .print-body-row td {
+            padding-top: 10px!important;
+        }
         
         .report-badge {
             background: #eee;
@@ -63,11 +67,8 @@
         <tfoot>
             <tr class="print-footer-row">
                 <td>
-                    <div class="print-footer-content">
-                        <p><strong>Yayasan IDEP Selaras Alam</strong></p>
-                        <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
-                        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
-                        <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
+                    <div class="print-footer-content" style="margin-top: 20px; margin-bottom: 20px">
+                        <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
                     </div>
                 </td>
             </tr>

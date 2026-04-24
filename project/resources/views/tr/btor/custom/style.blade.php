@@ -47,10 +47,11 @@
 
     .print-header-content {
         text-align: left;
-        padding: 10px 0 2px 0;
-        border-bottom: 2px solid #526d4e;
-        margin-inline-end: 14pt; 
-        margin-inline-start: 14pt;
+        padding: 10px 0 15px 0;
+        border-bottom: 1px solid #526d4e;
+        margin:10px;
+        /* margin-inline-end: 12pt; 
+        margin-inline-start: 12pt; */
     }
 
     .print-header-content img {

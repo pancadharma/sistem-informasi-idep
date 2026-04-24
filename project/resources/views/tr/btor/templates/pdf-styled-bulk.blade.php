@@ -664,9 +664,10 @@
 
             {{-- Footer --}}
             <div class="report-footer">
-                <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+                <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
+                {{-- <p><strong>Yayasan IDEP Selaras Alam</strong></p>
                 <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
-                <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
+                <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p> --}}
             </div>
         </div>
 
