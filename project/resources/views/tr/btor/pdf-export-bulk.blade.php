@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>BTOR Export</title>
+    <title>BTOR {{ $kegiatan->programOutcomeOutputActivity?->nama ?? '' }} Export</title>
     <style>
         /* Apply Figtree font as default */
         body, html, * {
@@ -68,11 +68,15 @@
         }
 
         .section-title {
-            font-size: 10pt;
+            font-size: 12pt;
             font-weight: bold;
             margin-top: 15pt;
             margin-bottom: 5pt;
             text-transform: none;
+            border: none;
+            text-transform: uppercase;
+            background-color: #526d4e;
+            color: white;
         }
 
         /** TABLES **/
@@ -192,34 +196,6 @@
                                 {{ $kegiatan->kegiatan_penulis->map(fn($p) => $p->peran->nama ?? '')->filter()->implode(', ') ?: '-' }}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.sektor_kegiatan') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">
-                                {{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.fase_pelaporan') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $kegiatan->fasepelaporan ?: '-' }}</td>
-                        </tr>
-                        {{-- Program Goals (commented, uncomment if needed) --}}
-                        {{-- @php
-                            $programGoal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
-                        @endphp
-                        @if($programGoal)
-                        <tr>
-                            <td class="label-col">{{ __('btor.program_target') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $programGoal->target ?: '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.program_indicator') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $programGoal->indikator ?: '-' }}</td>
-                        </tr>
-                        @endif --}}
                     </table>
                 </div>
 

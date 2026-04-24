@@ -1,21 +1,7 @@
 <style>
-    /* =====================================================
-       TABLE-BASED REPEATING HEADER/FOOTER
-       =====================================================
-       This is the ONLY reliable pure-CSS method for 
-       repeating headers/footers in browser print.
-       
-       Structure:
-       <table class="print-wrapper">
-         <thead> = repeating header
-         <tfoot> = repeating footer  
-         <tbody> = content
-       </table>
-    */
-
     @page {
         size: A4 portrait;
-        margin: 10mm;
+        margin: 8mm;
     }
 
     * {
@@ -23,7 +9,7 @@
     }
 
     body {
-        font-family: 'Tahoma', sans-serif;
+        font-family: 'Figtree', sans-serif;
         font-size: 10pt;
         line-height: 1.3;
         color: #000;
@@ -226,12 +212,37 @@
     .media-meta { font-size: 7pt; color: #666; text-align: center; }
 
     /* --- UTILITY CLASSES --- */
-    .section-title { font-size: 10pt; font-weight: bold; margin-top: 15pt; margin-bottom: 5pt; }
-    .content-box { text-align: justify; }
+    .section-title {
+        font-size: 12pt;
+        font-weight: bold;
+        margin-top: 15pt;
+        margin-bottom: 5pt;
+        text-transform: none;
+        border: none;
+        text-transform: uppercase;
+        background-color: #526d4e;
+        color: white;
+    }
+    .content-box { text-align: justify; margin: 10px}
     .text-center { text-align: center; }
 
     /* Print Controls */
     .btn-print { background-color: #007bff; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
     .btn-close { background-color: #6c757d; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 5px; }
     .print-controls { position: fixed; top: 20px; right: 20px; background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 9999; }
+
+
+
+    .print-h2, .print-h3 {
+        color: #526d4e;
+        font-family: 'Figtree', sans-serif;
+    }
+    .print-h2 {
+        font-size : 24px;
+        font-weight: 700;
+    }
+    .print-h3 {
+        font-size : 18px;
+        font-weight: 700;
+    }
 </style>

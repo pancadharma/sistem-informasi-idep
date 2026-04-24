@@ -376,7 +376,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('kegiatan/export/pdf/{kegiatan}', [BTORController::class, 'exportPdf'])->name('kegiatan.export.pdf');
     Route::get('kegiatan/export/docx/{kegiatan}', [BTORController::class, 'exportDocx'])->name('kegiatan.export.docx');
-
+    Route::get('kegiatan/export/print/{kegiatan}', [BTORController::class, 'print'])->name('kegiatan.export.print');
 
     Route::resource('kegiatan', KegiatanController::class);
 

@@ -147,6 +147,9 @@
         $('#btn-export-docx').attr('href', 
             "{{ route('kegiatan.export.docx', ['kegiatan' => '__id__']) }}".replace('__id__', id)
         );
+        $('#btn-export-print').attr('href', 
+            "{{ route('kegiatan.export.print', ['kegiatan' => '__id__']) }}".replace('__id__', id)
+        );
     });
 </script>
 

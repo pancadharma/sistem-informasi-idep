@@ -71,6 +71,9 @@
                         <a href="#" id="btn-export-docx" class="btn btn-primary mx-1">
                             <i class="fas fa-file-word"></i> DOCX
                         </a>
+                        <a href="#" id="btn-export-print" class="btn btn-success mx-1">
+                            <i class="bi bi-printer"></i> Print
+                        </a>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">

@@ -168,6 +168,7 @@
             min-height: 40px;
             word-wrap: break-word;
             text-align: justify;
+            margin: 10px
         }
 
         /* Hide in-content header and footer since we use fixed positioning */
