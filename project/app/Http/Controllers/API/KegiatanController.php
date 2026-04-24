@@ -128,7 +128,7 @@ class KegiatanController extends Controller
     private function generateButton($type, $color, $icon, $label, $id)
     {
         if ($type === 'export') {
-            return "<button type='button' data-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
+            return "<button type='button' data-toggle='modal' data-target='#exportKegiatanModal' data-kegiatan-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
         }
 
         $url = '';

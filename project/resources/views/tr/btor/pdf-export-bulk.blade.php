@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>BTOR Export</title>
+    <title>BTOR REPORT EXPORTS</title>
     <style>
         /* Apply Figtree font as default */
         body, html, * {
@@ -18,7 +18,7 @@
         }
 
         @page {
-            margin: 2.5cm 2.5cm 2.5cm 2.5cm;
+            margin: 2.5cm 1.5cm 1.5cm 1.5cm;
         }   
 
         body {
@@ -35,7 +35,7 @@
             left: 0;
             right: 0;
             height: 40px;
-            text-align: center;
+            text-align: left;
         }
 
         footer {
@@ -46,7 +46,7 @@
             height: 80px;
             font-size: 8pt;
             text-align: center;
-            color: #0F7001;
+            color: #526d4e;
         }
 
         .footer-line {
@@ -57,7 +57,13 @@
 
         .footer-bold {
             font-weight: bold;
-            color: #0D654D;
+            color: #526d4e;
+        }
+
+        .page-number:after {
+            content: counter(page);
+            font-size: 8pt;
+            color: #526d4e;
         }
 
         /** HEADINGS **/
@@ -68,11 +74,17 @@
         }
 
         .section-title {
+            display: block;
+            width: 100%;
             font-size: 10pt;
             font-weight: bold;
-            margin-top: 15pt;
-            margin-bottom: 5pt;
-            text-transform: none;
+            text-transform: uppercase;
+            background-color: #385623;
+            color: #ffffff;
+            padding: 4px 8px;
+            margin-top: 12pt;
+            margin-bottom: 4pt;
+            border: none;
         }
 
         /** TABLES **/
@@ -118,7 +130,7 @@
         .mb-2 { margin-bottom: 10px; }
 
         /** HTML CONTENT STYLING FIX **/
-        .html-content { text-align: justify; }
+        .html-content { text-align: justify; margin: 10px}
         .html-content p {
             margin: 0 0 5px 0;
         }
@@ -127,6 +139,19 @@
             margin-bottom: 5px;
             padding-left: 20px;
         }
+
+        .print-h2, .print-h3 {
+            color: #526d4e;
+            font-family: 'Figtree', sans-serif;
+        }
+        .print-h2 {
+            font-size : 24px;
+            font-weight: 700;
+        }
+        .print-h3 {
+            font-size : 18px;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -134,16 +159,16 @@
         @if(file_exists(public_path('images/uploads/header.png')))
             <img src="{{ public_path('images/uploads/header.png') }}" style="height: 38px; width: auto;">
         @else
-            <div style="font-size: 14pt; font-weight: bold;">YAYASAN IDEP</div>
+            <div style="font-size: 14pt; font-weight: bold;">IDEP SELARAS ALAM</div>
         @endif
     </header>
 
     <footer>
         <div class="footer-line"></div>
-        <div class="footer-bold">Yayasan IDEP Selaras Alam</div>
-        <div>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia</div>
-        <div>Telp/Fax : +62-361-908-2983 / +62-812 4658 5137</div>
-        <div>{{ __('btor.generated_at') }}: {{ date('d-m-Y H:i:s') }}</div>
+        <div class="page-number" style="text-align: center; margin-bottom: 3px;"></div>
+        <div class="footer">
+            <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
+        </div>
     </footer>
 
     <main>
@@ -153,6 +178,19 @@
                 $specific = $item->specific;
             @endphp
 
+            <div class="print-header" style="padding: 2px 4px;">
+                <div class="print-h2">
+                    BACK TO OFFICE
+                </div>
+                <div class="print-h3">
+                    | REPORT |
+                </div>
+                @isset($kegiatan->tanggalmulai)
+                    <div class="print-h3">
+                        {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('Y') }}
+                    </div>
+                @endisset
+            </div>
             <div class="{{ !$loop->last ? 'page-break' : '' }}">
                 
                 {{-- Metadata Table --}}
@@ -192,34 +230,6 @@
                                 {{ $kegiatan->kegiatan_penulis->map(fn($p) => $p->peran->nama ?? '')->filter()->implode(', ') ?: '-' }}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.sektor_kegiatan') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">
-                                {{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.fase_pelaporan') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $kegiatan->fasepelaporan ?: '-' }}</td>
-                        </tr>
-                        {{-- Program Goals (commented, uncomment if needed) --}}
-                        {{-- @php
-                            $programGoal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
-                        @endphp
-                        @if($programGoal)
-                        <tr>
-                            <td class="label-col">{{ __('btor.program_target') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $programGoal->target ?: '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">{{ __('btor.program_indicator') }}</td>
-                            <td class="sep-col">:</td>
-                            <td class="val-col">{{ $programGoal->indikator ?: '-' }}</td>
-                        </tr>
-                        @endif --}}
                     </table>
                 </div>
 
@@ -233,6 +243,7 @@
 
                 {{-- C. Detail Kegiatan --}}
                 <div class="section-title">C. {{ __('btor.detail_kegiatan') }}</div>
+                <div class="html-content">
                 <table class="table-print">
                     <tr>
                         <td class="label-col">{{ __('btor.tanggal_mulai') }}</td>
@@ -277,10 +288,12 @@
                     @include('tr.btor.partials.location', ['kegiatan' => $kegiatan])
                 @endif
 
+                </div>
                 {{-- D. Hasil Kegiatan --}}
                 <div class="section-title">D. {{ __('btor.hasil.label') }}</div>
                 
                 {{-- Dynamic Activity Content --}}
+                <div class="html-content">
                 @include('tr.btor.partials.hasil-dinamis-print', ['kegiatan' => $kegiatan])
 
                 <div class="text-bold mt-2">a. {{ __('btor.partisipan_disagregat') }}</div>
@@ -380,67 +393,28 @@
                 @else
                     <p>{{ __('btor.no_data_participants') }}</p>
                 @endif
+                </div>
 
                 <div class="text-bold mt-2">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
                 <div class="html-content">{!! $kegiatan->deskripsikeluaran ?? '-' !!}</div>
 
                 {{-- E. Tantangan --}}
                 <div class="section-title">E. {{ __('btor.tantangan_solusi') }}</div>
-                 @php
-                    $kendala = $kegiatan->assessment?->assessmentkendala
-                            ?? $kegiatan->sosialisasi?->sosialisasikendala
-                            ?? $kegiatan->pelatihan?->pelatihankendala
-                            ?? $kegiatan->pembelanjaan?->pembelanjaankendala
-                            ?? $kegiatan->pengembangan?->pengembangankendala
-                            ?? $kegiatan->kampanye?->kampanyekendala
-                            ?? $kegiatan->monitoring?->monitoringkendala
-                            ?? $kegiatan->kunjungan?->kunjungankendala
-                            ?? $kegiatan->konsultasi?->konsultasikendala
-                            ?? $kegiatan->pemetaan?->pemetaankendala
-                            ?? $kegiatan->lainnya?->lainnyakendala
-                            ?? null;
-                @endphp
-                <div class="html-content">{!! $kendala ?? __('btor.no_data_tantang_solusi') !!}</div>
+                <div class="html-content">{!! $specific['kendala'] ?? __('btor.no_data_tantang_solusi') !!}</div>
 
                 {{-- F. Isu --}}
                 <div class="section-title">F. {{ __('btor.hasil.assessmentisu') }}</div>
-                @php
-                    $isu = $kegiatan->assessment?->assessmentisu
-                        ?? $kegiatan->sosialisasi?->sosialisasiisu
-                        ?? $kegiatan->pelatihan?->pelatihanisu
-                        ?? $kegiatan->pembelanjaan?->pembelanjaanisu
-                        ?? $kegiatan->pengembangan?->pengembanganisu
-                        ?? $kegiatan->kampanye?->kampanyeisu
-                        ?? $kegiatan->pemetaan?->pemetaanisu
-                        ?? $kegiatan->monitoring?->monitoringisu
-                        ?? $kegiatan->kunjungan?->kunjunganisu
-                        ?? $kegiatan->konsultasi?->konsultasiisu
-                        ?? $kegiatan->lainnya?->lainnyaisu
-                        ?? null;
-                @endphp
-                <div class="html-content">{!! $isu ?? __('global.no_results') !!}</div>
+                <div class="html-content">{!! $specific['isu'] ?? __('global.no_results') !!}</div>
 
                 {{-- G. Pembelajaran --}}
                 <div class="section-title">G. {{ __('btor.hasil.assessmentpembelajaran') }}</div>
-                @php
-                    $pembelajaran = $kegiatan->assessment?->assessmentpembelajaran
-                                 ?? $kegiatan->pelatihan?->pelatihanpembelajaran
-                                 ?? $kegiatan->monitoring?->monitoringpembelajaran
-                                 ?? $kegiatan->sosialisasi?->sosialisasipembelajaran
-                                 ?? $kegiatan->kampanye?->kampanyepembelajaran
-                                 ?? $kegiatan->konsultasi?->konsultasipembelajaran
-                                 ?? $kegiatan->kunjungan?->kunjunganpembelajaran
-                                 ?? $kegiatan->pembelanjaan?->pembelanjaanpembelajaran
-                                 ?? $kegiatan->pengembangan?->pengembanganpembelajaran
-                                 ?? $kegiatan->pemetaan?->pemetaanpembelajaran
-                                 ?? $kegiatan->lainnya?->lainnyapembelajaran;
-                @endphp
-                <div class="html-content">{!! $pembelajaran ?? __('btor.no_data_pembelajaran') !!}</div>
+                <div class="html-content">{!! $specific['pembelajaran'] ?? __('btor.no_data_pembelajaran') !!}</div>
 
                 {{-- H. Dokumen --}}
                 <div class="section-title">H. {{ __('btor.dokumen_pendukung') }}</div>
-                @include('tr.btor.partials.dokumen', ['kegiatan' => $kegiatan])
-
+                <div class="html-content">
+                    @include('tr.btor.partials.dokumen', ['kegiatan' => $kegiatan])
+                </div>
                 {{-- I. Catatan Penulis --}}
                 <div class="section-title">I. {{ __('btor.catatan_penulis_laporan') }}</div>
                 <div class="html-content">{!! $kegiatan->catatan_penulis ?? '-' !!}</div>

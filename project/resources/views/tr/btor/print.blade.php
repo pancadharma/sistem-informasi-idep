@@ -1,6 +1,6 @@
 @extends('tr.btor.layouts.print-layout')
 
-@section('title', 'BTOR - ' . ($kegiatan->programOutcomeOutputActivity?->nama ?? 'Report'))
+@section('title', 'BTOR - ' . ($kegiatan->programOutcomeOutputActivity?->nama .' Report' ?? 'No BTOR ID Selected'))
 
 @push('print-styles')
     <style>
@@ -15,17 +15,20 @@
 
         /* HEADINGS */
         h1, h2, h3, h4, h5 {
-            font-family: 'Tahoma', sans-serif;
+            font-family: 'Figtree, DejaVu Sans', 'Arial', sans-serif;
             color: #000;
         }
 
         .section-title {
-            font-size: 10pt;
+            font-size: 12pt;
             font-weight: bold;
             margin-top: 15pt;
             margin-bottom: 5pt;
             text-transform: none;
-            border: none; /* Remove any default web borders */
+            border: none;
+            text-transform: uppercase;
+            background-color: #526d4e;
+            color: white;
         }
 
         /* TABLES */
@@ -64,13 +67,13 @@
             margin-top: 30px;
             text-align: center;
             font-size: 8pt;
-            color: #0F7001; /* Matches DOCX Footer Green */
+            color: #526d4e; /* Matches DOCX Footer Green */
             border-top: 3px double #000; /* Mimics thinThickMediumGap */
             padding-top: 10px;
             page-break-inside: avoid;
         }
         .report-footer strong {
-            color: #0D654D;
+            color: #526d4e;
             font-weight: bold;
         }
         .report-footer p {
@@ -80,7 +83,7 @@
         /* UTILS */
         .text-center { text-align: center; }
         .page-break { page-break-after: always; }
-        .content-box { text-align: justify; }
+        .content-box { text-align: justify; margin: 10px}
         
         /* Fix HTML content spacing */
         .content-box p { margin: 0 0 5px 0; }
@@ -89,6 +92,19 @@
 @endpush
 
 @section('content')
+<div class="print-header">
+    <div class="print-h2">
+        BACK TO OFFICE
+    </div>
+    <div class="print-h3">
+        | REPORT |
+    </div>
+    @isset($kegiatan->tanggalmulai)
+        <div class="print-h3">
+            {{ \Carbon\Carbon::parse($kegiatan->tanggalmulai)->locale(app()->getLocale())->isoFormat('Y') }}
+        </div>
+    @endisset
+</div>
 <div class="print-container">
     {{-- Basic Information Table --}}
     <div class="section">
@@ -129,38 +145,22 @@
                         {{ $kegiatan->kegiatan_penulis?->pluck('peran.nama')->filter()->implode(', ') ?: '-' }}
                     </td>
                 </tr>
-                {{-- REVIEW: Added Sektor Kegiatan field to print layout --}}
-                <tr>
+                
+                {{-- <tr>
                     <td><strong>{{ __('btor.sektor_kegiatan') }}</strong></td>
                     <td>:</td>
                     <td>
                         {{ $kegiatan->sektor?->pluck('nama')->filter()->implode(', ') ?: '-' }}
                     </td>
                 </tr>
-                {{-- REVIEW: Added Fase Pelaporan field --}}
+                
                 <tr>
                     <td><strong>{{ __('btor.fase_pelaporan') }}</strong></td>
                     <td>:</td>
                     <td>
                         {{ $kegiatan->fasepelaporan ?: '-' }}
                     </td>
-                </tr>
-                {{-- NEW: Added Program Goals (Target & Indicator) --}}
-                {{-- @php
-                    $programGoal = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->goal;
-                @endphp
-                @if($programGoal)
-                <tr>
-                    <td><strong>{{ __('btor.program_target') }}</strong></td>
-                    <td>:</td>
-                    <td>{{ $programGoal->target ?: '-' }}</td>
-                </tr>
-                <tr>
-                    <td><strong>{{ __('btor.program_indicator') }}</strong></td>
-                    <td>:</td>
-                    <td>{{ $programGoal->indikator ?: '-' }}</td>
-                </tr>
-                @endif --}}
+                </tr> --}}
             </table>
         </div>
     </div>
@@ -184,7 +184,8 @@
     {{-- 3. Detail Kegiatan --}}
     <div class="section">
         <h4 class="section-title">C. {{ __('btor.detail_kegiatan') }}</h4>
-
+        <div class="content-box">
+            
         <table class="table-print" style="margin-bottom: 5px;">
             <tr>
                 <td width="25%"><strong>{{ __('btor.tanggal_mulai') }}</strong></td>
@@ -228,13 +229,13 @@
             <div style="font-weight: bold; margin-top: 10px;">{{ __('btor.tabel_lokasi') }}</div>
             @include('tr.btor.partials.location')
         @endif
-        
+        </div>
     </div>
 
     {{-- 4. Hasil Kegiatan --}}
     <div class="section">
         <h4 class="section-title">D. {{ __('btor.hasil.label') }}</h4>
-
+        <div class="content-box">
         {{-- Dynamic Activity Content --}}
         @include('tr.btor.partials.hasil-dinamis-print', ['kegiatan' => $kegiatan])
 
@@ -342,6 +343,7 @@
         <div style="font-weight: bold; margin: 10px 0 5px 0;">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
         <div class="content-box">
             {!! $kegiatan->deskripsikeluaran ?? '-' !!}
+        </div>
         </div>
     </div>
 

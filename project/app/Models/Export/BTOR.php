@@ -74,55 +74,56 @@ class BTOR extends Model
     }
 
     /**
-     * Get BTOR data for specific kegiatan
+     * Map jeniskegiatan_id to its Eloquent relation name.
      */
-    public static function getData(int $kegiatanId)
+    private static function getTypeRelation(int $jenisId): string
     {
-        // return Kegiatan::with([
-        //     'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.goal',
-        //     'jenisKegiatan',
-        //     'lokasi.desa.kecamatan.kabupaten.provinsi',
-        //     'datapenulis',
-        //     'monitoring',
-        //     'assessment',
-        //     'kampanye',
-        //     'konsultasi',
-        //     'kunjungan',
-        //     'lainnya',
-        //     'pelatihan',
-        //     'pembelanjaan',
-        //     'pemetaan',
-        //     'pengembangan',
-        //     'sosialisasi',
-        //     'mitra',
-        //     'sektor',
-        //     'user'
+        return match ($jenisId) {
+            self::JENIS_ASSESSMENT   => 'assessment',
+            self::JENIS_SOSIALISASI  => 'sosialisasi',
+            self::JENIS_PELATIHAN    => 'pelatihan',
+            self::JENIS_PEMBELANJAAN => 'pembelanjaan',
+            self::JENIS_PENGEMBANGAN => 'pengembangan',
+            self::JENIS_KAMPANYE     => 'kampanye',
+            self::JENIS_PEMETAAN     => 'pemetaan',
+            self::JENIS_MONITORING   => 'monitoring',
+            self::JENIS_KUNJUNGAN    => 'kunjungan',
+            self::JENIS_KONSULTASI   => 'konsultasi',
+            self::JENIS_LAINNYA      => 'lainnya',
+            default                  => 'assessment',
+        };
+    }
 
+    /**
+     * Get BTOR data for specific kegiatan.
+     *
+     * Pass $jenisKegiatanId when it is already known (e.g. from a list or URL
+     * segment) to skip the lightweight pre-query and eager-load only the one
+     * type-relation that is actually needed.
+     */
+    public static function getData(int $kegiatanId, ?int $jenisKegiatanId = null)
+    {
+        // If caller doesn't know the jenis yet, fetch just that column first.
+        if ($jenisKegiatanId === null) {
+            $jenisKegiatanId = Kegiatan::where('id', $kegiatanId)
+                ->value('jeniskegiatan_id');
+        }
 
-        // ])->findOrFail($kegiatanId);
+        $typeRelation = self::getTypeRelation((int) $jenisKegiatanId);
+
         return Kegiatan::with([
             'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.goal',
+            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.kaitanSdg',
             'jenisKegiatan',
             'lokasi.desa.kecamatan.kabupaten.provinsi',
             'datapenulis',
             'lokasi_kegiatan',
             'kegiatan_penulis.peran',
             'kegiatan_penulis.user',
-            'assessment',
-            'monitoring',
-            'sosialisasi',
-            'pelatihan',
-            'pembelanjaan',
-            'pengembangan',
-            'kampanye',
-            'pemetaan',
-            'kunjungan',
-            'konsultasi',
-            'lainnya',
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program.kaitanSdg',
             'sektor',
             'mitra',
             'user',
+            $typeRelation,
         ])->findOrFail($kegiatanId);
     }
 

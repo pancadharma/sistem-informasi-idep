@@ -54,7 +54,7 @@
     </div>
 
     <div class="modal fade" id="exportKegiatanModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Export Kegiatan</h5>
@@ -62,25 +62,22 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="icheck-primary">
-                            <input type="radio" id="exportPdf" name="export_format" value="pdf" checked>
-                            <label for="exportPdf">PDF</label>
-                        </div>
-                        <div class="icheck-primary">
-                            <input type="radio" id="exportDocx" name="export_format" value="docx">
-                            <label for="exportDocx">DOCX</label>
-                        </div>
-                        <div class="icheck-primary">
-                            <input type="radio" id="exportMd" name="export_format" value="md">
-                            <label for="exportMd">Markdown (v2)</label>
-                        </div>
+                <div class="modal-body text-center">
+                    <p class="mb-3">Pilih format laporan yang ingin diunduh:</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="#" id="btn-export-pdf" class="btn btn-danger mx-1">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </a>
+                        <a href="#" id="btn-export-docx" class="btn btn-primary mx-1">
+                            <i class="fas fa-file-word"></i> DOCX
+                        </a>
+                        <a href="#" id="btn-export-print" class="btn btn-success mx-1">
+                            <i class="bi bi-printer"></i> Print
+                        </a>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('global.cancel') }}</button>
-                    <button type="button" class="btn btn-primary confirm-export">Export</button>
                 </div>
             </div>
         </div>
