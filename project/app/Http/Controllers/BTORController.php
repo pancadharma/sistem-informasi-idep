@@ -186,7 +186,7 @@ class BTORController extends Controller
             $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
 
             $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
-            $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
+            $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
             $pStyle = [
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                 'spaceBefore' => 0.25,
@@ -411,7 +411,7 @@ class BTORController extends Controller
 
                 // Footer Styles
                 $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
-                $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
+                $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '526d4e'];
                 $footerPStyle = [
                     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                     'spaceBefore' => 0.25,

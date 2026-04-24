@@ -89,7 +89,7 @@
     .print-footer-content {
         text-align: center;
         font-size: 8pt;
-        color: #0F7001;
+        color: #526d4e;
         border-top: 3px double #000;
         padding: 10px 0;
         margin-top: 15px;

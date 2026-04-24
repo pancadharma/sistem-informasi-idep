@@ -64,7 +64,7 @@
             margin-top: 30px;
             text-align: center;
             font-size: 8pt;
-            color: #0F7001; /* Matches DOCX Footer Green */
+            color: #526d4e; /* Matches DOCX Footer Green */
             border-top: 3px double #000; /* Mimics thinThickMediumGap */
             padding-top: 10px;
             page-break-inside: avoid;

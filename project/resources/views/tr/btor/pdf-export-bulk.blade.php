@@ -46,7 +46,7 @@
             height: 80px;
             font-size: 8pt;
             text-align: center;
-            color: #0F7001;
+            color: #526d4e;
         }
 
         .footer-line {
