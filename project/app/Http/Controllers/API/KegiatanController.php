@@ -116,7 +116,7 @@ class KegiatanController extends Controller
                 //     $buttons[] = $this->generateButton('export', 'success', 'download', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
                 //     // return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
                 // }
-                $buttons[] = $this->generateButton('export', 'success', 'printer', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id);
+                $buttons[] = $this->generateButton('export', 'success', 'printer', 'Export ' . __('cruds.kegiatan.label') . ' ' . $kegiatan->nama, $kegiatan->id, $kegiatan->status);
                 return "<div class='button-container'>" . implode(' ', $buttons) . "</div>";
             })
             ->rawColumns(['action'])
@@ -125,9 +125,15 @@ class KegiatanController extends Controller
         return $data;
     }
 
-    private function generateButton($type, $color, $icon, $label, $id)
+    private function generateButton($type, $color, $icon, $label, $id, $status = null)
     {
         if ($type === 'export') {
+            $isDraft = $status === 'draft';
+            if ($isDraft) {
+                return "<button type='button' class='btn btn-secondary btn-sm' disabled title='" . __('Export tidak tersedia untuk status Draft') . "'>"
+                    . "<i class='bi bi-" . $icon . "'></i>"
+                    . "</button>";
+            }
             return "<button type='button' data-toggle='modal' data-target='#exportKegiatanModal' data-kegiatan-id='" . $id . "' class='btn btn-" . $color . " btn-sm export-kegiatan-btn'><i class='bi bi-" . $icon . "' title='" . $label . "'></i></button>";
         }
 

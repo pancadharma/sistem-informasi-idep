@@ -49,6 +49,11 @@ class BTORController extends Controller
     public function print($id)
     {
         $kegiatan = BTOR::getData($id);
+
+        if ($kegiatan && $kegiatan->status === 'draft') {
+            abort(403, 'Laporan dengan status Draft tidak dapat dicetak atau diekspor.');
+        }
+
         $viewPath = BTOR::getViewPath($kegiatan->jeniskegiatan_id);
         $showButtons = true;
         return view('tr.btor.print', compact('kegiatan', 'viewPath', 'showButtons'));
@@ -84,6 +89,10 @@ class BTORController extends Controller
             return back()->with('error', 'Data tidak ditemukan.');
         }
 
+        if ($kegiatan->status === 'draft') {
+            abort(403, 'Laporan dengan status Draft tidak dapat diekspor.');
+        }
+
         // Pre-calculate specific data (Challenges, Issues, etc.)
         $specificData = $this->getSpecificKegiatanData($kegiatan);
 
@@ -115,11 +124,14 @@ class BTORController extends Controller
 
     public function exportDocx($id)
     {
+        // Draft guard — must be outside try/catch so abort(403) isn't swallowed
+        $kegiatan = BTOR::getData($id);
+        if ($kegiatan && $kegiatan->status === 'draft') {
+            abort(403, 'Laporan dengan status Draft tidak dapat diekspor.');
+        }
+
         $tmpDoc = null;
         try {
-            // Load kegiatan
-            $kegiatan = BTOR::getData($id);
-            
             // Validate export is possible
             $validationErrors = $this->validateKegiatanForExport($kegiatan);
             if (!empty($validationErrors)) {

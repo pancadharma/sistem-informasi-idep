@@ -17,7 +17,7 @@
                 "dataType": "JSON",
             },
             responsive: true,
-            lengthChange: false,
+            lengthChange: true,
             processing: true,
             autoWidth: false,
             serverSide: true,
@@ -163,14 +163,21 @@
                         },
                     ],
                 },
+                topEnd: {
+                    search: {}
+                },
                 bottomStart: {
-                    pageLength: 10
+                    pageLength: {
+                        menu: [5, 10, 25, 50, 100, 200]
+                    }
+                },
+                bottomEnd: {
+                    paging: true
                 }
             },
             order: [
                 [1, 'asc'] // Ensure this matches the index of the `users` column
             ],
-            lengthMenu: [5, 10, 25, 50, 100, 200],
         });
 
 
