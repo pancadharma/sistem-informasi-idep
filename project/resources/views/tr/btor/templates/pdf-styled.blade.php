@@ -55,11 +55,15 @@
         }
 
         .section-title {
-            font-size: 11pt;
+            font-size: 12pt;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-top: 15pt;
+            margin-bottom: 5pt;
+            text-transform: none;
+            border: none;
             text-transform: uppercase;
-            padding-bottom: 3px;
+            background-color: #526d4e;
+            color: white;
         }
 
         .table-print {
@@ -114,6 +118,7 @@
             min-height: 40px;
             word-wrap: break-word;
             text-align: justify;
+            margin: 10px
         }
 
         .report-footer {

@@ -13,7 +13,7 @@
 
     <style>
         body {
-            font-family: 'Figtree', sans-serif;
+            font-family: 'Figtree, DejaVu Sans', 'Arial', sans-serif;
             background-color: #f8f9fa;
         }
         .card {

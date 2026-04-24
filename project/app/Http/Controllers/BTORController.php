@@ -84,9 +84,6 @@ class BTORController extends Controller
             return back()->with('error', 'Data tidak ditemukan.');
         }
 
-        // 2. Ensure Relations & Specific Data are loaded (Same logic as Bulk)
-        $this->ensureRelationshipsLoaded($kegiatan);
-
         // Pre-calculate specific data (Challenges, Issues, etc.)
         $specificData = $this->getSpecificKegiatanData($kegiatan);
 
@@ -103,9 +100,10 @@ class BTORController extends Controller
         $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'isRemoteEnabled' => true,
-                'dpi' => 96,
-                'defaultFont' => 'Figtree'
+                'isRemoteEnabled' => false,
+                'dpi'             => 96,
+                'defaultFont'     => 'Figtree',
+                'enable_php'      => false,
             ]);
 
         // 5. Generate Filename using your helper
@@ -122,9 +120,6 @@ class BTORController extends Controller
             // Load kegiatan
             $kegiatan = BTOR::getData($id);
             
-            // CRITICAL FIX #1: Ensure relationships are loaded
-            $this->ensureRelationshipsLoaded($kegiatan);
-            
             // Validate export is possible
             $validationErrors = $this->validateKegiatanForExport($kegiatan);
             if (!empty($validationErrors)) {
@@ -135,9 +130,9 @@ class BTORController extends Controller
                 // Continue anyway, but with defaults for missing data
             }
 
-            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 12, 'color' => '000000'];
-            $h2Style = ['name' => 'Figtree', 'size' => 12, 'color' => '000000'];
-            $normalStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'allCaps' => true, 'name' => 'Figtree', 'size' => 11, 'color' => 'FFFFFF'];
+            $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+            $normalStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
 
             $h1ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 240];
             $h2ParagraphStyle = ['alignment' => 'both', 'spaceAfter' => 120];
@@ -145,11 +140,15 @@ class BTORController extends Controller
             
             // Create PHPWord document
             $phpWord = new PhpWord();
-            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
-            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 240]);
+            $phpWord->addTitleStyle(1, $h1Style, [
+                'spaceAfter'  => 100,
+                'spaceBefore' => 100,
+                'shading'     => ['type' => 'clear', 'color' => 'auto', 'fill' => '385623'],
+            ]);
+            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 80, 'spaceBefore' => 80]);
 
             $phpWord->setDefaultFontName('Figtree');
-            $phpWord->setDefaultFontSize(10);
+            $phpWord->setDefaultFontSize(9);
 
 
             // $section = $phpWord->addSection();
@@ -173,9 +172,9 @@ class BTORController extends Controller
             $imagePath = public_path('images/uploads/header.png');
             if (file_exists($imagePath)) {
                 $header->addImage($imagePath, [
-                    'width' => 395,
-                    'height' => 38,
-                    'alignment' => 'center'
+                    'width' => 128,
+                    'height' => 34,
+                    'alignment' => 'left'
                 ]);
             } else {
                 // Fallback text if image not found
@@ -185,8 +184,8 @@ class BTORController extends Controller
             // ✅ ADD FOOTER (repeats on every page)
             $footerStyle = $footerBodyStyle = new \PhpOffice\PhpWord\Style\Font();
 
-            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
-            $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
+            $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '526d4e'];
+            $footerBodyStyle = ['name' => 'Figtree', 'size' => 6, 'color' => '526d4e'];
             $pStyle = [
                 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                 'spaceBefore' => 0.25,
@@ -205,13 +204,10 @@ class BTORController extends Controller
             ];
 
             $footer = $section->addFooter();
-
-            $footer->addText('', [], $footerLineStyle);
-            $footer->addPreserveText('Yayasan IDEP Selaras Alam', $footerStyle, $pStyle);
-            $footer->addPreserveText('Office &amp; Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia', $footerBodyStyle, $pStyle);
-            $footer->addPreserveText(' Telp/Fax : +62-361-908-2983 / +62-812 4658 5137', $footerBodyStyle, $pStyle);
-            $footer->addPreserveText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), $footerBodyStyle, $pStyle);
-
+                // Add Footer Content
+                // $footer->addText('', [], $footerLineStyle);
+                $footer->addPreserveText('{PAGE}', $footerStyle, $pStyle);
+                $footer->addPreserveText('Office: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org', $footerBodyStyle, $pStyle);
             // Add document content
             $this->addDocxHeader($section, $kegiatan);
             $this->addDocxContent($section, $kegiatan);
@@ -259,36 +255,6 @@ class BTORController extends Controller
         }
     }
 
-    // public function exportBulkPdf(Request $request)
-    // {
-    //     $ids = is_string($request->input('ids')) 
-    //         ? array_filter(explode(',', $request->input('ids'))) 
-    //         : $request->input('ids', []);
-
-    //     if (empty($ids)) {
-    //         return back()->with('error', 'Pilih minimal 1 laporan untuk diekspor');
-    //     }
-
-    //     $kegiatanList = collect($ids)->map(function ($id) {
-    //         $kegiatan = BTOR::getData($id);
-    //         return [
-    //             'kegiatan' => $kegiatan,
-    //             'viewPath' => BTOR::getViewPath($kegiatan->jeniskegiatan_id)
-    //         ];
-    //     });
-
-    //     // Use pdf-export-bulk.blade.php with inline CSS (most reliable for DomPDF)
-    //     $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('kegiatanList'))
-    //         ->setPaper('a4', 'portrait')
-    //         ->setOption([
-    //             'isRemoteEnabled' => true,
-    //             'encoding' => 'UTF-8',
-    //         ]);
-
-    //     $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('Ymd_His') . '.pdf';
-    //     return $pdf->download($filename);
-    // }
-
     public function exportBulkPdf(Request $request)
     {
         // 1. Sanitize IDs
@@ -312,9 +278,6 @@ class BTORController extends Controller
                 continue;
             }
 
-            // Ensure relations are loaded (using your existing helper)
-            $this->ensureRelationshipsLoaded($kegiatan);
-
             // Pre-calculate the "Specific Data" (Challenges, Issues, Lessons)
             // We reuse the private helper logic you already wrote for DOCX
             $specificData = $this->getSpecificKegiatanData($kegiatan);
@@ -334,9 +297,10 @@ class BTORController extends Controller
         $pdf = Pdf::loadView('tr.btor.pdf-export-bulk', compact('dataList'))
             ->setPaper('a4', 'portrait')
             ->setOption([
-                'isRemoteEnabled' => true,
-                'dpi' => 96,
-                'defaultFont' => 'Figtree'
+                'isRemoteEnabled' => false,
+                'dpi'             => 96,
+                'defaultFont'     => 'Figtree',
+                'enable_php'      => false,
             ]);
 
         $filename = 'BTOR_Bulk_' . count($dataList) . '_Reports_' . date('Ymd_His') . '.pdf';
@@ -367,18 +331,20 @@ class BTORController extends Controller
             $phpWord->setDefaultFontSize(10);
 
             // Define Heading Styles globally
-            $h1Style = ['bold' => true, 'name' => 'Figtree', 'size' => 12, 'color' => '000000'];
+            $h1Style = ['bold' => true, 'allCaps' => true, 'name' => 'Figtree', 'size' => 11, 'color' => 'FFFFFF'];
             $h2Style = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
 
             // Register Title Styles so addTitle() works correctly in the content
-            $phpWord->addTitleStyle(1, $h1Style, ['spaceAfter' => 120, 'spaceBefore' => 120]);
-            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 120, 'spaceBefore' => 120]);
+            $phpWord->addTitleStyle(1, $h1Style, [
+                'spaceAfter'  => 100,
+                'spaceBefore' => 100,
+                'shading'     => ['type' => 'clear', 'color' => 'auto', 'fill' => '385623'],
+            ]);
+            $phpWord->addTitleStyle(2, $h2Style, ['spaceAfter' => 100, 'spaceBefore' => 100]);
 
             // --- 2. LOOP THROUGH DATA ---
             foreach ($ids as $id) {
                 $kegiatan = BTOR::getData($id);
-                // Ensure all relations are loaded prevents lazy loading errors
-                $this->ensureRelationshipsLoaded($kegiatan);
 
                 // --- 3. CREATE SECTION (New Page per ID) ---
                 // Using exact margins from your single export
@@ -410,8 +376,8 @@ class BTORController extends Controller
                 $footer = $section->addFooter();
 
                 // Footer Styles
-                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '0D654D'];
-                $footerBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '0F7001'];
+                $footerStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 8, 'color' => '526d4e'];
+                $footerBodyStyle = ['name' => 'Figtree', 'size' => 6, 'color' => '526d4e'];
                 $footerPStyle = [
                     'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
                     'spaceBefore' => 0.25,
@@ -429,11 +395,11 @@ class BTORController extends Controller
                 ];
 
                 // Add Footer Content
-                $footer->addText('', [], $footerLineStyle);
-                $footer->addPreserveText('Yayasan IDEP Selaras Alam', $footerStyle, $footerPStyle);
-                $footer->addPreserveText('Office &amp; Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali, Indonesia', $footerBodyStyle, $footerPStyle);
-                $footer->addPreserveText(' Telp/Fax : +62-361-908-2983 / +62-812 4658 5137', $footerBodyStyle, $footerPStyle);
-                $footer->addPreserveText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), $footerBodyStyle, $footerPStyle);
+                // $footer->addText('', [], $footerLineStyle);
+                $footer->addPreserveText('{PAGE}', $footerStyle, $footerPStyle);
+                $footer->addPreserveText('Office: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org', $footerBodyStyle, $footerPStyle);
+                // $footer->addPreserveText(' Telp/Fax : +62-361-908-2983 / +62-812 4658 5137', $footerBodyStyle, $footerPStyle);
+                // $footer->addPreserveText('Dihasilkan pada: ' . date('d-m-Y H:i:s'), $footerBodyStyle, $footerPStyle);
 
                 // --- 6. ADD CONTENT ---
                 // Reusing your existing helper functions
@@ -454,7 +420,7 @@ class BTORController extends Controller
                 ob_end_clean();
             }
 
-            $filename = 'BTOR_Bulk_' . count($ids) . '_Reports_' . date('YmdHis') . '.docx';
+            $filename = 'BTOR_REPORT_' . count($ids) . '_BULK_' . date('Y-m-d') . '.docx';
 
             return response()->download($tmpDoc, $filename)
                 ->deleteFileAfterSend(true);
@@ -478,8 +444,8 @@ class BTORController extends Controller
     private function addDocxHeader($section, $kegiatan)
     {
         // --- DEFINISI STYLE ---
-        $reportTitleStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 10, 'color' => '000000'];
-        $hBodyStyle = ['name' => 'Figtree', 'size' => 10, 'color' => '000000'];
+        $reportTitleStyle = ['bold' => true, 'name' => 'Figtree', 'size' => 9, 'color' => '000000'];
+        $hBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
         $normalBodyStyle = ['name' => 'Figtree', 'size' => 9, 'color' => '000000'];
         $labelStyle = array_merge($normalBodyStyle, ['bold' => true]);
 
@@ -492,7 +458,7 @@ class BTORController extends Controller
 
         $borderStyle = [
             // 'lineHeight' => 1.5,
-            'borderTopSize'  => 10,
+            'borderTopSize'  => 9,
             'borderTopColor' => '000000',
             'borderTopStyle' => 'single',
             'spaceAfter'     => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(0),
@@ -521,7 +487,24 @@ class BTORController extends Controller
             ? $penulisList->map(fn($p) => $this->safeValue($p->peran?->nama))->filter()->implode(', ')
             : '-';
 
-        // --- PEMBUATAN TABEL ---
+        $year = $kegiatan->programOutcomeOutputActivity?->program_outcome_output?->program_outcome?->program?->tahun ?? now()->format('Y');
+
+        // Opening block: BACK TO OFFICE / | REPORT | / year
+        $styleOpening1 = ['bold' => true, 'name' => 'Figtree', 'size' => 24, 'color' => '526d4e'];
+        $styleOpening2 = ['bold' => true, 'name' => 'Figtree', 'size' => 16, 'color' => '526d4e'];
+
+        $openingParStyle = [
+            'spaceAfter'  => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(0),
+            'spaceBefore' => \PhpOffice\PhpWord\Shared\Converter::pointToTwip(0),
+            'alignment'   => \PhpOffice\PhpWord\SimpleType\Jc::LEFT,
+        ];
+
+        $section->addText('BACK TO OFFICE', $styleOpening1, $openingParStyle);
+        $section->addText('| REPORT |',     $styleOpening2, $openingParStyle);
+        $section->addText((string) $year,   $styleOpening2, $openingParStyle);
+
+        // $section->addTextBreak(1); // breathing room before the metadata table
+
 
         $table = $section->addTable(['setBorderColor' => 'none']);
         
@@ -545,12 +528,7 @@ class BTORController extends Controller
         $addRow($table, __('btor.penulis_laporan'), $penulis);
         $addRow($table, __('btor.penulis_jabatan'), $jabatan);
 
-        if ($kegiatan->penanggung_jawab_id) {
-            $addRow($table, __('btor.penanggung_jawab'), $this->safeValue($kegiatan->penanggungJawab?->nama));
-            $addRow($table, __('btor.penanggung_jawab_jabatan'), $this->safeValue($kegiatan->penanggungJawab?->jabatan?->nama));
-        }
-
-        $section->addText('', [], $borderStyle);
+        // $section->addText('', [], $borderStyle);
         
     }
 
@@ -835,8 +813,8 @@ class BTORController extends Controller
             return;
         }
 
-        $labelStyle = ['name' => 'Figtree', 'size' => 10, 'bold' => true];
-        $normalStyle = ['name' => 'Figtree', 'size' => 10];
+        $labelStyle = ['name' => 'Figtree', 'size' => 9, 'bold' => true];
+        $normalStyle = ['name' => 'Figtree', 'size' => 9];
         $headerCellStyles = ['bgColor' => 'f2f2f2', 'valign' => 'center'];
         
         $section->addText('- ' . strtoupper(__('btor.hasil.label')) . ': ' . strtoupper($kegiatan->jenisKegiatan?->nama), $labelStyle);
@@ -1142,44 +1120,6 @@ class BTORController extends Controller
         return $html;
     }
 
-    /**
-     * Ensure critical relationships are loaded
-     */
-    private function ensureRelationshipsLoaded($kegiatan)
-    {
-        $relationships = [
-            'programOutcomeOutputActivity.program_outcome_output.program_outcome.program',
-            'lokasi.desa.kecamatan.kabupaten.provinsi',
-            'mitra',
-            'kegiatan_penulis.user',
-            'kegiatan_penulis.peran',
-            'assessment',
-            'sosialisasi',
-            'pelatihan',
-            'pembelanjaan',
-            'pengembangan',
-            'kampanye',
-            'pemetaan',
-            'monitoring',
-            'kunjungan',
-            'konsultasi',
-            'lainnya',
-            'penanggungJawab.jabatan'
-        ];
-
-        foreach ($relationships as $relation) {
-            if (!$kegiatan->relationLoaded($relation)) {
-                try {
-                    $kegiatan->load($relation);
-                } catch (\Exception $e) {
-                    Log::warning("Failed to load relationship: $relation", [
-                        'kegiatan_id' => $kegiatan->id,
-                        'error' => $e->getMessage()
-                    ]);
-                }
-            }
-        }
-    }
 
     /**
      * Validate kegiatan has required relationships
@@ -1211,7 +1151,7 @@ class BTORController extends Controller
     private function generateFilename($kegiatan, $format = 'docx')
     {
         $nama = Str::slug($kegiatan->programOutcomeOutputActivity?->nama ?? 'kegiatan');
-        return "BTOR_{$nama}_{$kegiatan->id}_" . date('YmdHis') . ".{$format}";
+        return "BTOR_{$nama}_{$kegiatan->id}_" . date('Y-m-d') . ".{$format}";
     }
 
 

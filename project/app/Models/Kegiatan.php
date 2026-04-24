@@ -415,8 +415,7 @@ class Kegiatan extends Model implements HasMedia
                 'pelatihanisu', 'pelatihanpembelajaran'
             ],
             4 => [ // Pembelanjaan
-                'pembelanjaandetailbarang', 'pembelanjaanmulai', 'pembelanjaanselesai',
-                'pembelanjaandistribusimulai', 'pembelanjaandistribusiselesai', 'pembelanjaanterdistribusi',
+                'pembelanjaandetailbarang', 'pembelanjaanmulai', 'pembelanjaanselesai', 'pembelanjaanterdistribusi',
                 'pembelanjaanakandistribusi', 'pembelanjaanakandistribusi_ket', 'pembelanjaankendala',
                 'pembelanjaanisu', 'pembelanjaanpembelajaran'
             ],
