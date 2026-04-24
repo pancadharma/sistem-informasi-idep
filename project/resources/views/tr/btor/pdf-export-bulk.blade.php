@@ -128,7 +128,7 @@
         .mb-2 { margin-bottom: 10px; }
 
         /** HTML CONTENT STYLING FIX **/
-        .html-content { text-align: justify; }
+        .html-content { text-align: justify; margin: 10px}
         .html-content p {
             margin: 0 0 5px 0;
         }
@@ -241,6 +241,7 @@
 
                 {{-- C. Detail Kegiatan --}}
                 <div class="section-title">C. {{ __('btor.detail_kegiatan') }}</div>
+                <div class="html-content">
                 <table class="table-print">
                     <tr>
                         <td class="label-col">{{ __('btor.tanggal_mulai') }}</td>
@@ -285,10 +286,12 @@
                     @include('tr.btor.partials.location', ['kegiatan' => $kegiatan])
                 @endif
 
+                </div>
                 {{-- D. Hasil Kegiatan --}}
                 <div class="section-title">D. {{ __('btor.hasil.label') }}</div>
                 
                 {{-- Dynamic Activity Content --}}
+                <div class="html-content">
                 @include('tr.btor.partials.hasil-dinamis-print', ['kegiatan' => $kegiatan])
 
                 <div class="text-bold mt-2">a. {{ __('btor.partisipan_disagregat') }}</div>
@@ -388,6 +391,7 @@
                 @else
                     <p>{{ __('btor.no_data_participants') }}</p>
                 @endif
+                </div>
 
                 <div class="text-bold mt-2">b. {{ __('cruds.kegiatan.description.deskripsikeluaran') }}</div>
                 <div class="html-content">{!! $kegiatan->deskripsikeluaran ?? '-' !!}</div>
@@ -406,8 +410,9 @@
 
                 {{-- H. Dokumen --}}
                 <div class="section-title">H. {{ __('btor.dokumen_pendukung') }}</div>
-                @include('tr.btor.partials.dokumen', ['kegiatan' => $kegiatan])
-
+                <div class="html-content">
+                    @include('tr.btor.partials.dokumen', ['kegiatan' => $kegiatan])
+                </div>
                 {{-- I. Catatan Penulis --}}
                 <div class="section-title">I. {{ __('btor.catatan_penulis_laporan') }}</div>
                 <div class="html-content">{!! $kegiatan->catatan_penulis ?? '-' !!}</div>
