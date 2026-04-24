@@ -94,7 +94,7 @@ return [
     'file_label' => 'File',
     'preview_failed_notice' => 'If the preview is blank or fails to load, the file might not be publicly indexed yet. Use the download button.',
     'download_file' => 'Download File',
-    
+    'no_writer_activity' => 'No writer activity',
     
     'penerima_manfaat' => 'Beneficiaries',
 

@@ -151,13 +151,13 @@ class User extends Authenticatable implements HasMedia
     {
         $user_name = $this->username ?? Auth::user()->username;
         $media = $this->getFirstMedia($user_name);
-        return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/idep.png';
+        return $media ? $media->getUrl('thumb') : '/vendor/adminlte/dist/img/2-logo.png';
     }
     public function full_profile()
     {
         $user_name = $this->username ?? Auth::user()->username;
         $media = $this->getFirstMedia($user_name);
-        return $media ? $media->getUrl() : '/vendor/adminlte/dist/img/idep.png';
+        return $media ? $media->getUrl() : '/vendor/adminlte/dist/img/2-logo.png';
     }
 
     public function adminlte_desc()
@@ -195,5 +195,15 @@ class User extends Authenticatable implements HasMedia
     public function trmealsKomponenModels()
     {
         return $this->hasMany(Meals_Komponen_Model::class, 'user_id');
+    }
+
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class, 'user_id');
+    }
+
+    public function divisi()
+    {
+        return $this->jabatan?->divisi();
     }
 }

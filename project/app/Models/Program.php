@@ -275,4 +275,9 @@ class Program extends Model implements HasMedia
     {
         return $this->hasMany(Meals_Komponen_Model::class, 'program_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', ['running', 'submit']);
+    }
 }

@@ -21,7 +21,7 @@
 @endphp
 
 @if($relationData)
-    <div class="section-title" style="margin-top: 20px;">
+    <div class="section-subtitle" style="margin-top: 0px;">
         {{ strtoupper(__('btor.hasil.label')) }}: {{ strtoupper($kegiatan->jenisKegiatan?->nama) }}
     </div>
     

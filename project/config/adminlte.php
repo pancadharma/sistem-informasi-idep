@@ -13,7 +13,7 @@ return [
         'allowed' => true,
     ],
     'logo' => '<b>IDEP </b>Foundation',
-    'logo_img' => '/vendor/adminlte/dist/img/idep.png',
+    'logo_img' => '/vendor/adminlte/dist/img/2-logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -24,8 +24,8 @@ return [
             'path' => '/vendor/adminlte/dist/img/idep.png',
             'alt' => 'IDEP Foundation Logo',
             'class' => '',
-            'width' => 50,
-            'height' => 50,
+            'width' => 100,
+            'height' => 100,
         ],
     ],
     'preloader' => [
@@ -43,6 +43,8 @@ return [
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => true,
+    'username_nav' => true,
+    'usermenu_jabatan' => true,
     'usermenu_desc' => true,
     'usermenu_profile_url' => true,
     'layout_topnav' => null,
@@ -140,6 +142,7 @@ return [
         [
             'text' => 'Dashboard',
             'icon' => 'fas fa-tachometer-alt',
+            'can' => 'dashboard_access',
             'submenu' => [
                 [
                     'text' => 'Beneficiaries',
@@ -223,6 +226,7 @@ return [
             'text' => 'user_management',
             'classes' => 'text-bold',
             'icon' => 'far fa-image',
+            'can' => 'user_management_access',
             'submenu' => [
                 [
                     'text' => 'role',
@@ -240,6 +244,12 @@ return [
                     'route' => 'users.index',
                     'icon' => 'fas fa-chalkboard-teacher',
                     'active' => ['users', 'users*', 'regex:@^users/[0-9]+$@'],
+                ],
+                [
+                    'text' => 'Divisi',
+                    'route' => 'mdivisi.index',
+                    'icon' => 'fas fa-sitemap',
+                    'active' => ['mdivisi','mdivisi/*','data/mdivisi', 'regex:@^mdivisi/[0-9]+$@'],
                 ],
                 [
                     'text' => 'roles',
@@ -423,6 +433,42 @@ return [
             'icon_color' => 'cyan',
             'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
             'can' => ['laporan_access'],
+        ],
+        [
+            'text' => 'Timesheet',
+            'icon' => 'fas fa-file',
+            'active' => ['laporan', 'laporan*', 'log:@^laporan/[0-9]+$@'],
+            'can' => ['timesheet_access'],
+            'submenu' => [
+                [
+                    'text' => 'Isi Timesheet',
+                    'route' => 'timesheet.index',
+                    'icon' => 'fas fa-edit',
+                    'active' => ['timesheet'],
+                    'can'  => 'fill-timesheet',
+                ],
+                [
+                    'text' => 'Approval Timesheet',
+                    'route' => 'approval.index',
+                    'icon' => 'fas fa-table',
+                    'active' => ['timesheet/approval', 'timesheet/approval*', 'regex:@^timesheet/approval/[0-9]+$@'],
+                    'can'  => 'approve-timesheet',
+                ],
+                [
+                    'text' => 'Approval History',
+                    'route' => 'approval.history',
+                    'icon' => 'fas fa-history',
+                    'active' => ['timesheet/approval/history', 'timesheet/approval/history*', 'regex:@^timesheet/approval/history/[0-9]+$@'],
+                    'can'  => 'history-timesheet',
+                ],
+                [
+                    'text' => 'Export Rekap',
+                    'route' => 'timesheet.export.index',
+                    'icon' => 'fas fa-file-export',
+                    'active' => ['timesheet/export', 'timesheet/export*'],
+                    'can'  => 'export-timesheet',
+                ],
+            ],
         ],
         // [
         //     'text'          => 'Report IDEP',

@@ -7,7 +7,7 @@
     <div class="report-header">
         <div class="text-center">
             <h2>{{ __('btor.btor') }}</h2>
-            <h3>(BTOR)</h3>
+            {{-- <h3>(BTOR)</h3> --}}
         </div>
 
         <div class="report-info" style="margin-top: 10px;">
@@ -338,10 +338,11 @@
     {{-- Footer --}}
     <div class="report-footer">
         {{-- Use the official IDEP footer style from DOCX --}}
-        <p><strong>Yayasan IDEP Selaras Alam</strong></p>
+        {{-- <p><strong>Yayasan IDEP Selaras Alam</strong></p>
         <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
-        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
-        <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
+        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p> --}}
+        <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
+        {{-- <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p> --}}
     </div>
 </div>
 @endsection

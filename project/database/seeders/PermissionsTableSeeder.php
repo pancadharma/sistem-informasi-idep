@@ -182,7 +182,17 @@ class PermissionsTableSeeder extends Seeder
                 ['id' => 163, 'nama' => 'frm_show'],
                 ['id' => 164, 'nama' => 'laporan_access'],
                 ['id' => 165, 'nama' => 'log_access'],
-
+                ['id' => 166, 'nama' => 'timesheet_access'],
+                ['id' => 167, 'nama' => 'fill-timesheet'],
+                ['id' => 168, 'nama' => 'approve-timesheet'],
+                ['id' => 169, 'nama' => 'history-timesheet'],
+                ['id' => 170, 'nama' => 'export-timesheet'],
+                ['id' => 171, 'nama' => 'timesheet_ubah_status'],
+                ['id' => 172, 'nama' => 'admin_timesheet'],
+                ['id' => 173, 'nama' => 'user_management_access'],
+                ['id' => 174, 'nama' => 'dashboard_access'],
+                ['id' => 175, 'nama' => 'kegiatan_view']
+                
                 
             ];
 

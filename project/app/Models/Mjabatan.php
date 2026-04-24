@@ -17,6 +17,8 @@ class Mjabatan extends Model
     protected $fillable = [
         'nama',
         'aktif',
+        'is_manager',
+        'divisi_id',
         'created_at',
         'updated_at',
     ];
@@ -31,4 +33,14 @@ class Mjabatan extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+    public function divisi()
+    {
+        return $this->belongsTo(MDivisi::class, 'divisi_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'jabatan_id');
+    }
+
 }

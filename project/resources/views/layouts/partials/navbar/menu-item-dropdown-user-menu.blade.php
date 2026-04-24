@@ -18,11 +18,12 @@
     {{-- User menu toggler --}}
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
         @if (config('adminlte.usermenu_image'))
-            <img src="{{ Auth::user()->adminlte_image() }}?t={{ time() }}"
-                class="user-image img-url img-circle elevation-2" alt="{{ Auth::user()->name }}">
+            <img src="{{ Auth::user()->adminlte_image() }}?t={{ time() }}" class="user-image img-url img-circle elevation-2" alt="{{ Auth::user()->nama }}">
         @endif
-        <span @if (config('adminlte.usermenu_image')) class="d-none d-md-inline" @endif>
-            {{ Auth::user()->name }}
+        <span 
+        @if(config('adminlte.username_nav')) 
+        class="d-none" 
+        @endif> {{ Auth::user()->nama }}
         </span>
     </a>
 
@@ -36,10 +37,13 @@
                 @if (!config('adminlte.usermenu_image')) h-auto @endif">
                 @if (config('adminlte.usermenu_image'))
                     <img src="{{ Auth::user()->adminlte_image() }}?t={{ time() }}" class="img-circle elevation-2"
-                        alt="{{ Auth::user()->name }}">
+                        alt="{{ Auth::user()->nama }}">
                 @endif
                 <p class="@if (!config('adminlte.usermenu_image')) mt-0 @endif">
-                    {{ Auth::user()->name }}
+                    {{ Auth::user()->nama ?? ''}}
+                    @if (config('adminlte.usermenu_jabatan'))
+                        <small class="user-jabatan">{{ Auth::user()->jabatan->nama ?? '' }}</small>
+                    @endif
                     @if (config('adminlte.usermenu_desc'))
                         <small class="user-desc">{{ Auth::user()->adminlte_desc() }}</small>
                     @endif

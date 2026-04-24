@@ -1,4 +1,4 @@
-<script>
+{{-- <script>
     //Ajax Request data using server side data table to reduce large data load
     $(document).ready(function() {
             $('#mjabatan_list').DataTable({
@@ -380,4 +380,188 @@
         
     });
 
+</script> --}}
+
+<script>
+$(function () {
+
+    /* =====================================================
+     * DATATABLE MJABATAN
+     * ===================================================== */
+    const table = $('#mjabatan_list').DataTable({
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('data.mjabatan') }}",
+        order: [[1, 'asc']],
+        lengthMenu: [10, 25, 50, 100, 500],
+
+        columns: [
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-center',
+                width: '5%',
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { data: 'nama', name: 'nama' },
+            { data: 'divisi.nama', name: 'divisi.nama' },
+            {
+                data: 'is_manager',
+                name: 'is_manager',
+                className: 'text-center',
+                render: function (data) {
+                    return data == 1
+                        ? '<span class="badge badge-success">Manager</span>'
+                        : '<span class="badge badge-secondary">Staff</span>';
+                }
+            },
+            {
+                data: 'aktif',
+                name: 'aktif',
+                className: 'text-center',
+                render: function (data) {
+                    return data == 1
+                        ? '<span class="badge badge-primary">Aktif</span>'
+                        : '<span class="badge badge-danger">Nonaktif</span>';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                className: 'text-center',
+                orderable: false,
+                searchable: false,
+                width: '15%'
+            }
+        ]
+    });
+
+    /* =====================================================
+     * CREATE MJABATAN
+     * ===================================================== */
+    $('.btn-add-mjabatan').on('click', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: "{{ route('mjabatan.store') }}",
+            method: "POST",
+            data: $('#mjabatanForm').serialize(),
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: res.message,
+                        timer: 800,
+                        showConfirmButton: false
+                    });
+                    $('#mjabatanForm')[0].reset();
+                    table.ajax.reload(null, false);
+                }
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: xhr.responseJSON?.message || 'Terjadi kesalahan'
+                });
+            }
+        });
+    });
+
+
+    /* =====================================
+     * SYNC CHECKBOX -> HIDDEN INPUT
+     * ===================================== */
+
+    // is_manager
+    $('#edit-is-manager-checkbox').on('change', function () {
+        $('#edit-is-manager').val(this.checked ? 1 : 0);
+    });
+
+    // aktif
+    $('#edit-aktif-checkbox').on('change', function () {
+        $('#edit-aktif').val(this.checked ? 1 : 0);
+    });
+
+
+    /* =====================================
+     * OPEN EDIT MODAL
+     * ===================================== */
+    $('#mjabatan_list').on('click', '.edit-mjabatan-btn', function (e) {
+        e.preventDefault();
+
+        const id = $(this).data('mjabatan-id');
+
+        $.get("{{ route('mjabatan.edit', ':id') }}".replace(':id', id), function (res) {
+
+            $('#editMjabatanForm')[0].reset();
+
+            $('#editMjabatanForm').attr(
+                'action',
+                "{{ route('mjabatan.update', ':id') }}".replace(':id', id)
+            );
+
+            $('#edit-id').val(res.id);
+            $('#edit-nama').val(res.nama);
+
+            $('#edit-divisi-id')
+                .val(res.divisi_id ?? '')
+                .trigger('change');
+
+            $('#edit-is-manager').val(res.is_manager ?? 0);
+            $('#edit-is-manager-checkbox')
+                .prop('checked', res.is_manager == 1);
+
+            $('#edit-aktif').val(res.aktif ?? 0);
+            $('#edit-aktif-checkbox')
+                .prop('checked', res.aktif == 1);
+
+            $('#editMjabatanModal').modal('show');
+        });
+    });
+
+
+    /* =====================================================
+     * SUBMIT EDIT
+     * ===================================================== */
+    $('#editMjabatanForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const url = $(this).attr('action');
+
+        $.ajax({
+            url: url,
+            method: 'PUT',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: res.message,
+                        timer: 800,
+                        showConfirmButton: false
+                    });
+                    $('#editMjabatanModal').modal('hide');
+                    table.ajax.reload(null, false);
+                }
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: xhr.responseJSON?.message || 'Gagal update data'
+                });
+            }
+        });
+    });
+
+});
 </script>

@@ -12,14 +12,14 @@
         <th>Selesai</th>
         <td>{!! $kegiatan->pembelanjaan->pembelanjaanselesai ?? '-' !!}</td>
     </tr>
-    <tr>
+    {{-- <tr>
         <th>Distribusi Mulai</th>
         <td>{!! $kegiatan->pembelanjaan->pembelanjaandistribusimulai ?? '-' !!}</td>
     </tr>
     <tr>
         <th>Distribusi Selesai</th>
         <td>{!! $kegiatan->pembelanjaan->pembelanjaandistribusiselesai ?? '-' !!}</td>
-    </tr>
+    </tr> --}}
     <tr>
         <th>Terdistribusi</th>
         <td>{!! $kegiatan->pembelanjaan->pembelanjaanterdistribusi ?? '-' !!}</td>

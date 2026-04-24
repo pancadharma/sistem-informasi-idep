@@ -22,6 +22,10 @@
                 border-bottom: none;
             }
         }
+
+        .print-body-row td {
+            padding-top: 10px!important;
+        }
         
         .report-badge {
             background: #eee;
@@ -30,6 +34,28 @@
             margin-bottom: 20px;
             display: inline-block;
             border: 1px solid #ccc;
+        }
+
+        /* Page number via CSS counter - works in Chrome/Edge/Firefox print */
+        @page {
+            @bottom-center {
+                content: counter(page) " / " counter(pages);
+                font-size: 8pt;
+                color: #526d4e;
+            }
+        }
+
+        /* Screen-only page number shown inside tfoot */
+        .page-number-display {
+            text-align: center;
+            font-size: 8pt;
+            color: #526d4e;
+            margin-bottom: 4px;
+        }
+
+        @media print {
+            /* Hide the screen-only page number — the @page counter takes over */
+            .page-number-display { display: none; }
         }
     </style>
     
@@ -50,7 +76,7 @@
                 <th>
                     <div class="print-header-content">
                         @if(file_exists(public_path('images/uploads/header.png')))
-                            <img src="{{ asset('images/uploads/header.png') }}" alt="Header">
+                            <img src="/images/uploads/header.png" alt="IDEP Header" style="height: 38px; width: auto; display: block;">
                         @else
                             <h2>YAYASAN IDEP</h2>
                         @endif
@@ -63,11 +89,9 @@
         <tfoot>
             <tr class="print-footer-row">
                 <td>
-                    <div class="print-footer-content">
-                        <p><strong>Yayasan IDEP Selaras Alam</strong></p>
-                        <p>Office & Demosite : Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia</p>
-                        <p>Telp/Fax +62-361-908-2983 / +62-812 4658 5137</p>
-                        <p>Dihasilkan pada: {{ date('d-m-Y H:i:s') }}</p>
+                    <div class="print-footer-content" style="margin-top: 20px; margin-bottom: 20px">
+                        <div class="page-number-display" id="pageNumDisplay">— &nbsp; —</div>
+                        <strong>Office</strong>: Br. Medahan, Desa Kemenuh, Sukawati, Gianyar 80582, Bali – Indonesia | Telp/Fax: +62-361 9082983 | www.idepfoundation.org
                     </div>
                 </td>
             </tr>
