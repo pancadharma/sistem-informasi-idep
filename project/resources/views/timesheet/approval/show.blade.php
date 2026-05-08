@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content_body')
+@php
+    // Helper untuk mengubah menit menjadi format X jam Y mnt
+    function formatJamMenit($menit) {
+        if ($menit == 0) return '0';
+        $h = floor($menit / 60);
+        $m = round($menit % 60);
+        $res = [];
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        return implode(' ', $res);
+    }
+@endphp
 <div class="container-fluid py-4" id="printArea">
 
     {{-- ================= HEADER ================= --}}
@@ -36,7 +48,8 @@
 
     {{-- ================= LOGIC SUMMARY ================= --}}
     @php
-        $totalJam = $timesheet->entries->sum('minutes') / 60;
+        $totalMenit = $timesheet->entries->sum('minutes');
+        $totalJam = $totalMenit / 60;
 
         $summary = [
             'kantor'   => 0,
@@ -52,7 +65,7 @@
                 $loc = 'other';
             }
 
-            $summary[$loc] += $e->minutes / 60;
+            $summary[$loc] += $e->minutes;
         }
 
         $totalHariKerja = $timesheet->entries
@@ -124,7 +137,7 @@
                                 @endif
 
                                 <td class="text-center">
-                                    {{ number_format($e->minutes / 60, 2) }}
+                                    {{ formatJamMenit($e->minutes) }}
                                 </td>
 
                                 <td>
@@ -151,7 +164,7 @@
                         <th colspan="2">TOTAL</th>
 
                         <th>
-                            {{ number_format($totalJam,2) }} Jam
+                            {{ formatJamMenit($totalMenit) }}
                         </th>
 
                         <th colspan="3">
@@ -182,16 +195,16 @@
                             <th class="text-center">%</th>
                         </tr>
 
-                        @foreach($summary as $loc => $jam)
+                        @foreach($summary as $loc => $menit)
                         <tr>
                             <td class="text-capitalize">{{ $loc }}</td>
 
                             <td class="text-center">
-                                {{ number_format($jam,2) }}
+                                {{ formatJamMenit($menit) }}
                             </td>
 
                             <td class="text-center">
-                                {{ pct($jam,$totalJam) }} %
+                                {{ pct($menit,$totalMenit) }} %
                             </td>
                         </tr>
                         @endforeach
@@ -498,10 +511,10 @@ $(function() {
     const total = {{ $totalJam }};
 
     const dataJam = [
-        {{ $summary['kantor'] }},
-        {{ $summary['lapangan'] }},
-        {{ $summary['rumah'] }},
-        {{ $summary['other'] }}
+        {{ $summary['kantor'] / 60 }},
+        {{ $summary['lapangan'] / 60 }},
+        {{ $summary['rumah'] / 60 }},
+        {{ $summary['other'] / 60 }}
     ];
 
     const labels = ['Kantor','Lapangan','Rumah','Other'];

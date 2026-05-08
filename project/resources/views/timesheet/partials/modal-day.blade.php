@@ -1,15 +1,8 @@
 <div class="modal fade" id="modalDay" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="height:80vh; display:flex; flex-direction:column;">
 
-            {{-- FORM --}}
-            <form id="formDay"
-                  method="POST"
-                  action="{{ route('timesheet.day.store') }}"
-                  autocomplete="off">
-                @csrf
-
-                {{-- HEADER --}}
+            {{-- HEADER --}}
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-calendar-day"></i>
@@ -21,9 +14,19 @@
                         &times;
                     </button>
                 </div>
+            
+            {{-- FORM --}}
+            <form id="formDay"
+                  method="POST"
+                  action="{{ route('timesheet.day.store') }}"
+                  autocomplete="off"
+                  style="display:flex; flex-direction:column; flex:1; min-height:0;">
+                @csrf
+
+                
 
                 {{-- BODY --}}
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y:auto; flex:1; min-height:0;">
 
                     {{-- HIDDEN --}}
                     <input type="hidden"
@@ -66,16 +69,16 @@
                     {{-- TABLE AKTIVITAS --}}
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle"
-                               id="activityTable" style="width: 100%; table-layout: fixed;">
+                               id="activityTable" style="min-width: 900px; width: 100%;">
                             <thead class="thead-light text-center">
                                 <tr>
                                     <th style="width: 15%">Area</th>
                                     <th style="width: 15%">Lokasi Kerja</th>
-                                    <th style="width: 8%">Jam</th>
-                                    <th style="width: 20%">Program</th>
-                                    <th style="width: 15%">Donor</th>
-                                    <th style="width: 20%">Kegiatan</th>
-                                    <th style="width: 7%">Aksi</th>
+                                    <th style="width: 16%">Waktu</th>
+                                    <th style="width: 17%">Fokus Area</th>
+                                    <th style="width: 14%">Resource</th>
+                                    <th style="width: 18%">Kegiatan</th>
+                                    <th style="width: 5%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
