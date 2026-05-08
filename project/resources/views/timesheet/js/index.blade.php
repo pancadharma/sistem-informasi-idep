@@ -1,3 +1,20 @@
+<style>
+    /* Sembunyikan panah (spinner) pada input number menit */
+    input[type="number"].jam::-webkit-inner-spin-button,
+    input[type="number"].jam::-webkit-outer-spin-button,
+    input[type="number"].input-jam-display::-webkit-inner-spin-button,
+    input[type="number"].input-jam-display::-webkit-outer-spin-button,
+    input[type="number"].input-mnt-display::-webkit-inner-spin-button,
+    input[type="number"].input-mnt-display::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"].jam,
+    input[type="number"].input-jam-display,
+    input[type="number"].input-mnt-display {
+        -moz-appearance: textfield;
+    }
+</style>
 <script>
 $(function () {
 
@@ -7,6 +24,133 @@ $(function () {
     const donors   = @json($donors ?? []);
     const programs = @json($programs ?? []);
     let rowIndex = 0;
+
+    // ===============================
+    // OPTIMASI: PRE-COMPILE TEMPLATE
+    // ===============================
+    // Compile string HTML satu kali saja agar tidak memberatkan loop saat menambah baris
+    const donorOptHtml = `
+        <optgroup label="Non Donor">
+            <option value="internal_funds">Internal Funds</option>
+            <option value="donations">Donations</option>
+            <option value="others">Others</option>
+        </optgroup>
+        <optgroup label="Donor Based">
+            ${donors.map(d => `<option value="${d.id}">${d.nama}</option>`).join('')}
+        </optgroup>
+    `;
+
+    const progOptHtml = `
+        <optgroup label="Non Donor">
+            <option value="benih_alami">Benih Alami</option>
+            <option value="sapi_bergulir">Sapi Bergulir</option>
+            <option value="train_with_idep">Train With IDEP</option>
+            <option value="visit_idep">Visit IDEP</option>
+            <option value="consult_idep">Consult IDEP</option>
+            <option value="bwp_project">BWP Project</option>
+            <option value="kios_idep">Kios IDEP</option>
+            <option value="capacity_building">Capacity Building</option>
+            <option value="garden_day">Garden Day</option>
+            <option value="others">Others</option>
+        </optgroup>
+        <optgroup label="Donor Based">
+            ${programs.map(p => `<option value="${p.id}">${p.nama}</option>`).join('')}
+        </optgroup>
+    `;
+
+    // ===============================
+    // DRAFT HELPER
+    // ===============================
+    function getDraftKey() {
+        const timesheetId = $('input[name="timesheet_id"]').val() || 'new';
+        const workDate = $('#modal-work-date').val() || 'unknown';
+        return `timesheet_draft_${timesheetId}_${workDate}`;
+    }
+
+    function saveDraft() {
+        const rows = [];
+
+        $('#activityTable tbody tr').each(function () {
+            rows.push({
+                location_detail: $(this).find('.location-detail').val(),
+                work_location: $(this).find('.work-location').val(),
+                minutes: $(this).find('.jam').val(),
+                program_id: $(this).find('.program').val(),
+                donor_id: $(this).find('.donor').val(),
+                activity: $(this).find('.kegiatan').val(),
+            });
+        });
+
+        const payload = {
+            day_status: $('#day-status').val(),
+            note: $('textarea[name="note"]').val(),
+            rows: rows,
+            updated_at: Date.now()
+        };
+
+        localStorage.setItem(getDraftKey(), JSON.stringify(payload));
+    }
+
+    function clearDraft() {
+        localStorage.removeItem(getDraftKey());
+    }
+
+    function restoreDraft() {
+        const draft = localStorage.getItem(getDraftKey());
+        if (!draft) return null;
+
+        try {
+            return JSON.parse(draft);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    // ===============================
+    // FUNGSI RENDER ROWS (DRY)
+    // ===============================
+    function renderActivities(rows) {
+        const $rowsToAdd = [];
+        rows.forEach(row => {
+            const tr = $(rowTemplate(rowIndex));
+            tr.find('.location-detail').val(row.location_detail || '');
+            tr.find('.work-location').val(row.work_location || '');
+
+            // Memecah total menit ke input visual Jam & Mnt
+            const totalMins = parseInt(row.minutes) || 0;
+            const h = Math.floor(totalMins / 60);
+            const m = totalMins % 60;
+            tr.find('.input-jam-display').val(h > 0 ? h : '');
+            tr.find('.input-mnt-display').val(m > 0 ? m : '');
+            tr.find('.jam').val(totalMins);
+
+            tr.find('.program').val(row.program_id || '');
+            tr.find('.donor').val(row.donor_id || '');
+            tr.find('.kegiatan').val(row.activity || '');
+            $rowsToAdd.push(tr);
+            rowIndex++;
+        });
+        $('#activityTable tbody').append($rowsToAdd);
+        $rowsToAdd.forEach((tr, idx) => {
+            initSelect2(tr);
+            tr.find('.program').trigger('change', ['from_render']);
+            tr.find('.donor').val(rows[idx].donor_id).trigger('change', ['from_render']);
+        });
+    }
+
+    function applyDraft(data) {
+        if (!data) return;
+
+        $('#day-status').val(data.day_status).trigger('change', ['from_render']);
+        $('textarea[name="note"]').val(data.note || '');
+
+        $('#activityTable tbody').empty();
+        rowIndex = 0;
+
+        if (data.rows && data.rows.length) {
+            renderActivities(data.rows);
+        }
+    }
 
     // ===============================
     // INIT SELECT2 (MODAL SAFE)
@@ -24,32 +168,6 @@ $(function () {
     // TEMPLATE ROW
     // ===============================
     function rowTemplate(index) {
-
-        let donorOpt = `
-            <optgroup label="Umum">
-                <option value="general">General</option>
-                <option value="others">Others</option>
-            </optgroup>
-            <optgroup label="Donor Program">
-                ${donors.map(d =>
-                    `<option value="${d.id}">${d.nama}</option>`
-                ).join('')}
-            </optgroup>
-        `;
-
-        let progOpt = `
-            <optgroup label="Umum">
-                <option value="administratif">Administratif</option>
-                <option value="bisnis_unit">Bisnis Unit</option>
-                <option value="program_internal">Program Internal</option>
-                <option value="others">Others</option>
-            </optgroup>
-            <optgroup label="Program-based">
-                ${programs.map(p =>
-                    `<option value="${p.id}">${p.nama}</option>`
-                ).join('')}
-            </optgroup>
-        `;
 
         return `
        <tr>
@@ -72,19 +190,25 @@ $(function () {
            </td>
 
            <td>
-               <input type="number"
-                      name="activities[${index}][minutes]"
-                      class="form-control jam"
-                      step="0.25"
-                      min="0"
-                      value="0">
+               <div class="d-flex justify-content-center align-items-center" style="gap: 8px;">
+                   <div class="text-center">
+                       <div style="font-size: 11px; color: #6c757d; margin-bottom: 2px;">Jam</div>
+                       <input type="number" class="form-control text-center input-jam-display" min="0" placeholder="0" style="width: 60px; padding: 4px;">
+                   </div>
+                   <div class="text-center">
+                       <div style="font-size: 11px; color: #6c757d; margin-bottom: 2px;">Mnt</div>
+                       <input type="number" class="form-control text-center input-mnt-display" min="0" max="59" placeholder="0" style="width: 60px; padding: 4px;">
+                   </div>
+                   
+                   <!-- Hidden input menyimpan total menit asli untuk dikirim ke Backend -->
+                   <input type="hidden" name="activities[${index}][minutes]" class="jam" value="0">
            </td>
 
            <td>
                <select name="activities[${index}][program_id]"
                        class="form-control program">
                    <option value=""></option>
-                   ${progOpt}
+                   ${progOptHtml}
                </select>
            </td>
 
@@ -93,7 +217,7 @@ $(function () {
                <select name="activities[${index}][donor_id]"
                        class="form-control donor">
                    <option value=""></option>
-                   ${donorOpt}
+                   ${donorOptHtml}
                </select>
            </td>
            <td>
@@ -113,14 +237,23 @@ $(function () {
     }
 
     // ===============================
-    // HITUNG TOTAL JAM
+    // HITUNG TOTAL MENIT
     // ===============================
-    function totalJam() {
+    function totalMenit() {
         let total = 0;
         $('.jam').each(function () {
-            total += parseFloat($(this).val()) || 0;
+            total += parseInt($(this).val()) || 0;
         });
         return total;
+    }
+
+    function formatWaktu(menit) {
+        let jam = Math.floor(menit / 60);
+        let sisaMenit = Math.round(menit % 60);
+        let text = [];
+        if (jam > 0) text.push(jam + ' jam');
+        if (sisaMenit > 0 || jam === 0) text.push(sisaMenit + ' mnt');
+        return text.join(' ');
     }
 
     // ===============================
@@ -130,8 +263,7 @@ $(function () {
         const status = $('#day-status').val();
         const isKerja = status === 'kerja';
 
-        $('#activityTable input, #activityTable select, #activityTable textarea')
-            .prop('disabled', !isKerja);
+        $('#activityTable').find('input, select, textarea').prop('disabled', !isKerja);
 
         $('#addRow').prop('disabled', !isKerja);
 
@@ -147,13 +279,14 @@ $(function () {
 // ===============================
 const fetchDayUrl = "{{ route('timesheet.day.get', ':date') }}";
 
-$('.btn-input-day').on('click', function () {
+$(document).on('click', '.btn-input-day', function () {
 
     const date = $(this).data('date');
 
     $('#modal-date-text').text(date);
     $('#modal-work-date').val(date);
     $('#activityTable tbody').html('');
+    rowIndex = 0;
 
     // 🔥 DETEKSI WEEKEND
     let d = new Date(date);
@@ -168,25 +301,33 @@ $('.btn-input-day').on('click', function () {
         const hasActivities = res.entries.length > 0;
         $('#has-existing-activities').val(hasActivities ? 1 : 0);
 
+        const draftData = restoreDraft();
+        const hasDraft = draftData && draftData.rows && draftData.rows.length > 0;
 
         // =====================================
         // 1. PRIORITAS DATA DARI SERVER
         // =====================================
         if (res.day_status && res.day_status !== 'kosong') {
 
-            $('#day-status').val(res.day_status).trigger('change');
+            $('#day-status').val(res.day_status).trigger('change', ['from_render']);
             $('textarea[name="note"]').val(res.note || '');
 
-        } 
+        }
         // =====================================
         // 2. JIKA BELUM ADA → PAKAI RULE AUTO
         // =====================================
         else {
 
+            if (hasDraft) {
+                applyDraft(draftData);
+                $('#modalDay').modal('show');
+                toggleByStatus();
+                return;
+            }
             if (day === 0 || day === 6) {
-                $('#day-status').val('libur').trigger('change');
+                $('#day-status').val('libur').trigger('change', ['from_render']);
             } else {
-                $('#day-status').val('kerja').trigger('change');
+                $('#day-status').val('kerja').trigger('change', ['from_render']);
             }
         }
 
@@ -203,27 +344,7 @@ $('.btn-input-day').on('click', function () {
 
         // isi data lama kalau ada
         if (res.entries.length > 0) {
-
-            res.entries.forEach(row => {
-
-                const tr = $(rowTemplate(rowIndex));
-
-                tr.find('.location-detail').val(row.location_detail);
-                tr.find('.work-location').val(row.work_location);
-
-                tr.find('.jam').val(row.minutes);
-
-                tr.find('.donor').val(row.donor_id).trigger('change');
-                tr.find('.program').val(row.program_id).trigger('change');
-
-                tr.find('.kegiatan').val(row.activity);
-
-                $('#activityTable tbody').append(tr);
-
-                initSelect2(tr);
-
-                rowIndex++;
-            });
+            renderActivities(res.entries);
 
         } else {
 
@@ -234,8 +355,28 @@ $('.btn-input-day').on('click', function () {
             rowIndex++;
         }
 
-        toggleByStatus();
+        if (hasActivities && hasDraft) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Draft Ditemukan',
+                text: 'Ada draft yang belum tersimpan untuk tanggal ini. Lanjutkan draft terakhir?',
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan Draft',
+                cancelButtonText: 'Gunakan Data Tersimpan'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    applyDraft(draftData);
+            } else {
+                clearDraft(); // Hapus draf agar tidak mengganggu lagi di masa depan
+                }
 
+                toggleByStatus();
+                $('#modalDay').modal('show');
+            });
+            return;
+        }
+
+        toggleByStatus();
         $('#modalDay').modal('show');
     });
 });
@@ -253,8 +394,46 @@ $('.btn-input-day').on('click', function () {
     // ===============================
     // REMOVE ROW
     // ===============================
+    // ===============================
+    // AUTO SAVE DRAFT
+    // ===============================
+    // OPTIMASI: Debounce untuk meringankan beban localStorage saat user mengetik
+    function debounce(func, wait = 500) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    const debouncedSaveDraft = debounce(saveDraft, 500);
+
+    $(document).on('input change', '#formDay input, #formDay textarea, #formDay select', function (e, context) {
+        if (context === 'from_render') return; // Abaikan jika ini perubahan hasil render sistem
+        debouncedSaveDraft();
+    });
+
+    $('#addRow').on('click', function () {
+        debouncedSaveDraft();
+    });
+
     $(document).on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
+        const row = $(this).closest('tr');
+        
+        Swal.fire({
+            title: 'Hapus Aktivitas?',
+            text: "Baris aktivitas ini akan dihapus dari form.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                row.remove();
+                debouncedSaveDraft();
+            }
+        });
     });
 
     // ===============================
@@ -268,25 +447,29 @@ $('.btn-input-day').on('click', function () {
     // ===============================
     // VALIDASI JAM (REALTIME)
     // ===============================
-    $(document).on('input', '.jam', function () {
-        let val = parseFloat($(this).val()) || 0;
+    $(document).on('input', '.input-jam-display, .input-mnt-display', function () {
+        let tr = $(this).closest('tr');
+        
+        let h = parseInt(tr.find('.input-jam-display').val()) || 0;
+        let m = parseInt(tr.find('.input-mnt-display').val()) || 0;
 
-        // kelipatan 0.25
-        if (val % 0.25 !== 0) {
-            $(this).addClass('is-invalid');
-            return;
-        } else {
-            $(this).removeClass('is-invalid');
-        }
+        if (h < 0) { h = 0; tr.find('.input-jam-display').val(''); }
+        if (m < 0) { m = 0; tr.find('.input-mnt-display').val(''); }
 
-        // max 24 jam
-        if (totalJam() > 24) {
+        let currentRowTotal = (h * 60) + m;
+        tr.find('.jam').val(currentRowTotal);
+
+        let tm = totalMenit();
+        // max 24 jam (1440 menit)
+        if (tm > 1440) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Jam Berlebih',
-                text: 'Total jam per hari maksimal 24 jam'
+                title: 'Waktu Berlebih',
+                text: 'Total waktu maksimal 24 jam (1440 menit). Input saat ini: ' + formatWaktu(tm)
             });
-            $(this).val(0);
+            tr.find('.input-jam-display').val('');
+            tr.find('.input-mnt-display').val('');
+            tr.find('.jam').val(0);
         }
     });
 
@@ -317,7 +500,7 @@ $('.btn-input-day').on('click', function () {
 
         $('#activityTable tbody tr').each(function () {
 
-            let minutes = parseFloat($(this).find('.jam').val()) || 0;
+            let minutes = parseInt($(this).find('.jam').val()) || 0;
             let activityText = $(this).find('.kegiatan').val();
 
             if (status === 'kerja' && (minutes <= 0 || !activityText)) {
@@ -393,6 +576,7 @@ $('.btn-input-day').on('click', function () {
 
                 success: function (res) {
 
+                    clearDraft();
                     Swal.fire({
                         icon: 'success',
                         title: 'Berhasil',
@@ -407,6 +591,16 @@ $('.btn-input-day').on('click', function () {
                 },
 
                 error: function (xhr) {
+
+                    if (xhr.status === 419) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Session Expired',
+                            text: 'Halaman terlalu lama terbuka. Silakan refresh halaman. Draft aktivitas kamu sudah disimpan.'
+                        });
+                        return;
+                    }
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
@@ -447,36 +641,6 @@ $('.btn-input-day').on('click', function () {
 
             const form = $('#formSubmitTimesheet');
 
-            // $.ajax({
-            //     url: form.attr('action'),
-            //     method: 'POST',
-            //     data: form.serialize(),
-
-            //     success: function (res) {
-
-            //         Swal.fire({
-            //             icon: 'success',
-            //             title: 'Berhasil',
-            //             text: res.message || 'Timesheet berhasil disubmit',
-            //             timer: 1200,
-            //             showConfirmButton: false
-            //         }).then(() => {
-            //             window.location.reload();
-            //         });
-
-            //     },
-
-            //     error: function (xhr) {
-
-            //         Swal.fire({
-            //             icon: 'error',
-            //             title: 'Gagal',
-            //             text: xhr.responseJSON?.message 
-            //                 ?? 'Terjadi kesalahan saat submit'
-            //         });
-
-            //     }
-            // });
             $.ajax({
                 url: form.attr('action'),
                 method: 'POST',
@@ -540,13 +704,14 @@ $('.btn-input-day').on('click', function () {
         if (!programId || isNaN(programId)) {
 
             // 🔥 RESET KERAS SELECT2
-            donorSelect.val(null).trigger('change');
+            donorSelect.val(null).trigger('change', ['from_render']);
             donorSelect.empty();
 
             let opt = `
                 <option value=""></option>
-                <optgroup label="Umum">
-                    <option value="general">General</option>
+                <optgroup label="Non Donor">
+                    <option value="internal_funds">Internal Funds</option>
+                    <option value="donations">Donations</option>
                     <option value="others">Others</option>
                 </optgroup>
             `;
@@ -572,9 +737,9 @@ $('.btn-input-day').on('click', function () {
         )
         .done(function (res) {
 
-            donorSelect.val(null).trigger('change');
+            donorSelect.val(null).trigger('change', ['from_render']);
 
-            let opt = `<optgroup label="Donor Program">`;
+            let opt = `<optgroup label="Donor Based">`;
 
             if (res.donors && res.donors.length > 0) {
                 res.donors.forEach(d => {
@@ -586,16 +751,16 @@ $('.btn-input-day').on('click', function () {
 
             opt += `</optgroup>`;
 
-            donorSelect.html(opt).trigger('change');
+            donorSelect.html(opt).trigger('change', ['from_render']);
 
         })
         .fail(function () {
 
             donorSelect.html(`
-                <optgroup label="Donor Program">
+                <optgroup label="Donor Based">
                     <option value="">Gagal load donor</option>
                 </optgroup>
-            `).trigger('change');
+            `).trigger('change', ['from_render']);
 
         });
 
