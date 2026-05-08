@@ -1,6 +1,32 @@
 @extends('layouts.app')
 
 @section('content_body')
+@php
+    // Helper untuk mengubah menit menjadi format X jam Y mnt
+    function formatJamMenit($menit) {
+        if ($menit <= 0) return '0';
+        $h = floor($menit / 60);
+        $m = $menit % 60;
+        $res = [];
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        return empty($res) ? '0' : implode(' ', $res);
+    }
+
+    // Helper untuk mengubah menit menjadi format X hari Y jam Z mnt
+    function formatHariJam($menit) {
+        if ($menit <= 0) return '0';
+        $d = floor($menit / 480);
+        $sisa = $menit % 480;
+        $h = floor($sisa / 60);
+        $m = $sisa % 60;
+        $res = [];
+        if ($d > 0) $res[] = $d . ' Hari';
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        return empty($res) ? '0' : implode(' ', $res);
+    }
+@endphp
 <div class="container-fluid py-4">
 
     <h4 class="mb-3">📤 Export Rekap Timesheet</h4>
@@ -64,10 +90,15 @@
                     <optgroup label="Program Umum">
                         @php
                             $staticPrograms = [
-                                'administratif'   => 'Administratif',
-                                'bisnis_unit'     => 'Bisnis Unit',
-                                'program_internal'=> 'Program Internal',
-                                'others'          => 'Others',
+                                'benih_alami'    => 'Benih Alami',
+                                'sapi_bergulir'=> 'Sapi Bergulir',
+                                'train_with_idep'=> 'Train With IDEP',
+                                'visit_idep'    => 'Visit IDEP',
+                                'consult_idep'  => 'Consult IDEP',
+                                'bwp_project'   => 'BWP Project',
+                                'kios_idep'     => 'Kios IDEP',
+                                'capacity_building'=> 'Capacity Building',
+                                'garden_day'    => 'Garden Day',
                             ];
                         @endphp
 
@@ -131,11 +162,11 @@
 <div class="table-responsive mt-3">
 <table class="table table-bordered text-center align-middle">
 
-    <thead class="table-light">
+    <thead class="table-light" style="white-space: nowrap;">
         <tr>
-            <th rowspan="2">Program</th>
+            <th rowspan="2" class="text-start" style="width: 250px;">Program</th>
             <th colspan="{{ $pd['daysInMonth'] }}">Calendar Day</th>
-            <th rowspan="2">Total</th>
+            <th rowspan="2">Total Hari</th>
         </tr>
         <tr>
             @for($d = 1; $d <= $pd['daysInMonth']; $d++)
@@ -151,7 +182,7 @@
             <td class="text-start fw-semibold">{{ $program }}</td>
 
             @for($d = 1; $d <= $pd['daysInMonth']; $d++)
-                <td>
+                <td style="white-space: nowrap;">
                     {{-- PRIORITAS: MARKER --}}
                     @if(isset($pd['nonWorkingMarker'][$d]))
                         <span class="badge bg-secondary">
@@ -163,26 +194,26 @@
                 </td>
             @endfor
 
-            <td class="fw-bold">{{ $days['total'] ?? 0 }}</td>
+            <td class="fw-bold" style="white-space: nowrap;">{{ $days['total'] ?? 0 }}</td>
         </tr>
         @endforeach
 
         {{-- GRAND TOTAL --}}
         <tr class="fw-bold">
-            <td>Grand Total</td>
+            <td class="text-start" style="white-space: nowrap;">Total Jam</td>
 
             @for($d = 1; $d <= $pd['daysInMonth']; $d++)
-                <td>{{ $pd['grandDaily'][$d] ?? 0 }}</td>
+                <td style="white-space: nowrap;">{{ $pd['grandDaily'][$d] ?? 0 }}</td>
             @endfor
 
-            <td>{{ $pd['grandTotal'] }}</td>
+            <td style="white-space: nowrap;">{{ $pd['grandTotal'] }}</td>
         </tr>
     </tbody>
 </table>
 </div>
 
 <p class="mt-2">
-    <strong>Equivalent Days (÷8):</strong> {{ $pd['equivalent'] }} hari
+    <strong>Equivalent Days (8 Jam/Hari):</strong> {{ $pd['equivalent'] }}
 </p>
 
 {{-- EXPORT --}}

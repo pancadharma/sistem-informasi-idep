@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content_body')
+@php
+    // Helper untuk mengubah menit menjadi format X jam Y mnt
+    function formatJamMenit($menit) {
+        if ($menit == 0) return '0';
+        $h = floor($menit / 60);
+        $m = round($menit % 60);
+        $res = [];
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        return implode(' ', $res);
+    }
+@endphp
 <div class="container-fluid py-4">
 
     <h4 class="mb-4">
@@ -36,7 +48,7 @@
                                 {{ \Carbon\Carbon::create($ts->year, $ts->month)->translatedFormat('F Y') }}
                             </td>
                             <td class="text-center">
-                                {{ number_format($ts->total_minutes / 60, 2) }} Jam
+                                {{ formatJamMenit($ts->total_minutes) }}
                             </td>
                             <td class="text-center">
                                 <span class="badge badge-warning">
