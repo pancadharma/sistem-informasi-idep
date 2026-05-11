@@ -90,14 +90,14 @@ class TimesheetController extends Controller
             foreach ($entries as $e) {
 
                 $loc = $e->work_location ?? 'other';
-                $jam = $e->minutes / 60;
+                $menit = $e->minutes;
 
                 if (!isset($byLocation[$loc])) {
                     $loc = 'other';
                 }
 
-                $byLocation[$loc] += $jam;
-                $summary[$loc]    += $jam;
+                $byLocation[$loc] += $menit;
+                $summary[$loc]    += $menit;
             }
 
             $minutes = $entries->sum('minutes');
@@ -275,7 +275,7 @@ class TimesheetController extends Controller
                         'location_detail' => $row['location_detail'] ?? null,
                         'work_location'   => $row['work_location'] ?? null,
 
-                        'minutes' => (int) ($row['minutes'] * 60),
+                        'minutes' => (int) $row['minutes'],
 
                         // DONOR
                         'donor_id' => is_numeric($row['donor_id'] ?? null)
@@ -391,7 +391,7 @@ class TimesheetController extends Controller
                 return [
                     'location_detail' => $e->location_detail,
                     'work_location'   => $e->work_location,
-                    'minutes'         => $e->minutes / 60,
+                    'minutes'         => $e->minutes,
                     'donor_id'        => $e->donor_id ?? $e->donor_static,
                     'program_id'      => $e->program_id ?? $e->program_static,
                     'activity'        => $e->activity,

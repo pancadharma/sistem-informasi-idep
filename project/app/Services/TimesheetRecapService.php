@@ -9,6 +9,26 @@ use Illuminate\Support\Carbon;
 
 class TimesheetRecapService
 {
+    private function formatMinutesToHours(int $minutes): string
+    {
+        if ($minutes <= 0) {
+            return '0';
+        }
+
+        $h = floor($minutes / 60);
+        $m = $minutes % 60;
+
+        $parts = [];
+        if ($h > 0) {
+            $parts[] = $h . 'J';
+        }
+        if ($m > 0) {
+            $parts[] = $m . 'M';
+        }
+
+        return empty($parts) ? '0' : implode(' ', $parts);
+    }
+
 public function buildForUser(User $user, Request $request): array
 {
     $month      = (int) $request->month;
@@ -25,7 +45,7 @@ public function buildForUser(User $user, Request $request): array
 
     $matrix     = [];
     $grandDaily = array_fill(1, $daysInMonth, 0);
-    $totalHours = 0;
+    $totalMinutes = 0;
 
     // 👉 penanda hari non-kerja
     $nonWorkingMarker = [];
@@ -78,22 +98,18 @@ public function buildForUser(User $user, Request $request): array
                 ?? ucfirst(str_replace('_', ' ', $e->program_static))
                 ?? 'Others';
 
-            $hours = $e->minutes / 60;
+            $minutes = (int) $e->minutes;
 
             $matrix[$program][$day] =
-                ($matrix[$program][$day] ?? 0) + $hours;
+                ($matrix[$program][$day] ?? 0) + $minutes;
 
             $matrix[$program]['total'] =
-                ($matrix[$program]['total'] ?? 0) + $hours;
+                ($matrix[$program]['total'] ?? 0) + $minutes;
 
-            $grandDaily[$day] += $hours;
-            $totalHours       += $hours;
+            $grandDaily[$day] += $minutes;
+            $totalMinutes       += $minutes;
         }
     }
-    // ===== SORT PROGRAM ALFABET =====
-    uksort($matrix, function ($a, $b) {
-        return strcasecmp($a, $b);
-    });
 
     return [
         'user'              => $user,
@@ -101,11 +117,50 @@ public function buildForUser(User $user, Request $request): array
         'year'              => $year,
         'status'            => $timesheet->status ?? 'draft',
         'daysInMonth'       => $daysInMonth,
-        'matrix'            => $matrix,
-        'grandDaily'        => $grandDaily,
-        'grandTotal'        => $totalHours,
-        'equivalent'        => round($totalHours / 8, 2),
+        'matrix'            => $this->formatMatrixValues($matrix),
+        'grandDaily'        => array_map([$this, 'formatMinutesToHours'], $grandDaily),
+        'grandTotal'        => $this->formatMinutesToDays($totalMinutes),
+        'equivalent'        => $this->formatMinutesToDays($totalMinutes),
         'nonWorkingMarker'  => $nonWorkingMarker, // ✅ PENTING
     ];
 }
+
+    private function formatMinutesToDays(int $minutes): string
+    {
+        if ($minutes <= 0) {
+            return '0';
+        }
+
+        $d = floor($minutes / 480);
+        $sisa = $minutes % 480;
+        $h = floor($sisa / 60);
+        $m = $sisa % 60;
+
+        $res = [];
+        if ($d > 0) $res[] = $d . ' Hari';
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+
+        return empty($res) ? '0' : implode(' ', $res);
+    }
+
+    private function formatMatrixValues(array $matrix): array
+    {
+        $formattedMatrix = [];
+        foreach ($matrix as $program => $days) {
+            foreach ($days as $day => $minutes) {
+                if ($day === 'total') {
+                    $formattedMatrix[$program][$day] = $this->formatMinutesToDays($minutes);
+                } else {
+                    $formattedMatrix[$program][$day] = $this->formatMinutesToHours($minutes);
+                }
+            }
+        }
+
+        uksort($formattedMatrix, function ($a, $b) {
+            return strcasecmp($a, $b);
+        });
+
+        return $formattedMatrix;
+    }
 }

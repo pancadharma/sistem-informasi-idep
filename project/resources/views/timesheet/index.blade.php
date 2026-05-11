@@ -2,6 +2,39 @@
 
 @section('content_body')
 
+@php
+    // Helper untuk mengubah menit menjadi format X jam Y mnt (contoh: 80 -> 1 jam 20 mnt)
+    function formatJamMenit($menit) {
+        if ($menit == 0) return '0';
+        
+        $h = floor($menit / 60);
+        $m = round($menit % 60);
+        
+        $res = [];
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        
+        return implode(' ', $res);
+    }
+
+    // Helper untuk mengubah menit menjadi format X hari Y jam Z mnt (1 hari = 8 jam = 480 mnt)
+    function formatHariJam($menit) {
+        if ($menit == 0) return '0';
+        
+        $d = floor($menit / 480);
+        $sisa = $menit % 480;
+        $h = floor($sisa / 60);
+        $m = round($sisa % 60);
+        
+        $res = [];
+        if ($d > 0) $res[] = $d . ' Hari';
+        if ($h > 0) $res[] = $h . ' Jam';
+        if ($m > 0) $res[] = $m . ' Mnt';
+        
+        return implode(' ', $res);
+    }
+@endphp
+
 <div class="container-fluid py-4">
 
 {{-- FEEDBACK UX --}}
@@ -54,15 +87,15 @@
 <div class="row mb-4">
 <div class="col-md-6">
     <div class="p-3 bg-primary text-white rounded">
-        <small>Total Jam Bulan Ini</small>
-        <h3>{{ number_format($totalMinutes/60,2) }} Jam</h3>
+        <small>Total Jam Kerja Bulan Ini</small>
+        <h3>{{ formatJamMenit($totalMinutes) }}</h3>
     </div>
 </div>
 
 <div class="col-md-6">
     <div class="p-3 bg-primary text-white rounded">
-        <small>Total Hari (8 Jam)</small>
-        <h3>{{ number_format($totalMinutes/480,2) }} Hari</h3>
+        <small>Total Hari Kerja Bulan Ini (8 Jam)</small>
+        <h3>{{ formatHariJam($totalMinutes) }}</h3>
     </div>
 </div>
 </div>
@@ -168,13 +201,13 @@ $dayBadge = [
 <td>{{ $day['date']->format('d M Y') }}</td>
 
 {{-- 🔥 PER LOKASI --}}
-<td>{{ number_format($day['byLocation']['kantor'], 2) }}</td>
-<td>{{ number_format($day['byLocation']['lapangan'], 2) }}</td>
-<td>{{ number_format($day['byLocation']['rumah'], 2) }}</td>
-<td>{{ number_format($day['byLocation']['other'], 2) }}</td>
+<td>{{ formatJamMenit($day['byLocation']['kantor']) }}</td>
+<td>{{ formatJamMenit($day['byLocation']['lapangan']) }}</td>
+<td>{{ formatJamMenit($day['byLocation']['rumah']) }}</td>
+<td>{{ formatJamMenit($day['byLocation']['other']) }}</td>
 
 <td>
-<strong>{{ number_format($day['minutes']/60,2) }} Jam</strong>
+<strong>{{ formatJamMenit($day['minutes']) }}</strong>
 </td>
 
 <td class="text-center">
@@ -209,18 +242,18 @@ $dayBadge = [
 <tr class="table-warning">
     <th>Lokasi</th>
     <th>Total Jam</th>
-    <th>Total Hari (÷8)</th>
+    <th>Total Hari Kerja (8 Jam)</th>
 </tr>
 
 @foreach(['kantor','lapangan','rumah','other'] as $loc)
 <tr>
     <td>{{ ucfirst($loc) }}</td>
 
-    <td>{{ number_format($summary[$loc],2) }} Jam</td>
+    <td>{{ formatJamMenit($summary[$loc]) }}</td>
 
     <td>
         <strong>
-        {{ number_format($summary[$loc] / 8, 2) }} Hari
+        {{ formatHariJam($summary[$loc]) }}
         </strong>
     </td>
 </tr>
@@ -229,9 +262,9 @@ $dayBadge = [
 <tr class="table-primary">
 <th>TOTAL</th>
 
-<th>{{ number_format($totalMinutes/60,2) }} Jam</th>
+<th>{{ formatJamMenit($totalMinutes) }}</th>
 
-<th>{{ number_format($totalMinutes/480,2) }} Hari</th>
+<th>{{ formatHariJam($totalMinutes) }}</th>
 </tr>
 
 </table>
