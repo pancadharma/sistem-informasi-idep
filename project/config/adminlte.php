@@ -3,7 +3,7 @@
 use Illuminate\Validation\Rules\Can;
 
 return [
-    'title' => 'IDEP Foundation',
+    'title' => 'SELARAS',
     'title_prefix' => '- ',
     'title_postfix' => ' -',
 
@@ -12,17 +12,17 @@ return [
     'google_fonts' => [
         'allowed' => true,
     ],
-    'logo' => '<b>IDEP </b>Foundation',
+    'logo' => '<b>SELARAS</b>',
     'logo_img' => '/vendor/adminlte/dist/img/2-logo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'IDEP Foundation Admin Logo',
+    'logo_img_alt' => 'SELARAS Admin Logo',
     'auth_logo' => [
         'enabled' => true,
         'img' => [
             'path' => '/vendor/adminlte/dist/img/idep.png',
-            'alt' => 'IDEP Foundation Logo',
+            'alt' => 'SELARAS Foundation Logo',
             'class' => '',
             'width' => 100,
             'height' => 100,
@@ -33,7 +33,7 @@ return [
         'mode' => 'fullscreen',
         'img' => [
             'path' => '/vendor/adminlte/dist/img/idep.png',
-            'alt' => 'IDEP Foundation Preloader Image',
+            'alt' => 'SELARAS Foundation Preloader Image',
             'effect' => 'animation__shake',
             'width' => 120,
             'height' => 120,
