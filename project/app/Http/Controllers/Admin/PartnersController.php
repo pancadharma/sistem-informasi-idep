@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PartnersController extends Controller
 {
     public function index(){
-        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('partner_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('master.partner.index');
     }

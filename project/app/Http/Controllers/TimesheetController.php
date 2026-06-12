@@ -257,31 +257,45 @@ class TimesheetController extends Controller
                 // ===============================
                 // BEKERJA → SIMPAN DETAIL
                 // ===============================
-                foreach ($request->activities ?? [] as $row) {
+                foreach ($request->activities ?? [] as $index => $row) {
 
+                    // Lewati baris yang benar-benar kosong untuk menghindari error validasi
                     if (
-                        empty($row['activity']) ||
-                        empty($row['minutes']) ||
-                        $row['minutes'] <= 0
+                        empty($row['program_id']) &&
+                        empty($row['donor_id']) &&
+                        empty($row['activity']) &&
+                        (empty($row['minutes']) || $row['minutes'] == 0)
                     ) {
                         continue;
+                    }
+
+                    // Untuk baris yang terisi sebagian, validasi semua kolom wajib
+                    if (
+                        empty($row['program_id']) ||
+                        empty($row['donor_id']) ||
+                        empty($row['activity']) ||
+                        empty($row['minutes']) ||
+                        (int)$row['minutes'] <= 0
+                    ) {
+                        DB::rollBack();
+                        return response()->json([
+                            'success' => false,
+                            'message' => "Kesalahan pada baris ke-" . ($index + 1) . ". Jika baris diisi, maka kolom 'Fokus Area', 'Resource', 'Aktivitas', dan 'Menit' wajib diisi.",
+                        ], 422);
                     }
 
                     TimesheetEntry::create([
                         'timesheet_id' => $timesheet->id,
                         'work_date'    => $date->toDateString(),
                         'day_status'   => 'bekerja',
-
                         'location_detail' => $row['location_detail'] ?? null,
                         'work_location'   => $row['work_location'] ?? null,
-
                         'minutes' => (int) $row['minutes'],
 
                         // DONOR
                         'donor_id' => is_numeric($row['donor_id'] ?? null)
                             ? $row['donor_id']
                             : null,
-
                         'donor_static' => !is_numeric($row['donor_id'] ?? null)
                             ? $row['donor_id']
                             : null,
@@ -290,7 +304,6 @@ class TimesheetController extends Controller
                         'program_id' => is_numeric($row['program_id'] ?? null)
                             ? $row['program_id']
                             : null,
-
                         'program_static' => !is_numeric($row['program_id'] ?? null)
                             ? $row['program_id']
                             : null,

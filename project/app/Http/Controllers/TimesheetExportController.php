@@ -25,8 +25,8 @@ class TimesheetExportController extends Controller
             $userIds = $request->input('user_ids', []);
 
             $users = empty($userIds)
-                ? User::orderBy('nama')->get()
-                : User::whereIn('id', $userIds)->orderBy('nama')->get();
+                ? User::where('aktif', true)->orderBy('nama')->get()
+                : User::whereIn('id', $userIds)->where('aktif', true)->orderBy('nama')->get();
 
             foreach ($users as $user) {
                 $previewData[] = $service->buildForUser($user, $request);
@@ -34,8 +34,8 @@ class TimesheetExportController extends Controller
         }
 
         return view('timesheet.export.index', [
-            'users'       => User::orderBy('nama')->get(),
-            'programs' => Program::where('status', '!=', 'draft')
+            'users'       => User::where('aktif', true)->orderBy('nama')->get(),
+            'programs'    => Program::where('status', '!=', 'draft')
                 ->orderBy('nama')
                 ->get(),
             'previewData' => $previewData,
@@ -54,7 +54,7 @@ class TimesheetExportController extends Controller
 
         // 🔥 LOAD RELASI BIAR ADA DIVISI & JABATAN
         $user = User::with('jabatan.divisi')
-            ->findOrFail($request->user_id);
+            ->where('aktif', true)->findOrFail($request->user_id);
 
         $data = $service->buildForUser($user, $request);
 

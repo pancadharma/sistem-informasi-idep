@@ -69,15 +69,15 @@
                     {{-- TABLE AKTIVITAS --}}
                     <div class="table-responsive">
                         <table class="table table-bordered align-middle"
-                               id="activityTable" style="min-width: 900px; width: 100%;">
+                               id="activityTable" style="min-width: 900px; width: 100%; table-layout: fixed;">
                             <thead class="thead-light text-center">
                                 <tr>
-                                    <th style="width: 15%">Area</th>
+                                    <th style="width: 10%">Area</th>
                                     <th style="width: 15%">Lokasi Kerja</th>
-                                    <th style="width: 16%">Waktu</th>
-                                    <th style="width: 17%">Fokus Area</th>
-                                    <th style="width: 14%">Resource</th>
-                                    <th style="width: 18%">Kegiatan</th>
+                                    <th style="width: 13%">Waktu</th>
+                                    <th style="width: 15%">Fokus Area</th>
+                                    <th style="width: 15%">Resource</th>
+                                    <th style="width: 27%">Kegiatan</th>
                                     <th style="width: 5%">Aksi</th>
                                 </tr>
                             </thead>

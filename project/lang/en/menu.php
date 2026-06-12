@@ -50,7 +50,7 @@ return [
     'laporan'           => 'Report',
     'cari'              => 'Search',
     'satuan'            => 'Units',
-    'target_reinstra'   => 'Target Reinstra',
+    'target_reinstra'   => 'Target Renstra',
     'peran'             => 'Responsibility',
     'benchmark'        => 'Benchmark',
     'komponenmodel'     => 'Componen/Model',
