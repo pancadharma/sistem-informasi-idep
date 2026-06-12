@@ -48,7 +48,7 @@ return [
     'laporan'           => 'Laporan',
     'cari'              => 'Pencarian',
     'satuan'            => 'Satuan',
-    'target_reinstra'   => 'Target Reinstra',
+    'target_reinstra'   => 'Target Renstra',
     'peran'             => 'Peran',
     'benchmark'        => 'Benchmark',
     'komponenmodel'     => 'Komponen/Model',

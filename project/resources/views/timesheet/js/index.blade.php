@@ -14,6 +14,13 @@
     input[type="number"].input-mnt-display {
         -moz-appearance: textfield;
     }
+
+    /* Batasi teks panjang di Select2 (Fokus Area/Resource) agar tidak merusak layout */
+    #activityTable .select2-selection__rendered {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
 <script>
 $(function () {
@@ -40,21 +47,38 @@ $(function () {
         </optgroup>
     `;
 
+    // Ambil nama program dari donor-based untuk pengecekan duplikat
+    const donorProgramNamesLower = programs.map(p => p.nama.trim().toLowerCase());
+
+    // Definisikan program statis sebagai array objek agar mudah difilter
+    const staticPrograms = [
+        { value: 'benih_alami',     text: 'Benih Alami' },
+        { value: 'sapi_bergulir',   text: 'Sapi Bergulir' },
+        { value: 'train_with_idep', text: 'Train With IDEP' },
+        { value: 'visit_idep',      text: 'Visit IDEP' },
+        { value: 'consult_idep',    text: 'Consult With IDEP' },
+        { value: 'bwp_project',     text: 'Bali Water Protection ' },
+        { value: 'kios_idep',       text: 'Kios IDEP' },
+        { value: 'capacity_building', text: 'Capacity Building' },
+        { value: 'garden_day',      text: 'Garden Day' },
+        { value: 'others',          text: 'Others' },
+    ];
+
+    // Filter program statis: hanya tampilkan jika namanya TIDAK ADA di program donor-based
+    // Logika baru: periksa jika nama statis adalah bagian awal dari nama program donor.
+    // Contoh: "Benih Alami" (statis) akan disembunyikan jika ada "Benih Alami 2026" (donor).
+        const filteredStaticPrograms = staticPrograms.filter(staticProg => {
+        const staticNameLower = staticProg.text.trim().toLowerCase();
+        // Cek apakah ada program dari donor yang namanya diawali dengan nama program statis ini.
+        const isDuplicate = donorProgramNamesLower.some(donorName => donorName.startsWith(staticNameLower));
+        // Kembalikan true (tampilkan) jika TIDAK ADA duplikat.
+        return !isDuplicate;
+    });
+
     const progOptHtml = `
-        <optgroup label="Non Donor">
-            <option value="benih_alami">Benih Alami</option>
-            <option value="sapi_bergulir">Sapi Bergulir</option>
-            <option value="train_with_idep">Train With IDEP</option>
-            <option value="visit_idep">Visit IDEP</option>
-            <option value="consult_idep">Consult IDEP</option>
-            <option value="bwp_project">BWP Project</option>
-            <option value="kios_idep">Kios IDEP</option>
-            <option value="capacity_building">Capacity Building</option>
-            <option value="garden_day">Garden Day</option>
-            <option value="others">Others</option>
-        </optgroup>
-        <optgroup label="Donor Based">
+        <optgroup>
             ${programs.map(p => `<option value="${p.id}">${p.nama}</option>`).join('')}
+            ${filteredStaticPrograms.map(p => `<option value="${p.value}">${p.text}</option>`).join('')}
         </optgroup>
     `;
 
@@ -496,26 +520,48 @@ $(document).on('click', '.btn-input-day', function () {
             }
         }
 
-        let activities = [];
+        let activities = []; // Array untuk menampung aktivitas yang valid
+        let isValid = true;  // Flag untuk menghentikan proses jika ada error
 
-        $('#activityTable tbody tr').each(function () {
+        if (status === 'kerja') {
+            $('#activityTable tbody tr').each(function (index) {
+                if (!isValid) return false; // Hentikan iterasi jika sudah ada error
 
-            let minutes = parseInt($(this).find('.jam').val()) || 0;
-            let activityText = $(this).find('.kegiatan').val();
+                const program_id = $(this).find('.program').val();
+                const donor_id = $(this).find('.donor').val();
+                const activity = $(this).find('.kegiatan').val().trim();
+                const minutes = parseInt($(this).find('.jam').val()) || 0;
 
-            if (status === 'kerja' && (minutes <= 0 || !activityText)) {
-                return;
-            }
+                // 1. Lewati baris yang benar-benar kosong
+                if (!program_id && !donor_id && !activity && minutes <= 0) {
+                    return true; // Lanjut ke baris berikutnya
+                }
 
-            activities.push({
-                location_detail: $(this).find('input[name*="[location_detail]"]').val(),
-                work_location: $(this).find('select[name*="[work_location]"]').val(),
-                minutes: minutes,
-                donor_id: $(this).find('select[name*="[donor_id]"]').val(),
-                program_id: $(this).find('select[name*="[program_id]"]').val(),
-                activity: activityText
+                // 2. Validasi baris yang terisi sebagian
+                if (!program_id || !donor_id || !activity || minutes <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Data Tidak Lengkap',
+                        text: `Baris ke-${index + 1} tidak lengkap. Mohon isi 'Fokus Area', 'Resource', 'Kegiatan', dan 'Waktu' jika baris digunakan.`
+                    });
+                    isValid = false; // Tandai sebagai tidak valid
+                    return false;    // Hentikan iterasi
+                }
+
+                // 3. Jika valid, tambahkan ke array
+                activities.push({
+                    location_detail: $(this).find('input[name*="[location_detail]"]').val(),
+                    work_location: $(this).find('select[name*="[work_location]"]').val(),
+                    minutes: minutes,
+                    donor_id: donor_id,
+                    program_id: program_id,
+                    activity: activity
+                });
             });
-        });
+        }
+
+        // Hentikan proses simpan jika ada baris yang tidak valid
+        if (!isValid) return;
 
         // =========================================
         // 🔥 KONFIRMASI KHUSUS GANTI KE NON KERJA
@@ -546,11 +592,11 @@ $(document).on('click', '.btn-input-day', function () {
         // =========================================
         // VALIDASI NORMAL KERJA
         // =========================================
-        if (status === 'kerja' && activities.length === 0) {
+        if (status === 'kerja' && activities.length === 0 && $('#activityTable tbody tr').length > 0) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Jam Kosong',
-                text: 'Minimal harus ada 1 aktivitas kerja'
+                title: 'Aktivitas Kosong',
+                text: 'Minimal harus ada 1 baris aktivitas yang diisi dengan lengkap.'
             });
             return;
         }

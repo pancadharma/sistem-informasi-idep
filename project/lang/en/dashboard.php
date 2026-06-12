@@ -134,7 +134,7 @@ return [
             'modal' => [
                 'title' => 'Component Details',
                 'subtitle' => 'Part of :program (Year :year)',
-                'targets' => 'Supported Reinstra Targets',
+                'targets' => 'Supported Renstra Targets',
                 'no_targets' => 'No connected targets.',
                 'locations_detail' => 'Implementation Location Details',
                 'headers' => [

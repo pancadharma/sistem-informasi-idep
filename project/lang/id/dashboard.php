@@ -134,7 +134,7 @@ return [
             'modal' => [
                 'title' => 'Detail Komponen',
                 'subtitle' => 'Bagian dari :program (Tahun :year)',
-                'targets' => 'Target Reinstra yang Didukung',
+                'targets' => 'Target Renstra yang Didukung',
                 'no_targets' => 'Tidak ada target yang terhubung.',
                 'locations_detail' => 'Rincian Lokasi Implementasi',
                 'headers' => [

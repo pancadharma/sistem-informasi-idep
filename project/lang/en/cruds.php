@@ -347,7 +347,7 @@ return [
     'reinstra' => [
         'title' => 'Strategy Plan Targets',
         'list' => 'Strategy Plan Target List',
-        'title_singular' => 'Reinstra Target',
+        'title_singular' => 'Renstra Target',
         'fields' => [
             'id' => 'ID',
             'nama' => 'Name',
@@ -421,9 +421,9 @@ return [
         'expektasi' => 'Beneficiary Expectations',
         'ex_indirect' => 'Expected Indirect Benefit Receipt',
 
-        'reinstra' => 'Target Reinstra',
-        'list_reinstra' => 'List Target Reinstra',
-        'select_reinstra' => 'Select Target Reinstra',
+        'reinstra' => 'Target Renstra',
+        'list_reinstra' => 'List Target Renstra',
+        'select_reinstra' => 'Select Target Renstra',
         'sdg' => 'SDG Linkages',
         'list_sdg' => 'SDG List',
         'select_sdg' => 'Select SDG',

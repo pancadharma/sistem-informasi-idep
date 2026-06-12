@@ -87,9 +87,10 @@
                     <tr>
                         <th>Tanggal</th>
                         <th>Status Hari</th>
-                        <th>Jam</th>
-                        <th>Program</th>
-                        <th>Donor</th>
+                        <th>Lokasi Kerja</th>
+                        <th>Waktu Kerja</th>
+                        <th>Fokus Area</th>
+                        <th>Resource</th>
                         <th>Kegiatan</th>
                     </tr>
                 </thead>
@@ -136,6 +137,10 @@
                                     </td>
                                 @endif
 
+                                <td class="text-center text-capitalize">
+                                    {{ $e->work_location ?? '-' }}
+                                </td>
+
                                 <td class="text-center">
                                     {{ formatJamMenit($e->minutes) }}
                                 </td>
@@ -162,6 +167,8 @@
                 <tfoot class="table-primary">
                     <tr>
                         <th colspan="2">TOTAL</th>
+
+                        <th></th>
 
                         <th>
                             {{ formatJamMenit($totalMenit) }}
