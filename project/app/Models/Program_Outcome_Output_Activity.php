@@ -9,10 +9,11 @@ use GedeAdi\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Program_Outcome_Output_Activity extends Model
 {
-    use HasFactory, Auditable, HasRoles, LogsActivity;
+    use HasFactory, Auditable, HasRoles, LogsActivity, SoftDeletes;
 
     protected $table = 'trprogramoutcomeoutputactivity';
 
@@ -30,6 +31,7 @@ class Program_Outcome_Output_Activity extends Model
     protected $dates = [
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 
     public function getActivitylogOptions(): LogOptions

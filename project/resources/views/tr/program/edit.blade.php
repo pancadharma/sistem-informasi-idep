@@ -260,7 +260,7 @@
                                         </strong>
                                     </label>
                                     <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
+                                        placeholder="{{ __('cruds.program.deskripsi') }}">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
 
                                     @if ($errors->has('deskripsi'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
@@ -276,7 +276,7 @@
                                         </strong>
                                     </label>
                                     <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="500">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
+                                        placeholder="{{ __('cruds.program.analisis') }}">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
                                     @if ($errors->has('analisamasalah'))
                                         <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
                                     @endif

@@ -276,6 +276,9 @@
                                             <button data-target="EditOutput" class="btn btn-sm modal-trigger float-right btn-success btnEditOutcomeOutput" data-action="edit" data-output-id="${output.id}" data-index="${output.id}" data-outcome-id="${output.programoutcome_id}">
                                             <i class="bi bi-pencil-square"></i>
                                             </button>
+                                            <button class="btn btn-sm float-right btn-danger btnDeleteOutput ml-1" data-output-id="${output.id}" data-outcome-id="${output.programoutcome_id}" title="{{ __('global.delete') }}">
+                                            <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -555,6 +558,73 @@
                     });
                 },
             });
+
+    // Delete Output with SweetAlert2 confirmation
+    $(document).on('click', '.btnDeleteOutput', function(e) {
+        e.preventDefault();
+        let outputId = $(this).data('output-id');
+        let outcomeId = $(this).data('outcome-id');
+        let outputApi = "{{ route('api.program.output', ':id') }}".replace(':id', outcomeId);
+        let deleteUrl = "{{ route('program.details.output.destroy', ':id') }}".replace(':id', outputId);
+
+        Swal.fire({
+            title: '{{ __("global.areYouSure") }}',
+            text: 'Output beserta seluruh aktivitasnya akan dihapus!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '{{ __("global.yes") }}, Hapus!',
+            cancelButtonText: '{{ __("global.cancel") }}'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '{{ __("global.response.processing") }}',
+                    text: '{{ __("global.response.please_wait") }}',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '{{ __("global.success") }}',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                            fetchOutputs(outputApi);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message || 'Gagal menghapus output.',
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        const errorMessage = getErrorMessage(xhr);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: errorMessage,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                });
+            }
+        });
+    });
         });
 
     });
