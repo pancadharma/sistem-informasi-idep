@@ -1275,6 +1275,42 @@ class ProgramController extends Controller
         }
     }
 
+    /**
+     * Soft delete an output and its child activities.
+     */
+    public function outputDestroy($output)
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_delete')) {
+            DB::beginTransaction();
+            try {
+                $outcomeOutput = Program_Outcome_Output::findOrFail($output);
+
+                // Soft delete child activities first
+                $outcomeOutput->activities()->delete();
+
+                // Soft delete the output itself
+                $outcomeOutput->delete();
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Output and its activities have been deleted successfully.',
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while deleting the output.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to delete this output.',
+        ], 403);
+    }
+
 
 
     /**
