@@ -145,131 +145,6 @@ class ProgramController extends Controller
         abort(Response::HTTP_FORBIDDEN, 'Unauthorized Permission. Please ask your administrator to assign permissions to access and create a program');
     }
 
-    // public function store(StoreProgramRequest $request, Program $program)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         // Gunakan StoreProgramRequest utk validasi users punya akses membuat program
-    //         $data = $request->validated();
-    //         $program = Program::create($data);
-    //         $program->targetReinstra()->sync($request->input('targetreinstra', []));
-    //         $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
-    //         $program->kaitanSDG()->sync($request->input('kaitansdg', []));
-
-    //         // Sync staff and peran
-    //         $this->storeStaffPeran($program, $request);
-    //         // $this->storeStaffPeran($program, $validated['staff'], $validated['peran']);
-
-
-
-    //         // Unggah dan simpan berkas menggunakan Spatie Media Library
-    //         if ($request->hasFile('file_pendukung')) {
-    //             $timestamp = now()->format('Ymd_His');
-    //             $fileCount = 1;
-
-    //             foreach ($request->file('file_pendukung') as $index => $file) {
-    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //                 $extension = $file->getClientOriginalExtension();
-    //                 $programName = str_replace(' ', '_', $program->nama);
-    //                 $fileName = "{$programName}_{$timestamp}_{$fileCount}.{$extension}";
-    //                 $keterangan = $request->input('captions')[$index] ?? "{$fileName}";
-
-    //                 \Log::info('Uploading file: ' . $fileName . ' Orignal Name: ' . $originalName . ' User ID: ' . auth()->user()->nama);
-    //                 $program->addMedia($file)
-    //                     ->withCustomProperties(['keterangan' => $keterangan, 'user_id'  =>  auth()->user()->id, 'original_name' => $originalName, 'extension' => $extension])
-    //                     ->usingName("{$programName}_{$originalName}_{$fileCount}")
-    //                     ->usingFileName($fileName)
-    //                     // ->toMediaCollection('file_pendukung_program', 'program_uploads');
-    //                     ->toMediaCollection('program_' . $program->id, 'program_uploads');
-
-    //                 $fileCount++;
-    //             }
-    //         } else {
-    //             if (!$request->has('file_pendukung')) {
-    //                 \Log::info('No file_pendukung key found in the request.');
-    //             } elseif (empty($request->file('file_pendukung'))) {
-    //                 \Log::info('file_pendukung key is present but no files were uploaded.');
-    //             } else {
-    //                 \Log::info('No files found in the request.');
-    //             }
-    //         }
-
-    //         // save program partner
-    //         $program->partner()->sync($request->input('partner', []));
-    //         // save program lokasi
-    //         $program->lokasi()->sync($request->input('lokasi', []));
-    //         // save report schedule
-    //         $this->storeReportSchedule($request, $program);
-
-    //         $newPendonor = $request->input('pendonor_id', []);
-    //         $nilaiD = $request->input('nilaidonasi', []);
-
-    //         if (count($newPendonor) !== count($nilaiD)) {
-    //             throw new Exception('Mismatched pendonor_id and nilaidonasi arrays length');
-    //         }
-    //         $newDonasi = array_map(function ($pendonor_id, $donation_value) {
-    //             if (empty($donation_value)) {
-    //                 throw new Exception("Missing donation value for donor ID $pendonor_id");
-    //             }
-    //             return [
-    //                 'pendonor_id' => $pendonor_id,
-    //                 'nilaidonasi' => $donation_value,
-    //             ];
-    //         }, $newPendonor, $nilaiD);
-    //         foreach ($newDonasi as $donation) {
-    //             $program->pendonor()->attach($donation['pendonor_id'], ['nilaidonasi' => $donation['nilaidonasi']]);
-    //         }
-
-    //         // create program outcome
-    //         $this->storeOutcome($request, $program);
-    //         $this->storeGoal($request, $program);
-    //         $this->storeObjective($request, $program);
-
-
-
-
-
-    //         //COMMIT THE QUERY IF NO ERROR
-    //         DB::commit();
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $program,
-    //             "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.added'),
-    //         ], Response::HTTP_CREATED);
-
-    //         //ERROR CATCH
-
-    //     } catch (ValidationException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Validation failed.',
-    //             'errors'  => $e->errors(),
-    //         ], 422);
-    //     } catch (ModelNotFoundException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Resource not found.',
-    //         ], 404);
-    //     } catch (HttpException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $e->getMessage(),
-    //         ], $e->getStatusCode());
-    //     } catch (Exception $e) {
-    //         DB::rollBack();
-
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'An error occurred.',
-    //             'error'   => $e->getMessage(),
-    //             'request_data' => $request->all(),
-    //         ], 500);
-    //     }
-    // }
-
     public function edit(Program $program)
     {
         if (auth()->user()->id !== 1 && !auth()->user()->can('program_edit')) {
@@ -333,101 +208,6 @@ class ProgramController extends Controller
         return 'other';
     }
 
-    // public function update(UpdateProgramRequest $request, Program $program)
-    // {
-    //     DB::beginTransaction();
-    //     try {
-    //         $data = $request->validated();
-    //         $program->update($data);
-    //         $program->targetReinstra()->sync($request->input('targetreinstra', []));
-    //         $program->kelompokMarjinal()->sync($request->input('kelompokmarjinal', []));
-    //         $program->kaitanSDG()->sync($request->input('kaitansdg', []));
-
-    //         $newFiles = $request->file('file_pendukung', []);
-    //         $newFileNames = array_map(function ($file) {
-    //             return $file->getClientOriginalName();
-    //         }, $newFiles);
-    //         // \Log::info($newFileNames);
-
-    //         if (is_countable($program->media) && count($program->media) > 0) {
-    //             foreach ($program->media as $media) {
-    //                 if (in_array($media->name, $newFileNames)) {
-    //                     // \Log::info('Deleting Media: ' . $media->name);
-    //                     $media->delete();
-    //                 }
-    //             }
-    //         }
-
-    //         if ($request->hasFile('file_pendukung')) {
-    //             foreach ($newFiles as $index => $file) {
-    //                 $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-    //                 $extension = $file->getClientOriginalExtension();
-    //                 $caption = $request->input('keterangan')[$index] ?? "{$originalName}.{$extension}";
-
-    //                 $program->addMedia($file)
-    //                     ->usingName("{$originalName}.{$extension}")
-    //                     ->withCustomProperties([
-    //                         'keterangan' => $caption,
-    //                         'user_id' => auth()->user()->id,
-    //                         'original_name' => $originalName,
-    //                         'extension' => $extension,
-    //                         'updated_by' => auth()->user()->id
-    //                     ])
-    //                     ->toMediaCollection('program_' . $program->id, 'program_uploads');
-    //                 // ->toMediaCollection('file_pendukung_program', 'program_uploads');
-    //             }
-    //         }
-    //         // update program lokasi
-    //         $program->lokasi()->sync($request->input('lokasi', []));
-
-    //         // update program partner
-    //         $program->partner()->sync($request->input('partner', []));
-
-    //         // Update staff and peran
-    //         $this->updateProgramStaff($program, $request);
-
-    //         // update program donatur
-    //         $this->updateProgramDonatur($program, $request);
-    //         $this->updateProgramOutcomes($program, $request);
-    //         $this->updateJadwalReport($program, $request);
-    //         $this->storeObjective($request, $program);
-    //         $this->storeGoal($request, $program);
-
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $program,
-    //             "message" => __('cruds.data.data') . ' ' . __('cruds.program.title') . ' ' . $request->nama . ' ' . __('cruds.data.updated'),
-    //         ], Response::HTTP_CREATED);
-    //     } catch (ValidationException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Validation failed.',
-    //             'errors'  => $e->errors(),
-    //         ], 422);
-    //     } catch (ModelNotFoundException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Resource not found.',
-    //         ], 404);
-    //     } catch (HttpException $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $e->getMessage(),
-    //         ], $e->getStatusCode());
-    //     } catch (Exception $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success'   => false,
-    //             'error'     => 'An error occurred.',
-    //             'message'   => $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
 
     public function store(StoreProgramRequest $request, Program $program)
     {
@@ -1493,6 +1273,42 @@ class ProgramController extends Controller
                 'message' => 'Data Output not found'
             ], 404);
         }
+    }
+
+    /**
+     * Soft delete an output and its child activities.
+     */
+    public function outputDestroy($output)
+    {
+        if (auth()->user()->id == 1 || auth()->user()->can('program_output_delete')) {
+            DB::beginTransaction();
+            try {
+                $outcomeOutput = Program_Outcome_Output::findOrFail($output);
+
+                // Soft delete child activities first
+                $outcomeOutput->activities()->delete();
+
+                // Soft delete the output itself
+                $outcomeOutput->delete();
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Output and its activities have been deleted successfully.',
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while deleting the output.',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized Permission. Please ask your administrator to assign permissions to delete this output.',
+        ], 403);
     }
 
 
