@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="nama">{{ __('cruds.mpendonor.nama') }} {{ __('cruds.mpendonor.title') }}</label>
+                        <label for="nama">{{ __('cruds.mpendonor.nama') }}</label>
                         <input type="text" id="nama" name="nama" class="form-control" required maxlength="200">
                     </div>
                     <div class="form-group">
