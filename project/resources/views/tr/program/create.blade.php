@@ -179,7 +179,7 @@
                                         </strong>
                                     </label>
                                     <textarea id="deskripsiprojek" name="deskripsiprojek" cols="30" rows="5" class="form-control {{ $errors->has('deskripsiprojek') ? 'is-invalid' : '' }}"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="500"></textarea>
+                                        placeholder="{{ __('cruds.program.deskripsi') }}"></textarea>
                                     @if ($errors->has('deskripsiprojek'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
                                     @endif
@@ -194,7 +194,7 @@
                                         </strong>
                                     </label>
                                     <textarea id="analisamasalah" name="analisamasalah" cols="30" rows="5" class="form-control {{ $errors->has('analisamasalah') ? 'is-invalid' : '' }}"
-                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="500"></textarea>
+                                        placeholder="{{ __('cruds.program.analisis') }}"></textarea>
 
                                     @if ($errors->has('deskripsiprojek'))
                                         <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>

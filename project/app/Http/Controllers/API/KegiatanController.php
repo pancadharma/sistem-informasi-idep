@@ -79,7 +79,7 @@ class KegiatanController extends Controller
                 $item->tanggalselesai = Carbon::parse($item->tanggalselesai)->format('d-m-Y');
 
                 // Add calculated values
-                $program = $item->activity->program_outcome_output->program_outcome->program;
+                $program = $item->activity?->program_outcome_output?->program_outcome?->program;
                 $item->total_beneficiaries = $item->penerimamanfaattotal;
                 $item->sektor_names = $item->sektor->pluck('nama')->toArray(); // Convert collection to array
 
@@ -89,10 +89,10 @@ class KegiatanController extends Controller
         $data = DataTables::of($kegiatan)
             ->addIndexColumn()
             ->addColumn('program_name', function ($kegiatan) {
-                return $kegiatan->activity->program_outcome_output->program_outcome->program->nama ?? 'N/A';
+                return $kegiatan->activity?->program_outcome_output?->program_outcome?->program?->nama ?? 'N/A';
             })
             ->addColumn('kegiatan_kode', function ($kegiatan) {
-                return $kegiatan->activity->kode ?? 'N/A';
+                return $kegiatan->activity?->kode ?? 'N/A';
             })
             ->addColumn('duration_in_days', function ($kegiatan) {
                 return $kegiatan->duration_in_days . ' ' . __('cruds.kegiatan.days')  ?? 'N/A';

@@ -11,19 +11,19 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.mpendonor.nama') }} {{ trans('cruds.mpendonor.title') }}</label>
+                <label for="nama">{{ trans('cruds.mpendonor.nama') }}</label>
                 <input type="text" id="editnama" name="nama" class="form-control" v-model="form.nama" required maxlength="200">
             </div>
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.mpendonor.nama') }} {{ trans('cruds.mpendonor.title') }}</label>
-                <input type="text" id="editpic" name="pic" class="form-control" v-model="form.nama" required maxlength="200">
+                <label for="pic">{{ trans('cruds.mpendonor.pic') }} {{ trans('cruds.mpendonor.title') }}</label>
+                <input type="text" id="editpic" name="pic" class="form-control" v-model="form.pic" required maxlength="200">
             </div>
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.mpendonor.nama') }} {{ trans('cruds.mpendonor.title') }}</label>
-                <input type="text" id="editemail" name="email" class="form-control" v-model="form.email" required maxlength="200">
+                <label for="email">{{ trans('cruds.mpendonor.email') }} {{ trans('cruds.mpendonor.title') }}</label>
+                <input type="email" id="editemail" name="email" class="form-control" v-model="form.email" required maxlength="200">
             </div>
             <div class="form-group">
-                <label for="nama">{{ trans('cruds.mpendonor.nama') }} {{ trans('cruds.mpendonor.title') }}</label>
+                <label for="phone">{{ trans('cruds.mpendonor.phone') }} {{ trans('cruds.mpendonor.title') }}</label>
                 <input type="text" id="editphone" name="phone" class="form-control" v-model="form.phone" required maxlength="200">
             </div>
             <div class="form-group">
