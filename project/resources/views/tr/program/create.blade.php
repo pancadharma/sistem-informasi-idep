@@ -179,7 +179,8 @@
                                         </strong>
                                     </label>
                                     <textarea id="deskripsiprojek" name="deskripsiprojek" cols="30" rows="5" class="form-control {{ $errors->has('deskripsiprojek') ? 'is-invalid' : '' }}"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}"></textarea>
+                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="20000"></textarea>
+                                        <small class="text-muted character-counter"></small>
                                     @if ($errors->has('deskripsiprojek'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
                                     @endif
@@ -194,8 +195,8 @@
                                         </strong>
                                     </label>
                                     <textarea id="analisamasalah" name="analisamasalah" cols="30" rows="5" class="form-control {{ $errors->has('analisamasalah') ? 'is-invalid' : '' }}"
-                                        placeholder="{{ __('cruds.program.analisis') }}"></textarea>
-
+                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="20000"></textarea>
+                                    <small class="text-muted character-counter"></small>
                                     @if ($errors->has('deskripsiprojek'))
                                         <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
                                     @endif
@@ -345,5 +346,59 @@
         // Initial calculation on page load
         calculateTotal();
     });
+function initCharacterCounter(container = document) {
+
+    container.querySelectorAll('textarea[maxlength], input[maxlength]').forEach(function(field){
+
+        // Cari counter pada parent terdekat
+        let counter =
+            field.closest('.form-group')?.querySelector('.character-counter') ||
+            field.closest('.col-lg-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-6')?.querySelector('.character-counter') ||
+            field.closest('.col-md-12')?.querySelector('.character-counter') ||
+            field.parentElement.querySelector('.character-counter');
+
+        if (!counter) {
+            return;
+        }
+
+        function updateCounter() {
+
+            const current = field.value.length;
+            const max = parseInt(field.maxLength);
+            const remaining = max - current;
+
+            counter.textContent =
+                `${current.toLocaleString('id-ID')} / ${max.toLocaleString('id-ID')} karakter • Sisa ${remaining.toLocaleString('id-ID')}`;
+
+            counter.classList.remove(
+                'text-muted',
+                'text-warning',
+                'text-danger'
+            );
+
+            if (current >= max * 0.95) {
+                counter.classList.add('text-danger');
+            } else if (current >= max * 0.80) {
+                counter.classList.add('text-warning');
+            } else {
+                counter.classList.add('text-muted');
+            }
+        }
+
+        updateCounter();
+
+        field.addEventListener('input', updateCounter);
+
+    });
+
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    initCharacterCounter();
+});
+
+
 </script>
 @endpush

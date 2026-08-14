@@ -12,6 +12,7 @@
                 const name = $input.attr("name").replace("[]", "[" + outcomeIndex + "]"); // Properly set the new index
                 $input.attr("name", name);
                 $input.val(""); // Clear value for new outcomes
+                initCharacterCounter($clone[0]);
             });
         });
 
