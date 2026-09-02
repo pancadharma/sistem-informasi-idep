@@ -11,10 +11,14 @@ class TimesheetRejected extends Notification
     use Queueable;
 
     protected $timesheet;
+    protected $targetStatus;
+    protected $note;
 
-    public function __construct($timesheet)
+    public function __construct($timesheet, string $targetStatus, string $note)
     {
         $this->timesheet = $timesheet;
+        $this->targetStatus = $targetStatus;
+        $this->note = $note;
     }
 
     public function via($notifiable)
@@ -32,7 +36,7 @@ class TimesheetRejected extends Notification
         
 
         // 🔥 Cek apakah ini penolakan mutlak atau sekadar revisi (draft)
-        $isDraft = $this->timesheet->status === 'draft';
+        $isDraft = $this->targetStatus === 'draft';
 
         // Sesuaikan Subjek Email
         $subject = $isDraft 
@@ -50,7 +54,7 @@ class TimesheetRejected extends Notification
             ->line($pesanUtama)
             ->line("Periode: {$bulan}")
             ->line("Catatan / Instruksi:")
-            ->line($this->timesheet->approval_note ?? 'Tidak ada catatan tambahan.') // Catatan ini sangat penting
+            ->line($this->note ?: 'Tidak ada catatan tambahan.') // Catatan ini sangat penting
             ->action('Buka & Perbaiki Timesheet', route('timesheet.index'));
     }
 }

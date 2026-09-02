@@ -11,10 +11,12 @@ class TimesheetApproved extends Notification
     use Queueable;
 
     protected $timesheet;
+    protected string $approverName;
 
-    public function __construct($timesheet)
+    public function __construct($timesheet, string $approverName)
     {
         $this->timesheet = $timesheet;
+        $this->approverName = $approverName;
     }
 
     public function via($notifiable)
@@ -29,12 +31,10 @@ class TimesheetApproved extends Notification
             $this->timesheet->month
         )->translatedFormat('F Y');
 
-        $namaPetugas = optional($this->timesheet->approver)->nama ?? 'Atasan/Admin';
-
         return (new MailMessage)
             ->subject("Timesheet Approved - {$bulan}")
             ->greeting("Halo {$notifiable->nama}")
-            ->line("Timesheet Anda telah disetujui oleh {$namaPetugas}.")
+            ->line("Timesheet Anda telah disetujui oleh {$this->approverName}.")
             ->line("Periode: {$bulan}")
             ->line("Total Jam: " . round($this->timesheet->total_minutes / 60, 2))
             ->action('Lihat Timesheet', route('timesheet.index'));
