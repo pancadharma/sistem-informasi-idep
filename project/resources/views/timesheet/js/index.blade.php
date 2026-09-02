@@ -693,30 +693,25 @@ $(document).on('click', '.btn-input-day', function () {
                 data: form.serialize(),
 
                 success: function (res) {
-
-                    // 🔥 TANGKAP STATUS EMAIL DARI CONTROLLER
-                    if (res.email_sent) {
+                    if (res.success === true && res.email_sent !== false) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
-                            text: res.message,
-                            timer: 1500,
-                            showConfirmButton: false
+                            text: res.message || 'Timesheet berhasil disubmit.',
+                            confirmButtonText: 'OK',
+                            allowOutsideClick: false
                         }).then(() => {
                             window.location.reload();
                         });
                     } else {
-                        // Jika masuk ke database tapi email gagal
                         Swal.fire({
-                            icon: 'warning',
-                            title: 'Tersubmit (Email Gagal)',
-                            text: res.message,
-                            footer: '<small class="text-danger">Silakan beri tahu atasan Anda secara manual.</small>'
-                        }).then(() => {
-                            window.location.reload();
+                            icon: 'error',
+                            title: 'Submit Gagal',
+                            text: res.message || 'Email gagal dikirim. Status timesheet tidak diubah. Coba lagi nanti.',
+                            confirmButtonText: 'Tutup',
+                            allowOutsideClick: false
                         });
                     }
-
                 },
 
                 error: function (xhr) {

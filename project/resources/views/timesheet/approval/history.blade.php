@@ -149,62 +149,62 @@
         </div>
     </div>
 
-</div>
-@endsection
+    </div> {{-- /.card --}}
 
+    <div class="d-flex justify-content-center mt-3">
+        {{ $timesheets->links('pagination::bootstrap-4') }}
+    </div>
 
-{{-- =======================
-    MODAL EDIT STATUS
-======================= --}}
+</div> {{-- /.container-fluid --}}
+
+{{-- MODAL EDIT STATUS tetap berada di dalam content_body --}}
 @can('timesheet_ubah_status')
-<div class="modal fade" id="modalEditStatus">
-  <div class="modal-dialog">
-    <form id="formEditStatus">
-        @csrf
+<div class="modal fade" id="modalEditStatus" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formEditStatus">
+            @csrf
 
-        <input type="hidden" name="timesheet_id" id="edit-timesheet-id">
+            <input type="hidden" name="timesheet_id" id="edit-timesheet-id">
 
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5>Ubah Status Timesheet</h5>
-            </div>
-
-            <div class="modal-body">
-
-                <div class="form-group">
-                    <label>Status Baru</label>
-                    <select name="status" class="form-control" required>
-                        <option value="draft">Draft (bisa diedit staff)</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ubah Status Timesheet</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>Alasan</label>
-                    <textarea name="note"
-                              class="form-control"
-                              required></textarea>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Status Baru</label>
+                        <select name="status" class="form-control" required>
+                            <option value="draft">Draft (bisa diedit staff)</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Alasan</label>
+                        <textarea name="note"
+                          class="form-control"
+                          placeholder="Masukkan catatan atau alasan perubahan status (minimal 5 karakter)"
+                          required></textarea>
+                    </div>
                 </div>
 
+                <div class="modal-footer">
+                    <button type="submit" id="btnSimpanStatus" class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
             </div>
-
-            <div class="modal-footer">
-                <button type="submit" id="btnSimpanStatus" class="btn btn-primary">
-                    Simpan
-                </button>
-            </div>
-
-        </div>
-    </form>
-  </div>
+        </form>
+    </div>
 </div>
 @endcan
 
+@endsection
 
-{{-- =======================
-    JAVASCRIPT
-======================= --}}
 @push('js')
 <script>
 $(function(){
@@ -217,69 +217,27 @@ $(function(){
         $('#modalEditStatus').modal('show');
     });
 
-    // SUBMIT EDIT STATUS
-// SUBMIT EDIT STATUS
-    // $('#formEditStatus').on('submit', function(e){
-    //     e.preventDefault();
-
-    //     // 1. Tangkap tombol dan simpan teks aslinya
-    //     let btn = $('#btnSimpanStatus');
-    //     let originalText = btn.html();
-
-    //     // 2. Pasang Efek LOADING (Tombol mati & muncul spinner)
-    //     btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Memproses...');
-
-    //     // 3. Eksekusi AJAX
-    //     $.post("{{ route('timesheet.admin.changeStatus') }}", $(this).serialize())
-    //     .done(function(res){
-            
-    //         // Tutup modal agar rapi
-    //         $('#modalEditStatus').modal('hide');
-
-    //         // 4. Cek apakah email sukses terkirim?
-    //         if (res.email_sent) {
-    //             // Sukses 100% (DB aman, Email terkirim)
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: 'Sukses',
-    //                 text: res.message
-    //             }).then(() => location.reload());
-    //         } else {
-    //             // Sukses parsial (DB aman, tapi jaringan/email error)
-    //             Swal.fire({
-    //                 icon: 'warning',
-    //                 title: 'Status Diubah',
-    //                 text: res.message, // "Status diubah, tapi GAGAL mengirim email"
-    //                 footer: '<small class="text-danger">Karyawan mungkin tidak menerima email.</small>'
-    //             }).then(() => location.reload());
-    //         }
-
-    //     })
-    //     .fail(function(xhr){
-            
-    //         // Tangkap error validasi atau server
-    //         Swal.fire(
-    //             'Gagal',
-    //             xhr.responseJSON?.message || 'Terjadi kesalahan validasi atau sistem.',
-    //             'error'
-    //         );
-
-    //     })
-    //     .always(function(){
-            
-    //         // 5. Lepas Efek LOADING (Apapun yang terjadi, tombol kembali normal)
-    //         btn.prop('disabled', false).html(originalText);
-            
-    //     });
-    // });
+    
 // SUBMIT EDIT STATUS (Di Halaman Riwayat/History)
     $('#formEditStatus').on('submit', function(e){
         e.preventDefault();
 
-        // 1. Tutup modal input dulu agar tidak tumpang tindih
+        const note = $.trim($(this).find('[name="note"]').val());
+
+        if (note.length < 5) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Catatan terlalu pendek',
+                text: 'Catatan minimal 5 karakter.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            });
+            return;
+        }
+
         $('#modalEditStatus').modal('hide');
 
-        // 2. 🔥 MUNCULKAN SWAL LOADING PENUH
+        // 1. 🔥 MUNCULKAN SWAL LOADING PENUH
         Swal.fire({
             title: 'Memproses Perubahan...',
             text: 'Mohon tunggu, sedang memperbarui status dan mengirim email.',
@@ -290,36 +248,42 @@ $(function(){
             }
         });
 
-        // 3. Eksekusi AJAX
+        // 2. Eksekusi AJAX
         $.post("{{ route('timesheet.admin.changeStatus') }}", $(this).serialize())
-        .done(function(res){
-            
-            // 4. Cek status email dari response controller
-            if (res.email_sent) {
+        .done(function (res) {
+            if (res.success === true && res.email_sent === true) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil',
-                    text: res.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => location.reload());
+                    text: res.message || 'Status berhasil diubah dan email terkirim.',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(function () {
+                    location.reload();
+                });
             } else {
                 Swal.fire({
-                    icon: 'warning',
-                    title: 'Status Diperbarui',
-                    text: res.message,
-                    footer: '<small class="text-danger">Karyawan mungkin tidak menerima email notifikasi.</small>'
-                }).then(() => location.reload());
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: res.message || 'Email gagal dikirim. Status tidak diubah. Coba lagi nanti.',
+                    confirmButtonText: 'Tutup',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+                // Tidak reload ketika email gagal.
             }
-
         })
         .fail(function(xhr){
-            // Tangkap error validasi atau server
-            Swal.fire(
-                'Gagal',
-                xhr.responseJSON?.message || 'Terjadi kesalahan sistem.',
-                'error'
-            );
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: xhr.responseJSON?.message
+                    || 'Email gagal dikirim. Status tidak diubah.',
+                confirmButtonText: 'Tutup',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
         });
     });
 
