@@ -137,24 +137,23 @@
                                     </td>
                                 @endif
 
-                                <td class="text-center text-capitalize">
+                                <td class="text-center text-capitalize align-middle">
                                     {{ $e->work_location ?? '-' }}
                                 </td>
 
-                                <td class="text-center">
+                                <td class="text-center align-middle">
                                     {{ formatJamMenit($e->minutes) }}
                                 </td>
 
-                                <td>
+                                <td class="text-center align-middle">
                                     {{ $e->program?->nama ?? ucfirst($e->program_static) ?? '-' }}
                                 </td>
 
-                                <td>
+                                <td class="text-center align-middle">
                                     {{ $e->donor?->nama ?? ucfirst($e->donor_static) ?? '-' }}
                                 </td>
 
-                                <td>
-                                    {{ $e->activity }}
+                                <td style="white-space: pre-wrap; word-break: break-word; min-width: 250px;">{{ $e->activity }}
                                 </td>
 
                             </tr>
@@ -488,26 +487,28 @@ $(function() {
 
     // 3. FUNGSI HELPER UNTUK RESULT SWAL
     function showEmailStatusSwal(res) {
-        // Swal.fire baru ini akan otomatis menimpa/menutup Swal Loading sebelumnya!
-        if (res.email_sent) {
+        if (res.success === true && res.email_sent === true) {
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil',
-                text: res.message,
-                timer: 1500,
-                showConfirmButton: false
-            }).then(() => {
+                text: res.message || 'Proses berhasil dan email terkirim.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(function () {
                 window.location.href = "{{ route('approval.index') }}";
             });
         } else {
             Swal.fire({
-                icon: 'warning',
-                title: 'Tersimpan (Email Gagal)',
-                text: res.message,
-                footer: '<small class="text-danger">Log error email telah dicatat sistem.</small>'
-            }).then(() => {
-                window.location.href = "{{ route('approval.index') }}";
+                icon: 'error',
+                title: 'Gagal',
+                text: res.message || 'Email gagal dikirim. Status tidak diubah. Coba lagi nanti.',
+                confirmButtonText: 'Tutup',
+                allowOutsideClick: false,
+                allowEscapeKey: false
             });
+
+            // Tidak redirect ketika gagal.
         }
     }
 

@@ -561,6 +561,54 @@
         });
 
     });
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('textarea[maxlength], input[maxlength]').forEach(function (field) {
+
+        // Cari counter pada parent terdekat
+        let counter =
+            field.closest('.form-group')?.querySelector('.character-counter') ||
+            field.closest('.col-lg-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-6')?.querySelector('.character-counter') ||
+            field.closest('.col-md-12')?.querySelector('.character-counter') ||
+            field.parentElement.querySelector('.character-counter');
+
+        // Jika tidak ditemukan, skip field ini
+        if (!counter) {
+            return;
+        }
+
+        function updateCounter() {
+            const current = field.value.length;
+            const max = parseInt(field.maxLength);
+            const remaining = max - current;
+
+            counter.textContent =
+                `• Sisa ${remaining.toLocaleString('id-ID')} / ${max.toLocaleString('id-ID')} karakter `;
+
+            counter.classList.remove(
+                'text-muted',
+                'text-warning',
+                'text-danger'
+            );
+
+            if (current >= max * 0.95) {
+                counter.classList.add('text-danger');
+            } else if (current >= max * 0.80) {
+                counter.classList.add('text-warning');
+            } else {
+                counter.classList.add('text-muted');
+            }
+        }
+
+        updateCounter();
+
+        field.addEventListener('input', updateCounter);
+
+    });
+
+});
 </script>
 {{-- resources\views\tr\program\detail\output.blade.php --}}
 @stack('edit-output')

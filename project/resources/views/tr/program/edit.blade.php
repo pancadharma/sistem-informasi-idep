@@ -260,7 +260,8 @@
                                         </strong>
                                     </label>
                                     <textarea id="deskripsi" name="deskripsiprojek" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.deskripsi') }}">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
+                                        placeholder="{{ __('cruds.program.deskripsi') }}" maxlength="20000">{{ old('deskripsiprojek', $program->deskripsiprojek) }}</textarea>
+                                    <small class="text-muted character-counter"></small>
 
                                     @if ($errors->has('deskripsi'))
                                         <span class="text-danger">{{ $errors->first('deskripsiprojek') }}</span>
@@ -276,7 +277,8 @@
                                         </strong>
                                     </label>
                                     <textarea id="analisis" name="analisamasalah" cols="30" rows="5" class="form-control"
-                                        placeholder="{{ __('cruds.program.analisis') }}">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
+                                        placeholder="{{ __('cruds.program.analisis') }}" maxlength="20000">{{ old('analisamasalah', $program->analisamasalah) }}</textarea>
+                                    <small class="text-muted character-counter"></small>
                                     @if ($errors->has('analisamasalah'))
                                         <span class="text-danger">{{ $errors->first('analisamasalah') }}</span>
                                     @endif
@@ -558,5 +560,97 @@
             });
         });
     });
+// document.addEventListener('DOMContentLoaded', function () {
+
+//     document.querySelectorAll('textarea[maxlength], input[maxlength]').forEach(function(field) {
+
+//         // Cari elemen counter
+//         let counter = field.parentElement.querySelector('.character-counter');
+
+//         // Jika belum ada, buat otomatis
+//         // if (!counter) {
+//         //     counter = document.createElement('small');
+//         //     counter.className = 'text-muted character-counter';
+//         //     field.insertAdjacentElement('afterend', counter);
+//         // }
+
+//         function updateCounter() {
+//             const current = field.value.length;
+//             const max = field.maxLength;
+//             const remaining = max - current;
+
+//             counter.textContent =
+//                 `${current.toLocaleString('id-ID')} / ${max.toLocaleString('id-ID')} karakter • Sisa ${remaining.toLocaleString('id-ID')}`;
+
+//             counter.classList.remove('text-muted', 'text-warning', 'text-danger');
+
+//             if (current >= max * 0.95) {
+//                 counter.classList.add('text-danger');
+//             } else if (current >= max * 0.80) {
+//                 counter.classList.add('text-warning');
+//             } else {
+//                 counter.classList.add('text-muted');
+//             }
+//         }
+
+//         updateCounter();
+//         field.addEventListener('input', updateCounter);
+
+//     });
+
+// });
+
+function initCharacterCounter(container = document) {
+
+    container.querySelectorAll('textarea[maxlength], input[maxlength]').forEach(function(field){
+
+        // Cari counter pada parent terdekat
+        let counter =
+            field.closest('.form-group')?.querySelector('.character-counter') ||
+            field.closest('.col-lg-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-4')?.querySelector('.character-counter') ||
+            field.closest('.col-md-6')?.querySelector('.character-counter') ||
+            field.closest('.col-md-12')?.querySelector('.character-counter') ||
+            field.parentElement.querySelector('.character-counter');
+
+        if (!counter) {
+            return;
+        }
+
+        function updateCounter() {
+
+            const current = field.value.length;
+            const max = parseInt(field.maxLength);
+            const remaining = max - current;
+
+            counter.textContent =
+                `${current.toLocaleString('id-ID')} / ${max.toLocaleString('id-ID')} karakter • Sisa ${remaining.toLocaleString('id-ID')}`;
+
+            counter.classList.remove(
+                'text-muted',
+                'text-warning',
+                'text-danger'
+            );
+
+            if (current >= max * 0.95) {
+                counter.classList.add('text-danger');
+            } else if (current >= max * 0.80) {
+                counter.classList.add('text-warning');
+            } else {
+                counter.classList.add('text-muted');
+            }
+        }
+
+        updateCounter();
+
+        field.addEventListener('input', updateCounter);
+
+    });
+
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    initCharacterCounter();
+});
 </script>
 @endpush

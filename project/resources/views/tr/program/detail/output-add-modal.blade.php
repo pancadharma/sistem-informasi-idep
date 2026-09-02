@@ -7,20 +7,26 @@
                 <input type="hidden" name="programoutcome_id" id="programoutcome_id">
                  <div class="row">
                     <div class="input-field col-lg-12">
-                        <textarea class="materialize-textarea" id="deskripsi_output" name="deskripsi" data-length="1000" required></textarea>
-                        <label class="pl-2" for="deskripsi_output">{{ __('cruds.program.output.desc') }}</label>
+                        <textarea class="materialize-textarea" id="deskripsi_output" name="deskripsi" data-length="1000" maxlength="1000" required></textarea>
+                        <label class="pl-2" for="deskripsi_output">{{ __('cruds.program.output.desc') }}
+                            <small class="text-muted character-counter"></small>
+                        </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col-lg-12">
-                        <textarea class="materialize-textarea" id="indikator_output" name="indikator" data-length="1000" required></textarea>
-                        <label class="pl-2" for="indikator_output">{{ __('cruds.program.output.indicator') }}</label>
+                        <textarea class="materialize-textarea" id="indikator_output" name="indikator" data-length="1000" maxlength="1000" required></textarea>
+                        <label class="pl-2" for="indikator_output">{{ __('cruds.program.output.indicator') }}
+                            <small class="text-muted character-counter"></small>
+                        </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col-lg-12">
-                        <textarea class="materialize-textarea" id="target_output" name="target" data-length="1000" required></textarea>
-                        <label class="pl-2" for="target_output">{{ __('cruds.program.output.target') }}</label>
+                        <textarea class="materialize-textarea" id="target_output" name="target" data-length="1000" maxlength="1000" required></textarea>
+                        <label class="pl-2" for="target_output">{{ __('cruds.program.output.target') }}
+                            <small class="text-muted character-counter"></small>
+                        </label>
                     </div>
                 </div>
                 {{-- data table output activity --}}

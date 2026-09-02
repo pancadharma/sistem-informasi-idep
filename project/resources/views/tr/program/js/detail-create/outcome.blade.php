@@ -13,6 +13,8 @@
         });
         $("#outcomeContainer").append($clone);
         $clone.find("textarea").val("");
+        // console.log(typeof initCharacterCounter);
+        initCharacterCounter($clone[0]);
     });
     $(document).on("click", ".removeButton", function() {
         $(this).closest(".row").remove();

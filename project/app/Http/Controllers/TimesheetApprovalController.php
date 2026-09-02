@@ -94,143 +94,99 @@ class TimesheetApprovalController extends Controller
 
         return view('timesheet.approval.show', compact('timesheet'));
     }
-
-    // /**
-    //  * APPROVE
-    //  */
-    // public function approve(Request $request, Timesheet $timesheet)
-    // {
-    //     $this->authorizeApproval($timesheet);
-
-    //     $timesheet->update([
-    //         'status'        => 'approved',
-    //         'approved_by'   => auth()->id(),
-    //         'approved_at'   => now(),
-    //         'approval_note' => $request->note,
-    //     ]);
-
-    //     // 🔥 PAKSA LOAD USER
-    //     $timesheet->load('user');
-
-    //     try {
-    //         $timesheet->user->notify(new TimesheetApproved($timesheet));
-
-    //     } catch (\Throwable $e) {
-    //         Log::error('EMAIL APPROVED GAGAL', [
-    //             'msg' => $e->getMessage()
-    //         ]);
-    //     }
-
-    //     return redirect()
-    //         ->route('approval.index')
-    //         ->with('success', 'Timesheet berhasil di-approve');
-    // }
-
-    // /**
-    //  * REJECT
-    //  */
-    // public function reject(Request $request, Timesheet $timesheet)
-    // {
-    //     $request->validate([
-    //         'note' => 'required|string|min:5'
-    //     ]);
-
-    //     $this->authorizeApproval($timesheet);
-
-    //     $timesheet->update([
-    //         'status'        => 'rejected',
-    //         'approved_by'   => auth()->id(),
-    //         'approved_at'   => now(),
-    //         'approval_note' => $request->note,
-    //     ]);
-
-    //     // 🔥 WAJIB LOAD USER
-    //     $timesheet->load('user');
-
-    //     try {
-    //         $timesheet->user->notify(new TimesheetRejected($timesheet));
-
-    //     } catch (\Throwable $e) {
-    //         \Log::error('EMAIL REJECTED GAGAL', [
-    //             'msg' => $e->getMessage()
-    //         ]);
-    //     }
-
-    //     return redirect()
-    //         ->route('approval.index')
-    //         ->with('error', 'Timesheet ditolak');
-    // }
     
     
     /**
      * APPROVE (AJAX)
      */
-    public function approve(Request $request, Timesheet $timesheet)
-    {
-        $this->authorizeApproval($timesheet);
+public function approve(Request $request, Timesheet $timesheet)
+{
+    $this->authorizeApproval($timesheet);
 
+    $approver = auth()->user();
+    $timesheet->load('user');
+
+    try {
+        // Email dikirim terlebih dahulu.
+        $timesheet->user->notify(
+            new TimesheetApproved($timesheet, $approver->nama)
+        );
+
+        // Status hanya berubah setelah email berhasil.
         $timesheet->update([
             'status'        => 'approved',
-            'approved_by'   => auth()->id(),
+            'approved_by'   => $approver->id,
             'approved_at'   => now(),
-            'approval_note' => null, // Jika approve biasanya tanpa note
+            'approval_note' => $request->input('note'),
         ]);
-
-        $timesheet->load('user');
-        $emailStatus = true;
-
-        try {
-            $timesheet->user->notify(new TimesheetApproved($timesheet));
-        } catch (\Throwable $e) {
-            $emailStatus = false;
-            \Log::error('EMAIL APPROVED GAGAL', ['msg' => $e->getMessage()]);
-        }
 
         return response()->json([
             'success'    => true,
-            'email_sent' => $emailStatus,
-            'message'    => $emailStatus 
-                            ? 'Timesheet berhasil di-approve.' 
-                            : 'Timesheet di-approve, tapi gagal kirim email ke staff.'
+            'email_sent' => true,
+            'message'    => 'Timesheet berhasil di-approve.',
         ]);
+    } catch (\Throwable $e) {
+        Log::error('EMAIL APPROVED GAGAL', [
+            'timesheet_id' => $timesheet->id,
+            'msg'          => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'success'    => false,
+            'email_sent' => false,
+            'message'     => 'Email gagal dikirim. Status timesheet tidak diubah.',
+        ], 500);
     }
+}
 
     /**
      * REJECT (AJAX)
      */
-    public function reject(Request $request, Timesheet $timesheet)
-    {
-        $request->validate([
-            'note' => 'required|string|min:5'
-        ]);
+public function reject(Request $request, Timesheet $timesheet)
+{
+    $request->validate([
+        'note' => 'required|string|min:5',
+    ]);
 
-        $this->authorizeApproval($timesheet);
+    $this->authorizeApproval($timesheet);
 
+    $approver = auth()->user();
+    $note = $request->input('note');
+
+    $timesheet->load('user');
+
+    try {
+        // Email dikirim terlebih dahulu.
+        $timesheet->user->notify(
+            new TimesheetRejected($timesheet, 'rejected', $note)
+        );
+
+        // Status hanya berubah setelah email berhasil.
         $timesheet->update([
             'status'        => 'rejected',
-            'approved_by'   => auth()->id(),
+            'approved_by'   => $approver->id,
             'approved_at'   => now(),
-            'approval_note' => $request->note,
+            'approval_note' => $note,
         ]);
-
-        $timesheet->load('user');
-        $emailStatus = true;
-
-        try {
-            $timesheet->user->notify(new TimesheetRejected($timesheet));
-        } catch (\Throwable $e) {
-            $emailStatus = false;
-            \Log::error('EMAIL REJECTED GAGAL', ['msg' => $e->getMessage()]);
-        }
 
         return response()->json([
             'success'    => true,
-            'email_sent' => $emailStatus,
-            'message'    => $emailStatus 
-                            ? 'Timesheet berhasil ditolak.' 
-                            : 'Timesheet ditolak, tapi gagal kirim email ke staff.'
+            'email_sent' => true,
+            'message'     => 'Timesheet berhasil ditolak.',
         ]);
+    } catch (\Throwable $e) {
+        Log::error('EMAIL REJECTED GAGAL', [
+            'timesheet_id' => $timesheet->id,
+            'msg'          => $e->getMessage(),
+        ]);
+
+        return response()->json([
+            'success'    => false,
+            'email_sent' => false,
+            'message'     => 'Email gagal dikirim. Status timesheet tidak diubah.',
+        ], 500);
     }
+}
 
     /**
      * CEK OTORISASI APPROVAL
@@ -306,7 +262,8 @@ class TimesheetApprovalController extends Controller
 
         $timesheets = $query
             ->orderBy('approved_at', 'desc')
-            ->get();
+            ->paginate(15)
+            ->withQueryString();
 
         return view('timesheet.approval.history', compact(
             'timesheets',

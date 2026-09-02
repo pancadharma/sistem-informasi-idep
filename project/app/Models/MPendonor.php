@@ -48,10 +48,10 @@ class MPendonor extends Model
         return $query->where('aktif', 1);
     }
 
-    public function getNamaAttribute($value)
-    {
-        return ucwords(strtolower($value));
-    }
+    // public function getNamaAttribute($value)
+    // {
+    //     return ucwords(strtolower($value));
+    // }
 
     public function mpendonnorkategori()
     {
