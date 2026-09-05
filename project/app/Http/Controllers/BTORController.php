@@ -16,6 +16,7 @@ use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\SimpleType\JcTable;
+use PhpOffice\PhpWord\Settings as PhpWordSettings;
 use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Writer\Word2007\Element\ParagraphAlignment;
@@ -124,6 +125,7 @@ class BTORController extends Controller
 
     public function exportDocx($id)
     {
+        // di pakai di /kegiatan/export/docx
         // Draft guard — must be outside try/catch so abort(403) isn't swallowed
         $kegiatan = BTOR::getData($id);
         if ($kegiatan && $kegiatan->status === 'draft') {
@@ -132,6 +134,10 @@ class BTORController extends Controller
 
         $tmpDoc = null;
         try {
+            // Escape text when writing XML; with escaping off PhpWord writes text
+            // via writeRaw(), so any "&" in content corrupts word/document.xml
+            // and the DOCX becomes unreadable.
+            PhpWordSettings::setOutputEscapingEnabled(true);
             // Validate export is possible
             $validationErrors = $this->validateKegiatanForExport($kegiatan);
             if (!empty($validationErrors)) {
@@ -336,6 +342,8 @@ class BTORController extends Controller
 
         $tmpDoc = null;
         try {
+            // See exportDocx(): escaping must be on or "&" in content corrupts the DOCX
+            PhpWordSettings::setOutputEscapingEnabled(true);
             $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
             // --- 1. GLOBAL STYLES (Matches exportDocx) ---
@@ -1038,8 +1046,22 @@ class BTORController extends Controller
 
         // --- STEP 1: CLEANING (Your existing working logic) ---
 
-        // 1. Fix &nbsp; 
+        // 1. Fix &nbsp;
         $html = str_replace('&nbsp;', ' ', $html);
+
+        // 1b. XML-safe entities: DOMDocument::loadXML in PhpWord\Shared\Html aborts
+        // on bare "&" or non-XML named entities (e.g. &copy;), which corrupts
+        // word/document.xml and makes the DOCX unreadable.
+        // Convert named entities to their UTF-8 characters (except the XML five),
+        // then encode remaining bare ampersands.
+        $entityMap = array_flip(get_html_translation_table(HTML_ENTITIES, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        unset($entityMap['&amp;'], $entityMap['&lt;'], $entityMap['&gt;'], $entityMap['&quot;'], $entityMap['&apos;']);
+        $html = preg_replace_callback(
+            '/&([a-zA-Z][a-zA-Z0-9]+);/',
+            fn ($m) => $entityMap['&' . $m[1] . ';'] ?? $m[0],
+            $html
+        );
+        $html = preg_replace('/&(?!#?\w+;)/', '&amp;', $html);
         
         // 2. Remove <colgroup> and <col> (Crucial)
         $html = preg_replace('/<colgroup>.*?<\/colgroup>/is', '', $html);
