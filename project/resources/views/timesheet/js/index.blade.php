@@ -693,7 +693,7 @@ $(document).on('click', '.btn-input-day', function () {
                 data: form.serialize(),
 
                 success: function (res) {
-                    if (res.success === true && res.email_sent !== false) {
+                    if (res.success === true) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
