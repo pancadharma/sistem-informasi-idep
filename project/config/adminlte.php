@@ -462,6 +462,13 @@ return [
                     'can'  => 'history-timesheet',
                 ],
                 [
+                    'text' => 'Pengaturan Approver',
+                    'route' => 'approval.assignments',
+                    'icon' => 'fas fa-user-check',
+                    'active' => ['timesheet/approval/assignments', 'timesheet/approval/assignments*'],
+                    'can'  => 'user_management_access',
+                ],
+                [
                     'text' => 'Export Rekap',
                     'route' => 'timesheet.export.index',
                     'icon' => 'fas fa-file-export',

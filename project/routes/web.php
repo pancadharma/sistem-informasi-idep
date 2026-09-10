@@ -746,6 +746,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [TimesheetApprovalController::class, 'index'])
                 ->name('index');
 
+            /* ===============================
+            * APPROVAL HISTORY
+            * =============================== */
+            Route::get('/history/list', 
+                [TimesheetApprovalController::class, 'history']
+            )->name('history');
+
+            Route::get('/assignments', [TimesheetApprovalController::class, 'assignments'])
+                ->name('assignments');
+
+            Route::post('/assignments/save', [TimesheetApprovalController::class, 'saveAssignments'])
+                ->name('assignments.save');
+
             Route::get('/{timesheet}', [TimesheetApprovalController::class, 'show'])
                 ->name('show');
 
@@ -754,12 +767,6 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/{timesheet}/reject', [TimesheetApprovalController::class, 'reject'])
                 ->name('reject');
-            /* ===============================
-            * APPROVAL HISTORY
-            * =============================== */
-            Route::get('/history/list', 
-                [TimesheetApprovalController::class, 'history']
-            )->name('history');
     });
     Route::post('/timesheet/admin/change-status',
         [TimesheetController::class, 'changeStatus']
