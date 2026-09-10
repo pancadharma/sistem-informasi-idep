@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Log;
+use App\Models\User;
 use App\Models\Timesheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TimesheetApprovalAssignment;
 use App\Notifications\TimesheetApproved;
 use App\Notifications\TimesheetRejected;
 
@@ -18,11 +20,19 @@ class TimesheetApprovalController extends Controller
     {
         $user = auth()->user();
 
+        abort_unless(
+            $user->can('approve-timesheet') || $user->can('admin_timesheet'),
+            403,
+            'Anda tidak memiliki hak approval timesheet'
+        );
+
         $timesheets = Timesheet::query()
             ->where('status', 'submitted')
             ->where('user_id', '!=', $user->id)
-            ->whereHas('user.jabatan', function ($q) use ($user) {
-                $q->where('divisi_id', $user->jabatan->divisi_id);
+            ->when(!$user->can('admin_timesheet'), function ($query) use ($user) {
+                $query->whereHas('user.timesheetApprovalAssignments', function ($itemQuery) use ($user) {
+                    $itemQuery->where('approver_id', $user->id);
+                });
             })
             ->with(['user.jabatan'])
             ->orderBy('year', 'desc')
@@ -46,23 +56,9 @@ class TimesheetApprovalController extends Controller
         );
 
         // =============================
-        // ADMIN → BEBAS
+        // APPROVER / ADMIN → BEBAS
         // =============================
-        if ($user->can('admin_timesheet')) {
-            return;
-        }
-
-        // =============================
-        // MANAGER → CEK DIVISI
-        // =============================
-        if (optional($user->jabatan)->is_manager) {
-
-            abort_if(
-                $timesheet->user->jabatan->divisi_id !== $user->jabatan->divisi_id,
-                403,
-                'Bukan divisi Anda'
-            );
-
+        if ($user->can('admin_timesheet') || $user->can('approve-timesheet') || $user->can('history-timesheet')) {
             return;
         }
 
@@ -198,17 +194,24 @@ public function reject(Request $request, Timesheet $timesheet)
         abort_if($timesheet->status !== 'submitted', 403);
         abort_if($timesheet->user_id === $user->id, 403);
 
-        abort_if(
-            !$user->jabatan || !$user->jabatan->is_manager,
+        abort_unless(
+            $user->can('approve-timesheet') || $user->can('admin_timesheet'),
             403,
-            'Anda bukan manager'
+            'Anda tidak memiliki hak approval timesheet'
         );
 
-        abort_if(
-            $timesheet->user->jabatan->divisi_id !== $user->jabatan->divisi_id,
-            403,
-            'Bukan bawahan Anda'
-        );
+        if (!$user->can('admin_timesheet')) {
+            $isAssignedApprover = TimesheetApprovalAssignment::query()
+                ->where('user_id', $timesheet->user_id)
+                ->where('approver_id', $user->id)
+                ->exists();
+
+            abort_unless(
+                $isAssignedApprover,
+                403,
+                'Anda belum ditunjuk sebagai approver untuk timesheet ini'
+            );
+        }
     }
 
     /**
@@ -216,6 +219,53 @@ public function reject(Request $request, Timesheet $timesheet)
      * 🔥 HISTORY DENGAN FILTER ROLE
      * ===============================
      */
+    public function assignments()
+    {
+        abort_unless(auth()->user()->can('user_management_access'), 403, 'Anda tidak memiliki hak mengatur approval timesheet');
+
+        $users = User::query()
+            ->with('jabatan')
+            ->orderBy('nama')
+            ->get();
+
+        $assignedApprovers = TimesheetApprovalAssignment::query()
+            ->get()
+            ->groupBy('user_id')
+            ->map(fn ($items) => $items->pluck('approver_id')->toArray());
+
+        return view('timesheet.approval.assignments', compact('users', 'assignedApprovers'));
+    }
+
+    public function saveAssignments(Request $request)
+    {
+        abort_unless(auth()->user()->can('user_management_access'), 403, 'Anda tidak memiliki hak mengatur approval timesheet');
+
+        $userId = $request->input('user_id');
+
+        abort_unless($userId, 422, 'User tidak valid.');
+
+        $user = User::findOrFail($userId);
+
+        $user->timesheetApprovalAssignments()->delete();
+
+        $approverIds = array_values(
+            array_unique(
+                array_filter(
+                    $request->input('approvers', []),
+                    fn ($id) => $id != null && $id != $userId && $id !== ''
+                )
+            )
+        );
+
+        foreach ($approverIds as $approverId) {
+            $user->timesheetApprovalAssignments()->create([
+                'approver_id' => $approverId,
+            ]);
+        }
+
+        return back()->with('success', 'Pengaturan approver untuk ' . $user->nama . ' berhasil disimpan.');
+    }
+
     public function history(Request $request)
     {
         $user = auth()->user();
@@ -228,27 +278,16 @@ public function reject(Request $request, Timesheet $timesheet)
             ->with(['user.jabatan']);
 
         // ===========================
-        // 1. ADMIN SISTEM → LIHAT SEMUA
+        // 1. ADMIN / APPROVER → LIHAT SEMUA
         // ===========================
-        if ($user->can('admin_timesheet')) {
+        if ($user->can('admin_timesheet') || $user->can('approve-timesheet') || $user->can('history-timesheet')) {
 
             // tanpa filter divisi
 
         }
 
         // ===========================
-        // 2. MANAGER → HANYA DIVISI DIA
-        // ===========================
-        elseif (optional($user->jabatan)->is_manager) {
-
-            $query->whereHas('user.jabatan', function ($q) use ($user) {
-                $q->where('divisi_id', $user->jabatan->divisi_id);
-            });
-
-        }
-
-        // ===========================
-        // 3. STAFF → HANYA MILIK DIA
+        // 2. STAFF → HANYA MILIK DIA
         // ===========================
         else {
 

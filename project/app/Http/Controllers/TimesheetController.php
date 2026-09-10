@@ -8,6 +8,7 @@ use App\Models\Program;
 use App\Models\Timesheet;
 use App\Models\TimesheetEntry;
 use App\Models\User;
+use App\Models\TimesheetApprovalAssignment;
 use App\Notifications\TimesheetSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -393,8 +394,9 @@ class TimesheetController extends Controller
             $dayStatus = $dateObj->isWeekend() ? 'libur' : 'kosong';
         }
 
-        $note = '* ' . $entries->whereIn('day_status', ['cuti','doc','sakit'])->first()->activity;
-
+        //$note = '* ' . $entries->whereIn('day_status', ['cuti','doc','sakit'])->first()->activity;
+        $noteEntry = $entries->whereIn('day_status', ['cuti','doc','sakit'])->first();
+        $note = $noteEntry ? '* ' . $noteEntry->activity : '';
         return response()->json([
             'day_status' => $dayStatus,
             'note'       => $note,
@@ -418,9 +420,6 @@ class TimesheetController extends Controller
     {
         abort_if($timesheet->user_id !== auth()->id(), 403);
 
-        $user = auth()->user();
-        $isManager = optional($user->jabatan)->is_manager;
-
         abort_if(
             !in_array($timesheet->status, ['draft', 'rejected']),
             403,
@@ -436,44 +435,35 @@ class TimesheetController extends Controller
             ], 422);
         }
 
-        // Manager langsung approved tanpa notifikasi manager.
-        if ($isManager) {
-            $timesheet->update([
-                'total_minutes' => $totalMinutes,
-                'status'        => 'approved',
-                'approved_by'   => $user->id,
-                'approved_at'   => now(),
-                'approval_note' => 'Auto approved (Manager)',
-            ]);
+        $assignedApprovers = TimesheetApprovalAssignment::query()
+            ->where('user_id', $timesheet->user_id)
+            ->with('approver')
+            ->get()
+            ->pluck('approver');
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Timesheet auto-approved sebagai Manager.',
-            ]);
-        }
-
-        $user->load('jabatan');
-        $timesheet->load('user.jabatan');
-
-        $managers = User::whereHas('jabatan', function ($query) use ($timesheet) {
-            $query->where('is_manager', 1)
-                ->where('divisi_id', $timesheet->user->jabatan->divisi_id);
-        })->get();
-
-        if ($managers->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Manager untuk divisi ini tidak ditemukan. Status timesheet tidak diubah.',
-            ], 422);
-        }
+        $assignedApprovers = $assignedApprovers->filter(fn ($approver) => $approver && $approver->id !== $timesheet->user_id);
 
         try {
-            // Email dikirim terlebih dahulu.
-            foreach ($managers as $manager) {
-                $manager->notify(new TimesheetSubmitted($timesheet));
+            if ($assignedApprovers->isEmpty()) {
+                $timesheet->update([
+                    'total_minutes' => $totalMinutes,
+                    'status'        => 'approved',
+                    'approved_by'   => $timesheet->user_id,
+                    'approved_at'   => now(),
+                    'approval_note' => 'Auto approved.',
+                ]);
+
+                return response()->json([
+                    'success'    => true,
+                    'email_sent' => false,
+                    'message'    => 'Timesheet berhasil disubmit dan otomatis disetujui.',
+                ]);
             }
 
-            // Status hanya berubah jika seluruh notify berhasil.
+            foreach ($assignedApprovers as $approver) {
+                $approver->notify(new TimesheetSubmitted($timesheet));
+            }
+
             $timesheet->update([
                 'total_minutes' => $totalMinutes,
                 'status'        => 'submitted',
@@ -485,10 +475,10 @@ class TimesheetController extends Controller
             return response()->json([
                 'success'    => true,
                 'email_sent' => true,
-                'message'    => 'Timesheet berhasil disubmit dan atasan telah dinotifikasi.',
+                'message'    => 'Timesheet berhasil disubmit dan approver telah dinotifikasi.',
             ]);
         } catch (\Throwable $e) {
-            \Log::error('EMAIL MANAGER GAGAL SAAT SUBMIT', [
+            \Log::error('EMAIL APPROVER GAGAL SAAT SUBMIT', [
                 'timesheet_id' => $timesheet->id,
                 'message'      => $e->getMessage(),
             ]);
@@ -496,7 +486,7 @@ class TimesheetController extends Controller
             return response()->json([
                 'success'    => false,
                 'email_sent' => false,
-                'message'    => 'Email gagal dikirim. Status timesheet tidak diubah.',
+                'message'    => 'Proses submit gagal. Silakan coba lagi.',
             ], 500);
         }
     }
