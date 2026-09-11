@@ -263,10 +263,16 @@ $(function(){
                     location.reload();
                 });
             } else {
+                const reason = res.reason || 'system';
+                const title = reason === 'email' ? 'Notifikasi gagal terkirim' : 'Proses gagal';
+                const text = reason === 'email'
+                    ? 'Email notifikasi gagal dikirim. Status timesheet belum berubah.'
+                    : 'Terjadi masalah saat menyimpan perubahan. Email mungkin sudah terkirim, tetapi status timesheet belum berubah.';
+
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal',
-                    text: res.message || 'Perubahan status gagal. Status timesheet tetap tidak berubah. Silakan coba lagi nanti.',
+                    title: title,
+                    text: text,
                     confirmButtonText: 'Tutup',
                     allowOutsideClick: false,
                     allowEscapeKey: false
@@ -275,11 +281,16 @@ $(function(){
             }
         })
         .fail(function(xhr){
+            const reason = xhr.responseJSON?.reason || 'system';
+            const title = reason === 'email' ? 'Notifikasi gagal terkirim' : 'Proses gagal';
+            const text = reason === 'email'
+                ? 'Email notifikasi gagal dikirim. Status timesheet belum berubah.'
+                : 'Terjadi masalah saat menyimpan perubahan. Email mungkin sudah terkirim, tetapi status timesheet belum berubah.';
+
             Swal.fire({
                 icon: 'error',
-                title: 'Gagal',
-                text: xhr.responseJSON?.message
-                    || 'Perubahan status gagal. Status timesheet tetap tidak berubah.',
+                title: title,
+                text: text,
                 confirmButtonText: 'Tutup',
                 allowOutsideClick: false,
                 allowEscapeKey: false

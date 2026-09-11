@@ -710,10 +710,16 @@ $(document).on('click', '.btn-input-day', function () {
                             window.location.reload();
                         });
                     } else {
+                        const reason = res.reason || 'system';
+                        const errorTitle = reason === 'email' ? 'Notifikasi gagal terkirim' : 'Proses gagal';
+                        const errorText = reason === 'email'
+                            ? 'Email notifikasi gagal dikirim. Status timesheet belum berubah. Silakan coba lagi nanti.'
+                            : 'Terjadi masalah saat menyimpan perubahan. Email mungkin sudah terkirim, tetapi status timesheet belum berubah. Silakan coba lagi nanti.';
+
                         Swal.fire({
                             icon: 'error',
-                            title: 'Submit Gagal',
-                            text: res.message || 'Submit gagal. Status timesheet tetap tidak berubah. Silakan coba lagi nanti.',
+                            title: errorTitle,
+                            text: errorText,
                             confirmButtonText: 'Tutup',
                             allowOutsideClick: false
                         });
@@ -721,11 +727,16 @@ $(document).on('click', '.btn-input-day', function () {
                 },
 
                 error: function (xhr) {
+                    const reason = xhr.responseJSON?.reason;
+                    const message = xhr.responseJSON?.message
+                        || 'Terjadi kesalahan saat submit';
+
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal',
-                        text: xhr.responseJSON?.message 
-                            ?? 'Terjadi kesalahan saat submit'
+                        title: 'Submit Gagal',
+                        text: message,
+                        confirmButtonText: 'Tutup',
+                        allowOutsideClick: false
                     });
                 }
             });
