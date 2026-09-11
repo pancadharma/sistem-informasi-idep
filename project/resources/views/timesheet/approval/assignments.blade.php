@@ -149,7 +149,7 @@
             allowClear: true
         });
 
-        $('.edit-assignment').on('click', function () {
+        $('#approvalAssignmentsTable tbody').on('click', '.edit-assignment', function () {
             const userId = $(this).data('userId');
             const userName = $(this).data('userName');
             const assignedApprovers = $(this).data('assignedApprovers') || [];
