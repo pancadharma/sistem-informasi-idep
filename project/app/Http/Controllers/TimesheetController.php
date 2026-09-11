@@ -445,13 +445,27 @@ class TimesheetController extends Controller
 
         try {
             if ($assignedApprovers->isEmpty()) {
-                $timesheet->update([
-                    'total_minutes' => $totalMinutes,
-                    'status'        => 'approved',
-                    'approved_by'   => $timesheet->user_id,
-                    'approved_at'   => now(),
-                    'approval_note' => 'Auto approved.',
-                ]);
+                try {
+                    $timesheet->update([
+                        'total_minutes' => $totalMinutes,
+                        'status'        => 'approved',
+                        'approved_by'   => $timesheet->user_id,
+                        'approved_at'   => now(),
+                        'approval_note' => 'Auto approved.',
+                    ]);
+                } catch (\Throwable $e) {
+                    \Log::error('AUTO APPROVE GAGAL SAAT SUBMIT', [
+                        'timesheet_id' => $timesheet->id,
+                        'message'      => $e->getMessage(),
+                    ]);
+
+                    return response()->json([
+                        'success'    => false,
+                        'email_sent' => false,
+                        'reason'     => 'system',
+                        'message'    => 'Submit gagal karena kesalahan sistem saat menyimpan status timesheet. Silakan coba lagi.',
+                    ], 500);
+                }
 
                 return response()->json([
                     'success'    => true,
@@ -460,17 +474,45 @@ class TimesheetController extends Controller
                 ]);
             }
 
-            foreach ($assignedApprovers as $approver) {
-                $approver->notify(new TimesheetSubmitted($timesheet));
+            try {
+                foreach ($assignedApprovers as $approver) {
+                    $approver->notify(new TimesheetSubmitted($timesheet));
+                }
+            } catch (\Throwable $e) {
+                \Log::error('EMAIL APPROVER GAGAL SAAT SUBMIT', [
+                    'timesheet_id' => $timesheet->id,
+                    'message'      => $e->getMessage(),
+                ]);
+
+                return response()->json([
+                    'success'    => false,
+                    'email_sent' => false,
+                    'reason'     => 'email',
+                    'message'    => 'Submit gagal karena gagal mengirim email notifikasi ke approver. Status timesheet tidak berubah.',
+                ], 500);
             }
 
-            $timesheet->update([
-                'total_minutes' => $totalMinutes,
-                'status'        => 'submitted',
-                'approved_by'   => null,
-                'approved_at'   => null,
-                'approval_note' => null,
-            ]);
+            try {
+                $timesheet->update([
+                    'total_minutes' => $totalMinutes,
+                    'status'        => 'submitted',
+                    'approved_by'   => null,
+                    'approved_at'   => null,
+                    'approval_note' => null,
+                ]);
+            } catch (\Throwable $e) {
+                \Log::error('UPDATE STATUS SUBMIT GAGAL', [
+                    'timesheet_id' => $timesheet->id,
+                    'message'      => $e->getMessage(),
+                ]);
+
+                return response()->json([
+                    'success'    => false,
+                    'email_sent' => false,
+                    'reason'     => 'system',
+                    'message'    => 'Submit gagal karena kesalahan sistem saat menyimpan status timesheet. Email kemungkinan sudah terkirim, tetapi status tidak berubah.',
+                ], 500);
+            }
 
             return response()->json([
                 'success'    => true,
@@ -478,7 +520,7 @@ class TimesheetController extends Controller
                 'message'    => 'Timesheet berhasil disubmit dan approver telah dinotifikasi.',
             ]);
         } catch (\Throwable $e) {
-            \Log::error('EMAIL APPROVER GAGAL SAAT SUBMIT', [
+            \Log::error('SUBMIT TIMESHEET GAGAL', [
                 'timesheet_id' => $timesheet->id,
                 'message'      => $e->getMessage(),
             ]);
@@ -486,7 +528,8 @@ class TimesheetController extends Controller
             return response()->json([
                 'success'    => false,
                 'email_sent' => false,
-                'message'    => 'Proses submit gagal. Silakan coba lagi.',
+                'reason'     => 'system',
+                'message'    => 'Submit gagal karena kesalahan sistem. Silakan coba lagi.',
             ], 500);
         }
     }
@@ -537,22 +580,50 @@ class TimesheetController extends Controller
         try {
             $timesheet->load(['user', 'approver']);
 
-            // Kirim email terlebih dahulu.
-            $timesheet->user->notify(
-                new \App\Notifications\TimesheetRejected(
-                    $timesheet,
-                    $request->status,
-                    $request->note
-                )
-            );
+            try {
+                // Kirim email terlebih dahulu.
+                $timesheet->user->notify(
+                    new \App\Notifications\TimesheetRejected(
+                        $timesheet,
+                        $request->status,
+                        $request->note
+                    )
+                );
+            } catch (\Throwable $e) {
+                \Log::error('Gagal kirim email ubah status', [
+                    'timesheet_id' => $timesheet->id,
+                    'message'      => $e->getMessage(),
+                ]);
 
-            // Status hanya diubah setelah email berhasil.
-            $timesheet->update([
-                'status'        => $request->status,
-                'approval_note' => $request->note,
-                'approved_by'   => auth()->id(),
-                'approved_at'   => now(),
-            ]);
+                return response()->json([
+                    'success'    => false,
+                    'email_sent' => false,
+                    'reason'     => 'email',
+                    'message'    => 'Perubahan status gagal karena gagal mengirim email notifikasi. Status timesheet tidak berubah.',
+                ], 500);
+            }
+
+            try {
+                // Status hanya diubah setelah email berhasil.
+                $timesheet->update([
+                    'status'        => $request->status,
+                    'approval_note' => $request->note,
+                    'approved_by'   => auth()->id(),
+                    'approved_at'   => now(),
+                ]);
+            } catch (\Throwable $e) {
+                \Log::error('Gagal simpan perubahan status timesheet', [
+                    'timesheet_id' => $timesheet->id,
+                    'message'      => $e->getMessage(),
+                ]);
+
+                return response()->json([
+                    'success'    => false,
+                    'email_sent' => false,
+                    'reason'     => 'system',
+                    'message'    => 'Perubahan status gagal karena kesalahan sistem saat menyimpan data. Email kemungkinan sudah terkirim, tetapi status timesheet tidak berubah.',
+                ], 500);
+            }
 
             return response()->json([
                 'success'    => true,
@@ -560,7 +631,7 @@ class TimesheetController extends Controller
                 'message'    => 'Status berhasil diubah dan email terkirim.',
             ]);
         } catch (\Throwable $e) {
-            \Log::error('Gagal kirim email ubah status', [
+            \Log::error('Gagal ubah status timesheet', [
                 'timesheet_id' => $timesheet->id,
                 'message'      => $e->getMessage(),
             ]);
@@ -568,7 +639,8 @@ class TimesheetController extends Controller
             return response()->json([
                 'success'    => false,
                 'email_sent' => false,
-                'message'     => 'Perubahan status gagal. Email tidak terkirim dan status timesheet tidak berubah.',
+                'reason'     => 'system',
+                'message'    => 'Perubahan status gagal karena kesalahan sistem. Silakan coba lagi.',
             ], 500);
         }
     }

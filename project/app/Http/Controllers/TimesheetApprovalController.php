@@ -103,18 +103,46 @@ public function approve(Request $request, Timesheet $timesheet)
     $timesheet->load('user');
 
     try {
-        // Email dikirim terlebih dahulu.
-        $timesheet->user->notify(
-            new TimesheetApproved($timesheet, $approver->nama)
-        );
+        try {
+            // Email dikirim terlebih dahulu.
+            $timesheet->user->notify(
+                new TimesheetApproved($timesheet, $approver->nama)
+            );
+        } catch (\Throwable $e) {
+            Log::error('EMAIL APPROVED GAGAL', [
+                'timesheet_id' => $timesheet->id,
+                'msg'          => $e->getMessage(),
+            ]);
 
-        // Status hanya berubah setelah email berhasil.
-        $timesheet->update([
-            'status'        => 'approved',
-            'approved_by'   => $approver->id,
-            'approved_at'   => now(),
-            'approval_note' => $request->input('note'),
-        ]);
+            return response()->json([
+                'success'    => false,
+                'email_sent' => false,
+                'reason'     => 'email',
+                'message'    => 'Approval gagal karena gagal mengirim email notifikasi ke user. Status timesheet tidak berubah.',
+            ], 500);
+        }
+
+        try {
+            // Status hanya berubah setelah email berhasil.
+            $timesheet->update([
+                'status'        => 'approved',
+                'approved_by'   => $approver->id,
+                'approved_at'   => now(),
+                'approval_note' => $request->input('note'),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('UPDATE APPROVE TIMESHEET GAGAL', [
+                'timesheet_id' => $timesheet->id,
+                'msg'          => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success'    => false,
+                'email_sent' => false,
+                'reason'     => 'system',
+                'message'    => 'Approval gagal karena kesalahan sistem saat menyimpan status timesheet. Email kemungkinan sudah terkirim, tetapi status tidak berubah.',
+            ], 500);
+        }
 
         return response()->json([
             'success'    => true,
@@ -122,7 +150,7 @@ public function approve(Request $request, Timesheet $timesheet)
             'message'    => 'Timesheet berhasil di-approve.',
         ]);
     } catch (\Throwable $e) {
-        Log::error('EMAIL APPROVED GAGAL', [
+        Log::error('APPROVE TIMESHEET GAGAL', [
             'timesheet_id' => $timesheet->id,
             'msg'          => $e->getMessage(),
         ]);
@@ -130,7 +158,8 @@ public function approve(Request $request, Timesheet $timesheet)
         return response()->json([
             'success'    => false,
             'email_sent' => false,
-            'message'     => 'Email gagal dikirim. Status timesheet tidak diubah.',
+            'reason'     => 'system',
+            'message'    => 'Approval gagal karena kesalahan sistem. Silakan coba lagi.',
         ], 500);
     }
 }
@@ -152,26 +181,54 @@ public function reject(Request $request, Timesheet $timesheet)
     $timesheet->load('user');
 
     try {
-        // Email dikirim terlebih dahulu.
-        $timesheet->user->notify(
-            new TimesheetRejected($timesheet, 'rejected', $note)
-        );
+        try {
+            // Email dikirim terlebih dahulu.
+            $timesheet->user->notify(
+                new TimesheetRejected($timesheet, 'rejected', $note)
+            );
+        } catch (\Throwable $e) {
+            Log::error('EMAIL REJECTED GAGAL', [
+                'timesheet_id' => $timesheet->id,
+                'msg'          => $e->getMessage(),
+            ]);
 
-        // Status hanya berubah setelah email berhasil.
-        $timesheet->update([
-            'status'        => 'rejected',
-            'approved_by'   => $approver->id,
-            'approved_at'   => now(),
-            'approval_note' => $note,
-        ]);
+            return response()->json([
+                'success'    => false,
+                'email_sent' => false,
+                'reason'     => 'email',
+                'message'    => 'Penolakan gagal karena gagal mengirim email notifikasi ke user. Status timesheet tidak berubah.',
+            ], 500);
+        }
+
+        try {
+            // Status hanya berubah setelah email berhasil.
+            $timesheet->update([
+                'status'        => 'rejected',
+                'approved_by'   => $approver->id,
+                'approved_at'   => now(),
+                'approval_note' => $note,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('UPDATE REJECT TIMESHEET GAGAL', [
+                'timesheet_id' => $timesheet->id,
+                'msg'          => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success'    => false,
+                'email_sent' => false,
+                'reason'     => 'system',
+                'message'    => 'Penolakan gagal karena kesalahan sistem saat menyimpan status timesheet. Email kemungkinan sudah terkirim, tetapi status tidak berubah.',
+            ], 500);
+        }
 
         return response()->json([
             'success'    => true,
             'email_sent' => true,
-            'message'     => 'Timesheet berhasil ditolak.',
+            'message'    => 'Timesheet berhasil ditolak.',
         ]);
     } catch (\Throwable $e) {
-        Log::error('EMAIL REJECTED GAGAL', [
+        Log::error('REJECT TIMESHEET GAGAL', [
             'timesheet_id' => $timesheet->id,
             'msg'          => $e->getMessage(),
         ]);
@@ -179,7 +236,8 @@ public function reject(Request $request, Timesheet $timesheet)
         return response()->json([
             'success'    => false,
             'email_sent' => false,
-            'message'     => 'Email gagal dikirim. Status timesheet tidak diubah.',
+            'reason'     => 'system',
+            'message'    => 'Penolakan gagal karena kesalahan sistem. Silakan coba lagi.',
         ], 500);
     }
 }
