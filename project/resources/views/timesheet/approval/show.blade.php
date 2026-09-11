@@ -502,7 +502,7 @@ $(function() {
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal',
-                text: res.message || 'Email gagal dikirim. Status tidak diubah. Coba lagi nanti.',
+                text: res.message || 'Proses gagal. Status timesheet tetap tidak berubah. Silakan coba lagi nanti.',
                 confirmButtonText: 'Tutup',
                 allowOutsideClick: false,
                 allowEscapeKey: false
