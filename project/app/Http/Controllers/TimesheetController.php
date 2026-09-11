@@ -568,7 +568,7 @@ class TimesheetController extends Controller
             return response()->json([
                 'success'    => false,
                 'email_sent' => false,
-                'message'     => 'Email gagal dikirim. Status timesheet tidak diubah.',
+                'message'     => 'Perubahan status gagal. Email tidak terkirim dan status timesheet tidak berubah.',
             ], 500);
         }
     }
