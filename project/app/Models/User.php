@@ -206,4 +206,14 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->jabatan?->divisi();
     }
+
+    public function timesheetApprovalAssignments()
+    {
+        return $this->hasMany(TimesheetApprovalAssignment::class, 'user_id');
+    }
+
+    public function canApproveTimesheetsFor()
+    {
+        return $this->hasMany(TimesheetApprovalAssignment::class, 'approver_id');
+    }
 }

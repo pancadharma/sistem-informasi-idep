@@ -693,11 +693,17 @@ $(document).on('click', '.btn-input-day', function () {
                 data: form.serialize(),
 
                 success: function (res) {
-                    if (res.success === true && res.email_sent !== false) {
+                    if (res.success === true) {
+                        const successText = res.message || (
+                            res.email_sent === false
+                                ? 'Timesheet berhasil disubmit dan otomatis disetujui.'
+                                : 'Timesheet berhasil disubmit dan approver telah dinotifikasi.'
+                        );
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
-                            text: res.message || 'Timesheet berhasil disubmit.',
+                            text: successText,
                             confirmButtonText: 'OK',
                             allowOutsideClick: false
                         }).then(() => {
@@ -707,7 +713,7 @@ $(document).on('click', '.btn-input-day', function () {
                         Swal.fire({
                             icon: 'error',
                             title: 'Submit Gagal',
-                            text: res.message || 'Email gagal dikirim. Status timesheet tidak diubah. Coba lagi nanti.',
+                            text: res.message || 'Submit gagal. Status timesheet tetap tidak berubah. Silakan coba lagi nanti.',
                             confirmButtonText: 'Tutup',
                             allowOutsideClick: false
                         });

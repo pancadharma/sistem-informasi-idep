@@ -266,12 +266,12 @@ $(function(){
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal',
-                    text: res.message || 'Email gagal dikirim. Status tidak diubah. Coba lagi nanti.',
+                    text: res.message || 'Perubahan status gagal. Status timesheet tetap tidak berubah. Silakan coba lagi nanti.',
                     confirmButtonText: 'Tutup',
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
-                // Tidak reload ketika email gagal.
+                // Tidak reload ketika proses gagal.
             }
         })
         .fail(function(xhr){
@@ -279,7 +279,7 @@ $(function(){
                 icon: 'error',
                 title: 'Gagal',
                 text: xhr.responseJSON?.message
-                    || 'Email gagal dikirim. Status tidak diubah.',
+                    || 'Perubahan status gagal. Status timesheet tetap tidak berubah.',
                 confirmButtonText: 'Tutup',
                 allowOutsideClick: false,
                 allowEscapeKey: false
